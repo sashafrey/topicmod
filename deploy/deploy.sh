@@ -18,6 +18,12 @@ cd ..
 git config --global user.name "Alexander Frey"
 git config --global user.email "sashafrey@gmail.com"
 
+## ===== unpack datasets =====
+cd datasets
+zcat docword.nips.txt.gz >docword.nips.txt
+zcat docword.kos.txt.gz >docword.kos.txt
+cd ..
+
 ## ===== Install Intel Composer and MKL =====
 mkdir /opt/intel
 mkdir /opt/intel/licenses

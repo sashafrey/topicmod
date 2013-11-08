@@ -14,7 +14,7 @@ using namespace std;
 int main(int argc, char * argv[]){
 //	VTPauseSampling();
 
-	if(argc!=8){
+	if(argc!=9){
 		cout<<"usage: PLSACluster <file> <dictionary> <numClusters> <numLS> <numIters> <numThreads> <numBlocks> <pos>"<<endl;
 		return 1;
 	}
@@ -44,7 +44,7 @@ int main(int argc, char * argv[]){
     int numWords = plsa->numWords();
 
     std::vector<std::string> dictionary;
-    ifstream matFile( argv[1] );
+    ifstream matFile( argv[2] );
      // should we handle exception here?
     if ( !matFile.good() )
     {
@@ -62,15 +62,14 @@ int main(int argc, char * argv[]){
     int wordsToSort = 10;
     for (int i = 0; i < plsa->numCats(); i++) {
         cout << "#" << (i+1) << ": ";
-        double* p_w_raw = plsa->get_p_w_z()[i];
-        std::vector<std::pair<double, int>> p_w(numWords);
+        std::vector<std::pair<double, int> > p_w;
         for (int iWord = 0; iWord < numWords; iWord++) {
-            p_w.push_back(std::pair<double, int>(p_w_raw[i], i));
+            p_w.push_back(std::pair<double, int>(plsa->get_p_w_z()[iWord][i], iWord));
         }
 
         std::sort(p_w.begin(), p_w.end());
         for (int iWord = numWords - 1; (iWord >= 0) && (iWord >= numWords - wordsToSort); iWord--) {
-            cout << dictionary[p_w[iWord].second] << " ";
+           cout << dictionary[p_w[iWord].second] << " ";
         }
 
         cout << endl;

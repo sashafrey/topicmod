@@ -12,13 +12,13 @@
 #
 
 #for dataset in new3 la12 cranmed; do
-for dataset in kos nips; do
+for dataset in enron; do
 	echo "dataset= ${dataset}"
-	for thread in 1 2; do
+	for thread in 1 2 4; do
 		echo "thread_num = ${thread}"
-		for block in 4; do
+		for block in 8; do
 			echo "block_num = ${block}"
-			bin/PLSACluster ../datasets/docword.${dataset}.txt 6 50 10 ${thread} ${block} 0
+			bin/PLSACluster ../datasets/docword.${dataset}.txt ../datasets/vocab.${dataset}.txt 6 10 15 ${thread} ${block} 0
 			echo ""
 			sleep 1
 		done	

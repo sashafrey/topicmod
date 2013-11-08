@@ -32,9 +32,9 @@ void alignedDelete(T* p){
 }
 
 bool iPLSA::loadMatrixFile() {
-    if ((matFileName.length() >= 4) && (0 == matFileName.compare(matFileName.length() - 3, 3, ".mat"))) {
+    if ((matFileName.length() >= 4) && (0 == matFileName.compare(matFileName.length() - 4, 4, ".mat"))) {
         return loadMatrixFileICPP();
-    } else if ((matFileName.length() >= 4) && (0 == matFileName.compare(matFileName.length() - 3, 3, ".txt"))) {
+    } else if ((matFileName.length() >= 4) && (0 == matFileName.compare(matFileName.length() - 4, 4, ".txt"))) {
         return loadMatrixFileUCI();
     } else {
         cerr << "Matrix filename should either end with .mat or .txt" << endl;
@@ -152,7 +152,9 @@ bool iPLSA::loadMatrixFileUCI() {
     for (int i = 0; i < numNonZero; i++) 
     {
         matFile >> d >> termID >> freq;
-        int r = rand();
+        d = d--; 
+        termID = termID --;
+	int r = rand();
         if ( ( r % testPercentage ) == 0 )
         {
             testDataFreq[ termID ].push_back( freq );

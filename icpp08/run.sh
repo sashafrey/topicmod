@@ -11,13 +11,14 @@
 #	number of maximum iterations to more than 12, or the program will crash.
 #
 
-for dataset in new3 la12 cranmed; do
+#for dataset in new3 la12 cranmed; do
+for dataset in kos nips; do
 	echo "dataset= ${dataset}"
-	for thread in 1; do
+	for thread in 1 2; do
 		echo "thread_num = ${thread}"
 		for block in 4; do
 			echo "block_num = ${block}"
-			bin/PLSACluster data/${dataset}.mat 6 50 10 ${thread} ${block} 0
+			bin/PLSACluster ../datasets/docword.${dataset}.txt 6 50 10 ${thread} ${block} 0
 			echo ""
 			sleep 1
 		done	

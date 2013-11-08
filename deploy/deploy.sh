@@ -9,10 +9,7 @@ sudo apt-get install libboost-all-dev -q -y
 sudo apt-get install openjdk-6-jre -q -y
 
 # ===== Download vowpal_wabbit library for topic modeling =====
-mkdir topicmod
-cd topicmod
 git clone git://github.com/JohnLangford/vowpal_wabbit.git
-cd ..
 
 ## ==== configure git =====
 git config --global user.name "Alexander Frey"

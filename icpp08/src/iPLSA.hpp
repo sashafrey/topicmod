@@ -112,8 +112,13 @@ private:
 
 	// methods
 	
-	/// Load the matrix file and initialize data, dataVector, and testData
-	bool loadMatrixFile();
+    bool loadMatrixFile();
+
+	/// Load the matrix file and initialize data, dataVector, and testData (in native ICPP format)
+	bool loadMatrixFileICPP();
+
+    // Loads the matrix from file in UCI format
+    bool loadMatrixFileUCI();
 
 	/// Copy current iteration data to best iteration data
 	void setBestToCurrent();

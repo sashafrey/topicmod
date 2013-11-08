@@ -31,7 +31,18 @@ void alignedDelete(T* p){
 	AlignAlloc::al_free(p);
 }
 
-bool iPLSA::loadMatrixFile()
+bool iPLSA::loadMatrixFile() {
+    if ((matFileName.length() >= 4) && (0 == matFileName.compare(matFileName.length() - 3, 3, ".mat"))) {
+        return loadMatrixFileICPP();
+    } else if ((matFileName.length() >= 4) && (0 == matFileName.compare(matFileName.length() - 3, 3, ".txt"))) {
+        return loadMatrixFileUCI();
+    } else {
+        cerr << "Matrix filename should either end with .mat or .txt" << endl;
+        return false;
+    }
+}
+
+bool iPLSA::loadMatrixFileICPP()
 {
    ifstream matFile( matFileName.c_str() );
     // should we handle exception here?
@@ -111,6 +122,54 @@ bool iPLSA::loadMatrixFile()
         //cerr << "numNonZero: " << numNonZero << endl;
         return false;
     }
+    matFile.close();
+    return true;
+}
+
+bool iPLSA::loadMatrixFileUCI() {
+    ifstream matFile( matFileName.c_str() );
+    // should we handle exception here?
+    if ( !matFile.good() )
+    {
+        cerr << "Error opening matrix file." << endl;
+        matFile.close();
+        return false;
+    }
+
+    matFile >> sizeD;
+    matFile >> sizeW;
+    // the number of non-zero elements in the matrix
+    int numNonZero;
+    matFile >> numNonZero;
+
+    // set up data and testData.
+    vector<int> * dataFreq = new vector<int>[ sizeW ];
+    vector<int> * dataDocID = new vector<int>[ sizeW ];
+    vector<int> * testDataFreq = new vector<int>[ sizeW ];
+    vector<int> * testDataDocID = new vector<int>[ sizeW ];
+
+    int d, termID, freq;
+    for (int i = 0; i < numNonZero; i++) 
+    {
+        matFile >> d >> termID >> freq;
+        int r = rand();
+        if ( ( r % testPercentage ) == 0 )
+        {
+            testDataFreq[ termID ].push_back( freq );
+            testDataDocID[ termID ].push_back( d );
+        } else {
+            dataFreq[ termID ].push_back( freq );
+            dataDocID[ termID ].push_back( d );
+        }
+    }
+
+    divideTrainData(numBlocks,dataFreq,dataDocID,freqs,docIDs,rowStarts,wStart,dStart);
+	delete[] dataFreq;
+	delete[] dataDocID;
+	divideTestData(numTestBlocks,testDataFreq,testDataDocID,testFreqs,testDocIDs,testRowStarts);
+	delete[] testDataFreq;
+	delete[] testDataDocID;
+
     matFile.close();
     return true;
 }

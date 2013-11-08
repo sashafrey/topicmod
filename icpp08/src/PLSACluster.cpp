@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stdlib.h>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include "iPLSA.hpp"
 #include "PCluster.hpp"
 #include <fstream>
@@ -13,21 +15,66 @@ int main(int argc, char * argv[]){
 //	VTPauseSampling();
 
 	if(argc!=8){
-		cout<<"usage: PLSACluster <file> <numClusters> <numLS> <numIters> <numThreads> <numBlocks> <pos>"<<endl;
+		cout<<"usage: PLSACluster <file> <dictionary> <numClusters> <numLS> <numIters> <numThreads> <numBlocks> <pos>"<<endl;
 		return 1;
 	}
 
-	PCluster pp(argv[1]);
-
-	int numClusters=atoi(argv[2]);
-	int numLS=atoi(argv[3]);
-	int numIters=atoi(argv[4]);
-	int numThreads=atoi(argv[5]);
-	int numBlocks=atoi(argv[6]);
-	int pos=atoi(argv[7]);
+    int iarg = 1;
+	PCluster pp(argv[iarg++]);
+    iarg++; // skip dictionary;
+    int numClusters=atoi(argv[iarg++]);
+	int numLS=atoi(argv[iarg++]);
+	int numIters=atoi(argv[iarg++]);
+	int numThreads=atoi(argv[iarg++]);
+	int numBlocks=atoi(argv[iarg++]);
+	int pos=atoi(argv[iarg++]);
 	omp_set_num_threads(numThreads);
 
 	pp.analyze(numLS,numIters,10,numThreads,numBlocks,pos);
+
+
+    iPLSA* plsa = pp.getPLSA();
+    cout << "Weights of categories : " ;
+    for (int i = 0; i < plsa->numCats(); i++) {
+        cout << plsa->get_p_z()[i] << " ";
+    }
+    cout << endl;
+
+    cout << "Top 10 words per category:\n";
+    int numWords = plsa->numWords();
+
+    std::vector<std::string> dictionary;
+    ifstream matFile( argv[1] );
+     // should we handle exception here?
+    if ( !matFile.good() )
+    {
+        cerr << "Error opening dictionary file." << endl;
+        matFile.close();
+        return 1;
+    }
+
+    char buff[128];
+    for (int iWord = 0; iWord < numWords; ++iWord) {
+        matFile.getline(buff, 128);
+        dictionary.push_back(buff);
+    }
+
+    int wordsToSort = 10;
+    for (int i = 0; i < plsa->numCats(); i++) {
+        cout << "#" << (i+1) << ": ";
+        double* p_w_raw = plsa->get_p_w_z()[i];
+        std::vector<std::pair<double, int>> p_w(numWords);
+        for (int iWord = 0; iWord < numWords; iWord++) {
+            p_w.push_back(std::pair<double, int>(p_w_raw[i], i));
+        }
+
+        std::sort(p_w.begin(), p_w.end());
+        for (int iWord = numWords - 1; (iWord >= 0) && (iWord >= numWords - wordsToSort); iWord--) {
+            cout << dictionary[p_w[iWord].second] << " ";
+        }
+
+        cout << endl;
+    }
 /*
 	pp.doCluster(numClusters,5,3);
 	Cluster c=pp.result();

@@ -8,6 +8,11 @@ sudo apt-get install build-essential -q -y
 sudo apt-get install libboost-all-dev -q -y
 sudo apt-get install openjdk-6-jre -q -y
 
+# nfs from deploy server
+sudo apt-get install nfs-common 
+sudo mkdir /deploy
+sudo mount ec2-54-228-62-190.eu-west-1.compute.amazonaws.com:/deploy /deploy
+
 # ===== Download vowpal_wabbit library for topic modeling =====
 git clone git://github.com/JohnLangford/vowpal_wabbit.git
 

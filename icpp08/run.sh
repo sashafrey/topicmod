@@ -18,7 +18,7 @@ for dataset in enron; do
 		echo "thread_num = ${thread}"
 		for block in 8; do
 			echo "block_num = ${block}"
-			bin/PLSACluster ../datasets/docword.${dataset}.txt ../datasets/vocab.${dataset}.txt 6 10 15 ${thread} ${block} 0
+			bin/PLSACluster /shared/topicmod/datasets/docword.${dataset}.txt /shared/topicmod/datasets/vocab.${dataset}.txt 6 10 15 ${thread} ${block} 0
 			echo ""
 			sleep 1
 		done	

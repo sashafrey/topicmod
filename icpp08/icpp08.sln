@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PLSA", "src\PLSA.vcxproj", "{8527CAC9-7A8F-4FAC-A58A-72DAC601701D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlsaBatchEM", "PlsaBatchEM\PlsaBatchEM.vcxproj", "{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -10,9 +12,11 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8527CAC9-7A8F-4FAC-A58A-72DAC601701D}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8527CAC9-7A8F-4FAC-A58A-72DAC601701D}.Debug|Win32.Build.0 = Debug|Win32
 		{8527CAC9-7A8F-4FAC-A58A-72DAC601701D}.Release|Win32.ActiveCfg = Release|Win32
-		{8527CAC9-7A8F-4FAC-A58A-72DAC601701D}.Release|Win32.Build.0 = Release|Win32
+		{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}.Debug|Win32.Build.0 = Debug|Win32
+		{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}.Release|Win32.ActiveCfg = Release|Win32
+		{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

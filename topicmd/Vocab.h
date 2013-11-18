@@ -8,4 +8,4 @@
 typedef std::vector<std::string> Vocab;
 typedef std::auto_ptr<Vocab> VocabPtr;
 
-#endif __VOCAB
+#endif // __VOCAB

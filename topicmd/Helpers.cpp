@@ -33,9 +33,8 @@ DocWordMatrix::Ptr loadMatrixFileUCI(string matFileName)
         matFile >> docId >> termId >> freq;
         
         // convert unity-based indexes into zero-based
-        docId = docId--; 
-        termId = termId --;
-
+        docId--; 
+        termId--;
         retval->getFreq(docId).push_back( (DataType)freq );
         retval->getTermId(docId).push_back( termId );
     }

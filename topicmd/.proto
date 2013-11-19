@@ -1,0 +1,50 @@
+package topicmd
+
+enum ContractVersion {
+  V_01 = 0;
+}
+
+message ItemsVector {
+  optional ContractVersion contract_version = 1 [default = V_01];
+  repeated string tokens = 2;
+
+  enum OperationType {
+    INSERT = 0;
+    UPDATE = 1;
+    DELETE = 2;
+  }
+
+  message Item {
+    optional int32 id = 1;
+    optional OperationType operation = 2 [default = INSERT];
+    repeated int32 token_ids = 3;
+    repeated int32 token_counts = 4;
+  }
+
+  repeated Item items = 3;
+}
+
+message Configuration {
+  enum ProcessorType {
+    BATCH_PLSA = 0;
+  }
+
+  optional ContractVersion contract_version = 1 [default = V_01];
+  optional string index_location = 2;
+  optional bool process_items_on_publish = 3 [default = false];
+  optional int index_readers_count = 4 [default = 1];
+  optional int processors_count = 5 [default = 1];
+}
+
+message LoggerConfiguration {
+  string log_location = 1;
+
+  enum Level {
+    ERROR = 1;
+    WARNING = 2;
+    INFO = 3;
+    VERBOSE = 4;
+  }
+
+  Level level = 2 [default = INFO];
+}

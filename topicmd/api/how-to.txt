@@ -1,0 +1,12 @@
+How to re-generate code from api.proto file?
+1. wget https://protobuf.googlecode.com/files/protobuf-2.5.0.tar.gz
+2. tar xvzf protobuf-2.5.0.tar.gz
+3. vi README.txt, and perform the following steps:
+      $ ./configure
+      $ make
+      $ make check
+      $ make install
+4. If protoc compiler don't start, execute this command:
+      $ export LD_LIBRARY_PATH="/usr/local/lib"
+   To make this change permanent, add this command to ~/.bashrc
+5.    $ protoc --cpp_out=. api.proto

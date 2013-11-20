@@ -1,5 +1,5 @@
 all: Helpers.cpp PlsaBatchEm.cpp srcMain.cpp
-	g++ -g -o topicmd Helpers.cpp PlsaBatchEm.cpp srcMain.cpp -I.
+	g++ -g -o topicmd Helpers.cpp PlsaBatchEm.cpp srcMain.cpp api/api.pb.cc -I. -lprotobuf 
 
 clean: 
 	rm topicmd

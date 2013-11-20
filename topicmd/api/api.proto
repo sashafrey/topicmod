@@ -1,4 +1,4 @@
-package topicmd
+package topicmd;
 
 enum ContractVersion {
   V_01 = 0;
@@ -32,12 +32,12 @@ message Configuration {
   optional ContractVersion contract_version = 1 [default = V_01];
   optional string index_location = 2;
   optional bool process_items_on_publish = 3 [default = false];
-  optional int index_readers_count = 4 [default = 1];
-  optional int processors_count = 5 [default = 1];
+  optional int32 index_readers_count = 4 [default = 1];
+  optional int32 processors_count = 5 [default = 1];
 }
 
 message LoggerConfiguration {
-  string log_location = 1;
+  optional string log_location = 1;
 
   enum Level {
     ERROR = 1;
@@ -46,5 +46,5 @@ message LoggerConfiguration {
     VERBOSE = 4;
   }
 
-  Level level = 2 [default = INFO];
+  optional Level level = 2 [default = INFO];
 }

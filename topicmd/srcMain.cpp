@@ -9,7 +9,21 @@ using namespace std;
 #include "Vocab.h"
 #include "Helpers.h"
 
+#include "api/api.pb.h"
+using namespace topicmd;
+
 int main(int argc, char * argv[]) {
+  ItemsVector iv;
+  ItemsVector::Item* item = iv.add_items();
+  item->add_token_ids(1);
+  item->add_token_counts(4);
+  item->add_token_ids(2);
+  item->add_token_counts(2);
+  cout << item->token_ids_size() << endl;
+  
+  //  ItemsVector::Item* item = iv.add_items();
+
+  /*
     if (argc != 4) {
         cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
         return 0;
@@ -102,6 +116,6 @@ int main(int argc, char * argv[]) {
         logTopWordsPerTopic(phi, 7);
         cout << endl;
     }
-
+  */
     return 0;
 }

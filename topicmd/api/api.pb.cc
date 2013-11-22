@@ -215,7 +215,7 @@ void protobuf_AssignDesc_api_2eproto() {
       sizeof(TokenTopics));
   ModelTopics_descriptor_ = file->message_type(9);
   static const int ModelTopics_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, token_topics_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, token_topic_),
   };
   ModelTopics_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -317,10 +317,10 @@ void protobuf_AddDesc_api_2eproto() {
     "d\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"7\n\013BatchTo"
     "pics\022(\n\013item_topics\030\001 \003(\0132\023.topicmd.Item"
     "Topics\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010"
-    "token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\"9\n\013"
-    "ModelTopics\022*\n\014token_topics\030\001 \003(\0132\024.topi"
-    "cmd.TokenTopics*\033\n\rOperationType\022\n\n\006INSE"
-    "RT\020\000", 964);
+    "token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\"8\n\013"
+    "ModelTopics\022)\n\013token_topic\030\001 \003(\0132\024.topic"
+    "md.TokenTopics*\033\n\rOperationType\022\n\n\006INSER"
+    "T\020\000", 963);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "api.proto", &protobuf_RegisterTypes);
   Field::_default_field_name_ =
@@ -2918,7 +2918,7 @@ void TokenTopics::Swap(TokenTopics* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int ModelTopics::kTokenTopicsFieldNumber;
+const int ModelTopics::kTokenTopicFieldNumber;
 #endif  // !_MSC_VER
 
 ModelTopics::ModelTopics()
@@ -2971,7 +2971,7 @@ ModelTopics* ModelTopics::New() const {
 }
 
 void ModelTopics::Clear() {
-  token_topics_.Clear();
+  token_topic_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2982,17 +2982,17 @@ bool ModelTopics::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .topicmd.TokenTopics token_topics = 1;
+      // repeated .topicmd.TokenTopics token_topic = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_token_topics:
+         parse_token_topic:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_token_topics()));
+                input, add_token_topic()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(10)) goto parse_token_topics;
+        if (input->ExpectTag(10)) goto parse_token_topic;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3015,10 +3015,10 @@ bool ModelTopics::MergePartialFromCodedStream(
 
 void ModelTopics::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .topicmd.TokenTopics token_topics = 1;
-  for (int i = 0; i < this->token_topics_size(); i++) {
+  // repeated .topicmd.TokenTopics token_topic = 1;
+  for (int i = 0; i < this->token_topic_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->token_topics(i), output);
+      1, this->token_topic(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3029,11 +3029,11 @@ void ModelTopics::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ModelTopics::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .topicmd.TokenTopics token_topics = 1;
-  for (int i = 0; i < this->token_topics_size(); i++) {
+  // repeated .topicmd.TokenTopics token_topic = 1;
+  for (int i = 0; i < this->token_topic_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->token_topics(i), target);
+        1, this->token_topic(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3046,12 +3046,12 @@ void ModelTopics::SerializeWithCachedSizes(
 int ModelTopics::ByteSize() const {
   int total_size = 0;
 
-  // repeated .topicmd.TokenTopics token_topics = 1;
-  total_size += 1 * this->token_topics_size();
-  for (int i = 0; i < this->token_topics_size(); i++) {
+  // repeated .topicmd.TokenTopics token_topic = 1;
+  total_size += 1 * this->token_topic_size();
+  for (int i = 0; i < this->token_topic_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->token_topics(i));
+        this->token_topic(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -3079,7 +3079,7 @@ void ModelTopics::MergeFrom(const ::google::protobuf::Message& from) {
 
 void ModelTopics::MergeFrom(const ModelTopics& from) {
   GOOGLE_CHECK_NE(&from, this);
-  token_topics_.MergeFrom(from.token_topics_);
+  token_topic_.MergeFrom(from.token_topic_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -3102,7 +3102,7 @@ bool ModelTopics::IsInitialized() const {
 
 void ModelTopics::Swap(ModelTopics* other) {
   if (other != this) {
-    token_topics_.Swap(&other->token_topics_);
+    token_topic_.Swap(&other->token_topic_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

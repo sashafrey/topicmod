@@ -10,31 +10,103 @@ using namespace std;
 #include "Helpers.h"
 
 #include "api/api.pb.h"
+#include "topicmd_api.h"
+
 using namespace topicmd;
 
+inline char* string_as_array(string* str) {
+  return str->empty() ? NULL : &*str->begin();
+}
+
 int main(int argc, char * argv[]) {
-  ItemsVector iv;
-  ItemsVector::Item* item = iv.add_items();
-  item->add_token_ids(1);
-  item->add_token_counts(4);
-  item->add_token_ids(2);
-  item->add_token_counts(2);
-  cout << item->token_ids_size() << endl;
+  if (argc != 4) {
+    cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
+    return 0;
+  }
+
+  // Create instance
+  string instance_config_blob;
+  InstanceConfig instance_config;
+  instance_config.SerializeToString(&instance_config_blob);
+  int instance_id = create_instance(0,
+				    instance_config_blob.size(), 
+				    string_as_array(&instance_config_blob));
   
+  // Create model
+  int nTopics = atoi(argv[3]);
+  string model_config_blob;
+  ModelConfig model_config;
+  model_config.set_topics_count(nTopics);
+  model_config.SerializeToString(&model_config_blob);
+  int model_id = create_model(instance_id, 
+			      0,
+			      model_config_blob.size(), 
+			      string_as_array(&model_config_blob));
+  
+  // Load doc-word matrix
+  DocWordMatrix::Ptr pD = loadMatrixFileUCI(argv[1]);
+  VocabPtr pVocab = loadVocab(argv[2], pD->getW());
+  int nWords = pD->getW();
+  int nDocs = pD->getD();
+
+  Batch batch;
+  for (int i = 0; i < nWords; i++) {
+    batch.add_token((*pVocab)[i]);
+  }
+
+  for (int iDoc = 0; iDoc < nDocs; iDoc++) {
+    auto term_ids = pD->getTermId(iDoc);
+    auto term_counts = pD->getFreq(iDoc);
+
+    Item* item = batch.add_item();
+    Field* field = item->add_field();
+    for (int iWord = 0; iWord < term_ids.size(); ++iWord) {
+      field->add_token_id(term_ids[iWord]);
+      field->add_token_count(term_counts[iWord]);
+    }
+  }
+
+  cout << "Number of documents: " << batch.item().size();
+  for (int i = 0; i < batch.item().size(); i++) {
+    cout << batch.item().Get(i).field().Get(0).token_id().size() << " ";
+  }
+
+  // Index doc-word matrix
+  string batch_blob;
+  batch.SerializeToString(&batch_blob);
+  insert_batch(instance_id, batch_blob.size(), string_as_array(&batch_blob));
+  int generation_id = finish_generation(instance_id);
+  publish_generation(instance_id, generation_id);
+  
+  // Run one tuning iteration
+  run_tuning_iteration(instance_id);
+
+  // Request model topics
+  int length;
+  char* address;
+  int request_id = request_model_topics(instance_id, model_id, &length, &address);
+  string model_topics_blob;
+  model_topics_blob.resize(length);
+  copy_request_result(request_id, 
+		      length, 
+		      string_as_array(&model_topics_blob));
+  ModelTopics model_topics;
+  model_topics.ParseFromString(model_topics_blob);
+  cout << "Number of tokens in model topic: " 
+       << model_topics.token_topic_size()
+       << endl;
+
+  dispose_request(request_id);
+  dispose_model(instance_id, model_id);
+  dispose_instance(instance_id);
+  
+
+
+
+
   //  ItemsVector::Item* item = iv.add_items();
 
   /*
-    if (argc != 4) {
-        cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
-        return 0;
-    }
-
-    DocWordMatrix::Ptr pD = loadMatrixFileUCI(argv[1]);
-    VocabPtr pVocab = loadVocab(argv[2], pD->getW());
-    int nTopics = atoi(argv[3]);
-
-    int nWords = pD->getW();
-    int nDocs = pD->getD();
     WordTopicMatrix phi(nWords, nTopics, pVocab.get());
     for (int i = 0; i < nWords * nTopics; ++i) {
         phi.get()[i] = (DataType)rand() / (DataType)RAND_MAX;

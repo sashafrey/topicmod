@@ -1126,24 +1126,24 @@ class ModelTopics : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .topicmd.TokenTopics token_topics = 1;
-  inline int token_topics_size() const;
-  inline void clear_token_topics();
-  static const int kTokenTopicsFieldNumber = 1;
-  inline const ::topicmd::TokenTopics& token_topics(int index) const;
-  inline ::topicmd::TokenTopics* mutable_token_topics(int index);
-  inline ::topicmd::TokenTopics* add_token_topics();
+  // repeated .topicmd.TokenTopics token_topic = 1;
+  inline int token_topic_size() const;
+  inline void clear_token_topic();
+  static const int kTokenTopicFieldNumber = 1;
+  inline const ::topicmd::TokenTopics& token_topic(int index) const;
+  inline ::topicmd::TokenTopics* mutable_token_topic(int index);
+  inline ::topicmd::TokenTopics* add_token_topic();
   inline const ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics >&
-      token_topics() const;
+      token_topic() const;
   inline ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics >*
-      mutable_token_topics();
+      mutable_token_topic();
 
   // @@protoc_insertion_point(class_scope:topicmd.ModelTopics)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics > token_topics_;
+  ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics > token_topic_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -1920,29 +1920,29 @@ TokenTopics::mutable_topic_weight() {
 
 // ModelTopics
 
-// repeated .topicmd.TokenTopics token_topics = 1;
-inline int ModelTopics::token_topics_size() const {
-  return token_topics_.size();
+// repeated .topicmd.TokenTopics token_topic = 1;
+inline int ModelTopics::token_topic_size() const {
+  return token_topic_.size();
 }
-inline void ModelTopics::clear_token_topics() {
-  token_topics_.Clear();
+inline void ModelTopics::clear_token_topic() {
+  token_topic_.Clear();
 }
-inline const ::topicmd::TokenTopics& ModelTopics::token_topics(int index) const {
-  return token_topics_.Get(index);
+inline const ::topicmd::TokenTopics& ModelTopics::token_topic(int index) const {
+  return token_topic_.Get(index);
 }
-inline ::topicmd::TokenTopics* ModelTopics::mutable_token_topics(int index) {
-  return token_topics_.Mutable(index);
+inline ::topicmd::TokenTopics* ModelTopics::mutable_token_topic(int index) {
+  return token_topic_.Mutable(index);
 }
-inline ::topicmd::TokenTopics* ModelTopics::add_token_topics() {
-  return token_topics_.Add();
+inline ::topicmd::TokenTopics* ModelTopics::add_token_topic() {
+  return token_topic_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics >&
-ModelTopics::token_topics() const {
-  return token_topics_;
+ModelTopics::token_topic() const {
+  return token_topic_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics >*
-ModelTopics::mutable_token_topics() {
-  return &token_topics_;
+ModelTopics::mutable_token_topic() {
+  return &token_topic_;
 }
 
 

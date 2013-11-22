@@ -73,5 +73,5 @@ message TokenTopics {
 }
 
 message ModelTopics {
-  repeated TokenTopics token_topics = 1;
+  repeated TokenTopics token_topic = 1;
 }

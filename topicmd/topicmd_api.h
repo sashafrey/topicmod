@@ -6,23 +6,55 @@
 
 extern "C" {
 
-int create_topicmd_instance(int length, const byte* buffer_configuration);
-int update_topicmd_instance(int instance_id, int length, const byte* buffer_configuration);
-void destroy_topicmd_instance(int instance_id);
+  int commit_generation(int instance_id, int generation_id);
 
-int insert_items(int instance_id, int length, const byte* buffer_items_vector);
-int publish_items(int instance_id, int generation_id);
-int commit_items(int instance_id, int generation_id);
+  int complete_request(int request_id);
 
-int process_items(int instance_id, int length, const byte* buffer_ids_vector);
-int process_all_indexed_items(int instance_id);
+  int configure_logger(int length, const byte* logger_config);
 
-int configure_logger(int length, const byte* logger_configuration);
+  int copy_request_result(int request_id, int length, byte* address);
 
-int request_word_topic_matrix(int instance_id, int *length, byte **address);
+  int create_instance(int instance_id, 
+		      int length, 
+		      const byte* instance_config_blob);
 
-int copy_request_result(int request_id, int length, byte* address);
-int finish_request(int request_id);
+  int create_model(int instance_id,
+		   int model_id,
+		   int length, 
+		   const byte* model_config_blob);
+
+  void destroy_instance(int instance_id);
+
+  void destroy_model(int instance_id, int model_id);
+
+  int finish_generation(int instance_id);
+
+  int insert_batch(int instance_id, int length, const byte* batch_blob);
+
+  int publish_generation(int instance_id, int generation_id);
+
+  int reconfigure_instance(int instance_id,
+			   int length, 
+			   const byte* instance_config_blob);
+
+  int reconfigure_model(int instance_id,
+			int model_id,
+			int length,
+			const byte* model_config_blob);
+
+  int request_batch_topics(int instance_id,
+		     int model_id,
+		     int batch_length,
+		     const byte* batch_blob,
+		     int *length,
+		     const byte** result);	    
+
+  int request_model_topics(int instance_id,
+		    int model_id,
+		    int *length,
+		    byte **address);
+
+  int run_tuning_iteration(int instance_id);
 
 }
 

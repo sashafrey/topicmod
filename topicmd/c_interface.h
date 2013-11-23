@@ -1,11 +1,10 @@
-#ifndef __TOPICMD_API
-#define __TOPICMD_API
+#ifndef TOPICMD_H_
+#define TOPICMD_H_
 
 #define TOPICMD_ERROR -1
 #define TOPICMD_SUCCESS 0
 
 extern "C" {
-
   int commit_generation(int instance_id, int generation_id);
 
   int configure_logger(int length, const char* logger_config);
@@ -55,7 +54,7 @@ extern "C" {
 		    char **address);
 
   int run_tuning_iteration(int instance_id);
-
 }
 
-#endif // __TOPICMD_API
+
+#endif // TOPICMD_H_

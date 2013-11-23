@@ -4,9 +4,9 @@
 #include <memory>
 #include <string>
 
-#include "DocWordMatrix.h"
-#include "WordTopicMatrix.h"
-#include "Vocab.h"
+#include "doc_token_matrix.h"
+#include "token_topic_matrix.h"
+#include "vocab.h"
 
 DocWordMatrix::Ptr loadMatrixFileUCI(std::string matFileName);
 VocabPtr loadVocab(std::string vocabFile, int nWords);

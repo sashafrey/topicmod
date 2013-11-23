@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "Common.h"
+#include "common.h"
 
 class DocTopicMatrix 
 {

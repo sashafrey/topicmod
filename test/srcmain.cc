@@ -3,14 +3,15 @@
 
 using namespace std;
 
-#include "DocWordMatrix.h"
-#include "WordTopicMatrix.h"
-#include "DocTopicMatrix.h"
-#include "Vocab.h"
-#include "Helpers.h"
+#include "doc_token_matrix.h"
+#include "token_topic_matrix.h"
+#include "doc_topic_matrix.h"
+#include "vocab.h"
+#include "helpers.h"
 
-#include "api/api.pb.h"
-#include "topicmd_api.h"
+// topicmd library
+#include "topicmd/cpp_interface.h"
+#include "topicmd/messages.pb.h"
 
 using namespace topicmd;
 
@@ -25,23 +26,25 @@ int main(int argc, char * argv[]) {
   }
 
   // Create instance
-  string instance_config_blob;
   InstanceConfig instance_config;
-  instance_config.SerializeToString(&instance_config_blob);
-  int instance_id = create_instance(0,
-				    instance_config_blob.size(), 
-				    string_as_array(&instance_config_blob));
-  
+  // string instance_config_blob;
+  // instance_config.SerializeToString(&instance_config_blob);
+  // int instance_id = create_instance(0,
+  //				    instance_config_blob.size(), 
+  //				    string_as_array(&instance_config_blob));
+  int instance_id = create_instance(0, instance_config);
+
   // Create model
   int nTopics = atoi(argv[3]);
-  string model_config_blob;
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-  model_config.SerializeToString(&model_config_blob);
-  int model_id = create_model(instance_id, 
-			      0,
-			      model_config_blob.size(), 
-			      string_as_array(&model_config_blob));
+  // string model_config_blob;
+  // model_config.SerializeToString(&model_config_blob);
+  // int model_id = create_model(instance_id, 
+  // 			      0,
+  //			      model_config_blob.size(), 
+  //			      string_as_array(&model_config_blob));
+  int model_id = create_model(instance_id, 0, model_config);
   
   // Load doc-word matrix
   DocWordMatrix::Ptr pD = loadMatrixFileUCI(argv[1]);
@@ -72,9 +75,10 @@ int main(int argc, char * argv[]) {
   }
 
   // Index doc-word matrix
-  string batch_blob;
-  batch.SerializeToString(&batch_blob);
-  insert_batch(instance_id, batch_blob.size(), string_as_array(&batch_blob));
+  // string batch_blob;
+  // batch.SerializeToString(&batch_blob);
+  // insert_batch(instance_id, batch_blob.size(), string_as_array(&batch_blob));
+  insert_batch(instance_id, batch);
   int generation_id = finish_generation(instance_id);
   publish_generation(instance_id, generation_id);
   
@@ -82,29 +86,30 @@ int main(int argc, char * argv[]) {
   run_tuning_iteration(instance_id);
 
   // Request model topics
-  int length;
-  char* address;
-  int request_id = request_model_topics(instance_id, model_id, &length, &address);
-  string model_topics_blob;
-  model_topics_blob.resize(length);
-  copy_request_result(request_id, 
-		      length, 
-		      string_as_array(&model_topics_blob));
+  // int length;
+  // char* address;
+  // int request_id = request_model_topics(instance_id, 
+  // 					model_id, 
+  //					&length,
+  //					&address);
+
+  // string model_topics_blob;
+  // model_topics_blob.resize(length);
+  // copy_request_result(request_id, 
+  //		      length, 
+  //		      string_as_array(&model_topics_blob));
+
   ModelTopics model_topics;
-  model_topics.ParseFromString(model_topics_blob);
+  //  model_topics.ParseFromString(model_topics_blob);
+  request_model_topics(instance_id, model_id, &model_topics);
+
   cout << "Number of tokens in model topic: " 
        << model_topics.token_topic_size()
        << endl;
 
-  dispose_request(request_id);
+  // dispose_request(request_id);
   dispose_model(instance_id, model_id);
   dispose_instance(instance_id);
-  
-
-
-
-
-  //  ItemsVector::Item* item = iv.add_items();
 
   /*
     WordTopicMatrix phi(nWords, nTopics, pVocab.get());

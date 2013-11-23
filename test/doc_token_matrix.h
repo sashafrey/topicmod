@@ -6,7 +6,7 @@
 
 #include <assert.h>
 
-#include "Common.h"
+#include "common.h"
 
 class DocWordMatrix 
 {

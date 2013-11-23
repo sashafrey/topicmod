@@ -1,9 +1,9 @@
-#include "topicmd_api.h"
+#include "c_interface.h"
 
 #include <string>
 using namespace std;
 
-#include "api/api.pb.h"
+#include "messages.pb.h"
 
 string message;
 inline char* string_as_array(string* str) {

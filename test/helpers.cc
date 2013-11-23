@@ -1,4 +1,4 @@
-#include "Helpers.h"
+#include "helpers.h"
 
 #include <algorithm>
 #include <fstream>
@@ -6,9 +6,9 @@
 #include <string>
 #include <vector>
 
-#include "DocWordMatrix.h"
-#include "WordTopicMatrix.h"
-#include "Vocab.h"
+#include "doc_topic_matrix.h"
+#include "token_topic_matrix.h"
+#include "vocab.h"
 
 using namespace std;
 

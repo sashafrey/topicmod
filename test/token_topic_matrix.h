@@ -4,8 +4,8 @@
 #include <assert.h>
 #include <stdlib.h>
 
-#include "Common.h"
-#include "Vocab.h"
+#include "common.h"
+#include "vocab.h"
 
 class WordTopicMatrix 
 {

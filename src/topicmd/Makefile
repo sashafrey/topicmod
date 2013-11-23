@@ -16,8 +16,7 @@
 # Remember to tweak this if you move this file.
 GTEST_DIR = ../../gtest
 
-# Where to find user code.
-USER_DIR = .
+CXX = g++
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -25,11 +24,24 @@ USER_DIR = .
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -Wextra -pthread
+CXXFLAGS += -g -Wall -pthread -fPIC
+
+# Linker flags
+LDFLAGS += 
+
+TARGET_LIB  = libtopicmd.so
+SRCS_LIB    = messages.pb.cc cpp_interface.cc c_interface.cc
+OBJS_LIB    = $(SRCS_LIB:.cc=.o)
+DEPS_LIB    = $(SRCS_LIB:.cc=.depends)
+
+TARGET_TEST = unittests
+SRCS_TEST   = sample1.cc sample1_unittest.cc cpp_interface_unittest.cc 
+OBJS_TEST   = $(SRCS_TEST:.cc=.o)
+DEPS_TEST   = $(SRCS_TEST:.cc=.depends)
 
 # All tests produced by this Makefile.  Remember to add new tests you
 # created to the list.
-TESTS = sample1_unittest
+#TESTS = sample1_unittest cpp_interface_unittest
 
 # All Google Test headers.  Usually you shouldn't change this
 # definition.
@@ -38,16 +50,18 @@ GTEST_HEADERS = $(GTEST_DIR)/include/gtest/*.h \
 
 # House-keeping build targets.
 
-all : $(TESTS)
+#all : $(TESTS)
 
-clean :
-	rm -f $(TESTS) gtest.a gtest_main.a *.o
+#clean :
+#	rm -f $(TESTS) gtest.a gtest_main.a *.o
 
 # Builds gtest.a and gtest_main.a.
 
 # Usually you shouldn't tweak such internal variables, indicated by a
 # trailing _.
 GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
+
+all: $(TARGET_LIB) $(TARGET_TEST)
 
 # For simplicity and to avoid depending on Google Test's
 # implementation details, the dependencies specified below are
@@ -71,24 +85,32 @@ gtest_main.a : gtest-all.o gtest_main.o
 # gtest_main.a, depending on whether it defines its own main()
 # function.
 
-sample1.o : $(USER_DIR)/sample1.cc $(USER_DIR)/sample1.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/sample1.cc
+.PHONY: clean all
 
-sample1_unittest.o : $(USER_DIR)/sample1_unittest.cc \
-                     $(USER_DIR)/sample1.h $(GTEST_HEADERS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $(USER_DIR)/sample1_unittest.cc
+$(TARGET_LIB): $(OBJS_LIB)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -shared $^ -o $@
+	sudo cp libtopicmd.so /usr/lib/
 
-sample1_unittest : sample1.o sample1_unittest.o gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -lpthread $^ -o $@
+$(TARGET_TEST): $(OBJS_TEST) gtest_main.a
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -ltopicmd $^ -o $@
 
-test:
-	./sample1_unittest
+.cc.o:
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-lib:
-	g++ -Wall -shared -fPIC -o libtopicmd.so messages.pb.cc cpp_interface.cc c_interface.cc 
-	sudo mv libtopicmd.so /usr/lib/
+%.depends: %.cc
+	$(CXX) -M $(CPPFLAGS) $(CXXFLAGS) $< > $@
 
-proto:
+clean:
+	 rm -f $(OBJS_LIB) $(DEPS_LIB) $(TARGET_LIB) \
+               $(OBJS_TEST) $(DEPS_TEST) $(TARGET_TEST)
+
+-include $(DEPS_LIB)
+-include $(DEPS_TEST)
+
+proto : 
 	protoc --cpp_out=. messages.proto
 	protoc --python_out=. messages.proto
 	protoc --java_out=./.. messages.proto
+
+test : unittests
+	./unittests

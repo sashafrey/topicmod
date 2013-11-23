@@ -1,16 +1,18 @@
-all: Helpers.cpp PlsaBatchEm.cpp srcMain.cpp
-	g++ -g -std=c++11 -o topicmd helpers.cpp srcmain.cpp -I. -lprotobuf -ltopicmd
-
 lib:
-	cd src/topicmd; make; cd ../..
+	cd src/topicmd; make lib; make all; cd ../..
 
 clean: 
-	rm topicmd
+	cd src/topicmd; make clean; cd ../..
+	cd src/cpp_client; make clean; cd ../..
 
 test:
-	./test/topicmd datasets/docword.kos.txt datasets/vocab.kos.txt 16
+	cd src/topicmd; make test; cd ../..
 
 proto:
 	cd src/topicmd; make proto; cd ../..
 
-.PHONY: all clean test
+cpp_client:
+	cd src/cpp_client; make; cd ../..
+
+cpp_client_test:
+	cd src/cpp_client; make test; cd ../..

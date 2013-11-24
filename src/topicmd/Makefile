@@ -22,20 +22,22 @@ CPPFLAGS += -I..
 CPPFLAGS += -isystem $(GTEST_DIR)/include
 
 # Flags passed to the C++ compiler.
-CXXFLAGS += -g -Wall -pthread -fPIC
+CXXFLAGS += -g -Wall -pthread -fPIC -std=c++11
 
 # Linker flags
 LDFLAGS += 
 
 # First target - shared library
 TARGET_LIB  = libtopicmd.so
-SRCS_LIB    = messages.pb.cc cpp_interface.cc c_interface.cc
+SRCS_LIB    = messages.pb.cc cpp_interface.cc c_interface.cc \
+              instance_manager.cc
 OBJS_LIB    = $(SRCS_LIB:.cc=.o)
 DEPS_LIB    = $(SRCS_LIB:.cc=.depends)
 
 # Second target - executable (unittests)
 TARGET_TEST = unittests
-SRCS_TEST   = sample1.cc sample1_unittest.cc cpp_interface_unittest.cc 
+SRCS_TEST   = sample1.cc sample1_unittest.cc cpp_interface_unittest.cc \
+              instance_manager_test.cc
 OBJS_TEST   = $(SRCS_TEST:.cc=.o)
 DEPS_TEST   = $(SRCS_TEST:.cc=.depends)
 

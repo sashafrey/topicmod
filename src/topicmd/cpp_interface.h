@@ -1,13 +1,18 @@
 #ifndef TOPICMD_CPP_H
 #define TOPICMD_CPP_H
 
-#include "messages.pb.h"
+#include "topicmd/messages.pb.h"
 
 namespace topicmd {
   int commit_generation(int instance_id, int generation_id);
 
   int configure_logger(const LoggerConfig& logger_config);
 
+  // Creates an instance and returns the corresponding ID (positive 
+  // integer). If argument instance_id is set to 0, then the ID will be
+  // picked up automatically. Otherwise, the specified value will be 
+  // used if it is available. If an instance with specified ID is 
+  // already running the function will return TOPICMD_ERROR. 
   int create_instance(int instance_id, 
 		      const InstanceConfig& instance_config);
 

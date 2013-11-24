@@ -1,5 +1,7 @@
-#include "cpp_interface.h"
-#include "messages.pb.h"
+#include "topicmd/cpp_interface.h"
+
+#include "topicmd/instance_manager.h"
+#include "topicmd/messages.pb.h"
 
 #define TOPICMD_ERROR -1
 #define TOPICMD_SUCCESS 0
@@ -15,7 +17,8 @@ namespace topicmd {
 
   int create_instance(int instance_id, 
 		      const InstanceConfig& instance_config) {
-    return TOPICMD_SUCCESS;
+    return InstanceManager::get().CreateInstance(instance_id,
+						 instance_config);
   }
 
   int create_model(int instance_id,
@@ -24,7 +27,11 @@ namespace topicmd {
     return TOPICMD_SUCCESS;
   }
 
-  void dispose_instance(int instance_id) { }
+  void dispose_instance(int instance_id) { 
+    if (InstanceManager::get().has_instance(instance_id)) {
+      InstanceManager::get().erase_instance(instance_id);
+    }
+  }
 
   void dispose_model(int instance_id, int model_id) { }
 

@@ -56,7 +56,7 @@ TEST(CppInterface, Basic) {
   ModelTopics model_topics;
   request_model_topics(instance_id, model_id, &model_topics);
 
-  EXPECT_EQ(model_topics.token_topic_size(), 0);
+  EXPECT_EQ(model_topics.token_topic_size(), 123);
 
   dispose_model(instance_id, model_id);
   dispose_instance(instance_id);

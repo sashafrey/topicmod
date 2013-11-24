@@ -1,0 +1,7 @@
+#ifndef TOPICMD_COMMON_H_
+#define TOPICMD_COMMON_H_
+
+#define TOPICMD_ERROR -1
+#define TOPICMD_SUCCESS 0
+
+#endif // TOPICMD_COMMON_H_

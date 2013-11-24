@@ -24,12 +24,17 @@ namespace topicmd {
 
   void dispose_model(int instance_id, int model_id);
 
-  void dispose_request(int request_id);
+  // Finishes current generation and returns the ID.
+  // Return TOPICMD_ERROR in case of failure.
+  int finish_partition(int instance_id);
 
-  int finish_generation(int instance_id);
-
+  // Inserts a batch of documents into current generation
   int insert_batch(int instance_id, const Batch& batch);
 
+  // Publishes all generations up to generation_id.
+  // Published generation can be used for data processing.
+  // No errors can be reported from this operation,
+  // unless input arguments were incorrect.
   int publish_generation(int instance_id, int generation_id);
 
   int reconfigure_instance(int instance_id,

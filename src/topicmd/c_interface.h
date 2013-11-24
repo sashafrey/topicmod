@@ -1,9 +1,6 @@
 #ifndef TOPICMD_H_
 #define TOPICMD_H_
 
-#define TOPICMD_ERROR -1
-#define TOPICMD_SUCCESS 0
-
 extern "C" {
   int commit_generation(int instance_id, int generation_id);
 
@@ -26,7 +23,7 @@ extern "C" {
 
   void dispose_request(int request_id);
 
-  int finish_generation(int instance_id);
+  int finish_partition(int instance_id);
 
   int insert_batch(int instance_id, int length, const char* batch_blob);
 

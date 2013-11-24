@@ -1,10 +1,8 @@
 #include "topicmd/cpp_interface.h"
 
+#include "topicmd/common.h"
 #include "topicmd/instance_manager.h"
 #include "topicmd/messages.pb.h"
-
-#define TOPICMD_ERROR -1
-#define TOPICMD_SUCCESS 0
 
 namespace topicmd {
   int commit_generation(int instance_id, int generation_id) {
@@ -35,16 +33,34 @@ namespace topicmd {
 
   void dispose_model(int instance_id, int model_id) { }
 
-  int finish_generation(int instance_id) {
-    return TOPICMD_SUCCESS;
+  int finish_partition(int instance_id) {
+    if (!InstanceManager::get().has_instance(instance_id)) {
+      return TOPICMD_ERROR;
+    }
+
+    auto instance = InstanceManager::get()
+      .mutable_instance(instance_id);
+    return instance.FinishPartition();
   }
 
   int insert_batch(int instance_id, const Batch& batch) {
-    return TOPICMD_SUCCESS;
+    if (!InstanceManager::get().has_instance(instance_id)) {
+      return TOPICMD_ERROR;
+    }
+
+    auto instance = InstanceManager::get()
+      .mutable_instance(instance_id);
+    return instance.InsertBatch(batch);
   }
 
   int publish_generation(int instance_id, int generation_id) {
-    return TOPICMD_SUCCESS;
+    if (!InstanceManager::get().has_instance(instance_id)) {
+      return TOPICMD_ERROR;
+    }
+
+    auto instance = InstanceManager::get()
+      .mutable_instance(instance_id);
+    return instance.PublishGeneration(generation_id);
   }
 
   int reconfigure_instance(int instance_id,

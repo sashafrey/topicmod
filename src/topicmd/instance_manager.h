@@ -4,25 +4,10 @@
 #include <memory>
 
 #include "topicmd/common.h"
+#include "topicmd/instance.h"
 #include "topicmd/messages.pb.h"
 
 namespace topicmd {
-
-  class Instance {
-  public:
-    typedef std::shared_ptr<Instance> Ptr;
-    Instance(int id, const InstanceConfig& config);
-    int id() const {
-      return id_;
-    }
-
-    const std::shared_ptr<InstanceConfig> config() const {
-      return instance_config_;
-    }
-  private:
-    int id_;
-    std::shared_ptr<InstanceConfig> instance_config_;
-  };
 
   class InstanceManager {
   public:

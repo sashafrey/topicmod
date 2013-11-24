@@ -46,7 +46,7 @@ TEST(CppInterface, Basic) {
 
   // Index doc-token matrix
   insert_batch(instance_id, batch);
-  int generation_id = finish_generation(instance_id);
+  int generation_id = finish_partition(instance_id);
   publish_generation(instance_id, generation_id);
   
   // Run one tuning iteration

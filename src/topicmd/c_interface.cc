@@ -3,6 +3,7 @@
 #include <string>
 using namespace std;
 
+#include "common.h"
 #include "messages.pb.h"
 
 string message;
@@ -47,7 +48,7 @@ void dispose_model(int instance_id, int model_id) {
 void dispose_request(int request_id) {
 }
 
-int finish_generation(int instance_id) {
+int finish_partition(int instance_id) {
   return TOPICMD_SUCCESS;
 }
 

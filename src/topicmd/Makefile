@@ -14,6 +14,8 @@ GTEST_DIR = ../../gtest
 # Defines the compiler
 CXX = g++
 
+CPPFLAGS += -I..
+
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
 # the compiler doesn't generate warnings in Google Test headers.
@@ -76,7 +78,7 @@ $(TARGET_LIB): $(OBJS_LIB)
 	sudo cp libtopicmd.so /usr/lib/
 
 $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -ltopicmd $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $^ -o $@ -ltopicmd -lprotobuf
 
 .cc.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@

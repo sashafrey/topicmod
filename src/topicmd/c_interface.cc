@@ -39,6 +39,10 @@ int create_model(int instance_id,
   return TOPICMD_SUCCESS;
 }
 
+int discard_partition(int instance_id) {
+  return TOPICMD_SUCCESS;  
+}
+
 void dispose_instance(int instance_id) {
 }
 

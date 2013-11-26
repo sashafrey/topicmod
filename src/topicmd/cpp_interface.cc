@@ -25,6 +25,15 @@ namespace topicmd {
     return TOPICMD_SUCCESS;
   }
 
+  int discard_partition(int instance_id) {
+    if (!InstanceManager::singleton().has_instance(instance_id)) {
+      return TOPICMD_ERROR;
+    }
+
+    auto instance = InstanceManager::singleton().instance(instance_id);
+    return instance->DiscardPartition();
+  }
+
   void dispose_instance(int instance_id) { 
     if (InstanceManager::singleton().has_instance(instance_id)) {
       InstanceManager::singleton().erase_instance(instance_id);
@@ -38,8 +47,7 @@ namespace topicmd {
       return TOPICMD_ERROR;
     }
 
-    auto instance = InstanceManager::singleton()
-      .mutable_instance(instance_id);
+    auto instance = InstanceManager::singleton().instance(instance_id);
     return instance->FinishPartition();
   }
 
@@ -48,8 +56,7 @@ namespace topicmd {
       return TOPICMD_ERROR;
     }
 
-    auto instance = InstanceManager::singleton()
-      .mutable_instance(instance_id);
+    auto instance = InstanceManager::singleton().instance(instance_id);
     return instance->InsertBatch(batch);
   }
 
@@ -58,14 +65,19 @@ namespace topicmd {
       return TOPICMD_ERROR;
     }
 
-    auto instance = InstanceManager::singleton()
-      .mutable_instance(instance_id);
+    auto instance = InstanceManager::singleton().instance(instance_id);
     return instance->PublishGeneration(generation_id);
   }
 
   int reconfigure_instance(int instance_id,
 			   const InstanceConfig& instance_config) {
-    return TOPICMD_SUCCESS;
+    
+    if (!InstanceManager::singleton().has_instance(instance_id)) {
+      return TOPICMD_ERROR;
+    }
+
+    auto instance = InstanceManager::singleton().instance(instance_id);
+    return instance->Reconfigure(instance_config);
   }
 
   int reconfigure_model(int instance_id,

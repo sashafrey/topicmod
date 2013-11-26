@@ -37,10 +37,9 @@ namespace topicmd {
 	return TOPICMD_ERROR;
       }
 
-      std::pair<int, Instance::Ptr>
-	value(id, Instance::Ptr(new Instance(id, config)));
+      instance_map_.insert(std::make_pair(
+        id, std::make_shared<Instance>(id, config)));
 
-      instance_map_.insert(value);
       return id;
     }
     
@@ -49,13 +48,13 @@ namespace topicmd {
       return instance_map_.find(id) != instance_map_.end();
     }
 
-    const Instance::Ptr instance(int id) const {
+    const std::shared_ptr<Instance> instance(int id) const {
       boost::lock_guard<boost::mutex> guard(lock_);
       auto iter = instance_map_.find(id);
       return iter->second;
     }
 
-    Instance::Ptr mutable_instance(int id) {
+    std::shared_ptr<Instance> instance(int id) {
       boost::lock_guard<boost::mutex> guard(lock_);
       auto iter = instance_map_.find(id);
       return iter->second;
@@ -79,7 +78,7 @@ namespace topicmd {
     mutable boost::mutex lock_;
 
     int next_id_;
-    std::map<int, Instance::Ptr> instance_map_;
+    std::map<int, std::shared_ptr<Instance> > instance_map_;
   };
 
 }

@@ -59,6 +59,9 @@ TEST(CppInterface, Basic) {
   EXPECT_EQ(model_topics.token_topic_size(), 123);
 
   dispose_model(instance_id, model_id);
+
+  reconfigure_instance(instance_id, InstanceConfig());
+
   dispose_instance(instance_id);
 
   EXPECT_EQ(1, 1);

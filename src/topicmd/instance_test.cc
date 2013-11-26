@@ -8,7 +8,7 @@ TEST(Instance, Basic) {
   Instance instance(1, InstanceConfig());
   Batch batch1;
   for (int i = 0; i < 2; ++i) batch1.add_item();
-  instance.InsertBatch(batch1);
+  instance.InsertBatch(batch1); // +2
   int gen1 = instance.FinishPartition();
   EXPECT_EQ(instance.GetTotalItemsCount(), 0);
   instance.PublishGeneration(gen1);
@@ -16,7 +16,7 @@ TEST(Instance, Basic) {
   
   for (int iBatch = 0; iBatch < 2; ++iBatch) {
     Batch batch;
-    for (int i = 0; i < (3 + iBatch); ++i) batch.add_item();
+    for (int i = 0; i < (3 + iBatch); ++i) batch.add_item(); // +3, +4
     instance.InsertBatch(batch);
   }
 
@@ -24,4 +24,11 @@ TEST(Instance, Basic) {
   instance.PublishGeneration(gen2);
 
   EXPECT_EQ(instance.GetTotalItemsCount(), 9);
+
+  instance.InsertBatch(batch1);  // +2
+  instance.DiscardPartition();   // -2
+  instance.InsertBatch(batch1);  // +2
+  int gen3 = instance.FinishPartition();
+  instance.PublishGeneration(gen3);
+  EXPECT_EQ(instance.GetTotalItemsCount(), 11); 
 }

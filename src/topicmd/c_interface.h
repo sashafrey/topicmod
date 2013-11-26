@@ -17,6 +17,8 @@ extern "C" {
 		   int length, 
 		   const char* model_config_blob);
 
+  int discard_partition(int instance_id);
+
   void dispose_instance(int instance_id);
 
   void dispose_model(int instance_id, int model_id);

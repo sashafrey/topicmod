@@ -6,19 +6,20 @@
 #include <vector>
 
 #include <boost/thread/mutex.hpp>
+#include <boost/utility.hpp>
 
 #include "topicmd/messages.pb.h"
 #include "topicmd/thread_safe_holder.h"
 
 namespace topicmd {
 
-  class Partition {
+  class Partition : boost::noncopyable {
   private: 
     std::vector<std::shared_ptr<Batch> > batches_;
   public:
     Partition() { };
     void Add(const Batch& batch) {
-      batches_.push_back(std::shared_ptr<Batch>(new Batch(batch)));
+      batches_.push_back(std::make_shared<Batch>(batch));
     }
     
     int GetItemsCount() const {
@@ -31,66 +32,56 @@ namespace topicmd {
       
       return retval;
     }
-
-    typedef std::shared_ptr<Partition> Ptr;
   };
 
   class Generation {
   private:
-    std::map<int, Partition::Ptr> generation_;
+    std::map<int, std::shared_ptr<const Partition> > generation_;
   public:
-    void AddPartition(int id, const Partition::Ptr& partition) {
+    void AddPartition(int id,
+		      const std::shared_ptr<const Partition>& partition) 
+    {
       generation_.insert(std::make_pair(id, partition));
-    }
-
-    const std::map<int, Partition::Ptr>& get() const {
-      return generation_;
-    }
-
-    // ToDo : code style: agree on consistency (mutable_get() vs get())    
-    std::map<int, Partition::Ptr>& mutable_get() {
-      return generation_;
     }
 
     int GetTotalItemsCount() const {
       int retval = 0;
-      for (auto iter = get().begin();
-	   iter != get().end();
+      for (auto iter = generation_.begin();
+	   iter != generation_.end();
 	   ++iter) {
 	retval += (*iter).second->GetItemsCount();
       }
 
       return retval;
     }
-
-    typedef std::shared_ptr<Generation> Ptr;
   };
 
-  class Instance {
+  class Instance : boost::noncopyable {
   public:
-    typedef std::shared_ptr<Instance> Ptr;
     Instance(int id, const InstanceConfig& config);
     int id() const {
       return instance_id_;
     }
 
     const std::shared_ptr<InstanceConfig> config() const {
-      return instance_config_;
+      return instance_config_.get();
     }
 
+    int DiscardPartition();
     int FinishPartition();
     int GetTotalItemsCount() const;
     int InsertBatch(const Batch& batch);
     int PublishGeneration(int generation_id);
+    int Reconfigure(const InstanceConfig& config);
     
   private:
     mutable boost::mutex lock_;
     int instance_id_;
     int next_generation_id_;
-    Partition::Ptr current_partition_;
-    std::map<int, Partition::Ptr> finished_partition_;
+    std::shared_ptr<Partition> current_partition_;
+    std::map<int, std::shared_ptr<const Partition> > finished_partition_;
     ThreadSafeHolder<Generation> published_generation_;
-    std::shared_ptr<InstanceConfig> instance_config_;
+    ThreadSafeHolder<InstanceConfig> instance_config_;
   };
 
 } // namespace topicmd

@@ -20,6 +20,8 @@ namespace topicmd {
 		   int model_id,
 		   const ModelConfig& model_config);
 
+  int discard_partition(int instance_id);
+
   void dispose_instance(int instance_id);
 
   void dispose_model(int instance_id, int model_id);

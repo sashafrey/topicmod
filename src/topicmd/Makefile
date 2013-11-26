@@ -25,7 +25,7 @@ CPPFLAGS += -isystem $(GTEST_DIR)/include
 CXXFLAGS += -g -Wall -pthread -fPIC -std=c++11
 
 # Linker flags
-LDFLAGS += 
+LDFLAGS += -lboost_system
 
 # First target - shared library
 TARGET_LIB    = libtopicmd.so
@@ -83,11 +83,11 @@ gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 $(TARGET_LIB): $(OBJS_LIB)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -shared $^ -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $^ -o $@ $(LDFLAGS)
 	sudo cp libtopicmd.so /usr/lib/
 
 $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) $^ -o $@ -ltopicmd -lprotobuf
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -ltopicmd -lprotobuf $(LDFLAGS)
 
 .cc.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@

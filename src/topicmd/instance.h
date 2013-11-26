@@ -5,7 +5,10 @@
 #include <memory>
 #include <vector>
 
-#include "messages.pb.h"
+#include <boost/thread/mutex.hpp>
+
+#include "topicmd/messages.pb.h"
+#include "topicmd/thread_safe_holder.h"
 
 namespace topicmd {
 
@@ -36,10 +39,15 @@ namespace topicmd {
   private:
     std::map<int, Partition::Ptr> generation_;
   public:
+    void AddPartition(int id, const Partition::Ptr& partition) {
+      generation_.insert(std::make_pair(id, partition));
+    }
+
     const std::map<int, Partition::Ptr>& get() const {
       return generation_;
     }
-    
+
+    // ToDo : code style: agree on consistency (mutable_get() vs get())    
     std::map<int, Partition::Ptr>& mutable_get() {
       return generation_;
     }
@@ -56,44 +64,6 @@ namespace topicmd {
     }
 
     typedef std::shared_ptr<Generation> Ptr;
-  };
-
-  class GenerationManager {
-  private:
-    // Implements read-only pattern for thread safety
-    Generation::Ptr published_generation_;
-
-  public:
-    GenerationManager() 
-      : published_generation_(new Generation())
-    {
-    }
-
-    void AddPartition(int id, Partition::Ptr partition) {
-      // make a copy of published_generation_, 
-      // and then set it in atomic way.
-      Generation::Ptr next_generation_(new Generation());
-      auto current_generation_ = GetLatestGeneration();
-      for (auto iter = current_generation_->get().begin();
-	   iter != current_generation_->get().end();
-	   ++iter) {
-	next_generation_->mutable_get().insert(*iter);
-      }
-
-      next_generation_->mutable_get()
-	.insert(std::pair<int, Partition::Ptr>(id, 
-					       partition));
-      
-      // lock
-      published_generation_ = next_generation_;
-    }
-
-    // Users of this function must hold shared_ptr while they 
-    // are using the generation.
-    Generation::Ptr GetLatestGeneration() const {
-      // lock
-      return published_generation_;
-    }
   };
 
   class Instance {
@@ -114,12 +84,12 @@ namespace topicmd {
     int PublishGeneration(int generation_id);
     
   private:
+    mutable boost::mutex lock_;
     int instance_id_;
     int next_generation_id_;
     Partition::Ptr current_partition_;
     std::map<int, Partition::Ptr> finished_partition_;
-    GenerationManager generation_manager_;
-
+    ThreadSafeHolder<Generation> published_generation_;
     std::shared_ptr<InstanceConfig> instance_config_;
   };
 

@@ -15,7 +15,7 @@ namespace topicmd {
 
   int create_instance(int instance_id, 
 		      const InstanceConfig& instance_config) {
-    return InstanceManager::get().CreateInstance(instance_id,
+    return InstanceManager::singleton().CreateInstance(instance_id,
 						 instance_config);
   }
 
@@ -26,41 +26,41 @@ namespace topicmd {
   }
 
   void dispose_instance(int instance_id) { 
-    if (InstanceManager::get().has_instance(instance_id)) {
-      InstanceManager::get().erase_instance(instance_id);
+    if (InstanceManager::singleton().has_instance(instance_id)) {
+      InstanceManager::singleton().erase_instance(instance_id);
     }
   }
 
   void dispose_model(int instance_id, int model_id) { }
 
   int finish_partition(int instance_id) {
-    if (!InstanceManager::get().has_instance(instance_id)) {
+    if (!InstanceManager::singleton().has_instance(instance_id)) {
       return TOPICMD_ERROR;
     }
 
-    auto instance = InstanceManager::get()
+    auto instance = InstanceManager::singleton()
       .mutable_instance(instance_id);
-    return instance.FinishPartition();
+    return instance->FinishPartition();
   }
 
   int insert_batch(int instance_id, const Batch& batch) {
-    if (!InstanceManager::get().has_instance(instance_id)) {
+    if (!InstanceManager::singleton().has_instance(instance_id)) {
       return TOPICMD_ERROR;
     }
 
-    auto instance = InstanceManager::get()
+    auto instance = InstanceManager::singleton()
       .mutable_instance(instance_id);
-    return instance.InsertBatch(batch);
+    return instance->InsertBatch(batch);
   }
 
   int publish_generation(int instance_id, int generation_id) {
-    if (!InstanceManager::get().has_instance(instance_id)) {
+    if (!InstanceManager::singleton().has_instance(instance_id)) {
       return TOPICMD_ERROR;
     }
 
-    auto instance = InstanceManager::get()
+    auto instance = InstanceManager::singleton()
       .mutable_instance(instance_id);
-    return instance.PublishGeneration(generation_id);
+    return instance->PublishGeneration(generation_id);
   }
 
   int reconfigure_instance(int instance_id,

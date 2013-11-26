@@ -6,17 +6,17 @@
 using namespace topicmd;
 
 TEST(InstanceManager, Basic) {
-  int id = InstanceManager::get().CreateInstance(0, InstanceConfig());
-  EXPECT_EQ(InstanceManager::get().instance(id).id(), id);
+  int id = InstanceManager::singleton().CreateInstance(0, InstanceConfig());
+  EXPECT_EQ(InstanceManager::singleton().instance(id)->id(), id);
 
-  int id2 = InstanceManager::get().CreateInstance(0, InstanceConfig());
+  int id2 = InstanceManager::singleton().CreateInstance(0, InstanceConfig());
   EXPECT_EQ(id2, id+1);
-  EXPECT_EQ(InstanceManager::get().instance(id2).id(), id2);
+  EXPECT_EQ(InstanceManager::singleton().instance(id2)->id(), id2);
 
-  int id3 = InstanceManager::get().CreateInstance(id2, 
+  int id3 = InstanceManager::singleton().CreateInstance(id2, 
 						  InstanceConfig());
   EXPECT_EQ(id3, TOPICMD_ERROR);
 
-  InstanceManager::get().erase_instance(id);
-  EXPECT_FALSE(InstanceManager::get().has_instance(id));
+  InstanceManager::singleton().erase_instance(id);
+  EXPECT_FALSE(InstanceManager::singleton().has_instance(id));
 }

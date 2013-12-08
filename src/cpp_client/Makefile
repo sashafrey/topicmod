@@ -7,3 +7,6 @@ clean:
 test:
 	./cpp_client ../../datasets/docword.kos.txt ../../datasets/vocab.kos.txt 16
 
+debug:
+	gdb --args ./cpp_client ../../datasets/docword.kos.txt ../../datasets/vocab.kos.txt 16
+

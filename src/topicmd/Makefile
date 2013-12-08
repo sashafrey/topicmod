@@ -24,8 +24,11 @@ CPPFLAGS += -isystem $(GTEST_DIR)/include
 # Flags passed to the C++ compiler.
 CXXFLAGS += -g -Wall -pthread -fPIC -std=c++11
 
+# Improved debugging capabilities
+# CXXFLAGS += -O0 -fno-inline
+
 # Linker flags
-LDFLAGS += -lboost_system
+LDFLAGS += -lboost_system -lboost_thread
 
 # First target - shared library
 TARGET_LIB    = libtopicmd.so
@@ -33,7 +36,9 @@ SRCS_LIB      = messages.pb.cc \
 		cpp_interface.cc \
 		c_interface.cc \
 		instance.cc \
-		instance_manager.cc 
+		instance_manager.cc \
+		processor.cc \
+		partition.cc \
 
 OBJS_LIB      = $(SRCS_LIB:.cc=.o)
 DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
@@ -44,7 +49,10 @@ SRCS_TEST     = sample1.cc \
 		sample1_unittest.cc \
 		cpp_interface_unittest.cc \
 		instance_test.cc \
-		instance_manager_test.cc
+		instance_manager_test.cc \
+		boost_thread_test.cc \
+		partition_test.cc \
+
 OBJS_TEST     = $(SRCS_TEST:.cc=.o)
 DEPS_TEST     = $(SRCS_TEST:.cc=.depends)
 

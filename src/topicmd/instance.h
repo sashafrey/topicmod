@@ -3,62 +3,80 @@
 
 #include <map>
 #include <memory>
+#include <queue>
 #include <vector>
-
+    
+#include <boost/thread.hpp>   
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
+#include "topicmd/merger.h"
 #include "topicmd/messages.pb.h"
+#include "topicmd/partition.h"
 #include "topicmd/thread_safe_holder.h"
 
 namespace topicmd {
 
-  class Partition : boost::noncopyable {
-  private: 
-    std::vector<std::shared_ptr<Batch> > batches_;
+  class DataLoader : boost::noncopyable {
   public:
-    Partition() { };
-    void Add(const Batch& batch) {
-      batches_.push_back(std::make_shared<Batch>(batch));
-    }
-    
-    int GetItemsCount() const {
-      int retval = 0;
-      for (auto iter = batches_.begin(); 
-	   iter != batches_.end();
-	   ++iter) {
-	retval += (*iter)->item_size();
-      }
-      
-      return retval;
-    }
-  };
-
-  class Generation {
-  private:
-    std::map<int, std::shared_ptr<const Partition> > generation_;
-  public:
-    void AddPartition(int id,
-		      const std::shared_ptr<const Partition>& partition) 
+    DataLoader(boost::mutex& lock, 
+	       std::queue<std::shared_ptr<const Partition> >& queue,
+	       std::shared_ptr<const Generation> generation) :
+      lock_(lock), 
+      queue_(queue),
+      generation_(generation),
+      thread_(boost::bind(&DataLoader::ThreadFunction, this))
     {
-      generation_.insert(std::make_pair(id, partition));
     }
 
-    int GetTotalItemsCount() const {
-      int retval = 0;
-      for (auto iter = generation_.begin();
-	   iter != generation_.end();
-	   ++iter) {
-	retval += (*iter).second->GetItemsCount();
+    ~DataLoader() {
+      if (thread_.joinable()) {
+	thread_.interrupt();
+	thread_.join();
       }
+    }
 
-      return retval;
+    void Join() {
+      thread_.join();
+    }
+  private:
+    boost::mutex& lock_;
+    std::queue<std::shared_ptr<const Partition> >& queue_;
+    std::shared_ptr<const Generation> generation_;
+
+    // Keep all threads at the end of class members
+    // (because the order of class members defines initialization order;
+    // everything else should be initialized before creating threads).
+    boost::thread thread_;
+
+    void ThreadFunction() 
+    {
+      try {
+	{
+	  boost::lock_guard<boost::mutex> guard(lock_);
+	  generation_->InvokeOnEachPartition([&](std::shared_ptr<const Partition> part) { 
+	      queue_.push(part);
+	    });
+	}
+
+
+	// Sleep and check for interrupt.
+	// To check for interrupt without sleep,
+	// use boost::this_thread::interruption_point()
+	// which also throws boost::thread_interrupted
+	// boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+      }
+      catch(boost::thread_interrupted&) {
+	return;
+      }
     }
   };
+
 
   class Instance : boost::noncopyable {
   public:
     Instance(int id, const InstanceConfig& config);
+    ~Instance();
     int id() const {
       return instance_id_;
     }
@@ -73,7 +91,11 @@ namespace topicmd {
     int InsertBatch(const Batch& batch);
     int PublishGeneration(int generation_id);
     int Reconfigure(const InstanceConfig& config);
-    
+    int RunTuningIteration();
+
+    std::shared_ptr<const Generation> get_latest_generation() const {
+      return published_generation_.get();
+    }
   private:
     mutable boost::mutex lock_;
     int instance_id_;
@@ -82,6 +104,15 @@ namespace topicmd {
     std::map<int, std::shared_ptr<const Partition> > finished_partition_;
     ThreadSafeHolder<Generation> published_generation_;
     ThreadSafeHolder<InstanceConfig> instance_config_;
+
+    // ToDo: processor queue must have not parts, 
+    // but special processing batches, self-containing data structures
+    // to process them in a processor.
+    mutable boost::mutex processor_queue_lock_;
+    std::queue<std::shared_ptr<const Partition> > processor_queue_;
+
+    mutable boost::mutex merger_queue_lock_;
+    std::queue<std::shared_ptr<const ProcessorOutput> > merger_queue_;
   };
 
 } // namespace topicmd

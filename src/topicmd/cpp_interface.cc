@@ -104,7 +104,12 @@ namespace topicmd {
   }
 
   int run_tuning_iteration(int instance_id) {
-    return TOPICMD_SUCCESS;
+    if (!InstanceManager::singleton().has_instance(instance_id)) {
+      return TOPICMD_ERROR;
+    }
+
+    auto instance = InstanceManager::singleton().instance(instance_id);
+    return instance->RunTuningIteration();
   }
 
 } // namespace topicmd

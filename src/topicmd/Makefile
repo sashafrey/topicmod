@@ -115,5 +115,18 @@ proto :
 	protoc --python_out=. messages.proto
 	protoc --java_out=./.. messages.proto
 
+proto_install:
+	mkdir ~/protobuf
+	cd ~/protobuf
+	wget https://protobuf.googlecode.com/files/protobuf-2.5.0.tar.gz
+	tar -xzf protobuf-2.5.0.tar.gz
+	cd protobuf-2.5.0/
+	./configure
+	make
+	make check
+	sudo make install
+	export LD_LIBRARY_PATH="/usr/local/lib"
+	#echo "export LD_LIBRARY_PATH=\"/usr/local/lib\"" >> ~/.bash_profile
+
 test : unittests
 	./unittests

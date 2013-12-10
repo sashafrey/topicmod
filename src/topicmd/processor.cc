@@ -57,8 +57,10 @@ namespace topicmd {
         }
 
         std::vector<float> Z(this_item_token_count);
-        int numInnerIters = 10;
-        for (int iInnerIter = 0; iInnerIter <= numInnerIters; iInnerIter++)
+        int numInnerIters = 10; // ToDo
+        for (int iInnerIter = 0;
+             iInnerIter <= numInnerIters;
+             iInnerIter++)
         {
           // 1. Find Z
           for (int token_index = 0;
@@ -91,7 +93,8 @@ namespace topicmd {
               if (iInnerIter < numInnerIters) {
                 // Normal iteration, updating theta_next
                 for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-                  theta_next[iTopic] += n_dw * cur_token_topics[iTopic] * theta[iTopic] / curZ;
+                  theta_next[iTopic] += n_dw * cur_token_topics[iTopic]
+                      * theta[iTopic] / curZ;
                 }
               } else {
                 // Last iteration, updating final counters
@@ -101,15 +104,15 @@ namespace topicmd {
                 float* hat_n_t = processor_output->counter_topic();
                 
                 for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-                  float val = n_dw * cur_token_topics[iTopic] * theta[iTopic] / curZ;
+                  float val = n_dw * cur_token_topics[iTopic] *
+                      theta[iTopic] / curZ;
                   hat_n_wt_cur[iTopic] += val;
                   hat_n_t[iTopic] += val;
                 }
               }
             }
           }                
-                
-          
+
           if (iInnerIter < numInnerIters) {
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
               theta[iTopic] = theta_next[iTopic];

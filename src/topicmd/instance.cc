@@ -28,7 +28,7 @@ namespace topicmd {
 
   int Instance::DiscardPartition() {
     current_partition_ = std::make_shared<Partition>();
-    return TOPICMD_SUCCESS;    
+    return TOPICMD_SUCCESS;
   }
 
   int Instance::GetTotalItemsCount() const {
@@ -83,25 +83,28 @@ namespace topicmd {
 
   int Instance::RunTuningIteration() {
     auto gen = published_generation_.get();
-
-    // load all data into processor_queue
-    // ToDo: sure, this should happen async, during ongoing processing!
-    DataLoader loader_(processor_queue_lock_,
-                       processor_queue_,
-                       gen);
-    loader_.Join();
-
+    // ToDo
     int topics_count = 10;
     Merger merger_(gen, topics_count);
 
-    Processor p(processor_queue_lock_,
-		processor_queue_,
-		merger_queue_lock_,
-		merger_queue_,
-		merger_);
+    for (int iter = 0; iter < 10; ++iter) {
+      // load all data into processor_queue
+      // ToDo: sure, this should happen async, during ongoing processing!
+      DataLoader loader_(processor_queue_lock_,
+                         processor_queue_,
+                         gen);
+      loader_.Join();
 
-    p.Join();
+      Processor p(processor_queue_lock_,
+                  processor_queue_,
+                  merger_queue_lock_,
+                  merger_queue_,
+                  merger_);
+      p.Join();
 
+      merger_.MergeFromQueueAndUpdateMatrix(merger_queue_,
+                                            merger_queue_lock_);
+    }
     return TOPICMD_SUCCESS;
   }
 } // namespace topicmd

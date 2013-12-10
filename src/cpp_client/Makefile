@@ -4,8 +4,11 @@ all: helpers.cc srcmain.cc
 clean:
 	rm cpp_client
 
-test:
+kos:
 	./cpp_client ../../datasets/docword.kos.txt ../../datasets/vocab.kos.txt 16
+
+nips:
+	./cpp_client ../../datasets/docword.nips.txt ../../datasets/vocab.nips.txt 16
 
 debug:
 	gdb --args ./cpp_client ../../datasets/docword.kos.txt ../../datasets/vocab.kos.txt 16

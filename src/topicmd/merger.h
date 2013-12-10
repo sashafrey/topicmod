@@ -2,10 +2,12 @@
 #define TOPICMD_MERGER_
 
 #include "assert.h"
+#include <stdlib.h>
 
 #include <map>
 #include <memory>
 #include <string>
+#include <queue>
 
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
@@ -40,8 +42,16 @@ class ProcessorOutput : boost::noncopyable {
     delete [] counter_topic_;
   }
 
+  const float* counter_token_topic(int token_index) const {
+    return &counter_token_topic_[topics_count_ * token_index];
+  }
+
   float* counter_token_topic(int token_index) {
     return &counter_token_topic_[topics_count_ * token_index];
+  }
+
+  const float* counter_topic() const {
+    return counter_topic_;
   }
 
   float* counter_topic() {
@@ -58,36 +68,22 @@ class ProcessorOutput : boost::noncopyable {
 class Merger : boost::noncopyable {
  public:
   Merger(const std::shared_ptr<const Generation>& generation,
-         int topics_count) :
-      lock_(),
-      token_topic_matrix_(lock_),
-      generation_(generation)
-  {
-    auto ttm = std::make_shared<TokenTopicMatrix>();
-    generation_->InvokeOnEachPartition(
-        [&](std::shared_ptr<const Partition> part) {
-          auto tokens = part->get_tokens();
-          for (auto iter = tokens.begin();
-               iter != tokens.end(); iter++)
-          {
-            ttm->add_token(*iter);
-          }
-        });
-
-    ttm->Initialize(topics_count);
-    token_topic_matrix_.set(ttm);
-  }
+         int topics_count);
 
   std::shared_ptr<const TokenTopicMatrix> token_topic_matrix() const
   {
     return token_topic_matrix_.get();
   }
+
+  void MergeFromQueueAndUpdateMatrix(
+      std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
+      boost::mutex& merger_queue_lock);
       
-  private:
-    mutable boost::mutex lock_;
-    ThreadSafeHolder<TokenTopicMatrix> token_topic_matrix_;
-    std::shared_ptr<const Generation> generation_;
-  };
+ private:
+  mutable boost::mutex lock_;
+  ThreadSafeHolder<TokenTopicMatrix> token_topic_matrix_;
+  std::shared_ptr<const Generation> generation_;
+};
 } // namespace topicmd
 
 #endif // TOPICMD_MERGER_

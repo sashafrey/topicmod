@@ -10,7 +10,7 @@ using namespace std;
 #include "helpers.h"
 
 // topicmd library
-#include "topicmd/cpp_interface.h"
+#include "topicmd/c_interface.h"
 #include "topicmd/messages.pb.h"
 
 using namespace topicmd;
@@ -27,24 +27,24 @@ int main(int argc, char * argv[]) {
 
   // Create instance
   InstanceConfig instance_config;
-  // string instance_config_blob;
-  // instance_config.SerializeToString(&instance_config_blob);
-  // int instance_id = create_instance(0,
-  //				    instance_config_blob.size(), 
-  //				    string_as_array(&instance_config_blob));
-  int instance_id = create_instance(0, instance_config);
+  string instance_config_blob;
+  instance_config.SerializeToString(&instance_config_blob);
+  int instance_id = create_instance(0,
+    instance_config_blob.size(), 
+  	string_as_array(&instance_config_blob));
+  // int instance_id = create_instance(0, instance_config);
 
   // Create model
   int nTopics = atoi(argv[3]);
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-  // string model_config_blob;
-  // model_config.SerializeToString(&model_config_blob);
-  // int model_id = create_model(instance_id, 
-  // 			      0,
-  //			      model_config_blob.size(), 
-  //			      string_as_array(&model_config_blob));
-  int model_id = create_model(instance_id, 0, model_config);
+   string model_config_blob;
+   model_config.SerializeToString(&model_config_blob);
+   int model_id = create_model(instance_id, 
+   			      0,
+  			      model_config_blob.size(), 
+  			      string_as_array(&model_config_blob));
+  // int model_id = create_model(instance_id, 0, model_config);
   
   // Load doc-word matrix
   DocWordMatrix::Ptr pD = loadMatrixFileUCI(argv[1]);
@@ -75,10 +75,10 @@ int main(int argc, char * argv[]) {
   }
 
   // Index doc-word matrix
-  // string batch_blob;
-  // batch.SerializeToString(&batch_blob);
-  // insert_batch(instance_id, batch_blob.size(), string_as_array(&batch_blob));
-  insert_batch(instance_id, batch);
+  string batch_blob;
+  batch.SerializeToString(&batch_blob);
+  insert_batch(instance_id, batch_blob.size(), string_as_array(&batch_blob));
+  // insert_batch(instance_id, batch);
   int generation_id = finish_partition(instance_id);
   publish_generation(instance_id, generation_id);
   
@@ -86,22 +86,22 @@ int main(int argc, char * argv[]) {
   run_tuning_iteration(instance_id);
 
   // Request model topics
-  // int length;
-  // char* address;
-  // int request_id = request_model_topics(instance_id, 
-  // 					model_id, 
-  //					&length,
-  //					&address);
+  int length;
+  char* address;
+  int request_id = request_model_topics(instance_id, 
+  				model_id, 
+  				&length,
+  				&address);
 
-  // string model_topics_blob;
-  // model_topics_blob.resize(length);
-  // copy_request_result(request_id, 
-  //		      length, 
-  //		      string_as_array(&model_topics_blob));
+  string model_topics_blob;
+  model_topics_blob.resize(length);
+  copy_request_result(request_id, 
+  	      length, 
+  	      string_as_array(&model_topics_blob));
 
   ModelTopics model_topics;
-  //  model_topics.ParseFromString(model_topics_blob);
-  request_model_topics(instance_id, model_id, &model_topics);
+  model_topics.ParseFromString(model_topics_blob);
+  // request_model_topics(instance_id, model_id, &model_topics);
 
   cout << "Number of tokens in model topic: " 
        << model_topics.token_topic_size()

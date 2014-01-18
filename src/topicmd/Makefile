@@ -46,9 +46,7 @@ DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
 
 # Second target - executable (unittests)
 TARGET_TEST   = unittests
-SRCS_TEST     = sample1.cc \
-		sample1_unittest.cc \
-		cpp_interface_unittest.cc \
+SRCS_TEST     = cpp_interface_unittest.cc \
 		instance_test.cc \
 		instance_manager_test.cc \
 		boost_thread_test.cc \

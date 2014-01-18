@@ -1,14 +1,14 @@
 #ifndef TOPICMD_H_
 #define TOPICMD_H_
 
-#if defined _WIN32
-	#ifdef TOPICMD_DLL_EXPORTS
-		#define DLL_PUBLIC __declspec(dllexport)
-	#else
-		#define DLL_PUBLIC __declspec(dllimport)
-	#endif
+#ifdef _WIN32
+  #ifdef TOPICMD_DLL_EXPORTS
+    #define DLL_PUBLIC __declspec(dllexport)
+  #else
+    #define DLL_PUBLIC __declspec(dllimport)
+  #endif
 #else
-	#define DLL_PUBLIC
+  #define DLL_PUBLIC
 #endif
 
 extern "C" {

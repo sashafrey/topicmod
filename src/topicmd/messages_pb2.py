@@ -14,7 +14,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
   package='topicmd',
-  serialized_pb='\n\x0emessages.proto\x12\x07topicmd\"I\n\x05\x46ield\x12\x19\n\nfield_name\x18\x01 \x01(\t:\x05@body\x12\x10\n\x08token_id\x18\x02 \x03(\x05\x12\x13\n\x0btoken_count\x18\x03 \x03(\x05\"d\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x31\n\toperation\x18\x02 \x01(\x0e\x32\x16.topicmd.OperationType:\x06INSERT\x12\x1d\n\x05\x66ield\x18\x03 \x03(\x0b\x32\x0e.topicmd.Field\"3\n\x05\x42\x61tch\x12\r\n\x05token\x18\x01 \x03(\t\x12\x1b\n\x04item\x18\x03 \x03(\x0b\x32\r.topicmd.Item\"\x8e\x01\n\x0eInstanceConfig\x12\x16\n\x0eindex_location\x18\x02 \x01(\t\x12\'\n\x18process_items_on_publish\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\x1e\n\x13index_readers_count\x18\x04 \x01(\x05:\x01\x31\x12\x1b\n\x10processors_count\x18\x05 \x01(\x05:\x01\x31\"\xab\x01\n\x0bModelConfig\x12\x46\n\x0eprocessor_type\x18\x01 \x01(\x0e\x32\".topicmd.ModelConfig.ProcessorType:\nBATCH_PLSA\x12\x18\n\x0ctopics_count\x18\x02 \x01(\x05:\x02\x33\x32\x12\x19\n\nis_enabled\x18\x03 \x01(\x08:\x05\x66\x61lse\"\x1f\n\rProcessorType\x12\x0e\n\nBATCH_PLSA\x10\x00\"\x9c\x01\n\x0cLoggerConfig\x12\x14\n\x0clog_location\x18\x01 \x01(\t\x12\x30\n\x05level\x18\x02 \x01(\x0e\x32\x1b.topicmd.LoggerConfig.Level:\x04INFO\"D\n\x05Level\x12\x0c\n\x08\x44ISABLED\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x12\x0b\n\x07WARNING\x10\x02\x12\x08\n\x04INFO\x10\x03\x12\x0b\n\x07VERBOSE\x10\x04\".\n\nItemTopics\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x02 \x03(\x02\"7\n\x0b\x42\x61tchTopics\x12(\n\x0bitem_topics\x18\x01 \x03(\x0b\x32\x13.topicmd.ItemTopics\"D\n\x0bTokenTopics\x12\r\n\x05token\x18\x01 \x01(\t\x12\x10\n\x08token_id\x18\x02 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x03 \x03(\x02\"8\n\x0bModelTopics\x12)\n\x0btoken_topic\x18\x01 \x03(\x0b\x32\x14.topicmd.TokenTopics*\x1b\n\rOperationType\x12\n\n\x06INSERT\x10\x00')
+  serialized_pb='\n\x0emessages.proto\x12\x07topicmd\"I\n\x05\x46ield\x12\x19\n\nfield_name\x18\x01 \x01(\t:\x05@body\x12\x10\n\x08token_id\x18\x02 \x03(\x05\x12\x13\n\x0btoken_count\x18\x03 \x03(\x05\"d\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x31\n\toperation\x18\x02 \x01(\x0e\x32\x16.topicmd.OperationType:\x06INSERT\x12\x1d\n\x05\x66ield\x18\x03 \x03(\x0b\x32\x0e.topicmd.Field\"3\n\x05\x42\x61tch\x12\r\n\x05token\x18\x01 \x03(\t\x12\x1b\n\x04item\x18\x03 \x03(\x0b\x32\r.topicmd.Item\"\x8e\x01\n\x0eInstanceConfig\x12\x16\n\x0eindex_location\x18\x02 \x01(\t\x12\'\n\x18process_items_on_publish\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\x1e\n\x13index_readers_count\x18\x04 \x01(\x05:\x01\x31\x12\x1b\n\x10processors_count\x18\x05 \x01(\x05:\x01\x31\"\xa8\x01\n\x0bModelConfig\x12\x46\n\x0eprocessor_type\x18\x01 \x01(\x0e\x32\".topicmd.ModelConfig.ProcessorType:\nBATCH_PLSA\x12\x18\n\x0ctopics_count\x18\x02 \x01(\x05:\x02\x33\x32\x12\x16\n\x07\x65nabled\x18\x03 \x01(\x08:\x05\x66\x61lse\"\x1f\n\rProcessorType\x12\x0e\n\nBATCH_PLSA\x10\x00\"\x9c\x01\n\x0cLoggerConfig\x12\x14\n\x0clog_location\x18\x01 \x01(\t\x12\x30\n\x05level\x18\x02 \x01(\x0e\x32\x1b.topicmd.LoggerConfig.Level:\x04INFO\"D\n\x05Level\x12\x0c\n\x08\x44ISABLED\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x12\x0b\n\x07WARNING\x10\x02\x12\x08\n\x04INFO\x10\x03\x12\x0b\n\x07VERBOSE\x10\x04\".\n\nItemTopics\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x02 \x03(\x02\"7\n\x0b\x42\x61tchTopics\x12(\n\x0bitem_topics\x18\x01 \x03(\x0b\x32\x13.topicmd.ItemTopics\"D\n\x0bTokenTopics\x12\r\n\x05token\x18\x01 \x01(\t\x12\x10\n\x08token_id\x18\x02 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x03 \x03(\x02\"8\n\x0bModelTopics\x12)\n\x0btoken_topic\x18\x01 \x03(\x0b\x32\x14.topicmd.TokenTopics*\x1b\n\rOperationType\x12\n\n\x06INSERT\x10\x00')
 
 _OPERATIONTYPE = _descriptor.EnumDescriptor(
   name='OperationType',
@@ -29,8 +29,8 @@ _OPERATIONTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=968,
-  serialized_end=995,
+  serialized_start=965,
+  serialized_end=992,
 )
 
 OperationType = enum_type_wrapper.EnumTypeWrapper(_OPERATIONTYPE)
@@ -50,8 +50,8 @@ _MODELCONFIG_PROCESSORTYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=543,
-  serialized_end=574,
+  serialized_start=540,
+  serialized_end=571,
 )
 
 _LOGGERCONFIG_LEVEL = _descriptor.EnumDescriptor(
@@ -83,8 +83,8 @@ _LOGGERCONFIG_LEVEL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=665,
-  serialized_end=733,
+  serialized_start=662,
+  serialized_end=730,
 )
 
 
@@ -278,7 +278,7 @@ _MODELCONFIG = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='is_enabled', full_name='topicmd.ModelConfig.is_enabled', index=2,
+      name='enabled', full_name='topicmd.ModelConfig.enabled', index=2,
       number=3, type=8, cpp_type=7, label=1,
       has_default_value=True, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
@@ -295,7 +295,7 @@ _MODELCONFIG = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=403,
-  serialized_end=574,
+  serialized_end=571,
 )
 
 
@@ -330,8 +330,8 @@ _LOGGERCONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=577,
-  serialized_end=733,
+  serialized_start=574,
+  serialized_end=730,
 )
 
 
@@ -365,8 +365,8 @@ _ITEMTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=735,
-  serialized_end=781,
+  serialized_start=732,
+  serialized_end=778,
 )
 
 
@@ -393,8 +393,8 @@ _BATCHTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=783,
-  serialized_end=838,
+  serialized_start=780,
+  serialized_end=835,
 )
 
 
@@ -435,8 +435,8 @@ _TOKENTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=840,
-  serialized_end=908,
+  serialized_start=837,
+  serialized_end=905,
 )
 
 
@@ -463,8 +463,8 @@ _MODELTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=910,
-  serialized_end=966,
+  serialized_start=907,
+  serialized_end=963,
 )
 
 _ITEM.fields_by_name['operation'].enum_type = _OPERATIONTYPE

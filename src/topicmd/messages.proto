@@ -41,7 +41,7 @@ message ModelConfig {
 
   optional ProcessorType processor_type = 1 [default = BATCH_PLSA];
   optional int32 topics_count = 2 [default = 32];
-  optional bool is_enabled = 3 [default = false];
+  optional bool enabled = 3 [default = false];
 }
 
 message LoggerConfig {

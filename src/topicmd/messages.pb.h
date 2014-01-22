@@ -634,12 +634,12 @@ class ModelConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 topics_count() const;
   inline void set_topics_count(::google::protobuf::int32 value);
 
-  // optional bool is_enabled = 3 [default = false];
-  inline bool has_is_enabled() const;
-  inline void clear_is_enabled();
-  static const int kIsEnabledFieldNumber = 3;
-  inline bool is_enabled() const;
-  inline void set_is_enabled(bool value);
+  // optional bool enabled = 3 [default = false];
+  inline bool has_enabled() const;
+  inline void clear_enabled();
+  static const int kEnabledFieldNumber = 3;
+  inline bool enabled() const;
+  inline void set_enabled(bool value);
 
   // @@protoc_insertion_point(class_scope:topicmd.ModelConfig)
  private:
@@ -647,14 +647,14 @@ class ModelConfig : public ::google::protobuf::Message {
   inline void clear_has_processor_type();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
-  inline void set_has_is_enabled();
-  inline void clear_has_is_enabled();
+  inline void set_has_enabled();
+  inline void clear_has_enabled();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   int processor_type_;
   ::google::protobuf::int32 topics_count_;
-  bool is_enabled_;
+  bool enabled_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -1628,26 +1628,26 @@ inline void ModelConfig::set_topics_count(::google::protobuf::int32 value) {
   topics_count_ = value;
 }
 
-// optional bool is_enabled = 3 [default = false];
-inline bool ModelConfig::has_is_enabled() const {
+// optional bool enabled = 3 [default = false];
+inline bool ModelConfig::has_enabled() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void ModelConfig::set_has_is_enabled() {
+inline void ModelConfig::set_has_enabled() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void ModelConfig::clear_has_is_enabled() {
+inline void ModelConfig::clear_has_enabled() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void ModelConfig::clear_is_enabled() {
-  is_enabled_ = false;
-  clear_has_is_enabled();
+inline void ModelConfig::clear_enabled() {
+  enabled_ = false;
+  clear_has_enabled();
 }
-inline bool ModelConfig::is_enabled() const {
-  return is_enabled_;
+inline bool ModelConfig::enabled() const {
+  return enabled_;
 }
-inline void ModelConfig::set_is_enabled(bool value) {
-  set_has_is_enabled();
-  is_enabled_ = value;
+inline void ModelConfig::set_enabled(bool value) {
+  set_has_enabled();
+  enabled_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -3372,15 +3372,15 @@ public final class Messages {
      */
     int getTopicsCount();
 
-    // optional bool is_enabled = 3 [default = false];
+    // optional bool enabled = 3 [default = false];
     /**
-     * <code>optional bool is_enabled = 3 [default = false];</code>
+     * <code>optional bool enabled = 3 [default = false];</code>
      */
-    boolean hasIsEnabled();
+    boolean hasEnabled();
     /**
-     * <code>optional bool is_enabled = 3 [default = false];</code>
+     * <code>optional bool enabled = 3 [default = false];</code>
      */
-    boolean getIsEnabled();
+    boolean getEnabled();
   }
   /**
    * Protobuf type {@code topicmd.ModelConfig}
@@ -3451,7 +3451,7 @@ public final class Messages {
             }
             case 24: {
               bitField0_ |= 0x00000004;
-              isEnabled_ = input.readBool();
+              enabled_ = input.readBool();
               break;
             }
           }
@@ -3599,26 +3599,26 @@ public final class Messages {
       return topicsCount_;
     }
 
-    // optional bool is_enabled = 3 [default = false];
-    public static final int IS_ENABLED_FIELD_NUMBER = 3;
-    private boolean isEnabled_;
+    // optional bool enabled = 3 [default = false];
+    public static final int ENABLED_FIELD_NUMBER = 3;
+    private boolean enabled_;
     /**
-     * <code>optional bool is_enabled = 3 [default = false];</code>
+     * <code>optional bool enabled = 3 [default = false];</code>
      */
-    public boolean hasIsEnabled() {
+    public boolean hasEnabled() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional bool is_enabled = 3 [default = false];</code>
+     * <code>optional bool enabled = 3 [default = false];</code>
      */
-    public boolean getIsEnabled() {
-      return isEnabled_;
+    public boolean getEnabled() {
+      return enabled_;
     }
 
     private void initFields() {
       processorType_ = topicmd.Messages.ModelConfig.ProcessorType.BATCH_PLSA;
       topicsCount_ = 32;
-      isEnabled_ = false;
+      enabled_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3639,7 +3639,7 @@ public final class Messages {
         output.writeInt32(2, topicsCount_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBool(3, isEnabled_);
+        output.writeBool(3, enabled_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -3660,7 +3660,7 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, isEnabled_);
+          .computeBoolSize(3, enabled_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3782,7 +3782,7 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000001);
         topicsCount_ = 32;
         bitField0_ = (bitField0_ & ~0x00000002);
-        isEnabled_ = false;
+        enabled_ = false;
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
@@ -3823,7 +3823,7 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.isEnabled_ = isEnabled_;
+        result.enabled_ = enabled_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3846,8 +3846,8 @@ public final class Messages {
         if (other.hasTopicsCount()) {
           setTopicsCount(other.getTopicsCount());
         }
-        if (other.hasIsEnabled()) {
-          setIsEnabled(other.getIsEnabled());
+        if (other.hasEnabled()) {
+          setEnabled(other.getEnabled());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -3945,35 +3945,35 @@ public final class Messages {
         return this;
       }
 
-      // optional bool is_enabled = 3 [default = false];
-      private boolean isEnabled_ ;
+      // optional bool enabled = 3 [default = false];
+      private boolean enabled_ ;
       /**
-       * <code>optional bool is_enabled = 3 [default = false];</code>
+       * <code>optional bool enabled = 3 [default = false];</code>
        */
-      public boolean hasIsEnabled() {
+      public boolean hasEnabled() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional bool is_enabled = 3 [default = false];</code>
+       * <code>optional bool enabled = 3 [default = false];</code>
        */
-      public boolean getIsEnabled() {
-        return isEnabled_;
+      public boolean getEnabled() {
+        return enabled_;
       }
       /**
-       * <code>optional bool is_enabled = 3 [default = false];</code>
+       * <code>optional bool enabled = 3 [default = false];</code>
        */
-      public Builder setIsEnabled(boolean value) {
+      public Builder setEnabled(boolean value) {
         bitField0_ |= 0x00000004;
-        isEnabled_ = value;
+        enabled_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional bool is_enabled = 3 [default = false];</code>
+       * <code>optional bool enabled = 3 [default = false];</code>
        */
-      public Builder clearIsEnabled() {
+      public Builder clearEnabled() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        isEnabled_ = false;
+        enabled_ = false;
         onChanged();
         return this;
       }
@@ -7332,21 +7332,21 @@ public final class Messages {
       "dex_location\030\002 \001(\t\022\'\n\030process_items_on_p" +
       "ublish\030\003 \001(\010:\005false\022\036\n\023index_readers_cou" +
       "nt\030\004 \001(\005:\0011\022\033\n\020processors_count\030\005 \001(\005:\0011",
-      "\"\253\001\n\013ModelConfig\022F\n\016processor_type\030\001 \001(\016" +
+      "\"\250\001\n\013ModelConfig\022F\n\016processor_type\030\001 \001(\016" +
       "2\".topicmd.ModelConfig.ProcessorType:\nBA" +
-      "TCH_PLSA\022\030\n\014topics_count\030\002 \001(\005:\00232\022\031\n\nis" +
-      "_enabled\030\003 \001(\010:\005false\"\037\n\rProcessorType\022\016" +
-      "\n\nBATCH_PLSA\020\000\"\234\001\n\014LoggerConfig\022\024\n\014log_l" +
-      "ocation\030\001 \001(\t\0220\n\005level\030\002 \001(\0162\033.topicmd.L" +
-      "oggerConfig.Level:\004INFO\"D\n\005Level\022\014\n\010DISA" +
-      "BLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003" +
-      "\022\013\n\007VERBOSE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022" +
-      "\024\n\014topic_weight\030\002 \003(\002\"7\n\013BatchTopics\022(\n\013",
-      "item_topics\030\001 \003(\0132\023.topicmd.ItemTopics\"D" +
-      "\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id" +
-      "\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\"8\n\013ModelTop" +
-      "ics\022)\n\013token_topic\030\001 \003(\0132\024.topicmd.Token" +
-      "Topics*\033\n\rOperationType\022\n\n\006INSERT\020\000"
+      "TCH_PLSA\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n\007en" +
+      "abled\030\003 \001(\010:\005false\"\037\n\rProcessorType\022\016\n\nB" +
+      "ATCH_PLSA\020\000\"\234\001\n\014LoggerConfig\022\024\n\014log_loca" +
+      "tion\030\001 \001(\t\0220\n\005level\030\002 \001(\0162\033.topicmd.Logg" +
+      "erConfig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLE" +
+      "D\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n" +
+      "\007VERBOSE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014" +
+      "topic_weight\030\002 \003(\002\"7\n\013BatchTopics\022(\n\013ite",
+      "m_topics\030\001 \003(\0132\023.topicmd.ItemTopics\"D\n\013T" +
+      "okenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 " +
+      "\001(\005\022\024\n\014topic_weight\030\003 \003(\002\"8\n\013ModelTopics" +
+      "\022)\n\013token_topic\030\001 \003(\0132\024.topicmd.TokenTop" +
+      "ics*\033\n\rOperationType\022\n\n\006INSERT\020\000"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7382,7 +7382,7 @@ public final class Messages {
           internal_static_topicmd_ModelConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_topicmd_ModelConfig_descriptor,
-              new java.lang.String[] { "ProcessorType", "TopicsCount", "IsEnabled", });
+              new java.lang.String[] { "ProcessorType", "TopicsCount", "Enabled", });
           internal_static_topicmd_LoggerConfig_descriptor =
             getDescriptor().getMessageTypes().get(5);
           internal_static_topicmd_LoggerConfig_fieldAccessorTable = new

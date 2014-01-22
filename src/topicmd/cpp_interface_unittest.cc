@@ -1,5 +1,7 @@
 #include "gtest/gtest.h"
 
+#include <boost/thread.hpp>
+
 #include "topicmd/cpp_interface.h"
 #include "topicmd/messages.pb.h"
 
@@ -49,14 +51,19 @@ TEST(CppInterface, Basic) {
   int generation_id = finish_partition(instance_id);
   publish_generation(instance_id, generation_id);
   
-  // Run one tuning iteration
-  run_tuning_iteration(instance_id);
+	model_config.set_enabled(true);
+	reconfigure_model(instance_id, model_id, model_config);
+
+	boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+
+	model_config.set_enabled(false);
+	reconfigure_model(instance_id, model_id, model_config);
 
   // Request model topics
   ModelTopics model_topics;
   request_model_topics(instance_id, model_id, &model_topics);
 
-  EXPECT_EQ(model_topics.token_topic_size(), 123);
+  EXPECT_EQ(model_topics.token_topic_size(), nTopics);
 
   dispose_model(instance_id, model_id);
 

@@ -25,16 +25,16 @@ namespace topicmd {
     int CreateInstance(int id, const InstanceConfig& config) {
       boost::lock_guard<boost::mutex> guard(lock_);
       if (id <= 0) {
-	// iterate through instance_map_ until find some slot
-	while(instance_map_.find(next_id_) != instance_map_.end()) {
-	  next_id_++;
-	}
+				// iterate through instance_map_ until find some slot
+				while(instance_map_.find(next_id_) != instance_map_.end()) {
+					next_id_++;
+				}
 
-	id = next_id_++;
+				id = next_id_++;
       }
 
       if (instance_map_.find(id) != instance_map_.end()) {
-	return TOPICMD_ERROR;
+				return TOPICMD_ERROR;
       }
 
       instance_map_.insert(std::make_pair(

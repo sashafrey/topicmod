@@ -5,14 +5,23 @@
 
 namespace topicmd {
 
-Merger::Merger(const std::shared_ptr<const Generation>& generation,
-               int topics_count) :
+Merger::Merger(boost::mutex& merger_queue_lock,
+							 std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
+							 ThreadSafeHolder<Generation>& generation) :
     lock_(),
     token_topic_matrix_(lock_),
-    generation_(generation)
+		generation_(generation),
+		merger_queue_lock_(merger_queue_lock),
+		merger_queue_(merger_queue),
+		thread_(boost::bind(&Merger::ThreadFunction, this))
+{
+}
+
+void Merger::Initialize(const Generation& generation,
+									 int topics_count)
 {
   auto ttm = std::make_shared<TokenTopicMatrix>();
-  generation_->InvokeOnEachPartition(
+  generation.InvokeOnEachPartition(
       [&](std::shared_ptr<const Partition> part) {
         auto tokens = part->get_tokens();
         for (auto iter = tokens.begin();
@@ -31,10 +40,37 @@ Merger::Merger(const std::shared_ptr<const Generation>& generation,
   token_topic_matrix_.set(ttm);
 }
 
+void Merger::ThreadFunction() 
+{
+  try {
+		int last_generation_id = -1;
+		for (;;)
+		{
+			// Sleep and check for interrupt.
+			// To check for interrupt without sleep,
+			// use boost::this_thread::interruption_point()
+			// which also throws boost::thread_interrupted
+			boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-void Merger::MergeFromQueueAndUpdateMatrix(
-    std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
-    boost::mutex& merger_queue_lock) {
+			// 1. If generation was updated, check new tokens for the model.
+			{
+				auto last_generation = generation_.get();
+				if (last_generation->get_id() != last_generation_id) {
+					Initialize(*last_generation, 10);
+					last_generation_id = last_generation->get_id();
+				}
+			}
+
+			// 2. Merge everything from the queue and update matrix.
+			MergeFromQueueAndUpdateMatrix();
+		}
+	}
+	catch(boost::thread_interrupted&) {
+		return;
+	}
+}
+
+void Merger::MergeFromQueueAndUpdateMatrix() {
   auto cur_ttm = token_topic_matrix_.get();
   auto new_ttm = std::make_shared<TokenTopicMatrix>();
   new_ttm->Initialize(*cur_ttm);
@@ -46,13 +82,13 @@ void Merger::MergeFromQueueAndUpdateMatrix(
   for (;;) {
     std::shared_ptr<const ProcessorOutput> processor_output;
     {
-      boost::lock_guard<boost::mutex> guard(merger_queue_lock);
-      if (merger_queue.empty()) {
+      boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
+      if (merger_queue_.empty()) {
         break;
       }
 
-      processor_output = merger_queue.front();
-      merger_queue.pop();
+      processor_output = merger_queue_.front();
+      merger_queue_.pop();
     }
 
     const float* source = processor_output->counter_token_topic(0);

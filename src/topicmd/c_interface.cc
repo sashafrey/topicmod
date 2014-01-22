@@ -103,8 +103,3 @@ int request_model_topics(int instance_id,
   *address = string_as_array(&message);
   return TOPICMD_SUCCESS;
 }
-
-int run_tuning_iteration(int instance_id) 
-{
-  return TOPICMD_SUCCESS;
-}

@@ -1,77 +1,73 @@
 #ifndef TOPICMD_INSTANCE_
 #define TOPICMD_INSTANCE_
 
+#include <algorithm>
 #include <map>
 #include <memory>
 #include <queue>
 #include <vector>
     
-#include <boost/thread.hpp>   
-#include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
+#include "topicmd/data_loader.h"
 #include "topicmd/merger.h"
 #include "topicmd/messages.pb.h"
 #include "topicmd/partition.h"
+#include "topicmd/processor.h"
 #include "topicmd/thread_safe_holder.h"
 
 namespace topicmd {
+	class InstanceSchema {
+	private:
+		InstanceConfig instance_config_;
+		std::map<int, std::shared_ptr<const ModelConfig> > models_config_;
+	public:
+		InstanceSchema(const InstanceSchema& schema) :
+				instance_config_(schema.instance_config_), 
+				models_config_(schema.models_config_) 
+		{
+		}
 
-  class DataLoader : boost::noncopyable {
-  public:
-    DataLoader(boost::mutex& lock, 
-	       std::queue<std::shared_ptr<const Partition> >& queue,
-	       std::shared_ptr<const Generation> generation) :
-      lock_(lock), 
-      queue_(queue),
-      generation_(generation),
-      thread_(boost::bind(&DataLoader::ThreadFunction, this))
-    {
-    }
+		InstanceSchema(const InstanceConfig& config) :
+				instance_config_(config), 
+				models_config_() 
+		{
+		}
 
-    ~DataLoader() {
-      if (thread_.joinable()) {
-	thread_.interrupt();
-	thread_.join();
-      }
-    }
+		void set_instance_config(const InstanceConfig& instance_config) {
+			instance_config_.CopyFrom(instance_config);
+		}
 
-    void Join() {
-      thread_.join();
-    }
-  private:
-    boost::mutex& lock_;
-    std::queue<std::shared_ptr<const Partition> >& queue_;
-    std::shared_ptr<const Generation> generation_;
+		const InstanceConfig& get_instance_config() const {
+			return instance_config_;
+		}
 
-    // Keep all threads at the end of class members
-    // (because the order of class members defines initialization order;
-    // everything else should be initialized before creating threads).
-    boost::thread thread_;
+		void set_model_config(int id, const std::shared_ptr<const ModelConfig>& model_config) {
+			auto iter = models_config_.find(id);
+			if (iter != models_config_.end()) {
+				iter->second = model_config;
+			} else {
+				models_config_.insert(std::make_pair(id, model_config));
+			}
+		}
 
-    void ThreadFunction() 
-    {
-      try {
-	{
-	  boost::lock_guard<boost::mutex> guard(lock_);
-	  generation_->InvokeOnEachPartition([&](std::shared_ptr<const Partition> part) { 
-	      queue_.push(part);
-	    });
-	}
+		const ModelConfig& get_model_config(int id) {
+			auto iter = models_config_.find(id);
+			return *(iter->second);
+		}
 
+		bool has_model_config(int id) {
+			auto iter = models_config_.find(id);
+			return iter != models_config_.end();
+		}
 
-	// Sleep and check for interrupt.
-	// To check for interrupt without sleep,
-	// use boost::this_thread::interruption_point()
-	// which also throws boost::thread_interrupted
-	// boost::this_thread::sleep(boost::posix_time::milliseconds(50));
-      }
-      catch(boost::thread_interrupted&) {
-	return;
-      }
-    }
-  };
-
+		void discard_model(int id) {
+			auto iter = models_config_.find(id);
+			if (iter != models_config_.end()) {
+				models_config_.erase(iter);
+			}
+		}
+	};
 
   class Instance : boost::noncopyable {
   public:
@@ -81,18 +77,19 @@ namespace topicmd {
       return instance_id_;
     }
 
-    const std::shared_ptr<InstanceConfig> config() const {
-      return instance_config_.get();
+    const std::shared_ptr<InstanceSchema> schema() const {
+      return schema_.get();
     }
 
+		int UpdateModel(int model_id, const ModelConfig& config);
+		int DisposeModel(int model_id);
     int DiscardPartition();
     int FinishPartition();
     int GetTotalItemsCount() const;
     int InsertBatch(const Batch& batch);
     int PublishGeneration(int generation_id);
     int Reconfigure(const InstanceConfig& config);
-    int RunTuningIteration();
-
+    
     std::shared_ptr<const Generation> get_latest_generation() const {
       return published_generation_.get();
     }
@@ -103,7 +100,7 @@ namespace topicmd {
     std::shared_ptr<Partition> current_partition_;
     std::map<int, std::shared_ptr<const Partition> > finished_partition_;
     ThreadSafeHolder<Generation> published_generation_;
-    ThreadSafeHolder<InstanceConfig> instance_config_;
+    ThreadSafeHolder<InstanceSchema> schema_;
 
     // ToDo: processor queue must have not parts, 
     // but special processing batches, self-containing data structures
@@ -113,6 +110,11 @@ namespace topicmd {
 
     mutable boost::mutex merger_queue_lock_;
     std::queue<std::shared_ptr<const ProcessorOutput> > merger_queue_;
+
+		DataLoader data_loader_; // creates a background thread that keep loading data
+		Merger merger_;					 // creates a background thread that keep merging processor output
+		Processor processor_;		 // creates a background thread for processing (for now only one thread)
+		
   };
 
 } // namespace topicmd

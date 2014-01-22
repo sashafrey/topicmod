@@ -9,6 +9,7 @@
 #include <string>
 #include <queue>
 
+#include <boost/thread.hpp>   
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
@@ -67,22 +68,27 @@ class ProcessorOutput : boost::noncopyable {
 
 class Merger : boost::noncopyable {
  public:
-  Merger(const std::shared_ptr<const Generation>& generation,
-         int topics_count);
+  Merger(boost::mutex& merger_queue_lock,
+				 std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
+				 ThreadSafeHolder<Generation>& generation);
 
   std::shared_ptr<const TokenTopicMatrix> token_topic_matrix() const
   {
     return token_topic_matrix_.get();
   }
-
-  void MergeFromQueueAndUpdateMatrix(
-      std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
-      boost::mutex& merger_queue_lock);
-      
  private:
   mutable boost::mutex lock_;
   ThreadSafeHolder<TokenTopicMatrix> token_topic_matrix_;
-  std::shared_ptr<const Generation> generation_;
+	ThreadSafeHolder<Generation>& generation_;
+	
+	boost::mutex& merger_queue_lock_;
+	std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue_; 
+
+	boost::thread thread_;  
+	void ThreadFunction();
+
+	void Initialize(const Generation& generation, int topics_count);
+  void MergeFromQueueAndUpdateMatrix();
 };
 } // namespace topicmd
 

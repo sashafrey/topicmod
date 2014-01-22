@@ -31,8 +31,8 @@ namespace topicmd {
 
     ~Processor() {
       if (thread_.joinable()) {
-	thread_.interrupt();
-	thread_.join();
+				thread_.interrupt();
+				thread_.join();
       }
     }
 

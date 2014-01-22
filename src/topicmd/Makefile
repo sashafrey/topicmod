@@ -35,6 +35,7 @@ TARGET_LIB    = libtopicmd.so
 SRCS_LIB      = messages.pb.cc \
 		cpp_interface.cc \
 		c_interface.cc \
+		data_loader.cc \
 		instance.cc \
 		instance_manager.cc \
 		processor.cc \

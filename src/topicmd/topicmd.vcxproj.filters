@@ -8,6 +8,7 @@
     <ClCompile Include="messages.pb.cc" />
     <ClCompile Include="partition.cc" />
     <ClCompile Include="processor.cc" />
+    <ClCompile Include="data_loader.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
@@ -21,5 +22,6 @@
     <ClInclude Include="processor.h" />
     <ClInclude Include="thread_safe_holder.h" />
     <ClInclude Include="token_topic_matrix.h" />
+    <ClInclude Include="data_loader.h" />
   </ItemGroup>
 </Project>

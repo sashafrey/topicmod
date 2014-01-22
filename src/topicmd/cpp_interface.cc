@@ -20,9 +20,11 @@ namespace topicmd {
   }
 
   int create_model(int instance_id,
-		   int model_id,
-		   const ModelConfig& model_config) {
-    return TOPICMD_SUCCESS;
+		int model_id,
+    const ModelConfig& model_config) 
+	{
+		// the same operation.
+		return reconfigure_model(instance_id, model_id, model_config);
   }
 
   int discard_partition(int instance_id) {
@@ -40,7 +42,14 @@ namespace topicmd {
     }
   }
 
-  void dispose_model(int instance_id, int model_id) { }
+  void dispose_model(int instance_id, int model_id) { 
+		if (!InstanceManager::singleton().has_instance(instance_id)) {
+			return;
+		}
+
+    auto instance = InstanceManager::singleton().instance(instance_id);
+		instance->DisposeModel(model_id);
+	}
 
   int finish_partition(int instance_id) {
     if (!InstanceManager::singleton().has_instance(instance_id)) {
@@ -81,9 +90,16 @@ namespace topicmd {
   }
 
   int reconfigure_model(int instance_id,
-			int model_id,
-			const ModelConfig& model_config) {
-    return TOPICMD_SUCCESS;
+		int model_id,
+		const ModelConfig& model_config) 
+	{
+		if (!InstanceManager::singleton().has_instance(instance_id)) {
+			return TOPICMD_ERROR;
+		}
+
+    auto instance = InstanceManager::singleton().instance(instance_id);
+		instance->UpdateModel(model_id, model_config);
+		return TOPICMD_SUCCESS;
   }
 
   int request_batch_topics(int instance_id,
@@ -102,15 +118,5 @@ namespace topicmd {
 
     return TOPICMD_SUCCESS;
   }
-
-  int run_tuning_iteration(int instance_id) {
-    if (!InstanceManager::singleton().has_instance(instance_id)) {
-      return TOPICMD_ERROR;
-    }
-
-    auto instance = InstanceManager::singleton().instance(instance_id);
-    return instance->RunTuningIteration();
-  }
-
 } // namespace topicmd
 

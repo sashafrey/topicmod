@@ -63,8 +63,6 @@ extern "C" {
 		    int model_id,
 		    int *length,
 		    char **address);
-
-  DLL_PUBLIC int run_tuning_iteration(int instance_id);
 }
 
 

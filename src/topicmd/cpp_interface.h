@@ -54,8 +54,6 @@ namespace topicmd {
   int request_model_topics(int instance_id,
 			   int model_id,
 			   ModelTopics* model_topics);
-
-  int run_tuning_iteration(int instance_id);
 } // namespace topicmd
 
 #endif // TOPICMD_CPP_H

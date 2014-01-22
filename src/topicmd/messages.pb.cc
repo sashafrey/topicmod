@@ -132,9 +132,10 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(InstanceConfig));
   ModelConfig_descriptor_ = file->message_type(4);
-  static const int ModelConfig_offsets_[2] = {
+  static const int ModelConfig_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, processor_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, topics_count_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, is_enabled_),
   };
   ModelConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -306,21 +307,21 @@ void protobuf_AddDesc_messages_2eproto() {
     "dex_location\030\002 \001(\t\022\'\n\030process_items_on_p"
     "ublish\030\003 \001(\010:\005false\022\036\n\023index_readers_cou"
     "nt\030\004 \001(\005:\0011\022\033\n\020processors_count\030\005 \001(\005:\0011"
-    "\"\220\001\n\013ModelConfig\022F\n\016processor_type\030\001 \001(\016"
+    "\"\253\001\n\013ModelConfig\022F\n\016processor_type\030\001 \001(\016"
     "2\".topicmd.ModelConfig.ProcessorType:\nBA"
-    "TCH_PLSA\022\030\n\014topics_count\030\002 \001(\005:\00232\"\037\n\rPr"
-    "ocessorType\022\016\n\nBATCH_PLSA\020\000\"\234\001\n\014LoggerCo"
-    "nfig\022\024\n\014log_location\030\001 \001(\t\0220\n\005level\030\002 \001("
-    "\0162\033.topicmd.LoggerConfig.Level:\004INFO\"D\n\005"
-    "Level\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNIN"
-    "G\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\".\n\nItemTopics"
-    "\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"7\n\013Ba"
-    "tchTopics\022(\n\013item_topics\030\001 \003(\0132\023.topicmd"
-    ".ItemTopics\"D\n\013TokenTopics\022\r\n\005token\030\001 \001("
-    "\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003("
-    "\002\"8\n\013ModelTopics\022)\n\013token_topic\030\001 \003(\0132\024."
-    "topicmd.TokenTopics*\033\n\rOperationType\022\n\n\006"
-    "INSERT\020\000", 968);
+    "TCH_PLSA\022\030\n\014topics_count\030\002 \001(\005:\00232\022\031\n\nis"
+    "_enabled\030\003 \001(\010:\005false\"\037\n\rProcessorType\022\016"
+    "\n\nBATCH_PLSA\020\000\"\234\001\n\014LoggerConfig\022\024\n\014log_l"
+    "ocation\030\001 \001(\t\0220\n\005level\030\002 \001(\0162\033.topicmd.L"
+    "oggerConfig.Level:\004INFO\"D\n\005Level\022\014\n\010DISA"
+    "BLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003"
+    "\022\013\n\007VERBOSE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022"
+    "\024\n\014topic_weight\030\002 \003(\002\"7\n\013BatchTopics\022(\n\013"
+    "item_topics\030\001 \003(\0132\023.topicmd.ItemTopics\"D"
+    "\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id"
+    "\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\"8\n\013ModelTop"
+    "ics\022)\n\013token_topic\030\001 \003(\0132\024.topicmd.Token"
+    "Topics*\033\n\rOperationType\022\n\n\006INSERT\020\000", 995);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Field::_default_field_name_ =
@@ -1602,6 +1603,7 @@ const int ModelConfig::ProcessorType_ARRAYSIZE;
 #ifndef _MSC_VER
 const int ModelConfig::kProcessorTypeFieldNumber;
 const int ModelConfig::kTopicsCountFieldNumber;
+const int ModelConfig::kIsEnabledFieldNumber;
 #endif  // !_MSC_VER
 
 ModelConfig::ModelConfig()
@@ -1622,6 +1624,7 @@ void ModelConfig::SharedCtor() {
   _cached_size_ = 0;
   processor_type_ = 0;
   topics_count_ = 32;
+  is_enabled_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1659,6 +1662,7 @@ void ModelConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     processor_type_ = 0;
     topics_count_ = 32;
+    is_enabled_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1702,6 +1706,22 @@ bool ModelConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(24)) goto parse_is_enabled;
+        break;
+      }
+
+      // optional bool is_enabled = 3 [default = false];
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_is_enabled:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &is_enabled_)));
+          set_has_is_enabled();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1735,6 +1755,11 @@ void ModelConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->topics_count(), output);
   }
 
+  // optional bool is_enabled = 3 [default = false];
+  if (has_is_enabled()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->is_enabled(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1752,6 +1777,11 @@ void ModelConfig::SerializeWithCachedSizes(
   // optional int32 topics_count = 2 [default = 32];
   if (has_topics_count()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->topics_count(), target);
+  }
+
+  // optional bool is_enabled = 3 [default = false];
+  if (has_is_enabled()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->is_enabled(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1776,6 +1806,11 @@ int ModelConfig::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->topics_count());
+    }
+
+    // optional bool is_enabled = 3 [default = false];
+    if (has_is_enabled()) {
+      total_size += 1 + 1;
     }
 
   }
@@ -1811,6 +1846,9 @@ void ModelConfig::MergeFrom(const ModelConfig& from) {
     if (from.has_topics_count()) {
       set_topics_count(from.topics_count());
     }
+    if (from.has_is_enabled()) {
+      set_is_enabled(from.is_enabled());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1836,6 +1874,7 @@ void ModelConfig::Swap(ModelConfig* other) {
   if (other != this) {
     std::swap(processor_type_, other->processor_type_);
     std::swap(topics_count_, other->topics_count_);
+    std::swap(is_enabled_, other->is_enabled_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

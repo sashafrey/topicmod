@@ -1,6 +1,7 @@
 #ifndef THREAD_SAFE_HOLDER_
 #define THREAD_SAFE_HOLDER_
 
+#include <map>
 #include <memory>
 
 #include <boost/thread/locks.hpp>
@@ -28,18 +29,13 @@ namespace topicmd {
  
     ~ThreadSafeHolder() {}
 
-    std::shared_ptr<T> get() {
+    std::shared_ptr<T> get() const {
       boost::lock_guard<boost::mutex> guard(lock_);
       return get_locked();
     }
 
     // Use this instead of get() when the lock is already acquired.
     std::shared_ptr<T> get_locked() const {
-      return object_;
-    }
-
-    const std::shared_ptr<T>& get() const {
-      boost::lock_guard<boost::mutex> guard(lock_);
       return object_;
     }
 
@@ -57,6 +53,61 @@ namespace topicmd {
   private:
     boost::mutex& lock_;
     std::shared_ptr<T> object_;
+  };
+
+  template<typename K, typename T>
+  class ThreadSafeCollectionHolder : boost::noncopyable {
+  public:
+    explicit ThreadSafeCollectionHolder(boost::mutex& lock) :
+      lock_(lock), object_(std::map<K, std::shared_ptr<T>>()) 
+    {
+    }
+
+    ~ThreadSafeCollectionHolder() {}
+
+    std::shared_ptr<T> get(const K& key) const {
+      boost::lock_guard<boost::mutex> guard(lock_);
+      return get_locked(key);
+    }
+
+    bool has_key(const K& key) {
+      boost::lock_guard<boost::mutex> guard(lock_);
+      return object_.find(key) != object_.end();
+    }
+
+    void erase(const K& key) {
+      boost::lock_guard<boost::mutex> guard(lock_);
+      auto iter = object_.find(key);
+      if (iter != object_.end()) {
+        object_.erase(iter);
+      }
+    }
+
+    // Use this instead of get() when the lock is already acquired.
+    std::shared_ptr<T> get_locked(const K& key) const {
+      auto iter = object_.find(key);
+      return (iter != object_.end()) ? iter->second : std::make_shared<T>();
+    }
+
+    std::shared_ptr<T> get_copy(const K& key) const {
+      auto iter = object_.find(key);
+      return (iter != object.end()) ? std::make_shared<T>(*(iter->second)) : std::make_shared<T>();
+    }
+    
+    void set(const K& key, const std::shared_ptr<T>& object)
+    {
+      boost::lock_guard<boost::mutex> guard(lock_);
+      auto iter = object_.find(key);
+      if (iter != object_.end()) {
+        iter->second = object;
+      } else {
+        object_.insert(std::pair<K, std::shared_ptr<T> >(key, object));
+      }
+    }
+
+  private:
+    boost::mutex& lock_;
+    std::map<K, std::shared_ptr<T> > object_;
   };
 
 } // namespace topicmd

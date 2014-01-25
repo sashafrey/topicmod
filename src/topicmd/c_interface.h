@@ -20,14 +20,14 @@ extern "C" {
 
   DLL_PUBLIC
   int create_instance(int instance_id, 
-		      int length, 
-		      const char* instance_config_blob);
+                      int length, 
+                      const char* instance_config_blob);
 
   DLL_PUBLIC
-	int create_model(int instance_id,
-		   int model_id,
-		   int length, 
-		   const char* model_config_blob);
+  int create_model(int instance_id,
+                   int model_id,
+                   int length, 
+                   const char* model_config_blob);
 
   DLL_PUBLIC int discard_partition(int instance_id);
 
@@ -44,25 +44,29 @@ extern "C" {
   DLL_PUBLIC int publish_generation(int instance_id, int generation_id);
 
   DLL_PUBLIC int reconfigure_instance(int instance_id,
-			   int length, 
-			   const char* instance_config_blob);
+                                      int length, 
+                                      const char* instance_config_blob);
 
   DLL_PUBLIC int reconfigure_model(int instance_id,
-			int model_id,
-			int length,
-			const char* model_config_blob);
+                                   int model_id,
+                                   int length,
+                                   const char* model_config_blob);
 
   DLL_PUBLIC int request_batch_topics(int instance_id,
-		     int model_id,
-		     int batch_length,
-		     const char* batch_blob,
-		     int *length,
-		     const char** result);	    
+                                      int model_id,
+                                      int batch_length,
+                                      const char* batch_blob,
+                                      int *length,
+                                      const char** result);      
 
   DLL_PUBLIC int request_model_topics(int instance_id,
-		    int model_id,
-		    int *length,
-		    char **address);
+                                      int model_id,
+                                      int *length,
+                                      char **address);
+
+  DLL_PUBLIC int wait_model_processed(int instance_id,
+                                      int model_id,
+                                      int processed_items);
 }
 
 

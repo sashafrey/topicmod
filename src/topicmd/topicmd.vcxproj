@@ -26,6 +26,7 @@
     <ClInclude Include="data_loader.h" />
     <ClInclude Include="generation.h" />
     <ClInclude Include="instance.h" />
+    <ClInclude Include="instance_schema.h" />
     <ClInclude Include="instance_manager.h" />
     <ClInclude Include="merger.h" />
     <ClInclude Include="messages.pb.h" />

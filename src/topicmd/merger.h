@@ -14,6 +14,7 @@
 #include <boost/utility.hpp>
 
 #include "topicmd/generation.h"
+#include "topicmd/instance_schema.h"
 #include "topicmd/thread_safe_holder.h"
 #include "topicmd/token_topic_matrix.h"
 
@@ -21,7 +22,8 @@ namespace topicmd {
 
 class ProcessorOutput : boost::noncopyable {
  public:
-  ProcessorOutput(int tokens_count, int topics_count) :
+  ProcessorOutput(int model_id, int tokens_count, int topics_count) :
+      model_id_(model_id),
       tokens_count_(tokens_count),
       topics_count_(topics_count),
       counter_token_topic_(NULL),
@@ -43,6 +45,26 @@ class ProcessorOutput : boost::noncopyable {
     delete [] counter_topic_;
   }
 
+  int model_id() const {
+    return model_id_;
+  }
+
+  int tokens_count() const {
+    return tokens_count_;
+  }
+
+  int topics_count() const {
+    return topics_count_;
+  }
+
+  int items_processed() const {
+    return items_processed_;
+  }
+
+  void set_items_processed(int value) {
+    items_processed_ = value;
+  }
+
   const float* counter_token_topic(int token_index) const {
     return &counter_token_topic_[topics_count_ * token_index];
   }
@@ -60,8 +82,10 @@ class ProcessorOutput : boost::noncopyable {
   }
   
  private:
+  int model_id_;
   int tokens_count_;
   int topics_count_;
+  int items_processed_;
   float* counter_token_topic_;
   float* counter_topic_;
 };
@@ -69,26 +93,36 @@ class ProcessorOutput : boost::noncopyable {
 class Merger : boost::noncopyable {
  public:
   Merger(boost::mutex& merger_queue_lock,
-				 std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
-				 ThreadSafeHolder<Generation>& generation);
+         std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
+         ThreadSafeHolder<Generation>& generation,
+         ThreadSafeHolder<InstanceSchema>& schema);
 
-  std::shared_ptr<const TokenTopicMatrix> token_topic_matrix() const
-  {
-    return token_topic_matrix_.get();
+  ~Merger() {
+    if (thread_.joinable()) {
+      thread_.interrupt();
+      thread_.join();
+    }
   }
+
+  std::shared_ptr<const TokenTopicMatrix> token_topic_matrix(int model_id) const
+  {
+    return token_topic_matrix_.get(model_id);
+  }
+
  private:
   mutable boost::mutex lock_;
-  ThreadSafeHolder<TokenTopicMatrix> token_topic_matrix_;
-	ThreadSafeHolder<Generation>& generation_;
-	
-	boost::mutex& merger_queue_lock_;
-	std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue_; 
+  ThreadSafeCollectionHolder<int, TokenTopicMatrix> token_topic_matrix_;
+  ThreadSafeHolder<Generation>& generation_;
+  ThreadSafeHolder<InstanceSchema>& schema_;
+  
+  boost::mutex& merger_queue_lock_;
+  std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue_; 
 
-	boost::thread thread_;  
-	void ThreadFunction();
+  boost::thread thread_;  
+  void ThreadFunction();
 
-	void Initialize(const Generation& generation, int topics_count);
-  void MergeFromQueueAndUpdateMatrix();
+  void Initialize(int model_id, const Generation& generation, int topics_count);
+  void MergeFromQueueAndUpdateMatrix(int model_id);
 };
 } // namespace topicmd
 

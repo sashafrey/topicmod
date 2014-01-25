@@ -20,28 +20,28 @@ namespace topicmd {
     processor_queue_(),
     merger_queue_lock_(),
     merger_queue_(),
-		data_loader_(processor_queue_lock_, processor_queue_, published_generation_),
-		merger_(merger_queue_lock_, merger_queue_, published_generation_),
-		processor_(processor_queue_lock_, processor_queue_, merger_queue_lock_, merger_queue_, merger_)
+    data_loader_(processor_queue_lock_, processor_queue_, published_generation_),
+    merger_(merger_queue_lock_, merger_queue_, published_generation_, schema_),
+    processor_(processor_queue_lock_, processor_queue_, merger_queue_lock_, merger_queue_, merger_, schema_)
   {
   }
 
   Instance::~Instance() {
   }
 
-	int Instance::UpdateModel(int model_id, const ModelConfig& config) {
-		auto new_schema = schema_.get_copy();
-		new_schema->set_model_config(model_id, std::make_shared<const ModelConfig>(config));
-		schema_.set(new_schema);
-		return TOPICMD_SUCCESS;
-	}
+  int Instance::UpdateModel(int model_id, const ModelConfig& config) {
+    auto new_schema = schema_.get_copy();
+    new_schema->set_model_config(model_id, std::make_shared<const ModelConfig>(config));
+    schema_.set(new_schema);
+    return TOPICMD_SUCCESS;
+  }
 
-	int Instance::DisposeModel(int model_id) {
-		auto new_schema = schema_.get_copy();
-		new_schema->discard_model(model_id);
-		schema_.set(new_schema);
-		return TOPICMD_SUCCESS;
-	}
+  int Instance::DisposeModel(int model_id) {
+    auto new_schema = schema_.get_copy();
+    new_schema->discard_model(model_id);
+    schema_.set(new_schema);
+    return TOPICMD_SUCCESS;
+  }
 
   int Instance::DiscardPartition() {
     current_partition_ = std::make_shared<Partition>();
@@ -75,15 +75,15 @@ namespace topicmd {
     // move all partitions up to generation_id
     // from finished_partition_ to published_generation_.
     for (auto iter = finished_partition_.begin();
-			iter != finished_partition_.end(); 
-			/* nothing */) 
+      iter != finished_partition_.end(); 
+      /* nothing */) 
     {
       if ((*iter).first <= generation_id) {
-				next_generation_->AddPartition(iter->second);
-				finished_partition_.erase(iter++);
+        next_generation_->AddPartition(iter->second);
+        finished_partition_.erase(iter++);
       }
       else {
-				++iter;
+        ++iter;
       }
     }
 
@@ -92,10 +92,36 @@ namespace topicmd {
   }
 
   int Instance::Reconfigure(const InstanceConfig& config) {
-		auto new_schema = schema_.get_copy();
-		new_schema->set_instance_config(config);
-		schema_.set(new_schema);
+    auto new_schema = schema_.get_copy();
+    new_schema->set_instance_config(config);
+    schema_.set(new_schema);
     return TOPICMD_SUCCESS;
+  }
+
+  int Instance::RequestModelTopics(int model_id, ModelTopics* model_topics) {
+    std::shared_ptr<const TokenTopicMatrix> ttm = merger_.token_topic_matrix(model_id);
+    int nTopics = ttm->topics_count(); 
+    for (int iToken = 0; iToken < ttm->tokens_count(); iToken++) {
+      TokenTopics* token_topics = model_topics->add_token_topic();
+      token_topics->set_token(ttm->token(iToken));
+      float* token_topics_weight = ttm->token_topics(iToken);
+      for (int iTopic = 0; iTopic < nTopics; ++iTopic) {
+        token_topics->add_topic_weight(token_topics_weight[iTopic]);
+      }
+    }
+    
+    return TOPICMD_SUCCESS;
+  }
+
+  int Instance::WaitModelProcessed(int model_id, int processed_items) {
+    for (;;) {
+      std::shared_ptr<const TokenTopicMatrix> ttm = merger_.token_topic_matrix(model_id);
+      if (ttm->items_processed() >= processed_items) {
+        return TOPICMD_SUCCESS;
+      }
+
+      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    }
   }
 } // namespace topicmd
 

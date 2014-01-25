@@ -9,30 +9,34 @@
 #include <boost/bind.hpp>
 #include <boost/utility.hpp>
 
+#include "topicmd/instance_schema.h"
 #include "topicmd/partition.h"
 #include "topicmd/merger.h"
+#include "topicmd/thread_safe_holder.h"
 
 namespace topicmd {
   class Processor : boost::noncopyable {
   public:
     Processor(boost::mutex& processor_queue_lock,
-	      std::queue<std::shared_ptr<const Partition> >&  processor_queue,
-	      boost::mutex& merger_queue_lock,
-	      std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
-	      const Merger& merger) :
+        std::queue<std::shared_ptr<const Partition> >&  processor_queue,
+        boost::mutex& merger_queue_lock,
+        std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
+        const Merger& merger,
+        ThreadSafeHolder<InstanceSchema>& schema) :
       processor_queue_lock_(processor_queue_lock),
       processor_queue_(processor_queue),
       merger_queue_lock_(merger_queue_lock),
       merger_queue_(merger_queue),
       merger_(merger),
+      schema_(schema),
       thread_(boost::bind(&Processor::ThreadFunction, this))
     {
     }
 
     ~Processor() {
       if (thread_.joinable()) {
-				thread_.interrupt();
-				thread_.join();
+        thread_.interrupt();
+        thread_.join();
       }
     }
 
@@ -45,6 +49,7 @@ namespace topicmd {
     boost::mutex& merger_queue_lock_;
     std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue_;
     const Merger& merger_;
+    ThreadSafeHolder<InstanceSchema>& schema_;
 
     boost::thread thread_;
     void ThreadFunction();

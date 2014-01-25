@@ -14,11 +14,11 @@ namespace topicmd {
   // used if it is available. If an instance with specified ID is 
   // already running the function will return TOPICMD_ERROR. 
   int create_instance(int instance_id, 
-		      const InstanceConfig& instance_config);
+                      const InstanceConfig& instance_config);
 
   int create_model(int instance_id,
-		   int model_id,
-		   const ModelConfig& model_config);
+                   int model_id,
+                   const ModelConfig& model_config);
 
   int discard_partition(int instance_id);
 
@@ -40,20 +40,24 @@ namespace topicmd {
   int publish_generation(int instance_id, int generation_id);
 
   int reconfigure_instance(int instance_id,
-			   const InstanceConfig& instance_config);
+                           const InstanceConfig& instance_config);
 
   int reconfigure_model(int instance_id,
-			int model_id,
-			const ModelConfig& model_config);
+                           int model_id,
+                           const ModelConfig& model_config);
 
   int request_batch_topics(int instance_id,
-			   int model_id,
-			   const Batch& batch,
-			   BatchTopics* batch_topics);
+                           int model_id,
+                           const Batch& batch,
+                           BatchTopics* batch_topics);
 
   int request_model_topics(int instance_id,
-			   int model_id,
-			   ModelTopics* model_topics);
+                           int model_id,
+                           ModelTopics* model_topics);
+
+  int wait_model_processed(int instance_id,
+                           int model_id,
+                           int processed_items);
 } // namespace topicmd
 
 #endif // TOPICMD_CPP_H

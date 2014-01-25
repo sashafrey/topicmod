@@ -6,19 +6,22 @@
 namespace topicmd {
 
 Merger::Merger(boost::mutex& merger_queue_lock,
-							 std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
-							 ThreadSafeHolder<Generation>& generation) :
+               std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
+               ThreadSafeHolder<Generation>& generation,
+               ThreadSafeHolder<InstanceSchema>& schema) :
     lock_(),
     token_topic_matrix_(lock_),
-		generation_(generation),
-		merger_queue_lock_(merger_queue_lock),
-		merger_queue_(merger_queue),
-		thread_(boost::bind(&Merger::ThreadFunction, this))
+    generation_(generation),
+    schema_(schema),
+    merger_queue_lock_(merger_queue_lock),
+    merger_queue_(merger_queue),
+    thread_(boost::bind(&Merger::ThreadFunction, this))
 {
 }
 
-void Merger::Initialize(const Generation& generation,
-									 int topics_count)
+void Merger::Initialize(int model_id, 
+                        const Generation& generation,
+                        int topics_count)
 {
   auto ttm = std::make_shared<TokenTopicMatrix>();
   generation.InvokeOnEachPartition(
@@ -31,54 +34,48 @@ void Merger::Initialize(const Generation& generation,
         }
       });
 
-  ttm->Initialize(topics_count);
-  float* target = ttm->token_topics(0);
-  for (int i = 0; i < ttm->tokens_count() * ttm->topics_count(); ++i) {
-    target[i] = (float)rand() / (float)RAND_MAX;
-  }
-
-  token_topic_matrix_.set(ttm);
+  bool as_random = true;
+  ttm->Initialize(topics_count, as_random);
+  token_topic_matrix_.set(model_id, ttm);
 }
 
 void Merger::ThreadFunction() 
 {
   try {
-		int last_generation_id = -1;
-		for (;;)
-		{
-			// Sleep and check for interrupt.
-			// To check for interrupt without sleep,
-			// use boost::this_thread::interruption_point()
-			// which also throws boost::thread_interrupted
-			boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    int last_generation_id = -1;
+    for (;;)
+    {
+      auto last_generation = generation_.get();
 
-			// 1. If generation was updated, check new tokens for the model.
-			{
-				auto last_generation = generation_.get();
-				if (last_generation->get_id() != last_generation_id) {
-					Initialize(*last_generation, 10);
-					last_generation_id = last_generation->get_id();
-				}
-			}
+      // Sleep and check for interrupt.
+      // To check for interrupt without sleep,
+      // use boost::this_thread::interruption_point()
+      // which also throws boost::thread_interrupted
+      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-			// 2. Merge everything from the queue and update matrix.
-			MergeFromQueueAndUpdateMatrix();
-		}
-	}
-	catch(boost::thread_interrupted&) {
-		return;
-	}
+      std::shared_ptr<InstanceSchema> schema = schema_.get();
+      std::vector<int> model_ids = schema->get_model_ids();
+      std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
+        const ModelConfig& model = schema->get_model_config(model_id);
+          
+        if (last_generation->get_id() != last_generation_id) {
+          // If generation was updated, check new tokens for the model.
+          Initialize(model_id, *last_generation, model.topics_count());
+        }
+  
+        // 2. Merge everything from the queue and update matrix.
+        MergeFromQueueAndUpdateMatrix(model_id);
+      });
+
+      last_generation_id = last_generation->get_id();
+    }
+  }
+  catch(boost::thread_interrupted&) {
+    return;
+  }
 }
 
-void Merger::MergeFromQueueAndUpdateMatrix() {
-  auto cur_ttm = token_topic_matrix_.get();
-  auto new_ttm = std::make_shared<TokenTopicMatrix>();
-  new_ttm->Initialize(*cur_ttm);
-  float* target = new_ttm->token_topics(0);
-  int token_size = cur_ttm->tokens_count();
-  int topic_size = cur_ttm->topics_count();
-  std::vector<float> topics(topic_size, 0);
-  
+void Merger::MergeFromQueueAndUpdateMatrix(int model_id) {
   for (;;) {
     std::shared_ptr<const ProcessorOutput> processor_output;
     {
@@ -91,6 +88,16 @@ void Merger::MergeFromQueueAndUpdateMatrix() {
       merger_queue_.pop();
     }
 
+    int model_id = processor_output->model_id();
+    auto cur_ttm = token_topic_matrix_.get(model_id);
+    auto new_ttm = std::make_shared<TokenTopicMatrix>();
+    new_ttm->Initialize(*cur_ttm);
+    new_ttm->add_items_processed(processor_output->items_processed());
+    float* target = new_ttm->token_topics(0);
+    int token_size = cur_ttm->tokens_count();
+    int topic_size = cur_ttm->topics_count();
+    std::vector<float> topics(topic_size, 0);
+
     const float* source = processor_output->counter_token_topic(0);
     for (int i = 0; i < token_size * topic_size; i++) {
       target[i] += source[i];
@@ -99,38 +106,15 @@ void Merger::MergeFromQueueAndUpdateMatrix() {
     for (int i = 0; i < topic_size; i++) {
       topics[i] += processor_output->counter_topic()[i];
     }
-  }
 
-  // divide phase
-  for (int iToken = 0; iToken < token_size; ++iToken) {
-    for (int iTopic = 0; iTopic < topic_size; ++iTopic) {
-      target[iToken * topic_size + iTopic] /= topics[iTopic];
-    }
-  }
-
-  token_topic_matrix_.set(new_ttm);
-
-  // void logTopWordsPerTopic(const WordTopicMatrix& mat, int N) {
-  {
-    int wordsToSort = 7;
-    for (int i = 0; i < topic_size; i++) {
-      std::cout << "#" << (i+1) << ": ";
-      std::vector<std::pair<float, int> > p_w;
-      for (int iWord = 0; iWord < token_size; iWord++) {
-        p_w.push_back(std::pair<float, int>(
-            new_ttm->token_topics(iWord)[i], iWord));
+    // divide phase
+    for (int iToken = 0; iToken < token_size; ++iToken) {
+      for (int iTopic = 0; iTopic < topic_size; ++iTopic) {
+        target[iToken * topic_size + iTopic] /= topics[iTopic];
       }
-
-      std::sort(p_w.begin(), p_w.end());
-      for (int iWord = token_size - 1;
-           (iWord >= 0) && (iWord >= token_size - wordsToSort);
-           iWord--)
-      {
-        std::cout << new_ttm->token(p_w[iWord].second) << " ";
-      }
-
-      std::cout << std::endl;
     }
+
+    token_topic_matrix_.set(model_id, new_ttm);
   }
 }
 

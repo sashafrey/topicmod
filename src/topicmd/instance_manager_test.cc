@@ -14,7 +14,7 @@ TEST(InstanceManager, Basic) {
   EXPECT_EQ(InstanceManager::singleton().instance(id2)->id(), id2);
 
   int id3 = InstanceManager::singleton().CreateInstance(id2, 
-						  InstanceConfig());
+              InstanceConfig());
   EXPECT_EQ(id3, TOPICMD_ERROR);
 
   InstanceManager::singleton().erase_instance(id);

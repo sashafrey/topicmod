@@ -23,5 +23,6 @@
     <ClInclude Include="thread_safe_holder.h" />
     <ClInclude Include="token_topic_matrix.h" />
     <ClInclude Include="data_loader.h" />
+    <ClInclude Include="instance_schema.h" />
   </ItemGroup>
 </Project>

@@ -31,6 +31,8 @@ TEST(CppInterface, Basic) {
     batch.add_token("token");
   }
 
+  batch.add_token("second_token");
+
   for (int iDoc = 0; iDoc < nDocs; iDoc++) {
     Item* item = batch.add_item();
     Field* field = item->add_field();
@@ -43,7 +45,7 @@ TEST(CppInterface, Basic) {
   EXPECT_EQ(batch.item().size(), nDocs);
   for (int i = 0; i < batch.item().size(); i++) {
     EXPECT_EQ(batch.item().Get(i).field().Get(0).token_id().size(), 
-	      nTokens);
+        nTokens);
   }
 
   // Index doc-token matrix
@@ -51,19 +53,22 @@ TEST(CppInterface, Basic) {
   int generation_id = finish_partition(instance_id);
   publish_generation(instance_id, generation_id);
   
-	model_config.set_enabled(true);
-	reconfigure_model(instance_id, model_id, model_config);
+  model_config.set_enabled(true);
+  reconfigure_model(instance_id, model_id, model_config);
 
-	boost::this_thread::sleep(boost::posix_time::milliseconds(50));
+  boost::this_thread::sleep(boost::posix_time::milliseconds(50));
 
-	model_config.set_enabled(false);
-	reconfigure_model(instance_id, model_id, model_config);
+  model_config.set_enabled(false);
+  reconfigure_model(instance_id, model_id, model_config);
 
   // Request model topics
   ModelTopics model_topics;
   request_model_topics(instance_id, model_id, &model_topics);
 
-  EXPECT_EQ(model_topics.token_topic_size(), nTopics);
+  int nUniqueTokens = 2; // "token" and "second_token"
+  EXPECT_EQ(model_topics.token_topic_size(), nUniqueTokens);
+  const TokenTopics& first_token_topics = model_topics.token_topic(0);
+  EXPECT_EQ(first_token_topics.topic_weight_size(), nTopics);
 
   dispose_model(instance_id, model_id);
 

@@ -56,14 +56,27 @@ TEST(Instance, Basic) {
   int gen4 = instance.FinishPartition();
   instance.PublishGeneration(gen4);
   
-  int topics_count = 3;
-  Merger merger(instance.get_latest_generation(), topics_count);
-  auto ttm = merger.token_topic_matrix();
-  EXPECT_EQ(ttm->token_count(), 3);
-  EXPECT_TRUE(ttm->token_topics("first token") != NULL);
-  EXPECT_TRUE(ttm->token_topics("second") != NULL);
-  EXPECT_TRUE(ttm->token_topics("last") != NULL);
-  EXPECT_TRUE(ttm->token_topics("not exists") == NULL);
+  int model_id = 0;
+  ModelConfig config;
+  config.set_enabled(true);
+  config.set_topics_count(3);
+  instance.UpdateModel(model_id, config);
 
-  instance.RunTuningIteration();
+  instance.WaitModelProcessed(model_id, 20);
+
+  config.set_enabled(false);
+  instance.UpdateModel(model_id, config);
+
+  ModelTopics model_topics;
+  instance.RequestModelTopics(model_id, &model_topics);
+  EXPECT_EQ(model_topics.token_topic_size(), 3);
+  int found = 0;
+  for (int i = 0; i < model_topics.token_topic_size(); ++i) {
+    std::string token = model_topics.token_topic(i).token();    
+    if (token == "first token") { found++; continue; }
+    if (token == "second") { found++; continue; }
+    if (token == "last") { found++; continue; }
+  }
+
+  EXPECT_EQ(found, 3);
 }

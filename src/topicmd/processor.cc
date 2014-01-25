@@ -29,12 +29,16 @@ namespace topicmd {
         std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
           const ModelConfig& model = schema->get_model_config(model_id);
 
+          // do not process disabled models.
+          if (!model.enabled()) return; // return from lambda; goes to next step of std::for_each
+
           std::shared_ptr<const TokenTopicMatrix> token_topic_matrix
               = merger_.token_topic_matrix(model_id);
           int tokens_count = token_topic_matrix->tokens_count();
           int topics_count = token_topic_matrix->topics_count();
 
-          if (tokens_count == 0) return; // return from lambda; goes to next step of std::for_each
+          // do not process "empty" models (no data arrived yet)
+          if (tokens_count == 0) return;
       
           // process part and store result in merger queue
           auto processor_output = std::make_shared<ProcessorOutput>(

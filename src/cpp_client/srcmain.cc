@@ -79,7 +79,17 @@ int main(int argc, char * argv[]) {
   int generation_id = finish_partition(instance_id);
   publish_generation(instance_id, generation_id);
 
+  // enable model
+  model_config.set_enabled(true);
+  model_config.SerializeToString(&model_config_blob);
+  reconfigure_model(instance_id, model_id, model_config_blob.size(), string_as_array(&model_config_blob));
+
   wait_model_processed(instance_id, model_id, nDocs * 10);
+
+  // disable model
+  model_config.set_enabled(false);
+  model_config.SerializeToString(&model_config_blob);
+  reconfigure_model(instance_id, model_id, model_config_blob.size(), string_as_array(&model_config_blob));
 
   // Request model topics
   int length;

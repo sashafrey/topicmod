@@ -91,7 +91,7 @@ namespace topicmd {
 
     std::shared_ptr<T> get_copy(const K& key) const {
       auto iter = object_.find(key);
-      return (iter != object.end()) ? std::make_shared<T>(*(iter->second)) : std::make_shared<T>();
+      return (iter != object_.end()) ? std::make_shared<T>(*(iter->second)) : std::make_shared<T>();
     }
     
     void set(const K& key, const std::shared_ptr<T>& object)

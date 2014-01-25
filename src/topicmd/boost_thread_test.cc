@@ -11,21 +11,22 @@ void ThreadFunction()
 
   for(;;)
     {
-      cout << "thread iteration " << ++counter << " Press Enter to stop" << endl;
+      counter++;
+      // cout << "thread iteration " << counter << " Press Enter to stop" << endl;
 
-        try
-	  {
-            // Sleep and check for interrupt.
-            // To check for interrupt without sleep,
-            // use boost::this_thread::interruption_point()
-            // which also throws boost::thread_interrupted
-	    boost::this_thread::sleep(boost::posix_time::milliseconds(500));
-	  }
-        catch(boost::thread_interrupted&)
-	  {
-            cout << "Thread is stopped" << endl;
-            return;
-	  }
+      try
+	    {
+        // Sleep and check for interrupt.
+        // To check for interrupt without sleep,
+        // use boost::this_thread::interruption_point()
+        // which also throws boost::thread_interrupted
+	      boost::this_thread::sleep(boost::posix_time::milliseconds(500));
+	    }
+      catch(boost::thread_interrupted&)
+	    {
+        // cout << "Thread is stopped" << endl;
+        return;
+	    }
     }
 }
 

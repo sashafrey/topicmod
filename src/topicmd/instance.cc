@@ -98,8 +98,8 @@ namespace topicmd {
     schema_.set(new_schema);
 
     // Adjust size of processors_ 
-    while (processors_.size() > config.processors_count()) processors_.pop_back();
-    while (processors_.size() < config.processors_count()) 
+    while ((int)processors_.size() > config.processors_count()) processors_.pop_back();
+    while ((int)processors_.size() < config.processors_count()) 
     {
       processors_.push_back(
         std::shared_ptr<Processor>(new Processor(

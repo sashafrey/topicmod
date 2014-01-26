@@ -22,8 +22,9 @@ namespace topicmd {
     merger_queue_(),
     data_loader_(processor_queue_lock_, processor_queue_, published_generation_),
     merger_(merger_queue_lock_, merger_queue_, published_generation_, schema_),
-    processor_(processor_queue_lock_, processor_queue_, merger_queue_lock_, merger_queue_, merger_, schema_)
+    processors_()
   {
+    Reconfigure(config);
   }
 
   Instance::~Instance() {
@@ -95,6 +96,21 @@ namespace topicmd {
     auto new_schema = schema_.get_copy();
     new_schema->set_instance_config(config);
     schema_.set(new_schema);
+
+    // Adjust size of processors_ 
+    while (processors_.size() > config.processors_count()) processors_.pop_back();
+    while (processors_.size() < config.processors_count()) 
+    {
+      processors_.push_back(
+        std::shared_ptr<Processor>(new Processor(
+          processor_queue_lock_, 
+          processor_queue_, 
+          merger_queue_lock_, 
+          merger_queue_, 
+          merger_, 
+          schema_)));
+    }
+
     return TOPICMD_SUCCESS;
   }
 

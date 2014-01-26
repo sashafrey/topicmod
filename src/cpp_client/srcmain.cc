@@ -1,3 +1,4 @@
+#include <ctime>
 #include <cstring>
 #include <iostream>
 
@@ -19,14 +20,10 @@ inline char* string_as_array(string* str) {
   return str->empty() ? NULL : &*str->begin();
 }
 
-int main(int argc, char * argv[]) {
-  if (argc != 4) {
-    cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
-    return 0;
-  }
-
+double proc(int argc, char * argv[], int processors_count) {
   // Create instance
   InstanceConfig instance_config;
+  instance_config.set_processors_count(processors_count);
   string instance_config_blob;
   instance_config.SerializeToString(&instance_config_blob);
   int instance_id = 
@@ -79,17 +76,21 @@ int main(int argc, char * argv[]) {
   int generation_id = finish_partition(instance_id);
   publish_generation(instance_id, generation_id);
 
+  clock_t begin = clock();
   // enable model
   model_config.set_enabled(true);
   model_config.SerializeToString(&model_config_blob);
   reconfigure_model(instance_id, model_id, model_config_blob.size(), string_as_array(&model_config_blob));
 
-  wait_model_processed(instance_id, model_id, nDocs * 10);
+  // wait while each document pass through processor about 100 times.
+  wait_model_processed(instance_id, model_id, nDocs * 100);
 
   // disable model
   model_config.set_enabled(false);
   model_config.SerializeToString(&model_config_blob);
   reconfigure_model(instance_id, model_id, model_config_blob.size(), string_as_array(&model_config_blob));
+
+  clock_t end = clock();
 
   // Request model topics
   int length;
@@ -148,6 +149,21 @@ int main(int argc, char * argv[]) {
       std::cout << std::endl;
     }
   }
+
+  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+  return elapsed_secs;
+}
+
+int main(int argc, char * argv[]) {
+  if (argc != 4) {
+    cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
+    return 0;
+  }
+
+  cout << proc(argc, argv, 4) << " sec. ================= " << endl << endl;
+  cout << proc(argc, argv, 3) << " sec. ================= " << endl << endl;
+  cout << proc(argc, argv, 2) << " sec. ================= " << endl << endl;
+  cout << proc(argc, argv, 1) << " sec. ================= " << endl << endl;
 
   return 0;
 }

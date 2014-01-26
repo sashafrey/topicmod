@@ -75,7 +75,7 @@ namespace topicmd {
             }
 
             std::vector<float> Z(this_item_token_count);
-            int numInnerIters = 10; // ToDo
+            int numInnerIters = model.inner_iterations_count();
             for (int iInnerIter = 0;
                   iInnerIter <= numInnerIters;
                   iInnerIter++)

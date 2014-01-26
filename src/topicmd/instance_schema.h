@@ -13,6 +13,10 @@ class InstanceSchema {
     InstanceConfig instance_config_;
     std::map<int, std::shared_ptr<const ModelConfig> > models_config_;
   public:
+    InstanceSchema() : instance_config_(), models_config_()
+    {
+    }
+
     InstanceSchema(const InstanceSchema& schema) :
         instance_config_(schema.instance_config_), 
         models_config_(schema.models_config_) 

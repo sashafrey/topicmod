@@ -64,7 +64,7 @@ namespace topicmd {
 
     DataLoader data_loader_; // creates a background thread that keep loading data
     Merger merger_;           // creates a background thread that keep merging processor output
-    Processor processor_;     // creates a background thread for processing (for now only one thread)
+    std::vector<std::shared_ptr<Processor> > processors_;     // creates a background thread for processing (for now only one thread)
   };
 
 } // namespace topicmd

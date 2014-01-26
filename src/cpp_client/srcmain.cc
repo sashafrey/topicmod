@@ -51,30 +51,36 @@ double proc(int argc, char * argv[], int processors_count) {
   int nWords = pD->getW();
   int nDocs = pD->getD();
 
-  Batch batch;
-  for (int i = 0; i < nWords; i++) {
-    batch.add_token((*pVocab)[i]);
-  }
-
-  for (int iDoc = 0; iDoc < nDocs; iDoc++) {
-    auto term_ids = pD->getTermId(iDoc);
-    auto term_counts = pD->getFreq(iDoc);
-
-    Item* item = batch.add_item();
-    Field* field = item->add_field();
-    for (int iWord = 0; iWord < term_ids.size(); ++iWord) {
-      field->add_token_id(term_ids[iWord]);
-      field->add_token_count(term_counts[iWord]);
+  int nParts = 16; 
+  int iDoc = 0; 
+  int docsPerPart = nDocs / nParts + 1;
+  for (int iPart = 1; iPart <= nParts; iPart++) 
+  {
+    Batch batch;
+    for (int i = 0; i < nWords; i++) {
+      batch.add_token((*pVocab)[i]);
     }
-  }
 
-  // Index doc-word matrix
-  string batch_blob;
-  batch.SerializeToString(&batch_blob);
-  insert_batch(instance_id, batch_blob.size(), string_as_array(&batch_blob));
-  // insert_batch(instance_id, batch);
-  int generation_id = finish_partition(instance_id);
-  publish_generation(instance_id, generation_id);
+    for (; iDoc < (docsPerPart * iPart) && (iDoc < nDocs) ; iDoc++) {
+      auto term_ids = pD->getTermId(iDoc);
+      auto term_counts = pD->getFreq(iDoc);
+
+      Item* item = batch.add_item();
+      Field* field = item->add_field();
+      for (int iWord = 0; iWord < (int)term_ids.size(); ++iWord) {
+        field->add_token_id(term_ids[iWord]);
+        field->add_token_count(term_counts[iWord]);
+      }
+    }
+
+    // Index doc-word matrix
+    string batch_blob;
+    batch.SerializeToString(&batch_blob);
+    insert_batch(instance_id, batch_blob.size(), string_as_array(&batch_blob));
+    // insert_batch(instance_id, batch);
+    int generation_id = finish_partition(instance_id);
+    publish_generation(instance_id, generation_id);
+  }
 
   clock_t begin = clock();
   // enable model
@@ -113,9 +119,9 @@ double proc(int argc, char * argv[], int processors_count) {
   model_topics.ParseFromString(model_topics_blob);
   // request_model_topics(instance_id, model_id, &model_topics);
 
-  cout << "Number of tokens in model topic: " 
-       << model_topics.token_topic_size()
-       << endl;
+  std::cout << "Number of tokens in model topic: " 
+            << model_topics.token_topic_size()
+            << endl;
 
   // dispose_request(request_id);
   dispose_model(instance_id, model_id);
@@ -139,8 +145,8 @@ double proc(int argc, char * argv[], int processors_count) {
       }
 
         std::sort(p_w.begin(), p_w.end());
-        for (int iWord = p_w.size() - 1;
-             (iWord >= 0) && (iWord >= p_w.size() - wordsToSort);
+        for (int iWord = (int)p_w.size() - 1;
+             (iWord >= 0) && (iWord >= (int)p_w.size() - wordsToSort);
              iWord--)
         {
           std::cout << p_w[iWord].second << " ";

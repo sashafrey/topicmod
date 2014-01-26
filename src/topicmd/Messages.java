@@ -2653,33 +2653,23 @@ public final class Messages {
     com.google.protobuf.ByteString
         getIndexLocationBytes();
 
-    // optional bool process_items_on_publish = 3 [default = false];
+    // optional int32 index_readers_count = 3 [default = 1];
     /**
-     * <code>optional bool process_items_on_publish = 3 [default = false];</code>
-     */
-    boolean hasProcessItemsOnPublish();
-    /**
-     * <code>optional bool process_items_on_publish = 3 [default = false];</code>
-     */
-    boolean getProcessItemsOnPublish();
-
-    // optional int32 index_readers_count = 4 [default = 1];
-    /**
-     * <code>optional int32 index_readers_count = 4 [default = 1];</code>
+     * <code>optional int32 index_readers_count = 3 [default = 1];</code>
      */
     boolean hasIndexReadersCount();
     /**
-     * <code>optional int32 index_readers_count = 4 [default = 1];</code>
+     * <code>optional int32 index_readers_count = 3 [default = 1];</code>
      */
     int getIndexReadersCount();
 
-    // optional int32 processors_count = 5 [default = 1];
+    // optional int32 processors_count = 4 [default = 1];
     /**
-     * <code>optional int32 processors_count = 5 [default = 1];</code>
+     * <code>optional int32 processors_count = 4 [default = 1];</code>
      */
     boolean hasProcessorsCount();
     /**
-     * <code>optional int32 processors_count = 5 [default = 1];</code>
+     * <code>optional int32 processors_count = 4 [default = 1];</code>
      */
     int getProcessorsCount();
   }
@@ -2741,16 +2731,11 @@ public final class Messages {
             }
             case 24: {
               bitField0_ |= 0x00000002;
-              processItemsOnPublish_ = input.readBool();
+              indexReadersCount_ = input.readInt32();
               break;
             }
             case 32: {
               bitField0_ |= 0x00000004;
-              indexReadersCount_ = input.readInt32();
-              break;
-            }
-            case 40: {
-              bitField0_ |= 0x00000008;
               processorsCount_ = input.readInt32();
               break;
             }
@@ -2837,49 +2822,33 @@ public final class Messages {
       }
     }
 
-    // optional bool process_items_on_publish = 3 [default = false];
-    public static final int PROCESS_ITEMS_ON_PUBLISH_FIELD_NUMBER = 3;
-    private boolean processItemsOnPublish_;
+    // optional int32 index_readers_count = 3 [default = 1];
+    public static final int INDEX_READERS_COUNT_FIELD_NUMBER = 3;
+    private int indexReadersCount_;
     /**
-     * <code>optional bool process_items_on_publish = 3 [default = false];</code>
+     * <code>optional int32 index_readers_count = 3 [default = 1];</code>
      */
-    public boolean hasProcessItemsOnPublish() {
+    public boolean hasIndexReadersCount() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional bool process_items_on_publish = 3 [default = false];</code>
-     */
-    public boolean getProcessItemsOnPublish() {
-      return processItemsOnPublish_;
-    }
-
-    // optional int32 index_readers_count = 4 [default = 1];
-    public static final int INDEX_READERS_COUNT_FIELD_NUMBER = 4;
-    private int indexReadersCount_;
-    /**
-     * <code>optional int32 index_readers_count = 4 [default = 1];</code>
-     */
-    public boolean hasIndexReadersCount() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional int32 index_readers_count = 4 [default = 1];</code>
+     * <code>optional int32 index_readers_count = 3 [default = 1];</code>
      */
     public int getIndexReadersCount() {
       return indexReadersCount_;
     }
 
-    // optional int32 processors_count = 5 [default = 1];
-    public static final int PROCESSORS_COUNT_FIELD_NUMBER = 5;
+    // optional int32 processors_count = 4 [default = 1];
+    public static final int PROCESSORS_COUNT_FIELD_NUMBER = 4;
     private int processorsCount_;
     /**
-     * <code>optional int32 processors_count = 5 [default = 1];</code>
+     * <code>optional int32 processors_count = 4 [default = 1];</code>
      */
     public boolean hasProcessorsCount() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional int32 processors_count = 5 [default = 1];</code>
+     * <code>optional int32 processors_count = 4 [default = 1];</code>
      */
     public int getProcessorsCount() {
       return processorsCount_;
@@ -2887,7 +2856,6 @@ public final class Messages {
 
     private void initFields() {
       indexLocation_ = "";
-      processItemsOnPublish_ = false;
       indexReadersCount_ = 1;
       processorsCount_ = 1;
     }
@@ -2907,13 +2875,10 @@ public final class Messages {
         output.writeBytes(2, getIndexLocationBytes());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBool(3, processItemsOnPublish_);
+        output.writeInt32(3, indexReadersCount_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeInt32(4, indexReadersCount_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeInt32(5, processorsCount_);
+        output.writeInt32(4, processorsCount_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -2930,15 +2895,11 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, processItemsOnPublish_);
+          .computeInt32Size(3, indexReadersCount_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(4, indexReadersCount_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, processorsCount_);
+          .computeInt32Size(4, processorsCount_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3058,12 +3019,10 @@ public final class Messages {
         super.clear();
         indexLocation_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        processItemsOnPublish_ = false;
-        bitField0_ = (bitField0_ & ~0x00000002);
         indexReadersCount_ = 1;
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         processorsCount_ = 1;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -3099,13 +3058,9 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.processItemsOnPublish_ = processItemsOnPublish_;
+        result.indexReadersCount_ = indexReadersCount_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
-        }
-        result.indexReadersCount_ = indexReadersCount_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
         }
         result.processorsCount_ = processorsCount_;
         result.bitField0_ = to_bitField0_;
@@ -3128,9 +3083,6 @@ public final class Messages {
           bitField0_ |= 0x00000001;
           indexLocation_ = other.indexLocation_;
           onChanged();
-        }
-        if (other.hasProcessItemsOnPublish()) {
-          setProcessItemsOnPublish(other.getProcessItemsOnPublish());
         }
         if (other.hasIndexReadersCount()) {
           setIndexReadersCount(other.getIndexReadersCount());
@@ -3239,100 +3191,67 @@ public final class Messages {
         return this;
       }
 
-      // optional bool process_items_on_publish = 3 [default = false];
-      private boolean processItemsOnPublish_ ;
+      // optional int32 index_readers_count = 3 [default = 1];
+      private int indexReadersCount_ = 1;
       /**
-       * <code>optional bool process_items_on_publish = 3 [default = false];</code>
+       * <code>optional int32 index_readers_count = 3 [default = 1];</code>
        */
-      public boolean hasProcessItemsOnPublish() {
+      public boolean hasIndexReadersCount() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional bool process_items_on_publish = 3 [default = false];</code>
-       */
-      public boolean getProcessItemsOnPublish() {
-        return processItemsOnPublish_;
-      }
-      /**
-       * <code>optional bool process_items_on_publish = 3 [default = false];</code>
-       */
-      public Builder setProcessItemsOnPublish(boolean value) {
-        bitField0_ |= 0x00000002;
-        processItemsOnPublish_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool process_items_on_publish = 3 [default = false];</code>
-       */
-      public Builder clearProcessItemsOnPublish() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        processItemsOnPublish_ = false;
-        onChanged();
-        return this;
-      }
-
-      // optional int32 index_readers_count = 4 [default = 1];
-      private int indexReadersCount_ = 1;
-      /**
-       * <code>optional int32 index_readers_count = 4 [default = 1];</code>
-       */
-      public boolean hasIndexReadersCount() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional int32 index_readers_count = 4 [default = 1];</code>
+       * <code>optional int32 index_readers_count = 3 [default = 1];</code>
        */
       public int getIndexReadersCount() {
         return indexReadersCount_;
       }
       /**
-       * <code>optional int32 index_readers_count = 4 [default = 1];</code>
+       * <code>optional int32 index_readers_count = 3 [default = 1];</code>
        */
       public Builder setIndexReadersCount(int value) {
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000002;
         indexReadersCount_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 index_readers_count = 4 [default = 1];</code>
+       * <code>optional int32 index_readers_count = 3 [default = 1];</code>
        */
       public Builder clearIndexReadersCount() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         indexReadersCount_ = 1;
         onChanged();
         return this;
       }
 
-      // optional int32 processors_count = 5 [default = 1];
+      // optional int32 processors_count = 4 [default = 1];
       private int processorsCount_ = 1;
       /**
-       * <code>optional int32 processors_count = 5 [default = 1];</code>
+       * <code>optional int32 processors_count = 4 [default = 1];</code>
        */
       public boolean hasProcessorsCount() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional int32 processors_count = 5 [default = 1];</code>
+       * <code>optional int32 processors_count = 4 [default = 1];</code>
        */
       public int getProcessorsCount() {
         return processorsCount_;
       }
       /**
-       * <code>optional int32 processors_count = 5 [default = 1];</code>
+       * <code>optional int32 processors_count = 4 [default = 1];</code>
        */
       public Builder setProcessorsCount(int value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         processorsCount_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional int32 processors_count = 5 [default = 1];</code>
+       * <code>optional int32 processors_count = 4 [default = 1];</code>
        */
       public Builder clearProcessorsCount() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         processorsCount_ = 1;
         onChanged();
         return this;
@@ -3381,6 +3300,16 @@ public final class Messages {
      * <code>optional bool enabled = 3 [default = false];</code>
      */
     boolean getEnabled();
+
+    // optional int32 inner_iterations_count = 4 [default = 10];
+    /**
+     * <code>optional int32 inner_iterations_count = 4 [default = 10];</code>
+     */
+    boolean hasInnerIterationsCount();
+    /**
+     * <code>optional int32 inner_iterations_count = 4 [default = 10];</code>
+     */
+    int getInnerIterationsCount();
   }
   /**
    * Protobuf type {@code topicmd.ModelConfig}
@@ -3452,6 +3381,11 @@ public final class Messages {
             case 24: {
               bitField0_ |= 0x00000004;
               enabled_ = input.readBool();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              innerIterationsCount_ = input.readInt32();
               break;
             }
           }
@@ -3615,10 +3549,27 @@ public final class Messages {
       return enabled_;
     }
 
+    // optional int32 inner_iterations_count = 4 [default = 10];
+    public static final int INNER_ITERATIONS_COUNT_FIELD_NUMBER = 4;
+    private int innerIterationsCount_;
+    /**
+     * <code>optional int32 inner_iterations_count = 4 [default = 10];</code>
+     */
+    public boolean hasInnerIterationsCount() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional int32 inner_iterations_count = 4 [default = 10];</code>
+     */
+    public int getInnerIterationsCount() {
+      return innerIterationsCount_;
+    }
+
     private void initFields() {
       processorType_ = topicmd.Messages.ModelConfig.ProcessorType.BATCH_PLSA;
       topicsCount_ = 32;
       enabled_ = false;
+      innerIterationsCount_ = 10;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3641,6 +3592,9 @@ public final class Messages {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBool(3, enabled_);
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt32(4, innerIterationsCount_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3661,6 +3615,10 @@ public final class Messages {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(3, enabled_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, innerIterationsCount_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3784,6 +3742,8 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000002);
         enabled_ = false;
         bitField0_ = (bitField0_ & ~0x00000004);
+        innerIterationsCount_ = 10;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -3824,6 +3784,10 @@ public final class Messages {
           to_bitField0_ |= 0x00000004;
         }
         result.enabled_ = enabled_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.innerIterationsCount_ = innerIterationsCount_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3848,6 +3812,9 @@ public final class Messages {
         }
         if (other.hasEnabled()) {
           setEnabled(other.getEnabled());
+        }
+        if (other.hasInnerIterationsCount()) {
+          setInnerIterationsCount(other.getInnerIterationsCount());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -3974,6 +3941,39 @@ public final class Messages {
       public Builder clearEnabled() {
         bitField0_ = (bitField0_ & ~0x00000004);
         enabled_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 inner_iterations_count = 4 [default = 10];
+      private int innerIterationsCount_ = 10;
+      /**
+       * <code>optional int32 inner_iterations_count = 4 [default = 10];</code>
+       */
+      public boolean hasInnerIterationsCount() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional int32 inner_iterations_count = 4 [default = 10];</code>
+       */
+      public int getInnerIterationsCount() {
+        return innerIterationsCount_;
+      }
+      /**
+       * <code>optional int32 inner_iterations_count = 4 [default = 10];</code>
+       */
+      public Builder setInnerIterationsCount(int value) {
+        bitField0_ |= 0x00000008;
+        innerIterationsCount_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 inner_iterations_count = 4 [default = 10];</code>
+       */
+      public Builder clearInnerIterationsCount() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        innerIterationsCount_ = 10;
         onChanged();
         return this;
       }
@@ -7328,25 +7328,25 @@ public final class Messages {
       "\0221\n\toperation\030\002 \001(\0162\026.topicmd.OperationT" +
       "ype:\006INSERT\022\035\n\005field\030\003 \003(\0132\016.topicmd.Fie" +
       "ld\"3\n\005Batch\022\r\n\005token\030\001 \003(\t\022\033\n\004item\030\003 \003(\013" +
-      "2\r.topicmd.Item\"\216\001\n\016InstanceConfig\022\026\n\016in" +
-      "dex_location\030\002 \001(\t\022\'\n\030process_items_on_p" +
-      "ublish\030\003 \001(\010:\005false\022\036\n\023index_readers_cou" +
-      "nt\030\004 \001(\005:\0011\022\033\n\020processors_count\030\005 \001(\005:\0011",
-      "\"\250\001\n\013ModelConfig\022F\n\016processor_type\030\001 \001(\016" +
-      "2\".topicmd.ModelConfig.ProcessorType:\nBA" +
-      "TCH_PLSA\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n\007en" +
-      "abled\030\003 \001(\010:\005false\"\037\n\rProcessorType\022\016\n\nB" +
-      "ATCH_PLSA\020\000\"\234\001\n\014LoggerConfig\022\024\n\014log_loca" +
-      "tion\030\001 \001(\t\0220\n\005level\030\002 \001(\0162\033.topicmd.Logg" +
-      "erConfig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLE" +
-      "D\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n" +
-      "\007VERBOSE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014" +
-      "topic_weight\030\002 \003(\002\"7\n\013BatchTopics\022(\n\013ite",
-      "m_topics\030\001 \003(\0132\023.topicmd.ItemTopics\"D\n\013T" +
-      "okenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 " +
-      "\001(\005\022\024\n\014topic_weight\030\003 \003(\002\"8\n\013ModelTopics" +
-      "\022)\n\013token_topic\030\001 \003(\0132\024.topicmd.TokenTop" +
-      "ics*\033\n\rOperationType\022\n\n\006INSERT\020\000"
+      "2\r.topicmd.Item\"e\n\016InstanceConfig\022\026\n\016ind" +
+      "ex_location\030\002 \001(\t\022\036\n\023index_readers_count" +
+      "\030\003 \001(\005:\0011\022\033\n\020processors_count\030\004 \001(\005:\0011\"\314" +
+      "\001\n\013ModelConfig\022F\n\016processor_type\030\001 \001(\0162\"",
+      ".topicmd.ModelConfig.ProcessorType:\nBATC" +
+      "H_PLSA\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n\007enab" +
+      "led\030\003 \001(\010:\005false\022\"\n\026inner_iterations_cou" +
+      "nt\030\004 \001(\005:\00210\"\037\n\rProcessorType\022\016\n\nBATCH_P" +
+      "LSA\020\000\"\234\001\n\014LoggerConfig\022\024\n\014log_location\030\001" +
+      " \001(\t\0220\n\005level\030\002 \001(\0162\033.topicmd.LoggerConf" +
+      "ig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n" +
+      "\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBO" +
+      "SE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_" +
+      "weight\030\002 \003(\002\"7\n\013BatchTopics\022(\n\013item_topi",
+      "cs\030\001 \003(\0132\023.topicmd.ItemTopics\"D\n\013TokenTo" +
+      "pics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n" +
+      "\014topic_weight\030\003 \003(\002\"8\n\013ModelTopics\022)\n\013to" +
+      "ken_topic\030\001 \003(\0132\024.topicmd.TokenTopics*\033\n" +
+      "\rOperationType\022\n\n\006INSERT\020\000"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -7376,13 +7376,13 @@ public final class Messages {
           internal_static_topicmd_InstanceConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_topicmd_InstanceConfig_descriptor,
-              new java.lang.String[] { "IndexLocation", "ProcessItemsOnPublish", "IndexReadersCount", "ProcessorsCount", });
+              new java.lang.String[] { "IndexLocation", "IndexReadersCount", "ProcessorsCount", });
           internal_static_topicmd_ModelConfig_descriptor =
             getDescriptor().getMessageTypes().get(4);
           internal_static_topicmd_ModelConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_topicmd_ModelConfig_descriptor,
-              new java.lang.String[] { "ProcessorType", "TopicsCount", "Enabled", });
+              new java.lang.String[] { "ProcessorType", "TopicsCount", "Enabled", "InnerIterationsCount", });
           internal_static_topicmd_LoggerConfig_descriptor =
             getDescriptor().getMessageTypes().get(5);
           internal_static_topicmd_LoggerConfig_fieldAccessorTable = new

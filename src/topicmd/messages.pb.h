@@ -492,24 +492,17 @@ class InstanceConfig : public ::google::protobuf::Message {
   inline ::std::string* release_index_location();
   inline void set_allocated_index_location(::std::string* index_location);
 
-  // optional bool process_items_on_publish = 3 [default = false];
-  inline bool has_process_items_on_publish() const;
-  inline void clear_process_items_on_publish();
-  static const int kProcessItemsOnPublishFieldNumber = 3;
-  inline bool process_items_on_publish() const;
-  inline void set_process_items_on_publish(bool value);
-
-  // optional int32 index_readers_count = 4 [default = 1];
+  // optional int32 index_readers_count = 3 [default = 1];
   inline bool has_index_readers_count() const;
   inline void clear_index_readers_count();
-  static const int kIndexReadersCountFieldNumber = 4;
+  static const int kIndexReadersCountFieldNumber = 3;
   inline ::google::protobuf::int32 index_readers_count() const;
   inline void set_index_readers_count(::google::protobuf::int32 value);
 
-  // optional int32 processors_count = 5 [default = 1];
+  // optional int32 processors_count = 4 [default = 1];
   inline bool has_processors_count() const;
   inline void clear_processors_count();
-  static const int kProcessorsCountFieldNumber = 5;
+  static const int kProcessorsCountFieldNumber = 4;
   inline ::google::protobuf::int32 processors_count() const;
   inline void set_processors_count(::google::protobuf::int32 value);
 
@@ -517,8 +510,6 @@ class InstanceConfig : public ::google::protobuf::Message {
  private:
   inline void set_has_index_location();
   inline void clear_has_index_location();
-  inline void set_has_process_items_on_publish();
-  inline void clear_has_process_items_on_publish();
   inline void set_has_index_readers_count();
   inline void clear_has_index_readers_count();
   inline void set_has_processors_count();
@@ -527,12 +518,11 @@ class InstanceConfig : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* index_location_;
-  bool process_items_on_publish_;
   ::google::protobuf::int32 index_readers_count_;
   ::google::protobuf::int32 processors_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -641,6 +631,13 @@ class ModelConfig : public ::google::protobuf::Message {
   inline bool enabled() const;
   inline void set_enabled(bool value);
 
+  // optional int32 inner_iterations_count = 4 [default = 10];
+  inline bool has_inner_iterations_count() const;
+  inline void clear_inner_iterations_count();
+  static const int kInnerIterationsCountFieldNumber = 4;
+  inline ::google::protobuf::int32 inner_iterations_count() const;
+  inline void set_inner_iterations_count(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:topicmd.ModelConfig)
  private:
   inline void set_has_processor_type();
@@ -649,15 +646,18 @@ class ModelConfig : public ::google::protobuf::Message {
   inline void clear_has_topics_count();
   inline void set_has_enabled();
   inline void clear_has_enabled();
+  inline void set_has_inner_iterations_count();
+  inline void clear_has_inner_iterations_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   int processor_type_;
   ::google::protobuf::int32 topics_count_;
   bool enabled_;
+  ::google::protobuf::int32 inner_iterations_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1513,37 +1513,15 @@ inline void InstanceConfig::set_allocated_index_location(::std::string* index_lo
   }
 }
 
-// optional bool process_items_on_publish = 3 [default = false];
-inline bool InstanceConfig::has_process_items_on_publish() const {
+// optional int32 index_readers_count = 3 [default = 1];
+inline bool InstanceConfig::has_index_readers_count() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void InstanceConfig::set_has_process_items_on_publish() {
+inline void InstanceConfig::set_has_index_readers_count() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void InstanceConfig::clear_has_process_items_on_publish() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void InstanceConfig::clear_process_items_on_publish() {
-  process_items_on_publish_ = false;
-  clear_has_process_items_on_publish();
-}
-inline bool InstanceConfig::process_items_on_publish() const {
-  return process_items_on_publish_;
-}
-inline void InstanceConfig::set_process_items_on_publish(bool value) {
-  set_has_process_items_on_publish();
-  process_items_on_publish_ = value;
-}
-
-// optional int32 index_readers_count = 4 [default = 1];
-inline bool InstanceConfig::has_index_readers_count() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void InstanceConfig::set_has_index_readers_count() {
-  _has_bits_[0] |= 0x00000004u;
-}
 inline void InstanceConfig::clear_has_index_readers_count() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void InstanceConfig::clear_index_readers_count() {
   index_readers_count_ = 1;
@@ -1557,15 +1535,15 @@ inline void InstanceConfig::set_index_readers_count(::google::protobuf::int32 va
   index_readers_count_ = value;
 }
 
-// optional int32 processors_count = 5 [default = 1];
+// optional int32 processors_count = 4 [default = 1];
 inline bool InstanceConfig::has_processors_count() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void InstanceConfig::set_has_processors_count() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void InstanceConfig::clear_has_processors_count() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void InstanceConfig::clear_processors_count() {
   processors_count_ = 1;
@@ -1648,6 +1626,28 @@ inline bool ModelConfig::enabled() const {
 inline void ModelConfig::set_enabled(bool value) {
   set_has_enabled();
   enabled_ = value;
+}
+
+// optional int32 inner_iterations_count = 4 [default = 10];
+inline bool ModelConfig::has_inner_iterations_count() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ModelConfig::set_has_inner_iterations_count() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ModelConfig::clear_has_inner_iterations_count() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ModelConfig::clear_inner_iterations_count() {
+  inner_iterations_count_ = 10;
+  clear_has_inner_iterations_count();
+}
+inline ::google::protobuf::int32 ModelConfig::inner_iterations_count() const {
+  return inner_iterations_count_;
+}
+inline void ModelConfig::set_inner_iterations_count(::google::protobuf::int32 value) {
+  set_has_inner_iterations_count();
+  inner_iterations_count_ = value;
 }
 
 // -------------------------------------------------------------------

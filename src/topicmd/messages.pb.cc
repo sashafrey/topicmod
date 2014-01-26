@@ -114,9 +114,8 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Batch));
   InstanceConfig_descriptor_ = file->message_type(3);
-  static const int InstanceConfig_offsets_[4] = {
+  static const int InstanceConfig_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InstanceConfig, index_location_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InstanceConfig, process_items_on_publish_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InstanceConfig, index_readers_count_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InstanceConfig, processors_count_),
   };
@@ -132,10 +131,11 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(InstanceConfig));
   ModelConfig_descriptor_ = file->message_type(4);
-  static const int ModelConfig_offsets_[3] = {
+  static const int ModelConfig_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, processor_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, topics_count_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, enabled_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, inner_iterations_count_),
   };
   ModelConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -303,25 +303,25 @@ void protobuf_AddDesc_messages_2eproto() {
     "\0221\n\toperation\030\002 \001(\0162\026.topicmd.OperationT"
     "ype:\006INSERT\022\035\n\005field\030\003 \003(\0132\016.topicmd.Fie"
     "ld\"3\n\005Batch\022\r\n\005token\030\001 \003(\t\022\033\n\004item\030\003 \003(\013"
-    "2\r.topicmd.Item\"\216\001\n\016InstanceConfig\022\026\n\016in"
-    "dex_location\030\002 \001(\t\022\'\n\030process_items_on_p"
-    "ublish\030\003 \001(\010:\005false\022\036\n\023index_readers_cou"
-    "nt\030\004 \001(\005:\0011\022\033\n\020processors_count\030\005 \001(\005:\0011"
-    "\"\250\001\n\013ModelConfig\022F\n\016processor_type\030\001 \001(\016"
-    "2\".topicmd.ModelConfig.ProcessorType:\nBA"
-    "TCH_PLSA\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n\007en"
-    "abled\030\003 \001(\010:\005false\"\037\n\rProcessorType\022\016\n\nB"
-    "ATCH_PLSA\020\000\"\234\001\n\014LoggerConfig\022\024\n\014log_loca"
-    "tion\030\001 \001(\t\0220\n\005level\030\002 \001(\0162\033.topicmd.Logg"
-    "erConfig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLE"
-    "D\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n"
-    "\007VERBOSE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014"
-    "topic_weight\030\002 \003(\002\"7\n\013BatchTopics\022(\n\013ite"
-    "m_topics\030\001 \003(\0132\023.topicmd.ItemTopics\"D\n\013T"
-    "okenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 "
-    "\001(\005\022\024\n\014topic_weight\030\003 \003(\002\"8\n\013ModelTopics"
-    "\022)\n\013token_topic\030\001 \003(\0132\024.topicmd.TokenTop"
-    "ics*\033\n\rOperationType\022\n\n\006INSERT\020\000", 992);
+    "2\r.topicmd.Item\"e\n\016InstanceConfig\022\026\n\016ind"
+    "ex_location\030\002 \001(\t\022\036\n\023index_readers_count"
+    "\030\003 \001(\005:\0011\022\033\n\020processors_count\030\004 \001(\005:\0011\"\314"
+    "\001\n\013ModelConfig\022F\n\016processor_type\030\001 \001(\0162\""
+    ".topicmd.ModelConfig.ProcessorType:\nBATC"
+    "H_PLSA\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n\007enab"
+    "led\030\003 \001(\010:\005false\022\"\n\026inner_iterations_cou"
+    "nt\030\004 \001(\005:\00210\"\037\n\rProcessorType\022\016\n\nBATCH_P"
+    "LSA\020\000\"\234\001\n\014LoggerConfig\022\024\n\014log_location\030\001"
+    " \001(\t\0220\n\005level\030\002 \001(\0162\033.topicmd.LoggerConf"
+    "ig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n"
+    "\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBO"
+    "SE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_"
+    "weight\030\002 \003(\002\"7\n\013BatchTopics\022(\n\013item_topi"
+    "cs\030\001 \003(\0132\023.topicmd.ItemTopics\"D\n\013TokenTo"
+    "pics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n"
+    "\014topic_weight\030\003 \003(\002\"8\n\013ModelTopics\022)\n\013to"
+    "ken_topic\030\001 \003(\0132\024.topicmd.TokenTopics*\033\n"
+    "\rOperationType\022\n\n\006INSERT\020\000", 986);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Field::_default_field_name_ =
@@ -1240,7 +1240,6 @@ void Batch::Swap(Batch* other) {
 
 #ifndef _MSC_VER
 const int InstanceConfig::kIndexLocationFieldNumber;
-const int InstanceConfig::kProcessItemsOnPublishFieldNumber;
 const int InstanceConfig::kIndexReadersCountFieldNumber;
 const int InstanceConfig::kProcessorsCountFieldNumber;
 #endif  // !_MSC_VER
@@ -1262,7 +1261,6 @@ InstanceConfig::InstanceConfig(const InstanceConfig& from)
 void InstanceConfig::SharedCtor() {
   _cached_size_ = 0;
   index_location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  process_items_on_publish_ = false;
   index_readers_count_ = 1;
   processors_count_ = 1;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1308,7 +1306,6 @@ void InstanceConfig::Clear() {
         index_location_->clear();
       }
     }
-    process_items_on_publish_ = false;
     index_readers_count_ = 1;
     processors_count_ = 1;
   }
@@ -1334,28 +1331,12 @@ bool InstanceConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(24)) goto parse_process_items_on_publish;
+        if (input->ExpectTag(24)) goto parse_index_readers_count;
         break;
       }
 
-      // optional bool process_items_on_publish = 3 [default = false];
+      // optional int32 index_readers_count = 3 [default = 1];
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_process_items_on_publish:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &process_items_on_publish_)));
-          set_has_process_items_on_publish();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(32)) goto parse_index_readers_count;
-        break;
-      }
-
-      // optional int32 index_readers_count = 4 [default = 1];
-      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_index_readers_count:
@@ -1366,12 +1347,12 @@ bool InstanceConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(40)) goto parse_processors_count;
+        if (input->ExpectTag(32)) goto parse_processors_count;
         break;
       }
 
-      // optional int32 processors_count = 5 [default = 1];
-      case 5: {
+      // optional int32 processors_count = 4 [default = 1];
+      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_processors_count:
@@ -1413,19 +1394,14 @@ void InstanceConfig::SerializeWithCachedSizes(
       2, this->index_location(), output);
   }
 
-  // optional bool process_items_on_publish = 3 [default = false];
-  if (has_process_items_on_publish()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->process_items_on_publish(), output);
-  }
-
-  // optional int32 index_readers_count = 4 [default = 1];
+  // optional int32 index_readers_count = 3 [default = 1];
   if (has_index_readers_count()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->index_readers_count(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->index_readers_count(), output);
   }
 
-  // optional int32 processors_count = 5 [default = 1];
+  // optional int32 processors_count = 4 [default = 1];
   if (has_processors_count()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->processors_count(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->processors_count(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1446,19 +1422,14 @@ void InstanceConfig::SerializeWithCachedSizes(
         2, this->index_location(), target);
   }
 
-  // optional bool process_items_on_publish = 3 [default = false];
-  if (has_process_items_on_publish()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->process_items_on_publish(), target);
-  }
-
-  // optional int32 index_readers_count = 4 [default = 1];
+  // optional int32 index_readers_count = 3 [default = 1];
   if (has_index_readers_count()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->index_readers_count(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->index_readers_count(), target);
   }
 
-  // optional int32 processors_count = 5 [default = 1];
+  // optional int32 processors_count = 4 [default = 1];
   if (has_processors_count()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->processors_count(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->processors_count(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1479,19 +1450,14 @@ int InstanceConfig::ByteSize() const {
           this->index_location());
     }
 
-    // optional bool process_items_on_publish = 3 [default = false];
-    if (has_process_items_on_publish()) {
-      total_size += 1 + 1;
-    }
-
-    // optional int32 index_readers_count = 4 [default = 1];
+    // optional int32 index_readers_count = 3 [default = 1];
     if (has_index_readers_count()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->index_readers_count());
     }
 
-    // optional int32 processors_count = 5 [default = 1];
+    // optional int32 processors_count = 4 [default = 1];
     if (has_processors_count()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -1528,9 +1494,6 @@ void InstanceConfig::MergeFrom(const InstanceConfig& from) {
     if (from.has_index_location()) {
       set_index_location(from.index_location());
     }
-    if (from.has_process_items_on_publish()) {
-      set_process_items_on_publish(from.process_items_on_publish());
-    }
     if (from.has_index_readers_count()) {
       set_index_readers_count(from.index_readers_count());
     }
@@ -1561,7 +1524,6 @@ bool InstanceConfig::IsInitialized() const {
 void InstanceConfig::Swap(InstanceConfig* other) {
   if (other != this) {
     std::swap(index_location_, other->index_location_);
-    std::swap(process_items_on_publish_, other->process_items_on_publish_);
     std::swap(index_readers_count_, other->index_readers_count_);
     std::swap(processors_count_, other->processors_count_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -1604,6 +1566,7 @@ const int ModelConfig::ProcessorType_ARRAYSIZE;
 const int ModelConfig::kProcessorTypeFieldNumber;
 const int ModelConfig::kTopicsCountFieldNumber;
 const int ModelConfig::kEnabledFieldNumber;
+const int ModelConfig::kInnerIterationsCountFieldNumber;
 #endif  // !_MSC_VER
 
 ModelConfig::ModelConfig()
@@ -1625,6 +1588,7 @@ void ModelConfig::SharedCtor() {
   processor_type_ = 0;
   topics_count_ = 32;
   enabled_ = false;
+  inner_iterations_count_ = 10;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1663,6 +1627,7 @@ void ModelConfig::Clear() {
     processor_type_ = 0;
     topics_count_ = 32;
     enabled_ = false;
+    inner_iterations_count_ = 10;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -1722,6 +1687,22 @@ bool ModelConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(32)) goto parse_inner_iterations_count;
+        break;
+      }
+
+      // optional int32 inner_iterations_count = 4 [default = 10];
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_inner_iterations_count:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &inner_iterations_count_)));
+          set_has_inner_iterations_count();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1760,6 +1741,11 @@ void ModelConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->enabled(), output);
   }
 
+  // optional int32 inner_iterations_count = 4 [default = 10];
+  if (has_inner_iterations_count()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->inner_iterations_count(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1782,6 +1768,11 @@ void ModelConfig::SerializeWithCachedSizes(
   // optional bool enabled = 3 [default = false];
   if (has_enabled()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->enabled(), target);
+  }
+
+  // optional int32 inner_iterations_count = 4 [default = 10];
+  if (has_inner_iterations_count()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->inner_iterations_count(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1811,6 +1802,13 @@ int ModelConfig::ByteSize() const {
     // optional bool enabled = 3 [default = false];
     if (has_enabled()) {
       total_size += 1 + 1;
+    }
+
+    // optional int32 inner_iterations_count = 4 [default = 10];
+    if (has_inner_iterations_count()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->inner_iterations_count());
     }
 
   }
@@ -1849,6 +1847,9 @@ void ModelConfig::MergeFrom(const ModelConfig& from) {
     if (from.has_enabled()) {
       set_enabled(from.enabled());
     }
+    if (from.has_inner_iterations_count()) {
+      set_inner_iterations_count(from.inner_iterations_count());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1875,6 +1876,7 @@ void ModelConfig::Swap(ModelConfig* other) {
     std::swap(processor_type_, other->processor_type_);
     std::swap(topics_count_, other->topics_count_);
     std::swap(enabled_, other->enabled_);
+    std::swap(inner_iterations_count_, other->inner_iterations_count_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -10,6 +10,7 @@
 #include <boost/utility.hpp>
 
 #include "topicmd/instance_schema.h"
+#include "topicmd/internals.pb.h"
 #include "topicmd/partition.h"
 #include "topicmd/merger.h"
 #include "topicmd/thread_safe_holder.h"

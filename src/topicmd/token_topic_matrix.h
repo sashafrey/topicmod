@@ -9,36 +9,56 @@
 
 namespace topicmd {
 
-class TokenTopicMatrix : boost::noncopyable
+class TokenTopicMatrix
 {
  private:
   std::map<std::string, int> token_to_token_id_;
   std::vector<std::string> token_id_to_token_;
-  int tokens_count_;
   int topics_count_;
 
   // Statistics: how many documents in total 
   // have made a contribution into this token topic matrix
   int items_processed_; 
 
-  float* data_;  
+  std::vector<float*> data_; // vector of length tokens_count
+  std::vector<float> normalizer_; // normalization constant for each topic
  public:
-  TokenTopicMatrix() :
+  explicit TokenTopicMatrix(int topics_count) :
       token_to_token_id_(),
       token_id_to_token_(),
-      tokens_count_(0),
-      topics_count_(0),
+      topics_count_(topics_count),
       items_processed_(0),
-      data_(NULL)
+      data_(),
+      normalizer_()
   {
+    assert(topics_count_ > 0);
+    normalizer_.resize(topics_count_);
+    memset(&normalizer_[0], 0, sizeof(float) * topics_count_);
+  }
+
+  explicit TokenTopicMatrix(const TokenTopicMatrix& rhs) :
+      token_to_token_id_(rhs.token_to_token_id_),
+      token_id_to_token_(rhs.token_id_to_token_),
+      topics_count_(rhs.topics_count_),
+      items_processed_(rhs.items_processed_),
+      data_(), // must be deep-copied 
+      normalizer_(rhs.normalizer_)
+  {
+    for (int i = 0; i < rhs.data_.size(); i++) {
+      float* values = new float[topics_count_];
+      data_.push_back(values);
+      memcpy(values, rhs.data_[i], sizeof(float) * topics_count_);
+    }
   }
 
   ~TokenTopicMatrix() {
-    delete [] data_;
+    std::for_each(data_.begin(), data_.end(), [&](float* value) {
+      delete [] value; 
+    }); 
   }
 
   int tokens_count() const {
-    return tokens_count_;
+    return data_.size();
   }
 
   int topics_count() const {
@@ -54,12 +74,21 @@ class TokenTopicMatrix : boost::noncopyable
   }
 
   void add_token(const std::string& token) {
-    if (token_to_token_id_.find(token) ==
+    if (token_to_token_id_.find(token) !=
         token_to_token_id_.end())
     {
-      token_to_token_id_.insert(
-          std::make_pair(token, tokens_count_++));
-      token_id_to_token_.push_back(token);
+      return;
+    }
+    
+    token_to_token_id_.insert(
+        std::make_pair(token, tokens_count()));
+    token_id_to_token_.push_back(token);
+    float* values = new float[topics_count()];      
+    data_.push_back(values);
+    for (int i = 0; i < topics_count(); ++i) {
+      float val = (float)rand() / (float)RAND_MAX;
+      values[i] = val;
+      normalizer_[i] += val;
     }
   }
 
@@ -73,57 +102,32 @@ class TokenTopicMatrix : boost::noncopyable
   }
 
   std::string token(int index) const {
-    assert(index < tokens_count_);
+    assert(index < tokens_count());
     return token_id_to_token_[index];
   }
   
-  float* token_topics(const std::string& token) const {
+  const float* token_topics(const std::string& token) const {
     auto iter = token_to_token_id_.find(token);
     if (iter == token_to_token_id_.end()) {
       return NULL;
     }
 
-    return &data_[topics_count_ * iter->second];
+    return data_[iter->second];
   }
 
-  float* token_topics(int token_id) const {
+  const float* token_topics(int token_id) const {
     assert(token_id >= 0);
-    assert(token_id < tokens_count_);
-    return &data_[topics_count_ * token_id];
+    assert(token_id < tokens_count());
+    return data_[token_id];
+  }
+
+  const float* normalizer() const {
+    return &normalizer_[0];
   }
     
-  void Initialize(int topics_count, bool as_random = false) {
-    assert(data_ == NULL);
-    assert(tokens_count_ >= 0);
-    assert(topics_count > 0);
-
-    topics_count_ = topics_count;
-
-    // The following allocation should work even when tokens_count_ == 0
-    // http://stackoverflow.com/questions/1087042/c-new-int0-will-it-allocate-memory
-    data_ = new float[ tokens_count_ * topics_count_]; 
-
-    if (as_random) {
-      for (int i = 0; i < tokens_count_ * topics_count_; ++i) {
-        data_[i] = (float)rand() / (float)RAND_MAX;
-      }
-    } else {
-      memset(data_, 0, sizeof(float) * tokens_count_ * topics_count_);
-    }
-  }
-
-  void Initialize(const TokenTopicMatrix& rhs) {
-    token_to_token_id_ = rhs.token_to_token_id_;
-    token_id_to_token_ = rhs.token_id_to_token_;
-    tokens_count_ = rhs.tokens_count_;
-    topics_count_ = rhs.topics_count_;
-    items_processed_ = rhs.items_processed_;
-    data_ = new float[ tokens_count_ * topics_count_ ];
-    memcpy(data_, rhs.data_, sizeof(float) * tokens_count_ * topics_count_);
-  }
-
-  void set_token_topic(int token_id, int topic_id, float value) {
-    data_[token_id * topics_count_ + topic_id] = value;
+  void add_token_topic(int token_id, int topic_id, float value) {
+    data_[token_id][topic_id] = value;
+    normalizer_[topic_id] += value;
   }
 };
 

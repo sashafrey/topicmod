@@ -38,6 +38,7 @@ SRCS_LIB      = messages.pb.cc \
 		data_loader.cc \
 		instance.cc \
 		instance_manager.cc \
+		internals.pb.cc 
 		processor.cc \
 		partition.cc \
 		merger.cc

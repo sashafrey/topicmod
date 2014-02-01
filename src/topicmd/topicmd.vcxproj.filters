@@ -9,6 +9,7 @@
     <ClCompile Include="partition.cc" />
     <ClCompile Include="processor.cc" />
     <ClCompile Include="data_loader.cc" />
+    <ClCompile Include="internals.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
@@ -24,5 +25,6 @@
     <ClInclude Include="token_topic_matrix.h" />
     <ClInclude Include="data_loader.h" />
     <ClInclude Include="instance_schema.h" />
+    <ClInclude Include="internals.pb.h" />
   </ItemGroup>
 </Project>

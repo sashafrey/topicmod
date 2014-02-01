@@ -48,18 +48,18 @@ When codebase meets this success criteria we are free to release the library.
 Core modules are \emph{DataLoader}, \emph{Processor}, and \emph{Merger}.
 Interaction between these components is orchestrated by a class called \emph{Instance}.
 
-Execution is divided into two phases: indexing and the actual processing. 
-The indexing phase produces index files and stores them on disk. 
-Index files expected to have multiple independent index parts of aprox. equal size. 
-Each part contains a subset of documents from the whole collection. 
+Execution is divided into two phases: indexing and the actual processing.
+The indexing phase produces index files and stores them on disk.
+Index files expected to have multiple independent index parts of aprox. equal size.
+Each part contains a subset of documents from the whole collection.
 Processing phase begins with dataloader component, which loads index parts
-(potentially in iterative scans), and store them into in-memory queue. 
+(potentially in iterative scans), and store them into in-memory queue.
 Then processor component withdraws index parts from the queue
 and infers a distribution of the documents into topics.
-The output is stored in yet another queue. 
+The output is stored in yet another queue.
 This queue is read by merger, which updates word-topic distribution.
 Before processing new index part the processor asks merger about the latest view of word-topic matrix.
-This design supports multiple concurrent dataloaders, multiple concurrent processors, but only one merger. 
+This design supports multiple concurrent dataloaders, multiple concurrent processors, but only one merger.
 
 \subsection{Concurrency and thread safety}
 The system must have the following locks:
@@ -70,16 +70,16 @@ The system must have the following locks:
 \end{enumerate}
 
 It is easy to understand why locks (1) and (2) are cheap:
-we just assume that index parts are large enough so that the time is mostly spent in reading and processing, 
-not in transferring references from dataloader to processor. 
-Lock (3) will be very check if impose one requirement: 
-once the merger returns a view of word-topic matrix to processor, 
+we just assume that index parts are large enough so that the time is mostly spent in reading and processing,
+not in transferring references from dataloader to processor.
+Lock (3) will be very check if impose one requirement:
+once the merger returns a view of word-topic matrix to processor,
 this view is read-only and can be further accessed without locks.
 Merger will proceed by building a new view (again without locking since it is not in use by any processor),
-up to the point where new view is different enough from the old view, 
+up to the point where new view is different enough from the old view,
 and hence should be will be replaced with a new one.
-This will not change the view for all running processors 
-until the finish current index part and request new view from merger. 
+This will not change the view for all running processors
+until the finish current index part and request new view from merger.
 Therefore, lock (3) is only acquired when
 
 a) merger updates the “current view” of world-topic matrix, and
@@ -89,13 +89,13 @@ b) processor finishes index part, and requests new view of world-topic matrix.
 All locks (1), (2), (3) can be implemented as usual boost locks.
 
 This design can be extended to cluster environment by implementing a networkmerger,
-which in addition to merging word-topic matrix within local process should merge it with updates, 
+which in addition to merging word-topic matrix within local process should merge it with updates,
 coming from networkmergers from other nodes.
 This design can also utilize CUDA-enabled devices or Index Xeon Phi co-processor
-by implementing a special processor (without changing the rest of architecture). 
-For CUDA the most promising parallelization is to assign CUDA-threads to topic 
+by implementing a special processor (without changing the rest of architecture).
+For CUDA the most promising parallelization is to assign CUDA-threads to topic
 while inferring a doc-topic distribution.
-dataloader might implement caching, so that if the whole collection fits into memory 
+dataloader might implement caching, so that if the whole collection fits into memory
 it doesn’t have to reload index parts from disk for the second and further scans.
 
 Last but not least:
@@ -125,14 +125,14 @@ and a compiled version (other messages.* files).
 messages.proto describes key objects that users can pass into the library.
 For example, it defines the following entities:
 \begin{itemize}
-    \item the format of input data 
+    \item the format of input data
         (e.g. the format to represent an arbitrary collection of textual files),
     \item all configuration parameters (number of concurrent processors, algorithm to use, etc),
     \item the format of output topic models
  \end{itemize}
 
 For example, collection is represented as a set of Items.
-Items is what you normally call ``documents'' - they have a list of tokens (aka terms), 
+Items is what you normally call ``documents'' - they have a list of tokens (aka terms),
 together with the number of occurrences of those tokens.
 All tokens in each Item are organized into Field (for example, ``body'', ``author'', ``title'', ``year'').
 This is a nice way of incorporating metadata into the document.
@@ -144,7 +144,7 @@ and the corresponding occurences.
 
 \paragraph{Key benefits of google protofol buffers}
 
-Once you define you objects in .proto file, you can use them in many programming languages. 
+Once you define you objects in .proto file, you can use them in many programming languages.
 Google officially supports C++, Python, and Java. There are also good implementation for $C\sharp$.
 I've also heard that it might be something for matlab, but I'm not so sure. Here is how it works:
 
@@ -161,7 +161,7 @@ and this is the most portable solution.
 
 \subsection{There is so much code.. Where should I start?!}
 
-First, take a look at cpp\_client/srcmain.cc. 
+First, take a look at cpp\_client/srcmain.cc.
 It is an example of ``external application build on top of our library'' "---
 it loads a collection of texts from a file,
 splits this collections into chunks ("partitions"),
@@ -182,10 +182,10 @@ It has the following implementation details:
     \item Strategy of updating matrix $\Phi$: whenever Merger finishes processing of the next Processors output,
     it updates matrix $\Phi$. It will be picked by each processor whenever it starts processing next partition.
     \item Matrix Phi is initialized with random [0..1] values.
-    \item Algorithm is truly online. Distributions $\theta_{t d}$ are inferred from scratch on every scan of the collection (Processors currently don't have a way to store the $\Theta$ values from previous iteration, 
+    \item Algorithm is truly online. Distributions $\theta_{t d}$ are inferred from scratch on every scan of the collection (Processors currently don't have a way to store the $\Theta$ values from previous iteration,
         and re-use these values in later iteration)
-    \item Counters $n_{w t}$ and $n_t$ keep increasing, even between scans of the whole collection. 
-    No exponential decay is currently implemented.         
+    \item Counters $n_{w t}$ and $n_t$ keep increasing, even between scans of the whole collection.
+    No exponential decay is currently implemented.
     \item Tuning the model is a background task. The only supported stop-criteria is the number of processed documents. The simplest way to express this is to say "stop after N*K documents", when N is the size of collection,
         and K is the desired number of scans.
 \end{enumerate}
@@ -208,12 +208,20 @@ It has the following implementation details:
  \end{verbatim}
 \item Download and unpack protobuf 2.5.0 (https://protobuf.googlecode.com/files/protobuf-2.5.0.zip).
    Set environmental variable PROTOBUF\_ROOT to the root protocol buffers library.
-  \begin{verbatim} 
+  \begin{verbatim}
 	setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
   \end{verbatim}
 \item Install Visual Studio 2010 + SP1, or Visual Studio 2012.
+\item Configure Visual Studio to use spaces instead of tabs; tab is 2 spaces.
+    To do so, open Tools / Text Editor / All languages / Tabs, and select the following:
+    \begin{itemize}
+        \item Indenting "--- smart,
+        \item Tab size "--- 2,
+        \item Indent size "--- 2,
+        \item Select "insert spaces"
+    \end{itemize}
 \item Open root/src/topicmd.sln
-\item Build all projects (debug or release, Win32) and execute tests. No 64-bit builds yet. 
+\item Build all projects (debug or release, Win32) and execute tests. No 64-bit builds yet.
 \end{enumerate}
 
 
@@ -243,4 +251,4 @@ The key responsibility of Integrator is to ensure stability of the master branch
 \end{itemize}
 Everyone should periodically merge master branch into their feature branches.
 
-\end{document}
+\end{document} 

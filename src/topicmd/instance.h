@@ -11,6 +11,7 @@
 
 #include "topicmd/data_loader.h"
 #include "topicmd/instance_schema.h"
+#include "topicmd/internals.pb.h"
 #include "topicmd/merger.h"
 #include "topicmd/messages.pb.h"
 #include "topicmd/partition.h"

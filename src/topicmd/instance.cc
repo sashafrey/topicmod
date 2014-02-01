@@ -21,7 +21,7 @@ namespace topicmd {
     merger_queue_lock_(),
     merger_queue_(),
     data_loader_(processor_queue_lock_, processor_queue_, published_generation_),
-    merger_(merger_queue_lock_, merger_queue_, published_generation_, schema_),
+    merger_(merger_queue_lock_, merger_queue_, schema_),
     processors_()
   {
     Reconfigure(config);
@@ -116,13 +116,14 @@ namespace topicmd {
 
   int Instance::RequestModelTopics(int model_id, ModelTopics* model_topics) {
     std::shared_ptr<const TokenTopicMatrix> ttm = merger_.token_topic_matrix(model_id);
+    const float* normalizer = ttm->normalizer();
     int nTopics = ttm->topics_count(); 
     for (int iToken = 0; iToken < ttm->tokens_count(); iToken++) {
       TokenTopics* token_topics = model_topics->add_token_topic();
       token_topics->set_token(ttm->token(iToken));
-      float* token_topics_weight = ttm->token_topics(iToken);
+      const float* token_topics_weight = ttm->token_topics(iToken);
       for (int iTopic = 0; iTopic < nTopics; ++iTopic) {
-        token_topics->add_topic_weight(token_topics_weight[iTopic]);
+        token_topics->add_topic_weight(token_topics_weight[iTopic] / normalizer[iTopic]);
       }
     }
     

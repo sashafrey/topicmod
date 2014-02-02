@@ -10,6 +10,8 @@ using namespace topicmd;
 TEST(CppInterface, Canary) {
 }
 
+// To run this particular test:
+// topicmd_tests.exe --gtest_filter=CppInterface.*
 TEST(CppInterface, Basic) {
   const int nTopics = 5;
 
@@ -24,21 +26,21 @@ TEST(CppInterface, Basic) {
   
   // Load doc-token matrix
   int nTokens = 10;
-  int nDocs = 5;
+  int nDocs = 15;
 
   Batch batch;
   for (int i = 0; i < nTokens; i++) {
-    batch.add_token("token");
+    std::stringstream str;
+    str << "token" << i;
+    batch.add_token(str.str());
   }
-
-  batch.add_token("second_token");
 
   for (int iDoc = 0; iDoc < nDocs; iDoc++) {
     Item* item = batch.add_item();
     Field* field = item->add_field();
     for (int iToken = 0; iToken < nTokens; ++iToken) {
       field->add_token_id(iToken);
-      field->add_token_count(iDoc + iToken);
+      field->add_token_count(iDoc + iToken + 1);
     }
   }
 
@@ -65,8 +67,8 @@ TEST(CppInterface, Basic) {
   ModelTopics model_topics;
   request_model_topics(instance_id, model_id, &model_topics);
 
-  int nUniqueTokens = 2; // "token" and "second_token"
-  EXPECT_EQ(model_topics.token_topic_size(), nUniqueTokens);
+  int nUniqueTokens = nTokens;
+  EXPECT_EQ(nUniqueTokens, model_topics.token_topic_size());
   const TokenTopics& first_token_topics = model_topics.token_topic(0);
   EXPECT_EQ(first_token_topics.topic_weight_size(), nTopics);
 

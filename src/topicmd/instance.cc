@@ -31,6 +31,8 @@ namespace topicmd {
   }
 
   int Instance::UpdateModel(int model_id, const ModelConfig& config) {
+    merger_.UpdateModel(model_id, config);
+    
     auto new_schema = schema_.get_copy();
     new_schema->set_model_config(model_id, std::make_shared<const ModelConfig>(config));
     schema_.set(new_schema);
@@ -41,6 +43,8 @@ namespace topicmd {
     auto new_schema = schema_.get_copy();
     new_schema->discard_model(model_id);
     schema_.set(new_schema);
+
+    merger_.DisposeModel(model_id);
     return TOPICMD_SUCCESS;
   }
 

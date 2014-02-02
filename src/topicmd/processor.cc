@@ -34,6 +34,7 @@ namespace topicmd {
 
           std::shared_ptr<const TokenTopicMatrix> token_topic_matrix
               = merger_.token_topic_matrix(model_id);
+          assert(token_topic_matrix.get() != NULL);
           int tokens_count = token_topic_matrix->tokens_count();
           int topics_count = token_topic_matrix->topics_count();
           const float* normalizer = token_topic_matrix->normalizer();
@@ -45,6 +46,10 @@ namespace topicmd {
 		      po->set_model_id(model_id);
 		      po->set_items_processed(items_count);
 		      po->set_topics_count(topics_count);
+          for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+            po->mutable_topic_counters()->add_value(0.0f);
+          }
+
 		      for (int iToken = 0; iToken < token_topic_matrix->tokens_count(); iToken++) {
 			      po->add_token(token_topic_matrix->token(iToken));
 			      Counters* counters = po->add_token_counters();

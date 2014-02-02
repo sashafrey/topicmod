@@ -17,6 +17,8 @@ Merger::Merger(boost::mutex& merger_queue_lock,
 {
 }
 
+
+
 void Merger::ThreadFunction() 
 {
   try {
@@ -29,21 +31,7 @@ void Merger::ThreadFunction()
       // which also throws boost::thread_interrupted
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-      // 1. Ensure that each model in the schema is initialized
-      // ToDo: there is a raise between here and processor. 
-      // Processor might ask a model when it is not initialized.
-      std::shared_ptr<InstanceSchema> schema = schema_.get();
-      std::vector<int> model_ids = schema->get_model_ids();
-      std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
-        const ModelConfig& model = schema->get_model_config(model_id);
-
-        if (!token_topic_matrix_.has_key(model_id)) {
-          auto ttm = std::make_shared<TokenTopicMatrix>(model.topics_count());
-          token_topic_matrix_.set(model_id, ttm);
-        }
-      });
-  
-      // 2. Merge everything from the queue and update matrix.
+      // Merge everything from the queue and update matrix.
       for (;;) {
         std::shared_ptr<const ProcessorOutput> processor_output;
         {
@@ -58,12 +46,20 @@ void Merger::ThreadFunction()
 
         int model_id = processor_output->model_id();
         auto cur_ttm = token_topic_matrix_.get(model_id);
+        if (cur_ttm.get() == NULL) {
+          // a model had been disposed during ongoing processing;
+          continue;
+        }
+        
         auto new_ttm = std::make_shared<TokenTopicMatrix>(*cur_ttm);
         new_ttm->add_items_processed(processor_output->items_processed());
         
         // Add new tokens discovered by processor
         for (int iNewToken = 0; iNewToken < processor_output->discovered_token_size(); ++iNewToken) {
-          new_ttm->add_token(processor_output->discovered_token(iNewToken));
+          std::string new_token = processor_output->discovered_token(iNewToken);
+          if (new_ttm->token_id(new_token) == -1) {
+            new_ttm->add_token(new_token);
+          }
         }
 
         int topics_count = new_ttm->topics_count();

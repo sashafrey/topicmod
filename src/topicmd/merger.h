@@ -34,6 +34,23 @@ class Merger : boost::noncopyable {
     }
   }
 
+  void UpdateModel(int model_id, const ModelConfig& model) {
+    if (!token_topic_matrix_.has_key(model_id)) {
+      // Handle more type of reconfigs - for example, changing the number of topics;
+      auto ttm = std::make_shared<TokenTopicMatrix>(model.topics_count());
+      token_topic_matrix_.set(model_id, ttm);
+    }
+
+    auto ttm = token_topic_matrix_.get(model_id);
+    if (ttm->topics_count() != model.topics_count()) {
+      throw "Unsupported reconfiguration";
+    }
+  }
+
+  void DisposeModel(int model_id) {
+    token_topic_matrix_.erase(model_id);
+  }
+
   std::shared_ptr<const TokenTopicMatrix> token_topic_matrix(int model_id) const
   {
     return token_topic_matrix_.get(model_id);

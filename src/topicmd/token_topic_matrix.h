@@ -85,10 +85,16 @@ class TokenTopicMatrix
     token_id_to_token_.push_back(token);
     float* values = new float[topics_count()];      
     data_.push_back(values);
+    float sum = 0.0f;
     for (int i = 0; i < topics_count(); ++i) {
       float val = (float)rand() / (float)RAND_MAX;
       values[i] = val;
-      normalizer_[i] += val;
+      sum += val;
+    }
+
+    for (int i = 0; i < topics_count(); ++i) {
+      values[i] /= sum;
+      normalizer_[i] += values[i];
     }
   }
 
@@ -126,7 +132,7 @@ class TokenTopicMatrix
   }
     
   void add_token_topic(int token_id, int topic_id, float value) {
-    data_[token_id][topic_id] = value;
+    data_[token_id][topic_id] += value;
     normalizer_[topic_id] += value;
   }
 };

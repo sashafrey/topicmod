@@ -1,6 +1,8 @@
 #ifndef DATA_LOADER_
 #define DATA_LOADER_
 
+#include <queue>
+
 #include <boost/thread.hpp>   
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
@@ -23,20 +25,10 @@ namespace topicmd {
     {
     }
 
-    ~DataLoader() {
-      if (thread_.joinable()) {
-        thread_.interrupt();
-        thread_.join();
-      }
-    }
+    ~DataLoader();
+    void Interrupt();
+    void Join();
 
-    void Interrupt() {
-      thread_.interrupt();
-    }
-
-    void Join() {
-      thread_.join();
-    }
   private:
     boost::mutex& lock_;
     std::queue<std::shared_ptr<const Partition> >& queue_;
@@ -47,38 +39,7 @@ namespace topicmd {
     // everything else should be initialized before creating threads).
     boost::thread thread_;
 
-    void ThreadFunction() 
-    {
-      try {
-        for (;;)
-        {
-          // Sleep and check for interrupt.
-          // To check for interrupt without sleep,
-          // use boost::this_thread::interruption_point()
-          // which also throws boost::thread_interrupted
-          boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-
-          {
-            boost::lock_guard<boost::mutex> guard(lock_);
-            if (queue_.size() > 10) {
-              continue; 
-            }
-          }
-
-          {
-            auto latest_generation = generation_.get();
-
-            boost::lock_guard<boost::mutex> guard(lock_);
-            latest_generation->InvokeOnEachPartition([&](std::shared_ptr<const Partition> part) { 
-              queue_.push(part);
-            });
-          }
-        }
-      }
-      catch(boost::thread_interrupted&) {
-        return;
-      }
-    }
+    void ThreadFunction();
   };
 }
 

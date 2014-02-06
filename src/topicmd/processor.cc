@@ -3,6 +3,21 @@
 #include "stdlib.h"
 
 namespace topicmd {
+  Processor::~Processor() {
+    if (thread_.joinable()) {
+      thread_.interrupt();
+      thread_.join();
+    }
+  }
+
+  void Processor::Interrupt() {
+    thread_.interrupt();
+  }
+
+  void Processor::Join() {
+    thread_.join();
+  }
+
   void Processor::ThreadFunction() {
     try
     {

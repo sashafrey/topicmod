@@ -1,6 +1,7 @@
 #ifndef TOPICMD_INSTANCE_MANAGER_
 #define TOPICMD_INSTANCE_MANAGER_
 
+#include <map>
 #include <memory>
 
 #include <boost/thread/locks.hpp>
@@ -22,53 +23,14 @@ namespace topicmd {
       return instance_manager;
     }
 
-    int CreateInstance(int id, const InstanceConfig& config) {
-      boost::lock_guard<boost::mutex> guard(lock_);
-      if (id <= 0) {
-        // iterate through instance_map_ until find some slot
-        while(instance_map_.find(next_id_) != instance_map_.end()) {
-          next_id_++;
-        }
+    int CreateInstance(int id, const InstanceConfig& config);
 
-        id = next_id_++;
-      }
+    bool has_instance(int id) const;
+    const std::shared_ptr<Instance> instance(int id) const;
+    std::shared_ptr<Instance> instance(int id);
+    void erase_instance(int id);
+    void clear();
 
-      if (instance_map_.find(id) != instance_map_.end()) {
-        return TOPICMD_ERROR;
-      }
-
-      instance_map_.insert(std::make_pair(
-        id, std::make_shared<Instance>(id, config)));
-
-      return id;
-    }
-    
-    bool has_instance(int id) const {
-      boost::lock_guard<boost::mutex> guard(lock_);      
-      return instance_map_.find(id) != instance_map_.end();
-    }
-
-    const std::shared_ptr<Instance> instance(int id) const {
-      boost::lock_guard<boost::mutex> guard(lock_);
-      auto iter = instance_map_.find(id);
-      return iter->second;
-    }
-
-    std::shared_ptr<Instance> instance(int id) {
-      boost::lock_guard<boost::mutex> guard(lock_);
-      auto iter = instance_map_.find(id);
-      return iter->second;
-    }
-
-    void erase_instance(int id) {
-      boost::lock_guard<boost::mutex> guard(lock_);
-      instance_map_.erase(id);
-    }
-
-    void clear() {
-      boost::lock_guard<boost::mutex> guard(lock_);
-      instance_map_.clear();
-    }
   private:
     // Singleton (make constructor private)
     InstanceManager() :

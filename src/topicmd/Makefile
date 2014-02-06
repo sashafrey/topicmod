@@ -32,13 +32,12 @@ LDFLAGS += -lboost_system -lboost_thread
 
 # First target - shared library
 TARGET_LIB    = libtopicmd.so
-SRCS_LIB      = \
-		cpp_interface.cc \
+SRCS_LIB      = cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
 		instance.cc \
 		instance_manager.cc \
-		internals.pb.cc 
+		internals.pb.cc \
 		merger.cc \
 		messages.pb.cc \
 		partition.cc \

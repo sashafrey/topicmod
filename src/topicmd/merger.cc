@@ -50,7 +50,6 @@ Merger::GetLatestTokenTopicMatrix(int model_id) const
 void Merger::ThreadFunction() 
 {
   try {
-    int last_generation_id = -1;
     for (;;)
     {
       // Sleep and check for interrupt.

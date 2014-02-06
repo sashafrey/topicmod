@@ -1,5 +1,7 @@
 #include <topicmd/token_topic_matrix.h>
 
+#include <string.h>
+
 #include <algorithm>
 
 namespace topicmd {
@@ -25,7 +27,7 @@ TokenTopicMatrix::TokenTopicMatrix(const TokenTopicMatrix& rhs) :
     data_(), // must be deep-copied 
     normalizer_(rhs.normalizer_)
 {
-  for (int i = 0; i < rhs.data_.size(); i++) {
+  for (size_t i = 0; i < rhs.data_.size(); i++) {
     float* values = new float[topics_count_];
     data_.push_back(values);
     memcpy(values, rhs.data_[i], sizeof(float) * topics_count_);

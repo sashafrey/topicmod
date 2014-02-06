@@ -14,9 +14,9 @@ namespace topicmd {
 class TokenWeights
 {
   private:
-   int topics_count_;
    const float* vector_;
    const float* normalizer_;
+   int topics_count_;
 
   public:
    TokenWeights(const float* vector, const float* normalizer, int topics_count) :

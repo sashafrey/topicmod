@@ -50,7 +50,6 @@ namespace topicmd {
           std::shared_ptr<const TokenTopicMatrix> token_topic_matrix
               = merger_.GetLatestTokenTopicMatrix(model_id);
           assert(token_topic_matrix.get() != NULL);
-          int tokens_count = token_topic_matrix->tokens_count();
           int topics_count = token_topic_matrix->topics_count();
 		      int items_count = part->get_item_count();
           

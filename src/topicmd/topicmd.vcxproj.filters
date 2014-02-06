@@ -10,6 +10,7 @@
     <ClCompile Include="processor.cc" />
     <ClCompile Include="data_loader.cc" />
     <ClCompile Include="internals.pb.cc" />
+    <ClCompile Include="token_topic_matrix.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />

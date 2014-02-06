@@ -119,15 +119,14 @@ namespace topicmd {
   }
 
   int Instance::RequestModelTopics(int model_id, ModelTopics* model_topics) {
-    std::shared_ptr<const TokenTopicMatrix> ttm = merger_.token_topic_matrix(model_id);
-    const float* normalizer = ttm->normalizer();
+    std::shared_ptr<const TokenTopicMatrix> ttm = merger_.GetLatestTokenTopicMatrix(model_id);
     int nTopics = ttm->topics_count(); 
     for (int iToken = 0; iToken < ttm->tokens_count(); iToken++) {
       TokenTopics* token_topics = model_topics->add_token_topic();
       token_topics->set_token(ttm->token(iToken));
-      const float* token_topics_weight = ttm->token_topics(iToken);
+      TokenWeights token_weights = ttm->token_weights(iToken);
       for (int iTopic = 0; iTopic < nTopics; ++iTopic) {
-        token_topics->add_topic_weight(token_topics_weight[iTopic] / normalizer[iTopic]);
+        token_topics->add_topic_weight(token_weights.at(iTopic));
       }
     }
     
@@ -136,7 +135,7 @@ namespace topicmd {
 
   int Instance::WaitModelProcessed(int model_id, int processed_items) {
     for (;;) {
-      std::shared_ptr<const TokenTopicMatrix> ttm = merger_.token_topic_matrix(model_id);
+      std::shared_ptr<const TokenTopicMatrix> ttm = merger_.GetLatestTokenTopicMatrix(model_id);
       if (ttm->items_processed() >= processed_items) {
         return TOPICMD_SUCCESS;
       }

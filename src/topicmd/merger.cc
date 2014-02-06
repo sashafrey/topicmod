@@ -17,7 +17,35 @@ Merger::Merger(boost::mutex& merger_queue_lock,
 {
 }
 
+Merger::~Merger() {
+  if (thread_.joinable()) {
+    thread_.interrupt();
+    thread_.join();
+  }
+}
 
+void Merger::DisposeModel(int model_id) {
+  token_topic_matrix_.erase(model_id);
+}
+
+void Merger::UpdateModel(int model_id, const ModelConfig& model) {
+  if (!token_topic_matrix_.has_key(model_id)) {
+    // Handle more type of reconfigs - for example, changing the number of topics;
+    auto ttm = std::make_shared<TokenTopicMatrix>(model.topics_count());
+    token_topic_matrix_.set(model_id, ttm);
+  }
+
+  auto ttm = token_topic_matrix_.get(model_id);
+  if (ttm->topics_count() != model.topics_count()) {
+    throw "Unsupported reconfiguration";
+  }
+}
+
+std::shared_ptr<const TokenTopicMatrix> 
+Merger::GetLatestTokenTopicMatrix(int model_id) const
+{
+  return token_topic_matrix_.get(model_id);
+}
 
 void Merger::ThreadFunction() 
 {
@@ -52,13 +80,13 @@ void Merger::ThreadFunction()
         }
         
         auto new_ttm = std::make_shared<TokenTopicMatrix>(*cur_ttm);
-        new_ttm->add_items_processed(processor_output->items_processed());
+        new_ttm->IncreaseItemsProcessed(processor_output->items_processed());
         
         // Add new tokens discovered by processor
         for (int iNewToken = 0; iNewToken < processor_output->discovered_token_size(); ++iNewToken) {
           std::string new_token = processor_output->discovered_token(iNewToken);
           if (new_ttm->token_id(new_token) == -1) {
-            new_ttm->add_token(new_token);
+            new_ttm->AddToken(new_token);
           }
         }
 
@@ -69,7 +97,7 @@ void Merger::ThreadFunction()
           const std::string& token = processor_output->token(iToken);
           int id = new_ttm->token_id(token);
           for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-            new_ttm->add_token_topic(id, iTopic, counters.value(iTopic));
+            new_ttm->IncreaseTokenWeight(id, iTopic, counters.value(iTopic));
           }
         }
 

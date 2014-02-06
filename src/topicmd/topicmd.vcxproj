@@ -20,6 +20,7 @@
     <ClCompile Include="messages.pb.cc" />
     <ClCompile Include="partition.cc" />
     <ClCompile Include="processor.cc" />
+    <ClCompile Include="token_topic_matrix.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />

@@ -61,6 +61,11 @@ This queue is read by merger, which updates word-topic distribution.
 Before processing new index part the processor asks merger about the latest view of word-topic matrix.
 This design supports multiple concurrent dataloaders, multiple concurrent processors, but only one merger.
 
+If processor observes a token that is not part of token-token matrix, it stores this token in the list of
+new ``discovered'' tokens, and transfers this list as part of processor output.
+Merger picks up all such tokens, and initializes new row in token-topic matrix.
+So, during the first scan over the collection the dictionary is gathered automatically.
+
 \subsection{Concurrency and thread safety}
 The system must have the following locks:
 \begin{enumerate}

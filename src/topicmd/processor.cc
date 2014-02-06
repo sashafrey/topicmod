@@ -51,24 +51,24 @@ namespace topicmd {
               = merger_.GetLatestTokenTopicMatrix(model_id);
           assert(token_topic_matrix.get() != NULL);
           int topics_count = token_topic_matrix->topics_count();
-		      int items_count = part->get_item_count();
+          int items_count = part->get_item_count();
           
           // process part and store result in merger queue
           auto po = std::make_shared<ProcessorOutput>();
-		      po->set_model_id(model_id);
-		      po->set_items_processed(items_count);
-		      po->set_topics_count(topics_count);
+          po->set_model_id(model_id);
+          po->set_items_processed(items_count);
+          po->set_topics_count(topics_count);
           for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
             po->mutable_topic_counters()->add_value(0.0f);
           }
 
-		      for (int iToken = 0; iToken < token_topic_matrix->tokens_count(); iToken++) {
-			      po->add_token(token_topic_matrix->token(iToken));
-			      Counters* counters = po->add_token_counters();
-			      for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-				      counters->add_value(0.0f);
-			      }
-		      }
+          for (int iToken = 0; iToken < token_topic_matrix->tokens_count(); iToken++) {
+            po->add_token(token_topic_matrix->token(iToken));
+            Counters* counters = po->add_token_counters();
+            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+              counters->add_value(0.0f);
+            }
+          }
 
           for (int item_index = 0;
                 item_index < items_count;
@@ -88,17 +88,17 @@ namespace topicmd {
             {
               std::string token = part->get_token(item_index, token_index);
               int token_id = token_topic_matrix->token_id(token);
-			        if (token_id < 0) {
-				        // Unknown token
-				        po->add_discovered_token(token);
-			        } else {
-				        this_item_token_id.push_back(token_id);
-				        this_item_token_frequency.push_back(
-					        part->get_token_frequency(item_index, token_index));
-			        }
+              if (token_id < 0) {
+                // Unknown token
+                po->add_discovered_token(token);
+              } else {
+                this_item_token_id.push_back(token_id);
+                this_item_token_frequency.push_back(
+                  part->get_token_frequency(item_index, token_index));
+              }
             }
 
-			      int this_item_token_count = this_item_token_id.size();
+            int this_item_token_count = this_item_token_id.size();
             std::vector<float> Z(this_item_token_count);
             int numInnerIters = model.inner_iterations_count();
             for (int iInnerIter = 0;
@@ -142,15 +142,15 @@ namespace topicmd {
                   } else {
                     // Last iteration, updating final counters
                     Counters* hat_n_wt_cur = po->mutable_token_counters(
-						          this_item_token_id[token_index]);
-					          Counters* hat_n_t = po->mutable_topic_counters();
+                      this_item_token_id[token_index]);
+                    Counters* hat_n_t = po->mutable_topic_counters();
                 
                     for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
                       float val = n_dw * (cur_token_weights.at(iTopic)) *
                           theta[iTopic] / curZ;
 
-					            hat_n_wt_cur->set_value(iTopic, hat_n_wt_cur->value(iTopic) + val);
-					            hat_n_t->set_value(iTopic, hat_n_t->value(iTopic) + val);
+                      hat_n_wt_cur->set_value(iTopic, hat_n_wt_cur->value(iTopic) + val);
+                      hat_n_t->set_value(iTopic, hat_n_t->value(iTopic) + val);
                     }
                   }
                 }

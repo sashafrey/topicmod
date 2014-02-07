@@ -28,7 +28,7 @@ namespace topicmd {
         // which also throws boost::thread_interrupted
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-        std::shared_ptr<const Partition> part;
+        std::shared_ptr<const Batch> part;
         {
           boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
           if (processor_queue_.empty()) {
@@ -51,7 +51,7 @@ namespace topicmd {
               = merger_.GetLatestTokenTopicMatrix(model_id);
           assert(token_topic_matrix.get() != NULL);
           int topics_count = token_topic_matrix->topics_count();
-          int items_count = part->get_item_count();
+          int items_count = part->item_size();
           
           // process part and store result in merger queue
           auto po = std::make_shared<ProcessorOutput>();
@@ -74,6 +74,18 @@ namespace topicmd {
                 item_index < items_count;
                 ++item_index)
           {
+            const Item& item = part->item(item_index);
+            const Field* field = nullptr;
+            for (int iField = 0; iField < item.field_size(); iField++) {
+              if (item.field(iField).field_name() == model.field_name()) {
+                field = &item.field(iField);
+              }
+            }
+
+            if (field == nullptr) {
+              continue;
+            }
+
             std::vector<float> theta(topics_count);
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
               theta[iTopic] = (float)rand() / (float)RAND_MAX;
@@ -83,10 +95,10 @@ namespace topicmd {
             std::vector<int> this_item_token_id;
             std::vector<float> this_item_token_frequency;
             for (int token_index = 0;
-                 token_index < part->get_token_count(item_index);
+                 token_index < field->token_id_size();
                  token_index++)
             {
-              std::string token = part->get_token(item_index, token_index);
+              std::string token = part->token(field->token_id(token_index));
               int token_id = token_topic_matrix->token_id(token);
               if (token_id < 0) {
                 // Unknown token
@@ -94,7 +106,7 @@ namespace topicmd {
               } else {
                 this_item_token_id.push_back(token_id);
                 this_item_token_frequency.push_back(
-                  part->get_token_frequency(item_index, token_index));
+                  field->token_count(token_index));
               }
             }
 

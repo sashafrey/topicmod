@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include "topicmd/instance_manager.h"
 #include "topicmd/messages.pb.h"
+#include "topicmd/instance.h"
 
 using namespace topicmd;
 

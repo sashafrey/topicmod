@@ -1,17 +1,50 @@
 #include "topicmd/cpp_interface.h"
 
 #include "topicmd/common.h"
-#include "topicmd/instance_manager.h"
 #include "topicmd/messages.pb.h"
+#include "topicmd/instance.h"
+#include "topicmd/data_loader.h"
 
 namespace topicmd {
-  int commit_generation(int instance_id, int generation_id) {
-    return TOPICMD_SUCCESS;
-  }
+  // =========================================================================
+  // Common routines
+  // =========================================================================
 
   int configure_logger(const LoggerConfig& logger_config)  {
     return TOPICMD_SUCCESS;
   }
+
+  // =========================================================================
+  // Data loader interface
+  // =========================================================================
+
+  int create_data_loader(int data_loader_id,
+                         const DataLoaderConfig& config) 
+  {
+    return DataLoaderManager::singleton().CreateInstance(data_loader_id, config);
+  }
+
+  void dispose_data_loader(int data_loader_id) 
+  {
+    if (DataLoaderManager::singleton().has_instance(data_loader_id)) {
+      DataLoaderManager::singleton().erase_instance(data_loader_id);
+    }
+  }
+
+  // Adds batch of documents
+  int add_batch(int data_loader_id, const Batch& batch) 
+  {
+    if (!DataLoaderManager::singleton().has_instance(data_loader_id)) {
+      return TOPICMD_ERROR;
+    }
+
+    auto data_loader = DataLoaderManager::singleton().instance(data_loader_id);
+    return data_loader->AddBatch(batch);
+  }
+  
+  // =========================================================================
+  // Instance interface
+  // =========================================================================
 
   int create_instance(int instance_id,
                       const InstanceConfig& instance_config) 
@@ -28,15 +61,6 @@ namespace topicmd {
     return reconfigure_model(instance_id, model_id, model_config);
   }
 
-  int discard_partition(int instance_id) {
-    if (!InstanceManager::singleton().has_instance(instance_id)) {
-      return TOPICMD_ERROR;
-    }
-
-    auto instance = InstanceManager::singleton().instance(instance_id);
-    return instance->DiscardPartition();
-  }
-
   void dispose_instance(int instance_id) { 
     if (InstanceManager::singleton().has_instance(instance_id)) {
       InstanceManager::singleton().erase_instance(instance_id);
@@ -50,33 +74,6 @@ namespace topicmd {
 
     auto instance = InstanceManager::singleton().instance(instance_id);
     instance->DisposeModel(model_id);
-  }
-
-  int finish_partition(int instance_id) {
-    if (!InstanceManager::singleton().has_instance(instance_id)) {
-      return TOPICMD_ERROR;
-    }
-
-    auto instance = InstanceManager::singleton().instance(instance_id);
-    return instance->FinishPartition();
-  }
-
-  int insert_batch(int instance_id, const Batch& batch) {
-    if (!InstanceManager::singleton().has_instance(instance_id)) {
-      return TOPICMD_ERROR;
-    }
-
-    auto instance = InstanceManager::singleton().instance(instance_id);
-    return instance->InsertBatch(batch);
-  }
-
-  int publish_generation(int instance_id, int generation_id) {
-    if (!InstanceManager::singleton().has_instance(instance_id)) {
-      return TOPICMD_ERROR;
-    }
-
-    auto instance = InstanceManager::singleton().instance(instance_id);
-    return instance->PublishGeneration(generation_id);
   }
 
   int reconfigure_instance(int instance_id,

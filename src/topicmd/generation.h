@@ -5,14 +5,15 @@
 #include <memory>
 
 #include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
 
-#include "topicmd/partition.h"
+#include "messages.pb.h"
 
 namespace topicmd {
   class Generation {
   private:
     int id_;
-    std::map<boost::uuids::uuid, std::shared_ptr<const Partition> > generation_;
+    std::map<boost::uuids::uuid, std::shared_ptr<const Batch> > generation_;
   public:
     Generation() : id_(0), generation_() 
     {
@@ -28,9 +29,9 @@ namespace topicmd {
       return id_;
     }
     
-    void AddPartition(const std::shared_ptr<const Partition>& partition) 
+    void AddBatch(const std::shared_ptr<const Batch>& batch) 
     {
-      generation_.insert(std::make_pair(partition->uuid(), partition));
+      generation_.insert(std::make_pair(boost::uuids::random_generator()(), batch));
     }
 
     template<class Function>
@@ -49,7 +50,7 @@ namespace topicmd {
            iter != generation_.end();
            ++iter) 
       {
-        retval += (*iter).second->GetItemsCount();
+        retval += (*iter).second->item_size();
       }
 
       return retval;

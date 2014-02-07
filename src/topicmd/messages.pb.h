@@ -37,6 +37,7 @@ void protobuf_ShutdownFile_messages_2eproto();
 class Field;
 class Item;
 class Batch;
+class DataLoaderConfig;
 class InstanceConfig;
 class ModelConfig;
 class LoggerConfig;
@@ -45,24 +46,6 @@ class BatchTopics;
 class TokenTopics;
 class ModelTopics;
 
-enum ModelConfig_ProcessorType {
-  ModelConfig_ProcessorType_BATCH_PLSA = 0
-};
-bool ModelConfig_ProcessorType_IsValid(int value);
-const ModelConfig_ProcessorType ModelConfig_ProcessorType_ProcessorType_MIN = ModelConfig_ProcessorType_BATCH_PLSA;
-const ModelConfig_ProcessorType ModelConfig_ProcessorType_ProcessorType_MAX = ModelConfig_ProcessorType_BATCH_PLSA;
-const int ModelConfig_ProcessorType_ProcessorType_ARRAYSIZE = ModelConfig_ProcessorType_ProcessorType_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* ModelConfig_ProcessorType_descriptor();
-inline const ::std::string& ModelConfig_ProcessorType_Name(ModelConfig_ProcessorType value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    ModelConfig_ProcessorType_descriptor(), value);
-}
-inline bool ModelConfig_ProcessorType_Parse(
-    const ::std::string& name, ModelConfig_ProcessorType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<ModelConfig_ProcessorType>(
-    ModelConfig_ProcessorType_descriptor(), name, value);
-}
 enum LoggerConfig_Level {
   LoggerConfig_Level_DISABLED = 0,
   LoggerConfig_Level_ERROR = 1,
@@ -84,24 +67,6 @@ inline bool LoggerConfig_Level_Parse(
     const ::std::string& name, LoggerConfig_Level* value) {
   return ::google::protobuf::internal::ParseNamedEnum<LoggerConfig_Level>(
     LoggerConfig_Level_descriptor(), name, value);
-}
-enum OperationType {
-  INSERT = 0
-};
-bool OperationType_IsValid(int value);
-const OperationType OperationType_MIN = INSERT;
-const OperationType OperationType_MAX = INSERT;
-const int OperationType_ARRAYSIZE = OperationType_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* OperationType_descriptor();
-inline const ::std::string& OperationType_Name(OperationType value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    OperationType_descriptor(), value);
-}
-inline bool OperationType_Parse(
-    const ::std::string& name, OperationType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<OperationType>(
-    OperationType_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -280,17 +245,10 @@ class Item : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 id() const;
   inline void set_id(::google::protobuf::int32 value);
 
-  // optional .topicmd.OperationType operation = 2 [default = INSERT];
-  inline bool has_operation() const;
-  inline void clear_operation();
-  static const int kOperationFieldNumber = 2;
-  inline ::topicmd::OperationType operation() const;
-  inline void set_operation(::topicmd::OperationType value);
-
-  // repeated .topicmd.Field field = 3;
+  // repeated .topicmd.Field field = 2;
   inline int field_size() const;
   inline void clear_field();
-  static const int kFieldFieldNumber = 3;
+  static const int kFieldFieldNumber = 2;
   inline const ::topicmd::Field& field(int index) const;
   inline ::topicmd::Field* mutable_field(int index);
   inline ::topicmd::Field* add_field();
@@ -303,17 +261,14 @@ class Item : public ::google::protobuf::Message {
  private:
   inline void set_has_id();
   inline void clear_has_id();
-  inline void set_has_operation();
-  inline void clear_has_operation();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::int32 id_;
-  int operation_;
   ::google::protobuf::RepeatedPtrField< ::topicmd::Field > field_;
+  ::google::protobuf::int32 id_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -426,6 +381,113 @@ class Batch : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class DataLoaderConfig : public ::google::protobuf::Message {
+ public:
+  DataLoaderConfig();
+  virtual ~DataLoaderConfig();
+
+  DataLoaderConfig(const DataLoaderConfig& from);
+
+  inline DataLoaderConfig& operator=(const DataLoaderConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DataLoaderConfig& default_instance();
+
+  void Swap(DataLoaderConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  DataLoaderConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DataLoaderConfig& from);
+  void MergeFrom(const DataLoaderConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required int32 instance_id = 1;
+  inline bool has_instance_id() const;
+  inline void clear_instance_id();
+  static const int kInstanceIdFieldNumber = 1;
+  inline ::google::protobuf::int32 instance_id() const;
+  inline void set_instance_id(::google::protobuf::int32 value);
+
+  // optional string disk_path = 2;
+  inline bool has_disk_path() const;
+  inline void clear_disk_path();
+  static const int kDiskPathFieldNumber = 2;
+  inline const ::std::string& disk_path() const;
+  inline void set_disk_path(const ::std::string& value);
+  inline void set_disk_path(const char* value);
+  inline void set_disk_path(const char* value, size_t size);
+  inline ::std::string* mutable_disk_path();
+  inline ::std::string* release_disk_path();
+  inline void set_allocated_disk_path(::std::string* disk_path);
+
+  // optional int32 queue_size = 3 [default = 10];
+  inline bool has_queue_size() const;
+  inline void clear_queue_size();
+  static const int kQueueSizeFieldNumber = 3;
+  inline ::google::protobuf::int32 queue_size() const;
+  inline void set_queue_size(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:topicmd.DataLoaderConfig)
+ private:
+  inline void set_has_instance_id();
+  inline void clear_has_instance_id();
+  inline void set_has_disk_path();
+  inline void clear_has_disk_path();
+  inline void set_has_queue_size();
+  inline void clear_has_queue_size();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* disk_path_;
+  ::google::protobuf::int32 instance_id_;
+  ::google::protobuf::int32 queue_size_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static DataLoaderConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class InstanceConfig : public ::google::protobuf::Message {
  public:
   InstanceConfig();
@@ -480,49 +542,24 @@ class InstanceConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string index_location = 2;
-  inline bool has_index_location() const;
-  inline void clear_index_location();
-  static const int kIndexLocationFieldNumber = 2;
-  inline const ::std::string& index_location() const;
-  inline void set_index_location(const ::std::string& value);
-  inline void set_index_location(const char* value);
-  inline void set_index_location(const char* value, size_t size);
-  inline ::std::string* mutable_index_location();
-  inline ::std::string* release_index_location();
-  inline void set_allocated_index_location(::std::string* index_location);
-
-  // optional int32 index_readers_count = 3 [default = 1];
-  inline bool has_index_readers_count() const;
-  inline void clear_index_readers_count();
-  static const int kIndexReadersCountFieldNumber = 3;
-  inline ::google::protobuf::int32 index_readers_count() const;
-  inline void set_index_readers_count(::google::protobuf::int32 value);
-
-  // optional int32 processors_count = 4 [default = 1];
+  // optional int32 processors_count = 1 [default = 1];
   inline bool has_processors_count() const;
   inline void clear_processors_count();
-  static const int kProcessorsCountFieldNumber = 4;
+  static const int kProcessorsCountFieldNumber = 1;
   inline ::google::protobuf::int32 processors_count() const;
   inline void set_processors_count(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:topicmd.InstanceConfig)
  private:
-  inline void set_has_index_location();
-  inline void clear_has_index_location();
-  inline void set_has_index_readers_count();
-  inline void clear_has_index_readers_count();
   inline void set_has_processors_count();
   inline void clear_has_processors_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* index_location_;
-  ::google::protobuf::int32 index_readers_count_;
   ::google::protobuf::int32 processors_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -585,37 +622,7 @@ class ModelConfig : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef ModelConfig_ProcessorType ProcessorType;
-  static const ProcessorType BATCH_PLSA = ModelConfig_ProcessorType_BATCH_PLSA;
-  static inline bool ProcessorType_IsValid(int value) {
-    return ModelConfig_ProcessorType_IsValid(value);
-  }
-  static const ProcessorType ProcessorType_MIN =
-    ModelConfig_ProcessorType_ProcessorType_MIN;
-  static const ProcessorType ProcessorType_MAX =
-    ModelConfig_ProcessorType_ProcessorType_MAX;
-  static const int ProcessorType_ARRAYSIZE =
-    ModelConfig_ProcessorType_ProcessorType_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  ProcessorType_descriptor() {
-    return ModelConfig_ProcessorType_descriptor();
-  }
-  static inline const ::std::string& ProcessorType_Name(ProcessorType value) {
-    return ModelConfig_ProcessorType_Name(value);
-  }
-  static inline bool ProcessorType_Parse(const ::std::string& name,
-      ProcessorType* value) {
-    return ModelConfig_ProcessorType_Parse(name, value);
-  }
-
   // accessors -------------------------------------------------------
-
-  // optional .topicmd.ModelConfig.ProcessorType processor_type = 1 [default = BATCH_PLSA];
-  inline bool has_processor_type() const;
-  inline void clear_processor_type();
-  static const int kProcessorTypeFieldNumber = 1;
-  inline ::topicmd::ModelConfig_ProcessorType processor_type() const;
-  inline void set_processor_type(::topicmd::ModelConfig_ProcessorType value);
 
   // optional int32 topics_count = 2 [default = 32];
   inline bool has_topics_count() const;
@@ -638,22 +645,35 @@ class ModelConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 inner_iterations_count() const;
   inline void set_inner_iterations_count(::google::protobuf::int32 value);
 
+  // optional string field_name = 5 [default = "@body"];
+  inline bool has_field_name() const;
+  inline void clear_field_name();
+  static const int kFieldNameFieldNumber = 5;
+  inline const ::std::string& field_name() const;
+  inline void set_field_name(const ::std::string& value);
+  inline void set_field_name(const char* value);
+  inline void set_field_name(const char* value, size_t size);
+  inline ::std::string* mutable_field_name();
+  inline ::std::string* release_field_name();
+  inline void set_allocated_field_name(::std::string* field_name);
+
   // @@protoc_insertion_point(class_scope:topicmd.ModelConfig)
  private:
-  inline void set_has_processor_type();
-  inline void clear_has_processor_type();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
   inline void set_has_enabled();
   inline void clear_has_enabled();
   inline void set_has_inner_iterations_count();
   inline void clear_has_inner_iterations_count();
+  inline void set_has_field_name();
+  inline void clear_has_field_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  int processor_type_;
   ::google::protobuf::int32 topics_count_;
   bool enabled_;
+  ::std::string* field_name_;
+  static ::std::string* _default_field_name_;
   ::google::protobuf::int32 inner_iterations_count_;
 
   mutable int _cached_size_;
@@ -1318,30 +1338,7 @@ inline void Item::set_id(::google::protobuf::int32 value) {
   id_ = value;
 }
 
-// optional .topicmd.OperationType operation = 2 [default = INSERT];
-inline bool Item::has_operation() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Item::set_has_operation() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Item::clear_has_operation() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void Item::clear_operation() {
-  operation_ = 0;
-  clear_has_operation();
-}
-inline ::topicmd::OperationType Item::operation() const {
-  return static_cast< ::topicmd::OperationType >(operation_);
-}
-inline void Item::set_operation(::topicmd::OperationType value) {
-  assert(::topicmd::OperationType_IsValid(value));
-  set_has_operation();
-  operation_ = value;
-}
-
-// repeated .topicmd.Field field = 3;
+// repeated .topicmd.Field field = 2;
 inline int Item::field_size() const {
   return field_.size();
 }
@@ -1441,109 +1438,135 @@ Batch::mutable_item() {
 
 // -------------------------------------------------------------------
 
-// InstanceConfig
+// DataLoaderConfig
 
-// optional string index_location = 2;
-inline bool InstanceConfig::has_index_location() const {
+// required int32 instance_id = 1;
+inline bool DataLoaderConfig::has_instance_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void InstanceConfig::set_has_index_location() {
+inline void DataLoaderConfig::set_has_instance_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void InstanceConfig::clear_has_index_location() {
+inline void DataLoaderConfig::clear_has_instance_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void InstanceConfig::clear_index_location() {
-  if (index_location_ != &::google::protobuf::internal::kEmptyString) {
-    index_location_->clear();
+inline void DataLoaderConfig::clear_instance_id() {
+  instance_id_ = 0;
+  clear_has_instance_id();
+}
+inline ::google::protobuf::int32 DataLoaderConfig::instance_id() const {
+  return instance_id_;
+}
+inline void DataLoaderConfig::set_instance_id(::google::protobuf::int32 value) {
+  set_has_instance_id();
+  instance_id_ = value;
+}
+
+// optional string disk_path = 2;
+inline bool DataLoaderConfig::has_disk_path() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DataLoaderConfig::set_has_disk_path() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DataLoaderConfig::clear_has_disk_path() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DataLoaderConfig::clear_disk_path() {
+  if (disk_path_ != &::google::protobuf::internal::kEmptyString) {
+    disk_path_->clear();
   }
-  clear_has_index_location();
+  clear_has_disk_path();
 }
-inline const ::std::string& InstanceConfig::index_location() const {
-  return *index_location_;
+inline const ::std::string& DataLoaderConfig::disk_path() const {
+  return *disk_path_;
 }
-inline void InstanceConfig::set_index_location(const ::std::string& value) {
-  set_has_index_location();
-  if (index_location_ == &::google::protobuf::internal::kEmptyString) {
-    index_location_ = new ::std::string;
+inline void DataLoaderConfig::set_disk_path(const ::std::string& value) {
+  set_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    disk_path_ = new ::std::string;
   }
-  index_location_->assign(value);
+  disk_path_->assign(value);
 }
-inline void InstanceConfig::set_index_location(const char* value) {
-  set_has_index_location();
-  if (index_location_ == &::google::protobuf::internal::kEmptyString) {
-    index_location_ = new ::std::string;
+inline void DataLoaderConfig::set_disk_path(const char* value) {
+  set_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    disk_path_ = new ::std::string;
   }
-  index_location_->assign(value);
+  disk_path_->assign(value);
 }
-inline void InstanceConfig::set_index_location(const char* value, size_t size) {
-  set_has_index_location();
-  if (index_location_ == &::google::protobuf::internal::kEmptyString) {
-    index_location_ = new ::std::string;
+inline void DataLoaderConfig::set_disk_path(const char* value, size_t size) {
+  set_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    disk_path_ = new ::std::string;
   }
-  index_location_->assign(reinterpret_cast<const char*>(value), size);
+  disk_path_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* InstanceConfig::mutable_index_location() {
-  set_has_index_location();
-  if (index_location_ == &::google::protobuf::internal::kEmptyString) {
-    index_location_ = new ::std::string;
+inline ::std::string* DataLoaderConfig::mutable_disk_path() {
+  set_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    disk_path_ = new ::std::string;
   }
-  return index_location_;
+  return disk_path_;
 }
-inline ::std::string* InstanceConfig::release_index_location() {
-  clear_has_index_location();
-  if (index_location_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* DataLoaderConfig::release_disk_path() {
+  clear_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = index_location_;
-    index_location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = disk_path_;
+    disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void InstanceConfig::set_allocated_index_location(::std::string* index_location) {
-  if (index_location_ != &::google::protobuf::internal::kEmptyString) {
-    delete index_location_;
+inline void DataLoaderConfig::set_allocated_disk_path(::std::string* disk_path) {
+  if (disk_path_ != &::google::protobuf::internal::kEmptyString) {
+    delete disk_path_;
   }
-  if (index_location) {
-    set_has_index_location();
-    index_location_ = index_location;
+  if (disk_path) {
+    set_has_disk_path();
+    disk_path_ = disk_path;
   } else {
-    clear_has_index_location();
-    index_location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_disk_path();
+    disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
-// optional int32 index_readers_count = 3 [default = 1];
-inline bool InstanceConfig::has_index_readers_count() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void InstanceConfig::set_has_index_readers_count() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void InstanceConfig::clear_has_index_readers_count() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void InstanceConfig::clear_index_readers_count() {
-  index_readers_count_ = 1;
-  clear_has_index_readers_count();
-}
-inline ::google::protobuf::int32 InstanceConfig::index_readers_count() const {
-  return index_readers_count_;
-}
-inline void InstanceConfig::set_index_readers_count(::google::protobuf::int32 value) {
-  set_has_index_readers_count();
-  index_readers_count_ = value;
-}
-
-// optional int32 processors_count = 4 [default = 1];
-inline bool InstanceConfig::has_processors_count() const {
+// optional int32 queue_size = 3 [default = 10];
+inline bool DataLoaderConfig::has_queue_size() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void InstanceConfig::set_has_processors_count() {
+inline void DataLoaderConfig::set_has_queue_size() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void InstanceConfig::clear_has_processors_count() {
+inline void DataLoaderConfig::clear_has_queue_size() {
   _has_bits_[0] &= ~0x00000004u;
+}
+inline void DataLoaderConfig::clear_queue_size() {
+  queue_size_ = 10;
+  clear_has_queue_size();
+}
+inline ::google::protobuf::int32 DataLoaderConfig::queue_size() const {
+  return queue_size_;
+}
+inline void DataLoaderConfig::set_queue_size(::google::protobuf::int32 value) {
+  set_has_queue_size();
+  queue_size_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// InstanceConfig
+
+// optional int32 processors_count = 1 [default = 1];
+inline bool InstanceConfig::has_processors_count() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void InstanceConfig::set_has_processors_count() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void InstanceConfig::clear_has_processors_count() {
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void InstanceConfig::clear_processors_count() {
   processors_count_ = 1;
@@ -1561,38 +1584,15 @@ inline void InstanceConfig::set_processors_count(::google::protobuf::int32 value
 
 // ModelConfig
 
-// optional .topicmd.ModelConfig.ProcessorType processor_type = 1 [default = BATCH_PLSA];
-inline bool ModelConfig::has_processor_type() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void ModelConfig::set_has_processor_type() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void ModelConfig::clear_has_processor_type() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void ModelConfig::clear_processor_type() {
-  processor_type_ = 0;
-  clear_has_processor_type();
-}
-inline ::topicmd::ModelConfig_ProcessorType ModelConfig::processor_type() const {
-  return static_cast< ::topicmd::ModelConfig_ProcessorType >(processor_type_);
-}
-inline void ModelConfig::set_processor_type(::topicmd::ModelConfig_ProcessorType value) {
-  assert(::topicmd::ModelConfig_ProcessorType_IsValid(value));
-  set_has_processor_type();
-  processor_type_ = value;
-}
-
 // optional int32 topics_count = 2 [default = 32];
 inline bool ModelConfig::has_topics_count() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void ModelConfig::set_has_topics_count() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void ModelConfig::clear_has_topics_count() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void ModelConfig::clear_topics_count() {
   topics_count_ = 32;
@@ -1608,13 +1608,13 @@ inline void ModelConfig::set_topics_count(::google::protobuf::int32 value) {
 
 // optional bool enabled = 3 [default = false];
 inline bool ModelConfig::has_enabled() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void ModelConfig::set_has_enabled() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void ModelConfig::clear_has_enabled() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void ModelConfig::clear_enabled() {
   enabled_ = false;
@@ -1630,13 +1630,13 @@ inline void ModelConfig::set_enabled(bool value) {
 
 // optional int32 inner_iterations_count = 4 [default = 10];
 inline bool ModelConfig::has_inner_iterations_count() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void ModelConfig::set_has_inner_iterations_count() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void ModelConfig::clear_has_inner_iterations_count() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void ModelConfig::clear_inner_iterations_count() {
   inner_iterations_count_ = 10;
@@ -1648,6 +1648,76 @@ inline ::google::protobuf::int32 ModelConfig::inner_iterations_count() const {
 inline void ModelConfig::set_inner_iterations_count(::google::protobuf::int32 value) {
   set_has_inner_iterations_count();
   inner_iterations_count_ = value;
+}
+
+// optional string field_name = 5 [default = "@body"];
+inline bool ModelConfig::has_field_name() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void ModelConfig::set_has_field_name() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void ModelConfig::clear_has_field_name() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void ModelConfig::clear_field_name() {
+  if (field_name_ != _default_field_name_) {
+    field_name_->assign(*_default_field_name_);
+  }
+  clear_has_field_name();
+}
+inline const ::std::string& ModelConfig::field_name() const {
+  return *field_name_;
+}
+inline void ModelConfig::set_field_name(const ::std::string& value) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(value);
+}
+inline void ModelConfig::set_field_name(const char* value) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(value);
+}
+inline void ModelConfig::set_field_name(const char* value, size_t size) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ModelConfig::mutable_field_name() {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string(*_default_field_name_);
+  }
+  return field_name_;
+}
+inline ::std::string* ModelConfig::release_field_name() {
+  clear_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    return NULL;
+  } else {
+    ::std::string* temp = field_name_;
+    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+    return temp;
+  }
+}
+inline void ModelConfig::set_allocated_field_name(::std::string* field_name) {
+  if (field_name_ != _default_field_name_) {
+    delete field_name_;
+  }
+  if (field_name) {
+    set_has_field_name();
+    field_name_ = field_name;
+  } else {
+    clear_has_field_name();
+    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+  }
 }
 
 // -------------------------------------------------------------------
@@ -1987,16 +2057,8 @@ namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::topicmd::ModelConfig_ProcessorType>() {
-  return ::topicmd::ModelConfig_ProcessorType_descriptor();
-}
-template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::topicmd::LoggerConfig_Level>() {
   return ::topicmd::LoggerConfig_Level_descriptor();
-}
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::topicmd::OperationType>() {
-  return ::topicmd::OperationType_descriptor();
 }
 
 }  // namespace google

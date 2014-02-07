@@ -7,20 +7,20 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
+#include "topicmd/common.h"
 #include "topicmd/generation.h"
 #include "topicmd/messages.pb.h"
-#include "topicmd/partition.h"
+#include "topicmd/instance.h"
+#include "topicmd/template_manager.h"
 #include "topicmd/thread_safe_holder.h"
 
 namespace topicmd {
   class DataLoader : boost::noncopyable {
   public:
-    DataLoader(boost::mutex& lock, 
-        std::queue<std::shared_ptr<const Partition> >& queue,
-        ThreadSafeHolder<Generation>& generation) :
-      lock_(lock), 
-      queue_(queue),
-      generation_(generation),
+    DataLoader(int id, const DataLoaderConfig& config) :
+      lock_(),
+      config_(lock_, std::make_shared<DataLoaderConfig>(config)),
+      generation_(lock_, std::make_shared<Generation>()),
       thread_(boost::bind(&DataLoader::ThreadFunction, this))
     {
     }
@@ -28,11 +28,17 @@ namespace topicmd {
     ~DataLoader();
     void Interrupt();
     void Join();
+    int AddBatch(const Batch& batch);
+
+    int GetTotalItemsCount() const {
+      auto ptr = generation_.get();
+      return ptr->GetTotalItemsCount();
+    }
 
   private:
-    boost::mutex& lock_;
-    std::queue<std::shared_ptr<const Partition> >& queue_;
-    ThreadSafeHolder<Generation>& generation_;
+    boost::mutex lock_;
+    ThreadSafeHolder<DataLoaderConfig> config_;
+    ThreadSafeHolder<Generation> generation_;
 
     // Keep all threads at the end of class members
     // (because the order of class members defines initialization order;
@@ -41,6 +47,9 @@ namespace topicmd {
 
     void ThreadFunction();
   };
+
+  typedef TemplateManager<DataLoader, DataLoaderConfig> DataLoaderManager;
+
 }
 
 #endif // DATA_LOADER_

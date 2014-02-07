@@ -25,7 +25,6 @@
     <ClCompile Include="cpp_interface_unittest.cc" />
     <ClCompile Include="instance_manager_test.cc" />
     <ClCompile Include="instance_test.cc" />
-    <ClCompile Include="partition_test.cc" />
     <ClCompile Include="thread_safe_holder_test.cpp" />
   </ItemGroup>
   <ItemGroup>

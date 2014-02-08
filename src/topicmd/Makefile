@@ -27,8 +27,13 @@ CXXFLAGS += -g -Wall -pthread -fPIC -std=c++11
 # Improved debugging capabilities
 # CXXFLAGS += -O0 -fno-inline
 
+# Directory where to put our library
+USR_LIB_DIR = ../../libs
+
 # Linker flags
 LDFLAGS += -lboost_system -lboost_thread
+
+INSTALL_DIR = /usr/lib
 
 # First target - shared library
 TARGET_LIB    = libtopicmd.so
@@ -69,6 +74,8 @@ GTEST_SRCS_ = $(GTEST_DIR)/src/*.cc $(GTEST_DIR)/src/*.h $(GTEST_HEADERS)
 
 all: $(TARGET_LIB) $(TARGET_TEST)
 
+lib: $(TARGET_LIB)
+
 # For simplicity and to avoid depending on Google Test's
 # implementation details, the dependencies specified below are
 # conservative and not optimized.  This is fine as Google Test
@@ -91,8 +98,11 @@ gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 $(TARGET_LIB): $(OBJS_LIB)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $^ -o $@ $(LDFLAGS)
-	sudo cp libtopicmd.so /usr/lib/
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $^ -o $@ $(LDFLAGS); \
+	cp libtopicmd.so $(USR_LIB_DIR); \
+
+install:
+	cp libtopicmd.so $(INSTALL_DIR)
 
 $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -ltopicmd -lprotobuf $(LDFLAGS)
@@ -111,9 +121,9 @@ clean:
 -include $(DEPS_TEST)
 
 proto : 
-	protoc --cpp_out=. messages.proto
-	protoc --python_out=. messages.proto
-	protoc --java_out=./.. messages.proto
+	protoc --cpp_out=. messages.proto; \
+	protoc --python_out=. messages.proto; \
+	protoc --java_out=./.. messages.proto; \
 
 proto-install :
 	mkdir ~/protobuf; \
@@ -128,4 +138,5 @@ proto-install :
 	export LD_LIBRARY_PATH="/usr/local/lib"; \
 
 test : unittests
-	./unittests
+	export LD_LIBRARY_PATH=$$(pwd)/$(USR_LIB_DIR)
+	./unittests; \

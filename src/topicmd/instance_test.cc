@@ -7,6 +7,7 @@
 
 using namespace topicmd;
 
+// topicmd_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
   Instance instance(1, InstanceConfig());
   Batch batch1;
@@ -62,7 +63,7 @@ TEST(Instance, Basic) {
   config.set_topics_count(3);
   instance.UpdateModel(model_id, config);
 
-  instance.WaitModelProcessed(model_id, 20);
+  instance.WaitModelProcessed(model_id, 150);
 
   config.set_enabled(false);
   instance.UpdateModel(model_id, config);

@@ -5,6 +5,8 @@
 
 using namespace topicmd;
 
+// To run this particular test:
+// topicmd_tests.exe --gtest_filter=InstanceManager.*
 TEST(InstanceManager, Basic) {
   int id = InstanceManager::singleton().CreateInstance(0, InstanceConfig());
   EXPECT_EQ(InstanceManager::singleton().instance(id)->id(), id);
@@ -19,4 +21,6 @@ TEST(InstanceManager, Basic) {
 
   InstanceManager::singleton().erase_instance(id);
   EXPECT_FALSE(InstanceManager::singleton().has_instance(id));
+
+  InstanceManager::singleton().erase_instance(id2);
 }

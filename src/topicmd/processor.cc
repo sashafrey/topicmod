@@ -3,6 +3,21 @@
 #include "stdlib.h"
 
 namespace topicmd {
+  Processor::~Processor() {
+    if (thread_.joinable()) {
+      thread_.interrupt();
+      thread_.join();
+    }
+  }
+
+  void Processor::Interrupt() {
+    thread_.interrupt();
+  }
+
+  void Processor::Join() {
+    thread_.join();
+  }
+
   void Processor::ThreadFunction() {
     try
     {
@@ -33,21 +48,30 @@ namespace topicmd {
           if (!model.enabled()) return; // return from lambda; goes to next step of std::for_each
 
           std::shared_ptr<const TokenTopicMatrix> token_topic_matrix
-              = merger_.token_topic_matrix(model_id);
-          int tokens_count = token_topic_matrix->tokens_count();
+              = merger_.GetLatestTokenTopicMatrix(model_id);
+          assert(token_topic_matrix.get() != NULL);
           int topics_count = token_topic_matrix->topics_count();
-
-          // do not process "empty" models (no data arrived yet)
-          if (tokens_count == 0) return;
-      
+          int items_count = part->get_item_count();
+          
           // process part and store result in merger queue
-          auto processor_output = std::make_shared<ProcessorOutput>(
-              model_id, tokens_count, topics_count);
+          auto po = std::make_shared<ProcessorOutput>();
+          po->set_model_id(model_id);
+          po->set_items_processed(items_count);
+          po->set_topics_count(topics_count);
+          for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+            po->mutable_topic_counters()->add_value(0.0f);
+          }
 
-          int item_count = part->get_item_count();
-          processor_output->set_items_processed(item_count);
+          for (int iToken = 0; iToken < token_topic_matrix->tokens_count(); iToken++) {
+            po->add_token(token_topic_matrix->token(iToken));
+            Counters* counters = po->add_token_counters();
+            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+              counters->add_value(0.0f);
+            }
+          }
+
           for (int item_index = 0;
-                item_index < item_count;
+                item_index < items_count;
                 ++item_index)
           {
             std::vector<float> theta(topics_count);
@@ -55,25 +79,26 @@ namespace topicmd {
               theta[iTopic] = (float)rand() / (float)RAND_MAX;
             }
 
-            int this_item_token_count = part->get_token_count(item_index);
-
             // find the id of token in token_topic_matrix
             std::vector<int> this_item_token_id;
             std::vector<float> this_item_token_frequency;
-            this_item_token_id.reserve(this_item_token_count);
-            this_item_token_frequency.reserve(this_item_token_count);
             for (int token_index = 0;
-                  token_index < this_item_token_count;
-                  token_index++)
+                 token_index < part->get_token_count(item_index);
+                 token_index++)
             {
               std::string token = part->get_token(item_index, token_index);
               int token_id = token_topic_matrix->token_id(token);
-              assert(token_id >= 0);
-              this_item_token_id.push_back(token_id);
-              this_item_token_frequency.push_back(
+              if (token_id < 0) {
+                // Unknown token
+                po->add_discovered_token(token);
+              } else {
+                this_item_token_id.push_back(token_id);
+                this_item_token_frequency.push_back(
                   part->get_token_frequency(item_index, token_index));
+              }
             }
 
+            int this_item_token_count = this_item_token_id.size();
             std::vector<float> Z(this_item_token_count);
             int numInnerIters = model.inner_iterations_count();
             for (int iInnerIter = 0;
@@ -86,10 +111,10 @@ namespace topicmd {
                     ++token_index)
               {
                 float curZ = 0.0f;
-                float* cur_token_topics = token_topic_matrix->token_topics(
-                    this_item_token_id[token_index]);
+                TokenWeights cur_token_weights = token_topic_matrix->token_weights(
+                  this_item_token_id[token_index]);
                 for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-                  curZ += cur_token_topics[iTopic] * theta[iTopic];
+                  curZ += cur_token_weights.at(iTopic) * theta[iTopic];
                 }
 
                 Z[token_index] = curZ;
@@ -103,7 +128,7 @@ namespace topicmd {
                     ++token_index)
               {
                 float n_dw = this_item_token_frequency[token_index];
-                float* cur_token_topics = token_topic_matrix->token_topics(
+                TokenWeights cur_token_weights = token_topic_matrix->token_weights(
                     this_item_token_id[token_index]);
                 float curZ = Z[token_index];
           
@@ -111,21 +136,21 @@ namespace topicmd {
                   if (iInnerIter < numInnerIters) {
                     // Normal iteration, updating theta_next
                     for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-                      theta_next[iTopic] += n_dw * cur_token_topics[iTopic]
-                          * theta[iTopic] / curZ;
+                      theta_next[iTopic] += n_dw * (cur_token_weights.at(iTopic))
+                        * theta[iTopic] / curZ;
                     }
                   } else {
                     // Last iteration, updating final counters
-                    float* hat_n_wt_cur =
-                        processor_output->counter_token_topic(
-                            this_item_token_id[token_index]);
-                    float* hat_n_t = processor_output->counter_topic();
+                    Counters* hat_n_wt_cur = po->mutable_token_counters(
+                      this_item_token_id[token_index]);
+                    Counters* hat_n_t = po->mutable_topic_counters();
                 
                     for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-                      float val = n_dw * cur_token_topics[iTopic] *
+                      float val = n_dw * (cur_token_weights.at(iTopic)) *
                           theta[iTopic] / curZ;
-                      hat_n_wt_cur[iTopic] += val;
-                      hat_n_t[iTopic] += val;
+
+                      hat_n_wt_cur->set_value(iTopic, hat_n_wt_cur->value(iTopic) + val);
+                      hat_n_t->set_value(iTopic, hat_n_t->value(iTopic) + val);
                     }
                   }
                 }
@@ -141,7 +166,7 @@ namespace topicmd {
 
           {
             boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
-            merger_queue_.push(processor_output);
+            merger_queue_.push(po);
           }
         });
       }

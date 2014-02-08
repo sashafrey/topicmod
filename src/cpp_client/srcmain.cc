@@ -36,6 +36,7 @@ double proc(int argc, char * argv[], int processors_count) {
   int nTopics = atoi(argv[3]);
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
+  model_config.set_inner_iterations_count(10);
   string model_config_blob;
   model_config.SerializeToString(&model_config_blob);
   int model_id = 
@@ -89,7 +90,7 @@ double proc(int argc, char * argv[], int processors_count) {
   reconfigure_model(instance_id, model_id, model_config_blob.size(), string_as_array(&model_config_blob));
 
   // wait while each document pass through processor about 100 times.
-  wait_model_processed(instance_id, model_id, nDocs * 100);
+  wait_model_processed(instance_id, model_id, nDocs * 10);
 
   // disable model
   model_config.set_enabled(false);
@@ -166,10 +167,10 @@ int main(int argc, char * argv[]) {
     return 0;
   }
 
-  cout << proc(argc, argv, 4) << " sec. ================= " << endl << endl;
-  cout << proc(argc, argv, 3) << " sec. ================= " << endl << endl;
+//  cout << proc(argc, argv, 4) << " sec. ================= " << endl << endl;
+ // cout << proc(argc, argv, 3) << " sec. ================= " << endl << endl;
   cout << proc(argc, argv, 2) << " sec. ================= " << endl << endl;
-  cout << proc(argc, argv, 1) << " sec. ================= " << endl << endl;
+  //cout << proc(argc, argv, 1) << " sec. ================= " << endl << endl;
 
   return 0;
 }

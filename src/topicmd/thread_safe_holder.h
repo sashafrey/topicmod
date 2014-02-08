@@ -86,12 +86,12 @@ namespace topicmd {
     // Use this instead of get() when the lock is already acquired.
     std::shared_ptr<T> get_locked(const K& key) const {
       auto iter = object_.find(key);
-      return (iter != object_.end()) ? iter->second : std::make_shared<T>();
+      return (iter != object_.end()) ? iter->second : std::shared_ptr<T>();
     }
 
     std::shared_ptr<T> get_copy(const K& key) const {
       auto iter = object_.find(key);
-      return (iter != object_.end()) ? std::make_shared<T>(*(iter->second)) : std::make_shared<T>();
+      return (iter != object_.end()) ? std::make_shared<T>(*(iter->second)) : std::shared_ptr<T>();
     }
     
     void set(const K& key, const std::shared_ptr<T>& object)

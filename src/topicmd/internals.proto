@@ -1,0 +1,24 @@
+package topicmd;
+
+message Counters {
+	repeated float value = 1 [packed = true];
+}
+
+message ProcessorOutput
+{
+	required int32 model_id = 1;
+	required int32 topics_count = 2;
+	optional int32 items_processed = 3;
+	
+	// The sum of token counters
+	required Counters topic_counters = 4;
+	
+	// Counters for each token
+	repeated Counters token_counters = 5;
+
+	// Known tokens
+	repeated string token = 6;
+
+	// Newly discovered tokens, not yet included in matrix Phi.
+	repeated string discovered_token = 7;
+}

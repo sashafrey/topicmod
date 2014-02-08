@@ -10,6 +10,7 @@
 #include <boost/utility.hpp>
 
 #include "topicmd/instance_schema.h"
+#include "topicmd/internals.pb.h"
 #include "topicmd/partition.h"
 #include "topicmd/merger.h"
 #include "topicmd/thread_safe_holder.h"
@@ -33,16 +34,9 @@ namespace topicmd {
     {
     }
 
-    ~Processor() {
-      if (thread_.joinable()) {
-        thread_.interrupt();
-        thread_.join();
-      }
-    }
-
-    void Join() {
-      thread_.join();
-    }
+    ~Processor();
+    void Interrupt();
+    void Join();
   private:
     boost::mutex& processor_queue_lock_;
     std::queue<std::shared_ptr<const Partition> >& processor_queue_;

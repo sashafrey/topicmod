@@ -15,10 +15,12 @@
     <ClCompile Include="data_loader.cc" />
     <ClCompile Include="instance.cc" />
     <ClCompile Include="instance_manager.cc" />
+    <ClCompile Include="internals.pb.cc" />
     <ClCompile Include="merger.cc" />
     <ClCompile Include="messages.pb.cc" />
     <ClCompile Include="partition.cc" />
     <ClCompile Include="processor.cc" />
+    <ClCompile Include="token_topic_matrix.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.h" />
@@ -28,6 +30,7 @@
     <ClInclude Include="instance.h" />
     <ClInclude Include="instance_schema.h" />
     <ClInclude Include="instance_manager.h" />
+    <ClInclude Include="internals.pb.h" />
     <ClInclude Include="merger.h" />
     <ClInclude Include="messages.pb.h" />
     <ClInclude Include="partition.h" />

@@ -36,7 +36,7 @@ LDFLAGS += -lboost_system -lboost_thread
 INSTALL_DIR = /usr/lib
 
 # First target - shared library
-TARGET_LIB    = libtopicmd.so
+TARGET_LIB    = libartm.so
 SRCS_LIB      = cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
@@ -98,13 +98,13 @@ gtest_main.a : gtest-all.o gtest_main.o
 
 $(TARGET_LIB): $(OBJS_LIB)
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $^ -o $@ $(LDFLAGS); \
-	cp libtopicmd.so $(USR_LIB_DIR); \
+	cp libartm.so $(USR_LIB_DIR); \
 
 install:
-	cp libtopicmd.so $(INSTALL_DIR)
+	cp libartm.so $(INSTALL_DIR)
 
 $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -ltopicmd -lprotobuf $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -lartm -lprotobuf $(LDFLAGS)
 
 .cc.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@

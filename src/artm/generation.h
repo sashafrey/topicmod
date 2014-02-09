@@ -1,5 +1,5 @@
-#ifndef TOPICMD_GENERATION_
-#define TOPICMD_GENERATION_
+#ifndef ARTM_GENERATION_
+#define ARTM_GENERATION_
 
 #include <map>
 #include <memory>
@@ -58,4 +58,4 @@ namespace artm { namespace core {
   };
 }} // namespace artm/core
 
-#endif // TOPICMD_GENERATION_
+#endif // ARTM_GENERATION_

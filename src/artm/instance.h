@@ -1,5 +1,5 @@
-#ifndef TOPICMD_INSTANCE_
-#define TOPICMD_INSTANCE_
+#ifndef ARTM_INSTANCE_
+#define ARTM_INSTANCE_
 
 #include <map>
 #include <memory>
@@ -9,13 +9,13 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
-#include "topicmd/instance_schema.h"
-#include "topicmd/internals.pb.h"
-#include "topicmd/merger.h"
-#include "topicmd/messages.pb.h"
-#include "topicmd/processor.h"
-#include "topicmd/template_manager.h"
-#include "topicmd/thread_safe_holder.h"
+#include "artm/instance_schema.h"
+#include "artm/internals.pb.h"
+#include "artm/merger.h"
+#include "artm/messages.pb.h"
+#include "artm/processor.h"
+#include "artm/template_manager.h"
+#include "artm/thread_safe_holder.h"
 
 namespace artm { namespace core {
   class Instance : boost::noncopyable {
@@ -65,4 +65,4 @@ namespace artm { namespace core {
 
 
 }} // namespace artm/core
-#endif // TOPICMD_INSTANCE_
+#endif // ARTM_INSTANCE_

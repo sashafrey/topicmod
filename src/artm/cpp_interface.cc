@@ -1,4 +1,4 @@
-#include "topicmd/cpp_interface.h"
+#include "artm/cpp_interface.h"
 
 namespace artm { 
 

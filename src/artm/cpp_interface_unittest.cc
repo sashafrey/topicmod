@@ -2,8 +2,8 @@
 
 #include <boost/thread.hpp>
 
-#include "topicmd/cpp_interface.h"
-#include "topicmd/messages.pb.h"
+#include "artm/cpp_interface.h"
+#include "artm/messages.pb.h"
 
 using namespace artm;
 
@@ -11,7 +11,7 @@ TEST(CppInterface, Canary) {
 }
 
 // To run this particular test:
-// topicmd_tests.exe --gtest_filter=CppInterface.*
+// artm_tests.exe --gtest_filter=CppInterface.*
 TEST(CppInterface, Basic) {
   const int nTopics = 5;
 

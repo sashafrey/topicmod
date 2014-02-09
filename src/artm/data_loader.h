@@ -7,12 +7,12 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
-#include "topicmd/common.h"
-#include "topicmd/generation.h"
-#include "topicmd/messages.pb.h"
-#include "topicmd/instance.h"
-#include "topicmd/template_manager.h"
-#include "topicmd/thread_safe_holder.h"
+#include "artm/common.h"
+#include "artm/generation.h"
+#include "artm/messages.pb.h"
+#include "artm/instance.h"
+#include "artm/template_manager.h"
+#include "artm/thread_safe_holder.h"
 
 namespace artm { namespace core {
   class DataLoader : boost::noncopyable {

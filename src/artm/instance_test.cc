@@ -2,14 +2,14 @@
 
 #include <boost/thread/mutex.hpp>
 
-#include "topicmd/instance.cc"
-#include "topicmd/data_loader.h"
-#include "topicmd/messages.pb.h"
+#include "artm/instance.cc"
+#include "artm/data_loader.h"
+#include "artm/messages.pb.h"
 
 using namespace ::artm;
 using namespace ::artm::core;
 
-// topicmd_tests.exe --gtest_filter=Instance.*
+// artm_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
   int instance_id = InstanceManager::singleton().Create(0, InstanceConfig());
   std::shared_ptr<Instance> instance = InstanceManager::singleton().Get(instance_id);

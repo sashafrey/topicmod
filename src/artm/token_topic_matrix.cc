@@ -1,4 +1,4 @@
-#include <topicmd/token_topic_matrix.h>
+#include <artm/token_topic_matrix.h>
 
 #include <string.h>
 

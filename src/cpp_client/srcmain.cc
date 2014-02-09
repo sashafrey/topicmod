@@ -10,9 +10,8 @@ using namespace std;
 #include "vocab.h"
 #include "helpers.h"
 
-// topicmd library
-#include "topicmd/cpp_interface.h"
-#include "topicmd/messages.pb.h"
+#include "artm/cpp_interface.h"
+#include "artm/messages.pb.h"
 
 using namespace artm;
 

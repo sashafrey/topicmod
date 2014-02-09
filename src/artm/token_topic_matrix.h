@@ -1,5 +1,5 @@
-#ifndef TOPICMD_TOKEN_TOPIC_MATRIX
-#define TOPICMD_TOKEN_TOPIC_MATRIX
+#ifndef ARTM_TOKEN_TOPIC_MATRIX
+#define ARTM_TOKEN_TOPIC_MATRIX
 
 #include <assert.h>
 
@@ -65,4 +65,4 @@ private:
 
 }} // namespace artm/core
 
-#endif // TOPICMD_TOKEN_TOPIC_MATRIX
+#endif // ARTM_TOKEN_TOPIC_MATRIX

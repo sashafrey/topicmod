@@ -1,4 +1,4 @@
-#include "topicmd/data_loader.h"
+#include "artm/data_loader.h"
 
 namespace artm { namespace core {
 
@@ -22,7 +22,7 @@ int DataLoader::AddBatch(const Batch& batch)
   std::shared_ptr<Generation> next_gen = generation_.get_copy();
   next_gen->AddBatch(std::make_shared<Batch>(batch));
   generation_.set(next_gen);
-  return TOPICMD_SUCCESS;
+  return ARTM_SUCCESS;
 }
 
 void DataLoader::ThreadFunction() 

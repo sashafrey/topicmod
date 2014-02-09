@@ -1,10 +1,10 @@
-#ifndef TOPICMD_INSTANCE_SCHEMA_
-#define TOPICMD_INSTANCE_SCHEMA_
+#ifndef ARTM_INSTANCE_SCHEMA_
+#define ARTM_INSTANCE_SCHEMA_
 
 #include <map>
 #include <memory>
 
-#include "topicmd/messages.pb.h"
+#include "artm/messages.pb.h"
 
 namespace artm { namespace core {
 
@@ -75,4 +75,4 @@ class InstanceSchema {
 
 }} // namespace artm/core
 
-#endif // TOPICMD_INSTANCE_SCHEMA_ 
+#endif // ARTM_INSTANCE_SCHEMA_ 

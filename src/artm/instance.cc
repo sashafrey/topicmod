@@ -1,12 +1,12 @@
-#include "topicmd/instance.h"
+#include "artm/instance.h"
 
 #include <iostream>
 
 #include <boost/bind.hpp>
 
-#include "topicmd/common.h"
-#include "topicmd/processor.h"
-#include "topicmd/template_manager.h"
+#include "artm/common.h"
+#include "artm/processor.h"
+#include "artm/template_manager.h"
 
 namespace artm { namespace core {
   Instance::Instance(int id, const InstanceConfig& config) :
@@ -32,7 +32,7 @@ namespace artm { namespace core {
     auto new_schema = schema_.get_copy();
     new_schema->set_model_config(model_id, std::make_shared<const ModelConfig>(config));
     schema_.set(new_schema);
-    return TOPICMD_SUCCESS;
+    return ARTM_SUCCESS;
   }
 
   int Instance::DisposeModel(int model_id) {
@@ -41,7 +41,7 @@ namespace artm { namespace core {
     schema_.set(new_schema);
 
     merger_.DisposeModel(model_id);
-    return TOPICMD_SUCCESS;
+    return ARTM_SUCCESS;
   }
 
   int Instance::Reconfigure(const InstanceConfig& config) {
@@ -63,7 +63,7 @@ namespace artm { namespace core {
           schema_)));
     }
 
-    return TOPICMD_SUCCESS;
+    return ARTM_SUCCESS;
   }
 
   int Instance::RequestModelTopics(int model_id, ModelTopics* model_topics) {
@@ -78,14 +78,14 @@ namespace artm { namespace core {
       }
     }
     
-    return TOPICMD_SUCCESS;
+    return ARTM_SUCCESS;
   }
 
   int Instance::WaitModelProcessed(int model_id, int processed_items) {
     for (;;) {
       std::shared_ptr<const TokenTopicMatrix> ttm = merger_.GetLatestTokenTopicMatrix(model_id);
       if (ttm->items_processed() >= processed_items) {
-        return TOPICMD_SUCCESS;
+        return ARTM_SUCCESS;
       }
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
@@ -100,7 +100,7 @@ namespace artm { namespace core {
   int Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const Batch> batch) {
     boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
     processor_queue_.push(batch);
-    return TOPICMD_SUCCESS;
+    return ARTM_SUCCESS;
   }
 }} // namespace artm/core
 

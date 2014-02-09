@@ -1,5 +1,5 @@
-#ifndef TOPICMD_TEMPLATE_MANAGER_
-#define TOPICMD_TEMPLATE_MANAGER_
+#ifndef ARTM_TEMPLATE_MANAGER_
+#define ARTM_TEMPLATE_MANAGER_
 
 #include <map>
 #include <memory>
@@ -8,8 +8,8 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
-#include "topicmd/common.h"
-#include "topicmd/messages.pb.h"
+#include "artm/common.h"
+#include "artm/messages.pb.h"
 
 namespace artm { namespace core {
 
@@ -36,7 +36,7 @@ namespace artm { namespace core {
       }
 
       if (map_.find(id) != map_.end()) {
-        return TOPICMD_ERROR;
+        return ARTM_ERROR;
       }
 
       std::shared_ptr<Type> ptr(new Type(id, config));
@@ -91,4 +91,4 @@ namespace artm { namespace core {
 
 }} // artm/core
 
-#endif // TOPICMD_TEMPLATE_MANAGER_
+#endif // ARTM_TEMPLATE_MANAGER_

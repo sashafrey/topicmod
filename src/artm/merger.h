@@ -1,5 +1,5 @@
-#ifndef TOPICMD_MERGER_
-#define TOPICMD_MERGER_
+#ifndef ARTM_MERGER_
+#define ARTM_MERGER_
 
 #include "assert.h"
 #include <stdlib.h>
@@ -14,10 +14,10 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
-#include "topicmd/instance_schema.h"
-#include "topicmd/internals.pb.h"
-#include "topicmd/thread_safe_holder.h"
-#include "topicmd/token_topic_matrix.h"
+#include "artm/instance_schema.h"
+#include "artm/internals.pb.h"
+#include "artm/thread_safe_holder.h"
+#include "artm/token_topic_matrix.h"
 
 namespace artm { namespace core {
 
@@ -48,4 +48,4 @@ class Merger : boost::noncopyable {
 
 }} // namespace artm/core
 
-#endif // TOPICMD_MERGER_
+#endif // ARTM_MERGER_

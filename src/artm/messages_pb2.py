@@ -12,14 +12,14 @@ from google.protobuf import descriptor_pb2
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
-  package='topicmd',
-  serialized_pb='\n\x0emessages.proto\x12\x07topicmd\"I\n\x05\x46ield\x12\x19\n\nfield_name\x18\x01 \x01(\t:\x05@body\x12\x10\n\x08token_id\x18\x02 \x03(\x05\x12\x13\n\x0btoken_count\x18\x03 \x03(\x05\"1\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x1d\n\x05\x66ield\x18\x02 \x03(\x0b\x32\x0e.topicmd.Field\"3\n\x05\x42\x61tch\x12\r\n\x05token\x18\x01 \x03(\t\x12\x1b\n\x04item\x18\x03 \x03(\x0b\x32\r.topicmd.Item\"R\n\x10\x44\x61taLoaderConfig\x12\x13\n\x0binstance_id\x18\x01 \x02(\x05\x12\x11\n\tdisk_path\x18\x02 \x01(\t\x12\x16\n\nqueue_size\x18\x03 \x01(\x05:\x02\x31\x30\"-\n\x0eInstanceConfig\x12\x1b\n\x10processors_count\x18\x01 \x01(\x05:\x01\x31\"~\n\x0bModelConfig\x12\x18\n\x0ctopics_count\x18\x02 \x01(\x05:\x02\x33\x32\x12\x16\n\x07\x65nabled\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\"\n\x16inner_iterations_count\x18\x04 \x01(\x05:\x02\x31\x30\x12\x19\n\nfield_name\x18\x05 \x01(\t:\x05@body\"\x9c\x01\n\x0cLoggerConfig\x12\x14\n\x0clog_location\x18\x01 \x01(\t\x12\x30\n\x05level\x18\x02 \x01(\x0e\x32\x1b.topicmd.LoggerConfig.Level:\x04INFO\"D\n\x05Level\x12\x0c\n\x08\x44ISABLED\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x12\x0b\n\x07WARNING\x10\x02\x12\x08\n\x04INFO\x10\x03\x12\x0b\n\x07VERBOSE\x10\x04\".\n\nItemTopics\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x02 \x03(\x02\"7\n\x0b\x42\x61tchTopics\x12(\n\x0bitem_topics\x18\x01 \x03(\x0b\x32\x13.topicmd.ItemTopics\"D\n\x0bTokenTopics\x12\r\n\x05token\x18\x01 \x01(\t\x12\x10\n\x08token_id\x18\x02 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x03 \x03(\x02\"8\n\x0bModelTopics\x12)\n\x0btoken_topic\x18\x01 \x03(\x0b\x32\x14.topicmd.TokenTopics')
+  package='artm',
+  serialized_pb='\n\x0emessages.proto\x12\x04\x61rtm\"I\n\x05\x46ield\x12\x19\n\nfield_name\x18\x01 \x01(\t:\x05@body\x12\x10\n\x08token_id\x18\x02 \x03(\x05\x12\x13\n\x0btoken_count\x18\x03 \x03(\x05\".\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x1a\n\x05\x66ield\x18\x02 \x03(\x0b\x32\x0b.artm.Field\"0\n\x05\x42\x61tch\x12\r\n\x05token\x18\x01 \x03(\t\x12\x18\n\x04item\x18\x03 \x03(\x0b\x32\n.artm.Item\"R\n\x10\x44\x61taLoaderConfig\x12\x13\n\x0binstance_id\x18\x01 \x02(\x05\x12\x11\n\tdisk_path\x18\x02 \x01(\t\x12\x16\n\nqueue_size\x18\x03 \x01(\x05:\x02\x31\x30\"-\n\x0eInstanceConfig\x12\x1b\n\x10processors_count\x18\x01 \x01(\x05:\x01\x31\"~\n\x0bModelConfig\x12\x18\n\x0ctopics_count\x18\x02 \x01(\x05:\x02\x33\x32\x12\x16\n\x07\x65nabled\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\"\n\x16inner_iterations_count\x18\x04 \x01(\x05:\x02\x31\x30\x12\x19\n\nfield_name\x18\x05 \x01(\t:\x05@body\"\x99\x01\n\x0cLoggerConfig\x12\x14\n\x0clog_location\x18\x01 \x01(\t\x12-\n\x05level\x18\x02 \x01(\x0e\x32\x18.artm.LoggerConfig.Level:\x04INFO\"D\n\x05Level\x12\x0c\n\x08\x44ISABLED\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x12\x0b\n\x07WARNING\x10\x02\x12\x08\n\x04INFO\x10\x03\x12\x0b\n\x07VERBOSE\x10\x04\".\n\nItemTopics\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x02 \x03(\x02\"4\n\x0b\x42\x61tchTopics\x12%\n\x0bitem_topics\x18\x01 \x03(\x0b\x32\x10.artm.ItemTopics\"D\n\x0bTokenTopics\x12\r\n\x05token\x18\x01 \x01(\t\x12\x10\n\x08token_id\x18\x02 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x03 \x03(\x02\"5\n\x0bModelTopics\x12&\n\x0btoken_topic\x18\x01 \x03(\x0b\x32\x11.artm.TokenTopics')
 
 
 
 _LOGGERCONFIG_LEVEL = _descriptor.EnumDescriptor(
   name='Level',
-  full_name='topicmd.LoggerConfig.Level',
+  full_name='artm.LoggerConfig.Level',
   filename=None,
   file=DESCRIPTOR,
   values=[
@@ -46,34 +46,34 @@ _LOGGERCONFIG_LEVEL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=554,
-  serialized_end=622,
+  serialized_start=542,
+  serialized_end=610,
 )
 
 
 _FIELD = _descriptor.Descriptor(
   name='Field',
-  full_name='topicmd.Field',
+  full_name='artm.Field',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='field_name', full_name='topicmd.Field.field_name', index=0,
+      name='field_name', full_name='artm.Field.field_name', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=True, default_value=unicode("@body", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='token_id', full_name='topicmd.Field.token_id', index=1,
+      name='token_id', full_name='artm.Field.token_id', index=1,
       number=2, type=5, cpp_type=1, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='token_count', full_name='topicmd.Field.token_count', index=2,
+      name='token_count', full_name='artm.Field.token_count', index=2,
       number=3, type=5, cpp_type=1, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -88,27 +88,27 @@ _FIELD = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=27,
-  serialized_end=100,
+  serialized_start=24,
+  serialized_end=97,
 )
 
 
 _ITEM = _descriptor.Descriptor(
   name='Item',
-  full_name='topicmd.Item',
+  full_name='artm.Item',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='topicmd.Item.id', index=0,
+      name='id', full_name='artm.Item.id', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='field', full_name='topicmd.Item.field', index=1,
+      name='field', full_name='artm.Item.field', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -123,27 +123,27 @@ _ITEM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=102,
-  serialized_end=151,
+  serialized_start=99,
+  serialized_end=145,
 )
 
 
 _BATCH = _descriptor.Descriptor(
   name='Batch',
-  full_name='topicmd.Batch',
+  full_name='artm.Batch',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='token', full_name='topicmd.Batch.token', index=0,
+      name='token', full_name='artm.Batch.token', index=0,
       number=1, type=9, cpp_type=9, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='item', full_name='topicmd.Batch.item', index=1,
+      name='item', full_name='artm.Batch.item', index=1,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -158,34 +158,34 @@ _BATCH = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=153,
-  serialized_end=204,
+  serialized_start=147,
+  serialized_end=195,
 )
 
 
 _DATALOADERCONFIG = _descriptor.Descriptor(
   name='DataLoaderConfig',
-  full_name='topicmd.DataLoaderConfig',
+  full_name='artm.DataLoaderConfig',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='instance_id', full_name='topicmd.DataLoaderConfig.instance_id', index=0,
+      name='instance_id', full_name='artm.DataLoaderConfig.instance_id', index=0,
       number=1, type=5, cpp_type=1, label=2,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='disk_path', full_name='topicmd.DataLoaderConfig.disk_path', index=1,
+      name='disk_path', full_name='artm.DataLoaderConfig.disk_path', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='queue_size', full_name='topicmd.DataLoaderConfig.queue_size', index=2,
+      name='queue_size', full_name='artm.DataLoaderConfig.queue_size', index=2,
       number=3, type=5, cpp_type=1, label=1,
       has_default_value=True, default_value=10,
       message_type=None, enum_type=None, containing_type=None,
@@ -200,20 +200,20 @@ _DATALOADERCONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=206,
-  serialized_end=288,
+  serialized_start=197,
+  serialized_end=279,
 )
 
 
 _INSTANCECONFIG = _descriptor.Descriptor(
   name='InstanceConfig',
-  full_name='topicmd.InstanceConfig',
+  full_name='artm.InstanceConfig',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='processors_count', full_name='topicmd.InstanceConfig.processors_count', index=0,
+      name='processors_count', full_name='artm.InstanceConfig.processors_count', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=True, default_value=1,
       message_type=None, enum_type=None, containing_type=None,
@@ -228,41 +228,41 @@ _INSTANCECONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=290,
-  serialized_end=335,
+  serialized_start=281,
+  serialized_end=326,
 )
 
 
 _MODELCONFIG = _descriptor.Descriptor(
   name='ModelConfig',
-  full_name='topicmd.ModelConfig',
+  full_name='artm.ModelConfig',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='topics_count', full_name='topicmd.ModelConfig.topics_count', index=0,
+      name='topics_count', full_name='artm.ModelConfig.topics_count', index=0,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=True, default_value=32,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='enabled', full_name='topicmd.ModelConfig.enabled', index=1,
+      name='enabled', full_name='artm.ModelConfig.enabled', index=1,
       number=3, type=8, cpp_type=7, label=1,
       has_default_value=True, default_value=False,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='inner_iterations_count', full_name='topicmd.ModelConfig.inner_iterations_count', index=2,
+      name='inner_iterations_count', full_name='artm.ModelConfig.inner_iterations_count', index=2,
       number=4, type=5, cpp_type=1, label=1,
       has_default_value=True, default_value=10,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='field_name', full_name='topicmd.ModelConfig.field_name', index=3,
+      name='field_name', full_name='artm.ModelConfig.field_name', index=3,
       number=5, type=9, cpp_type=9, label=1,
       has_default_value=True, default_value=unicode("@body", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
@@ -277,27 +277,27 @@ _MODELCONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=337,
-  serialized_end=463,
+  serialized_start=328,
+  serialized_end=454,
 )
 
 
 _LOGGERCONFIG = _descriptor.Descriptor(
   name='LoggerConfig',
-  full_name='topicmd.LoggerConfig',
+  full_name='artm.LoggerConfig',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='log_location', full_name='topicmd.LoggerConfig.log_location', index=0,
+      name='log_location', full_name='artm.LoggerConfig.log_location', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='level', full_name='topicmd.LoggerConfig.level', index=1,
+      name='level', full_name='artm.LoggerConfig.level', index=1,
       number=2, type=14, cpp_type=8, label=1,
       has_default_value=True, default_value=3,
       message_type=None, enum_type=None, containing_type=None,
@@ -313,27 +313,27 @@ _LOGGERCONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=466,
-  serialized_end=622,
+  serialized_start=457,
+  serialized_end=610,
 )
 
 
 _ITEMTOPICS = _descriptor.Descriptor(
   name='ItemTopics',
-  full_name='topicmd.ItemTopics',
+  full_name='artm.ItemTopics',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='topicmd.ItemTopics.id', index=0,
+      name='id', full_name='artm.ItemTopics.id', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='topic_weight', full_name='topicmd.ItemTopics.topic_weight', index=1,
+      name='topic_weight', full_name='artm.ItemTopics.topic_weight', index=1,
       number=2, type=2, cpp_type=6, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -348,20 +348,20 @@ _ITEMTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=624,
-  serialized_end=670,
+  serialized_start=612,
+  serialized_end=658,
 )
 
 
 _BATCHTOPICS = _descriptor.Descriptor(
   name='BatchTopics',
-  full_name='topicmd.BatchTopics',
+  full_name='artm.BatchTopics',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='item_topics', full_name='topicmd.BatchTopics.item_topics', index=0,
+      name='item_topics', full_name='artm.BatchTopics.item_topics', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -376,34 +376,34 @@ _BATCHTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=672,
-  serialized_end=727,
+  serialized_start=660,
+  serialized_end=712,
 )
 
 
 _TOKENTOPICS = _descriptor.Descriptor(
   name='TokenTopics',
-  full_name='topicmd.TokenTopics',
+  full_name='artm.TokenTopics',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='token', full_name='topicmd.TokenTopics.token', index=0,
+      name='token', full_name='artm.TokenTopics.token', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='token_id', full_name='topicmd.TokenTopics.token_id', index=1,
+      name='token_id', full_name='artm.TokenTopics.token_id', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='topic_weight', full_name='topicmd.TokenTopics.topic_weight', index=2,
+      name='topic_weight', full_name='artm.TokenTopics.topic_weight', index=2,
       number=3, type=2, cpp_type=6, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -418,20 +418,20 @@ _TOKENTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=729,
-  serialized_end=797,
+  serialized_start=714,
+  serialized_end=782,
 )
 
 
 _MODELTOPICS = _descriptor.Descriptor(
   name='ModelTopics',
-  full_name='topicmd.ModelTopics',
+  full_name='artm.ModelTopics',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='token_topic', full_name='topicmd.ModelTopics.token_topic', index=0,
+      name='token_topic', full_name='artm.ModelTopics.token_topic', index=0,
       number=1, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -446,8 +446,8 @@ _MODELTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=799,
-  serialized_end=855,
+  serialized_start=784,
+  serialized_end=837,
 )
 
 _ITEM.fields_by_name['field'].message_type = _FIELD
@@ -472,67 +472,67 @@ class Field(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _FIELD
 
-  # @@protoc_insertion_point(class_scope:topicmd.Field)
+  # @@protoc_insertion_point(class_scope:artm.Field)
 
 class Item(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _ITEM
 
-  # @@protoc_insertion_point(class_scope:topicmd.Item)
+  # @@protoc_insertion_point(class_scope:artm.Item)
 
 class Batch(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _BATCH
 
-  # @@protoc_insertion_point(class_scope:topicmd.Batch)
+  # @@protoc_insertion_point(class_scope:artm.Batch)
 
 class DataLoaderConfig(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _DATALOADERCONFIG
 
-  # @@protoc_insertion_point(class_scope:topicmd.DataLoaderConfig)
+  # @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
 
 class InstanceConfig(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _INSTANCECONFIG
 
-  # @@protoc_insertion_point(class_scope:topicmd.InstanceConfig)
+  # @@protoc_insertion_point(class_scope:artm.InstanceConfig)
 
 class ModelConfig(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _MODELCONFIG
 
-  # @@protoc_insertion_point(class_scope:topicmd.ModelConfig)
+  # @@protoc_insertion_point(class_scope:artm.ModelConfig)
 
 class LoggerConfig(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _LOGGERCONFIG
 
-  # @@protoc_insertion_point(class_scope:topicmd.LoggerConfig)
+  # @@protoc_insertion_point(class_scope:artm.LoggerConfig)
 
 class ItemTopics(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _ITEMTOPICS
 
-  # @@protoc_insertion_point(class_scope:topicmd.ItemTopics)
+  # @@protoc_insertion_point(class_scope:artm.ItemTopics)
 
 class BatchTopics(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _BATCHTOPICS
 
-  # @@protoc_insertion_point(class_scope:topicmd.BatchTopics)
+  # @@protoc_insertion_point(class_scope:artm.BatchTopics)
 
 class TokenTopics(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _TOKENTOPICS
 
-  # @@protoc_insertion_point(class_scope:topicmd.TokenTopics)
+  # @@protoc_insertion_point(class_scope:artm.TokenTopics)
 
 class ModelTopics(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _MODELTOPICS
 
-  # @@protoc_insertion_point(class_scope:topicmd.ModelTopics)
+  # @@protoc_insertion_point(class_scope:artm.ModelTopics)
 
 
 # @@protoc_insertion_point(module_scope)

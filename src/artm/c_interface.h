@@ -1,8 +1,8 @@
-#ifndef TOPICMD_H_
-#define TOPICMD_H_
+#ifndef ARTM_H_
+#define ARTM_H_
 
 #ifdef _WIN32
-  #ifdef TOPICMD_DLL_EXPORTS
+  #ifdef ARTM_DLL_EXPORTS
     #define DLL_PUBLIC __declspec(dllexport)
   #else
     #define DLL_PUBLIC __declspec(dllimport)
@@ -83,4 +83,4 @@ extern "C" {
 }
 
 
-#endif // TOPICMD_H_
+#endif // ARTM_H_

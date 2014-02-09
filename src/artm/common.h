@@ -1,7 +1,7 @@
-#ifndef TOPICMD_COMMON_H_
-#define TOPICMD_COMMON_H_
+#ifndef ARTM_COMMON_H_
+#define ARTM_COMMON_H_
 
-#define TOPICMD_ERROR -1
-#define TOPICMD_SUCCESS 0
+#define ARTM_ERROR -1
+#define ARTM_SUCCESS 0
 
-#endif // TOPICMD_COMMON_H_
+#endif // ARTM_COMMON_H_

@@ -1,5 +1,5 @@
-#ifndef TOPICMD_PROCESSOR_
-#define TOPICMD_PROCESSOR_
+#ifndef ARTM_PROCESSOR_
+#define ARTM_PROCESSOR_
 
 #include <memory>
 #include <queue>
@@ -9,10 +9,10 @@
 #include <boost/bind.hpp>
 #include <boost/utility.hpp>
 
-#include "topicmd/instance_schema.h"
-#include "topicmd/internals.pb.h"
-#include "topicmd/merger.h"
-#include "topicmd/thread_safe_holder.h"
+#include "artm/instance_schema.h"
+#include "artm/internals.pb.h"
+#include "artm/merger.h"
+#include "artm/thread_safe_holder.h"
 
 namespace artm { namespace core {
 
@@ -50,4 +50,4 @@ namespace artm { namespace core {
   };
 }} // artm/core
 
-#endif // TOPICMD_PROCESSOR_
+#endif // ARTM_PROCESSOR_

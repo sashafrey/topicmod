@@ -1,12 +1,12 @@
-#ifndef TOPICMD_CPP_H
-#define TOPICMD_CPP_H
+#ifndef ARTM_CPP_H
+#define ARTM_CPP_H
 
 #include <memory>
 #include <string>
 using namespace std;
 
-#include "topicmd/messages.pb.h"
-#include "topicmd/c_interface.h"
+#include "artm/messages.pb.h"
+#include "artm/c_interface.h"
 
 #define DISALLOW_COPY_AND_ASSIGN(TypeName) \
   TypeName(const TypeName&);   \
@@ -67,4 +67,4 @@ namespace artm {
 
 } // namespace artm
 
-#endif // TOPICMD_CPP_H
+#endif // ARTM_CPP_H

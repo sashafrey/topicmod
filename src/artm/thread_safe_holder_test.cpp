@@ -1,4 +1,4 @@
-#include "topicmd/thread_safe_holder.h"
+#include "artm/thread_safe_holder.h"
 
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
@@ -9,7 +9,7 @@ using namespace ::artm;
 using namespace ::artm::core;
 
 // To run this particular test:
-// topicmd_tests.exe --gtest_filter=ThreadSafeHolder.*
+// artm_tests.exe --gtest_filter=ThreadSafeHolder.*
 TEST(ThreadSafeHolder, Basic) {
   boost::mutex lock_;
   ThreadSafeHolder<double> int_holder(lock_);

@@ -2,10 +2,10 @@
 
 #include <string>
 
-#include "topicmd/common.h"
-#include "topicmd/messages.pb.h"
-#include "topicmd/instance.h"
-#include "topicmd/data_loader.h"
+#include "artm/common.h"
+#include "artm/messages.pb.h"
+#include "artm/instance.h"
+#include "artm/data_loader.h"
 
 using namespace std;
 using namespace ::artm;
@@ -18,13 +18,13 @@ inline char* string_as_array(string* str) {
 }
 
 int configure_logger(int length, const char* logger_config) {
-  return TOPICMD_SUCCESS;
+  return ARTM_SUCCESS;
 }
 
 int copy_request_result(int request_id, int length, char* address) 
 {
   memcpy(address, string_as_array(&message), length);
-  return TOPICMD_SUCCESS;
+  return ARTM_SUCCESS;
 }
 
 int create_data_loader(
@@ -56,7 +56,7 @@ int create_model(int instance_id,
   model_config.ParseFromArray(model_config_blob, length);
   
   if (!InstanceManager::singleton().Contains(instance_id)) {
-    return TOPICMD_ERROR;
+    return ARTM_ERROR;
   }
 
   auto instance = InstanceManager::singleton().Get(instance_id);
@@ -92,7 +92,7 @@ int add_batch(int data_loader_id, int length, const char* batch_blob) {
   batch.ParseFromArray(batch_blob, length);
 
   if (!DataLoaderManager::singleton().Contains(data_loader_id)) {
-    return TOPICMD_ERROR;
+    return ARTM_ERROR;
   }
 
   auto data_loader = DataLoaderManager::singleton().Get(data_loader_id);
@@ -106,7 +106,7 @@ int reconfigure_instance(int instance_id,
   InstanceConfig instance_config;
   instance_config.ParseFromArray(instance_config_blob, length);
   if (!InstanceManager::singleton().Contains(instance_id)) {
-    return TOPICMD_ERROR;
+    return ARTM_ERROR;
   }
 
   auto instance = InstanceManager::singleton().Get(instance_id);
@@ -122,7 +122,7 @@ int reconfigure_model(int instance_id,
   model_config.ParseFromArray(model_config_blob, length);
   
   if (!InstanceManager::singleton().Contains(instance_id)) {
-    return TOPICMD_ERROR;
+    return ARTM_ERROR;
   }
 
   auto instance = InstanceManager::singleton().Get(instance_id);
@@ -136,7 +136,7 @@ int request_batch_topics(int instance_id,
                          int *length,
                          const char** result) 
 {
-  return TOPICMD_SUCCESS;
+  return ARTM_SUCCESS;
 }
 
 int request_model_topics(int instance_id,
@@ -146,7 +146,7 @@ int request_model_topics(int instance_id,
 {
   ModelTopics model_topics;
   if (!InstanceManager::singleton().Contains(instance_id)) {
-    return TOPICMD_ERROR;
+    return ARTM_ERROR;
   }
 
   auto instance = InstanceManager::singleton().Get(instance_id);
@@ -154,7 +154,7 @@ int request_model_topics(int instance_id,
   model_topics.SerializeToString(&message);
   *length = message.size();
   *address = string_as_array(&message);
-  return TOPICMD_SUCCESS;
+  return ARTM_SUCCESS;
 }
 
 int wait_model_processed(int instance_id,
@@ -162,7 +162,7 @@ int wait_model_processed(int instance_id,
                          int processed_items) 
 {
   if (!InstanceManager::singleton().Contains(instance_id)) {
-    return TOPICMD_ERROR;
+    return ARTM_ERROR;
   }
 
   auto instance = InstanceManager::singleton().Get(instance_id);

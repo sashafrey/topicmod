@@ -1,66 +1,69 @@
 #ifndef TOPICMD_CPP_H
 #define TOPICMD_CPP_H
 
+#include <memory>
+#include <string>
+using namespace std;
+
 #include "topicmd/messages.pb.h"
+#include "topicmd/c_interface.h"
 
-namespace topicmd {
-  // =========================================================================
-  // Common routines
-  // =========================================================================
+#define DISALLOW_COPY_AND_ASSIGN(TypeName) \
+  TypeName(const TypeName&);   \
+  void operator=(const TypeName&)
 
-  int configure_logger(const LoggerConfig& logger_config);
+namespace artm { 
+  class Instance;
+  class Model;
+  class DataLoader;
 
-  // =========================================================================
-  // Data loader interface
-  // =========================================================================
+  class Instance {
+  public:
+    explicit Instance(const InstanceConfig& config);
+    ~Instance();
 
-  int create_data_loader(int data_loader_id,
-                         const DataLoaderConfig& config);
+    int id() const { return id_; }
+    std::shared_ptr<ModelTopics> GetTopics(const Model& model);
+    void WaitModelProcessed(const Model& model, int nDocs);
+  private:
+    int id_;
+    InstanceConfig config_;
+    DISALLOW_COPY_AND_ASSIGN(Instance);
+  };
 
-  void dispose_data_loader(int data_loader_id);
+  class Model {
+  public:
+    Model(const Instance& instance, const ModelConfig& config);
+    ~Model();
 
-  // Adds batch of documents
-  int add_batch(int data_loader_id, const Batch& batch);
-  
-  // =========================================================================
-  // Instance interface
-  // =========================================================================
+    void Reconfigure(const ModelConfig& config);
+    void Enable();
+    void Disable();
 
-  // Creates an instance and returns the corresponding ID (positive 
-  // integer). If argument instance_id is set to 0, then the ID will be
-  // picked up automatically. Otherwise, the specified value will be 
-  // used if it is available. If an instance with specified ID is 
-  // already running the function will return TOPICMD_ERROR. 
-  int create_instance(int instance_id, 
-                      const InstanceConfig& instance_config);
+    int instance_id() const { return instance_id_; }
+    int model_id() const { return model_id_; }
 
-  int create_model(int instance_id,
-                   int model_id,
-                   const ModelConfig& model_config);
+  private:
+    int instance_id_;
+    int model_id_;
+    ModelConfig config_;
 
-  void dispose_instance(int instance_id);
+    DISALLOW_COPY_AND_ASSIGN(Model);
+  };
 
-  void dispose_model(int instance_id, int model_id);
+  class DataLoader {
+  public:
+    DataLoader(const Instance& instance, const DataLoaderConfig& config);
+    ~DataLoader();
 
-  int reconfigure_instance(int instance_id,
-                           const InstanceConfig& instance_config);
+    int id() const { return id_; }
+    void AddBatch(const Batch& batch);
 
-  int reconfigure_model(int instance_id,
-                           int model_id,
-                           const ModelConfig& model_config);
-
-  int request_batch_topics(int instance_id,
-                           int model_id,
-                           const Batch& batch,
-                           BatchTopics* batch_topics);
-
-  int request_model_topics(int instance_id,
-                           int model_id,
-                           ModelTopics* model_topics);
-
-  int wait_model_processed(int instance_id,
-                           int model_id,
-                           int processed_items);
-} // namespace topicmd
+  private:
+    int id_;
+    DataLoaderConfig config_;
+    DISALLOW_COPY_AND_ASSIGN(DataLoader);
+  };
+} // namespace artm
 
 #endif // TOPICMD_CPP_H

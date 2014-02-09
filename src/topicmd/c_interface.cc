@@ -1,11 +1,15 @@
 #include "c_interface.h"
 
 #include <string>
-using namespace std;
 
 #include "topicmd/common.h"
 #include "topicmd/messages.pb.h"
-#include "topicmd/cpp_interface.h"
+#include "topicmd/instance.h"
+#include "topicmd/data_loader.h"
+
+using namespace std;
+using namespace ::artm;
+using namespace ::artm::core;
 
 string message;
 
@@ -28,9 +32,9 @@ int create_data_loader(
   int length, 
   const char* data_loader_config_blob) 
 {
-  topicmd::DataLoaderConfig config;
+  DataLoaderConfig config;
   config.ParseFromArray(data_loader_config_blob, length);
-  return topicmd::create_data_loader(data_loader_id, config);
+  return DataLoaderManager::singleton().Create(data_loader_id, config);
 }
 
 int create_instance(
@@ -38,9 +42,9 @@ int create_instance(
   int length, 
   const char* instance_config_blob) 
 {
-  topicmd::InstanceConfig instance_config;
+  InstanceConfig instance_config;
   instance_config.ParseFromArray(instance_config_blob, length);
-  return topicmd::create_instance(instance_id, instance_config);
+  return InstanceManager::singleton().Create(instance_id, instance_config);
 }
 
 int create_model(int instance_id,
@@ -48,39 +52,65 @@ int create_model(int instance_id,
                  int length, 
                  const char* model_config_blob) 
 {
-  topicmd::ModelConfig model_config;
+  ModelConfig model_config;
   model_config.ParseFromArray(model_config_blob, length);
-  return topicmd::create_model(instance_id, model_id, model_config);
+  
+  if (!InstanceManager::singleton().Contains(instance_id)) {
+    return TOPICMD_ERROR;
+  }
+
+  auto instance = InstanceManager::singleton().Get(instance_id);
+  return instance->UpdateModel(model_id, model_config);
 }
 
 void dispose_data_loader(int data_loader_id) {
-  topicmd::dispose_data_loader(data_loader_id);
+  if (DataLoaderManager::singleton().Contains(data_loader_id)) {
+    DataLoaderManager::singleton().Erase(data_loader_id);
+  }
 }
 
 void dispose_instance(int instance_id) {
-  topicmd::dispose_instance(instance_id);
+  if (InstanceManager::singleton().Contains(instance_id)) {
+    InstanceManager::singleton().Erase(instance_id);
+  }
 }
 
 void dispose_model(int instance_id, int model_id) {
-  topicmd::dispose_model(instance_id, model_id);
+  if (!InstanceManager::singleton().Contains(instance_id)) {
+    return;
+  }
+
+  auto instance = InstanceManager::singleton().Get(instance_id);
+  instance->DisposeModel(model_id);
 }
 
 void dispose_request(int request_id) {
 }
 
 int add_batch(int data_loader_id, int length, const char* batch_blob) {
-  topicmd::Batch batch;
+  Batch batch;
   batch.ParseFromArray(batch_blob, length);
-  return topicmd::add_batch(data_loader_id, batch);  
+
+  if (!DataLoaderManager::singleton().Contains(data_loader_id)) {
+    return TOPICMD_ERROR;
+  }
+
+  auto data_loader = DataLoaderManager::singleton().Get(data_loader_id);
+  return data_loader->AddBatch(batch);
 }
 
 int reconfigure_instance(int instance_id,
                          int length, 
                          const char* instance_config_blob) 
 {
-  topicmd::InstanceConfig instance_config;
+  InstanceConfig instance_config;
   instance_config.ParseFromArray(instance_config_blob, length);
-  return topicmd::reconfigure_instance(instance_id, instance_config);
+  if (!InstanceManager::singleton().Contains(instance_id)) {
+    return TOPICMD_ERROR;
+  }
+
+  auto instance = InstanceManager::singleton().Get(instance_id);
+  return instance->Reconfigure(instance_config);
 }
 
 int reconfigure_model(int instance_id,
@@ -88,9 +118,15 @@ int reconfigure_model(int instance_id,
                       int length,
                       const char* model_config_blob) 
 {
-  topicmd::ModelConfig model_config;
+  ModelConfig model_config;
   model_config.ParseFromArray(model_config_blob, length);
-  return topicmd::reconfigure_model(instance_id, model_id, model_config);
+  
+  if (!InstanceManager::singleton().Contains(instance_id)) {
+    return TOPICMD_ERROR;
+  }
+
+  auto instance = InstanceManager::singleton().Get(instance_id);
+  return instance->UpdateModel(model_id, model_config);
 }
 
 int request_batch_topics(int instance_id,
@@ -108,8 +144,13 @@ int request_model_topics(int instance_id,
                          int *length,
                          char **address) 
 {
-  topicmd::ModelTopics model_topics;
-  topicmd::request_model_topics(instance_id, model_id, &model_topics);
+  ModelTopics model_topics;
+  if (!InstanceManager::singleton().Contains(instance_id)) {
+    return TOPICMD_ERROR;
+  }
+
+  auto instance = InstanceManager::singleton().Get(instance_id);
+  instance->RequestModelTopics(model_id, &model_topics);
   model_topics.SerializeToString(&message);
   *length = message.size();
   *address = string_as_array(&message);
@@ -120,5 +161,10 @@ int wait_model_processed(int instance_id,
                          int model_id,
                          int processed_items) 
 {
-  return topicmd::wait_model_processed(instance_id, model_id, processed_items);
+  if (!InstanceManager::singleton().Contains(instance_id)) {
+    return TOPICMD_ERROR;
+  }
+
+  auto instance = InstanceManager::singleton().Get(instance_id);
+  return instance->WaitModelProcessed(model_id, processed_items);
 }

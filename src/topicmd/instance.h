@@ -17,7 +17,7 @@
 #include "topicmd/template_manager.h"
 #include "topicmd/thread_safe_holder.h"
 
-namespace topicmd {
+namespace artm { namespace core {
   class Instance : boost::noncopyable {
   public:
     ~Instance();
@@ -64,5 +64,5 @@ namespace topicmd {
   typedef TemplateManager<Instance, InstanceConfig> InstanceManager;
 
 
-} // namespace topicmd
+}} // namespace artm/core
 #endif // TOPICMD_INSTANCE_

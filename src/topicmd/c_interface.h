@@ -30,7 +30,7 @@ extern "C" {
                          const char* data_loader_config_blob);
 
   DLL_PUBLIC 
-  void dispose_data_loader(int instance_id);
+  void dispose_data_loader(int data_loader_id);
 
   DLL_PUBLIC 
   int add_batch(int data_loader_id, int length, const char* batch_blob);

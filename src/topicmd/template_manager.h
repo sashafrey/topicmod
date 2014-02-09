@@ -11,7 +11,7 @@
 #include "topicmd/common.h"
 #include "topicmd/messages.pb.h"
 
-namespace topicmd {
+namespace artm { namespace core {
 
   template<class Type, class Config>
   class TemplateManager : boost::noncopyable {
@@ -88,6 +88,7 @@ namespace topicmd {
     int next_id_;
     std::map<int, std::shared_ptr<Type> > map_;
   };
-}
+
+}} // artm/core
 
 #endif // TOPICMD_TEMPLATE_MANAGER_

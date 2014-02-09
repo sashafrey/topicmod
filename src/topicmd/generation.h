@@ -9,7 +9,7 @@
 
 #include "messages.pb.h"
 
-namespace topicmd {
+namespace artm { namespace core {
   class Generation {
   private:
     int id_;
@@ -56,6 +56,6 @@ namespace topicmd {
       return retval;
     }
   };
-}
+}} // namespace artm/core
 
 #endif // TOPICMD_GENERATION_

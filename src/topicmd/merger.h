@@ -19,7 +19,7 @@
 #include "topicmd/thread_safe_holder.h"
 #include "topicmd/token_topic_matrix.h"
 
-namespace topicmd {
+namespace artm { namespace core {
 
 class Merger : boost::noncopyable {
  public:
@@ -45,6 +45,7 @@ class Merger : boost::noncopyable {
   boost::thread thread_;  
   void ThreadFunction();
 };
-} // namespace topicmd
+
+}} // namespace artm/core
 
 #endif // TOPICMD_MERGER_

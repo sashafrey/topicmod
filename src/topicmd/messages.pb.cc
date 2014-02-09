@@ -16,7 +16,7 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace topicmd {
+namespace artm {
 
 namespace {
 
@@ -315,28 +315,27 @@ void protobuf_AddDesc_messages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\016messages.proto\022\007topicmd\"I\n\005Field\022\031\n\nfi"
-    "eld_name\030\001 \001(\t:\005@body\022\020\n\010token_id\030\002 \003(\005\022"
-    "\023\n\013token_count\030\003 \003(\005\"1\n\004Item\022\n\n\002id\030\001 \001(\005"
-    "\022\035\n\005field\030\002 \003(\0132\016.topicmd.Field\"3\n\005Batch"
-    "\022\r\n\005token\030\001 \003(\t\022\033\n\004item\030\003 \003(\0132\r.topicmd."
-    "Item\"R\n\020DataLoaderConfig\022\023\n\013instance_id\030"
-    "\001 \002(\005\022\021\n\tdisk_path\030\002 \001(\t\022\026\n\nqueue_size\030\003"
-    " \001(\005:\00210\"-\n\016InstanceConfig\022\033\n\020processors"
-    "_count\030\001 \001(\005:\0011\"~\n\013ModelConfig\022\030\n\014topics"
-    "_count\030\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false"
-    "\022\"\n\026inner_iterations_count\030\004 \001(\005:\00210\022\031\n\n"
-    "field_name\030\005 \001(\t:\005@body\"\234\001\n\014LoggerConfig"
-    "\022\024\n\014log_location\030\001 \001(\t\0220\n\005level\030\002 \001(\0162\033."
-    "topicmd.LoggerConfig.Level:\004INFO\"D\n\005Leve"
-    "l\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022"
-    "\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\".\n\nItemTopics\022\n\n\002"
-    "id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"7\n\013BatchT"
-    "opics\022(\n\013item_topics\030\001 \003(\0132\023.topicmd.Ite"
-    "mTopics\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n"
-    "\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\"8\n"
-    "\013ModelTopics\022)\n\013token_topic\030\001 \003(\0132\024.topi"
-    "cmd.TokenTopics", 855);
+    "\n\016messages.proto\022\004artm\"I\n\005Field\022\031\n\nfield"
+    "_name\030\001 \001(\t:\005@body\022\020\n\010token_id\030\002 \003(\005\022\023\n\013"
+    "token_count\030\003 \003(\005\".\n\004Item\022\n\n\002id\030\001 \001(\005\022\032\n"
+    "\005field\030\002 \003(\0132\013.artm.Field\"0\n\005Batch\022\r\n\005to"
+    "ken\030\001 \003(\t\022\030\n\004item\030\003 \003(\0132\n.artm.Item\"R\n\020D"
+    "ataLoaderConfig\022\023\n\013instance_id\030\001 \002(\005\022\021\n\t"
+    "disk_path\030\002 \001(\t\022\026\n\nqueue_size\030\003 \001(\005:\00210\""
+    "-\n\016InstanceConfig\022\033\n\020processors_count\030\001 "
+    "\001(\005:\0011\"~\n\013ModelConfig\022\030\n\014topics_count\030\002 "
+    "\001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inner"
+    "_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_nam"
+    "e\030\005 \001(\t:\005@body\"\231\001\n\014LoggerConfig\022\024\n\014log_l"
+    "ocation\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.Logg"
+    "erConfig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLE"
+    "D\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n"
+    "\007VERBOSE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014"
+    "topic_weight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013ite"
+    "m_topics\030\001 \003(\0132\020.artm.ItemTopics\"D\n\013Toke"
+    "nTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005"
+    "\022\024\n\014topic_weight\030\003 \003(\002\"5\n\013ModelTopics\022&\n"
+    "\013token_topic\030\001 \003(\0132\021.artm.TokenTopics", 837);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Field::_default_field_name_ =
@@ -784,7 +783,7 @@ bool Item::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .topicmd.Field field = 2;
+      // repeated .artm.Field field = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -822,7 +821,7 @@ void Item::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->id(), output);
   }
 
-  // repeated .topicmd.Field field = 2;
+  // repeated .artm.Field field = 2;
   for (int i = 0; i < this->field_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       2, this->field(i), output);
@@ -841,7 +840,7 @@ void Item::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->id(), target);
   }
 
-  // repeated .topicmd.Field field = 2;
+  // repeated .artm.Field field = 2;
   for (int i = 0; i < this->field_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -867,7 +866,7 @@ int Item::ByteSize() const {
     }
 
   }
-  // repeated .topicmd.Field field = 2;
+  // repeated .artm.Field field = 2;
   total_size += 1 * this->field_size();
   for (int i = 0; i < this->field_size(); i++) {
     total_size +=
@@ -1033,7 +1032,7 @@ bool Batch::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .topicmd.Item item = 3;
+      // repeated .artm.Item item = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -1075,7 +1074,7 @@ void Batch::SerializeWithCachedSizes(
       1, this->token(i), output);
   }
 
-  // repeated .topicmd.Item item = 3;
+  // repeated .artm.Item item = 3;
   for (int i = 0; i < this->item_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       3, this->item(i), output);
@@ -1098,7 +1097,7 @@ void Batch::SerializeWithCachedSizes(
       WriteStringToArray(1, this->token(i), target);
   }
 
-  // repeated .topicmd.Item item = 3;
+  // repeated .artm.Item item = 3;
   for (int i = 0; i < this->item_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -1122,7 +1121,7 @@ int Batch::ByteSize() const {
       this->token(i));
   }
 
-  // repeated .topicmd.Item item = 3;
+  // repeated .artm.Item item = 3;
   total_size += 1 * this->item_size();
   for (int i = 0; i < this->item_size(); i++) {
     total_size +=
@@ -2177,7 +2176,7 @@ bool LoggerConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // optional .topicmd.LoggerConfig.Level level = 2 [default = INFO];
+      // optional .artm.LoggerConfig.Level level = 2 [default = INFO];
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -2186,8 +2185,8 @@ bool LoggerConfig::MergePartialFromCodedStream(
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
                  input, &value)));
-          if (::topicmd::LoggerConfig_Level_IsValid(value)) {
-            set_level(static_cast< ::topicmd::LoggerConfig_Level >(value));
+          if (::artm::LoggerConfig_Level_IsValid(value)) {
+            set_level(static_cast< ::artm::LoggerConfig_Level >(value));
           } else {
             mutable_unknown_fields()->AddVarint(2, value);
           }
@@ -2225,7 +2224,7 @@ void LoggerConfig::SerializeWithCachedSizes(
       1, this->log_location(), output);
   }
 
-  // optional .topicmd.LoggerConfig.Level level = 2 [default = INFO];
+  // optional .artm.LoggerConfig.Level level = 2 [default = INFO];
   if (has_level()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       2, this->level(), output);
@@ -2249,7 +2248,7 @@ void LoggerConfig::SerializeWithCachedSizes(
         1, this->log_location(), target);
   }
 
-  // optional .topicmd.LoggerConfig.Level level = 2 [default = INFO];
+  // optional .artm.LoggerConfig.Level level = 2 [default = INFO];
   if (has_level()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       2, this->level(), target);
@@ -2273,7 +2272,7 @@ int LoggerConfig::ByteSize() const {
           this->log_location());
     }
 
-    // optional .topicmd.LoggerConfig.Level level = 2 [default = INFO];
+    // optional .artm.LoggerConfig.Level level = 2 [default = INFO];
     if (has_level()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->level());
@@ -2672,7 +2671,7 @@ bool BatchTopics::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .topicmd.ItemTopics item_topics = 1;
+      // repeated .artm.ItemTopics item_topics = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2705,7 +2704,7 @@ bool BatchTopics::MergePartialFromCodedStream(
 
 void BatchTopics::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .topicmd.ItemTopics item_topics = 1;
+  // repeated .artm.ItemTopics item_topics = 1;
   for (int i = 0; i < this->item_topics_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->item_topics(i), output);
@@ -2719,7 +2718,7 @@ void BatchTopics::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* BatchTopics::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .topicmd.ItemTopics item_topics = 1;
+  // repeated .artm.ItemTopics item_topics = 1;
   for (int i = 0; i < this->item_topics_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -2736,7 +2735,7 @@ void BatchTopics::SerializeWithCachedSizes(
 int BatchTopics::ByteSize() const {
   int total_size = 0;
 
-  // repeated .topicmd.ItemTopics item_topics = 1;
+  // repeated .artm.ItemTopics item_topics = 1;
   total_size += 1 * this->item_topics_size();
   for (int i = 0; i < this->item_topics_size(); i++) {
     total_size +=
@@ -3185,7 +3184,7 @@ bool ModelTopics::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .topicmd.TokenTopics token_topic = 1;
+      // repeated .artm.TokenTopics token_topic = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -3218,7 +3217,7 @@ bool ModelTopics::MergePartialFromCodedStream(
 
 void ModelTopics::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated .topicmd.TokenTopics token_topic = 1;
+  // repeated .artm.TokenTopics token_topic = 1;
   for (int i = 0; i < this->token_topic_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       1, this->token_topic(i), output);
@@ -3232,7 +3231,7 @@ void ModelTopics::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ModelTopics::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated .topicmd.TokenTopics token_topic = 1;
+  // repeated .artm.TokenTopics token_topic = 1;
   for (int i = 0; i < this->token_topic_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -3249,7 +3248,7 @@ void ModelTopics::SerializeWithCachedSizes(
 int ModelTopics::ByteSize() const {
   int total_size = 0;
 
-  // repeated .topicmd.TokenTopics token_topic = 1;
+  // repeated .artm.TokenTopics token_topic = 1;
   total_size += 1 * this->token_topic_size();
   for (int i = 0; i < this->token_topic_size(); i++) {
     total_size +=
@@ -3323,6 +3322,6 @@ void ModelTopics::Swap(ModelTopics* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace topicmd
+}  // namespace artm
 
 // @@protoc_insertion_point(global_scope)

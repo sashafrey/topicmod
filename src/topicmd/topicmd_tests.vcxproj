@@ -22,6 +22,7 @@
     <ClCompile Include="..\..\gtest\src\gtest-all.cc" />
     <ClCompile Include="..\..\gtest\src\gtest_main.cc" />
     <ClCompile Include="boost_thread_test.cc" />
+    <ClCompile Include="cpp_interface.cc" />
     <ClCompile Include="cpp_interface_unittest.cc" />
     <ClCompile Include="instance_manager_test.cc" />
     <ClCompile Include="instance_test.cc" />
@@ -29,6 +30,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\gtest\include\gtest\gtest.h" />
+    <ClInclude Include="cpp_interface.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="topicmd_dll.vcxproj">
+      <Project>{94b610ad-18c4-4c67-ae30-a4fa360f3150}</Project>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{615DE847-3EEA-4D7D-A4F5-A336733EE213}</ProjectGuid>

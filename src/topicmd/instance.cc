@@ -8,7 +8,7 @@
 #include "topicmd/processor.h"
 #include "topicmd/template_manager.h"
 
-namespace topicmd {
+namespace artm { namespace core {
   Instance::Instance(int id, const InstanceConfig& config) :
     lock_(),
     instance_id_(id),
@@ -102,5 +102,5 @@ namespace topicmd {
     processor_queue_.push(batch);
     return TOPICMD_SUCCESS;
   }
-} // namespace topicmd
+}} // namespace artm/core
 

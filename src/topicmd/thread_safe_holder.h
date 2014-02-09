@@ -8,7 +8,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
-namespace topicmd {
+namespace artm { namespace core {
 
   // A helper-class, which magically turns any class into thread-safe thing.
   // The only requirement: the class must have deep copy constructor.
@@ -110,6 +110,6 @@ namespace topicmd {
     std::map<K, std::shared_ptr<T> > object_;
   };
 
-} // namespace topicmd
+}} // namespace artm/core
 
 #endif // THREAD_SAFE_HOLDER_

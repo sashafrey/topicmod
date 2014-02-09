@@ -14,7 +14,8 @@
 #include "topicmd/merger.h"
 #include "topicmd/thread_safe_holder.h"
 
-namespace topicmd {
+namespace artm { namespace core {
+
   class Processor : boost::noncopyable {
   public:
     Processor(boost::mutex& processor_queue_lock,
@@ -47,6 +48,6 @@ namespace topicmd {
     boost::thread thread_;
     void ThreadFunction();
   };
-} // topicmd
+}} // artm/core
 
 #endif // TOPICMD_PROCESSOR_

@@ -14,7 +14,7 @@
 #include "topicmd/template_manager.h"
 #include "topicmd/thread_safe_holder.h"
 
-namespace topicmd {
+namespace artm { namespace core {
   class DataLoader : boost::noncopyable {
   public:
     ~DataLoader();
@@ -51,6 +51,6 @@ namespace topicmd {
   };
 
   typedef TemplateManager<DataLoader, DataLoaderConfig> DataLoaderManager;
-}
+}} // namespace artm/core
 
 #endif // DATA_LOADER_

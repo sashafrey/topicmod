@@ -1,135 +1,106 @@
 #include "topicmd/cpp_interface.h"
 
-#include "topicmd/common.h"
-#include "topicmd/messages.pb.h"
-#include "topicmd/instance.h"
-#include "topicmd/data_loader.h"
+namespace artm { 
 
-namespace topicmd {
-  // =========================================================================
-  // Common routines
-  // =========================================================================
+inline char* string_as_array(string* str) {
+  return str->empty() ? NULL : &*str->begin();
+}
 
-  int configure_logger(const LoggerConfig& logger_config)  {
-    return TOPICMD_SUCCESS;
-  }
+Instance::Instance(const InstanceConfig& config) : id_(0), config_(config)
+{
+  string instance_config_blob;
+  config.SerializeToString(&instance_config_blob);
+  id_ = create_instance(
+    0,
+    instance_config_blob.size(), 
+    string_as_array(&instance_config_blob));
+}
 
-  // =========================================================================
-  // Data loader interface
-  // =========================================================================
+Instance::~Instance() {
+  dispose_instance(id());
+}
 
-  int create_data_loader(int data_loader_id,
-                         const DataLoaderConfig& config) 
-  {
-    return DataLoaderManager::singleton().Create(data_loader_id, config);
-  }
+std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
+  // Request model topics
+  int length;
+  char* address;
+  int request_id = 
+    request_model_topics(
+      id(), 
+      model.model_id(), 
+      &length,
+      &address);
 
-  void dispose_data_loader(int data_loader_id) 
-  {
-    if (DataLoaderManager::singleton().Contains(data_loader_id)) {
-      DataLoaderManager::singleton().Erase(data_loader_id);
-    }
-  }
+  string model_topics_blob;
+  model_topics_blob.resize(length);
+  copy_request_result(
+    request_id, 
+    length, 
+    string_as_array(&model_topics_blob));
 
-  // Adds batch of documents
-  int add_batch(int data_loader_id, const Batch& batch) 
-  {
-    if (!DataLoaderManager::singleton().Contains(data_loader_id)) {
-      return TOPICMD_ERROR;
-    }
+  dispose_request(request_id);
 
-    auto data_loader = DataLoaderManager::singleton().Get(data_loader_id);
-    return data_loader->AddBatch(batch);
-  }
-  
-  // =========================================================================
-  // Instance interface
-  // =========================================================================
+  std::shared_ptr<ModelTopics> model_topics(new ModelTopics());
+  model_topics->ParseFromString(model_topics_blob);
+  return model_topics;
+}
 
-  int create_instance(int instance_id,
-                      const InstanceConfig& instance_config) 
-  {
-    return InstanceManager::singleton().Create(instance_id,
-      instance_config);
-  }
+void Instance::WaitModelProcessed(const Model& model, int nDocs) {
+  wait_model_processed(id(), model.model_id(), nDocs);
+}
 
-  int create_model(int instance_id,
-                   int model_id,
-                   const ModelConfig& model_config) 
-  {
-    // the same operation.
-    return reconfigure_model(instance_id, model_id, model_config);
-  }
+Model::Model(const Instance& instance, const ModelConfig& config) : instance_id_(instance.id()), model_id_(0), config_(config) 
+{
+  string model_config_blob;
+    config.SerializeToString(&model_config_blob);
+    int model_id_ = create_model(
+      instance_id_, 
+      0,
+      model_config_blob.size(), 
+      string_as_array(&model_config_blob));
+}
 
-  void dispose_instance(int instance_id) { 
-    if (InstanceManager::singleton().Contains(instance_id)) {
-      InstanceManager::singleton().Erase(instance_id);
-    }
-  }
+Model::~Model() {
+  dispose_model(instance_id(), model_id());
+}
 
-  void dispose_model(int instance_id, int model_id) { 
-    if (!InstanceManager::singleton().Contains(instance_id)) {
-      return;
-    }
+void Model::Reconfigure(const ModelConfig& config) {
+  string model_config_blob;
+  config.SerializeToString(&model_config_blob);
+  reconfigure_model(instance_id(), model_id(), model_config_blob.size(), string_as_array(&model_config_blob));
+  config_.CopyFrom(config);      
+}
 
-    auto instance = InstanceManager::singleton().Get(instance_id);
-    instance->DisposeModel(model_id);
-  }
+void Model::Enable() {
+  config_.set_enabled(true);
+  Reconfigure(config_);
+}
 
-  int reconfigure_instance(int instance_id,
-                           const InstanceConfig& instance_config) 
-  {
-    if (!InstanceManager::singleton().Contains(instance_id)) {
-      return TOPICMD_ERROR;
-    }
+void Model::Disable() {
+  config_.set_enabled(false);
+  Reconfigure(config_);
+}
+ 
+DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config) : id_(0), config_(config)
+{
+  config_.set_instance_id(instance.id());
+  string data_loader_config_blob;
+  config_.SerializeToString(&data_loader_config_blob);
+  id_ =
+    create_data_loader(
+      0,
+      data_loader_config_blob.size(),
+      string_as_array(&data_loader_config_blob));      
+}
 
-    auto instance = InstanceManager::singleton().Get(instance_id);
-    return instance->Reconfigure(instance_config);
-  }
-
-  int reconfigure_model(int instance_id,
-                        int model_id,
-                        const ModelConfig& model_config) 
-  {
-    if (!InstanceManager::singleton().Contains(instance_id)) {
-      return TOPICMD_ERROR;
-    }
-
-    auto instance = InstanceManager::singleton().Get(instance_id);
-    instance->UpdateModel(model_id, model_config);
-    return TOPICMD_SUCCESS;
-  }
-
-  int request_batch_topics(int instance_id,
-                           int model_id,
-                           const Batch& batch,
-                           BatchTopics* batch_topics) 
-  {
-    return TOPICMD_SUCCESS;
-  }
-
-  int request_model_topics(int instance_id,
-                           int model_id,
-                           ModelTopics* model_topics) 
-  {
-    if (!InstanceManager::singleton().Contains(instance_id)) {
-      return TOPICMD_ERROR;
-    }
-
-    auto instance = InstanceManager::singleton().Get(instance_id);
-    return instance->RequestModelTopics(model_id, model_topics);
-  }
-
-  int wait_model_processed(int instance_id,
-                           int model_id,
-                           int processed_items) 
-  {
-    if (!InstanceManager::singleton().Contains(instance_id)) {
-      return TOPICMD_ERROR;
-    }
-
-    auto instance = InstanceManager::singleton().Get(instance_id);
-    return instance->WaitModelProcessed(model_id, processed_items);
-  }
-} // namespace topicmd
-
+DataLoader::~DataLoader() {
+  dispose_data_loader(id());
+}
+   
+void DataLoader::AddBatch(const Batch& batch) {
+  string batch_blob;
+  batch.SerializeToString(&batch_blob);
+  add_batch(id(), batch_blob.size(), string_as_array(&batch_blob));
+}
+ 
+} // namespace artm

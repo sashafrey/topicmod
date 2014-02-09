@@ -16,7 +16,8 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 
-namespace topicmd {
+namespace artm {
+namespace core {
 
 namespace {
 
@@ -106,13 +107,13 @@ void protobuf_AddDesc_internals_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\017internals.proto\022\007topicmd\"\035\n\010Counters\022\021"
-    "\n\005value\030\001 \003(\002B\002\020\001\"\321\001\n\017ProcessorOutput\022\020\n"
-    "\010model_id\030\001 \002(\005\022\024\n\014topics_count\030\002 \002(\005\022\027\n"
-    "\017items_processed\030\003 \001(\005\022)\n\016topic_counters"
-    "\030\004 \002(\0132\021.topicmd.Counters\022)\n\016token_count"
-    "ers\030\005 \003(\0132\021.topicmd.Counters\022\r\n\005token\030\006 "
-    "\003(\t\022\030\n\020discovered_token\030\007 \003(\t", 269);
+    "\n\017internals.proto\022\tartm.core\"\035\n\010Counters"
+    "\022\021\n\005value\030\001 \003(\002B\002\020\001\"\325\001\n\017ProcessorOutput\022"
+    "\020\n\010model_id\030\001 \002(\005\022\024\n\014topics_count\030\002 \002(\005\022"
+    "\027\n\017items_processed\030\003 \001(\005\022+\n\016topic_counte"
+    "rs\030\004 \002(\0132\023.artm.core.Counters\022+\n\016token_c"
+    "ounters\030\005 \003(\0132\023.artm.core.Counters\022\r\n\005to"
+    "ken\030\006 \003(\t\022\030\n\020discovered_token\030\007 \003(\t", 275);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "internals.proto", &protobuf_RegisterTypes);
   Counters::default_instance_ = new Counters();
@@ -372,7 +373,7 @@ ProcessorOutput::ProcessorOutput()
 }
 
 void ProcessorOutput::InitAsDefaultInstance() {
-  topic_counters_ = const_cast< ::topicmd::Counters*>(&::topicmd::Counters::default_instance());
+  topic_counters_ = const_cast< ::artm::core::Counters*>(&::artm::core::Counters::default_instance());
 }
 
 ProcessorOutput::ProcessorOutput(const ProcessorOutput& from)
@@ -427,7 +428,7 @@ void ProcessorOutput::Clear() {
     topics_count_ = 0;
     items_processed_ = 0;
     if (has_topic_counters()) {
-      if (topic_counters_ != NULL) topic_counters_->::topicmd::Counters::Clear();
+      if (topic_counters_ != NULL) topic_counters_->::artm::core::Counters::Clear();
     }
   }
   token_counters_.Clear();
@@ -490,7 +491,7 @@ bool ProcessorOutput::MergePartialFromCodedStream(
         break;
       }
 
-      // required .topicmd.Counters topic_counters = 4;
+      // required .artm.core.Counters topic_counters = 4;
       case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -504,7 +505,7 @@ bool ProcessorOutput::MergePartialFromCodedStream(
         break;
       }
 
-      // repeated .topicmd.Counters token_counters = 5;
+      // repeated .artm.core.Counters token_counters = 5;
       case 5: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -590,13 +591,13 @@ void ProcessorOutput::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->items_processed(), output);
   }
 
-  // required .topicmd.Counters topic_counters = 4;
+  // required .artm.core.Counters topic_counters = 4;
   if (has_topic_counters()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       4, this->topic_counters(), output);
   }
 
-  // repeated .topicmd.Counters token_counters = 5;
+  // repeated .artm.core.Counters token_counters = 5;
   for (int i = 0; i < this->token_counters_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
       5, this->token_counters(i), output);
@@ -643,14 +644,14 @@ void ProcessorOutput::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->items_processed(), target);
   }
 
-  // required .topicmd.Counters topic_counters = 4;
+  // required .artm.core.Counters topic_counters = 4;
   if (has_topic_counters()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         4, this->topic_counters(), target);
   }
 
-  // repeated .topicmd.Counters token_counters = 5;
+  // repeated .artm.core.Counters token_counters = 5;
   for (int i = 0; i < this->token_counters_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
@@ -707,7 +708,7 @@ int ProcessorOutput::ByteSize() const {
           this->items_processed());
     }
 
-    // required .topicmd.Counters topic_counters = 4;
+    // required .artm.core.Counters topic_counters = 4;
     if (has_topic_counters()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
@@ -715,7 +716,7 @@ int ProcessorOutput::ByteSize() const {
     }
 
   }
-  // repeated .topicmd.Counters token_counters = 5;
+  // repeated .artm.core.Counters token_counters = 5;
   total_size += 1 * this->token_counters_size();
   for (int i = 0; i < this->token_counters_size(); i++) {
     total_size +=
@@ -776,7 +777,7 @@ void ProcessorOutput::MergeFrom(const ProcessorOutput& from) {
       set_items_processed(from.items_processed());
     }
     if (from.has_topic_counters()) {
-      mutable_topic_counters()->::topicmd::Counters::MergeFrom(from.topic_counters());
+      mutable_topic_counters()->::artm::core::Counters::MergeFrom(from.topic_counters());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -826,6 +827,7 @@ void ProcessorOutput::Swap(ProcessorOutput* other) {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace topicmd
+}  // namespace core
+}  // namespace artm
 
 // @@protoc_insertion_point(global_scope)

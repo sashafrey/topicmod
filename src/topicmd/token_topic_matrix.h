@@ -9,7 +9,7 @@
 
 #include <boost/utility.hpp>
 
-namespace topicmd {
+namespace artm { namespace core {
 
 class TokenWeights
 {
@@ -63,6 +63,6 @@ private:
   std::vector<float> normalizer_; // normalization constant for each topic
 };
 
-} // namespace topicmd
+}} // namespace artm/core
 
 #endif // TOPICMD_TOKEN_TOPIC_MATRIX

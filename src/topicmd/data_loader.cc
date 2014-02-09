@@ -1,6 +1,6 @@
 #include "topicmd/data_loader.h"
 
-namespace topicmd {
+namespace artm { namespace core {
 
 DataLoader::~DataLoader() {
     if (thread_.joinable()) {
@@ -61,4 +61,4 @@ void DataLoader::ThreadFunction()
   }
 }
 
-} // namespace topicmd
+}} // namespace artm/core

@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <iostream>
 
-namespace topicmd {
+namespace artm { namespace core {
 
 Merger::Merger(boost::mutex& merger_queue_lock,
                std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
@@ -109,4 +109,4 @@ void Merger::ThreadFunction()
   }
 }
 
-} // namespace topicmd
+}} // namespace artm/core

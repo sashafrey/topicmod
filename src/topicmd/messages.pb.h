@@ -27,7 +27,7 @@
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
-namespace topicmd {
+namespace artm {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_messages_2eproto();
@@ -160,7 +160,7 @@ class Field : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_token_count();
 
-  // @@protoc_insertion_point(class_scope:topicmd.Field)
+  // @@protoc_insertion_point(class_scope:artm.Field)
  private:
   inline void set_has_field_name();
   inline void clear_has_field_name();
@@ -245,26 +245,26 @@ class Item : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 id() const;
   inline void set_id(::google::protobuf::int32 value);
 
-  // repeated .topicmd.Field field = 2;
+  // repeated .artm.Field field = 2;
   inline int field_size() const;
   inline void clear_field();
   static const int kFieldFieldNumber = 2;
-  inline const ::topicmd::Field& field(int index) const;
-  inline ::topicmd::Field* mutable_field(int index);
-  inline ::topicmd::Field* add_field();
-  inline const ::google::protobuf::RepeatedPtrField< ::topicmd::Field >&
+  inline const ::artm::Field& field(int index) const;
+  inline ::artm::Field* mutable_field(int index);
+  inline ::artm::Field* add_field();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::Field >&
       field() const;
-  inline ::google::protobuf::RepeatedPtrField< ::topicmd::Field >*
+  inline ::google::protobuf::RepeatedPtrField< ::artm::Field >*
       mutable_field();
 
-  // @@protoc_insertion_point(class_scope:topicmd.Item)
+  // @@protoc_insertion_point(class_scope:artm.Item)
  private:
   inline void set_has_id();
   inline void clear_has_id();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::topicmd::Field > field_;
+  ::google::protobuf::RepeatedPtrField< ::artm::Field > field_;
   ::google::protobuf::int32 id_;
 
   mutable int _cached_size_;
@@ -349,25 +349,25 @@ class Batch : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_token();
 
-  // repeated .topicmd.Item item = 3;
+  // repeated .artm.Item item = 3;
   inline int item_size() const;
   inline void clear_item();
   static const int kItemFieldNumber = 3;
-  inline const ::topicmd::Item& item(int index) const;
-  inline ::topicmd::Item* mutable_item(int index);
-  inline ::topicmd::Item* add_item();
-  inline const ::google::protobuf::RepeatedPtrField< ::topicmd::Item >&
+  inline const ::artm::Item& item(int index) const;
+  inline ::artm::Item* mutable_item(int index);
+  inline ::artm::Item* add_item();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::Item >&
       item() const;
-  inline ::google::protobuf::RepeatedPtrField< ::topicmd::Item >*
+  inline ::google::protobuf::RepeatedPtrField< ::artm::Item >*
       mutable_item();
 
-  // @@protoc_insertion_point(class_scope:topicmd.Batch)
+  // @@protoc_insertion_point(class_scope:artm.Batch)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
-  ::google::protobuf::RepeatedPtrField< ::topicmd::Item > item_;
+  ::google::protobuf::RepeatedPtrField< ::artm::Item > item_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -461,7 +461,7 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 queue_size() const;
   inline void set_queue_size(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:topicmd.DataLoaderConfig)
+  // @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
  private:
   inline void set_has_instance_id();
   inline void clear_has_instance_id();
@@ -549,7 +549,7 @@ class InstanceConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 processors_count() const;
   inline void set_processors_count(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:topicmd.InstanceConfig)
+  // @@protoc_insertion_point(class_scope:artm.InstanceConfig)
  private:
   inline void set_has_processors_count();
   inline void clear_has_processors_count();
@@ -657,7 +657,7 @@ class ModelConfig : public ::google::protobuf::Message {
   inline ::std::string* release_field_name();
   inline void set_allocated_field_name(::std::string* field_name);
 
-  // @@protoc_insertion_point(class_scope:topicmd.ModelConfig)
+  // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
@@ -781,14 +781,14 @@ class LoggerConfig : public ::google::protobuf::Message {
   inline ::std::string* release_log_location();
   inline void set_allocated_log_location(::std::string* log_location);
 
-  // optional .topicmd.LoggerConfig.Level level = 2 [default = INFO];
+  // optional .artm.LoggerConfig.Level level = 2 [default = INFO];
   inline bool has_level() const;
   inline void clear_level();
   static const int kLevelFieldNumber = 2;
-  inline ::topicmd::LoggerConfig_Level level() const;
-  inline void set_level(::topicmd::LoggerConfig_Level value);
+  inline ::artm::LoggerConfig_Level level() const;
+  inline void set_level(::artm::LoggerConfig_Level value);
 
-  // @@protoc_insertion_point(class_scope:topicmd.LoggerConfig)
+  // @@protoc_insertion_point(class_scope:artm.LoggerConfig)
  private:
   inline void set_has_log_location();
   inline void clear_has_log_location();
@@ -885,7 +885,7 @@ class ItemTopics : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< float >*
       mutable_topic_weight();
 
-  // @@protoc_insertion_point(class_scope:topicmd.ItemTopics)
+  // @@protoc_insertion_point(class_scope:artm.ItemTopics)
  private:
   inline void set_has_id();
   inline void clear_has_id();
@@ -961,24 +961,24 @@ class BatchTopics : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .topicmd.ItemTopics item_topics = 1;
+  // repeated .artm.ItemTopics item_topics = 1;
   inline int item_topics_size() const;
   inline void clear_item_topics();
   static const int kItemTopicsFieldNumber = 1;
-  inline const ::topicmd::ItemTopics& item_topics(int index) const;
-  inline ::topicmd::ItemTopics* mutable_item_topics(int index);
-  inline ::topicmd::ItemTopics* add_item_topics();
-  inline const ::google::protobuf::RepeatedPtrField< ::topicmd::ItemTopics >&
+  inline const ::artm::ItemTopics& item_topics(int index) const;
+  inline ::artm::ItemTopics* mutable_item_topics(int index);
+  inline ::artm::ItemTopics* add_item_topics();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics >&
       item_topics() const;
-  inline ::google::protobuf::RepeatedPtrField< ::topicmd::ItemTopics >*
+  inline ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics >*
       mutable_item_topics();
 
-  // @@protoc_insertion_point(class_scope:topicmd.BatchTopics)
+  // @@protoc_insertion_point(class_scope:artm.BatchTopics)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::topicmd::ItemTopics > item_topics_;
+  ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics > item_topics_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -1077,7 +1077,7 @@ class TokenTopics : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< float >*
       mutable_topic_weight();
 
-  // @@protoc_insertion_point(class_scope:topicmd.TokenTopics)
+  // @@protoc_insertion_point(class_scope:artm.TokenTopics)
  private:
   inline void set_has_token();
   inline void clear_has_token();
@@ -1156,24 +1156,24 @@ class ModelTopics : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .topicmd.TokenTopics token_topic = 1;
+  // repeated .artm.TokenTopics token_topic = 1;
   inline int token_topic_size() const;
   inline void clear_token_topic();
   static const int kTokenTopicFieldNumber = 1;
-  inline const ::topicmd::TokenTopics& token_topic(int index) const;
-  inline ::topicmd::TokenTopics* mutable_token_topic(int index);
-  inline ::topicmd::TokenTopics* add_token_topic();
-  inline const ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics >&
+  inline const ::artm::TokenTopics& token_topic(int index) const;
+  inline ::artm::TokenTopics* mutable_token_topic(int index);
+  inline ::artm::TokenTopics* add_token_topic();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >&
       token_topic() const;
-  inline ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics >*
+  inline ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >*
       mutable_token_topic();
 
-  // @@protoc_insertion_point(class_scope:topicmd.ModelTopics)
+  // @@protoc_insertion_point(class_scope:artm.ModelTopics)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics > token_topic_;
+  ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics > token_topic_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -1338,27 +1338,27 @@ inline void Item::set_id(::google::protobuf::int32 value) {
   id_ = value;
 }
 
-// repeated .topicmd.Field field = 2;
+// repeated .artm.Field field = 2;
 inline int Item::field_size() const {
   return field_.size();
 }
 inline void Item::clear_field() {
   field_.Clear();
 }
-inline const ::topicmd::Field& Item::field(int index) const {
+inline const ::artm::Field& Item::field(int index) const {
   return field_.Get(index);
 }
-inline ::topicmd::Field* Item::mutable_field(int index) {
+inline ::artm::Field* Item::mutable_field(int index) {
   return field_.Mutable(index);
 }
-inline ::topicmd::Field* Item::add_field() {
+inline ::artm::Field* Item::add_field() {
   return field_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::topicmd::Field >&
+inline const ::google::protobuf::RepeatedPtrField< ::artm::Field >&
 Item::field() const {
   return field_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::topicmd::Field >*
+inline ::google::protobuf::RepeatedPtrField< ::artm::Field >*
 Item::mutable_field() {
   return &field_;
 }
@@ -1411,27 +1411,27 @@ Batch::mutable_token() {
   return &token_;
 }
 
-// repeated .topicmd.Item item = 3;
+// repeated .artm.Item item = 3;
 inline int Batch::item_size() const {
   return item_.size();
 }
 inline void Batch::clear_item() {
   item_.Clear();
 }
-inline const ::topicmd::Item& Batch::item(int index) const {
+inline const ::artm::Item& Batch::item(int index) const {
   return item_.Get(index);
 }
-inline ::topicmd::Item* Batch::mutable_item(int index) {
+inline ::artm::Item* Batch::mutable_item(int index) {
   return item_.Mutable(index);
 }
-inline ::topicmd::Item* Batch::add_item() {
+inline ::artm::Item* Batch::add_item() {
   return item_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::topicmd::Item >&
+inline const ::google::protobuf::RepeatedPtrField< ::artm::Item >&
 Batch::item() const {
   return item_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::topicmd::Item >*
+inline ::google::protobuf::RepeatedPtrField< ::artm::Item >*
 Batch::mutable_item() {
   return &item_;
 }
@@ -1794,7 +1794,7 @@ inline void LoggerConfig::set_allocated_log_location(::std::string* log_location
   }
 }
 
-// optional .topicmd.LoggerConfig.Level level = 2 [default = INFO];
+// optional .artm.LoggerConfig.Level level = 2 [default = INFO];
 inline bool LoggerConfig::has_level() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -1808,11 +1808,11 @@ inline void LoggerConfig::clear_level() {
   level_ = 3;
   clear_has_level();
 }
-inline ::topicmd::LoggerConfig_Level LoggerConfig::level() const {
-  return static_cast< ::topicmd::LoggerConfig_Level >(level_);
+inline ::artm::LoggerConfig_Level LoggerConfig::level() const {
+  return static_cast< ::artm::LoggerConfig_Level >(level_);
 }
-inline void LoggerConfig::set_level(::topicmd::LoggerConfig_Level value) {
-  assert(::topicmd::LoggerConfig_Level_IsValid(value));
+inline void LoggerConfig::set_level(::artm::LoggerConfig_Level value) {
+  assert(::artm::LoggerConfig_Level_IsValid(value));
   set_has_level();
   level_ = value;
 }
@@ -1872,27 +1872,27 @@ ItemTopics::mutable_topic_weight() {
 
 // BatchTopics
 
-// repeated .topicmd.ItemTopics item_topics = 1;
+// repeated .artm.ItemTopics item_topics = 1;
 inline int BatchTopics::item_topics_size() const {
   return item_topics_.size();
 }
 inline void BatchTopics::clear_item_topics() {
   item_topics_.Clear();
 }
-inline const ::topicmd::ItemTopics& BatchTopics::item_topics(int index) const {
+inline const ::artm::ItemTopics& BatchTopics::item_topics(int index) const {
   return item_topics_.Get(index);
 }
-inline ::topicmd::ItemTopics* BatchTopics::mutable_item_topics(int index) {
+inline ::artm::ItemTopics* BatchTopics::mutable_item_topics(int index) {
   return item_topics_.Mutable(index);
 }
-inline ::topicmd::ItemTopics* BatchTopics::add_item_topics() {
+inline ::artm::ItemTopics* BatchTopics::add_item_topics() {
   return item_topics_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::topicmd::ItemTopics >&
+inline const ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics >&
 BatchTopics::item_topics() const {
   return item_topics_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::topicmd::ItemTopics >*
+inline ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics >*
 BatchTopics::mutable_item_topics() {
   return &item_topics_;
 }
@@ -2022,27 +2022,27 @@ TokenTopics::mutable_topic_weight() {
 
 // ModelTopics
 
-// repeated .topicmd.TokenTopics token_topic = 1;
+// repeated .artm.TokenTopics token_topic = 1;
 inline int ModelTopics::token_topic_size() const {
   return token_topic_.size();
 }
 inline void ModelTopics::clear_token_topic() {
   token_topic_.Clear();
 }
-inline const ::topicmd::TokenTopics& ModelTopics::token_topic(int index) const {
+inline const ::artm::TokenTopics& ModelTopics::token_topic(int index) const {
   return token_topic_.Get(index);
 }
-inline ::topicmd::TokenTopics* ModelTopics::mutable_token_topic(int index) {
+inline ::artm::TokenTopics* ModelTopics::mutable_token_topic(int index) {
   return token_topic_.Mutable(index);
 }
-inline ::topicmd::TokenTopics* ModelTopics::add_token_topic() {
+inline ::artm::TokenTopics* ModelTopics::add_token_topic() {
   return token_topic_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics >&
+inline const ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >&
 ModelTopics::token_topic() const {
   return token_topic_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::topicmd::TokenTopics >*
+inline ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >*
 ModelTopics::mutable_token_topic() {
   return &token_topic_;
 }
@@ -2050,15 +2050,15 @@ ModelTopics::mutable_token_topic() {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace topicmd
+}  // namespace artm
 
 #ifndef SWIG
 namespace google {
 namespace protobuf {
 
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::topicmd::LoggerConfig_Level>() {
-  return ::topicmd::LoggerConfig_Level_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::LoggerConfig_Level>() {
+  return ::artm::LoggerConfig_Level_descriptor();
 }
 
 }  // namespace google

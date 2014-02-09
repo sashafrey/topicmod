@@ -6,7 +6,7 @@
 
 #include "topicmd/messages.pb.h"
 
-namespace topicmd {
+namespace artm { namespace core {
 
 class InstanceSchema {
   private:
@@ -73,6 +73,6 @@ class InstanceSchema {
     }
   };
 
-}
+}} // namespace artm/core
 
 #endif // TOPICMD_INSTANCE_SCHEMA_ 

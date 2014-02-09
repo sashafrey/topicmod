@@ -26,7 +26,8 @@
 #include <google/protobuf/unknown_field_set.h>
 // @@protoc_insertion_point(includes)
 
-namespace topicmd {
+namespace artm {
+namespace core {
 
 // Internal implementation detail -- do not call these.
 void  protobuf_AddDesc_internals_2eproto();
@@ -104,7 +105,7 @@ class Counters : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< float >*
       mutable_value();
 
-  // @@protoc_insertion_point(class_scope:topicmd.Counters)
+  // @@protoc_insertion_point(class_scope:artm.core.Counters)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
@@ -199,25 +200,25 @@ class ProcessorOutput : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 items_processed() const;
   inline void set_items_processed(::google::protobuf::int32 value);
 
-  // required .topicmd.Counters topic_counters = 4;
+  // required .artm.core.Counters topic_counters = 4;
   inline bool has_topic_counters() const;
   inline void clear_topic_counters();
   static const int kTopicCountersFieldNumber = 4;
-  inline const ::topicmd::Counters& topic_counters() const;
-  inline ::topicmd::Counters* mutable_topic_counters();
-  inline ::topicmd::Counters* release_topic_counters();
-  inline void set_allocated_topic_counters(::topicmd::Counters* topic_counters);
+  inline const ::artm::core::Counters& topic_counters() const;
+  inline ::artm::core::Counters* mutable_topic_counters();
+  inline ::artm::core::Counters* release_topic_counters();
+  inline void set_allocated_topic_counters(::artm::core::Counters* topic_counters);
 
-  // repeated .topicmd.Counters token_counters = 5;
+  // repeated .artm.core.Counters token_counters = 5;
   inline int token_counters_size() const;
   inline void clear_token_counters();
   static const int kTokenCountersFieldNumber = 5;
-  inline const ::topicmd::Counters& token_counters(int index) const;
-  inline ::topicmd::Counters* mutable_token_counters(int index);
-  inline ::topicmd::Counters* add_token_counters();
-  inline const ::google::protobuf::RepeatedPtrField< ::topicmd::Counters >&
+  inline const ::artm::core::Counters& token_counters(int index) const;
+  inline ::artm::core::Counters* mutable_token_counters(int index);
+  inline ::artm::core::Counters* add_token_counters();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >&
       token_counters() const;
-  inline ::google::protobuf::RepeatedPtrField< ::topicmd::Counters >*
+  inline ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >*
       mutable_token_counters();
 
   // repeated string token = 6;
@@ -252,7 +253,7 @@ class ProcessorOutput : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& discovered_token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_discovered_token();
 
-  // @@protoc_insertion_point(class_scope:topicmd.ProcessorOutput)
+  // @@protoc_insertion_point(class_scope:artm.core.ProcessorOutput)
  private:
   inline void set_has_model_id();
   inline void clear_has_model_id();
@@ -267,8 +268,8 @@ class ProcessorOutput : public ::google::protobuf::Message {
 
   ::google::protobuf::int32 model_id_;
   ::google::protobuf::int32 topics_count_;
-  ::topicmd::Counters* topic_counters_;
-  ::google::protobuf::RepeatedPtrField< ::topicmd::Counters > token_counters_;
+  ::artm::core::Counters* topic_counters_;
+  ::google::protobuf::RepeatedPtrField< ::artm::core::Counters > token_counters_;
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
   ::google::protobuf::RepeatedPtrField< ::std::string> discovered_token_;
   ::google::protobuf::int32 items_processed_;
@@ -385,7 +386,7 @@ inline void ProcessorOutput::set_items_processed(::google::protobuf::int32 value
   items_processed_ = value;
 }
 
-// required .topicmd.Counters topic_counters = 4;
+// required .artm.core.Counters topic_counters = 4;
 inline bool ProcessorOutput::has_topic_counters() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -396,24 +397,24 @@ inline void ProcessorOutput::clear_has_topic_counters() {
   _has_bits_[0] &= ~0x00000008u;
 }
 inline void ProcessorOutput::clear_topic_counters() {
-  if (topic_counters_ != NULL) topic_counters_->::topicmd::Counters::Clear();
+  if (topic_counters_ != NULL) topic_counters_->::artm::core::Counters::Clear();
   clear_has_topic_counters();
 }
-inline const ::topicmd::Counters& ProcessorOutput::topic_counters() const {
+inline const ::artm::core::Counters& ProcessorOutput::topic_counters() const {
   return topic_counters_ != NULL ? *topic_counters_ : *default_instance_->topic_counters_;
 }
-inline ::topicmd::Counters* ProcessorOutput::mutable_topic_counters() {
+inline ::artm::core::Counters* ProcessorOutput::mutable_topic_counters() {
   set_has_topic_counters();
-  if (topic_counters_ == NULL) topic_counters_ = new ::topicmd::Counters;
+  if (topic_counters_ == NULL) topic_counters_ = new ::artm::core::Counters;
   return topic_counters_;
 }
-inline ::topicmd::Counters* ProcessorOutput::release_topic_counters() {
+inline ::artm::core::Counters* ProcessorOutput::release_topic_counters() {
   clear_has_topic_counters();
-  ::topicmd::Counters* temp = topic_counters_;
+  ::artm::core::Counters* temp = topic_counters_;
   topic_counters_ = NULL;
   return temp;
 }
-inline void ProcessorOutput::set_allocated_topic_counters(::topicmd::Counters* topic_counters) {
+inline void ProcessorOutput::set_allocated_topic_counters(::artm::core::Counters* topic_counters) {
   delete topic_counters_;
   topic_counters_ = topic_counters;
   if (topic_counters) {
@@ -423,27 +424,27 @@ inline void ProcessorOutput::set_allocated_topic_counters(::topicmd::Counters* t
   }
 }
 
-// repeated .topicmd.Counters token_counters = 5;
+// repeated .artm.core.Counters token_counters = 5;
 inline int ProcessorOutput::token_counters_size() const {
   return token_counters_.size();
 }
 inline void ProcessorOutput::clear_token_counters() {
   token_counters_.Clear();
 }
-inline const ::topicmd::Counters& ProcessorOutput::token_counters(int index) const {
+inline const ::artm::core::Counters& ProcessorOutput::token_counters(int index) const {
   return token_counters_.Get(index);
 }
-inline ::topicmd::Counters* ProcessorOutput::mutable_token_counters(int index) {
+inline ::artm::core::Counters* ProcessorOutput::mutable_token_counters(int index) {
   return token_counters_.Mutable(index);
 }
-inline ::topicmd::Counters* ProcessorOutput::add_token_counters() {
+inline ::artm::core::Counters* ProcessorOutput::add_token_counters() {
   return token_counters_.Add();
 }
-inline const ::google::protobuf::RepeatedPtrField< ::topicmd::Counters >&
+inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >&
 ProcessorOutput::token_counters() const {
   return token_counters_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::topicmd::Counters >*
+inline ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >*
 ProcessorOutput::mutable_token_counters() {
   return &token_counters_;
 }
@@ -539,7 +540,8 @@ ProcessorOutput::mutable_discovered_token() {
 
 // @@protoc_insertion_point(namespace_scope)
 
-}  // namespace topicmd
+}  // namespace core
+}  // namespace artm
 
 #ifndef SWIG
 namespace google {

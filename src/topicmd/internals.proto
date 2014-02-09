@@ -1,4 +1,4 @@
-package topicmd;
+package artm.core;
 
 message Counters {
 	repeated float value = 1 [packed = true];

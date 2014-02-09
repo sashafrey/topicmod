@@ -6,7 +6,8 @@
 #include "topicmd/data_loader.h"
 #include "topicmd/messages.pb.h"
 
-using namespace topicmd;
+using namespace ::artm;
+using namespace ::artm::core;
 
 // topicmd_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {

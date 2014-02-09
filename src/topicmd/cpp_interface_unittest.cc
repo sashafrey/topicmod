@@ -5,7 +5,7 @@
 #include "topicmd/cpp_interface.h"
 #include "topicmd/messages.pb.h"
 
-using namespace topicmd;
+using namespace artm;
 
 TEST(CppInterface, Canary) {
 }
@@ -17,12 +17,12 @@ TEST(CppInterface, Basic) {
 
   // Create instance
   InstanceConfig instance_config;
-  int instance_id = create_instance(0, instance_config);
+  Instance instance(instance_config);
 
   // Create model
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-  int model_id = create_model(instance_id, 0, model_config);
+  Model model(instance, model_config);
   
   // Load doc-token matrix
   int nTokens = 10;
@@ -51,36 +51,22 @@ TEST(CppInterface, Basic) {
   }
 
   DataLoaderConfig config;
-  config.set_instance_id(instance_id);
-  int data_loader_id = create_data_loader(0, config);
+  DataLoader data_loader(instance, config);
   
   // Index doc-token matrix
-  add_batch(data_loader_id, batch);
+  data_loader.AddBatch(batch);
   
-  model_config.set_enabled(true);
-  reconfigure_model(instance_id, model_id, model_config);
+  model.Enable();
 
   boost::this_thread::sleep(boost::posix_time::milliseconds(50));
 
-  model_config.set_enabled(false);
-  reconfigure_model(instance_id, model_id, model_config);
+  model.Disable();
 
   // Request model topics
-  ModelTopics model_topics;
-  request_model_topics(instance_id, model_id, &model_topics);
+  std::shared_ptr<ModelTopics> model_topics = instance.GetTopics(model);
 
   int nUniqueTokens = nTokens;
-  EXPECT_EQ(nUniqueTokens, model_topics.token_topic_size());
-  const TokenTopics& first_token_topics = model_topics.token_topic(0);
+  EXPECT_EQ(nUniqueTokens, model_topics->token_topic_size());
+  const TokenTopics& first_token_topics = model_topics->token_topic(0);
   EXPECT_EQ(first_token_topics.topic_weight_size(), nTopics);
-
-  dispose_model(instance_id, model_id);
-
-  reconfigure_instance(instance_id, InstanceConfig());
-
-  dispose_instance(instance_id);
-
-  dispose_data_loader(data_loader_id);
-
-  EXPECT_EQ(1, 1);
 }

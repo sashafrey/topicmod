@@ -2,7 +2,8 @@
 
 #include "stdlib.h"
 
-namespace topicmd {
+namespace artm { namespace core {
+
   Processor::~Processor() {
     if (thread_.joinable()) {
       thread_.interrupt();
@@ -187,4 +188,4 @@ namespace topicmd {
       return;
     }
   }
-} // namespace topicmd
+}} // namespace artm/core

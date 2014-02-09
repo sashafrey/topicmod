@@ -19,11 +19,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\topicmd\cpp_interface.cc" />
     <ClCompile Include="..\topicmd\messages.pb.cc" />
     <ClCompile Include="helpers.cc" />
     <ClCompile Include="srcmain.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\topicmd\cpp_interface.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="doc_token_matrix.h" />
     <ClInclude Include="doc_topic_matrix.h" />

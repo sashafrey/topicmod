@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-namespace topicmd {
+namespace artm { namespace core {
 
 TokenTopicMatrix::TokenTopicMatrix(int topics_count) :
     token_to_token_id_(),
@@ -111,4 +111,4 @@ TokenWeights TokenTopicMatrix::token_weights(int token_id) const {
   return TokenWeights(data_[token_id], &normalizer_[0], topics_count_);
 }
 
-}
+}} // artm/core

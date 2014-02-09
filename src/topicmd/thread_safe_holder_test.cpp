@@ -5,7 +5,8 @@
 
 #include "gtest/gtest.h"
 
-using namespace topicmd;
+using namespace ::artm;
+using namespace ::artm::core;
 
 // To run this particular test:
 // topicmd_tests.exe --gtest_filter=ThreadSafeHolder.*

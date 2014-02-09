@@ -7,6 +7,7 @@ Building with Visual Studio 2010
    Set environmental variable PROTOBUF_ROOT to the root protocol buffers library.
 	setx PROTOBUF_ROOT "C:\Program Files\protobuf\src"
 
-3. Open topicmd.sln (ensure to first close and reopen all existing instances of visuals studio).
+3. Open artm_vs2010.sln or artm_vs2012.sln (depending on your visual studio version)
+   Ensure to first close and reopen all existing instances of visuals studio!
 
 4. Build in either win32-debug or win32-release configuration.

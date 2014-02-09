@@ -8,19 +8,19 @@ using namespace topicmd;
 // To run this particular test:
 // topicmd_tests.exe --gtest_filter=InstanceManager.*
 TEST(InstanceManager, Basic) {
-  int id = InstanceManager::singleton().CreateInstance(0, InstanceConfig());
-  EXPECT_EQ(InstanceManager::singleton().instance(id)->id(), id);
+  int id = InstanceManager::singleton().Create(0, InstanceConfig());
+  EXPECT_EQ(InstanceManager::singleton().Get(id)->id(), id);
 
-  int id2 = InstanceManager::singleton().CreateInstance(0, InstanceConfig());
+  int id2 = InstanceManager::singleton().Create(0, InstanceConfig());
   EXPECT_EQ(id2, id+1);
-  EXPECT_EQ(InstanceManager::singleton().instance(id2)->id(), id2);
+  EXPECT_EQ(InstanceManager::singleton().Get(id2)->id(), id2);
 
-  int id3 = InstanceManager::singleton().CreateInstance(id2, 
+  int id3 = InstanceManager::singleton().Create(id2, 
               InstanceConfig());
   EXPECT_EQ(id3, TOPICMD_ERROR);
 
-  InstanceManager::singleton().erase_instance(id);
-  EXPECT_FALSE(InstanceManager::singleton().has_instance(id));
+  InstanceManager::singleton().Erase(id);
+  EXPECT_FALSE(InstanceManager::singleton().Contains(id));
 
-  InstanceManager::singleton().erase_instance(id2);
+  InstanceManager::singleton().Erase(id2);
 }

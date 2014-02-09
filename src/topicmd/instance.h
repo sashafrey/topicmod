@@ -20,7 +20,6 @@
 namespace topicmd {
   class Instance : boost::noncopyable {
   public:
-    Instance(int id, const InstanceConfig& config);
     ~Instance();
 
     int id() const {
@@ -40,6 +39,11 @@ namespace topicmd {
     int AddBatchIntoProcessorQueue(std::shared_ptr<const Batch> batch);
 
   private:
+    friend class TemplateManager<Instance, InstanceConfig>;
+
+    // All instances must be created via TemplateManager.
+    Instance(int id, const InstanceConfig& config);
+
     mutable boost::mutex lock_;
     int instance_id_;
     ThreadSafeHolder<InstanceSchema> schema_;

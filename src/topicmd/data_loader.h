@@ -17,14 +17,6 @@
 namespace topicmd {
   class DataLoader : boost::noncopyable {
   public:
-    DataLoader(int id, const DataLoaderConfig& config) :
-      lock_(),
-      config_(lock_, std::make_shared<DataLoaderConfig>(config)),
-      generation_(lock_, std::make_shared<Generation>()),
-      thread_(boost::bind(&DataLoader::ThreadFunction, this))
-    {
-    }
-
     ~DataLoader();
     void Interrupt();
     void Join();
@@ -34,8 +26,18 @@ namespace topicmd {
       auto ptr = generation_.get();
       return ptr->GetTotalItemsCount();
     }
-
   private:
+    friend class TemplateManager<DataLoader, DataLoaderConfig>;
+
+    // All instances of DataLoader should be created via DataLoader::Manager
+    DataLoader(int id, const DataLoaderConfig& config) :
+      lock_(),
+      config_(lock_, std::make_shared<DataLoaderConfig>(config)),
+      generation_(lock_, std::make_shared<Generation>()),
+      thread_(boost::bind(&DataLoader::ThreadFunction, this))
+    {
+    }
+
     boost::mutex lock_;
     ThreadSafeHolder<DataLoaderConfig> config_;
     ThreadSafeHolder<Generation> generation_;
@@ -49,7 +51,6 @@ namespace topicmd {
   };
 
   typedef TemplateManager<DataLoader, DataLoaderConfig> DataLoaderManager;
-
 }
 
 #endif // DATA_LOADER_

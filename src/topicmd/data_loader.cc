@@ -37,11 +37,11 @@ void DataLoader::ThreadFunction()
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
       auto config = config_.get();
-      if (!InstanceManager::singleton().has_instance(config->instance_id())) {
+      if (!InstanceManager::singleton().Contains(config->instance_id())) {
         continue;
       }
 
-      auto instance = InstanceManager::singleton().instance(config->instance_id());
+      auto instance = InstanceManager::singleton().Get(config->instance_id());
       if (instance->ProcessorQueueSize() >= config->queue_size()) {
         continue;
       }

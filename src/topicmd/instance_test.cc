@@ -10,12 +10,13 @@ using namespace topicmd;
 
 // topicmd_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
-  int instance_id = InstanceManager::singleton().CreateInstance(0, InstanceConfig());
-  std::shared_ptr<Instance> instance = InstanceManager::singleton().instance(instance_id);
+  int instance_id = InstanceManager::singleton().Create(0, InstanceConfig());
+  std::shared_ptr<Instance> instance = InstanceManager::singleton().Get(instance_id);
 
   DataLoaderConfig data_loader_config;
   data_loader_config.set_instance_id(instance_id);
-  DataLoader data_loader(0, data_loader_config); 
+  int data_loader_id = DataLoaderManager::singleton().Create(0, data_loader_config);
+  std::shared_ptr<DataLoader> data_loader = DataLoaderManager::singleton().Get(data_loader_id);
   
   Batch batch1;
   batch1.add_token("first token");
@@ -27,18 +28,18 @@ TEST(Instance, Basic) {
     field->add_token_count(i+1);
   }
 
-  data_loader.AddBatch(batch1); // +2
+  data_loader->AddBatch(batch1); // +2
   
   for (int iBatch = 0; iBatch < 2; ++iBatch) {
     Batch batch;
     for (int i = 0; i < (3 + iBatch); ++i) batch.add_item(); // +3, +4
-    data_loader.AddBatch(batch);
+    data_loader->AddBatch(batch);
   }
 
-  EXPECT_EQ(data_loader.GetTotalItemsCount(), 9);
+  EXPECT_EQ(data_loader->GetTotalItemsCount(), 9);
 
-  data_loader.AddBatch(batch1);  // +2
-  EXPECT_EQ(data_loader.GetTotalItemsCount(), 11); 
+  data_loader->AddBatch(batch1);  // +2
+  EXPECT_EQ(data_loader->GetTotalItemsCount(), 11); 
 
   Batch batch4;
   batch4.add_token("second");
@@ -50,7 +51,7 @@ TEST(Instance, Basic) {
     field->add_token_count(iToken + 2);
   }
 
-  data_loader.AddBatch(batch4);
+  data_loader->AddBatch(batch4);
   
   int model_id = 0;
   ModelConfig config;

@@ -23,7 +23,7 @@ namespace topicmd {
       return manager;
     }
 
-    int CreateInstance(int id, const Config& config)
+    int Create(int id, const Config& config)
     {
       boost::lock_guard<boost::mutex> guard(lock_);
       if (id <= 0) {
@@ -39,39 +39,39 @@ namespace topicmd {
         return TOPICMD_ERROR;
       }
 
-      map_.insert(std::make_pair(
-        id, std::make_shared<Type>(id, config)));
+      std::shared_ptr<Type> ptr(new Type(id, config));
+      map_.insert(std::make_pair(id, ptr));
 
       return id;
     }
 
-    bool has_instance(int id) const
+    bool Contains(int id) const
     {
       boost::lock_guard<boost::mutex> guard(lock_);      
       return map_.find(id) != map_.end();
     }
 
-    const std::shared_ptr<Type> instance(int id) const
+    const std::shared_ptr<Type> Get(int id) const
     {
       boost::lock_guard<boost::mutex> guard(lock_);
       auto iter = map_.find(id);
       return iter->second;
     }
 
-    std::shared_ptr<Type> instance(int id)
+    std::shared_ptr<Type> Get(int id)
     {
       boost::lock_guard<boost::mutex> guard(lock_);
       auto iter = map_.find(id);
       return iter->second;
     }
 
-    void erase_instance(int id)
+    void Erase(int id)
     {
       boost::lock_guard<boost::mutex> guard(lock_);
       map_.erase(id);
     }
 
-    void clear()
+    void Clear()
     {
       boost::lock_guard<boost::mutex> guard(lock_);
       map_.clear();

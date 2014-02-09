@@ -3,13 +3,21 @@
 #include <boost/thread/mutex.hpp>
 
 #include "topicmd/instance.cc"
+#include "topicmd/data_loader.h"
 #include "topicmd/messages.pb.h"
 
 using namespace topicmd;
 
 // topicmd_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
-  Instance instance(1, InstanceConfig());
+  int instance_id = InstanceManager::singleton().Create(0, InstanceConfig());
+  std::shared_ptr<Instance> instance = InstanceManager::singleton().Get(instance_id);
+
+  DataLoaderConfig data_loader_config;
+  data_loader_config.set_instance_id(instance_id);
+  int data_loader_id = DataLoaderManager::singleton().Create(0, data_loader_config);
+  std::shared_ptr<DataLoader> data_loader = DataLoaderManager::singleton().Get(data_loader_id);
+  
   Batch batch1;
   batch1.add_token("first token");
   batch1.add_token("second");
@@ -19,29 +27,19 @@ TEST(Instance, Basic) {
     field->add_token_id(i);
     field->add_token_count(i+1);
   }
-  instance.InsertBatch(batch1); // +2
-  int gen1 = instance.FinishPartition();
-  EXPECT_EQ(instance.GetTotalItemsCount(), 0);
-  instance.PublishGeneration(gen1);
-  EXPECT_EQ(instance.GetTotalItemsCount(), 2);
+
+  data_loader->AddBatch(batch1); // +2
   
   for (int iBatch = 0; iBatch < 2; ++iBatch) {
     Batch batch;
     for (int i = 0; i < (3 + iBatch); ++i) batch.add_item(); // +3, +4
-    instance.InsertBatch(batch);
+    data_loader->AddBatch(batch);
   }
 
-  int gen2 = instance.FinishPartition();
-  instance.PublishGeneration(gen2);
+  EXPECT_EQ(data_loader->GetTotalItemsCount(), 9);
 
-  EXPECT_EQ(instance.GetTotalItemsCount(), 9);
-
-  instance.InsertBatch(batch1);  // +2
-  instance.DiscardPartition();   // -2
-  instance.InsertBatch(batch1);  // +2
-  int gen3 = instance.FinishPartition();
-  instance.PublishGeneration(gen3);
-  EXPECT_EQ(instance.GetTotalItemsCount(), 11); 
+  data_loader->AddBatch(batch1);  // +2
+  EXPECT_EQ(data_loader->GetTotalItemsCount(), 11); 
 
   Batch batch4;
   batch4.add_token("second");
@@ -53,23 +51,21 @@ TEST(Instance, Basic) {
     field->add_token_count(iToken + 2);
   }
 
-  instance.InsertBatch(batch4);
-  int gen4 = instance.FinishPartition();
-  instance.PublishGeneration(gen4);
+  data_loader->AddBatch(batch4);
   
   int model_id = 0;
   ModelConfig config;
   config.set_enabled(true);
   config.set_topics_count(3);
-  instance.UpdateModel(model_id, config);
+  instance->UpdateModel(model_id, config);
 
-  instance.WaitModelProcessed(model_id, 150);
+  instance->WaitModelProcessed(model_id, 150);
 
   config.set_enabled(false);
-  instance.UpdateModel(model_id, config);
+  instance->UpdateModel(model_id, config);
 
   ModelTopics model_topics;
-  instance.RequestModelTopics(model_id, &model_topics);
+  instance->RequestModelTopics(model_id, &model_topics);
   EXPECT_EQ(model_topics.token_topic_size(), 3);
   int found = 0;
   for (int i = 0; i < model_topics.token_topic_size(); ++i) {

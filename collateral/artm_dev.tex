@@ -46,25 +46,37 @@ When codebase meets this success criteria we are free to release the library.
 \subsection{Core modules}
 
 Core modules are \emph{DataLoader}, \emph{Processor}, and \emph{Merger}.
-Interaction between these components is orchestrated by a class called \emph{Instance}.
+Interaction between these components is orchestrated by a class called \emph{Instance},
+and two queues --- \emph{processor input queue}, and \emph{processor output queue}.
 
-Execution is divided into two phases: indexing and the actual processing.
-The indexing phase produces index files and stores them on disk.
-Index files expected to have multiple independent index parts of aprox. equal size.
-Each part contains a subset of documents from the whole collection.
-Processing phase begins with dataloader component, which loads index parts
-(potentially in iterative scans), and store them into in-memory queue.
-Then processor component withdraws index parts from the queue
+\textbf{DataLoader.} Responsibility of DataLoader component is to populate the input processor queue
+with batches (small chunks of the collection).
+It is up to implementation of the DataLoader to decide where to gather batches
+(they can be stored in memory, on disk, or came through the network).
+DataLoader is expected to perform iterative scans over the whole collection.
+
+\textbf{Processor.} Processor component withdraws index parts from the queue
 and infers a distribution of the documents into topics.
-The output is stored in yet another queue.
-This queue is read by merger, which updates word-topic distribution.
-Before processing new index part the processor asks merger about the latest view of word-topic matrix.
-This design supports multiple concurrent dataloaders, multiple concurrent processors, but only one merger.
+The output is stored in \emph{processor output queue}.
+Before processing new batch the processor asks merger about the the latest word-topic matrix.
 
 If processor observes a token that is not part of token-token matrix, it stores this token in the list of
 new ``discovered'' tokens, and transfers this list as part of processor output.
 Merger picks up all such tokens, and initializes new row in token-topic matrix.
 So, during the first scan over the collection the dictionary is gathered automatically.
+
+\textbf{Merger.}
+Merger reads the processor output queue and updates token-topic matrix.
+At any moment there exist two copies of token-topic matrix ---
+``active'' and ``background''.
+The ``active'' token-topic matrix is used by processors,
+while ``background'' token-topic matrix can be safely updated by merger.
+It is up to merger to decide when to switch ``active'' token-topic matrix to the ``background'' one.
+Even after switching ``active'' topic-matrix the previous (deprecated) active matrix
+will be in use to complete all ongoing processing of batches.
+Every new batch will be processed with new matrix.
+
+This design supports multiple concurrent dataloaders, multiple concurrent processors, but only one merger.
 
 \subsection{Concurrency and thread safety}
 The system must have the following locks:

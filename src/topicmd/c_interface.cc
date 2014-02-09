@@ -13,11 +13,6 @@ inline char* string_as_array(string* str) {
   return str->empty() ? NULL : &*str->begin();
 }
 
-int commit_generation(int instance_id, int generation_id) {
-  topicmd::commit_generation(instance_id, generation_id);
-  return TOPICMD_SUCCESS;
-}
-
 int configure_logger(int length, const char* logger_config) {
   return TOPICMD_SUCCESS;
 }
@@ -26,6 +21,16 @@ int copy_request_result(int request_id, int length, char* address)
 {
   memcpy(address, string_as_array(&message), length);
   return TOPICMD_SUCCESS;
+}
+
+int create_data_loader(
+  int data_loader_id, 
+  int length, 
+  const char* data_loader_config_blob) 
+{
+  topicmd::DataLoaderConfig config;
+  config.ParseFromArray(data_loader_config_blob, length);
+  return topicmd::create_data_loader(data_loader_id, config);
 }
 
 int create_instance(
@@ -48,8 +53,8 @@ int create_model(int instance_id,
   return topicmd::create_model(instance_id, model_id, model_config);
 }
 
-int discard_partition(int instance_id) {
-  return topicmd::discard_partition(instance_id);
+void dispose_data_loader(int data_loader_id) {
+  topicmd::dispose_data_loader(data_loader_id);
 }
 
 void dispose_instance(int instance_id) {
@@ -63,18 +68,10 @@ void dispose_model(int instance_id, int model_id) {
 void dispose_request(int request_id) {
 }
 
-int finish_partition(int instance_id) {
-  return topicmd::finish_partition(instance_id);
-}
-
-int insert_batch(int instance_id, int length, const char* batch_blob) {
+int add_batch(int data_loader_id, int length, const char* batch_blob) {
   topicmd::Batch batch;
   batch.ParseFromArray(batch_blob, length);
-  return topicmd::insert_batch(instance_id, batch);  
-}
-
-int publish_generation(int instance_id, int generation_id) {
-  return topicmd::publish_generation(instance_id, generation_id);
+  return topicmd::add_batch(data_loader_id, batch);  
 }
 
 int reconfigure_instance(int instance_id,

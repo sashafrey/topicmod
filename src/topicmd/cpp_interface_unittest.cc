@@ -50,10 +50,12 @@ TEST(CppInterface, Basic) {
         nTokens);
   }
 
+  DataLoaderConfig config;
+  config.set_instance_id(instance_id);
+  int data_loader_id = create_data_loader(0, config);
+  
   // Index doc-token matrix
-  insert_batch(instance_id, batch);
-  int generation_id = finish_partition(instance_id);
-  publish_generation(instance_id, generation_id);
+  add_batch(data_loader_id, batch);
   
   model_config.set_enabled(true);
   reconfigure_model(instance_id, model_id, model_config);
@@ -77,6 +79,8 @@ TEST(CppInterface, Basic) {
   reconfigure_instance(instance_id, InstanceConfig());
 
   dispose_instance(instance_id);
+
+  dispose_data_loader(data_loader_id);
 
   EXPECT_EQ(1, 1);
 }

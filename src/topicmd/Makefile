@@ -41,11 +41,9 @@ SRCS_LIB      = cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
 		instance.cc \
-		instance_manager.cc \
 		internals.pb.cc \
 		merger.cc \
 		messages.pb.cc \
-		partition.cc \
 		processor.cc \
 		token_topic_matrix.cc
 
@@ -58,7 +56,6 @@ SRCS_TEST     = cpp_interface_unittest.cc \
 		instance_test.cc \
 		instance_manager_test.cc \
 		boost_thread_test.cc \
-		partition_test.cc \
 
 OBJS_TEST     = $(SRCS_TEST:.cc=.o)
 DEPS_TEST     = $(SRCS_TEST:.cc=.depends)

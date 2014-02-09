@@ -32,6 +32,18 @@ double proc(int argc, char * argv[], int processors_count) {
       instance_config_blob.size(), 
       string_as_array(&instance_config_blob));
 
+  // Create data loader
+  DataLoaderConfig data_loader_config;
+  data_loader_config.set_instance_id(instance_id);
+  string data_loader_config_blob;
+  instance_config.SerializeToString(&instance_config_blob);
+  data_loader_config.SerializeToString(&data_loader_config_blob);
+  int data_loader_id =
+    create_data_loader(
+      0,
+      data_loader_config_blob.size(),
+      string_as_array(&data_loader_config_blob));
+
   // Create model
   int nTopics = atoi(argv[3]);
   ModelConfig model_config;
@@ -70,17 +82,14 @@ double proc(int argc, char * argv[], int processors_count) {
       Field* field = item->add_field();
       for (int iWord = 0; iWord < (int)term_ids.size(); ++iWord) {
         field->add_token_id(term_ids[iWord]);
-        field->add_token_count(term_counts[iWord]);
+        field->add_token_count((google::protobuf::int32) term_counts[iWord]);
       }
     }
 
     // Index doc-word matrix
     string batch_blob;
     batch.SerializeToString(&batch_blob);
-    insert_batch(instance_id, batch_blob.size(), string_as_array(&batch_blob));
-    // insert_batch(instance_id, batch);
-    int generation_id = finish_partition(instance_id);
-    publish_generation(instance_id, generation_id);
+    add_batch(data_loader_id, batch_blob.size(), string_as_array(&batch_blob));
   }
 
   clock_t begin = clock();
@@ -126,7 +135,9 @@ double proc(int argc, char * argv[], int processors_count) {
 
   // dispose_request(request_id);
   dispose_model(instance_id, model_id);
+  dispose_data_loader(data_loader_id);
   dispose_instance(instance_id);
+  
 
   // Log top 7 words per each topic
   {

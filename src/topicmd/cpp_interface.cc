@@ -53,7 +53,7 @@ Model::Model(const Instance& instance, const ModelConfig& config) : instance_id_
 {
   string model_config_blob;
     config.SerializeToString(&model_config_blob);
-    int model_id_ = create_model(
+    model_id_ = create_model(
       instance_id_, 
       0,
       model_config_blob.size(), 

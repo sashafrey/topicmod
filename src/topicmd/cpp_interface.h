@@ -13,6 +13,7 @@ using namespace std;
   void operator=(const TypeName&)
 
 namespace artm { 
+
   class Instance;
   class Model;
   class DataLoader;
@@ -47,7 +48,6 @@ namespace artm {
     int instance_id_;
     int model_id_;
     ModelConfig config_;
-
     DISALLOW_COPY_AND_ASSIGN(Model);
   };
 
@@ -64,6 +64,7 @@ namespace artm {
     DataLoaderConfig config_;
     DISALLOW_COPY_AND_ASSIGN(DataLoader);
   };
+
 } // namespace artm
 
 #endif // TOPICMD_CPP_H

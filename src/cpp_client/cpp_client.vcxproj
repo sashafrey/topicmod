@@ -26,6 +26,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\topicmd\cpp_interface.h" />
+    <ClInclude Include="..\topicmd\messages.pb.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="doc_token_matrix.h" />
     <ClInclude Include="doc_topic_matrix.h" />
@@ -42,6 +43,7 @@
     <ProjectGuid>{6D1B2081-22AE-45C9-9507-9B41FEF0FBFE}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>LinearSamplingCPU</RootNamespace>
+    <ProjectName>cpp_client</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition=" '$(VisualStudioVersion)'=='10.0' ">

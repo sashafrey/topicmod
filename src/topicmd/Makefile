@@ -40,7 +40,6 @@ SRCS_LIB      = cpp_interface.cc \
 		merger.cc \
 		messages.pb.cc \
 		processor.cc \
-		template_manager.h \
 		token_topic_matrix.cc
 
 OBJS_LIB      = $(SRCS_LIB:.cc=.o)

@@ -30,6 +30,11 @@ extern "C" {
                          const char* data_loader_config_blob);
 
   DLL_PUBLIC 
+  int reconfigure_data_loader(int data_loader_id, 
+                              int length, 
+                              const char* data_loader_config_blob);
+
+  DLL_PUBLIC 
   void dispose_data_loader(int data_loader_id);
 
   DLL_PUBLIC 

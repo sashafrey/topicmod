@@ -1,4 +1,5 @@
 #include "artm/data_loader.h"
+#include "artm/protobuf_helpers.h"
 
 namespace artm { namespace core {
 
@@ -15,6 +16,11 @@ void DataLoader::Interrupt() {
 
 void DataLoader::Join() {
   thread_.join();
+}
+
+int DataLoader::Reconfigure(const DataLoaderConfig& config) {
+  config_.set(std::make_shared<DataLoaderConfig>(config));
+  return ARTM_SUCCESS;
 }
 
 int DataLoader::AddBatch(const Batch& batch)  
@@ -51,7 +57,43 @@ void DataLoader::ThreadFunction()
 
         boost::lock_guard<boost::mutex> guard(lock_);
         latest_generation->InvokeOnEachPartition([&](std::shared_ptr<const Batch> batch) { 
-          instance->AddBatchIntoProcessorQueue(batch);
+          auto pi = std::make_shared<ProcessorInput>();
+          pi->mutable_batch()->CopyFrom(*batch);
+          
+          // loop through all streams
+          for (int iStream = 0; iStream < config->stream_size(); ++iStream) {
+            const Stream& stream = config->stream(iStream);
+            pi->add_stream_name(stream.name());
+            
+            Flags* flags = pi->add_stream_flags();
+            for (int iItem = 0; iItem < batch->item_size(); ++iItem) {
+              // verify if item is part of the stream
+              bool value = false;
+              switch (stream.type()) 
+              {
+                case Stream_Type_Global:
+                {
+                  value = true; 
+                  break; // Stream_Type_Global
+                }
+
+                case Stream_Type_ItemIdModulus: 
+                {
+                  int id_mod = batch->item(iItem).id() % stream.modulus();
+                  value = repeated_field_contains(stream.residuals(), id_mod);
+                  break; // Stream_Type_ItemIdModulus
+                }
+                
+                case Stream_Type_ItemHashModulus:
+                default:
+                  throw "bad santa"; // not implemented.
+              }
+
+              flags->add_value(true);
+            }
+          }
+          
+          instance->AddBatchIntoProcessorQueue(pi);
         });
       }
     }

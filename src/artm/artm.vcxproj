@@ -29,6 +29,7 @@
     <ClInclude Include="merger.h" />
     <ClInclude Include="messages.pb.h" />
     <ClInclude Include="processor.h" />
+    <ClInclude Include="protobuf_helpers.h" />
     <ClInclude Include="template_manager.h" />
     <ClInclude Include="thread_safe_holder.h" />
     <ClInclude Include="token_topic_matrix.h" />

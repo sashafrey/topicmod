@@ -97,9 +97,9 @@ namespace artm { namespace core {
     return processor_queue_.size();
   }
 
-  int Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const Batch> batch) {
+  int Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input) {
     boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
-    processor_queue_.push(batch);
+    processor_queue_.push(input);
     return ARTM_SUCCESS;
   }
 }} // namespace artm/core

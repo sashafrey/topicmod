@@ -20,6 +20,12 @@ Instance::~Instance() {
   dispose_instance(id());
 }
 
+void Instance::Reconfigure(const InstanceConfig& config) {
+  string config_blob;
+  config.SerializeToString(&config_blob);
+  reconfigure_instance(id(), config_blob.size(), string_as_array(&config_blob));
+}
+
 std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
   // Request model topics
   int length;
@@ -102,5 +108,11 @@ void DataLoader::AddBatch(const Batch& batch) {
   batch.SerializeToString(&batch_blob);
   add_batch(id(), batch_blob.size(), string_as_array(&batch_blob));
 }
- 
+
+void DataLoader::Reconfigure(const DataLoaderConfig& config) {
+  string config_blob;
+  config.SerializeToString(&config_blob);
+  reconfigure_data_loader(id(), config_blob.size(), string_as_array(&config_blob));
+}
+
 } // namespace artm

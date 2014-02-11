@@ -26,6 +26,7 @@ namespace artm {
     int id() const { return id_; }
     std::shared_ptr<ModelTopics> GetTopics(const Model& model);
     void WaitModelProcessed(const Model& model, int nDocs);
+    void Reconfigure(const InstanceConfig& config);
   private:
     int id_;
     InstanceConfig config_;
@@ -58,6 +59,7 @@ namespace artm {
 
     int id() const { return id_; }
     void AddBatch(const Batch& batch);
+    void Reconfigure(const DataLoaderConfig& config);
 
   private:
     int id_;

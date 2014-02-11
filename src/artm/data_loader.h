@@ -26,6 +26,9 @@ namespace artm { namespace core {
       auto ptr = generation_.get();
       return ptr->GetTotalItemsCount();
     }
+
+    int Reconfigure(const DataLoaderConfig& config);
+
   private:
     friend class TemplateManager<DataLoader, DataLoaderConfig>;
 

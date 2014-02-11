@@ -37,6 +37,20 @@ int create_data_loader(
   return DataLoaderManager::singleton().Create(data_loader_id, config);
 }
 
+int reconfigure_data_loader(int data_loader_id, 
+                            int length, 
+                            const char* data_loader_config_blob) 
+{
+  DataLoaderConfig config;
+  config.ParseFromArray(data_loader_config_blob, length);
+  if (!DataLoaderManager::singleton().Contains(data_loader_id)) {
+    return ARTM_ERROR;
+  }
+
+  auto data_loader = DataLoaderManager::singleton().Get(data_loader_id);
+  return data_loader->Reconfigure(config);
+}
+
 int create_instance(
   int instance_id, 
   int length, 

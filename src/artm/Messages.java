@@ -3684,13 +3684,9 @@ public final class Messages {
        */
       ItemIdModulus(1, 1),
       /**
-       * <code>ItemIdVector = 2;</code>
-       */
-      ItemIdVector(2, 2),
-      /**
        * <code>ItemHashModulus = 3;</code>
        */
-      ItemHashModulus(3, 3),
+      ItemHashModulus(2, 3),
       ;
 
       /**
@@ -3701,10 +3697,6 @@ public final class Messages {
        * <code>ItemIdModulus = 1;</code>
        */
       public static final int ItemIdModulus_VALUE = 1;
-      /**
-       * <code>ItemIdVector = 2;</code>
-       */
-      public static final int ItemIdVector_VALUE = 2;
       /**
        * <code>ItemHashModulus = 3;</code>
        */
@@ -3717,7 +3709,6 @@ public final class Messages {
         switch (value) {
           case 0: return Global;
           case 1: return ItemIdModulus;
-          case 2: return ItemIdVector;
           case 3: return ItemHashModulus;
           default: return null;
         }
@@ -6381,6 +6372,16 @@ public final class Messages {
      */
     artm.Messages.TokenTopicsOrBuilder getTokenTopicOrBuilder(
         int index);
+
+    // optional int32 items_processed = 2;
+    /**
+     * <code>optional int32 items_processed = 2;</code>
+     */
+    boolean hasItemsProcessed();
+    /**
+     * <code>optional int32 items_processed = 2;</code>
+     */
+    int getItemsProcessed();
   }
   /**
    * Protobuf type {@code artm.ModelTopics}
@@ -6445,6 +6446,11 @@ public final class Messages {
               tokenTopic_.add(input.readMessage(artm.Messages.TokenTopics.PARSER, extensionRegistry));
               break;
             }
+            case 16: {
+              bitField0_ |= 0x00000001;
+              itemsProcessed_ = input.readInt32();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -6487,6 +6493,7 @@ public final class Messages {
       return PARSER;
     }
 
+    private int bitField0_;
     // repeated .artm.TokenTopics token_topic = 1;
     public static final int TOKEN_TOPIC_FIELD_NUMBER = 1;
     private java.util.List<artm.Messages.TokenTopics> tokenTopic_;
@@ -6523,8 +6530,25 @@ public final class Messages {
       return tokenTopic_.get(index);
     }
 
+    // optional int32 items_processed = 2;
+    public static final int ITEMS_PROCESSED_FIELD_NUMBER = 2;
+    private int itemsProcessed_;
+    /**
+     * <code>optional int32 items_processed = 2;</code>
+     */
+    public boolean hasItemsProcessed() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional int32 items_processed = 2;</code>
+     */
+    public int getItemsProcessed() {
+      return itemsProcessed_;
+    }
+
     private void initFields() {
       tokenTopic_ = java.util.Collections.emptyList();
+      itemsProcessed_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -6541,6 +6565,9 @@ public final class Messages {
       for (int i = 0; i < tokenTopic_.size(); i++) {
         output.writeMessage(1, tokenTopic_.get(i));
       }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(2, itemsProcessed_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -6553,6 +6580,10 @@ public final class Messages {
       for (int i = 0; i < tokenTopic_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(1, tokenTopic_.get(i));
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, itemsProcessed_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -6681,6 +6712,8 @@ public final class Messages {
         } else {
           tokenTopicBuilder_.clear();
         }
+        itemsProcessed_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -6708,6 +6741,7 @@ public final class Messages {
       public artm.Messages.ModelTopics buildPartial() {
         artm.Messages.ModelTopics result = new artm.Messages.ModelTopics(this);
         int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
         if (tokenTopicBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001)) {
             tokenTopic_ = java.util.Collections.unmodifiableList(tokenTopic_);
@@ -6717,6 +6751,11 @@ public final class Messages {
         } else {
           result.tokenTopic_ = tokenTopicBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.itemsProcessed_ = itemsProcessed_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
@@ -6757,6 +6796,9 @@ public final class Messages {
               tokenTopicBuilder_.addAllMessages(other.tokenTopic_);
             }
           }
+        }
+        if (other.hasItemsProcessed()) {
+          setItemsProcessed(other.getItemsProcessed());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -7023,6 +7065,39 @@ public final class Messages {
           tokenTopic_ = null;
         }
         return tokenTopicBuilder_;
+      }
+
+      // optional int32 items_processed = 2;
+      private int itemsProcessed_ ;
+      /**
+       * <code>optional int32 items_processed = 2;</code>
+       */
+      public boolean hasItemsProcessed() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int32 items_processed = 2;</code>
+       */
+      public int getItemsProcessed() {
+        return itemsProcessed_;
+      }
+      /**
+       * <code>optional int32 items_processed = 2;</code>
+       */
+      public Builder setItemsProcessed(int value) {
+        bitField0_ |= 0x00000002;
+        itemsProcessed_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 items_processed = 2;</code>
+       */
+      public Builder clearItemsProcessed() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        itemsProcessed_ = 0;
+        onChanged();
+        return this;
       }
 
       // @@protoc_insertion_point(builder_scope:artm.ModelTopics)
@@ -9050,27 +9125,27 @@ public final class Messages {
       "ken\030\001 \003(\t\022\030\n\004item\030\002 \003(\0132\n.artm.Item\"p\n\020D" +
       "ataLoaderConfig\022\023\n\013instance_id\030\001 \002(\005\022\021\n\t" +
       "disk_path\030\002 \001(\t\022\026\n\nqueue_size\030\003 \001(\005:\00210\022" +
-      "\034\n\006stream\030\004 \003(\0132\014.artm.Stream\"\272\001\n\006Stream" +
+      "\034\n\006stream\030\004 \003(\0132\014.artm.Stream\"\250\001\n\006Stream" +
       "\022\'\n\004type\030\001 \002(\0162\021.artm.Stream.Type:\006Globa" +
       "l\022\025\n\004name\030\002 \001(\t:\007@global\022\017\n\007modulus\030\003 \001(",
-      "\005\022\021\n\tresiduals\030\004 \003(\005\"L\n\004Type\022\n\n\006Global\020\000" +
-      "\022\021\n\rItemIdModulus\020\001\022\020\n\014ItemIdVector\020\002\022\023\n" +
-      "\017ItemHashModulus\020\003\"-\n\016InstanceConfig\022\033\n\020" +
-      "processors_count\030\001 \001(\005:\0011\"\234\001\n\013ModelConfi" +
-      "g\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n\007enabled\030\003" +
-      " \001(\010:\005false\022\"\n\026inner_iterations_count\030\004 " +
-      "\001(\005:\00210\022\031\n\nfield_name\030\005 \001(\t:\005@body\022\034\n\013st" +
-      "ream_name\030\006 \001(\t:\007@global\"\231\001\n\014LoggerConfi" +
-      "g\022\024\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030" +
-      ".artm.LoggerConfig.Level:\004INFO\"D\n\005Level\022",
-      "\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n" +
-      "\004INFO\020\003\022\013\n\007VERBOSE\020\004\"5\n\013ModelTopics\022&\n\013t" +
-      "oken_topic\030\001 \003(\0132\021.artm.TokenTopics\"D\n\013T" +
-      "okenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 " +
-      "\001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItemTopics\022" +
-      "\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"4\n\013Bat" +
-      "chTopics\022%\n\013item_topics\030\001 \003(\0132\020.artm.Ite" +
-      "mTopics"
+      "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000" +
+      "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003" +
+      "\"-\n\016InstanceConfig\022\033\n\020processors_count\030\001" +
+      " \001(\005:\0011\"\234\001\n\013ModelConfig\022\030\n\014topics_count\030" +
+      "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn" +
+      "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n" +
+      "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@" +
+      "global\"\231\001\n\014LoggerConfig\022\024\n\014log_location\030" +
+      "\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerConfig" +
+      ".Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005E",
+      "RROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE" +
+      "\020\004\"N\n\013ModelTopics\022&\n\013token_topic\030\001 \003(\0132\021" +
+      ".artm.TokenTopics\022\027\n\017items_processed\030\002 \001" +
+      "(\005\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010toke" +
+      "n_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItem" +
+      "Topics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002" +
+      "\"4\n\013BatchTopics\022%\n\013item_topics\030\001 \003(\0132\020.a" +
+      "rtm.ItemTopics"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -9130,7 +9205,7 @@ public final class Messages {
           internal_static_artm_ModelTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_ModelTopics_descriptor,
-              new java.lang.String[] { "TokenTopic", });
+              new java.lang.String[] { "TokenTopic", "ItemsProcessed", });
           internal_static_artm_TokenTopics_descriptor =
             getDescriptor().getMessageTypes().get(9);
           internal_static_artm_TokenTopics_fieldAccessorTable = new

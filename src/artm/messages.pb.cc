@@ -206,8 +206,9 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(LoggerConfig));
   LoggerConfig_Level_descriptor_ = LoggerConfig_descriptor_->enum_type(0);
   ModelTopics_descriptor_ = file->message_type(8);
-  static const int ModelTopics_offsets_[1] = {
+  static const int ModelTopics_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, token_topic_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, items_processed_),
   };
   ModelTopics_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -353,27 +354,27 @@ void protobuf_AddDesc_messages_2eproto() {
     "ken\030\001 \003(\t\022\030\n\004item\030\002 \003(\0132\n.artm.Item\"p\n\020D"
     "ataLoaderConfig\022\023\n\013instance_id\030\001 \002(\005\022\021\n\t"
     "disk_path\030\002 \001(\t\022\026\n\nqueue_size\030\003 \001(\005:\00210\022"
-    "\034\n\006stream\030\004 \003(\0132\014.artm.Stream\"\272\001\n\006Stream"
+    "\034\n\006stream\030\004 \003(\0132\014.artm.Stream\"\250\001\n\006Stream"
     "\022\'\n\004type\030\001 \002(\0162\021.artm.Stream.Type:\006Globa"
     "l\022\025\n\004name\030\002 \001(\t:\007@global\022\017\n\007modulus\030\003 \001("
-    "\005\022\021\n\tresiduals\030\004 \003(\005\"L\n\004Type\022\n\n\006Global\020\000"
-    "\022\021\n\rItemIdModulus\020\001\022\020\n\014ItemIdVector\020\002\022\023\n"
-    "\017ItemHashModulus\020\003\"-\n\016InstanceConfig\022\033\n\020"
-    "processors_count\030\001 \001(\005:\0011\"\234\001\n\013ModelConfi"
-    "g\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n\007enabled\030\003"
-    " \001(\010:\005false\022\"\n\026inner_iterations_count\030\004 "
-    "\001(\005:\00210\022\031\n\nfield_name\030\005 \001(\t:\005@body\022\034\n\013st"
-    "ream_name\030\006 \001(\t:\007@global\"\231\001\n\014LoggerConfi"
-    "g\022\024\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030"
-    ".artm.LoggerConfig.Level:\004INFO\"D\n\005Level\022"
-    "\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n"
-    "\004INFO\020\003\022\013\n\007VERBOSE\020\004\"5\n\013ModelTopics\022&\n\013t"
-    "oken_topic\030\001 \003(\0132\021.artm.TokenTopics\"D\n\013T"
-    "okenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 "
-    "\001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItemTopics\022"
-    "\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"4\n\013Bat"
-    "chTopics\022%\n\013item_topics\030\001 \003(\0132\020.artm.Ite"
-    "mTopics", 1087);
+    "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000"
+    "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003"
+    "\"-\n\016InstanceConfig\022\033\n\020processors_count\030\001"
+    " \001(\005:\0011\"\234\001\n\013ModelConfig\022\030\n\014topics_count\030"
+    "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn"
+    "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n"
+    "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@"
+    "global\"\231\001\n\014LoggerConfig\022\024\n\014log_location\030"
+    "\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerConfig"
+    ".Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005E"
+    "RROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE"
+    "\020\004\"N\n\013ModelTopics\022&\n\013token_topic\030\001 \003(\0132\021"
+    ".artm.TokenTopics\022\027\n\017items_processed\030\002 \001"
+    "(\005\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010toke"
+    "n_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItem"
+    "Topics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002"
+    "\"4\n\013BatchTopics\022%\n\013item_topics\030\001 \003(\0132\020.a"
+    "rtm.ItemTopics", 1094);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -1598,7 +1599,6 @@ bool Stream_Type_IsValid(int value) {
   switch(value) {
     case 0:
     case 1:
-    case 2:
     case 3:
       return true;
     default:
@@ -1609,7 +1609,6 @@ bool Stream_Type_IsValid(int value) {
 #ifndef _MSC_VER
 const Stream_Type Stream::Global;
 const Stream_Type Stream::ItemIdModulus;
-const Stream_Type Stream::ItemIdVector;
 const Stream_Type Stream::ItemHashModulus;
 const Stream_Type Stream::Type_MIN;
 const Stream_Type Stream::Type_MAX;
@@ -2886,6 +2885,7 @@ void LoggerConfig::Swap(LoggerConfig* other) {
 
 #ifndef _MSC_VER
 const int ModelTopics::kTokenTopicFieldNumber;
+const int ModelTopics::kItemsProcessedFieldNumber;
 #endif  // !_MSC_VER
 
 ModelTopics::ModelTopics()
@@ -2904,6 +2904,7 @@ ModelTopics::ModelTopics(const ModelTopics& from)
 
 void ModelTopics::SharedCtor() {
   _cached_size_ = 0;
+  items_processed_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2938,6 +2939,9 @@ ModelTopics* ModelTopics::New() const {
 }
 
 void ModelTopics::Clear() {
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    items_processed_ = 0;
+  }
   token_topic_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2960,6 +2964,22 @@ bool ModelTopics::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(10)) goto parse_token_topic;
+        if (input->ExpectTag(16)) goto parse_items_processed;
+        break;
+      }
+
+      // optional int32 items_processed = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_items_processed:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &items_processed_)));
+          set_has_items_processed();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2988,6 +3008,11 @@ void ModelTopics::SerializeWithCachedSizes(
       1, this->token_topic(i), output);
   }
 
+  // optional int32 items_processed = 2;
+  if (has_items_processed()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->items_processed(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -3003,6 +3028,11 @@ void ModelTopics::SerializeWithCachedSizes(
         1, this->token_topic(i), target);
   }
 
+  // optional int32 items_processed = 2;
+  if (has_items_processed()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->items_processed(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -3013,6 +3043,15 @@ void ModelTopics::SerializeWithCachedSizes(
 int ModelTopics::ByteSize() const {
   int total_size = 0;
 
+  if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    // optional int32 items_processed = 2;
+    if (has_items_processed()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->items_processed());
+    }
+
+  }
   // repeated .artm.TokenTopics token_topic = 1;
   total_size += 1 * this->token_topic_size();
   for (int i = 0; i < this->token_topic_size(); i++) {
@@ -3047,6 +3086,11 @@ void ModelTopics::MergeFrom(const ::google::protobuf::Message& from) {
 void ModelTopics::MergeFrom(const ModelTopics& from) {
   GOOGLE_CHECK_NE(&from, this);
   token_topic_.MergeFrom(from.token_topic_);
+  if (from._has_bits_[1 / 32] & (0xffu << (1 % 32))) {
+    if (from.has_items_processed()) {
+      set_items_processed(from.items_processed());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -3070,6 +3114,7 @@ bool ModelTopics::IsInitialized() const {
 void ModelTopics::Swap(ModelTopics* other) {
   if (other != this) {
     token_topic_.Swap(&other->token_topic_);
+    std::swap(items_processed_, other->items_processed_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

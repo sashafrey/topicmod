@@ -50,7 +50,6 @@ class BatchTopics;
 enum Stream_Type {
   Stream_Type_Global = 0,
   Stream_Type_ItemIdModulus = 1,
-  Stream_Type_ItemIdVector = 2,
   Stream_Type_ItemHashModulus = 3
 };
 bool Stream_Type_IsValid(int value);
@@ -578,7 +577,6 @@ class Stream : public ::google::protobuf::Message {
   typedef Stream_Type Type;
   static const Type Global = Stream_Type_Global;
   static const Type ItemIdModulus = Stream_Type_ItemIdModulus;
-  static const Type ItemIdVector = Stream_Type_ItemIdVector;
   static const Type ItemHashModulus = Stream_Type_ItemHashModulus;
   static inline bool Type_IsValid(int value) {
     return Stream_Type_IsValid(value);
@@ -1076,15 +1074,25 @@ class ModelTopics : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >*
       mutable_token_topic();
 
+  // optional int32 items_processed = 2;
+  inline bool has_items_processed() const;
+  inline void clear_items_processed();
+  static const int kItemsProcessedFieldNumber = 2;
+  inline ::google::protobuf::int32 items_processed() const;
+  inline void set_items_processed(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:artm.ModelTopics)
  private:
+  inline void set_has_items_processed();
+  inline void clear_has_items_processed();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics > token_topic_;
+  ::google::protobuf::int32 items_processed_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2281,6 +2289,28 @@ ModelTopics::token_topic() const {
 inline ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >*
 ModelTopics::mutable_token_topic() {
   return &token_topic_;
+}
+
+// optional int32 items_processed = 2;
+inline bool ModelTopics::has_items_processed() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ModelTopics::set_has_items_processed() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ModelTopics::clear_has_items_processed() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ModelTopics::clear_items_processed() {
+  items_processed_ = 0;
+  clear_has_items_processed();
+}
+inline ::google::protobuf::int32 ModelTopics::items_processed() const {
+  return items_processed_;
+}
+inline void ModelTopics::set_items_processed(::google::protobuf::int32 value) {
+  set_has_items_processed();
+  items_processed_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -29,18 +29,37 @@ namespace artm { namespace core {
 
     int Reconfigure(const DataLoaderConfig& config);
 
+    int InvokeIteration(int iterations_count) {
+      if (iterations_count <= 0) return ARTM_ERROR;
+      boost::lock_guard<boost::mutex> guard(lock_);
+      pending_iterations_count_ += iterations_count;
+      return ARTM_SUCCESS;
+    }
+
+    int WaitIdle() {
+      for (;;) 
+      {
+        {
+          boost::lock_guard<boost::mutex> guard(lock_);
+          if (pending_iterations_count_ <= 0) return ARTM_SUCCESS;
+        }
+
+        boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      }
+    }
+
+    int id() const {
+      return data_loader_id_;
+    }
+
   private:
     friend class TemplateManager<DataLoader, DataLoaderConfig>;
 
-    // All instances of DataLoader should be created via DataLoader::Manager
-    DataLoader(int id, const DataLoaderConfig& config) :
-      lock_(),
-      config_(lock_, std::make_shared<DataLoaderConfig>(config)),
-      generation_(lock_, std::make_shared<Generation>()),
-      thread_(boost::bind(&DataLoader::ThreadFunction, this))
-    {
-    }
+    // All instances of DataLoader should be created via DataLoaderManager
+    DataLoader(int id, const DataLoaderConfig& config);
 
+    int data_loader_id_;
+    int pending_iterations_count_;
     boost::mutex lock_;
     ThreadSafeHolder<DataLoaderConfig> config_;
     ThreadSafeHolder<Generation> generation_;

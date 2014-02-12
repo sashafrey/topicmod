@@ -3,6 +3,16 @@
 
 namespace artm { namespace core {
 
+DataLoader::DataLoader(int id, const DataLoaderConfig& config) :
+    data_loader_id_(id),
+    pending_iterations_count_(0),
+    lock_(),
+    config_(lock_, std::make_shared<DataLoaderConfig>(config)),
+    generation_(lock_, std::make_shared<Generation>()),
+    thread_(boost::bind(&DataLoader::ThreadFunction, this))
+{
+}
+
 DataLoader::~DataLoader() {
     if (thread_.joinable()) {
       thread_.interrupt();
@@ -56,6 +66,13 @@ void DataLoader::ThreadFunction()
         auto latest_generation = generation_.get();
 
         boost::lock_guard<boost::mutex> guard(lock_);
+        
+        if (pending_iterations_count_ == 0) {
+          continue;
+        }
+
+        pending_iterations_count_--;
+
         latest_generation->InvokeOnEachPartition([&](std::shared_ptr<const Batch> batch) { 
           auto pi = std::make_shared<ProcessorInput>();
           pi->mutable_batch()->CopyFrom(*batch);
@@ -89,7 +106,7 @@ void DataLoader::ThreadFunction()
                   throw "bad santa"; // not implemented.
               }
 
-              flags->add_value(true);
+              flags->add_value(value);
             }
           }
           

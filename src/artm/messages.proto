@@ -95,6 +95,7 @@ message LoggerConfig {
 // Topic model, represented by matrix Phi.
 message ModelTopics {
   repeated TokenTopics token_topic = 1;
+  optional int32 items_processed = 2;
 }
 
 // Represents one row in matrix Phi.

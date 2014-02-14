@@ -83,10 +83,13 @@ namespace artm { namespace core {
       for (int iTopic = 0; iTopic < nTopics; ++iTopic) {
         token_topics->add_topic_weight(token_weights.at(iTopic));
       }
-
-      model_topics->set_items_processed(ttm->items_processed());
     }
-    
+
+    model_topics->set_items_processed(ttm->items_processed());
+    for (int iScore = 0; iScore < ttm->scores().size(); ++iScore) {
+      model_topics->add_score(exp(- ttm->scores()[iScore] / ttm->items_processed()));
+    }
+
     return ARTM_SUCCESS;
   }
 

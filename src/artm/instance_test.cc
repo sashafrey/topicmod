@@ -173,6 +173,9 @@ TEST(Instance, MultipleStreamsAndModels) {
   ModelConfig m1;
   m1.set_stream_name("train");
   m1.set_enabled(true);
+  Score* score = m1.add_score();
+  score->set_type(Score_Type::Score_Type_Perplexity);
+  score->set_stream_name("test");
   int m1_id = test.instance()->CreateModel(m1);
 
   ModelConfig m2;
@@ -200,4 +203,7 @@ TEST(Instance, MultipleStreamsAndModels) {
   EXPECT_TRUE(model_has_token(m2t, "token1"));
   EXPECT_TRUE(model_has_token(m2t, "token3"));
   EXPECT_TRUE(model_has_token(m2t, "token5"));
+
+  EXPECT_EQ(m1t.score_size(), 1);
+  EXPECT_TRUE(m1t.score(0) > 0);
 }

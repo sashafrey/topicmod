@@ -456,6 +456,18 @@ class ProcessorOutput : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& discovered_token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_discovered_token();
 
+  // repeated double score = 8;
+  inline int score_size() const;
+  inline void clear_score();
+  static const int kScoreFieldNumber = 8;
+  inline double score(int index) const;
+  inline void set_score(int index, double value);
+  inline void add_score(double value);
+  inline const ::google::protobuf::RepeatedField< double >&
+      score() const;
+  inline ::google::protobuf::RepeatedField< double >*
+      mutable_score();
+
   // @@protoc_insertion_point(class_scope:artm.core.ProcessorOutput)
  private:
   inline void set_has_model_id();
@@ -475,10 +487,11 @@ class ProcessorOutput : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::artm::core::Counters > token_counters_;
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
   ::google::protobuf::RepeatedPtrField< ::std::string> discovered_token_;
+  ::google::protobuf::RepeatedField< double > score_;
   ::google::protobuf::int32 items_processed_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
 
   friend void  protobuf_AddDesc_internals_2eproto();
   friend void protobuf_AssignDesc_internals_2eproto();
@@ -878,6 +891,31 @@ ProcessorOutput::discovered_token() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 ProcessorOutput::mutable_discovered_token() {
   return &discovered_token_;
+}
+
+// repeated double score = 8;
+inline int ProcessorOutput::score_size() const {
+  return score_.size();
+}
+inline void ProcessorOutput::clear_score() {
+  score_.Clear();
+}
+inline double ProcessorOutput::score(int index) const {
+  return score_.Get(index);
+}
+inline void ProcessorOutput::set_score(int index, double value) {
+  score_.Set(index, value);
+}
+inline void ProcessorOutput::add_score(double value) {
+  score_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< double >&
+ProcessorOutput::score() const {
+  return score_;
+}
+inline ::google::protobuf::RepeatedField< double >*
+ProcessorOutput::mutable_score() {
+  return &score_;
 }
 
 

@@ -68,6 +68,11 @@ namespace artm { namespace core {
           auto po = std::make_shared<ProcessorOutput>();
           po->set_model_id(model_id);
 
+          // Prepare score vector
+          for (int iScore = 0; iScore < model.score_size(); ++iScore) {
+            po->add_score(0.0);
+          }
+
           int items_processed = 0;
           
           po->set_topics_count(topics_count);
@@ -197,6 +202,13 @@ namespace artm { namespace core {
           } // loop across items
 
           po->set_items_processed(items_processed);
+
+          // ToDo: calculate all requested scores (such as perplexity)
+          for (int iScore = 0; iScore < model.score_size(); ++iScore) {
+            const Score& score = model.score(iScore);
+            double value = 13.666; // hack, for now :)
+            po->set_score(iScore, po->score(iScore) + value);
+          }
 
           {
             boost::lock_guard<boost::mutex> guard(merger_queue_lock_);

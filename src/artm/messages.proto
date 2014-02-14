@@ -67,6 +67,16 @@ message ModelConfig {
   optional int32 inner_iterations_count = 4 [default = 10];
   optional string field_name = 5 [default = "@body"];
   optional string stream_name = 6 [default = "@global"];
+  repeated Score score = 7;
+}
+
+message Score {
+  enum Type {
+    Perplexity = 0;
+  }
+  
+  required Type type = 1;
+  optional string stream_name = 3;
 }
 
 // Configuration of the logger (not implemented yet).
@@ -96,6 +106,8 @@ message LoggerConfig {
 message ModelTopics {
   repeated TokenTopics token_topic = 1;
   optional int32 items_processed = 2;
+  optional ModelConfig model_config = 3;  // model config used to tune this model
+  repeated double score = 4;              // scores, calculated for the model
 }
 
 // Represents one row in matrix Phi.

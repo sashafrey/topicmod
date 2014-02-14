@@ -34,4 +34,6 @@ message ProcessorOutput
 
 	// Newly discovered tokens, not yet included in matrix Phi.
 	repeated string discovered_token = 7;
+	
+	repeated double score = 8;
 }

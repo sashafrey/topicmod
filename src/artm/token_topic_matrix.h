@@ -42,10 +42,13 @@ class TokenTopicMatrix
   void AddToken(const std::string& token);
   void IncreaseTokenWeight(int token_id, int topic_id, float value);
   void IncreaseItemsProcessed(int value);
+  void IncreaseScores(int iScore, double value);
 
   int tokens_count() const;
   int topics_count() const;
   int items_processed() const;
+  const std::vector<double>& scores() const { return scores_; }
+  std::vector<double>* mutable_scores() { return &scores_; }
   int token_id(const std::string& token) const;
   std::string token(int index) const;
   TokenWeights token_weights(const std::string& token) const;
@@ -58,6 +61,9 @@ private:
   // Statistics: how many documents in total 
   // have made a contribution into this token topic matrix
   int items_processed_; 
+
+  // Scores (such as perplexity), defined by ModelConfig.
+  std::vector<double> scores_;
 
   std::vector<float*> data_; // vector of length tokens_count
   std::vector<float> normalizer_; // normalization constant for each topic

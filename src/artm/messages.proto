@@ -76,7 +76,8 @@ message Score {
   }
   
   required Type type = 1;
-  optional string stream_name = 3;
+  optional string field_name = 2 [default = "@body"];
+  optional string stream_name = 3 [default = "@global"];
 }
 
 // Configuration of the logger (not implemented yet).

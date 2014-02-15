@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
   package='artm',
-  serialized_pb='\n\x0emessages.proto\x12\x04\x61rtm\".\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x1a\n\x05\x66ield\x18\x02 \x03(\x0b\x32\x0b.artm.Field\"I\n\x05\x46ield\x12\x19\n\nfield_name\x18\x01 \x01(\t:\x05@body\x12\x10\n\x08token_id\x18\x02 \x03(\x05\x12\x13\n\x0btoken_count\x18\x03 \x03(\x05\"0\n\x05\x42\x61tch\x12\r\n\x05token\x18\x01 \x03(\t\x12\x18\n\x04item\x18\x02 \x03(\x0b\x32\n.artm.Item\"p\n\x10\x44\x61taLoaderConfig\x12\x13\n\x0binstance_id\x18\x01 \x02(\x05\x12\x11\n\tdisk_path\x18\x02 \x01(\t\x12\x16\n\nqueue_size\x18\x03 \x01(\x05:\x02\x31\x30\x12\x1c\n\x06stream\x18\x04 \x03(\x0b\x32\x0c.artm.Stream\"\xa8\x01\n\x06Stream\x12\'\n\x04type\x18\x01 \x02(\x0e\x32\x11.artm.Stream.Type:\x06Global\x12\x15\n\x04name\x18\x02 \x01(\t:\x07@global\x12\x0f\n\x07modulus\x18\x03 \x01(\x05\x12\x11\n\tresiduals\x18\x04 \x03(\x05\":\n\x04Type\x12\n\n\x06Global\x10\x00\x12\x11\n\rItemIdModulus\x10\x01\x12\x13\n\x0fItemHashModulus\x10\x03\"-\n\x0eInstanceConfig\x12\x1b\n\x10processors_count\x18\x01 \x01(\x05:\x01\x31\"\xb8\x01\n\x0bModelConfig\x12\x18\n\x0ctopics_count\x18\x02 \x01(\x05:\x02\x33\x32\x12\x16\n\x07\x65nabled\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\"\n\x16inner_iterations_count\x18\x04 \x01(\x05:\x02\x31\x30\x12\x19\n\nfield_name\x18\x05 \x01(\t:\x05@body\x12\x1c\n\x0bstream_name\x18\x06 \x01(\t:\x07@global\x12\x1a\n\x05score\x18\x07 \x03(\x0b\x32\x0b.artm.Score\"T\n\x05Score\x12\x1e\n\x04type\x18\x01 \x02(\x0e\x32\x10.artm.Score.Type\x12\x13\n\x0bstream_name\x18\x03 \x01(\t\"\x16\n\x04Type\x12\x0e\n\nPerplexity\x10\x00\"\x99\x01\n\x0cLoggerConfig\x12\x14\n\x0clog_location\x18\x01 \x01(\t\x12-\n\x05level\x18\x02 \x01(\x0e\x32\x18.artm.LoggerConfig.Level:\x04INFO\"D\n\x05Level\x12\x0c\n\x08\x44ISABLED\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x12\x0b\n\x07WARNING\x10\x02\x12\x08\n\x04INFO\x10\x03\x12\x0b\n\x07VERBOSE\x10\x04\"\x86\x01\n\x0bModelTopics\x12&\n\x0btoken_topic\x18\x01 \x03(\x0b\x32\x11.artm.TokenTopics\x12\x17\n\x0fitems_processed\x18\x02 \x01(\x05\x12\'\n\x0cmodel_config\x18\x03 \x01(\x0b\x32\x11.artm.ModelConfig\x12\r\n\x05score\x18\x04 \x03(\x01\"D\n\x0bTokenTopics\x12\r\n\x05token\x18\x01 \x01(\t\x12\x10\n\x08token_id\x18\x02 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x03 \x03(\x02\".\n\nItemTopics\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x02 \x03(\x02\"4\n\x0b\x42\x61tchTopics\x12%\n\x0bitem_topics\x18\x01 \x03(\x0b\x32\x10.artm.ItemTopics')
+  serialized_pb='\n\x0emessages.proto\x12\x04\x61rtm\".\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x1a\n\x05\x66ield\x18\x02 \x03(\x0b\x32\x0b.artm.Field\"I\n\x05\x46ield\x12\x19\n\nfield_name\x18\x01 \x01(\t:\x05@body\x12\x10\n\x08token_id\x18\x02 \x03(\x05\x12\x13\n\x0btoken_count\x18\x03 \x03(\x05\"0\n\x05\x42\x61tch\x12\r\n\x05token\x18\x01 \x03(\t\x12\x18\n\x04item\x18\x02 \x03(\x0b\x32\n.artm.Item\"p\n\x10\x44\x61taLoaderConfig\x12\x13\n\x0binstance_id\x18\x01 \x02(\x05\x12\x11\n\tdisk_path\x18\x02 \x01(\t\x12\x16\n\nqueue_size\x18\x03 \x01(\x05:\x02\x31\x30\x12\x1c\n\x06stream\x18\x04 \x03(\x0b\x32\x0c.artm.Stream\"\xa8\x01\n\x06Stream\x12\'\n\x04type\x18\x01 \x02(\x0e\x32\x11.artm.Stream.Type:\x06Global\x12\x15\n\x04name\x18\x02 \x01(\t:\x07@global\x12\x0f\n\x07modulus\x18\x03 \x01(\x05\x12\x11\n\tresiduals\x18\x04 \x03(\x05\":\n\x04Type\x12\n\n\x06Global\x10\x00\x12\x11\n\rItemIdModulus\x10\x01\x12\x13\n\x0fItemHashModulus\x10\x03\"-\n\x0eInstanceConfig\x12\x1b\n\x10processors_count\x18\x01 \x01(\x05:\x01\x31\"\xb8\x01\n\x0bModelConfig\x12\x18\n\x0ctopics_count\x18\x02 \x01(\x05:\x02\x33\x32\x12\x16\n\x07\x65nabled\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\"\n\x16inner_iterations_count\x18\x04 \x01(\x05:\x02\x31\x30\x12\x19\n\nfield_name\x18\x05 \x01(\t:\x05@body\x12\x1c\n\x0bstream_name\x18\x06 \x01(\t:\x07@global\x12\x1a\n\x05score\x18\x07 \x03(\x0b\x32\x0b.artm.Score\"x\n\x05Score\x12\x1e\n\x04type\x18\x01 \x02(\x0e\x32\x10.artm.Score.Type\x12\x19\n\nfield_name\x18\x02 \x01(\t:\x05@body\x12\x1c\n\x0bstream_name\x18\x03 \x01(\t:\x07@global\"\x16\n\x04Type\x12\x0e\n\nPerplexity\x10\x00\"\x99\x01\n\x0cLoggerConfig\x12\x14\n\x0clog_location\x18\x01 \x01(\t\x12-\n\x05level\x18\x02 \x01(\x0e\x32\x18.artm.LoggerConfig.Level:\x04INFO\"D\n\x05Level\x12\x0c\n\x08\x44ISABLED\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x12\x0b\n\x07WARNING\x10\x02\x12\x08\n\x04INFO\x10\x03\x12\x0b\n\x07VERBOSE\x10\x04\"\x86\x01\n\x0bModelTopics\x12&\n\x0btoken_topic\x18\x01 \x03(\x0b\x32\x11.artm.TokenTopics\x12\x17\n\x0fitems_processed\x18\x02 \x01(\x05\x12\'\n\x0cmodel_config\x18\x03 \x01(\x0b\x32\x11.artm.ModelConfig\x12\r\n\x05score\x18\x04 \x03(\x01\"D\n\x0bTokenTopics\x12\r\n\x05token\x18\x01 \x01(\t\x12\x10\n\x08token_id\x18\x02 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x03 \x03(\x02\".\n\nItemTopics\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x14\n\x0ctopic_weight\x18\x02 \x03(\x02\"4\n\x0b\x42\x61tchTopics\x12%\n\x0bitem_topics\x18\x01 \x03(\x0b\x32\x10.artm.ItemTopics')
 
 
 
@@ -55,8 +55,8 @@ _SCORE_TYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=778,
-  serialized_end=800,
+  serialized_start=814,
+  serialized_end=836,
 )
 
 _LOGGERCONFIG_LEVEL = _descriptor.EnumDescriptor(
@@ -88,8 +88,8 @@ _LOGGERCONFIG_LEVEL = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=888,
-  serialized_end=956,
+  serialized_start=924,
+  serialized_end=992,
 )
 
 
@@ -410,9 +410,16 @@ _SCORE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='stream_name', full_name='artm.Score.stream_name', index=1,
+      name='field_name', full_name='artm.Score.field_name', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=True, default_value=unicode("@body", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='stream_name', full_name='artm.Score.stream_name', index=2,
       number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
+      has_default_value=True, default_value=unicode("@global", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
@@ -427,7 +434,7 @@ _SCORE = _descriptor.Descriptor(
   is_extendable=False,
   extension_ranges=[],
   serialized_start=716,
-  serialized_end=800,
+  serialized_end=836,
 )
 
 
@@ -462,8 +469,8 @@ _LOGGERCONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=803,
-  serialized_end=956,
+  serialized_start=839,
+  serialized_end=992,
 )
 
 
@@ -511,8 +518,8 @@ _MODELTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=959,
-  serialized_end=1093,
+  serialized_start=995,
+  serialized_end=1129,
 )
 
 
@@ -553,8 +560,8 @@ _TOKENTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1095,
-  serialized_end=1163,
+  serialized_start=1131,
+  serialized_end=1199,
 )
 
 
@@ -588,8 +595,8 @@ _ITEMTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1165,
-  serialized_end=1211,
+  serialized_start=1201,
+  serialized_end=1247,
 )
 
 
@@ -616,8 +623,8 @@ _BATCHTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1213,
-  serialized_end=1265,
+  serialized_start=1249,
+  serialized_end=1301,
 )
 
 _ITEM.fields_by_name['field'].message_type = _FIELD

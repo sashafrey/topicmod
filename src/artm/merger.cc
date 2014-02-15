@@ -33,6 +33,7 @@ void Merger::UpdateModel(int model_id, const ModelConfig& model) {
     // Handle more type of reconfigs - for example, changing the number of topics;
     auto ttm = std::make_shared<TokenTopicMatrix>(model.topics_count());
     ttm->mutable_scores()->resize(model.score_size());
+    ttm->mutable_scores_norm()->resize(model.score_size());
     token_topic_matrix_.set(model_id, ttm);
   }
 
@@ -74,7 +75,7 @@ void Merger::ThreadFunction()
 
         int model_id = processor_output->model_id();
         auto cur_ttm = token_topic_matrix_.get(model_id);
-        if (cur_ttm.get() == NULL) {
+        if (cur_ttm.get() == nullptr) {
           // a model had been disposed during ongoing processing;
           continue;
         }
@@ -82,7 +83,7 @@ void Merger::ThreadFunction()
         auto new_ttm = std::make_shared<TokenTopicMatrix>(*cur_ttm);
         new_ttm->IncreaseItemsProcessed(processor_output->items_processed());
         for (int iScore = 0; iScore < processor_output->score_size(); ++iScore) {
-          new_ttm->IncreaseScores(iScore, processor_output->score(iScore));
+          new_ttm->IncreaseScores(iScore, processor_output->score(iScore), processor_output->score_norm(iScore));
         }
 
         // Add new tokens discovered by processor

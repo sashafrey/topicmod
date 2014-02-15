@@ -175,7 +175,8 @@ TEST(Instance, MultipleStreamsAndModels) {
   m1.set_enabled(true);
   Score* score = m1.add_score();
   score->set_type(Score_Type::Score_Type_Perplexity);
-  score->set_stream_name("test");
+  // calc score on the same stream because the have non-overlapping tokens
+  score->set_stream_name("train"); 
   int m1_id = test.instance()->CreateModel(m1);
 
   ModelConfig m2;
@@ -183,7 +184,12 @@ TEST(Instance, MultipleStreamsAndModels) {
   m2.set_enabled(true);
   int m2_id = test.instance()->CreateModel(m2);
 
-  test.data_loader()->InvokeIteration(2);
+
+  test.data_loader()->InvokeIteration(1);
+  test.instance()->WaitModelProcessed(m1_id, 3);
+  test.instance()->WaitModelProcessed(m2_id, 3);
+
+  test.data_loader()->InvokeIteration(1);
   test.instance()->WaitModelProcessed(m1_id, 6);
   test.instance()->WaitModelProcessed(m2_id, 6);
 

@@ -35,5 +35,7 @@ message ProcessorOutput
 	// Newly discovered tokens, not yet included in matrix Phi.
 	repeated string discovered_token = 7;
 	
-	repeated double score = 8;
+	// Messages related to scores such as perplexity.
+	repeated double score = 8; 	// cumulative part of perplexity
+	repeated double score_norm = 9; // total number of tokens accumulated so far
 }

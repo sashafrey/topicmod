@@ -87,7 +87,7 @@ namespace artm { namespace core {
 
     model_topics->set_items_processed(ttm->items_processed());
     for (int iScore = 0; iScore < ttm->scores().size(); ++iScore) {
-      model_topics->add_score(exp(- ttm->scores()[iScore] / ttm->items_processed()));
+      model_topics->add_score(exp(- ttm->scores()[iScore] / ttm->scores_norm()[iScore]));
     }
 
     return ARTM_SUCCESS;

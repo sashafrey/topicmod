@@ -12,6 +12,7 @@
 #include "artm/instance_schema.h"
 #include "artm/internals.pb.h"
 #include "artm/merger.h"
+#include "artm/messages.pb.h"
 #include "artm/thread_safe_holder.h"
 
 namespace artm { namespace core {
@@ -47,6 +48,85 @@ namespace artm { namespace core {
 
     boost::thread thread_;
     void ThreadFunction();
+
+    // Helper class to iterate on stream
+    class StreamIterator : boost::noncopyable {
+     public:
+       StreamIterator(const ProcessorInput& processor_input, const std::string stream_name);
+       const Item* Next();
+       const Item* Current() const;
+     private:
+       int items_count_;
+       int item_index_;
+       const Flags* stream_flags_;
+       const ProcessorInput& processor_input_;
+    };
+
+    // Helper class to perform the actual job of inferring theta distribution
+    class ItemProcessor : boost::noncopyable {
+     public:
+      ItemProcessor(const ::artm::ModelConfig& model, 
+                    const TokenTopicMatrix& token_topic_matrix, 
+                    const google::protobuf::RepeatedPtrField<std::string>& token,
+                    ProcessorOutput* processor_output);
+      void ProcessItem(const Item& item, float* theta_out);
+     private:
+      const ::artm::ModelConfig& model_;
+      const TokenTopicMatrix& token_topic_matrix_;
+      const google::protobuf::RepeatedPtrField<std::string>& token_;
+      ProcessorOutput* processor_output_;
+    };
+
+    // Helper class to iterate through tokens in one item
+    class TokenIterator : boost::noncopyable {
+     public:
+      enum Mode {
+        Known = 1,
+        Unknown = 2,
+        KnownAndUnknown = 3
+      };
+
+      TokenIterator(const google::protobuf::RepeatedPtrField<std::string>& token_dict, 
+                    const TokenTopicMatrix& token_topic_matrix, 
+                    const Item& item, 
+                    const std::string& field_name, 
+                    Mode mode = KnownAndUnknown);
+
+     bool Next();
+     void Reset();
+
+     const std::string& token() const { return token_; }
+     int id() const { return token_id_; }
+     int count() const { return count_; }
+     TokenWeights weights() const { return token_topic_matrix_.token_weights(id()); }
+
+     private:
+      const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
+      const TokenTopicMatrix& token_topic_matrix_;
+      const Field* field_;
+      int token_size_;
+      bool iterate_known_;
+      bool iterate_unknown_;
+      
+      // Current state of the iterator
+      int token_index_;
+      std::string token_;
+      int token_id_;
+      int count_;
+    };
+
+    // Helper class to calculate perplexity
+    class PerplexityCalculator : boost::noncopyable {     
+     public:
+      PerplexityCalculator(const Score& score,
+                           const TokenTopicMatrix& token_topic_matrix, 
+                           const google::protobuf::RepeatedPtrField<std::string>& token);
+      void ProcessItem(const Item& item, const float* theta, double* perplexity, double* normalizer);
+     private:
+      const Score& score_;
+      const TokenTopicMatrix& token_topic_matrix_;
+      const google::protobuf::RepeatedPtrField<std::string>& token_;
+    };
   };
 }} // artm/core
 

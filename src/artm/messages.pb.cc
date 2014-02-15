@@ -194,8 +194,9 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ModelConfig));
   Score_descriptor_ = file->message_type(7);
-  static const int Score_offsets_[2] = {
+  static const int Score_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Score, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Score, field_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Score, stream_name_),
   };
   Score_reflection_ =
@@ -356,6 +357,8 @@ void protobuf_ShutdownFile_messages_2eproto() {
   delete ModelConfig::_default_stream_name_;
   delete Score::default_instance_;
   delete Score_reflection_;
+  delete Score::_default_field_name_;
+  delete Score::_default_stream_name_;
   delete LoggerConfig::default_instance_;
   delete LoggerConfig_reflection_;
   delete ModelTopics::default_instance_;
@@ -392,21 +395,22 @@ void protobuf_AddDesc_messages_2eproto() {
     "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn"
     "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n"
     "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@"
-    "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\"T\n\005Sc"
-    "ore\022\036\n\004type\030\001 \002(\0162\020.artm.Score.Type\022\023\n\013s"
-    "tream_name\030\003 \001(\t\"\026\n\004Type\022\016\n\nPerplexity\020\000"
-    "\"\231\001\n\014LoggerConfig\022\024\n\014log_location\030\001 \001(\t\022"
-    "-\n\005level\030\002 \001(\0162\030.artm.LoggerConfig.Level"
-    ":\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001"
-    "\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"\206\001\n"
-    "\013ModelTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm"
-    ".TokenTopics\022\027\n\017items_processed\030\002 \001(\005\022\'\n"
-    "\014model_config\030\003 \001(\0132\021.artm.ModelConfig\022\r"
-    "\n\005score\030\004 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 "
-    "\001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 "
-    "\003(\002\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_w"
-    "eight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topic"
-    "s\030\001 \003(\0132\020.artm.ItemTopics", 1265);
+    "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\"x\n\005Sc"
+    "ore\022\036\n\004type\030\001 \002(\0162\020.artm.Score.Type\022\031\n\nf"
+    "ield_name\030\002 \001(\t:\005@body\022\034\n\013stream_name\030\003 "
+    "\001(\t:\007@global\"\026\n\004Type\022\016\n\nPerplexity\020\000\"\231\001\n"
+    "\014LoggerConfig\022\024\n\014log_location\030\001 \001(\t\022-\n\005l"
+    "evel\030\002 \001(\0162\030.artm.LoggerConfig.Level:\004IN"
+    "FO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007"
+    "WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"\206\001\n\013Mod"
+    "elTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm.Tok"
+    "enTopics\022\027\n\017items_processed\030\002 \001(\005\022\'\n\014mod"
+    "el_config\030\003 \001(\0132\021.artm.ModelConfig\022\r\n\005sc"
+    "ore\030\004 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022"
+    "\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\""
+    ".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weigh"
+    "t\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topics\030\001 "
+    "\003(\0132\020.artm.ItemTopics", 1301);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -424,6 +428,10 @@ void protobuf_AddDesc_messages_2eproto() {
   ModelConfig::_default_stream_name_ =
       new ::std::string("@global", 7);
   ModelConfig::default_instance_ = new ModelConfig();
+  Score::_default_field_name_ =
+      new ::std::string("@body", 5);
+  Score::_default_stream_name_ =
+      new ::std::string("@global", 7);
   Score::default_instance_ = new Score();
   LoggerConfig::default_instance_ = new LoggerConfig();
   ModelTopics::default_instance_ = new ModelTopics();
@@ -2681,8 +2689,11 @@ const Score_Type Score::Type_MIN;
 const Score_Type Score::Type_MAX;
 const int Score::Type_ARRAYSIZE;
 #endif  // _MSC_VER
+::std::string* Score::_default_field_name_ = NULL;
+::std::string* Score::_default_stream_name_ = NULL;
 #ifndef _MSC_VER
 const int Score::kTypeFieldNumber;
+const int Score::kFieldNameFieldNumber;
 const int Score::kStreamNameFieldNumber;
 #endif  // !_MSC_VER
 
@@ -2703,7 +2714,8 @@ Score::Score(const Score& from)
 void Score::SharedCtor() {
   _cached_size_ = 0;
   type_ = 0;
-  stream_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  field_name_ = const_cast< ::std::string*>(_default_field_name_);
+  stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2712,7 +2724,10 @@ Score::~Score() {
 }
 
 void Score::SharedDtor() {
-  if (stream_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (field_name_ != _default_field_name_) {
+    delete field_name_;
+  }
+  if (stream_name_ != _default_stream_name_) {
     delete stream_name_;
   }
   if (this != default_instance_) {
@@ -2743,9 +2758,14 @@ Score* Score::New() const {
 void Score::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     type_ = 0;
+    if (has_field_name()) {
+      if (field_name_ != _default_field_name_) {
+        field_name_->assign(*_default_field_name_);
+      }
+    }
     if (has_stream_name()) {
-      if (stream_name_ != &::google::protobuf::internal::kEmptyString) {
-        stream_name_->clear();
+      if (stream_name_ != _default_stream_name_) {
+        stream_name_->assign(*_default_stream_name_);
       }
     }
   }
@@ -2775,11 +2795,28 @@ bool Score::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(18)) goto parse_field_name;
+        break;
+      }
+
+      // optional string field_name = 2 [default = "@body"];
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_field_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_field_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->field_name().data(), this->field_name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectTag(26)) goto parse_stream_name;
         break;
       }
 
-      // optional string stream_name = 3;
+      // optional string stream_name = 3 [default = "@global"];
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
@@ -2820,7 +2857,16 @@ void Score::SerializeWithCachedSizes(
       1, this->type(), output);
   }
 
-  // optional string stream_name = 3;
+  // optional string field_name = 2 [default = "@body"];
+  if (has_field_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->field_name().data(), this->field_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->field_name(), output);
+  }
+
+  // optional string stream_name = 3 [default = "@global"];
   if (has_stream_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->stream_name().data(), this->stream_name().length(),
@@ -2843,7 +2889,17 @@ void Score::SerializeWithCachedSizes(
       1, this->type(), target);
   }
 
-  // optional string stream_name = 3;
+  // optional string field_name = 2 [default = "@body"];
+  if (has_field_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->field_name().data(), this->field_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->field_name(), target);
+  }
+
+  // optional string stream_name = 3 [default = "@global"];
   if (has_stream_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->stream_name().data(), this->stream_name().length(),
@@ -2870,7 +2926,14 @@ int Score::ByteSize() const {
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
     }
 
-    // optional string stream_name = 3;
+    // optional string field_name = 2 [default = "@body"];
+    if (has_field_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->field_name());
+    }
+
+    // optional string stream_name = 3 [default = "@global"];
     if (has_stream_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
@@ -2907,6 +2970,9 @@ void Score::MergeFrom(const Score& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
+    if (from.has_field_name()) {
+      set_field_name(from.field_name());
+    }
     if (from.has_stream_name()) {
       set_stream_name(from.stream_name());
     }
@@ -2935,6 +3001,7 @@ bool Score::IsInitialized() const {
 void Score::Swap(Score* other) {
   if (other != this) {
     std::swap(type_, other->type_);
+    std::swap(field_name_, other->field_name_);
     std::swap(stream_name_, other->stream_name_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

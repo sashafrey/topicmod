@@ -6054,17 +6054,32 @@ public final class Messages {
      */
     artm.Messages.Score.Type getType();
 
-    // optional string stream_name = 3;
+    // optional string field_name = 2 [default = "@body"];
     /**
-     * <code>optional string stream_name = 3;</code>
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    boolean hasFieldName();
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    java.lang.String getFieldName();
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    com.google.protobuf.ByteString
+        getFieldNameBytes();
+
+    // optional string stream_name = 3 [default = "@global"];
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
      */
     boolean hasStreamName();
     /**
-     * <code>optional string stream_name = 3;</code>
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
      */
     java.lang.String getStreamName();
     /**
-     * <code>optional string stream_name = 3;</code>
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
      */
     com.google.protobuf.ByteString
         getStreamNameBytes();
@@ -6131,8 +6146,13 @@ public final class Messages {
               }
               break;
             }
-            case 26: {
+            case 18: {
               bitField0_ |= 0x00000002;
+              fieldName_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
               streamName_ = input.readBytes();
               break;
             }
@@ -6265,17 +6285,60 @@ public final class Messages {
       return type_;
     }
 
-    // optional string stream_name = 3;
-    public static final int STREAM_NAME_FIELD_NUMBER = 3;
-    private java.lang.Object streamName_;
+    // optional string field_name = 2 [default = "@body"];
+    public static final int FIELD_NAME_FIELD_NUMBER = 2;
+    private java.lang.Object fieldName_;
     /**
-     * <code>optional string stream_name = 3;</code>
+     * <code>optional string field_name = 2 [default = "@body"];</code>
      */
-    public boolean hasStreamName() {
+    public boolean hasFieldName() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>optional string stream_name = 3;</code>
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    public java.lang.String getFieldName() {
+      java.lang.Object ref = fieldName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          fieldName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    public com.google.protobuf.ByteString
+        getFieldNameBytes() {
+      java.lang.Object ref = fieldName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fieldName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string stream_name = 3 [default = "@global"];
+    public static final int STREAM_NAME_FIELD_NUMBER = 3;
+    private java.lang.Object streamName_;
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
+     */
+    public boolean hasStreamName() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
      */
     public java.lang.String getStreamName() {
       java.lang.Object ref = streamName_;
@@ -6292,7 +6355,7 @@ public final class Messages {
       }
     }
     /**
-     * <code>optional string stream_name = 3;</code>
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
      */
     public com.google.protobuf.ByteString
         getStreamNameBytes() {
@@ -6310,7 +6373,8 @@ public final class Messages {
 
     private void initFields() {
       type_ = artm.Messages.Score.Type.Perplexity;
-      streamName_ = "";
+      fieldName_ = "@body";
+      streamName_ = "@global";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -6332,6 +6396,9 @@ public final class Messages {
         output.writeEnum(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getFieldNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBytes(3, getStreamNameBytes());
       }
       getUnknownFields().writeTo(output);
@@ -6348,6 +6415,10 @@ public final class Messages {
           .computeEnumSize(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getFieldNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(3, getStreamNameBytes());
       }
@@ -6469,8 +6540,10 @@ public final class Messages {
         super.clear();
         type_ = artm.Messages.Score.Type.Perplexity;
         bitField0_ = (bitField0_ & ~0x00000001);
-        streamName_ = "";
+        fieldName_ = "@body";
         bitField0_ = (bitField0_ & ~0x00000002);
+        streamName_ = "@global";
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -6506,6 +6579,10 @@ public final class Messages {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
+        result.fieldName_ = fieldName_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
         result.streamName_ = streamName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -6526,8 +6603,13 @@ public final class Messages {
         if (other.hasType()) {
           setType(other.getType());
         }
-        if (other.hasStreamName()) {
+        if (other.hasFieldName()) {
           bitField0_ |= 0x00000002;
+          fieldName_ = other.fieldName_;
+          onChanged();
+        }
+        if (other.hasStreamName()) {
+          bitField0_ |= 0x00000004;
           streamName_ = other.streamName_;
           onChanged();
         }
@@ -6598,16 +6680,90 @@ public final class Messages {
         return this;
       }
 
-      // optional string stream_name = 3;
-      private java.lang.Object streamName_ = "";
+      // optional string field_name = 2 [default = "@body"];
+      private java.lang.Object fieldName_ = "@body";
       /**
-       * <code>optional string stream_name = 3;</code>
+       * <code>optional string field_name = 2 [default = "@body"];</code>
        */
-      public boolean hasStreamName() {
+      public boolean hasFieldName() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>optional string stream_name = 3;</code>
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public java.lang.String getFieldName() {
+        java.lang.Object ref = fieldName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          fieldName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public com.google.protobuf.ByteString
+          getFieldNameBytes() {
+        java.lang.Object ref = fieldName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          fieldName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public Builder setFieldName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        fieldName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public Builder clearFieldName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        fieldName_ = getDefaultInstance().getFieldName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public Builder setFieldNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        fieldName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string stream_name = 3 [default = "@global"];
+      private java.lang.Object streamName_ = "@global";
+      /**
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
+       */
+      public boolean hasStreamName() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
        */
       public java.lang.String getStreamName() {
         java.lang.Object ref = streamName_;
@@ -6621,7 +6777,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>optional string stream_name = 3;</code>
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
        */
       public com.google.protobuf.ByteString
           getStreamNameBytes() {
@@ -6637,36 +6793,36 @@ public final class Messages {
         }
       }
       /**
-       * <code>optional string stream_name = 3;</code>
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
        */
       public Builder setStreamName(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
         streamName_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string stream_name = 3;</code>
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
        */
       public Builder clearStreamName() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000004);
         streamName_ = getDefaultInstance().getStreamName();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string stream_name = 3;</code>
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
        */
       public Builder setStreamNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000002;
+  bitField0_ |= 0x00000004;
         streamName_ = value;
         onChanged();
         return this;
@@ -10626,21 +10782,22 @@ public final class Messages {
       "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn" +
       "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n" +
       "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@" +
-      "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\"T\n\005Sc" +
-      "ore\022\036\n\004type\030\001 \002(\0162\020.artm.Score.Type\022\023\n\013s" +
-      "tream_name\030\003 \001(\t\"\026\n\004Type\022\016\n\nPerplexity\020\000",
-      "\"\231\001\n\014LoggerConfig\022\024\n\014log_location\030\001 \001(\t\022" +
-      "-\n\005level\030\002 \001(\0162\030.artm.LoggerConfig.Level" +
-      ":\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001" +
-      "\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"\206\001\n" +
-      "\013ModelTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm" +
-      ".TokenTopics\022\027\n\017items_processed\030\002 \001(\005\022\'\n" +
-      "\014model_config\030\003 \001(\0132\021.artm.ModelConfig\022\r" +
-      "\n\005score\030\004 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 " +
-      "\001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 " +
-      "\003(\002\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_w",
-      "eight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topic" +
-      "s\030\001 \003(\0132\020.artm.ItemTopics"
+      "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\"x\n\005Sc" +
+      "ore\022\036\n\004type\030\001 \002(\0162\020.artm.Score.Type\022\031\n\nf" +
+      "ield_name\030\002 \001(\t:\005@body\022\034\n\013stream_name\030\003 ",
+      "\001(\t:\007@global\"\026\n\004Type\022\016\n\nPerplexity\020\000\"\231\001\n" +
+      "\014LoggerConfig\022\024\n\014log_location\030\001 \001(\t\022-\n\005l" +
+      "evel\030\002 \001(\0162\030.artm.LoggerConfig.Level:\004IN" +
+      "FO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007" +
+      "WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"\206\001\n\013Mod" +
+      "elTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm.Tok" +
+      "enTopics\022\027\n\017items_processed\030\002 \001(\005\022\'\n\014mod" +
+      "el_config\030\003 \001(\0132\021.artm.ModelConfig\022\r\n\005sc" +
+      "ore\030\004 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022" +
+      "\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\"",
+      ".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weigh" +
+      "t\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topics\030\001 " +
+      "\003(\0132\020.artm.ItemTopics"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -10694,7 +10851,7 @@ public final class Messages {
           internal_static_artm_Score_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_Score_descriptor,
-              new java.lang.String[] { "Type", "StreamName", });
+              new java.lang.String[] { "Type", "FieldName", "StreamName", });
           internal_static_artm_LoggerConfig_descriptor =
             getDescriptor().getMessageTypes().get(8);
           internal_static_artm_LoggerConfig_fieldAccessorTable = new

@@ -48,6 +48,11 @@ double proc(int argc, char * argv[], int processors_count) {
   model_config.set_topics_count(nTopics);
   model_config.set_inner_iterations_count(10);
   model_config.set_stream_name("train_stream");
+
+  Score* score = model_config.add_score();
+  score->set_type(Score_Type::Score_Type_Perplexity);
+  score->set_stream_name("test_stream");
+
   Model model(instance, model_config);
   
   // Load doc-word matrix
@@ -87,22 +92,22 @@ double proc(int argc, char * argv[], int processors_count) {
 
   // Enable model and wait while each document pass through processor about 10 times.
   model.Enable();
-  data_loader.InvokeIteration(10);
-  data_loader.WaitIdle();
-  instance.WaitIdle();
+  std::shared_ptr<ModelTopics> model_topics;
+  for (int iIter = 0; iIter < 40; ++iIter) {
+    data_loader.InvokeIteration(1);
+    data_loader.WaitIdle();
+    instance.WaitIdle();
+    model_topics = instance.GetTopics(model);
+    std::cout << "Iteration #" << (iIter + 1) << ": " 
+              << "#Tokens = "  << model_topics->token_topic_size() << ", "
+              << "Items processed = " << model_topics->items_processed() << ", "
+              << "Perplexity = " << model_topics->score(0) << endl;
+  }
   model.Disable();
 
+  std::cout << endl;
+
   clock_t end = clock();
-
-  std::shared_ptr<ModelTopics> model_topics = instance.GetTopics(model);
-
-  std::cout << "Number of tokens in model topic: " 
-            << model_topics->token_topic_size()
-            << endl;
-
-  std::cout << "Items processed: "
-            << model_topics->items_processed()
-            << endl;
 
   // Log top 7 words per each topic
   {
@@ -143,10 +148,10 @@ int main(int argc, char * argv[]) {
     return 0;
   }
 
-//  cout << proc(argc, argv, 4) << " sec. ================= " << endl << endl;
- // cout << proc(argc, argv, 3) << " sec. ================= " << endl << endl;
-  cout << proc(argc, argv, 2) << " sec. ================= " << endl << endl;
-  //cout << proc(argc, argv, 1) << " sec. ================= " << endl << endl;
+  cout << proc(argc, argv, 4) << " sec. ================= " << endl << endl;
+  // cout << proc(argc, argv, 3) << " sec. ================= " << endl << endl;
+  // cout << proc(argc, argv, 2) << " sec. ================= " << endl << endl;
+  // cout << proc(argc, argv, 1) << " sec. ================= " << endl << endl;
 
   return 0;
 }

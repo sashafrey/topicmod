@@ -1000,7 +1000,19 @@ class Score : public ::google::protobuf::Message {
   inline ::artm::Score_Type type() const;
   inline void set_type(::artm::Score_Type value);
 
-  // optional string stream_name = 3;
+  // optional string field_name = 2 [default = "@body"];
+  inline bool has_field_name() const;
+  inline void clear_field_name();
+  static const int kFieldNameFieldNumber = 2;
+  inline const ::std::string& field_name() const;
+  inline void set_field_name(const ::std::string& value);
+  inline void set_field_name(const char* value);
+  inline void set_field_name(const char* value, size_t size);
+  inline ::std::string* mutable_field_name();
+  inline ::std::string* release_field_name();
+  inline void set_allocated_field_name(::std::string* field_name);
+
+  // optional string stream_name = 3 [default = "@global"];
   inline bool has_stream_name() const;
   inline void clear_stream_name();
   static const int kStreamNameFieldNumber = 3;
@@ -1016,16 +1028,21 @@ class Score : public ::google::protobuf::Message {
  private:
   inline void set_has_type();
   inline void clear_has_type();
+  inline void set_has_field_name();
+  inline void clear_has_field_name();
   inline void set_has_stream_name();
   inline void clear_has_stream_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* field_name_;
+  static ::std::string* _default_field_name_;
   ::std::string* stream_name_;
+  static ::std::string* _default_stream_name_;
   int type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2394,19 +2411,89 @@ inline void Score::set_type(::artm::Score_Type value) {
   type_ = value;
 }
 
-// optional string stream_name = 3;
-inline bool Score::has_stream_name() const {
+// optional string field_name = 2 [default = "@body"];
+inline bool Score::has_field_name() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Score::set_has_stream_name() {
+inline void Score::set_has_field_name() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Score::clear_has_stream_name() {
+inline void Score::clear_has_field_name() {
   _has_bits_[0] &= ~0x00000002u;
 }
+inline void Score::clear_field_name() {
+  if (field_name_ != _default_field_name_) {
+    field_name_->assign(*_default_field_name_);
+  }
+  clear_has_field_name();
+}
+inline const ::std::string& Score::field_name() const {
+  return *field_name_;
+}
+inline void Score::set_field_name(const ::std::string& value) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(value);
+}
+inline void Score::set_field_name(const char* value) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(value);
+}
+inline void Score::set_field_name(const char* value, size_t size) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Score::mutable_field_name() {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string(*_default_field_name_);
+  }
+  return field_name_;
+}
+inline ::std::string* Score::release_field_name() {
+  clear_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    return NULL;
+  } else {
+    ::std::string* temp = field_name_;
+    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+    return temp;
+  }
+}
+inline void Score::set_allocated_field_name(::std::string* field_name) {
+  if (field_name_ != _default_field_name_) {
+    delete field_name_;
+  }
+  if (field_name) {
+    set_has_field_name();
+    field_name_ = field_name;
+  } else {
+    clear_has_field_name();
+    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+  }
+}
+
+// optional string stream_name = 3 [default = "@global"];
+inline bool Score::has_stream_name() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Score::set_has_stream_name() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Score::clear_has_stream_name() {
+  _has_bits_[0] &= ~0x00000004u;
+}
 inline void Score::clear_stream_name() {
-  if (stream_name_ != &::google::protobuf::internal::kEmptyString) {
-    stream_name_->clear();
+  if (stream_name_ != _default_stream_name_) {
+    stream_name_->assign(*_default_stream_name_);
   }
   clear_has_stream_name();
 }
@@ -2415,44 +2502,44 @@ inline const ::std::string& Score::stream_name() const {
 }
 inline void Score::set_stream_name(const ::std::string& value) {
   set_has_stream_name();
-  if (stream_name_ == &::google::protobuf::internal::kEmptyString) {
+  if (stream_name_ == _default_stream_name_) {
     stream_name_ = new ::std::string;
   }
   stream_name_->assign(value);
 }
 inline void Score::set_stream_name(const char* value) {
   set_has_stream_name();
-  if (stream_name_ == &::google::protobuf::internal::kEmptyString) {
+  if (stream_name_ == _default_stream_name_) {
     stream_name_ = new ::std::string;
   }
   stream_name_->assign(value);
 }
 inline void Score::set_stream_name(const char* value, size_t size) {
   set_has_stream_name();
-  if (stream_name_ == &::google::protobuf::internal::kEmptyString) {
+  if (stream_name_ == _default_stream_name_) {
     stream_name_ = new ::std::string;
   }
   stream_name_->assign(reinterpret_cast<const char*>(value), size);
 }
 inline ::std::string* Score::mutable_stream_name() {
   set_has_stream_name();
-  if (stream_name_ == &::google::protobuf::internal::kEmptyString) {
-    stream_name_ = new ::std::string;
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string(*_default_stream_name_);
   }
   return stream_name_;
 }
 inline ::std::string* Score::release_stream_name() {
   clear_has_stream_name();
-  if (stream_name_ == &::google::protobuf::internal::kEmptyString) {
+  if (stream_name_ == _default_stream_name_) {
     return NULL;
   } else {
     ::std::string* temp = stream_name_;
-    stream_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
     return temp;
   }
 }
 inline void Score::set_allocated_stream_name(::std::string* stream_name) {
-  if (stream_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (stream_name_ != _default_stream_name_) {
     delete stream_name_;
   }
   if (stream_name) {
@@ -2460,7 +2547,7 @@ inline void Score::set_allocated_stream_name(::std::string* stream_name) {
     stream_name_ = stream_name;
   } else {
     clear_has_stream_name();
-    stream_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
   }
 }
 

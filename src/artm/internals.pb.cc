@@ -91,7 +91,7 @@ void protobuf_AssignDesc_internals_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ProcessorInput));
   ProcessorOutput_descriptor_ = file->message_type(3);
-  static const int ProcessorOutput_offsets_[8] = {
+  static const int ProcessorOutput_offsets_[9] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessorOutput, model_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessorOutput, topics_count_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessorOutput, items_processed_),
@@ -100,6 +100,7 @@ void protobuf_AssignDesc_internals_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessorOutput, token_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessorOutput, discovered_token_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessorOutput, score_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ProcessorOutput, score_norm_),
   };
   ProcessorOutput_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -160,13 +161,13 @@ void protobuf_AddDesc_internals_2eproto() {
     "lags\022\021\n\005value\030\001 \003(\010B\002\020\001\"i\n\016ProcessorInpu"
     "t\022\032\n\005batch\030\001 \002(\0132\013.artm.Batch\022&\n\014stream_"
     "flags\030\002 \003(\0132\020.artm.core.Flags\022\023\n\013stream_"
-    "name\030\003 \003(\t\"\344\001\n\017ProcessorOutput\022\020\n\010model_"
+    "name\030\003 \003(\t\"\370\001\n\017ProcessorOutput\022\020\n\010model_"
     "id\030\001 \002(\005\022\024\n\014topics_count\030\002 \002(\005\022\027\n\017items_"
     "processed\030\003 \001(\005\022+\n\016topic_counters\030\004 \002(\0132"
     "\023.artm.core.Counters\022+\n\016token_counters\030\005"
     " \003(\0132\023.artm.core.Counters\022\r\n\005token\030\006 \003(\t"
     "\022\030\n\020discovered_token\030\007 \003(\t\022\r\n\005score\030\010 \003("
-    "\001", 441);
+    "\001\022\022\n\nscore_norm\030\t \003(\001", 461);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "internals.proto", &protobuf_RegisterTypes);
   Counters::default_instance_ = new Counters();
@@ -950,6 +951,7 @@ const int ProcessorOutput::kTokenCountersFieldNumber;
 const int ProcessorOutput::kTokenFieldNumber;
 const int ProcessorOutput::kDiscoveredTokenFieldNumber;
 const int ProcessorOutput::kScoreFieldNumber;
+const int ProcessorOutput::kScoreNormFieldNumber;
 #endif  // !_MSC_VER
 
 ProcessorOutput::ProcessorOutput()
@@ -1020,6 +1022,7 @@ void ProcessorOutput::Clear() {
   token_.Clear();
   discovered_token_.Clear();
   score_.Clear();
+  score_norm_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -1162,6 +1165,28 @@ bool ProcessorOutput::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(65)) goto parse_score;
+        if (input->ExpectTag(73)) goto parse_score_norm;
+        break;
+      }
+
+      // repeated double score_norm = 9;
+      case 9: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_score_norm:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 1, 73, input, this->mutable_score_norm())));
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_LENGTH_DELIMITED) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, this->mutable_score_norm())));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(73)) goto parse_score_norm;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1235,6 +1260,12 @@ void ProcessorOutput::SerializeWithCachedSizes(
       8, this->score(i), output);
   }
 
+  // repeated double score_norm = 9;
+  for (int i = 0; i < this->score_norm_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(
+      9, this->score_norm(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1294,6 +1325,12 @@ void ProcessorOutput::SerializeWithCachedSizes(
   for (int i = 0; i < this->score_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteDoubleToArray(8, this->score(i), target);
+  }
+
+  // repeated double score_norm = 9;
+  for (int i = 0; i < this->score_norm_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteDoubleToArray(9, this->score_norm(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1365,6 +1402,13 @@ int ProcessorOutput::ByteSize() const {
     total_size += 1 * this->score_size() + data_size;
   }
 
+  // repeated double score_norm = 9;
+  {
+    int data_size = 0;
+    data_size = 8 * this->score_norm_size();
+    total_size += 1 * this->score_norm_size() + data_size;
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -1394,6 +1438,7 @@ void ProcessorOutput::MergeFrom(const ProcessorOutput& from) {
   token_.MergeFrom(from.token_);
   discovered_token_.MergeFrom(from.discovered_token_);
   score_.MergeFrom(from.score_);
+  score_norm_.MergeFrom(from.score_norm_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_model_id()) {
       set_model_id(from.model_id());
@@ -1439,6 +1484,7 @@ void ProcessorOutput::Swap(ProcessorOutput* other) {
     token_.Swap(&other->token_);
     discovered_token_.Swap(&other->discovered_token_);
     score_.Swap(&other->score_);
+    score_norm_.Swap(&other->score_norm_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

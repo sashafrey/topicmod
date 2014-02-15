@@ -13,6 +13,7 @@ TokenTopicMatrix::TokenTopicMatrix(int topics_count) :
     topics_count_(topics_count),
     items_processed_(0),
     scores_(),
+    scores_norm_(),
     data_(),
     normalizer_()
 {
@@ -27,6 +28,7 @@ TokenTopicMatrix::TokenTopicMatrix(const TokenTopicMatrix& rhs) :
     topics_count_(rhs.topics_count_),
     items_processed_(rhs.items_processed_),
     scores_(rhs.scores_),
+    scores_norm_(rhs.scores_norm_),
     data_(), // must be deep-copied 
     normalizer_(rhs.normalizer_)
 {
@@ -72,9 +74,10 @@ void TokenTopicMatrix::IncreaseItemsProcessed(int value) {
   items_processed_ += value;
 }
 
-void TokenTopicMatrix::IncreaseScores(int iScore, double value) {
+void TokenTopicMatrix::IncreaseScores(int iScore, double value, double norm) {
   assert(iScore < scores_.size());
   scores_[iScore] += value;
+  scores_norm_[iScore] += norm;
 }
 
 void TokenTopicMatrix::IncreaseTokenWeight(int token_id, int topic_id, float value) {

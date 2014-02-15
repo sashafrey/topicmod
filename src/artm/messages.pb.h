@@ -34,18 +34,39 @@ void  protobuf_AddDesc_messages_2eproto();
 void protobuf_AssignDesc_messages_2eproto();
 void protobuf_ShutdownFile_messages_2eproto();
 
-class Field;
 class Item;
+class Field;
 class Batch;
 class DataLoaderConfig;
+class Stream;
 class InstanceConfig;
 class ModelConfig;
 class LoggerConfig;
+class ModelTopics;
+class TokenTopics;
 class ItemTopics;
 class BatchTopics;
-class TokenTopics;
-class ModelTopics;
 
+enum Stream_Type {
+  Stream_Type_Global = 0,
+  Stream_Type_ItemIdModulus = 1,
+  Stream_Type_ItemHashModulus = 3
+};
+bool Stream_Type_IsValid(int value);
+const Stream_Type Stream_Type_Type_MIN = Stream_Type_Global;
+const Stream_Type Stream_Type_Type_MAX = Stream_Type_ItemHashModulus;
+const int Stream_Type_Type_ARRAYSIZE = Stream_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* Stream_Type_descriptor();
+inline const ::std::string& Stream_Type_Name(Stream_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    Stream_Type_descriptor(), value);
+}
+inline bool Stream_Type_Parse(
+    const ::std::string& name, Stream_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<Stream_Type>(
+    Stream_Type_descriptor(), name, value);
+}
 enum LoggerConfig_Level {
   LoggerConfig_Level_DISABLED = 0,
   LoggerConfig_Level_ERROR = 1,
@@ -69,6 +90,101 @@ inline bool LoggerConfig_Level_Parse(
     LoggerConfig_Level_descriptor(), name, value);
 }
 // ===================================================================
+
+class Item : public ::google::protobuf::Message {
+ public:
+  Item();
+  virtual ~Item();
+
+  Item(const Item& from);
+
+  inline Item& operator=(const Item& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Item& default_instance();
+
+  void Swap(Item* other);
+
+  // implements Message ----------------------------------------------
+
+  Item* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Item& from);
+  void MergeFrom(const Item& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 id = 1;
+  inline bool has_id() const;
+  inline void clear_id();
+  static const int kIdFieldNumber = 1;
+  inline ::google::protobuf::int32 id() const;
+  inline void set_id(::google::protobuf::int32 value);
+
+  // repeated .artm.Field field = 2;
+  inline int field_size() const;
+  inline void clear_field();
+  static const int kFieldFieldNumber = 2;
+  inline const ::artm::Field& field(int index) const;
+  inline ::artm::Field* mutable_field(int index);
+  inline ::artm::Field* add_field();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::Field >&
+      field() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::Field >*
+      mutable_field();
+
+  // @@protoc_insertion_point(class_scope:artm.Item)
+ private:
+  inline void set_has_id();
+  inline void clear_has_id();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::artm::Field > field_;
+  ::google::protobuf::int32 id_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Item* default_instance_;
+};
+// -------------------------------------------------------------------
 
 class Field : public ::google::protobuf::Message {
  public:
@@ -184,101 +300,6 @@ class Field : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Item : public ::google::protobuf::Message {
- public:
-  Item();
-  virtual ~Item();
-
-  Item(const Item& from);
-
-  inline Item& operator=(const Item& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const Item& default_instance();
-
-  void Swap(Item* other);
-
-  // implements Message ----------------------------------------------
-
-  Item* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Item& from);
-  void MergeFrom(const Item& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional int32 id = 1;
-  inline bool has_id() const;
-  inline void clear_id();
-  static const int kIdFieldNumber = 1;
-  inline ::google::protobuf::int32 id() const;
-  inline void set_id(::google::protobuf::int32 value);
-
-  // repeated .artm.Field field = 2;
-  inline int field_size() const;
-  inline void clear_field();
-  static const int kFieldFieldNumber = 2;
-  inline const ::artm::Field& field(int index) const;
-  inline ::artm::Field* mutable_field(int index);
-  inline ::artm::Field* add_field();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::Field >&
-      field() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::Field >*
-      mutable_field();
-
-  // @@protoc_insertion_point(class_scope:artm.Item)
- private:
-  inline void set_has_id();
-  inline void clear_has_id();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::RepeatedPtrField< ::artm::Field > field_;
-  ::google::protobuf::int32 id_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static Item* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class Batch : public ::google::protobuf::Message {
  public:
   Batch();
@@ -349,10 +370,10 @@ class Batch : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_token();
 
-  // repeated .artm.Item item = 3;
+  // repeated .artm.Item item = 2;
   inline int item_size() const;
   inline void clear_item();
-  static const int kItemFieldNumber = 3;
+  static const int kItemFieldNumber = 2;
   inline const ::artm::Item& item(int index) const;
   inline ::artm::Item* mutable_item(int index);
   inline ::artm::Item* add_item();
@@ -461,6 +482,18 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 queue_size() const;
   inline void set_queue_size(::google::protobuf::int32 value);
 
+  // repeated .artm.Stream stream = 4;
+  inline int stream_size() const;
+  inline void clear_stream();
+  static const int kStreamFieldNumber = 4;
+  inline const ::artm::Stream& stream(int index) const;
+  inline ::artm::Stream* mutable_stream(int index);
+  inline ::artm::Stream* add_stream();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::Stream >&
+      stream() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::Stream >*
+      mutable_stream();
+
   // @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
  private:
   inline void set_has_instance_id();
@@ -475,9 +508,10 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   ::std::string* disk_path_;
   ::google::protobuf::int32 instance_id_;
   ::google::protobuf::int32 queue_size_;
+  ::google::protobuf::RepeatedPtrField< ::artm::Stream > stream_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -485,6 +519,152 @@ class DataLoaderConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DataLoaderConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Stream : public ::google::protobuf::Message {
+ public:
+  Stream();
+  virtual ~Stream();
+
+  Stream(const Stream& from);
+
+  inline Stream& operator=(const Stream& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Stream& default_instance();
+
+  void Swap(Stream* other);
+
+  // implements Message ----------------------------------------------
+
+  Stream* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Stream& from);
+  void MergeFrom(const Stream& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef Stream_Type Type;
+  static const Type Global = Stream_Type_Global;
+  static const Type ItemIdModulus = Stream_Type_ItemIdModulus;
+  static const Type ItemHashModulus = Stream_Type_ItemHashModulus;
+  static inline bool Type_IsValid(int value) {
+    return Stream_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    Stream_Type_Type_MIN;
+  static const Type Type_MAX =
+    Stream_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    Stream_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return Stream_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return Stream_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return Stream_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // required .artm.Stream.Type type = 1 [default = Global];
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 1;
+  inline ::artm::Stream_Type type() const;
+  inline void set_type(::artm::Stream_Type value);
+
+  // optional string name = 2 [default = "@global"];
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 2;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional int32 modulus = 3;
+  inline bool has_modulus() const;
+  inline void clear_modulus();
+  static const int kModulusFieldNumber = 3;
+  inline ::google::protobuf::int32 modulus() const;
+  inline void set_modulus(::google::protobuf::int32 value);
+
+  // repeated int32 residuals = 4;
+  inline int residuals_size() const;
+  inline void clear_residuals();
+  static const int kResidualsFieldNumber = 4;
+  inline ::google::protobuf::int32 residuals(int index) const;
+  inline void set_residuals(int index, ::google::protobuf::int32 value);
+  inline void add_residuals(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      residuals() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_residuals();
+
+  // @@protoc_insertion_point(class_scope:artm.Stream)
+ private:
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_modulus();
+  inline void clear_has_modulus();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* name_;
+  static ::std::string* _default_name_;
+  int type_;
+  ::google::protobuf::int32 modulus_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > residuals_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static Stream* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -657,6 +837,18 @@ class ModelConfig : public ::google::protobuf::Message {
   inline ::std::string* release_field_name();
   inline void set_allocated_field_name(::std::string* field_name);
 
+  // optional string stream_name = 6 [default = "@global"];
+  inline bool has_stream_name() const;
+  inline void clear_stream_name();
+  static const int kStreamNameFieldNumber = 6;
+  inline const ::std::string& stream_name() const;
+  inline void set_stream_name(const ::std::string& value);
+  inline void set_stream_name(const char* value);
+  inline void set_stream_name(const char* value, size_t size);
+  inline ::std::string* mutable_stream_name();
+  inline ::std::string* release_stream_name();
+  inline void set_allocated_stream_name(::std::string* stream_name);
+
   // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
   inline void set_has_topics_count();
@@ -667,6 +859,8 @@ class ModelConfig : public ::google::protobuf::Message {
   inline void clear_has_inner_iterations_count();
   inline void set_has_field_name();
   inline void clear_has_field_name();
+  inline void set_has_stream_name();
+  inline void clear_has_stream_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -674,10 +868,12 @@ class ModelConfig : public ::google::protobuf::Message {
   bool enabled_;
   ::std::string* field_name_;
   static ::std::string* _default_field_name_;
+  ::std::string* stream_name_;
+  static ::std::string* _default_stream_name_;
   ::google::protobuf::int32 inner_iterations_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -809,6 +1005,211 @@ class LoggerConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static LoggerConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ModelTopics : public ::google::protobuf::Message {
+ public:
+  ModelTopics();
+  virtual ~ModelTopics();
+
+  ModelTopics(const ModelTopics& from);
+
+  inline ModelTopics& operator=(const ModelTopics& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ModelTopics& default_instance();
+
+  void Swap(ModelTopics* other);
+
+  // implements Message ----------------------------------------------
+
+  ModelTopics* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ModelTopics& from);
+  void MergeFrom(const ModelTopics& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .artm.TokenTopics token_topic = 1;
+  inline int token_topic_size() const;
+  inline void clear_token_topic();
+  static const int kTokenTopicFieldNumber = 1;
+  inline const ::artm::TokenTopics& token_topic(int index) const;
+  inline ::artm::TokenTopics* mutable_token_topic(int index);
+  inline ::artm::TokenTopics* add_token_topic();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >&
+      token_topic() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >*
+      mutable_token_topic();
+
+  // optional int32 items_processed = 2;
+  inline bool has_items_processed() const;
+  inline void clear_items_processed();
+  static const int kItemsProcessedFieldNumber = 2;
+  inline ::google::protobuf::int32 items_processed() const;
+  inline void set_items_processed(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:artm.ModelTopics)
+ private:
+  inline void set_has_items_processed();
+  inline void clear_has_items_processed();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics > token_topic_;
+  ::google::protobuf::int32 items_processed_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static ModelTopics* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class TokenTopics : public ::google::protobuf::Message {
+ public:
+  TokenTopics();
+  virtual ~TokenTopics();
+
+  TokenTopics(const TokenTopics& from);
+
+  inline TokenTopics& operator=(const TokenTopics& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TokenTopics& default_instance();
+
+  void Swap(TokenTopics* other);
+
+  // implements Message ----------------------------------------------
+
+  TokenTopics* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const TokenTopics& from);
+  void MergeFrom(const TokenTopics& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string token = 1;
+  inline bool has_token() const;
+  inline void clear_token();
+  static const int kTokenFieldNumber = 1;
+  inline const ::std::string& token() const;
+  inline void set_token(const ::std::string& value);
+  inline void set_token(const char* value);
+  inline void set_token(const char* value, size_t size);
+  inline ::std::string* mutable_token();
+  inline ::std::string* release_token();
+  inline void set_allocated_token(::std::string* token);
+
+  // optional int32 token_id = 2;
+  inline bool has_token_id() const;
+  inline void clear_token_id();
+  static const int kTokenIdFieldNumber = 2;
+  inline ::google::protobuf::int32 token_id() const;
+  inline void set_token_id(::google::protobuf::int32 value);
+
+  // repeated float topic_weight = 3;
+  inline int topic_weight_size() const;
+  inline void clear_topic_weight();
+  static const int kTopicWeightFieldNumber = 3;
+  inline float topic_weight(int index) const;
+  inline void set_topic_weight(int index, float value);
+  inline void add_topic_weight(float value);
+  inline const ::google::protobuf::RepeatedField< float >&
+      topic_weight() const;
+  inline ::google::protobuf::RepeatedField< float >*
+      mutable_topic_weight();
+
+  // @@protoc_insertion_point(class_scope:artm.TokenTopics)
+ private:
+  inline void set_has_token();
+  inline void clear_has_token();
+  inline void set_has_token_id();
+  inline void clear_has_token_id();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* token_;
+  ::google::protobuf::RepeatedField< float > topic_weight_;
+  ::google::protobuf::int32 token_id_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static TokenTopics* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -990,205 +1391,61 @@ class BatchTopics : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static BatchTopics* default_instance_;
 };
-// -------------------------------------------------------------------
-
-class TokenTopics : public ::google::protobuf::Message {
- public:
-  TokenTopics();
-  virtual ~TokenTopics();
-
-  TokenTopics(const TokenTopics& from);
-
-  inline TokenTopics& operator=(const TokenTopics& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const TokenTopics& default_instance();
-
-  void Swap(TokenTopics* other);
-
-  // implements Message ----------------------------------------------
-
-  TokenTopics* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const TokenTopics& from);
-  void MergeFrom(const TokenTopics& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional string token = 1;
-  inline bool has_token() const;
-  inline void clear_token();
-  static const int kTokenFieldNumber = 1;
-  inline const ::std::string& token() const;
-  inline void set_token(const ::std::string& value);
-  inline void set_token(const char* value);
-  inline void set_token(const char* value, size_t size);
-  inline ::std::string* mutable_token();
-  inline ::std::string* release_token();
-  inline void set_allocated_token(::std::string* token);
-
-  // optional int32 token_id = 2;
-  inline bool has_token_id() const;
-  inline void clear_token_id();
-  static const int kTokenIdFieldNumber = 2;
-  inline ::google::protobuf::int32 token_id() const;
-  inline void set_token_id(::google::protobuf::int32 value);
-
-  // repeated float topic_weight = 3;
-  inline int topic_weight_size() const;
-  inline void clear_topic_weight();
-  static const int kTopicWeightFieldNumber = 3;
-  inline float topic_weight(int index) const;
-  inline void set_topic_weight(int index, float value);
-  inline void add_topic_weight(float value);
-  inline const ::google::protobuf::RepeatedField< float >&
-      topic_weight() const;
-  inline ::google::protobuf::RepeatedField< float >*
-      mutable_topic_weight();
-
-  // @@protoc_insertion_point(class_scope:artm.TokenTopics)
- private:
-  inline void set_has_token();
-  inline void clear_has_token();
-  inline void set_has_token_id();
-  inline void clear_has_token_id();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* token_;
-  ::google::protobuf::RepeatedField< float > topic_weight_;
-  ::google::protobuf::int32 token_id_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
-
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static TokenTopics* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class ModelTopics : public ::google::protobuf::Message {
- public:
-  ModelTopics();
-  virtual ~ModelTopics();
-
-  ModelTopics(const ModelTopics& from);
-
-  inline ModelTopics& operator=(const ModelTopics& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const ModelTopics& default_instance();
-
-  void Swap(ModelTopics* other);
-
-  // implements Message ----------------------------------------------
-
-  ModelTopics* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const ModelTopics& from);
-  void MergeFrom(const ModelTopics& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // repeated .artm.TokenTopics token_topic = 1;
-  inline int token_topic_size() const;
-  inline void clear_token_topic();
-  static const int kTokenTopicFieldNumber = 1;
-  inline const ::artm::TokenTopics& token_topic(int index) const;
-  inline ::artm::TokenTopics* mutable_token_topic(int index);
-  inline ::artm::TokenTopics* add_token_topic();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >&
-      token_topic() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >*
-      mutable_token_topic();
-
-  // @@protoc_insertion_point(class_scope:artm.ModelTopics)
- private:
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics > token_topic_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
-
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static ModelTopics* default_instance_;
-};
 // ===================================================================
 
 
 // ===================================================================
+
+// Item
+
+// optional int32 id = 1;
+inline bool Item::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Item::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Item::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Item::clear_id() {
+  id_ = 0;
+  clear_has_id();
+}
+inline ::google::protobuf::int32 Item::id() const {
+  return id_;
+}
+inline void Item::set_id(::google::protobuf::int32 value) {
+  set_has_id();
+  id_ = value;
+}
+
+// repeated .artm.Field field = 2;
+inline int Item::field_size() const {
+  return field_.size();
+}
+inline void Item::clear_field() {
+  field_.Clear();
+}
+inline const ::artm::Field& Item::field(int index) const {
+  return field_.Get(index);
+}
+inline ::artm::Field* Item::mutable_field(int index) {
+  return field_.Mutable(index);
+}
+inline ::artm::Field* Item::add_field() {
+  return field_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::Field >&
+Item::field() const {
+  return field_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::Field >*
+Item::mutable_field() {
+  return &field_;
+}
+
+// -------------------------------------------------------------------
 
 // Field
 
@@ -1314,57 +1571,6 @@ Field::mutable_token_count() {
 
 // -------------------------------------------------------------------
 
-// Item
-
-// optional int32 id = 1;
-inline bool Item::has_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Item::set_has_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Item::clear_has_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void Item::clear_id() {
-  id_ = 0;
-  clear_has_id();
-}
-inline ::google::protobuf::int32 Item::id() const {
-  return id_;
-}
-inline void Item::set_id(::google::protobuf::int32 value) {
-  set_has_id();
-  id_ = value;
-}
-
-// repeated .artm.Field field = 2;
-inline int Item::field_size() const {
-  return field_.size();
-}
-inline void Item::clear_field() {
-  field_.Clear();
-}
-inline const ::artm::Field& Item::field(int index) const {
-  return field_.Get(index);
-}
-inline ::artm::Field* Item::mutable_field(int index) {
-  return field_.Mutable(index);
-}
-inline ::artm::Field* Item::add_field() {
-  return field_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::artm::Field >&
-Item::field() const {
-  return field_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::Field >*
-Item::mutable_field() {
-  return &field_;
-}
-
-// -------------------------------------------------------------------
-
 // Batch
 
 // repeated string token = 1;
@@ -1411,7 +1617,7 @@ Batch::mutable_token() {
   return &token_;
 }
 
-// repeated .artm.Item item = 3;
+// repeated .artm.Item item = 2;
 inline int Batch::item_size() const {
   return item_.size();
 }
@@ -1552,6 +1758,175 @@ inline ::google::protobuf::int32 DataLoaderConfig::queue_size() const {
 inline void DataLoaderConfig::set_queue_size(::google::protobuf::int32 value) {
   set_has_queue_size();
   queue_size_ = value;
+}
+
+// repeated .artm.Stream stream = 4;
+inline int DataLoaderConfig::stream_size() const {
+  return stream_.size();
+}
+inline void DataLoaderConfig::clear_stream() {
+  stream_.Clear();
+}
+inline const ::artm::Stream& DataLoaderConfig::stream(int index) const {
+  return stream_.Get(index);
+}
+inline ::artm::Stream* DataLoaderConfig::mutable_stream(int index) {
+  return stream_.Mutable(index);
+}
+inline ::artm::Stream* DataLoaderConfig::add_stream() {
+  return stream_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::Stream >&
+DataLoaderConfig::stream() const {
+  return stream_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::Stream >*
+DataLoaderConfig::mutable_stream() {
+  return &stream_;
+}
+
+// -------------------------------------------------------------------
+
+// Stream
+
+// required .artm.Stream.Type type = 1 [default = Global];
+inline bool Stream::has_type() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void Stream::set_has_type() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void Stream::clear_has_type() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void Stream::clear_type() {
+  type_ = 0;
+  clear_has_type();
+}
+inline ::artm::Stream_Type Stream::type() const {
+  return static_cast< ::artm::Stream_Type >(type_);
+}
+inline void Stream::set_type(::artm::Stream_Type value) {
+  assert(::artm::Stream_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional string name = 2 [default = "@global"];
+inline bool Stream::has_name() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void Stream::set_has_name() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void Stream::clear_has_name() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void Stream::clear_name() {
+  if (name_ != _default_name_) {
+    name_->assign(*_default_name_);
+  }
+  clear_has_name();
+}
+inline const ::std::string& Stream::name() const {
+  return *name_;
+}
+inline void Stream::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void Stream::set_name(const char* value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void Stream::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* Stream::mutable_name() {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string(*_default_name_);
+  }
+  return name_;
+}
+inline ::std::string* Stream::release_name() {
+  clear_has_name();
+  if (name_ == _default_name_) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(_default_name_);
+    return temp;
+  }
+}
+inline void Stream::set_allocated_name(::std::string* name) {
+  if (name_ != _default_name_) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(_default_name_);
+  }
+}
+
+// optional int32 modulus = 3;
+inline bool Stream::has_modulus() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void Stream::set_has_modulus() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void Stream::clear_has_modulus() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void Stream::clear_modulus() {
+  modulus_ = 0;
+  clear_has_modulus();
+}
+inline ::google::protobuf::int32 Stream::modulus() const {
+  return modulus_;
+}
+inline void Stream::set_modulus(::google::protobuf::int32 value) {
+  set_has_modulus();
+  modulus_ = value;
+}
+
+// repeated int32 residuals = 4;
+inline int Stream::residuals_size() const {
+  return residuals_.size();
+}
+inline void Stream::clear_residuals() {
+  residuals_.Clear();
+}
+inline ::google::protobuf::int32 Stream::residuals(int index) const {
+  return residuals_.Get(index);
+}
+inline void Stream::set_residuals(int index, ::google::protobuf::int32 value) {
+  residuals_.Set(index, value);
+}
+inline void Stream::add_residuals(::google::protobuf::int32 value) {
+  residuals_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+Stream::residuals() const {
+  return residuals_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+Stream::mutable_residuals() {
+  return &residuals_;
 }
 
 // -------------------------------------------------------------------
@@ -1720,6 +2095,76 @@ inline void ModelConfig::set_allocated_field_name(::std::string* field_name) {
   }
 }
 
+// optional string stream_name = 6 [default = "@global"];
+inline bool ModelConfig::has_stream_name() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void ModelConfig::set_has_stream_name() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void ModelConfig::clear_has_stream_name() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void ModelConfig::clear_stream_name() {
+  if (stream_name_ != _default_stream_name_) {
+    stream_name_->assign(*_default_stream_name_);
+  }
+  clear_has_stream_name();
+}
+inline const ::std::string& ModelConfig::stream_name() const {
+  return *stream_name_;
+}
+inline void ModelConfig::set_stream_name(const ::std::string& value) {
+  set_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string;
+  }
+  stream_name_->assign(value);
+}
+inline void ModelConfig::set_stream_name(const char* value) {
+  set_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string;
+  }
+  stream_name_->assign(value);
+}
+inline void ModelConfig::set_stream_name(const char* value, size_t size) {
+  set_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string;
+  }
+  stream_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ModelConfig::mutable_stream_name() {
+  set_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string(*_default_stream_name_);
+  }
+  return stream_name_;
+}
+inline ::std::string* ModelConfig::release_stream_name() {
+  clear_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    return NULL;
+  } else {
+    ::std::string* temp = stream_name_;
+    stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
+    return temp;
+  }
+}
+inline void ModelConfig::set_allocated_stream_name(::std::string* stream_name) {
+  if (stream_name_ != _default_stream_name_) {
+    delete stream_name_;
+  }
+  if (stream_name) {
+    set_has_stream_name();
+    stream_name_ = stream_name;
+  } else {
+    clear_has_stream_name();
+    stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
+  }
+}
+
 // -------------------------------------------------------------------
 
 // LoggerConfig
@@ -1819,82 +2264,53 @@ inline void LoggerConfig::set_level(::artm::LoggerConfig_Level value) {
 
 // -------------------------------------------------------------------
 
-// ItemTopics
+// ModelTopics
 
-// optional int32 id = 1;
-inline bool ItemTopics::has_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
+// repeated .artm.TokenTopics token_topic = 1;
+inline int ModelTopics::token_topic_size() const {
+  return token_topic_.size();
 }
-inline void ItemTopics::set_has_id() {
-  _has_bits_[0] |= 0x00000001u;
+inline void ModelTopics::clear_token_topic() {
+  token_topic_.Clear();
 }
-inline void ItemTopics::clear_has_id() {
-  _has_bits_[0] &= ~0x00000001u;
+inline const ::artm::TokenTopics& ModelTopics::token_topic(int index) const {
+  return token_topic_.Get(index);
 }
-inline void ItemTopics::clear_id() {
-  id_ = 0;
-  clear_has_id();
+inline ::artm::TokenTopics* ModelTopics::mutable_token_topic(int index) {
+  return token_topic_.Mutable(index);
 }
-inline ::google::protobuf::int32 ItemTopics::id() const {
-  return id_;
+inline ::artm::TokenTopics* ModelTopics::add_token_topic() {
+  return token_topic_.Add();
 }
-inline void ItemTopics::set_id(::google::protobuf::int32 value) {
-  set_has_id();
-  id_ = value;
+inline const ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >&
+ModelTopics::token_topic() const {
+  return token_topic_;
 }
-
-// repeated float topic_weight = 2;
-inline int ItemTopics::topic_weight_size() const {
-  return topic_weight_.size();
-}
-inline void ItemTopics::clear_topic_weight() {
-  topic_weight_.Clear();
-}
-inline float ItemTopics::topic_weight(int index) const {
-  return topic_weight_.Get(index);
-}
-inline void ItemTopics::set_topic_weight(int index, float value) {
-  topic_weight_.Set(index, value);
-}
-inline void ItemTopics::add_topic_weight(float value) {
-  topic_weight_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< float >&
-ItemTopics::topic_weight() const {
-  return topic_weight_;
-}
-inline ::google::protobuf::RepeatedField< float >*
-ItemTopics::mutable_topic_weight() {
-  return &topic_weight_;
+inline ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >*
+ModelTopics::mutable_token_topic() {
+  return &token_topic_;
 }
 
-// -------------------------------------------------------------------
-
-// BatchTopics
-
-// repeated .artm.ItemTopics item_topics = 1;
-inline int BatchTopics::item_topics_size() const {
-  return item_topics_.size();
+// optional int32 items_processed = 2;
+inline bool ModelTopics::has_items_processed() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void BatchTopics::clear_item_topics() {
-  item_topics_.Clear();
+inline void ModelTopics::set_has_items_processed() {
+  _has_bits_[0] |= 0x00000002u;
 }
-inline const ::artm::ItemTopics& BatchTopics::item_topics(int index) const {
-  return item_topics_.Get(index);
+inline void ModelTopics::clear_has_items_processed() {
+  _has_bits_[0] &= ~0x00000002u;
 }
-inline ::artm::ItemTopics* BatchTopics::mutable_item_topics(int index) {
-  return item_topics_.Mutable(index);
+inline void ModelTopics::clear_items_processed() {
+  items_processed_ = 0;
+  clear_has_items_processed();
 }
-inline ::artm::ItemTopics* BatchTopics::add_item_topics() {
-  return item_topics_.Add();
+inline ::google::protobuf::int32 ModelTopics::items_processed() const {
+  return items_processed_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics >&
-BatchTopics::item_topics() const {
-  return item_topics_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics >*
-BatchTopics::mutable_item_topics() {
-  return &item_topics_;
+inline void ModelTopics::set_items_processed(::google::protobuf::int32 value) {
+  set_has_items_processed();
+  items_processed_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -2020,31 +2436,82 @@ TokenTopics::mutable_topic_weight() {
 
 // -------------------------------------------------------------------
 
-// ModelTopics
+// ItemTopics
 
-// repeated .artm.TokenTopics token_topic = 1;
-inline int ModelTopics::token_topic_size() const {
-  return token_topic_.size();
+// optional int32 id = 1;
+inline bool ItemTopics::has_id() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ModelTopics::clear_token_topic() {
-  token_topic_.Clear();
+inline void ItemTopics::set_has_id() {
+  _has_bits_[0] |= 0x00000001u;
 }
-inline const ::artm::TokenTopics& ModelTopics::token_topic(int index) const {
-  return token_topic_.Get(index);
+inline void ItemTopics::clear_has_id() {
+  _has_bits_[0] &= ~0x00000001u;
 }
-inline ::artm::TokenTopics* ModelTopics::mutable_token_topic(int index) {
-  return token_topic_.Mutable(index);
+inline void ItemTopics::clear_id() {
+  id_ = 0;
+  clear_has_id();
 }
-inline ::artm::TokenTopics* ModelTopics::add_token_topic() {
-  return token_topic_.Add();
+inline ::google::protobuf::int32 ItemTopics::id() const {
+  return id_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >&
-ModelTopics::token_topic() const {
-  return token_topic_;
+inline void ItemTopics::set_id(::google::protobuf::int32 value) {
+  set_has_id();
+  id_ = value;
 }
-inline ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics >*
-ModelTopics::mutable_token_topic() {
-  return &token_topic_;
+
+// repeated float topic_weight = 2;
+inline int ItemTopics::topic_weight_size() const {
+  return topic_weight_.size();
+}
+inline void ItemTopics::clear_topic_weight() {
+  topic_weight_.Clear();
+}
+inline float ItemTopics::topic_weight(int index) const {
+  return topic_weight_.Get(index);
+}
+inline void ItemTopics::set_topic_weight(int index, float value) {
+  topic_weight_.Set(index, value);
+}
+inline void ItemTopics::add_topic_weight(float value) {
+  topic_weight_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< float >&
+ItemTopics::topic_weight() const {
+  return topic_weight_;
+}
+inline ::google::protobuf::RepeatedField< float >*
+ItemTopics::mutable_topic_weight() {
+  return &topic_weight_;
+}
+
+// -------------------------------------------------------------------
+
+// BatchTopics
+
+// repeated .artm.ItemTopics item_topics = 1;
+inline int BatchTopics::item_topics_size() const {
+  return item_topics_.size();
+}
+inline void BatchTopics::clear_item_topics() {
+  item_topics_.Clear();
+}
+inline const ::artm::ItemTopics& BatchTopics::item_topics(int index) const {
+  return item_topics_.Get(index);
+}
+inline ::artm::ItemTopics* BatchTopics::mutable_item_topics(int index) {
+  return item_topics_.Mutable(index);
+}
+inline ::artm::ItemTopics* BatchTopics::add_item_topics() {
+  return item_topics_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics >&
+BatchTopics::item_topics() const {
+  return item_topics_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::ItemTopics >*
+BatchTopics::mutable_item_topics() {
+  return &item_topics_;
 }
 
 
@@ -2056,6 +2523,10 @@ ModelTopics::mutable_token_topic() {
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::Stream_Type>() {
+  return ::artm::Stream_Type_descriptor();
+}
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::LoggerConfig_Level>() {
   return ::artm::LoggerConfig_Level_descriptor();

@@ -24,6 +24,7 @@
 #include <google/protobuf/repeated_field.h>
 #include <google/protobuf/extension_set.h>
 #include <google/protobuf/unknown_field_set.h>
+#include "messages.pb.h"
 // @@protoc_insertion_point(includes)
 
 namespace artm {
@@ -35,6 +36,8 @@ void protobuf_AssignDesc_internals_2eproto();
 void protobuf_ShutdownFile_internals_2eproto();
 
 class Counters;
+class Flags;
+class ProcessorInput;
 class ProcessorOutput;
 
 // ===================================================================
@@ -122,6 +125,206 @@ class Counters : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Counters* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Flags : public ::google::protobuf::Message {
+ public:
+  Flags();
+  virtual ~Flags();
+
+  Flags(const Flags& from);
+
+  inline Flags& operator=(const Flags& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Flags& default_instance();
+
+  void Swap(Flags* other);
+
+  // implements Message ----------------------------------------------
+
+  Flags* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Flags& from);
+  void MergeFrom(const Flags& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated bool value = 1 [packed = true];
+  inline int value_size() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 1;
+  inline bool value(int index) const;
+  inline void set_value(int index, bool value);
+  inline void add_value(bool value);
+  inline const ::google::protobuf::RepeatedField< bool >&
+      value() const;
+  inline ::google::protobuf::RepeatedField< bool >*
+      mutable_value();
+
+  // @@protoc_insertion_point(class_scope:artm.core.Flags)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedField< bool > value_;
+  mutable int _value_cached_byte_size_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_internals_2eproto();
+  friend void protobuf_AssignDesc_internals_2eproto();
+  friend void protobuf_ShutdownFile_internals_2eproto();
+
+  void InitAsDefaultInstance();
+  static Flags* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProcessorInput : public ::google::protobuf::Message {
+ public:
+  ProcessorInput();
+  virtual ~ProcessorInput();
+
+  ProcessorInput(const ProcessorInput& from);
+
+  inline ProcessorInput& operator=(const ProcessorInput& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProcessorInput& default_instance();
+
+  void Swap(ProcessorInput* other);
+
+  // implements Message ----------------------------------------------
+
+  ProcessorInput* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProcessorInput& from);
+  void MergeFrom(const ProcessorInput& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required .artm.Batch batch = 1;
+  inline bool has_batch() const;
+  inline void clear_batch();
+  static const int kBatchFieldNumber = 1;
+  inline const ::artm::Batch& batch() const;
+  inline ::artm::Batch* mutable_batch();
+  inline ::artm::Batch* release_batch();
+  inline void set_allocated_batch(::artm::Batch* batch);
+
+  // repeated .artm.core.Flags stream_flags = 2;
+  inline int stream_flags_size() const;
+  inline void clear_stream_flags();
+  static const int kStreamFlagsFieldNumber = 2;
+  inline const ::artm::core::Flags& stream_flags(int index) const;
+  inline ::artm::core::Flags* mutable_stream_flags(int index);
+  inline ::artm::core::Flags* add_stream_flags();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Flags >&
+      stream_flags() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::core::Flags >*
+      mutable_stream_flags();
+
+  // repeated string stream_name = 3;
+  inline int stream_name_size() const;
+  inline void clear_stream_name();
+  static const int kStreamNameFieldNumber = 3;
+  inline const ::std::string& stream_name(int index) const;
+  inline ::std::string* mutable_stream_name(int index);
+  inline void set_stream_name(int index, const ::std::string& value);
+  inline void set_stream_name(int index, const char* value);
+  inline void set_stream_name(int index, const char* value, size_t size);
+  inline ::std::string* add_stream_name();
+  inline void add_stream_name(const ::std::string& value);
+  inline void add_stream_name(const char* value);
+  inline void add_stream_name(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& stream_name() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_stream_name();
+
+  // @@protoc_insertion_point(class_scope:artm.core.ProcessorInput)
+ private:
+  inline void set_has_batch();
+  inline void clear_has_batch();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::artm::Batch* batch_;
+  ::google::protobuf::RepeatedPtrField< ::artm::core::Flags > stream_flags_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> stream_name_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_internals_2eproto();
+  friend void protobuf_AssignDesc_internals_2eproto();
+  friend void protobuf_ShutdownFile_internals_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProcessorInput* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -314,6 +517,146 @@ Counters::value() const {
 inline ::google::protobuf::RepeatedField< float >*
 Counters::mutable_value() {
   return &value_;
+}
+
+// -------------------------------------------------------------------
+
+// Flags
+
+// repeated bool value = 1 [packed = true];
+inline int Flags::value_size() const {
+  return value_.size();
+}
+inline void Flags::clear_value() {
+  value_.Clear();
+}
+inline bool Flags::value(int index) const {
+  return value_.Get(index);
+}
+inline void Flags::set_value(int index, bool value) {
+  value_.Set(index, value);
+}
+inline void Flags::add_value(bool value) {
+  value_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< bool >&
+Flags::value() const {
+  return value_;
+}
+inline ::google::protobuf::RepeatedField< bool >*
+Flags::mutable_value() {
+  return &value_;
+}
+
+// -------------------------------------------------------------------
+
+// ProcessorInput
+
+// required .artm.Batch batch = 1;
+inline bool ProcessorInput::has_batch() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProcessorInput::set_has_batch() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProcessorInput::clear_has_batch() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProcessorInput::clear_batch() {
+  if (batch_ != NULL) batch_->::artm::Batch::Clear();
+  clear_has_batch();
+}
+inline const ::artm::Batch& ProcessorInput::batch() const {
+  return batch_ != NULL ? *batch_ : *default_instance_->batch_;
+}
+inline ::artm::Batch* ProcessorInput::mutable_batch() {
+  set_has_batch();
+  if (batch_ == NULL) batch_ = new ::artm::Batch;
+  return batch_;
+}
+inline ::artm::Batch* ProcessorInput::release_batch() {
+  clear_has_batch();
+  ::artm::Batch* temp = batch_;
+  batch_ = NULL;
+  return temp;
+}
+inline void ProcessorInput::set_allocated_batch(::artm::Batch* batch) {
+  delete batch_;
+  batch_ = batch;
+  if (batch) {
+    set_has_batch();
+  } else {
+    clear_has_batch();
+  }
+}
+
+// repeated .artm.core.Flags stream_flags = 2;
+inline int ProcessorInput::stream_flags_size() const {
+  return stream_flags_.size();
+}
+inline void ProcessorInput::clear_stream_flags() {
+  stream_flags_.Clear();
+}
+inline const ::artm::core::Flags& ProcessorInput::stream_flags(int index) const {
+  return stream_flags_.Get(index);
+}
+inline ::artm::core::Flags* ProcessorInput::mutable_stream_flags(int index) {
+  return stream_flags_.Mutable(index);
+}
+inline ::artm::core::Flags* ProcessorInput::add_stream_flags() {
+  return stream_flags_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Flags >&
+ProcessorInput::stream_flags() const {
+  return stream_flags_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::core::Flags >*
+ProcessorInput::mutable_stream_flags() {
+  return &stream_flags_;
+}
+
+// repeated string stream_name = 3;
+inline int ProcessorInput::stream_name_size() const {
+  return stream_name_.size();
+}
+inline void ProcessorInput::clear_stream_name() {
+  stream_name_.Clear();
+}
+inline const ::std::string& ProcessorInput::stream_name(int index) const {
+  return stream_name_.Get(index);
+}
+inline ::std::string* ProcessorInput::mutable_stream_name(int index) {
+  return stream_name_.Mutable(index);
+}
+inline void ProcessorInput::set_stream_name(int index, const ::std::string& value) {
+  stream_name_.Mutable(index)->assign(value);
+}
+inline void ProcessorInput::set_stream_name(int index, const char* value) {
+  stream_name_.Mutable(index)->assign(value);
+}
+inline void ProcessorInput::set_stream_name(int index, const char* value, size_t size) {
+  stream_name_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProcessorInput::add_stream_name() {
+  return stream_name_.Add();
+}
+inline void ProcessorInput::add_stream_name(const ::std::string& value) {
+  stream_name_.Add()->assign(value);
+}
+inline void ProcessorInput::add_stream_name(const char* value) {
+  stream_name_.Add()->assign(value);
+}
+inline void ProcessorInput::add_stream_name(const char* value, size_t size) {
+  stream_name_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ProcessorInput::stream_name() const {
+  return stream_name_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ProcessorInput::mutable_stream_name() {
+  return &stream_name_;
 }
 
 // -------------------------------------------------------------------

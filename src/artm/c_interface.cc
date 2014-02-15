@@ -37,6 +37,38 @@ int create_data_loader(
   return DataLoaderManager::singleton().Create(data_loader_id, config);
 }
 
+int reconfigure_data_loader(int data_loader_id, 
+                            int length, 
+                            const char* data_loader_config_blob) 
+{
+  DataLoaderConfig config;
+  config.ParseFromArray(data_loader_config_blob, length);
+  if (!DataLoaderManager::singleton().Contains(data_loader_id)) {
+    return ARTM_ERROR;
+  }
+
+  auto data_loader = DataLoaderManager::singleton().Get(data_loader_id);
+  return data_loader->Reconfigure(config);
+}
+
+int invoke_iteration(int data_loader_id, int iterations_count) {
+  if (!DataLoaderManager::singleton().Contains(data_loader_id)) {
+    return ARTM_ERROR;
+  }
+
+  auto data_loader = DataLoaderManager::singleton().Get(data_loader_id);
+  return data_loader->InvokeIteration(iterations_count);
+}
+
+int wait_idle_data_loader(int data_loader_id) {
+  if (!DataLoaderManager::singleton().Contains(data_loader_id)) {
+    return ARTM_ERROR;
+  }
+
+  auto data_loader = DataLoaderManager::singleton().Get(data_loader_id);
+  return data_loader->WaitIdle();
+}
+
 int create_instance(
   int instance_id, 
   int length, 
@@ -48,7 +80,6 @@ int create_instance(
 }
 
 int create_model(int instance_id,
-                 int model_id,
                  int length, 
                  const char* model_config_blob) 
 {
@@ -60,7 +91,7 @@ int create_model(int instance_id,
   }
 
   auto instance = InstanceManager::singleton().Get(instance_id);
-  return instance->UpdateModel(model_id, model_config);
+  return instance->CreateModel(model_config);
 }
 
 void dispose_data_loader(int data_loader_id) {
@@ -126,7 +157,7 @@ int reconfigure_model(int instance_id,
   }
 
   auto instance = InstanceManager::singleton().Get(instance_id);
-  return instance->UpdateModel(model_id, model_config);
+  return instance->ReconfigureModel(model_id, model_config);
 }
 
 int request_batch_topics(int instance_id,
@@ -167,4 +198,13 @@ int wait_model_processed(int instance_id,
 
   auto instance = InstanceManager::singleton().Get(instance_id);
   return instance->WaitModelProcessed(model_id, processed_items);
+}
+
+int wait_idle_instance(int instance_id) {
+  if (!InstanceManager::singleton().Contains(instance_id)) {
+    return ARTM_ERROR;
+  }
+
+  auto instance = InstanceManager::singleton().Get(instance_id);
+  return instance->WaitIdle();
 }

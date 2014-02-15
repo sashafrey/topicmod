@@ -19,7 +19,7 @@ namespace artm { namespace core {
   class Processor : boost::noncopyable {
   public:
     Processor(boost::mutex& processor_queue_lock,
-        std::queue<std::shared_ptr<const Batch> >&  processor_queue,
+        std::queue<std::shared_ptr<const ProcessorInput> >&  processor_queue,
         boost::mutex& merger_queue_lock,
         std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
         const Merger& merger,
@@ -39,7 +39,7 @@ namespace artm { namespace core {
     void Join();
   private:
     boost::mutex& processor_queue_lock_;
-    std::queue<std::shared_ptr<const Batch> >& processor_queue_;
+    std::queue<std::shared_ptr<const ProcessorInput> >& processor_queue_;
     boost::mutex& merger_queue_lock_;
     std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue_;
     const Merger& merger_;

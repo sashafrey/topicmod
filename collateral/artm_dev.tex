@@ -54,6 +54,9 @@ with batches (small chunks of the collection).
 It is up to implementation of the DataLoader to decide where to gather batches
 (they can be stored in memory, on disk, or came through the network).
 DataLoader is expected to perform iterative scans over the whole collection.
+It is possible to set up several \emph{streams} inside data loader
+(for example, one stream for training items, and one for test items).
+Models (and quality measures such as perplexity) specify which stream to use for tuning (evaluation).
 
 \textbf{Processor.} Processor component withdraws index parts from the queue
 and infers a distribution of the documents into topics.

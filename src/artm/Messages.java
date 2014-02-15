@@ -7555,35 +7555,9 @@ public final class Messages {
      */
     int getItemsProcessed();
 
-    // optional .artm.ModelConfig model_config = 3;
+    // repeated double score = 3;
     /**
-     * <code>optional .artm.ModelConfig model_config = 3;</code>
-     *
-     * <pre>
-     * model config used to tune this model
-     * </pre>
-     */
-    boolean hasModelConfig();
-    /**
-     * <code>optional .artm.ModelConfig model_config = 3;</code>
-     *
-     * <pre>
-     * model config used to tune this model
-     * </pre>
-     */
-    artm.Messages.ModelConfig getModelConfig();
-    /**
-     * <code>optional .artm.ModelConfig model_config = 3;</code>
-     *
-     * <pre>
-     * model config used to tune this model
-     * </pre>
-     */
-    artm.Messages.ModelConfigOrBuilder getModelConfigOrBuilder();
-
-    // repeated double score = 4;
-    /**
-     * <code>repeated double score = 4;</code>
+     * <code>repeated double score = 3;</code>
      *
      * <pre>
      * scores, calculated for the model
@@ -7591,7 +7565,7 @@ public final class Messages {
      */
     java.util.List<java.lang.Double> getScoreList();
     /**
-     * <code>repeated double score = 4;</code>
+     * <code>repeated double score = 3;</code>
      *
      * <pre>
      * scores, calculated for the model
@@ -7599,7 +7573,7 @@ public final class Messages {
      */
     int getScoreCount();
     /**
-     * <code>repeated double score = 4;</code>
+     * <code>repeated double score = 3;</code>
      *
      * <pre>
      * scores, calculated for the model
@@ -7675,33 +7649,20 @@ public final class Messages {
               itemsProcessed_ = input.readInt32();
               break;
             }
-            case 26: {
-              artm.Messages.ModelConfig.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000002) == 0x00000002)) {
-                subBuilder = modelConfig_.toBuilder();
-              }
-              modelConfig_ = input.readMessage(artm.Messages.ModelConfig.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(modelConfig_);
-                modelConfig_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000002;
-              break;
-            }
-            case 33: {
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+            case 25: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
                 score_ = new java.util.ArrayList<java.lang.Double>();
-                mutable_bitField0_ |= 0x00000008;
+                mutable_bitField0_ |= 0x00000004;
               }
               score_.add(input.readDouble());
               break;
             }
-            case 34: {
+            case 26: {
               int length = input.readRawVarint32();
               int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008) && input.getBytesUntilLimit() > 0) {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
                 score_ = new java.util.ArrayList<java.lang.Double>();
-                mutable_bitField0_ |= 0x00000008;
+                mutable_bitField0_ |= 0x00000004;
               }
               while (input.getBytesUntilLimit() > 0) {
                 score_.add(input.readDouble());
@@ -7720,7 +7681,7 @@ public final class Messages {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           tokenTopic_ = java.util.Collections.unmodifiableList(tokenTopic_);
         }
-        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
           score_ = java.util.Collections.unmodifiableList(score_);
         }
         this.unknownFields = unknownFields.build();
@@ -7807,45 +7768,11 @@ public final class Messages {
       return itemsProcessed_;
     }
 
-    // optional .artm.ModelConfig model_config = 3;
-    public static final int MODEL_CONFIG_FIELD_NUMBER = 3;
-    private artm.Messages.ModelConfig modelConfig_;
-    /**
-     * <code>optional .artm.ModelConfig model_config = 3;</code>
-     *
-     * <pre>
-     * model config used to tune this model
-     * </pre>
-     */
-    public boolean hasModelConfig() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional .artm.ModelConfig model_config = 3;</code>
-     *
-     * <pre>
-     * model config used to tune this model
-     * </pre>
-     */
-    public artm.Messages.ModelConfig getModelConfig() {
-      return modelConfig_;
-    }
-    /**
-     * <code>optional .artm.ModelConfig model_config = 3;</code>
-     *
-     * <pre>
-     * model config used to tune this model
-     * </pre>
-     */
-    public artm.Messages.ModelConfigOrBuilder getModelConfigOrBuilder() {
-      return modelConfig_;
-    }
-
-    // repeated double score = 4;
-    public static final int SCORE_FIELD_NUMBER = 4;
+    // repeated double score = 3;
+    public static final int SCORE_FIELD_NUMBER = 3;
     private java.util.List<java.lang.Double> score_;
     /**
-     * <code>repeated double score = 4;</code>
+     * <code>repeated double score = 3;</code>
      *
      * <pre>
      * scores, calculated for the model
@@ -7856,7 +7783,7 @@ public final class Messages {
       return score_;
     }
     /**
-     * <code>repeated double score = 4;</code>
+     * <code>repeated double score = 3;</code>
      *
      * <pre>
      * scores, calculated for the model
@@ -7866,7 +7793,7 @@ public final class Messages {
       return score_.size();
     }
     /**
-     * <code>repeated double score = 4;</code>
+     * <code>repeated double score = 3;</code>
      *
      * <pre>
      * scores, calculated for the model
@@ -7879,7 +7806,6 @@ public final class Messages {
     private void initFields() {
       tokenTopic_ = java.util.Collections.emptyList();
       itemsProcessed_ = 0;
-      modelConfig_ = artm.Messages.ModelConfig.getDefaultInstance();
       score_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -7887,12 +7813,6 @@ public final class Messages {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (hasModelConfig()) {
-        if (!getModelConfig().isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -7906,11 +7826,8 @@ public final class Messages {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(2, itemsProcessed_);
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeMessage(3, modelConfig_);
-      }
       for (int i = 0; i < score_.size(); i++) {
-        output.writeDouble(4, score_.get(i));
+        output.writeDouble(3, score_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -7928,10 +7845,6 @@ public final class Messages {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, itemsProcessed_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, modelConfig_);
       }
       {
         int dataSize = 0;
@@ -8052,7 +7965,6 @@ public final class Messages {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
           getTokenTopicFieldBuilder();
-          getModelConfigFieldBuilder();
         }
       }
       private static Builder create() {
@@ -8069,14 +7981,8 @@ public final class Messages {
         }
         itemsProcessed_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        if (modelConfigBuilder_ == null) {
-          modelConfig_ = artm.Messages.ModelConfig.getDefaultInstance();
-        } else {
-          modelConfigBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000004);
         score_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -8118,17 +8024,9 @@ public final class Messages {
           to_bitField0_ |= 0x00000001;
         }
         result.itemsProcessed_ = itemsProcessed_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        if (modelConfigBuilder_ == null) {
-          result.modelConfig_ = modelConfig_;
-        } else {
-          result.modelConfig_ = modelConfigBuilder_.build();
-        }
-        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
           score_ = java.util.Collections.unmodifiableList(score_);
-          bitField0_ = (bitField0_ & ~0x00000008);
+          bitField0_ = (bitField0_ & ~0x00000004);
         }
         result.score_ = score_;
         result.bitField0_ = to_bitField0_;
@@ -8176,13 +8074,10 @@ public final class Messages {
         if (other.hasItemsProcessed()) {
           setItemsProcessed(other.getItemsProcessed());
         }
-        if (other.hasModelConfig()) {
-          mergeModelConfig(other.getModelConfig());
-        }
         if (!other.score_.isEmpty()) {
           if (score_.isEmpty()) {
             score_ = other.score_;
-            bitField0_ = (bitField0_ & ~0x00000008);
+            bitField0_ = (bitField0_ & ~0x00000004);
           } else {
             ensureScoreIsMutable();
             score_.addAll(other.score_);
@@ -8194,12 +8089,6 @@ public final class Messages {
       }
 
       public final boolean isInitialized() {
-        if (hasModelConfig()) {
-          if (!getModelConfig().isInitialized()) {
-            
-            return false;
-          }
-        }
         return true;
       }
 
@@ -8495,169 +8384,16 @@ public final class Messages {
         return this;
       }
 
-      // optional .artm.ModelConfig model_config = 3;
-      private artm.Messages.ModelConfig modelConfig_ = artm.Messages.ModelConfig.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          artm.Messages.ModelConfig, artm.Messages.ModelConfig.Builder, artm.Messages.ModelConfigOrBuilder> modelConfigBuilder_;
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      public boolean hasModelConfig() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      public artm.Messages.ModelConfig getModelConfig() {
-        if (modelConfigBuilder_ == null) {
-          return modelConfig_;
-        } else {
-          return modelConfigBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      public Builder setModelConfig(artm.Messages.ModelConfig value) {
-        if (modelConfigBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          modelConfig_ = value;
-          onChanged();
-        } else {
-          modelConfigBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      public Builder setModelConfig(
-          artm.Messages.ModelConfig.Builder builderForValue) {
-        if (modelConfigBuilder_ == null) {
-          modelConfig_ = builderForValue.build();
-          onChanged();
-        } else {
-          modelConfigBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      public Builder mergeModelConfig(artm.Messages.ModelConfig value) {
-        if (modelConfigBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              modelConfig_ != artm.Messages.ModelConfig.getDefaultInstance()) {
-            modelConfig_ =
-              artm.Messages.ModelConfig.newBuilder(modelConfig_).mergeFrom(value).buildPartial();
-          } else {
-            modelConfig_ = value;
-          }
-          onChanged();
-        } else {
-          modelConfigBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000004;
-        return this;
-      }
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      public Builder clearModelConfig() {
-        if (modelConfigBuilder_ == null) {
-          modelConfig_ = artm.Messages.ModelConfig.getDefaultInstance();
-          onChanged();
-        } else {
-          modelConfigBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      public artm.Messages.ModelConfig.Builder getModelConfigBuilder() {
-        bitField0_ |= 0x00000004;
-        onChanged();
-        return getModelConfigFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      public artm.Messages.ModelConfigOrBuilder getModelConfigOrBuilder() {
-        if (modelConfigBuilder_ != null) {
-          return modelConfigBuilder_.getMessageOrBuilder();
-        } else {
-          return modelConfig_;
-        }
-      }
-      /**
-       * <code>optional .artm.ModelConfig model_config = 3;</code>
-       *
-       * <pre>
-       * model config used to tune this model
-       * </pre>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          artm.Messages.ModelConfig, artm.Messages.ModelConfig.Builder, artm.Messages.ModelConfigOrBuilder> 
-          getModelConfigFieldBuilder() {
-        if (modelConfigBuilder_ == null) {
-          modelConfigBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              artm.Messages.ModelConfig, artm.Messages.ModelConfig.Builder, artm.Messages.ModelConfigOrBuilder>(
-                  modelConfig_,
-                  getParentForChildren(),
-                  isClean());
-          modelConfig_ = null;
-        }
-        return modelConfigBuilder_;
-      }
-
-      // repeated double score = 4;
+      // repeated double score = 3;
       private java.util.List<java.lang.Double> score_ = java.util.Collections.emptyList();
       private void ensureScoreIsMutable() {
-        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
           score_ = new java.util.ArrayList<java.lang.Double>(score_);
-          bitField0_ |= 0x00000008;
+          bitField0_ |= 0x00000004;
          }
       }
       /**
-       * <code>repeated double score = 4;</code>
+       * <code>repeated double score = 3;</code>
        *
        * <pre>
        * scores, calculated for the model
@@ -8668,7 +8404,7 @@ public final class Messages {
         return java.util.Collections.unmodifiableList(score_);
       }
       /**
-       * <code>repeated double score = 4;</code>
+       * <code>repeated double score = 3;</code>
        *
        * <pre>
        * scores, calculated for the model
@@ -8678,7 +8414,7 @@ public final class Messages {
         return score_.size();
       }
       /**
-       * <code>repeated double score = 4;</code>
+       * <code>repeated double score = 3;</code>
        *
        * <pre>
        * scores, calculated for the model
@@ -8688,7 +8424,7 @@ public final class Messages {
         return score_.get(index);
       }
       /**
-       * <code>repeated double score = 4;</code>
+       * <code>repeated double score = 3;</code>
        *
        * <pre>
        * scores, calculated for the model
@@ -8702,7 +8438,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated double score = 4;</code>
+       * <code>repeated double score = 3;</code>
        *
        * <pre>
        * scores, calculated for the model
@@ -8715,7 +8451,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated double score = 4;</code>
+       * <code>repeated double score = 3;</code>
        *
        * <pre>
        * scores, calculated for the model
@@ -8729,7 +8465,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated double score = 4;</code>
+       * <code>repeated double score = 3;</code>
        *
        * <pre>
        * scores, calculated for the model
@@ -8737,7 +8473,7 @@ public final class Messages {
        */
       public Builder clearScore() {
         score_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
@@ -10789,15 +10525,14 @@ public final class Messages {
       "\014LoggerConfig\022\024\n\014log_location\030\001 \001(\t\022-\n\005l" +
       "evel\030\002 \001(\0162\030.artm.LoggerConfig.Level:\004IN" +
       "FO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007" +
-      "WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"\206\001\n\013Mod" +
-      "elTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm.Tok" +
-      "enTopics\022\027\n\017items_processed\030\002 \001(\005\022\'\n\014mod" +
-      "el_config\030\003 \001(\0132\021.artm.ModelConfig\022\r\n\005sc" +
-      "ore\030\004 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022" +
-      "\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\"",
-      ".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weigh" +
-      "t\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topics\030\001 " +
-      "\003(\0132\020.artm.ItemTopics"
+      "WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013Mode" +
+      "lTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm.Toke" +
+      "nTopics\022\027\n\017items_processed\030\002 \001(\005\022\r\n\005scor" +
+      "e\030\003 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n" +
+      "\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n" +
+      "\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030",
+      "\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topics\030\001 \003(" +
+      "\0132\020.artm.ItemTopics"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -10863,7 +10598,7 @@ public final class Messages {
           internal_static_artm_ModelTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_ModelTopics_descriptor,
-              new java.lang.String[] { "TokenTopic", "ItemsProcessed", "ModelConfig", "Score", });
+              new java.lang.String[] { "TokenTopic", "ItemsProcessed", "Score", });
           internal_static_artm_TokenTopics_descriptor =
             getDescriptor().getMessageTypes().get(10);
           internal_static_artm_TokenTopics_fieldAccessorTable = new

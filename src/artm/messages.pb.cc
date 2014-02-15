@@ -229,10 +229,9 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(LoggerConfig));
   LoggerConfig_Level_descriptor_ = LoggerConfig_descriptor_->enum_type(0);
   ModelTopics_descriptor_ = file->message_type(9);
-  static const int ModelTopics_offsets_[4] = {
+  static const int ModelTopics_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, token_topic_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, items_processed_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, model_config_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, score_),
   };
   ModelTopics_reflection_ =
@@ -402,15 +401,14 @@ void protobuf_AddDesc_messages_2eproto() {
     "\014LoggerConfig\022\024\n\014log_location\030\001 \001(\t\022-\n\005l"
     "evel\030\002 \001(\0162\030.artm.LoggerConfig.Level:\004IN"
     "FO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007"
-    "WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"\206\001\n\013Mod"
-    "elTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm.Tok"
-    "enTopics\022\027\n\017items_processed\030\002 \001(\005\022\'\n\014mod"
-    "el_config\030\003 \001(\0132\021.artm.ModelConfig\022\r\n\005sc"
-    "ore\030\004 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022"
-    "\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\""
-    ".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weigh"
-    "t\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topics\030\001 "
-    "\003(\0132\020.artm.ItemTopics", 1301);
+    "WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013Mode"
+    "lTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm.Toke"
+    "nTopics\022\027\n\017items_processed\030\002 \001(\005\022\r\n\005scor"
+    "e\030\003 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n"
+    "\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n"
+    "\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030"
+    "\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topics\030\001 \003("
+    "\0132\020.artm.ItemTopics", 1259);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -3321,7 +3319,6 @@ void LoggerConfig::Swap(LoggerConfig* other) {
 #ifndef _MSC_VER
 const int ModelTopics::kTokenTopicFieldNumber;
 const int ModelTopics::kItemsProcessedFieldNumber;
-const int ModelTopics::kModelConfigFieldNumber;
 const int ModelTopics::kScoreFieldNumber;
 #endif  // !_MSC_VER
 
@@ -3331,7 +3328,6 @@ ModelTopics::ModelTopics()
 }
 
 void ModelTopics::InitAsDefaultInstance() {
-  model_config_ = const_cast< ::artm::ModelConfig*>(&::artm::ModelConfig::default_instance());
 }
 
 ModelTopics::ModelTopics(const ModelTopics& from)
@@ -3343,7 +3339,6 @@ ModelTopics::ModelTopics(const ModelTopics& from)
 void ModelTopics::SharedCtor() {
   _cached_size_ = 0;
   items_processed_ = 0;
-  model_config_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3353,7 +3348,6 @@ ModelTopics::~ModelTopics() {
 
 void ModelTopics::SharedDtor() {
   if (this != default_instance_) {
-    delete model_config_;
   }
 }
 
@@ -3381,9 +3375,6 @@ ModelTopics* ModelTopics::New() const {
 void ModelTopics::Clear() {
   if (_has_bits_[1 / 32] & (0xffu << (1 % 32))) {
     items_processed_ = 0;
-    if (has_model_config()) {
-      if (model_config_ != NULL) model_config_->::artm::ModelConfig::Clear();
-    }
   }
   token_topic_.Clear();
   score_.Clear();
@@ -3424,32 +3415,18 @@ bool ModelTopics::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_model_config;
+        if (input->ExpectTag(25)) goto parse_score;
         break;
       }
 
-      // optional .artm.ModelConfig model_config = 3;
+      // repeated double score = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_model_config:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_model_config()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(33)) goto parse_score;
-        break;
-      }
-
-      // repeated double score = 4;
-      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
          parse_score:
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 1, 33, input, this->mutable_score())));
+                 1, 25, input, this->mutable_score())));
         } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
                    == ::google::protobuf::internal::WireFormatLite::
                       WIRETYPE_LENGTH_DELIMITED) {
@@ -3459,7 +3436,7 @@ bool ModelTopics::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(33)) goto parse_score;
+        if (input->ExpectTag(25)) goto parse_score;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3493,16 +3470,10 @@ void ModelTopics::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->items_processed(), output);
   }
 
-  // optional .artm.ModelConfig model_config = 3;
-  if (has_model_config()) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->model_config(), output);
-  }
-
-  // repeated double score = 4;
+  // repeated double score = 3;
   for (int i = 0; i < this->score_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(
-      4, this->score(i), output);
+      3, this->score(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3525,17 +3496,10 @@ void ModelTopics::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->items_processed(), target);
   }
 
-  // optional .artm.ModelConfig model_config = 3;
-  if (has_model_config()) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->model_config(), target);
-  }
-
-  // repeated double score = 4;
+  // repeated double score = 3;
   for (int i = 0; i < this->score_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleToArray(4, this->score(i), target);
+      WriteDoubleToArray(3, this->score(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3556,13 +3520,6 @@ int ModelTopics::ByteSize() const {
           this->items_processed());
     }
 
-    // optional .artm.ModelConfig model_config = 3;
-    if (has_model_config()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->model_config());
-    }
-
   }
   // repeated .artm.TokenTopics token_topic = 1;
   total_size += 1 * this->token_topic_size();
@@ -3572,7 +3529,7 @@ int ModelTopics::ByteSize() const {
         this->token_topic(i));
   }
 
-  // repeated double score = 4;
+  // repeated double score = 3;
   {
     int data_size = 0;
     data_size = 8 * this->score_size();
@@ -3610,9 +3567,6 @@ void ModelTopics::MergeFrom(const ModelTopics& from) {
     if (from.has_items_processed()) {
       set_items_processed(from.items_processed());
     }
-    if (from.has_model_config()) {
-      mutable_model_config()->::artm::ModelConfig::MergeFrom(from.model_config());
-    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -3631,9 +3585,6 @@ void ModelTopics::CopyFrom(const ModelTopics& from) {
 
 bool ModelTopics::IsInitialized() const {
 
-  if (has_model_config()) {
-    if (!this->model_config().IsInitialized()) return false;
-  }
   return true;
 }
 
@@ -3641,7 +3592,6 @@ void ModelTopics::Swap(ModelTopics* other) {
   if (other != this) {
     token_topic_.Swap(&other->token_topic_);
     std::swap(items_processed_, other->items_processed_);
-    std::swap(model_config_, other->model_config_);
     score_.Swap(&other->score_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

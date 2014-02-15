@@ -1250,19 +1250,10 @@ class ModelTopics : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 items_processed() const;
   inline void set_items_processed(::google::protobuf::int32 value);
 
-  // optional .artm.ModelConfig model_config = 3;
-  inline bool has_model_config() const;
-  inline void clear_model_config();
-  static const int kModelConfigFieldNumber = 3;
-  inline const ::artm::ModelConfig& model_config() const;
-  inline ::artm::ModelConfig* mutable_model_config();
-  inline ::artm::ModelConfig* release_model_config();
-  inline void set_allocated_model_config(::artm::ModelConfig* model_config);
-
-  // repeated double score = 4;
+  // repeated double score = 3;
   inline int score_size() const;
   inline void clear_score();
-  static const int kScoreFieldNumber = 4;
+  static const int kScoreFieldNumber = 3;
   inline double score(int index) const;
   inline void set_score(int index, double value);
   inline void add_score(double value);
@@ -1275,18 +1266,15 @@ class ModelTopics : public ::google::protobuf::Message {
  private:
   inline void set_has_items_processed();
   inline void clear_has_items_processed();
-  inline void set_has_model_config();
-  inline void clear_has_model_config();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::artm::TokenTopics > token_topic_;
-  ::artm::ModelConfig* model_config_;
   ::google::protobuf::RepeatedField< double > score_;
   ::google::protobuf::int32 items_processed_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2699,45 +2687,7 @@ inline void ModelTopics::set_items_processed(::google::protobuf::int32 value) {
   items_processed_ = value;
 }
 
-// optional .artm.ModelConfig model_config = 3;
-inline bool ModelTopics::has_model_config() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void ModelTopics::set_has_model_config() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void ModelTopics::clear_has_model_config() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void ModelTopics::clear_model_config() {
-  if (model_config_ != NULL) model_config_->::artm::ModelConfig::Clear();
-  clear_has_model_config();
-}
-inline const ::artm::ModelConfig& ModelTopics::model_config() const {
-  return model_config_ != NULL ? *model_config_ : *default_instance_->model_config_;
-}
-inline ::artm::ModelConfig* ModelTopics::mutable_model_config() {
-  set_has_model_config();
-  if (model_config_ == NULL) model_config_ = new ::artm::ModelConfig;
-  return model_config_;
-}
-inline ::artm::ModelConfig* ModelTopics::release_model_config() {
-  clear_has_model_config();
-  ::artm::ModelConfig* temp = model_config_;
-  model_config_ = NULL;
-  return temp;
-}
-inline void ModelTopics::set_allocated_model_config(::artm::ModelConfig* model_config) {
-  delete model_config_;
-  model_config_ = model_config;
-  if (model_config) {
-    set_has_model_config();
-  } else {
-    clear_has_model_config();
-  }
-}
-
-// repeated double score = 4;
+// repeated double score = 3;
 inline int ModelTopics::score_size() const {
   return score_.size();
 }

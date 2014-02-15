@@ -107,8 +107,7 @@ message LoggerConfig {
 message ModelTopics {
   repeated TokenTopics token_topic = 1;
   optional int32 items_processed = 2;
-  optional ModelConfig model_config = 3;  // model config used to tune this model
-  repeated double score = 4;              // scores, calculated for the model
+  repeated double score = 3;              // scores, calculated for the model
 }
 
 // Represents one row in matrix Phi.

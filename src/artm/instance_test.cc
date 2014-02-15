@@ -175,7 +175,13 @@ TEST(Instance, MultipleStreamsAndModels) {
   m1.set_enabled(true);
   Score* score = m1.add_score();
   score->set_type(Score_Type::Score_Type_Perplexity);
-  // calc score on the same stream because the have non-overlapping tokens
+  
+  // In the little synthetic dataset created below
+  // tokens in 'train' and 'test' sample won't overlap.
+  // If we chose to calc perplexity on test sample
+  // it will be zero, because none of test-sample tokens
+  // are present in token-topic-matrix. Therefore,
+  // using train sample to get non-zero perplexity score.
   score->set_stream_name("train"); 
   int m1_id = test.instance()->CreateModel(m1);
 

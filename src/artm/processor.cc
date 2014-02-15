@@ -80,23 +80,23 @@ namespace artm { namespace core {
   }
 
     
-  Processor::ItemProcessor::ItemProcessor(const ::artm::ModelConfig& model, 
-                                          const TokenTopicMatrix& token_topic_matrix, 
-                                          const google::protobuf::RepeatedPtrField<std::string>& token,
-                                          ProcessorOutput* processor_output) :
-      model_(model), 
+  Processor::ItemProcessor::ItemProcessor(const TokenTopicMatrix& token_topic_matrix, 
+                                          const google::protobuf::RepeatedPtrField<std::string>& token_dict) :
       token_topic_matrix_(token_topic_matrix),
-      token_(token),
-      processor_output_(processor_output)
+      token_dict_(token_dict)
   {
   }
 
-  void Processor::ItemProcessor::ProcessItem(const Item& item, float* theta_out) {
+  void Processor::ItemProcessor::InferTheta(const ModelConfig& model, 
+                                            const Item& item,  
+                                            ProcessorOutput* processor_output, 
+                                            float* theta_out) 
+  {
     int topics_count = token_topic_matrix_.topics_count();
 
-    if (processor_output_ != nullptr) {
-      processor_output_->set_items_processed(
-        processor_output_->items_processed() + 1);
+    if (processor_output != nullptr) {
+      processor_output->set_items_processed(
+        processor_output->items_processed() + 1);
     }
 
     std::vector<float> theta(topics_count);
@@ -104,11 +104,11 @@ namespace artm { namespace core {
       theta[iTopic] = (float)rand() / (float)RAND_MAX;
     }
 
-    if (processor_output_ != nullptr) {
+    if (processor_output != nullptr) {
       // Process unknown tokens (if any)
-      TokenIterator iter(token_, token_topic_matrix_, item, model_.field_name(), TokenIterator::Mode::Unknown);
+      TokenIterator iter(token_dict_, token_topic_matrix_, item, model.field_name(), TokenIterator::Mode::Unknown);
       while (iter.Next()) {
-        processor_output_->add_discovered_token(iter.token());
+        processor_output->add_discovered_token(iter.token());
       }
     }
 
@@ -116,24 +116,25 @@ namespace artm { namespace core {
     std::vector<int> token_id;
     std::vector<float> token_count;
     std::vector<TokenWeights> token_weights;
-    TokenIterator iter(token_, token_topic_matrix_, item, model_.field_name(), TokenIterator::Mode::Known);
+    std::vector<float> Z;
+    int known_tokens_count = 0;
+    TokenIterator iter(token_dict_, token_topic_matrix_, item, model.field_name(), TokenIterator::Mode::Known);
     while (iter.Next()) {
       token_id.push_back(iter.id());
       token_count.push_back(iter.count());
       token_weights.push_back(iter.weights());
+      Z.push_back(0.0f);
+      known_tokens_count++;
     }
 
-    int this_item_token_count = token_id.size();
-    std::vector<float> Z(this_item_token_count);
-    
-    int numInnerIters = model_.inner_iterations_count();
+    int numInnerIters = model.inner_iterations_count();
     for (int iInnerIter = 0;
           iInnerIter <= numInnerIters;
           iInnerIter++)
     {
       // 1. Find Z
       for (int token_index = 0;
-            token_index < this_item_token_count;
+            token_index < known_tokens_count;
             ++token_index)
       {
         float curZ = 0.0f;
@@ -149,7 +150,7 @@ namespace artm { namespace core {
       std::vector<float> theta_next(topics_count);
       memset(&theta_next[0], 0, topics_count * sizeof(float));
       for (int token_index = 0;
-            token_index < this_item_token_count;
+            token_index < known_tokens_count;
             ++token_index)
       {
         float n_dw = token_count[token_index];
@@ -163,11 +164,11 @@ namespace artm { namespace core {
             theta_next[iTopic] += n_dw * w * theta[iTopic] / curZ;
           }
 
-          if ((iInnerIter == numInnerIters) && (processor_output_ != nullptr)) {
+          if ((iInnerIter == numInnerIters) && (processor_output != nullptr)) {
             // Last iteration, updating final counters
-            Counters* hat_n_wt_cur = processor_output_->mutable_token_counters(
+            Counters* hat_n_wt_cur = processor_output->mutable_token_counters(
               token_id[token_index]);
-            Counters* hat_n_t = processor_output_->mutable_topic_counters();
+            Counters* hat_n_t = processor_output->mutable_topic_counters();
                 
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
               float val = n_dw * (cur_token_weights.at(iTopic)) *
@@ -198,6 +199,20 @@ namespace artm { namespace core {
           theta[iTopic] = theta_next[iTopic];
         }
       }
+    }
+  }
+
+  void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& item, const float* theta, double* perplexity, double* normalizer) {
+    TokenIterator iter(token_dict_, token_topic_matrix_, item, score.field_name(), TokenIterator::Mode::Known);
+    while(iter.Next()) {
+      TokenWeights weights = iter.weights();
+      float sum = 0.0f;
+      for (int iTopic = 0; iTopic < token_topic_matrix_.topics_count(); ++iTopic) {
+        sum += theta[iTopic] * weights.at(iTopic);
+      }
+
+      (*normalizer) += iter.count();
+      (*perplexity) += iter.count() * log(sum);
     }
   }
 
@@ -238,32 +253,6 @@ namespace artm { namespace core {
     return &(processor_input_.batch().item(item_index_));
   }
 
-  Processor::PerplexityCalculator::PerplexityCalculator(
-    const Score& score,
-    const TokenTopicMatrix& token_topic_matrix, 
-    const google::protobuf::RepeatedPtrField<std::string>& token) : 
-      score_(score),
-      token_topic_matrix_(token_topic_matrix),
-      token_(token)          
-  {
-  }
-
-
-  void Processor::PerplexityCalculator::ProcessItem(const Item& item, const float* theta, double* perplexity, double* normalizer) {
-    TokenIterator iter(token_, token_topic_matrix_, item, score_.field_name(), TokenIterator::Mode::Known);
-    while(iter.Next()) {
-      TokenWeights weights = iter.weights();
-      float sum = 0.0f;
-      for (int iTopic = 0; iTopic < token_topic_matrix_.topics_count(); ++iTopic) {
-        sum += theta[iTopic] * weights.at(iTopic);
-      }
-
-      (*normalizer) += iter.count();
-      (*perplexity) += iter.count() * log(sum);
-    }
-  }
-  
-
   void Processor::ThreadFunction() {
     try
     {
@@ -295,9 +284,12 @@ namespace artm { namespace core {
 
           std::shared_ptr<const TokenTopicMatrix> token_topic_matrix
               = merger_.GetLatestTokenTopicMatrix(model_id);
-          assert(token_topic_matrix.get() != NULL);
+          assert(token_topic_matrix.get() != nullptr);
+          
           int topics_count = token_topic_matrix->topics_count();
           int items_count = part->batch().item_size();
+
+          assert(topics_count > 0);
           
           // process part and store result in merger queue
           auto po = std::make_shared<ProcessorOutput>();
@@ -323,11 +315,12 @@ namespace artm { namespace core {
             }
           }
 
-          ItemProcessor item_processor(model, *token_topic_matrix, part->batch().token(), po.get());
+          ItemProcessor item_processor(*token_topic_matrix, part->batch().token());
           StreamIterator iter(*part, model.stream_name());
           while (iter.Next() != nullptr) 
           {
-            item_processor.ProcessItem(*iter.Current(), nullptr);
+            const Item* item = iter.Current();
+            item_processor.InferTheta(model, *item, po.get(), nullptr);
           }
 
           // Calculate all requested scores (such as perplexity)
@@ -345,13 +338,12 @@ namespace artm { namespace core {
             double perplexity_score = 0.0;
             double perplexity_norm = 0.0;
             StreamIterator test_iter(*part, score.stream_name());
-            ItemProcessor test_item_processor(model, *token_topic_matrix, part->batch().token(), nullptr);
-            PerplexityCalculator perplexity_calc(score, *token_topic_matrix, part->batch().token());
+            ItemProcessor test_item_processor(*token_topic_matrix, part->batch().token());
             while (test_iter.Next() != nullptr) 
             {
               const Item* item = test_iter.Current();
-              test_item_processor.ProcessItem(*item, theta);
-              perplexity_calc.ProcessItem(*item, theta, &perplexity_score, &perplexity_norm);
+              test_item_processor.InferTheta(model, *item, nullptr, theta);
+              test_item_processor.CalculateScore(score, *item, theta, &perplexity_score, &perplexity_norm);
             }
 
             po->set_score(iScore, po->score(iScore) + perplexity_score);

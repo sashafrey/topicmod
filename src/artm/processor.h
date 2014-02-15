@@ -62,19 +62,26 @@ namespace artm { namespace core {
        const ProcessorInput& processor_input_;
     };
 
-    // Helper class to perform the actual job of inferring theta distribution
+    // Helper class to perform the actual job 
+    // (inferring theta distribution or perplexity calculation)
     class ItemProcessor : boost::noncopyable {
      public:
-      ItemProcessor(const ::artm::ModelConfig& model, 
-                    const TokenTopicMatrix& token_topic_matrix, 
-                    const google::protobuf::RepeatedPtrField<std::string>& token,
-                    ProcessorOutput* processor_output);
-      void ProcessItem(const Item& item, float* theta_out);
+      ItemProcessor(const TokenTopicMatrix& token_topic_matrix, 
+                    const google::protobuf::RepeatedPtrField<std::string>& token_dict);
+      
+      void InferTheta(const ModelConfig& model, 
+                      const Item& item, 
+                      ProcessorOutput* processor_output, 
+                      float* theta_out);
+      
+      void CalculateScore(const Score& score, 
+                          const Item& item, 
+                          const float* theta, 
+                          double* perplexity, 
+                          double* normalizer);
      private:
-      const ::artm::ModelConfig& model_;
       const TokenTopicMatrix& token_topic_matrix_;
-      const google::protobuf::RepeatedPtrField<std::string>& token_;
-      ProcessorOutput* processor_output_;
+      const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
     };
 
     // Helper class to iterate through tokens in one item
@@ -113,19 +120,6 @@ namespace artm { namespace core {
       std::string token_;
       int token_id_;
       int count_;
-    };
-
-    // Helper class to calculate perplexity
-    class PerplexityCalculator : boost::noncopyable {     
-     public:
-      PerplexityCalculator(const Score& score,
-                           const TokenTopicMatrix& token_topic_matrix, 
-                           const google::protobuf::RepeatedPtrField<std::string>& token);
-      void ProcessItem(const Item& item, const float* theta, double* perplexity, double* normalizer);
-     private:
-      const Score& score_;
-      const TokenTopicMatrix& token_topic_matrix_;
-      const google::protobuf::RepeatedPtrField<std::string>& token_;
     };
   };
 }} // artm/core

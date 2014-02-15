@@ -187,7 +187,7 @@ namespace artm { namespace core {
               sum += theta_next[iTopic];
             
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-              theta_out[iTopic] = (sum > 0) ? (theta_next[iTopic] / sum) : 0.0;
+              theta_out[iTopic] = (sum > 0) ? (theta_next[iTopic] / sum) : 0.0f;
             }
           }
         }

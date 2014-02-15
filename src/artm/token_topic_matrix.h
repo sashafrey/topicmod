@@ -35,7 +35,7 @@ class TokenWeights
 class TokenTopicMatrix
 {
  public:
-  explicit TokenTopicMatrix(int topics_count);
+  explicit TokenTopicMatrix(int topics_count, int scores_count);
   explicit TokenTopicMatrix(const TokenTopicMatrix& rhs);
   ~TokenTopicMatrix();
 
@@ -47,11 +47,9 @@ class TokenTopicMatrix
   int tokens_count() const;
   int topics_count() const;
   int items_processed() const;
+  int scores_count() const;
 
-  const std::vector<double>& scores() const { return scores_; }
-  std::vector<double>* mutable_scores() { return &scores_; }
-  const std::vector<double>& scores_norm() const { return scores_norm_; }
-  std::vector<double>* mutable_scores_norm() { return &scores_norm_; }
+  double score(int iScore) const;
 
   int token_id(const std::string& token) const;
   std::string token(int index) const;

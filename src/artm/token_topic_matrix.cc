@@ -7,7 +7,7 @@
 
 namespace artm { namespace core {
 
-TokenTopicMatrix::TokenTopicMatrix(int topics_count) :
+TokenTopicMatrix::TokenTopicMatrix(int topics_count, int scores_count) :
     token_to_token_id_(),
     token_id_to_token_(),
     topics_count_(topics_count),
@@ -20,6 +20,9 @@ TokenTopicMatrix::TokenTopicMatrix(int topics_count) :
   assert(topics_count_ > 0);
   normalizer_.resize(topics_count_);
   memset(&normalizer_[0], 0, sizeof(float) * topics_count_);
+
+  scores_.resize(scores_count);
+  scores_norm_.resize(scores_count);
 }
 
 TokenTopicMatrix::TokenTopicMatrix(const TokenTopicMatrix& rhs) :
@@ -80,6 +83,11 @@ void TokenTopicMatrix::IncreaseScores(int iScore, double value, double norm) {
   scores_norm_[iScore] += norm;
 }
 
+double TokenTopicMatrix::score(int iScore) const {
+// The only supported type so far is perplexity.
+return exp(- scores_[iScore] / scores_norm_[iScore]);
+}
+
 void TokenTopicMatrix::IncreaseTokenWeight(int token_id, int topic_id, float value) {
   data_[token_id][topic_id] += value;
   normalizer_[topic_id] += value;
@@ -95,6 +103,10 @@ int TokenTopicMatrix::topics_count() const {
 
 int TokenTopicMatrix::items_processed() const {
   return items_processed_;
+}
+
+int TokenTopicMatrix::scores_count() const {
+  return scores_.size();
 }
 
 int TokenTopicMatrix::token_id(const std::string& token) const {

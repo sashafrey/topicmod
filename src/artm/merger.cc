@@ -31,9 +31,7 @@ void Merger::DisposeModel(int model_id) {
 void Merger::UpdateModel(int model_id, const ModelConfig& model) {
   if (!token_topic_matrix_.has_key(model_id)) {
     // Handle more type of reconfigs - for example, changing the number of topics;
-    auto ttm = std::make_shared<TokenTopicMatrix>(model.topics_count());
-    ttm->mutable_scores()->resize(model.score_size());
-    ttm->mutable_scores_norm()->resize(model.score_size());
+    auto ttm = std::make_shared<TokenTopicMatrix>(model.topics_count(), model.score_size());
     token_topic_matrix_.set(model_id, ttm);
   }
 

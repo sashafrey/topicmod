@@ -104,7 +104,7 @@ install:
 	cp libartm.so $(INSTALL_DIR)
 
 $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -lartm -lprotobuf $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -L$(USR_LIB_DIR) -lartm -lprotobuf $(LDFLAGS)
 
 .cc.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@

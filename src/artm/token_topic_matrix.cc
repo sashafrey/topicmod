@@ -78,7 +78,7 @@ void TokenTopicMatrix::IncreaseItemsProcessed(int value) {
 }
 
 void TokenTopicMatrix::IncreaseScores(int iScore, double value, double norm) {
-  assert(iScore < scores_.size());
+  assert(iScore < (int)scores_.size());
   scores_[iScore] += value;
   scores_norm_[iScore] += norm;
 }

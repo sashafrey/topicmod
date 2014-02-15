@@ -1,3 +1,7 @@
+all:
+	cd src/artm; make all; cd ../..
+	cd src/cpp_client; make all; cd ../..
+
 lib:
 	cd src/artm; make lib; make all; cd ../..
 

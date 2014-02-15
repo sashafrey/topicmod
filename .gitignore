@@ -28,3 +28,15 @@ datasets/docword.*.txt
 *.suo
 */ipch/*
 *.vcxproj.user
+
+# Auto-generated files (by pdflatex)
+collateral/artm_dev.aux
+collateral/artm_dev.log
+collateral/artm_dev.pdf
+collateral/artm_dev.toc
+collateral/artm_dev.synctex.gz
+
+
+# Binaries
+/src/artm/unittests
+/src/cpp_client/cpp_client

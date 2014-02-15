@@ -1,7 +1,20 @@
 package artm.core;
 
+import "messages.proto";
+
 message Counters {
 	repeated float value = 1 [packed = true];
+}
+
+message Flags {
+	repeated bool value = 1 [packed = true];
+}
+
+message ProcessorInput
+{
+	required Batch batch = 1;
+	repeated Flags stream_flags = 2;
+	repeated string stream_name = 3;
 }
 
 message ProcessorOutput

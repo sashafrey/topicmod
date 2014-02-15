@@ -26,6 +26,10 @@ namespace artm {
     int id() const { return id_; }
     std::shared_ptr<ModelTopics> GetTopics(const Model& model);
     void WaitModelProcessed(const Model& model, int nDocs);
+    void WaitIdle();
+    void Reconfigure(const InstanceConfig& config);
+
+    const InstanceConfig& config() const { return config_; }
   private:
     int id_;
     InstanceConfig config_;
@@ -44,6 +48,8 @@ namespace artm {
     int instance_id() const { return instance_id_; }
     int model_id() const { return model_id_; }
 
+    const ModelConfig& config() const { return config_; }
+
   private:
     int instance_id_;
     int model_id_;
@@ -58,6 +64,12 @@ namespace artm {
 
     int id() const { return id_; }
     void AddBatch(const Batch& batch);
+    void AddStream(const Stream& stream);
+    void RemoveStream(std::string stream_name);
+    void Reconfigure(const DataLoaderConfig& config);
+    void InvokeIteration(int iterations_count);
+    void WaitIdle();
+    const DataLoaderConfig& config() const { return config_; }
 
   private:
     int id_;

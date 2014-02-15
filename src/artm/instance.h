@@ -30,13 +30,15 @@ namespace artm { namespace core {
       return schema_.get();
     }
 
-    int UpdateModel(int model_id, const ModelConfig& config);
+    int CreateModel(const ModelConfig& config);
+    int ReconfigureModel(int model_id, const ModelConfig& config);
     int DisposeModel(int model_id);
     int Reconfigure(const InstanceConfig& config);
     int RequestModelTopics(int model_id, ModelTopics* model_topics);
     int WaitModelProcessed(int model_id, int processed_items);
+    int WaitIdle();
     int ProcessorQueueSize();
-    int AddBatchIntoProcessorQueue(std::shared_ptr<const Batch> batch);
+    int AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
   private:
     friend class TemplateManager<Instance, InstanceConfig>;
@@ -48,8 +50,10 @@ namespace artm { namespace core {
     int instance_id_;
     ThreadSafeHolder<InstanceSchema> schema_;
 
+    int next_model_id_;
+
     mutable boost::mutex processor_queue_lock_;
-    std::queue<std::shared_ptr<const Batch> > processor_queue_;
+    std::queue<std::shared_ptr<const ProcessorInput> > processor_queue_;
 
     mutable boost::mutex merger_queue_lock_;
     std::queue<std::shared_ptr<const ProcessorOutput> > merger_queue_;

@@ -25,11 +25,29 @@ double proc(int argc, char * argv[], int processors_count) {
   DataLoaderConfig data_loader_config;
   DataLoader data_loader(instance, data_loader_config);
 
+  // Configure train and test streams
+  Stream train_stream, test_stream;
+  train_stream.set_name("train_stream");
+  train_stream.set_type(Stream_Type::Stream_Type_ItemIdModulus);
+  train_stream.set_modulus(10);
+  for (int i = 0; i <= 8; ++i) {
+    train_stream.add_residuals(i);
+  }
+
+  test_stream.set_name("test_stream");
+  test_stream.set_type(Stream_Type::Stream_Type_ItemIdModulus);
+  test_stream.set_modulus(10);
+  test_stream.add_residuals(9);
+
+  data_loader.AddStream(train_stream);
+  data_loader.AddStream(test_stream);
+
   // Create model
   int nTopics = atoi(argv[3]);
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
   model_config.set_inner_iterations_count(10);
+  model_config.set_stream_name("train_stream");
   Model model(instance, model_config);
   
   // Load doc-word matrix
@@ -53,6 +71,7 @@ double proc(int argc, char * argv[], int processors_count) {
       auto term_counts = pD->getFreq(iDoc);
 
       Item* item = batch.add_item();
+      item->set_id(iDoc);
       Field* field = item->add_field();
       for (int iWord = 0; iWord < (int)term_ids.size(); ++iWord) {
         field->add_token_id(term_ids[iWord]);
@@ -68,7 +87,9 @@ double proc(int argc, char * argv[], int processors_count) {
 
   // Enable model and wait while each document pass through processor about 10 times.
   model.Enable();
-  instance.WaitModelProcessed(model, nDocs * 10);
+  data_loader.InvokeIteration(10);
+  data_loader.WaitIdle();
+  instance.WaitIdle();
   model.Disable();
 
   clock_t end = clock();
@@ -77,6 +98,10 @@ double proc(int argc, char * argv[], int processors_count) {
 
   std::cout << "Number of tokens in model topic: " 
             << model_topics->token_topic_size()
+            << endl;
+
+  std::cout << "Items processed: "
+            << model_topics->items_processed()
             << endl;
 
   // Log top 7 words per each topic

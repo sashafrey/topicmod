@@ -1,4 +1,5 @@
 #include "artm/cpp_interface.h"
+#include "artm/protobuf_helpers.h"
 
 namespace artm { 
 
@@ -18,6 +19,13 @@ Instance::Instance(const InstanceConfig& config) : id_(0), config_(config)
 
 Instance::~Instance() {
   dispose_instance(id());
+}
+
+void Instance::Reconfigure(const InstanceConfig& config) {
+  string config_blob;
+  config.SerializeToString(&config_blob);
+  reconfigure_instance(id(), config_blob.size(), string_as_array(&config_blob));
+  config_.CopyFrom(config);
 }
 
 std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
@@ -49,13 +57,16 @@ void Instance::WaitModelProcessed(const Model& model, int nDocs) {
   wait_model_processed(id(), model.model_id(), nDocs);
 }
 
+void Instance::WaitIdle() {
+  wait_idle_instance(id());
+}
+
 Model::Model(const Instance& instance, const ModelConfig& config) : instance_id_(instance.id()), model_id_(0), config_(config) 
 {
   string model_config_blob;
     config.SerializeToString(&model_config_blob);
     model_id_ = create_model(
       instance_id_, 
-      0,
       model_config_blob.size(), 
       string_as_array(&model_config_blob));
 }
@@ -102,5 +113,40 @@ void DataLoader::AddBatch(const Batch& batch) {
   batch.SerializeToString(&batch_blob);
   add_batch(id(), batch_blob.size(), string_as_array(&batch_blob));
 }
- 
+
+void DataLoader::Reconfigure(const DataLoaderConfig& config) {
+  string config_blob;
+  config.SerializeToString(&config_blob);
+  reconfigure_data_loader(id(), config_blob.size(), string_as_array(&config_blob));
+  config_.CopyFrom(config);
+}
+
+void DataLoader::InvokeIteration(int iterations_count) {
+  invoke_iteration(id(), iterations_count);
+}
+
+void DataLoader::WaitIdle() {
+  wait_idle_data_loader(id());
+}
+
+void DataLoader::AddStream(const Stream& stream) {
+  Stream* s = config_.add_stream();
+  s->CopyFrom(stream);
+  Reconfigure(config_);
+}
+
+void DataLoader::RemoveStream(std::string stream_name) {
+  DataLoaderConfig new_config(config_);
+  new_config.mutable_stream()->Clear();
+
+  for (int iStream = 0; iStream < config_.stream_size(); ++iStream) {
+    if (config_.stream(iStream).name() != stream_name) {
+      Stream* s = new_config.add_stream();
+      s->CopyFrom(config_.stream(iStream));
+    }
+  }
+
+  Reconfigure(new_config);
+}
+
 } // namespace artm

@@ -8,791 +8,6 @@ public final class Messages {
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistry registry) {
   }
-  public interface FieldOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional string field_name = 1 [default = "@body"];
-    /**
-     * <code>optional string field_name = 1 [default = "@body"];</code>
-     */
-    boolean hasFieldName();
-    /**
-     * <code>optional string field_name = 1 [default = "@body"];</code>
-     */
-    java.lang.String getFieldName();
-    /**
-     * <code>optional string field_name = 1 [default = "@body"];</code>
-     */
-    com.google.protobuf.ByteString
-        getFieldNameBytes();
-
-    // repeated int32 token_id = 2;
-    /**
-     * <code>repeated int32 token_id = 2;</code>
-     */
-    java.util.List<java.lang.Integer> getTokenIdList();
-    /**
-     * <code>repeated int32 token_id = 2;</code>
-     */
-    int getTokenIdCount();
-    /**
-     * <code>repeated int32 token_id = 2;</code>
-     */
-    int getTokenId(int index);
-
-    // repeated int32 token_count = 3;
-    /**
-     * <code>repeated int32 token_count = 3;</code>
-     */
-    java.util.List<java.lang.Integer> getTokenCountList();
-    /**
-     * <code>repeated int32 token_count = 3;</code>
-     */
-    int getTokenCountCount();
-    /**
-     * <code>repeated int32 token_count = 3;</code>
-     */
-    int getTokenCount(int index);
-  }
-  /**
-   * Protobuf type {@code artm.Field}
-   */
-  public static final class Field extends
-      com.google.protobuf.GeneratedMessage
-      implements FieldOrBuilder {
-    // Use Field.newBuilder() to construct.
-    private Field(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private Field(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final Field defaultInstance;
-    public static Field getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public Field getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private Field(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              fieldName_ = input.readBytes();
-              break;
-            }
-            case 16: {
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                tokenId_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              tokenId_.add(input.readInt32());
-              break;
-            }
-            case 18: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
-                tokenId_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000002;
-              }
-              while (input.getBytesUntilLimit() > 0) {
-                tokenId_.add(input.readInt32());
-              }
-              input.popLimit(limit);
-              break;
-            }
-            case 24: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                tokenCount_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              tokenCount_.add(input.readInt32());
-              break;
-            }
-            case 26: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
-                tokenCount_ = new java.util.ArrayList<java.lang.Integer>();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              while (input.getBytesUntilLimit() > 0) {
-                tokenCount_.add(input.readInt32());
-              }
-              input.popLimit(limit);
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-          tokenId_ = java.util.Collections.unmodifiableList(tokenId_);
-        }
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          tokenCount_ = java.util.Collections.unmodifiableList(tokenCount_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return artm.Messages.internal_static_artm_Field_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return artm.Messages.internal_static_artm_Field_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              artm.Messages.Field.class, artm.Messages.Field.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<Field> PARSER =
-        new com.google.protobuf.AbstractParser<Field>() {
-      public Field parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new Field(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<Field> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional string field_name = 1 [default = "@body"];
-    public static final int FIELD_NAME_FIELD_NUMBER = 1;
-    private java.lang.Object fieldName_;
-    /**
-     * <code>optional string field_name = 1 [default = "@body"];</code>
-     */
-    public boolean hasFieldName() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional string field_name = 1 [default = "@body"];</code>
-     */
-    public java.lang.String getFieldName() {
-      java.lang.Object ref = fieldName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          fieldName_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string field_name = 1 [default = "@body"];</code>
-     */
-    public com.google.protobuf.ByteString
-        getFieldNameBytes() {
-      java.lang.Object ref = fieldName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        fieldName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // repeated int32 token_id = 2;
-    public static final int TOKEN_ID_FIELD_NUMBER = 2;
-    private java.util.List<java.lang.Integer> tokenId_;
-    /**
-     * <code>repeated int32 token_id = 2;</code>
-     */
-    public java.util.List<java.lang.Integer>
-        getTokenIdList() {
-      return tokenId_;
-    }
-    /**
-     * <code>repeated int32 token_id = 2;</code>
-     */
-    public int getTokenIdCount() {
-      return tokenId_.size();
-    }
-    /**
-     * <code>repeated int32 token_id = 2;</code>
-     */
-    public int getTokenId(int index) {
-      return tokenId_.get(index);
-    }
-
-    // repeated int32 token_count = 3;
-    public static final int TOKEN_COUNT_FIELD_NUMBER = 3;
-    private java.util.List<java.lang.Integer> tokenCount_;
-    /**
-     * <code>repeated int32 token_count = 3;</code>
-     */
-    public java.util.List<java.lang.Integer>
-        getTokenCountList() {
-      return tokenCount_;
-    }
-    /**
-     * <code>repeated int32 token_count = 3;</code>
-     */
-    public int getTokenCountCount() {
-      return tokenCount_.size();
-    }
-    /**
-     * <code>repeated int32 token_count = 3;</code>
-     */
-    public int getTokenCount(int index) {
-      return tokenCount_.get(index);
-    }
-
-    private void initFields() {
-      fieldName_ = "@body";
-      tokenId_ = java.util.Collections.emptyList();
-      tokenCount_ = java.util.Collections.emptyList();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getFieldNameBytes());
-      }
-      for (int i = 0; i < tokenId_.size(); i++) {
-        output.writeInt32(2, tokenId_.get(i));
-      }
-      for (int i = 0; i < tokenCount_.size(); i++) {
-        output.writeInt32(3, tokenCount_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getFieldNameBytes());
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < tokenId_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(tokenId_.get(i));
-        }
-        size += dataSize;
-        size += 1 * getTokenIdList().size();
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < tokenCount_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeInt32SizeNoTag(tokenCount_.get(i));
-        }
-        size += dataSize;
-        size += 1 * getTokenCountList().size();
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static artm.Messages.Field parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static artm.Messages.Field parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static artm.Messages.Field parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static artm.Messages.Field parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static artm.Messages.Field parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static artm.Messages.Field parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static artm.Messages.Field parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static artm.Messages.Field parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static artm.Messages.Field parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static artm.Messages.Field parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(artm.Messages.Field prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code artm.Field}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements artm.Messages.FieldOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return artm.Messages.internal_static_artm_Field_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return artm.Messages.internal_static_artm_Field_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                artm.Messages.Field.class, artm.Messages.Field.Builder.class);
-      }
-
-      // Construct using artm.Messages.Field.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        fieldName_ = "@body";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        tokenId_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000002);
-        tokenCount_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return artm.Messages.internal_static_artm_Field_descriptor;
-      }
-
-      public artm.Messages.Field getDefaultInstanceForType() {
-        return artm.Messages.Field.getDefaultInstance();
-      }
-
-      public artm.Messages.Field build() {
-        artm.Messages.Field result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public artm.Messages.Field buildPartial() {
-        artm.Messages.Field result = new artm.Messages.Field(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.fieldName_ = fieldName_;
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          tokenId_ = java.util.Collections.unmodifiableList(tokenId_);
-          bitField0_ = (bitField0_ & ~0x00000002);
-        }
-        result.tokenId_ = tokenId_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          tokenCount_ = java.util.Collections.unmodifiableList(tokenCount_);
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.tokenCount_ = tokenCount_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof artm.Messages.Field) {
-          return mergeFrom((artm.Messages.Field)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(artm.Messages.Field other) {
-        if (other == artm.Messages.Field.getDefaultInstance()) return this;
-        if (other.hasFieldName()) {
-          bitField0_ |= 0x00000001;
-          fieldName_ = other.fieldName_;
-          onChanged();
-        }
-        if (!other.tokenId_.isEmpty()) {
-          if (tokenId_.isEmpty()) {
-            tokenId_ = other.tokenId_;
-            bitField0_ = (bitField0_ & ~0x00000002);
-          } else {
-            ensureTokenIdIsMutable();
-            tokenId_.addAll(other.tokenId_);
-          }
-          onChanged();
-        }
-        if (!other.tokenCount_.isEmpty()) {
-          if (tokenCount_.isEmpty()) {
-            tokenCount_ = other.tokenCount_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureTokenCountIsMutable();
-            tokenCount_.addAll(other.tokenCount_);
-          }
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        artm.Messages.Field parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (artm.Messages.Field) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional string field_name = 1 [default = "@body"];
-      private java.lang.Object fieldName_ = "@body";
-      /**
-       * <code>optional string field_name = 1 [default = "@body"];</code>
-       */
-      public boolean hasFieldName() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional string field_name = 1 [default = "@body"];</code>
-       */
-      public java.lang.String getFieldName() {
-        java.lang.Object ref = fieldName_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          fieldName_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string field_name = 1 [default = "@body"];</code>
-       */
-      public com.google.protobuf.ByteString
-          getFieldNameBytes() {
-        java.lang.Object ref = fieldName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          fieldName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string field_name = 1 [default = "@body"];</code>
-       */
-      public Builder setFieldName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        fieldName_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string field_name = 1 [default = "@body"];</code>
-       */
-      public Builder clearFieldName() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        fieldName_ = getDefaultInstance().getFieldName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string field_name = 1 [default = "@body"];</code>
-       */
-      public Builder setFieldNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        fieldName_ = value;
-        onChanged();
-        return this;
-      }
-
-      // repeated int32 token_id = 2;
-      private java.util.List<java.lang.Integer> tokenId_ = java.util.Collections.emptyList();
-      private void ensureTokenIdIsMutable() {
-        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          tokenId_ = new java.util.ArrayList<java.lang.Integer>(tokenId_);
-          bitField0_ |= 0x00000002;
-         }
-      }
-      /**
-       * <code>repeated int32 token_id = 2;</code>
-       */
-      public java.util.List<java.lang.Integer>
-          getTokenIdList() {
-        return java.util.Collections.unmodifiableList(tokenId_);
-      }
-      /**
-       * <code>repeated int32 token_id = 2;</code>
-       */
-      public int getTokenIdCount() {
-        return tokenId_.size();
-      }
-      /**
-       * <code>repeated int32 token_id = 2;</code>
-       */
-      public int getTokenId(int index) {
-        return tokenId_.get(index);
-      }
-      /**
-       * <code>repeated int32 token_id = 2;</code>
-       */
-      public Builder setTokenId(
-          int index, int value) {
-        ensureTokenIdIsMutable();
-        tokenId_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 token_id = 2;</code>
-       */
-      public Builder addTokenId(int value) {
-        ensureTokenIdIsMutable();
-        tokenId_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 token_id = 2;</code>
-       */
-      public Builder addAllTokenId(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureTokenIdIsMutable();
-        super.addAll(values, tokenId_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 token_id = 2;</code>
-       */
-      public Builder clearTokenId() {
-        tokenId_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000002);
-        onChanged();
-        return this;
-      }
-
-      // repeated int32 token_count = 3;
-      private java.util.List<java.lang.Integer> tokenCount_ = java.util.Collections.emptyList();
-      private void ensureTokenCountIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          tokenCount_ = new java.util.ArrayList<java.lang.Integer>(tokenCount_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-      /**
-       * <code>repeated int32 token_count = 3;</code>
-       */
-      public java.util.List<java.lang.Integer>
-          getTokenCountList() {
-        return java.util.Collections.unmodifiableList(tokenCount_);
-      }
-      /**
-       * <code>repeated int32 token_count = 3;</code>
-       */
-      public int getTokenCountCount() {
-        return tokenCount_.size();
-      }
-      /**
-       * <code>repeated int32 token_count = 3;</code>
-       */
-      public int getTokenCount(int index) {
-        return tokenCount_.get(index);
-      }
-      /**
-       * <code>repeated int32 token_count = 3;</code>
-       */
-      public Builder setTokenCount(
-          int index, int value) {
-        ensureTokenCountIsMutable();
-        tokenCount_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 token_count = 3;</code>
-       */
-      public Builder addTokenCount(int value) {
-        ensureTokenCountIsMutable();
-        tokenCount_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 token_count = 3;</code>
-       */
-      public Builder addAllTokenCount(
-          java.lang.Iterable<? extends java.lang.Integer> values) {
-        ensureTokenCountIsMutable();
-        super.addAll(values, tokenCount_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated int32 token_count = 3;</code>
-       */
-      public Builder clearTokenCount() {
-        tokenCount_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:artm.Field)
-    }
-
-    static {
-      defaultInstance = new Field(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:artm.Field)
-  }
-
   public interface ItemOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -833,6 +48,11 @@ public final class Messages {
   }
   /**
    * Protobuf type {@code artm.Item}
+   *
+   * <pre>
+   * Item is an object that represents some textual information.
+   * You may think of Item just as about one document from some collection of texts.
+   * </pre>
    */
   public static final class Item extends
       com.google.protobuf.GeneratedMessage
@@ -1109,6 +329,11 @@ public final class Messages {
     }
     /**
      * Protobuf type {@code artm.Item}
+     *
+     * <pre>
+     * Item is an object that represents some textual information.
+     * You may think of Item just as about one document from some collection of texts.
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -1551,6 +776,819 @@ public final class Messages {
     // @@protoc_insertion_point(class_scope:artm.Item)
   }
 
+  public interface FieldOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional string field_name = 1 [default = "@body"];
+    /**
+     * <code>optional string field_name = 1 [default = "@body"];</code>
+     */
+    boolean hasFieldName();
+    /**
+     * <code>optional string field_name = 1 [default = "@body"];</code>
+     */
+    java.lang.String getFieldName();
+    /**
+     * <code>optional string field_name = 1 [default = "@body"];</code>
+     */
+    com.google.protobuf.ByteString
+        getFieldNameBytes();
+
+    // repeated int32 token_id = 2;
+    /**
+     * <code>repeated int32 token_id = 2;</code>
+     */
+    java.util.List<java.lang.Integer> getTokenIdList();
+    /**
+     * <code>repeated int32 token_id = 2;</code>
+     */
+    int getTokenIdCount();
+    /**
+     * <code>repeated int32 token_id = 2;</code>
+     */
+    int getTokenId(int index);
+
+    // repeated int32 token_count = 3;
+    /**
+     * <code>repeated int32 token_count = 3;</code>
+     */
+    java.util.List<java.lang.Integer> getTokenCountList();
+    /**
+     * <code>repeated int32 token_count = 3;</code>
+     */
+    int getTokenCountCount();
+    /**
+     * <code>repeated int32 token_count = 3;</code>
+     */
+    int getTokenCount(int index);
+  }
+  /**
+   * Protobuf type {@code artm.Field}
+   *
+   * <pre>
+   * Items consist of multiple fields.
+   * The idea behind fields is that each item might have its 
+   * title, author, body, abstract, actual text, links, year of publication, etc.
+   * Each of this entities should be represented as a Field.
+   * The Model should define how those fields should be taken into account
+   * when we infer a topic model.
+   * Currently each field is represented as "bag-of-words" ---
+   * Each token is listed together with the number of its occurences.
+   * Note that each Field is always part of an Item,
+   * Item is part of a Batch, and a batch always contains a list of tokens.
+   * Therefore, each Field just lists the indexes of tokens in the Batch.
+   * </pre>
+   */
+  public static final class Field extends
+      com.google.protobuf.GeneratedMessage
+      implements FieldOrBuilder {
+    // Use Field.newBuilder() to construct.
+    private Field(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private Field(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Field defaultInstance;
+    public static Field getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Field getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Field(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              fieldName_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                tokenId_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              tokenId_.add(input.readInt32());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
+                tokenId_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                tokenId_.add(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 24: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                tokenCount_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              tokenCount_.add(input.readInt32());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
+                tokenCount_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                tokenCount_.add(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          tokenId_ = java.util.Collections.unmodifiableList(tokenId_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          tokenCount_ = java.util.Collections.unmodifiableList(tokenCount_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return artm.Messages.internal_static_artm_Field_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return artm.Messages.internal_static_artm_Field_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              artm.Messages.Field.class, artm.Messages.Field.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Field> PARSER =
+        new com.google.protobuf.AbstractParser<Field>() {
+      public Field parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Field(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Field> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional string field_name = 1 [default = "@body"];
+    public static final int FIELD_NAME_FIELD_NUMBER = 1;
+    private java.lang.Object fieldName_;
+    /**
+     * <code>optional string field_name = 1 [default = "@body"];</code>
+     */
+    public boolean hasFieldName() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional string field_name = 1 [default = "@body"];</code>
+     */
+    public java.lang.String getFieldName() {
+      java.lang.Object ref = fieldName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          fieldName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string field_name = 1 [default = "@body"];</code>
+     */
+    public com.google.protobuf.ByteString
+        getFieldNameBytes() {
+      java.lang.Object ref = fieldName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fieldName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // repeated int32 token_id = 2;
+    public static final int TOKEN_ID_FIELD_NUMBER = 2;
+    private java.util.List<java.lang.Integer> tokenId_;
+    /**
+     * <code>repeated int32 token_id = 2;</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getTokenIdList() {
+      return tokenId_;
+    }
+    /**
+     * <code>repeated int32 token_id = 2;</code>
+     */
+    public int getTokenIdCount() {
+      return tokenId_.size();
+    }
+    /**
+     * <code>repeated int32 token_id = 2;</code>
+     */
+    public int getTokenId(int index) {
+      return tokenId_.get(index);
+    }
+
+    // repeated int32 token_count = 3;
+    public static final int TOKEN_COUNT_FIELD_NUMBER = 3;
+    private java.util.List<java.lang.Integer> tokenCount_;
+    /**
+     * <code>repeated int32 token_count = 3;</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getTokenCountList() {
+      return tokenCount_;
+    }
+    /**
+     * <code>repeated int32 token_count = 3;</code>
+     */
+    public int getTokenCountCount() {
+      return tokenCount_.size();
+    }
+    /**
+     * <code>repeated int32 token_count = 3;</code>
+     */
+    public int getTokenCount(int index) {
+      return tokenCount_.get(index);
+    }
+
+    private void initFields() {
+      fieldName_ = "@body";
+      tokenId_ = java.util.Collections.emptyList();
+      tokenCount_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getFieldNameBytes());
+      }
+      for (int i = 0; i < tokenId_.size(); i++) {
+        output.writeInt32(2, tokenId_.get(i));
+      }
+      for (int i = 0; i < tokenCount_.size(); i++) {
+        output.writeInt32(3, tokenCount_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getFieldNameBytes());
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < tokenId_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(tokenId_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getTokenIdList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < tokenCount_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(tokenCount_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getTokenCountList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static artm.Messages.Field parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.Field parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.Field parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.Field parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.Field parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.Field parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.Field parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static artm.Messages.Field parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.Field parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.Field parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(artm.Messages.Field prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code artm.Field}
+     *
+     * <pre>
+     * Items consist of multiple fields.
+     * The idea behind fields is that each item might have its 
+     * title, author, body, abstract, actual text, links, year of publication, etc.
+     * Each of this entities should be represented as a Field.
+     * The Model should define how those fields should be taken into account
+     * when we infer a topic model.
+     * Currently each field is represented as "bag-of-words" ---
+     * Each token is listed together with the number of its occurences.
+     * Note that each Field is always part of an Item,
+     * Item is part of a Batch, and a batch always contains a list of tokens.
+     * Therefore, each Field just lists the indexes of tokens in the Batch.
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements artm.Messages.FieldOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return artm.Messages.internal_static_artm_Field_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return artm.Messages.internal_static_artm_Field_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                artm.Messages.Field.class, artm.Messages.Field.Builder.class);
+      }
+
+      // Construct using artm.Messages.Field.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        fieldName_ = "@body";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        tokenId_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        tokenCount_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return artm.Messages.internal_static_artm_Field_descriptor;
+      }
+
+      public artm.Messages.Field getDefaultInstanceForType() {
+        return artm.Messages.Field.getDefaultInstance();
+      }
+
+      public artm.Messages.Field build() {
+        artm.Messages.Field result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public artm.Messages.Field buildPartial() {
+        artm.Messages.Field result = new artm.Messages.Field(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.fieldName_ = fieldName_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          tokenId_ = java.util.Collections.unmodifiableList(tokenId_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.tokenId_ = tokenId_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          tokenCount_ = java.util.Collections.unmodifiableList(tokenCount_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.tokenCount_ = tokenCount_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof artm.Messages.Field) {
+          return mergeFrom((artm.Messages.Field)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(artm.Messages.Field other) {
+        if (other == artm.Messages.Field.getDefaultInstance()) return this;
+        if (other.hasFieldName()) {
+          bitField0_ |= 0x00000001;
+          fieldName_ = other.fieldName_;
+          onChanged();
+        }
+        if (!other.tokenId_.isEmpty()) {
+          if (tokenId_.isEmpty()) {
+            tokenId_ = other.tokenId_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureTokenIdIsMutable();
+            tokenId_.addAll(other.tokenId_);
+          }
+          onChanged();
+        }
+        if (!other.tokenCount_.isEmpty()) {
+          if (tokenCount_.isEmpty()) {
+            tokenCount_ = other.tokenCount_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureTokenCountIsMutable();
+            tokenCount_.addAll(other.tokenCount_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        artm.Messages.Field parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (artm.Messages.Field) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional string field_name = 1 [default = "@body"];
+      private java.lang.Object fieldName_ = "@body";
+      /**
+       * <code>optional string field_name = 1 [default = "@body"];</code>
+       */
+      public boolean hasFieldName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string field_name = 1 [default = "@body"];</code>
+       */
+      public java.lang.String getFieldName() {
+        java.lang.Object ref = fieldName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          fieldName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string field_name = 1 [default = "@body"];</code>
+       */
+      public com.google.protobuf.ByteString
+          getFieldNameBytes() {
+        java.lang.Object ref = fieldName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          fieldName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string field_name = 1 [default = "@body"];</code>
+       */
+      public Builder setFieldName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        fieldName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string field_name = 1 [default = "@body"];</code>
+       */
+      public Builder clearFieldName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        fieldName_ = getDefaultInstance().getFieldName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string field_name = 1 [default = "@body"];</code>
+       */
+      public Builder setFieldNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        fieldName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // repeated int32 token_id = 2;
+      private java.util.List<java.lang.Integer> tokenId_ = java.util.Collections.emptyList();
+      private void ensureTokenIdIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          tokenId_ = new java.util.ArrayList<java.lang.Integer>(tokenId_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      /**
+       * <code>repeated int32 token_id = 2;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getTokenIdList() {
+        return java.util.Collections.unmodifiableList(tokenId_);
+      }
+      /**
+       * <code>repeated int32 token_id = 2;</code>
+       */
+      public int getTokenIdCount() {
+        return tokenId_.size();
+      }
+      /**
+       * <code>repeated int32 token_id = 2;</code>
+       */
+      public int getTokenId(int index) {
+        return tokenId_.get(index);
+      }
+      /**
+       * <code>repeated int32 token_id = 2;</code>
+       */
+      public Builder setTokenId(
+          int index, int value) {
+        ensureTokenIdIsMutable();
+        tokenId_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 token_id = 2;</code>
+       */
+      public Builder addTokenId(int value) {
+        ensureTokenIdIsMutable();
+        tokenId_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 token_id = 2;</code>
+       */
+      public Builder addAllTokenId(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureTokenIdIsMutable();
+        super.addAll(values, tokenId_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 token_id = 2;</code>
+       */
+      public Builder clearTokenId() {
+        tokenId_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+
+      // repeated int32 token_count = 3;
+      private java.util.List<java.lang.Integer> tokenCount_ = java.util.Collections.emptyList();
+      private void ensureTokenCountIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          tokenCount_ = new java.util.ArrayList<java.lang.Integer>(tokenCount_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      /**
+       * <code>repeated int32 token_count = 3;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getTokenCountList() {
+        return java.util.Collections.unmodifiableList(tokenCount_);
+      }
+      /**
+       * <code>repeated int32 token_count = 3;</code>
+       */
+      public int getTokenCountCount() {
+        return tokenCount_.size();
+      }
+      /**
+       * <code>repeated int32 token_count = 3;</code>
+       */
+      public int getTokenCount(int index) {
+        return tokenCount_.get(index);
+      }
+      /**
+       * <code>repeated int32 token_count = 3;</code>
+       */
+      public Builder setTokenCount(
+          int index, int value) {
+        ensureTokenCountIsMutable();
+        tokenCount_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 token_count = 3;</code>
+       */
+      public Builder addTokenCount(int value) {
+        ensureTokenCountIsMutable();
+        tokenCount_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 token_count = 3;</code>
+       */
+      public Builder addAllTokenCount(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureTokenCountIsMutable();
+        super.addAll(values, tokenCount_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 token_count = 3;</code>
+       */
+      public Builder clearTokenCount() {
+        tokenCount_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:artm.Field)
+    }
+
+    static {
+      defaultInstance = new Field(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:artm.Field)
+  }
+
   public interface BatchOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -1574,33 +1612,37 @@ public final class Messages {
     com.google.protobuf.ByteString
         getTokenBytes(int index);
 
-    // repeated .artm.Item item = 3;
+    // repeated .artm.Item item = 2;
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     java.util.List<artm.Messages.Item> 
         getItemList();
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     artm.Messages.Item getItem(int index);
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     int getItemCount();
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     java.util.List<? extends artm.Messages.ItemOrBuilder> 
         getItemOrBuilderList();
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     artm.Messages.ItemOrBuilder getItemOrBuilder(
         int index);
   }
   /**
    * Protobuf type {@code artm.Batch}
+   *
+   * <pre>
+   * A batch represents a set of Items.
+   * </pre>
    */
   public static final class Batch extends
       com.google.protobuf.GeneratedMessage
@@ -1658,7 +1700,7 @@ public final class Messages {
               token_.add(input.readBytes());
               break;
             }
-            case 26: {
+            case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
                 item_ = new java.util.ArrayList<artm.Messages.Item>();
                 mutable_bitField0_ |= 0x00000002;
@@ -1741,36 +1783,36 @@ public final class Messages {
       return token_.getByteString(index);
     }
 
-    // repeated .artm.Item item = 3;
-    public static final int ITEM_FIELD_NUMBER = 3;
+    // repeated .artm.Item item = 2;
+    public static final int ITEM_FIELD_NUMBER = 2;
     private java.util.List<artm.Messages.Item> item_;
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     public java.util.List<artm.Messages.Item> getItemList() {
       return item_;
     }
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     public java.util.List<? extends artm.Messages.ItemOrBuilder> 
         getItemOrBuilderList() {
       return item_;
     }
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     public int getItemCount() {
       return item_.size();
     }
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     public artm.Messages.Item getItem(int index) {
       return item_.get(index);
     }
     /**
-     * <code>repeated .artm.Item item = 3;</code>
+     * <code>repeated .artm.Item item = 2;</code>
      */
     public artm.Messages.ItemOrBuilder getItemOrBuilder(
         int index) {
@@ -1797,7 +1839,7 @@ public final class Messages {
         output.writeBytes(1, token_.getByteString(i));
       }
       for (int i = 0; i < item_.size(); i++) {
-        output.writeMessage(3, item_.get(i));
+        output.writeMessage(2, item_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -1819,7 +1861,7 @@ public final class Messages {
       }
       for (int i = 0; i < item_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, item_.get(i));
+          .computeMessageSize(2, item_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1901,6 +1943,10 @@ public final class Messages {
     }
     /**
      * Protobuf type {@code artm.Batch}
+     *
+     * <pre>
+     * A batch represents a set of Items.
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -2159,7 +2205,7 @@ public final class Messages {
         return this;
       }
 
-      // repeated .artm.Item item = 3;
+      // repeated .artm.Item item = 2;
       private java.util.List<artm.Messages.Item> item_ =
         java.util.Collections.emptyList();
       private void ensureItemIsMutable() {
@@ -2173,7 +2219,7 @@ public final class Messages {
           artm.Messages.Item, artm.Messages.Item.Builder, artm.Messages.ItemOrBuilder> itemBuilder_;
 
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public java.util.List<artm.Messages.Item> getItemList() {
         if (itemBuilder_ == null) {
@@ -2183,7 +2229,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public int getItemCount() {
         if (itemBuilder_ == null) {
@@ -2193,7 +2239,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public artm.Messages.Item getItem(int index) {
         if (itemBuilder_ == null) {
@@ -2203,7 +2249,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder setItem(
           int index, artm.Messages.Item value) {
@@ -2220,7 +2266,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder setItem(
           int index, artm.Messages.Item.Builder builderForValue) {
@@ -2234,7 +2280,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder addItem(artm.Messages.Item value) {
         if (itemBuilder_ == null) {
@@ -2250,7 +2296,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder addItem(
           int index, artm.Messages.Item value) {
@@ -2267,7 +2313,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder addItem(
           artm.Messages.Item.Builder builderForValue) {
@@ -2281,7 +2327,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder addItem(
           int index, artm.Messages.Item.Builder builderForValue) {
@@ -2295,7 +2341,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder addAllItem(
           java.lang.Iterable<? extends artm.Messages.Item> values) {
@@ -2309,7 +2355,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder clearItem() {
         if (itemBuilder_ == null) {
@@ -2322,7 +2368,7 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public Builder removeItem(int index) {
         if (itemBuilder_ == null) {
@@ -2335,14 +2381,14 @@ public final class Messages {
         return this;
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public artm.Messages.Item.Builder getItemBuilder(
           int index) {
         return getItemFieldBuilder().getBuilder(index);
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public artm.Messages.ItemOrBuilder getItemOrBuilder(
           int index) {
@@ -2352,7 +2398,7 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public java.util.List<? extends artm.Messages.ItemOrBuilder> 
            getItemOrBuilderList() {
@@ -2363,14 +2409,14 @@ public final class Messages {
         }
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public artm.Messages.Item.Builder addItemBuilder() {
         return getItemFieldBuilder().addBuilder(
             artm.Messages.Item.getDefaultInstance());
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public artm.Messages.Item.Builder addItemBuilder(
           int index) {
@@ -2378,7 +2424,7 @@ public final class Messages {
             index, artm.Messages.Item.getDefaultInstance());
       }
       /**
-       * <code>repeated .artm.Item item = 3;</code>
+       * <code>repeated .artm.Item item = 2;</code>
        */
       public java.util.List<artm.Messages.Item.Builder> 
            getItemBuilderList() {
@@ -2447,9 +2493,38 @@ public final class Messages {
      * <code>optional int32 queue_size = 3 [default = 10];</code>
      */
     int getQueueSize();
+
+    // repeated .artm.Stream stream = 4;
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    java.util.List<artm.Messages.Stream> 
+        getStreamList();
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    artm.Messages.Stream getStream(int index);
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    int getStreamCount();
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    java.util.List<? extends artm.Messages.StreamOrBuilder> 
+        getStreamOrBuilderList();
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    artm.Messages.StreamOrBuilder getStreamOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code artm.DataLoaderConfig}
+   *
+   * <pre>
+   * Configuration of DataLoader component.
+   * </pre>
    */
   public static final class DataLoaderConfig extends
       com.google.protobuf.GeneratedMessage
@@ -2514,6 +2589,14 @@ public final class Messages {
               queueSize_ = input.readInt32();
               break;
             }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                stream_ = new java.util.ArrayList<artm.Messages.Stream>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              stream_.add(input.readMessage(artm.Messages.Stream.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2522,6 +2605,9 @@ public final class Messages {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          stream_ = java.util.Collections.unmodifiableList(stream_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -2629,10 +2715,47 @@ public final class Messages {
       return queueSize_;
     }
 
+    // repeated .artm.Stream stream = 4;
+    public static final int STREAM_FIELD_NUMBER = 4;
+    private java.util.List<artm.Messages.Stream> stream_;
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    public java.util.List<artm.Messages.Stream> getStreamList() {
+      return stream_;
+    }
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    public java.util.List<? extends artm.Messages.StreamOrBuilder> 
+        getStreamOrBuilderList() {
+      return stream_;
+    }
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    public int getStreamCount() {
+      return stream_.size();
+    }
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    public artm.Messages.Stream getStream(int index) {
+      return stream_.get(index);
+    }
+    /**
+     * <code>repeated .artm.Stream stream = 4;</code>
+     */
+    public artm.Messages.StreamOrBuilder getStreamOrBuilder(
+        int index) {
+      return stream_.get(index);
+    }
+
     private void initFields() {
       instanceId_ = 0;
       diskPath_ = "";
       queueSize_ = 10;
+      stream_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2642,6 +2765,12 @@ public final class Messages {
       if (!hasInstanceId()) {
         memoizedIsInitialized = 0;
         return false;
+      }
+      for (int i = 0; i < getStreamCount(); i++) {
+        if (!getStream(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -2658,6 +2787,9 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeInt32(3, queueSize_);
+      }
+      for (int i = 0; i < stream_.size(); i++) {
+        output.writeMessage(4, stream_.get(i));
       }
       getUnknownFields().writeTo(output);
     }
@@ -2679,6 +2811,10 @@ public final class Messages {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(3, queueSize_);
+      }
+      for (int i = 0; i < stream_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, stream_.get(i));
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -2760,6 +2896,10 @@ public final class Messages {
     }
     /**
      * Protobuf type {@code artm.DataLoaderConfig}
+     *
+     * <pre>
+     * Configuration of DataLoader component.
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -2788,6 +2928,7 @@ public final class Messages {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getStreamFieldBuilder();
         }
       }
       private static Builder create() {
@@ -2802,6 +2943,12 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000002);
         queueSize_ = 10;
         bitField0_ = (bitField0_ & ~0x00000004);
+        if (streamBuilder_ == null) {
+          stream_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          streamBuilder_.clear();
+        }
         return this;
       }
 
@@ -2842,6 +2989,15 @@ public final class Messages {
           to_bitField0_ |= 0x00000004;
         }
         result.queueSize_ = queueSize_;
+        if (streamBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            stream_ = java.util.Collections.unmodifiableList(stream_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.stream_ = stream_;
+        } else {
+          result.stream_ = streamBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2869,6 +3025,32 @@ public final class Messages {
         if (other.hasQueueSize()) {
           setQueueSize(other.getQueueSize());
         }
+        if (streamBuilder_ == null) {
+          if (!other.stream_.isEmpty()) {
+            if (stream_.isEmpty()) {
+              stream_ = other.stream_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureStreamIsMutable();
+              stream_.addAll(other.stream_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.stream_.isEmpty()) {
+            if (streamBuilder_.isEmpty()) {
+              streamBuilder_.dispose();
+              streamBuilder_ = null;
+              stream_ = other.stream_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              streamBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getStreamFieldBuilder() : null;
+            } else {
+              streamBuilder_.addAllMessages(other.stream_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -2877,6 +3059,12 @@ public final class Messages {
         if (!hasInstanceId()) {
           
           return false;
+        }
+        for (int i = 0; i < getStreamCount(); i++) {
+          if (!getStream(i).isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -3040,6 +3228,246 @@ public final class Messages {
         return this;
       }
 
+      // repeated .artm.Stream stream = 4;
+      private java.util.List<artm.Messages.Stream> stream_ =
+        java.util.Collections.emptyList();
+      private void ensureStreamIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          stream_ = new java.util.ArrayList<artm.Messages.Stream>(stream_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          artm.Messages.Stream, artm.Messages.Stream.Builder, artm.Messages.StreamOrBuilder> streamBuilder_;
+
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public java.util.List<artm.Messages.Stream> getStreamList() {
+        if (streamBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(stream_);
+        } else {
+          return streamBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public int getStreamCount() {
+        if (streamBuilder_ == null) {
+          return stream_.size();
+        } else {
+          return streamBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public artm.Messages.Stream getStream(int index) {
+        if (streamBuilder_ == null) {
+          return stream_.get(index);
+        } else {
+          return streamBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder setStream(
+          int index, artm.Messages.Stream value) {
+        if (streamBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStreamIsMutable();
+          stream_.set(index, value);
+          onChanged();
+        } else {
+          streamBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder setStream(
+          int index, artm.Messages.Stream.Builder builderForValue) {
+        if (streamBuilder_ == null) {
+          ensureStreamIsMutable();
+          stream_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          streamBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder addStream(artm.Messages.Stream value) {
+        if (streamBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStreamIsMutable();
+          stream_.add(value);
+          onChanged();
+        } else {
+          streamBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder addStream(
+          int index, artm.Messages.Stream value) {
+        if (streamBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureStreamIsMutable();
+          stream_.add(index, value);
+          onChanged();
+        } else {
+          streamBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder addStream(
+          artm.Messages.Stream.Builder builderForValue) {
+        if (streamBuilder_ == null) {
+          ensureStreamIsMutable();
+          stream_.add(builderForValue.build());
+          onChanged();
+        } else {
+          streamBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder addStream(
+          int index, artm.Messages.Stream.Builder builderForValue) {
+        if (streamBuilder_ == null) {
+          ensureStreamIsMutable();
+          stream_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          streamBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder addAllStream(
+          java.lang.Iterable<? extends artm.Messages.Stream> values) {
+        if (streamBuilder_ == null) {
+          ensureStreamIsMutable();
+          super.addAll(values, stream_);
+          onChanged();
+        } else {
+          streamBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder clearStream() {
+        if (streamBuilder_ == null) {
+          stream_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          streamBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public Builder removeStream(int index) {
+        if (streamBuilder_ == null) {
+          ensureStreamIsMutable();
+          stream_.remove(index);
+          onChanged();
+        } else {
+          streamBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public artm.Messages.Stream.Builder getStreamBuilder(
+          int index) {
+        return getStreamFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public artm.Messages.StreamOrBuilder getStreamOrBuilder(
+          int index) {
+        if (streamBuilder_ == null) {
+          return stream_.get(index);  } else {
+          return streamBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public java.util.List<? extends artm.Messages.StreamOrBuilder> 
+           getStreamOrBuilderList() {
+        if (streamBuilder_ != null) {
+          return streamBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(stream_);
+        }
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public artm.Messages.Stream.Builder addStreamBuilder() {
+        return getStreamFieldBuilder().addBuilder(
+            artm.Messages.Stream.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public artm.Messages.Stream.Builder addStreamBuilder(
+          int index) {
+        return getStreamFieldBuilder().addBuilder(
+            index, artm.Messages.Stream.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .artm.Stream stream = 4;</code>
+       */
+      public java.util.List<artm.Messages.Stream.Builder> 
+           getStreamBuilderList() {
+        return getStreamFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          artm.Messages.Stream, artm.Messages.Stream.Builder, artm.Messages.StreamOrBuilder> 
+          getStreamFieldBuilder() {
+        if (streamBuilder_ == null) {
+          streamBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              artm.Messages.Stream, artm.Messages.Stream.Builder, artm.Messages.StreamOrBuilder>(
+                  stream_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          stream_ = null;
+        }
+        return streamBuilder_;
+      }
+
       // @@protoc_insertion_point(builder_scope:artm.DataLoaderConfig)
     }
 
@@ -3049,6 +3477,912 @@ public final class Messages {
     }
 
     // @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
+  }
+
+  public interface StreamOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required .artm.Stream.Type type = 1 [default = Global];
+    /**
+     * <code>required .artm.Stream.Type type = 1 [default = Global];</code>
+     */
+    boolean hasType();
+    /**
+     * <code>required .artm.Stream.Type type = 1 [default = Global];</code>
+     */
+    artm.Messages.Stream.Type getType();
+
+    // optional string name = 2 [default = "@global"];
+    /**
+     * <code>optional string name = 2 [default = "@global"];</code>
+     */
+    boolean hasName();
+    /**
+     * <code>optional string name = 2 [default = "@global"];</code>
+     */
+    java.lang.String getName();
+    /**
+     * <code>optional string name = 2 [default = "@global"];</code>
+     */
+    com.google.protobuf.ByteString
+        getNameBytes();
+
+    // optional int32 modulus = 3;
+    /**
+     * <code>optional int32 modulus = 3;</code>
+     */
+    boolean hasModulus();
+    /**
+     * <code>optional int32 modulus = 3;</code>
+     */
+    int getModulus();
+
+    // repeated int32 residuals = 4;
+    /**
+     * <code>repeated int32 residuals = 4;</code>
+     */
+    java.util.List<java.lang.Integer> getResidualsList();
+    /**
+     * <code>repeated int32 residuals = 4;</code>
+     */
+    int getResidualsCount();
+    /**
+     * <code>repeated int32 residuals = 4;</code>
+     */
+    int getResiduals(int index);
+  }
+  /**
+   * Protobuf type {@code artm.Stream}
+   *
+   * <pre>
+   * Defines a stream in DataLoader
+   * </pre>
+   */
+  public static final class Stream extends
+      com.google.protobuf.GeneratedMessage
+      implements StreamOrBuilder {
+    // Use Stream.newBuilder() to construct.
+    private Stream(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private Stream(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Stream defaultInstance;
+    public static Stream getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Stream getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Stream(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              artm.Messages.Stream.Type value = artm.Messages.Stream.Type.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                type_ = value;
+              }
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              name_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              modulus_ = input.readInt32();
+              break;
+            }
+            case 32: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                residuals_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              residuals_.add(input.readInt32());
+              break;
+            }
+            case 34: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008) && input.getBytesUntilLimit() > 0) {
+                residuals_ = new java.util.ArrayList<java.lang.Integer>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                residuals_.add(input.readInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          residuals_ = java.util.Collections.unmodifiableList(residuals_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return artm.Messages.internal_static_artm_Stream_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return artm.Messages.internal_static_artm_Stream_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              artm.Messages.Stream.class, artm.Messages.Stream.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Stream> PARSER =
+        new com.google.protobuf.AbstractParser<Stream>() {
+      public Stream parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Stream(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Stream> getParserForType() {
+      return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code artm.Stream.Type}
+     */
+    public enum Type
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>Global = 0;</code>
+       */
+      Global(0, 0),
+      /**
+       * <code>ItemIdModulus = 1;</code>
+       */
+      ItemIdModulus(1, 1),
+      /**
+       * <code>ItemHashModulus = 3;</code>
+       */
+      ItemHashModulus(2, 3),
+      ;
+
+      /**
+       * <code>Global = 0;</code>
+       */
+      public static final int Global_VALUE = 0;
+      /**
+       * <code>ItemIdModulus = 1;</code>
+       */
+      public static final int ItemIdModulus_VALUE = 1;
+      /**
+       * <code>ItemHashModulus = 3;</code>
+       */
+      public static final int ItemHashModulus_VALUE = 3;
+
+
+      public final int getNumber() { return value; }
+
+      public static Type valueOf(int value) {
+        switch (value) {
+          case 0: return Global;
+          case 1: return ItemIdModulus;
+          case 3: return ItemHashModulus;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<Type>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<Type>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Type>() {
+              public Type findValueByNumber(int number) {
+                return Type.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return artm.Messages.Stream.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final Type[] VALUES = values();
+
+      public static Type valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private Type(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:artm.Stream.Type)
+    }
+
+    private int bitField0_;
+    // required .artm.Stream.Type type = 1 [default = Global];
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private artm.Messages.Stream.Type type_;
+    /**
+     * <code>required .artm.Stream.Type type = 1 [default = Global];</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .artm.Stream.Type type = 1 [default = Global];</code>
+     */
+    public artm.Messages.Stream.Type getType() {
+      return type_;
+    }
+
+    // optional string name = 2 [default = "@global"];
+    public static final int NAME_FIELD_NUMBER = 2;
+    private java.lang.Object name_;
+    /**
+     * <code>optional string name = 2 [default = "@global"];</code>
+     */
+    public boolean hasName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string name = 2 [default = "@global"];</code>
+     */
+    public java.lang.String getName() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          name_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string name = 2 [default = "@global"];</code>
+     */
+    public com.google.protobuf.ByteString
+        getNameBytes() {
+      java.lang.Object ref = name_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        name_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional int32 modulus = 3;
+    public static final int MODULUS_FIELD_NUMBER = 3;
+    private int modulus_;
+    /**
+     * <code>optional int32 modulus = 3;</code>
+     */
+    public boolean hasModulus() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional int32 modulus = 3;</code>
+     */
+    public int getModulus() {
+      return modulus_;
+    }
+
+    // repeated int32 residuals = 4;
+    public static final int RESIDUALS_FIELD_NUMBER = 4;
+    private java.util.List<java.lang.Integer> residuals_;
+    /**
+     * <code>repeated int32 residuals = 4;</code>
+     */
+    public java.util.List<java.lang.Integer>
+        getResidualsList() {
+      return residuals_;
+    }
+    /**
+     * <code>repeated int32 residuals = 4;</code>
+     */
+    public int getResidualsCount() {
+      return residuals_.size();
+    }
+    /**
+     * <code>repeated int32 residuals = 4;</code>
+     */
+    public int getResiduals(int index) {
+      return residuals_.get(index);
+    }
+
+    private void initFields() {
+      type_ = artm.Messages.Stream.Type.Global;
+      name_ = "@global";
+      modulus_ = 0;
+      residuals_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, type_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, modulus_);
+      }
+      for (int i = 0; i < residuals_.size(); i++) {
+        output.writeInt32(4, residuals_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, type_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, modulus_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < residuals_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeInt32SizeNoTag(residuals_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getResidualsList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static artm.Messages.Stream parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.Stream parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.Stream parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.Stream parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.Stream parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.Stream parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.Stream parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static artm.Messages.Stream parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.Stream parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.Stream parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(artm.Messages.Stream prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code artm.Stream}
+     *
+     * <pre>
+     * Defines a stream in DataLoader
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements artm.Messages.StreamOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return artm.Messages.internal_static_artm_Stream_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return artm.Messages.internal_static_artm_Stream_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                artm.Messages.Stream.class, artm.Messages.Stream.Builder.class);
+      }
+
+      // Construct using artm.Messages.Stream.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        type_ = artm.Messages.Stream.Type.Global;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        name_ = "@global";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        modulus_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        residuals_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return artm.Messages.internal_static_artm_Stream_descriptor;
+      }
+
+      public artm.Messages.Stream getDefaultInstanceForType() {
+        return artm.Messages.Stream.getDefaultInstance();
+      }
+
+      public artm.Messages.Stream build() {
+        artm.Messages.Stream result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public artm.Messages.Stream buildPartial() {
+        artm.Messages.Stream result = new artm.Messages.Stream(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.type_ = type_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.name_ = name_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.modulus_ = modulus_;
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          residuals_ = java.util.Collections.unmodifiableList(residuals_);
+          bitField0_ = (bitField0_ & ~0x00000008);
+        }
+        result.residuals_ = residuals_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof artm.Messages.Stream) {
+          return mergeFrom((artm.Messages.Stream)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(artm.Messages.Stream other) {
+        if (other == artm.Messages.Stream.getDefaultInstance()) return this;
+        if (other.hasType()) {
+          setType(other.getType());
+        }
+        if (other.hasName()) {
+          bitField0_ |= 0x00000002;
+          name_ = other.name_;
+          onChanged();
+        }
+        if (other.hasModulus()) {
+          setModulus(other.getModulus());
+        }
+        if (!other.residuals_.isEmpty()) {
+          if (residuals_.isEmpty()) {
+            residuals_ = other.residuals_;
+            bitField0_ = (bitField0_ & ~0x00000008);
+          } else {
+            ensureResidualsIsMutable();
+            residuals_.addAll(other.residuals_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasType()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        artm.Messages.Stream parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (artm.Messages.Stream) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required .artm.Stream.Type type = 1 [default = Global];
+      private artm.Messages.Stream.Type type_ = artm.Messages.Stream.Type.Global;
+      /**
+       * <code>required .artm.Stream.Type type = 1 [default = Global];</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .artm.Stream.Type type = 1 [default = Global];</code>
+       */
+      public artm.Messages.Stream.Type getType() {
+        return type_;
+      }
+      /**
+       * <code>required .artm.Stream.Type type = 1 [default = Global];</code>
+       */
+      public Builder setType(artm.Messages.Stream.Type value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .artm.Stream.Type type = 1 [default = Global];</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = artm.Messages.Stream.Type.Global;
+        onChanged();
+        return this;
+      }
+
+      // optional string name = 2 [default = "@global"];
+      private java.lang.Object name_ = "@global";
+      /**
+       * <code>optional string name = 2 [default = "@global"];</code>
+       */
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string name = 2 [default = "@global"];</code>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          name_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string name = 2 [default = "@global"];</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string name = 2 [default = "@global"];</code>
+       */
+      public Builder setName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string name = 2 [default = "@global"];</code>
+       */
+      public Builder clearName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        name_ = getDefaultInstance().getName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string name = 2 [default = "@global"];</code>
+       */
+      public Builder setNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        name_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 modulus = 3;
+      private int modulus_ ;
+      /**
+       * <code>optional int32 modulus = 3;</code>
+       */
+      public boolean hasModulus() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional int32 modulus = 3;</code>
+       */
+      public int getModulus() {
+        return modulus_;
+      }
+      /**
+       * <code>optional int32 modulus = 3;</code>
+       */
+      public Builder setModulus(int value) {
+        bitField0_ |= 0x00000004;
+        modulus_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 modulus = 3;</code>
+       */
+      public Builder clearModulus() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        modulus_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // repeated int32 residuals = 4;
+      private java.util.List<java.lang.Integer> residuals_ = java.util.Collections.emptyList();
+      private void ensureResidualsIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          residuals_ = new java.util.ArrayList<java.lang.Integer>(residuals_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+      /**
+       * <code>repeated int32 residuals = 4;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getResidualsList() {
+        return java.util.Collections.unmodifiableList(residuals_);
+      }
+      /**
+       * <code>repeated int32 residuals = 4;</code>
+       */
+      public int getResidualsCount() {
+        return residuals_.size();
+      }
+      /**
+       * <code>repeated int32 residuals = 4;</code>
+       */
+      public int getResiduals(int index) {
+        return residuals_.get(index);
+      }
+      /**
+       * <code>repeated int32 residuals = 4;</code>
+       */
+      public Builder setResiduals(
+          int index, int value) {
+        ensureResidualsIsMutable();
+        residuals_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 residuals = 4;</code>
+       */
+      public Builder addResiduals(int value) {
+        ensureResidualsIsMutable();
+        residuals_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 residuals = 4;</code>
+       */
+      public Builder addAllResiduals(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureResidualsIsMutable();
+        super.addAll(values, residuals_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated int32 residuals = 4;</code>
+       */
+      public Builder clearResiduals() {
+        residuals_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000008);
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:artm.Stream)
+    }
+
+    static {
+      defaultInstance = new Stream(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:artm.Stream)
   }
 
   public interface InstanceConfigOrBuilder
@@ -3066,6 +4400,10 @@ public final class Messages {
   }
   /**
    * Protobuf type {@code artm.InstanceConfig}
+   *
+   * <pre>
+   * Configuration of Instance component.
+   * </pre>
    */
   public static final class InstanceConfig extends
       com.google.protobuf.GeneratedMessage
@@ -3287,6 +4625,10 @@ public final class Messages {
     }
     /**
      * Protobuf type {@code artm.InstanceConfig}
+     *
+     * <pre>
+     * Configuration of Instance component.
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -3494,9 +4836,28 @@ public final class Messages {
      */
     com.google.protobuf.ByteString
         getFieldNameBytes();
+
+    // optional string stream_name = 6 [default = "@global"];
+    /**
+     * <code>optional string stream_name = 6 [default = "@global"];</code>
+     */
+    boolean hasStreamName();
+    /**
+     * <code>optional string stream_name = 6 [default = "@global"];</code>
+     */
+    java.lang.String getStreamName();
+    /**
+     * <code>optional string stream_name = 6 [default = "@global"];</code>
+     */
+    com.google.protobuf.ByteString
+        getStreamNameBytes();
   }
   /**
    * Protobuf type {@code artm.ModelConfig}
+   *
+   * <pre>
+   * Configuration of a model.
+   * </pre>
    */
   public static final class ModelConfig extends
       com.google.protobuf.GeneratedMessage
@@ -3564,6 +4925,11 @@ public final class Messages {
             case 42: {
               bitField0_ |= 0x00000008;
               fieldName_ = input.readBytes();
+              break;
+            }
+            case 50: {
+              bitField0_ |= 0x00000010;
+              streamName_ = input.readBytes();
               break;
             }
           }
@@ -3697,11 +5063,55 @@ public final class Messages {
       }
     }
 
+    // optional string stream_name = 6 [default = "@global"];
+    public static final int STREAM_NAME_FIELD_NUMBER = 6;
+    private java.lang.Object streamName_;
+    /**
+     * <code>optional string stream_name = 6 [default = "@global"];</code>
+     */
+    public boolean hasStreamName() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string stream_name = 6 [default = "@global"];</code>
+     */
+    public java.lang.String getStreamName() {
+      java.lang.Object ref = streamName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          streamName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string stream_name = 6 [default = "@global"];</code>
+     */
+    public com.google.protobuf.ByteString
+        getStreamNameBytes() {
+      java.lang.Object ref = streamName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        streamName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       topicsCount_ = 32;
       enabled_ = false;
       innerIterationsCount_ = 10;
       fieldName_ = "@body";
+      streamName_ = "@global";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3727,6 +5137,9 @@ public final class Messages {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBytes(5, getFieldNameBytes());
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(6, getStreamNameBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -3751,6 +5164,10 @@ public final class Messages {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, getFieldNameBytes());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, getStreamNameBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -3832,6 +5249,10 @@ public final class Messages {
     }
     /**
      * Protobuf type {@code artm.ModelConfig}
+     *
+     * <pre>
+     * Configuration of a model.
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -3876,6 +5297,8 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000004);
         fieldName_ = "@body";
         bitField0_ = (bitField0_ & ~0x00000008);
+        streamName_ = "@global";
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -3920,6 +5343,10 @@ public final class Messages {
           to_bitField0_ |= 0x00000008;
         }
         result.fieldName_ = fieldName_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.streamName_ = streamName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -3948,6 +5375,11 @@ public final class Messages {
         if (other.hasFieldName()) {
           bitField0_ |= 0x00000008;
           fieldName_ = other.fieldName_;
+          onChanged();
+        }
+        if (other.hasStreamName()) {
+          bitField0_ |= 0x00000010;
+          streamName_ = other.streamName_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -4150,6 +5582,80 @@ public final class Messages {
         return this;
       }
 
+      // optional string stream_name = 6 [default = "@global"];
+      private java.lang.Object streamName_ = "@global";
+      /**
+       * <code>optional string stream_name = 6 [default = "@global"];</code>
+       */
+      public boolean hasStreamName() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional string stream_name = 6 [default = "@global"];</code>
+       */
+      public java.lang.String getStreamName() {
+        java.lang.Object ref = streamName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          streamName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string stream_name = 6 [default = "@global"];</code>
+       */
+      public com.google.protobuf.ByteString
+          getStreamNameBytes() {
+        java.lang.Object ref = streamName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          streamName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string stream_name = 6 [default = "@global"];</code>
+       */
+      public Builder setStreamName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        streamName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string stream_name = 6 [default = "@global"];</code>
+       */
+      public Builder clearStreamName() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        streamName_ = getDefaultInstance().getStreamName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string stream_name = 6 [default = "@global"];</code>
+       */
+      public Builder setStreamNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000010;
+        streamName_ = value;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:artm.ModelConfig)
     }
 
@@ -4191,6 +5697,10 @@ public final class Messages {
   }
   /**
    * Protobuf type {@code artm.LoggerConfig}
+   *
+   * <pre>
+   * Configuration of the logger (not implemented yet).
+   * </pre>
    */
   public static final class LoggerConfig extends
       com.google.protobuf.GeneratedMessage
@@ -4583,6 +6093,10 @@ public final class Messages {
     }
     /**
      * Protobuf type {@code artm.LoggerConfig}
+     *
+     * <pre>
+     * Configuration of the logger (not implemented yet).
+     * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
@@ -4829,6 +6343,1486 @@ public final class Messages {
     }
 
     // @@protoc_insertion_point(class_scope:artm.LoggerConfig)
+  }
+
+  public interface ModelTopicsOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // repeated .artm.TokenTopics token_topic = 1;
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    java.util.List<artm.Messages.TokenTopics> 
+        getTokenTopicList();
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    artm.Messages.TokenTopics getTokenTopic(int index);
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    int getTokenTopicCount();
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    java.util.List<? extends artm.Messages.TokenTopicsOrBuilder> 
+        getTokenTopicOrBuilderList();
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    artm.Messages.TokenTopicsOrBuilder getTokenTopicOrBuilder(
+        int index);
+
+    // optional int32 items_processed = 2;
+    /**
+     * <code>optional int32 items_processed = 2;</code>
+     */
+    boolean hasItemsProcessed();
+    /**
+     * <code>optional int32 items_processed = 2;</code>
+     */
+    int getItemsProcessed();
+  }
+  /**
+   * Protobuf type {@code artm.ModelTopics}
+   *
+   * <pre>
+   * Topic model, represented by matrix Phi.
+   * </pre>
+   */
+  public static final class ModelTopics extends
+      com.google.protobuf.GeneratedMessage
+      implements ModelTopicsOrBuilder {
+    // Use ModelTopics.newBuilder() to construct.
+    private ModelTopics(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private ModelTopics(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final ModelTopics defaultInstance;
+    public static ModelTopics getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ModelTopics getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ModelTopics(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                tokenTopic_ = new java.util.ArrayList<artm.Messages.TokenTopics>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              tokenTopic_.add(input.readMessage(artm.Messages.TokenTopics.PARSER, extensionRegistry));
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000001;
+              itemsProcessed_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+          tokenTopic_ = java.util.Collections.unmodifiableList(tokenTopic_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return artm.Messages.internal_static_artm_ModelTopics_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return artm.Messages.internal_static_artm_ModelTopics_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              artm.Messages.ModelTopics.class, artm.Messages.ModelTopics.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<ModelTopics> PARSER =
+        new com.google.protobuf.AbstractParser<ModelTopics>() {
+      public ModelTopics parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ModelTopics(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ModelTopics> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // repeated .artm.TokenTopics token_topic = 1;
+    public static final int TOKEN_TOPIC_FIELD_NUMBER = 1;
+    private java.util.List<artm.Messages.TokenTopics> tokenTopic_;
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    public java.util.List<artm.Messages.TokenTopics> getTokenTopicList() {
+      return tokenTopic_;
+    }
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    public java.util.List<? extends artm.Messages.TokenTopicsOrBuilder> 
+        getTokenTopicOrBuilderList() {
+      return tokenTopic_;
+    }
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    public int getTokenTopicCount() {
+      return tokenTopic_.size();
+    }
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    public artm.Messages.TokenTopics getTokenTopic(int index) {
+      return tokenTopic_.get(index);
+    }
+    /**
+     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+     */
+    public artm.Messages.TokenTopicsOrBuilder getTokenTopicOrBuilder(
+        int index) {
+      return tokenTopic_.get(index);
+    }
+
+    // optional int32 items_processed = 2;
+    public static final int ITEMS_PROCESSED_FIELD_NUMBER = 2;
+    private int itemsProcessed_;
+    /**
+     * <code>optional int32 items_processed = 2;</code>
+     */
+    public boolean hasItemsProcessed() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional int32 items_processed = 2;</code>
+     */
+    public int getItemsProcessed() {
+      return itemsProcessed_;
+    }
+
+    private void initFields() {
+      tokenTopic_ = java.util.Collections.emptyList();
+      itemsProcessed_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < tokenTopic_.size(); i++) {
+        output.writeMessage(1, tokenTopic_.get(i));
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(2, itemsProcessed_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      for (int i = 0; i < tokenTopic_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, tokenTopic_.get(i));
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, itemsProcessed_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static artm.Messages.ModelTopics parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.ModelTopics parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.ModelTopics parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.ModelTopics parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.ModelTopics parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.ModelTopics parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.ModelTopics parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static artm.Messages.ModelTopics parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.ModelTopics parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.ModelTopics parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(artm.Messages.ModelTopics prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code artm.ModelTopics}
+     *
+     * <pre>
+     * Topic model, represented by matrix Phi.
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements artm.Messages.ModelTopicsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return artm.Messages.internal_static_artm_ModelTopics_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return artm.Messages.internal_static_artm_ModelTopics_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                artm.Messages.ModelTopics.class, artm.Messages.ModelTopics.Builder.class);
+      }
+
+      // Construct using artm.Messages.ModelTopics.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getTokenTopicFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        if (tokenTopicBuilder_ == null) {
+          tokenTopic_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          tokenTopicBuilder_.clear();
+        }
+        itemsProcessed_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return artm.Messages.internal_static_artm_ModelTopics_descriptor;
+      }
+
+      public artm.Messages.ModelTopics getDefaultInstanceForType() {
+        return artm.Messages.ModelTopics.getDefaultInstance();
+      }
+
+      public artm.Messages.ModelTopics build() {
+        artm.Messages.ModelTopics result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public artm.Messages.ModelTopics buildPartial() {
+        artm.Messages.ModelTopics result = new artm.Messages.ModelTopics(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (tokenTopicBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            tokenTopic_ = java.util.Collections.unmodifiableList(tokenTopic_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.tokenTopic_ = tokenTopic_;
+        } else {
+          result.tokenTopic_ = tokenTopicBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.itemsProcessed_ = itemsProcessed_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof artm.Messages.ModelTopics) {
+          return mergeFrom((artm.Messages.ModelTopics)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(artm.Messages.ModelTopics other) {
+        if (other == artm.Messages.ModelTopics.getDefaultInstance()) return this;
+        if (tokenTopicBuilder_ == null) {
+          if (!other.tokenTopic_.isEmpty()) {
+            if (tokenTopic_.isEmpty()) {
+              tokenTopic_ = other.tokenTopic_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureTokenTopicIsMutable();
+              tokenTopic_.addAll(other.tokenTopic_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.tokenTopic_.isEmpty()) {
+            if (tokenTopicBuilder_.isEmpty()) {
+              tokenTopicBuilder_.dispose();
+              tokenTopicBuilder_ = null;
+              tokenTopic_ = other.tokenTopic_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              tokenTopicBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getTokenTopicFieldBuilder() : null;
+            } else {
+              tokenTopicBuilder_.addAllMessages(other.tokenTopic_);
+            }
+          }
+        }
+        if (other.hasItemsProcessed()) {
+          setItemsProcessed(other.getItemsProcessed());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        artm.Messages.ModelTopics parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (artm.Messages.ModelTopics) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // repeated .artm.TokenTopics token_topic = 1;
+      private java.util.List<artm.Messages.TokenTopics> tokenTopic_ =
+        java.util.Collections.emptyList();
+      private void ensureTokenTopicIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          tokenTopic_ = new java.util.ArrayList<artm.Messages.TokenTopics>(tokenTopic_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          artm.Messages.TokenTopics, artm.Messages.TokenTopics.Builder, artm.Messages.TokenTopicsOrBuilder> tokenTopicBuilder_;
+
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public java.util.List<artm.Messages.TokenTopics> getTokenTopicList() {
+        if (tokenTopicBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(tokenTopic_);
+        } else {
+          return tokenTopicBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public int getTokenTopicCount() {
+        if (tokenTopicBuilder_ == null) {
+          return tokenTopic_.size();
+        } else {
+          return tokenTopicBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public artm.Messages.TokenTopics getTokenTopic(int index) {
+        if (tokenTopicBuilder_ == null) {
+          return tokenTopic_.get(index);
+        } else {
+          return tokenTopicBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder setTokenTopic(
+          int index, artm.Messages.TokenTopics value) {
+        if (tokenTopicBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTokenTopicIsMutable();
+          tokenTopic_.set(index, value);
+          onChanged();
+        } else {
+          tokenTopicBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder setTokenTopic(
+          int index, artm.Messages.TokenTopics.Builder builderForValue) {
+        if (tokenTopicBuilder_ == null) {
+          ensureTokenTopicIsMutable();
+          tokenTopic_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          tokenTopicBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder addTokenTopic(artm.Messages.TokenTopics value) {
+        if (tokenTopicBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTokenTopicIsMutable();
+          tokenTopic_.add(value);
+          onChanged();
+        } else {
+          tokenTopicBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder addTokenTopic(
+          int index, artm.Messages.TokenTopics value) {
+        if (tokenTopicBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureTokenTopicIsMutable();
+          tokenTopic_.add(index, value);
+          onChanged();
+        } else {
+          tokenTopicBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder addTokenTopic(
+          artm.Messages.TokenTopics.Builder builderForValue) {
+        if (tokenTopicBuilder_ == null) {
+          ensureTokenTopicIsMutable();
+          tokenTopic_.add(builderForValue.build());
+          onChanged();
+        } else {
+          tokenTopicBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder addTokenTopic(
+          int index, artm.Messages.TokenTopics.Builder builderForValue) {
+        if (tokenTopicBuilder_ == null) {
+          ensureTokenTopicIsMutable();
+          tokenTopic_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          tokenTopicBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder addAllTokenTopic(
+          java.lang.Iterable<? extends artm.Messages.TokenTopics> values) {
+        if (tokenTopicBuilder_ == null) {
+          ensureTokenTopicIsMutable();
+          super.addAll(values, tokenTopic_);
+          onChanged();
+        } else {
+          tokenTopicBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder clearTokenTopic() {
+        if (tokenTopicBuilder_ == null) {
+          tokenTopic_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          tokenTopicBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public Builder removeTokenTopic(int index) {
+        if (tokenTopicBuilder_ == null) {
+          ensureTokenTopicIsMutable();
+          tokenTopic_.remove(index);
+          onChanged();
+        } else {
+          tokenTopicBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public artm.Messages.TokenTopics.Builder getTokenTopicBuilder(
+          int index) {
+        return getTokenTopicFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public artm.Messages.TokenTopicsOrBuilder getTokenTopicOrBuilder(
+          int index) {
+        if (tokenTopicBuilder_ == null) {
+          return tokenTopic_.get(index);  } else {
+          return tokenTopicBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public java.util.List<? extends artm.Messages.TokenTopicsOrBuilder> 
+           getTokenTopicOrBuilderList() {
+        if (tokenTopicBuilder_ != null) {
+          return tokenTopicBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(tokenTopic_);
+        }
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public artm.Messages.TokenTopics.Builder addTokenTopicBuilder() {
+        return getTokenTopicFieldBuilder().addBuilder(
+            artm.Messages.TokenTopics.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public artm.Messages.TokenTopics.Builder addTokenTopicBuilder(
+          int index) {
+        return getTokenTopicFieldBuilder().addBuilder(
+            index, artm.Messages.TokenTopics.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
+       */
+      public java.util.List<artm.Messages.TokenTopics.Builder> 
+           getTokenTopicBuilderList() {
+        return getTokenTopicFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          artm.Messages.TokenTopics, artm.Messages.TokenTopics.Builder, artm.Messages.TokenTopicsOrBuilder> 
+          getTokenTopicFieldBuilder() {
+        if (tokenTopicBuilder_ == null) {
+          tokenTopicBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              artm.Messages.TokenTopics, artm.Messages.TokenTopics.Builder, artm.Messages.TokenTopicsOrBuilder>(
+                  tokenTopic_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          tokenTopic_ = null;
+        }
+        return tokenTopicBuilder_;
+      }
+
+      // optional int32 items_processed = 2;
+      private int itemsProcessed_ ;
+      /**
+       * <code>optional int32 items_processed = 2;</code>
+       */
+      public boolean hasItemsProcessed() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int32 items_processed = 2;</code>
+       */
+      public int getItemsProcessed() {
+        return itemsProcessed_;
+      }
+      /**
+       * <code>optional int32 items_processed = 2;</code>
+       */
+      public Builder setItemsProcessed(int value) {
+        bitField0_ |= 0x00000002;
+        itemsProcessed_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 items_processed = 2;</code>
+       */
+      public Builder clearItemsProcessed() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        itemsProcessed_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:artm.ModelTopics)
+    }
+
+    static {
+      defaultInstance = new ModelTopics(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:artm.ModelTopics)
+  }
+
+  public interface TokenTopicsOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional string token = 1;
+    /**
+     * <code>optional string token = 1;</code>
+     */
+    boolean hasToken();
+    /**
+     * <code>optional string token = 1;</code>
+     */
+    java.lang.String getToken();
+    /**
+     * <code>optional string token = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTokenBytes();
+
+    // optional int32 token_id = 2;
+    /**
+     * <code>optional int32 token_id = 2;</code>
+     */
+    boolean hasTokenId();
+    /**
+     * <code>optional int32 token_id = 2;</code>
+     */
+    int getTokenId();
+
+    // repeated float topic_weight = 3;
+    /**
+     * <code>repeated float topic_weight = 3;</code>
+     */
+    java.util.List<java.lang.Float> getTopicWeightList();
+    /**
+     * <code>repeated float topic_weight = 3;</code>
+     */
+    int getTopicWeightCount();
+    /**
+     * <code>repeated float topic_weight = 3;</code>
+     */
+    float getTopicWeight(int index);
+  }
+  /**
+   * Protobuf type {@code artm.TokenTopics}
+   *
+   * <pre>
+   * Represents one row in matrix Phi.
+   * </pre>
+   */
+  public static final class TokenTopics extends
+      com.google.protobuf.GeneratedMessage
+      implements TokenTopicsOrBuilder {
+    // Use TokenTopics.newBuilder() to construct.
+    private TokenTopics(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private TokenTopics(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final TokenTopics defaultInstance;
+    public static TokenTopics getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public TokenTopics getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private TokenTopics(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              token_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              tokenId_ = input.readInt32();
+              break;
+            }
+            case 29: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                topicWeight_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              topicWeight_.add(input.readFloat());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
+                topicWeight_ = new java.util.ArrayList<java.lang.Float>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                topicWeight_.add(input.readFloat());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          topicWeight_ = java.util.Collections.unmodifiableList(topicWeight_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return artm.Messages.internal_static_artm_TokenTopics_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return artm.Messages.internal_static_artm_TokenTopics_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              artm.Messages.TokenTopics.class, artm.Messages.TokenTopics.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<TokenTopics> PARSER =
+        new com.google.protobuf.AbstractParser<TokenTopics>() {
+      public TokenTopics parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new TokenTopics(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<TokenTopics> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional string token = 1;
+    public static final int TOKEN_FIELD_NUMBER = 1;
+    private java.lang.Object token_;
+    /**
+     * <code>optional string token = 1;</code>
+     */
+    public boolean hasToken() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional string token = 1;</code>
+     */
+    public java.lang.String getToken() {
+      java.lang.Object ref = token_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          token_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string token = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTokenBytes() {
+      java.lang.Object ref = token_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        token_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional int32 token_id = 2;
+    public static final int TOKEN_ID_FIELD_NUMBER = 2;
+    private int tokenId_;
+    /**
+     * <code>optional int32 token_id = 2;</code>
+     */
+    public boolean hasTokenId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional int32 token_id = 2;</code>
+     */
+    public int getTokenId() {
+      return tokenId_;
+    }
+
+    // repeated float topic_weight = 3;
+    public static final int TOPIC_WEIGHT_FIELD_NUMBER = 3;
+    private java.util.List<java.lang.Float> topicWeight_;
+    /**
+     * <code>repeated float topic_weight = 3;</code>
+     */
+    public java.util.List<java.lang.Float>
+        getTopicWeightList() {
+      return topicWeight_;
+    }
+    /**
+     * <code>repeated float topic_weight = 3;</code>
+     */
+    public int getTopicWeightCount() {
+      return topicWeight_.size();
+    }
+    /**
+     * <code>repeated float topic_weight = 3;</code>
+     */
+    public float getTopicWeight(int index) {
+      return topicWeight_.get(index);
+    }
+
+    private void initFields() {
+      token_ = "";
+      tokenId_ = 0;
+      topicWeight_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getTokenBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, tokenId_);
+      }
+      for (int i = 0; i < topicWeight_.size(); i++) {
+        output.writeFloat(3, topicWeight_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getTokenBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, tokenId_);
+      }
+      {
+        int dataSize = 0;
+        dataSize = 4 * getTopicWeightList().size();
+        size += dataSize;
+        size += 1 * getTopicWeightList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static artm.Messages.TokenTopics parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.TokenTopics parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.TokenTopics parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.TokenTopics parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.TokenTopics parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.TokenTopics parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.TokenTopics parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static artm.Messages.TokenTopics parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.TokenTopics parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.TokenTopics parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(artm.Messages.TokenTopics prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code artm.TokenTopics}
+     *
+     * <pre>
+     * Represents one row in matrix Phi.
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements artm.Messages.TokenTopicsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return artm.Messages.internal_static_artm_TokenTopics_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return artm.Messages.internal_static_artm_TokenTopics_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                artm.Messages.TokenTopics.class, artm.Messages.TokenTopics.Builder.class);
+      }
+
+      // Construct using artm.Messages.TokenTopics.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        token_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        tokenId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        topicWeight_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return artm.Messages.internal_static_artm_TokenTopics_descriptor;
+      }
+
+      public artm.Messages.TokenTopics getDefaultInstanceForType() {
+        return artm.Messages.TokenTopics.getDefaultInstance();
+      }
+
+      public artm.Messages.TokenTopics build() {
+        artm.Messages.TokenTopics result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public artm.Messages.TokenTopics buildPartial() {
+        artm.Messages.TokenTopics result = new artm.Messages.TokenTopics(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.token_ = token_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.tokenId_ = tokenId_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          topicWeight_ = java.util.Collections.unmodifiableList(topicWeight_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.topicWeight_ = topicWeight_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof artm.Messages.TokenTopics) {
+          return mergeFrom((artm.Messages.TokenTopics)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(artm.Messages.TokenTopics other) {
+        if (other == artm.Messages.TokenTopics.getDefaultInstance()) return this;
+        if (other.hasToken()) {
+          bitField0_ |= 0x00000001;
+          token_ = other.token_;
+          onChanged();
+        }
+        if (other.hasTokenId()) {
+          setTokenId(other.getTokenId());
+        }
+        if (!other.topicWeight_.isEmpty()) {
+          if (topicWeight_.isEmpty()) {
+            topicWeight_ = other.topicWeight_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureTopicWeightIsMutable();
+            topicWeight_.addAll(other.topicWeight_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        artm.Messages.TokenTopics parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (artm.Messages.TokenTopics) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional string token = 1;
+      private java.lang.Object token_ = "";
+      /**
+       * <code>optional string token = 1;</code>
+       */
+      public boolean hasToken() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string token = 1;</code>
+       */
+      public java.lang.String getToken() {
+        java.lang.Object ref = token_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          token_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string token = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTokenBytes() {
+        java.lang.Object ref = token_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          token_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string token = 1;</code>
+       */
+      public Builder setToken(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        token_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string token = 1;</code>
+       */
+      public Builder clearToken() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        token_ = getDefaultInstance().getToken();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string token = 1;</code>
+       */
+      public Builder setTokenBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        token_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 token_id = 2;
+      private int tokenId_ ;
+      /**
+       * <code>optional int32 token_id = 2;</code>
+       */
+      public boolean hasTokenId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int32 token_id = 2;</code>
+       */
+      public int getTokenId() {
+        return tokenId_;
+      }
+      /**
+       * <code>optional int32 token_id = 2;</code>
+       */
+      public Builder setTokenId(int value) {
+        bitField0_ |= 0x00000002;
+        tokenId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 token_id = 2;</code>
+       */
+      public Builder clearTokenId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        tokenId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // repeated float topic_weight = 3;
+      private java.util.List<java.lang.Float> topicWeight_ = java.util.Collections.emptyList();
+      private void ensureTopicWeightIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          topicWeight_ = new java.util.ArrayList<java.lang.Float>(topicWeight_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      /**
+       * <code>repeated float topic_weight = 3;</code>
+       */
+      public java.util.List<java.lang.Float>
+          getTopicWeightList() {
+        return java.util.Collections.unmodifiableList(topicWeight_);
+      }
+      /**
+       * <code>repeated float topic_weight = 3;</code>
+       */
+      public int getTopicWeightCount() {
+        return topicWeight_.size();
+      }
+      /**
+       * <code>repeated float topic_weight = 3;</code>
+       */
+      public float getTopicWeight(int index) {
+        return topicWeight_.get(index);
+      }
+      /**
+       * <code>repeated float topic_weight = 3;</code>
+       */
+      public Builder setTopicWeight(
+          int index, float value) {
+        ensureTopicWeightIsMutable();
+        topicWeight_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float topic_weight = 3;</code>
+       */
+      public Builder addTopicWeight(float value) {
+        ensureTopicWeightIsMutable();
+        topicWeight_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float topic_weight = 3;</code>
+       */
+      public Builder addAllTopicWeight(
+          java.lang.Iterable<? extends java.lang.Float> values) {
+        ensureTopicWeightIsMutable();
+        super.addAll(values, topicWeight_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated float topic_weight = 3;</code>
+       */
+      public Builder clearTopicWeight() {
+        topicWeight_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:artm.TokenTopics)
+    }
+
+    static {
+      defaultInstance = new TokenTopics(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:artm.TokenTopics)
   }
 
   public interface ItemTopicsOrBuilder
@@ -6055,1396 +9049,16 @@ public final class Messages {
     // @@protoc_insertion_point(class_scope:artm.BatchTopics)
   }
 
-  public interface TokenTopicsOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional string token = 1;
-    /**
-     * <code>optional string token = 1;</code>
-     */
-    boolean hasToken();
-    /**
-     * <code>optional string token = 1;</code>
-     */
-    java.lang.String getToken();
-    /**
-     * <code>optional string token = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getTokenBytes();
-
-    // optional int32 token_id = 2;
-    /**
-     * <code>optional int32 token_id = 2;</code>
-     */
-    boolean hasTokenId();
-    /**
-     * <code>optional int32 token_id = 2;</code>
-     */
-    int getTokenId();
-
-    // repeated float topic_weight = 3;
-    /**
-     * <code>repeated float topic_weight = 3;</code>
-     */
-    java.util.List<java.lang.Float> getTopicWeightList();
-    /**
-     * <code>repeated float topic_weight = 3;</code>
-     */
-    int getTopicWeightCount();
-    /**
-     * <code>repeated float topic_weight = 3;</code>
-     */
-    float getTopicWeight(int index);
-  }
-  /**
-   * Protobuf type {@code artm.TokenTopics}
-   */
-  public static final class TokenTopics extends
-      com.google.protobuf.GeneratedMessage
-      implements TokenTopicsOrBuilder {
-    // Use TokenTopics.newBuilder() to construct.
-    private TokenTopics(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private TokenTopics(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final TokenTopics defaultInstance;
-    public static TokenTopics getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public TokenTopics getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private TokenTopics(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              token_ = input.readBytes();
-              break;
-            }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              tokenId_ = input.readInt32();
-              break;
-            }
-            case 29: {
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-                topicWeight_ = new java.util.ArrayList<java.lang.Float>();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              topicWeight_.add(input.readFloat());
-              break;
-            }
-            case 26: {
-              int length = input.readRawVarint32();
-              int limit = input.pushLimit(length);
-              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
-                topicWeight_ = new java.util.ArrayList<java.lang.Float>();
-                mutable_bitField0_ |= 0x00000004;
-              }
-              while (input.getBytesUntilLimit() > 0) {
-                topicWeight_.add(input.readFloat());
-              }
-              input.popLimit(limit);
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
-          topicWeight_ = java.util.Collections.unmodifiableList(topicWeight_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return artm.Messages.internal_static_artm_TokenTopics_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return artm.Messages.internal_static_artm_TokenTopics_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              artm.Messages.TokenTopics.class, artm.Messages.TokenTopics.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<TokenTopics> PARSER =
-        new com.google.protobuf.AbstractParser<TokenTopics>() {
-      public TokenTopics parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new TokenTopics(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<TokenTopics> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional string token = 1;
-    public static final int TOKEN_FIELD_NUMBER = 1;
-    private java.lang.Object token_;
-    /**
-     * <code>optional string token = 1;</code>
-     */
-    public boolean hasToken() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional string token = 1;</code>
-     */
-    public java.lang.String getToken() {
-      java.lang.Object ref = token_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          token_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string token = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTokenBytes() {
-      java.lang.Object ref = token_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        token_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // optional int32 token_id = 2;
-    public static final int TOKEN_ID_FIELD_NUMBER = 2;
-    private int tokenId_;
-    /**
-     * <code>optional int32 token_id = 2;</code>
-     */
-    public boolean hasTokenId() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional int32 token_id = 2;</code>
-     */
-    public int getTokenId() {
-      return tokenId_;
-    }
-
-    // repeated float topic_weight = 3;
-    public static final int TOPIC_WEIGHT_FIELD_NUMBER = 3;
-    private java.util.List<java.lang.Float> topicWeight_;
-    /**
-     * <code>repeated float topic_weight = 3;</code>
-     */
-    public java.util.List<java.lang.Float>
-        getTopicWeightList() {
-      return topicWeight_;
-    }
-    /**
-     * <code>repeated float topic_weight = 3;</code>
-     */
-    public int getTopicWeightCount() {
-      return topicWeight_.size();
-    }
-    /**
-     * <code>repeated float topic_weight = 3;</code>
-     */
-    public float getTopicWeight(int index) {
-      return topicWeight_.get(index);
-    }
-
-    private void initFields() {
-      token_ = "";
-      tokenId_ = 0;
-      topicWeight_ = java.util.Collections.emptyList();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getTokenBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeInt32(2, tokenId_);
-      }
-      for (int i = 0; i < topicWeight_.size(); i++) {
-        output.writeFloat(3, topicWeight_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getTokenBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, tokenId_);
-      }
-      {
-        int dataSize = 0;
-        dataSize = 4 * getTopicWeightList().size();
-        size += dataSize;
-        size += 1 * getTopicWeightList().size();
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static artm.Messages.TokenTopics parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static artm.Messages.TokenTopics parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static artm.Messages.TokenTopics parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static artm.Messages.TokenTopics parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static artm.Messages.TokenTopics parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static artm.Messages.TokenTopics parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static artm.Messages.TokenTopics parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static artm.Messages.TokenTopics parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static artm.Messages.TokenTopics parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static artm.Messages.TokenTopics parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(artm.Messages.TokenTopics prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code artm.TokenTopics}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements artm.Messages.TokenTopicsOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return artm.Messages.internal_static_artm_TokenTopics_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return artm.Messages.internal_static_artm_TokenTopics_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                artm.Messages.TokenTopics.class, artm.Messages.TokenTopics.Builder.class);
-      }
-
-      // Construct using artm.Messages.TokenTopics.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        token_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        tokenId_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        topicWeight_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return artm.Messages.internal_static_artm_TokenTopics_descriptor;
-      }
-
-      public artm.Messages.TokenTopics getDefaultInstanceForType() {
-        return artm.Messages.TokenTopics.getDefaultInstance();
-      }
-
-      public artm.Messages.TokenTopics build() {
-        artm.Messages.TokenTopics result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public artm.Messages.TokenTopics buildPartial() {
-        artm.Messages.TokenTopics result = new artm.Messages.TokenTopics(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.token_ = token_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.tokenId_ = tokenId_;
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          topicWeight_ = java.util.Collections.unmodifiableList(topicWeight_);
-          bitField0_ = (bitField0_ & ~0x00000004);
-        }
-        result.topicWeight_ = topicWeight_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof artm.Messages.TokenTopics) {
-          return mergeFrom((artm.Messages.TokenTopics)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(artm.Messages.TokenTopics other) {
-        if (other == artm.Messages.TokenTopics.getDefaultInstance()) return this;
-        if (other.hasToken()) {
-          bitField0_ |= 0x00000001;
-          token_ = other.token_;
-          onChanged();
-        }
-        if (other.hasTokenId()) {
-          setTokenId(other.getTokenId());
-        }
-        if (!other.topicWeight_.isEmpty()) {
-          if (topicWeight_.isEmpty()) {
-            topicWeight_ = other.topicWeight_;
-            bitField0_ = (bitField0_ & ~0x00000004);
-          } else {
-            ensureTopicWeightIsMutable();
-            topicWeight_.addAll(other.topicWeight_);
-          }
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        artm.Messages.TokenTopics parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (artm.Messages.TokenTopics) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional string token = 1;
-      private java.lang.Object token_ = "";
-      /**
-       * <code>optional string token = 1;</code>
-       */
-      public boolean hasToken() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional string token = 1;</code>
-       */
-      public java.lang.String getToken() {
-        java.lang.Object ref = token_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          token_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string token = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getTokenBytes() {
-        java.lang.Object ref = token_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          token_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string token = 1;</code>
-       */
-      public Builder setToken(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        token_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string token = 1;</code>
-       */
-      public Builder clearToken() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        token_ = getDefaultInstance().getToken();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string token = 1;</code>
-       */
-      public Builder setTokenBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        token_ = value;
-        onChanged();
-        return this;
-      }
-
-      // optional int32 token_id = 2;
-      private int tokenId_ ;
-      /**
-       * <code>optional int32 token_id = 2;</code>
-       */
-      public boolean hasTokenId() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional int32 token_id = 2;</code>
-       */
-      public int getTokenId() {
-        return tokenId_;
-      }
-      /**
-       * <code>optional int32 token_id = 2;</code>
-       */
-      public Builder setTokenId(int value) {
-        bitField0_ |= 0x00000002;
-        tokenId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 token_id = 2;</code>
-       */
-      public Builder clearTokenId() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        tokenId_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // repeated float topic_weight = 3;
-      private java.util.List<java.lang.Float> topicWeight_ = java.util.Collections.emptyList();
-      private void ensureTopicWeightIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          topicWeight_ = new java.util.ArrayList<java.lang.Float>(topicWeight_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-      /**
-       * <code>repeated float topic_weight = 3;</code>
-       */
-      public java.util.List<java.lang.Float>
-          getTopicWeightList() {
-        return java.util.Collections.unmodifiableList(topicWeight_);
-      }
-      /**
-       * <code>repeated float topic_weight = 3;</code>
-       */
-      public int getTopicWeightCount() {
-        return topicWeight_.size();
-      }
-      /**
-       * <code>repeated float topic_weight = 3;</code>
-       */
-      public float getTopicWeight(int index) {
-        return topicWeight_.get(index);
-      }
-      /**
-       * <code>repeated float topic_weight = 3;</code>
-       */
-      public Builder setTopicWeight(
-          int index, float value) {
-        ensureTopicWeightIsMutable();
-        topicWeight_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated float topic_weight = 3;</code>
-       */
-      public Builder addTopicWeight(float value) {
-        ensureTopicWeightIsMutable();
-        topicWeight_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated float topic_weight = 3;</code>
-       */
-      public Builder addAllTopicWeight(
-          java.lang.Iterable<? extends java.lang.Float> values) {
-        ensureTopicWeightIsMutable();
-        super.addAll(values, topicWeight_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated float topic_weight = 3;</code>
-       */
-      public Builder clearTopicWeight() {
-        topicWeight_ = java.util.Collections.emptyList();
-        bitField0_ = (bitField0_ & ~0x00000004);
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:artm.TokenTopics)
-    }
-
-    static {
-      defaultInstance = new TokenTopics(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:artm.TokenTopics)
-  }
-
-  public interface ModelTopicsOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // repeated .artm.TokenTopics token_topic = 1;
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    java.util.List<artm.Messages.TokenTopics> 
-        getTokenTopicList();
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    artm.Messages.TokenTopics getTokenTopic(int index);
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    int getTokenTopicCount();
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    java.util.List<? extends artm.Messages.TokenTopicsOrBuilder> 
-        getTokenTopicOrBuilderList();
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    artm.Messages.TokenTopicsOrBuilder getTokenTopicOrBuilder(
-        int index);
-  }
-  /**
-   * Protobuf type {@code artm.ModelTopics}
-   */
-  public static final class ModelTopics extends
-      com.google.protobuf.GeneratedMessage
-      implements ModelTopicsOrBuilder {
-    // Use ModelTopics.newBuilder() to construct.
-    private ModelTopics(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private ModelTopics(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final ModelTopics defaultInstance;
-    public static ModelTopics getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public ModelTopics getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private ModelTopics(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                tokenTopic_ = new java.util.ArrayList<artm.Messages.TokenTopics>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              tokenTopic_.add(input.readMessage(artm.Messages.TokenTopics.PARSER, extensionRegistry));
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          tokenTopic_ = java.util.Collections.unmodifiableList(tokenTopic_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return artm.Messages.internal_static_artm_ModelTopics_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return artm.Messages.internal_static_artm_ModelTopics_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              artm.Messages.ModelTopics.class, artm.Messages.ModelTopics.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<ModelTopics> PARSER =
-        new com.google.protobuf.AbstractParser<ModelTopics>() {
-      public ModelTopics parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ModelTopics(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<ModelTopics> getParserForType() {
-      return PARSER;
-    }
-
-    // repeated .artm.TokenTopics token_topic = 1;
-    public static final int TOKEN_TOPIC_FIELD_NUMBER = 1;
-    private java.util.List<artm.Messages.TokenTopics> tokenTopic_;
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    public java.util.List<artm.Messages.TokenTopics> getTokenTopicList() {
-      return tokenTopic_;
-    }
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    public java.util.List<? extends artm.Messages.TokenTopicsOrBuilder> 
-        getTokenTopicOrBuilderList() {
-      return tokenTopic_;
-    }
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    public int getTokenTopicCount() {
-      return tokenTopic_.size();
-    }
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    public artm.Messages.TokenTopics getTokenTopic(int index) {
-      return tokenTopic_.get(index);
-    }
-    /**
-     * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-     */
-    public artm.Messages.TokenTopicsOrBuilder getTokenTopicOrBuilder(
-        int index) {
-      return tokenTopic_.get(index);
-    }
-
-    private void initFields() {
-      tokenTopic_ = java.util.Collections.emptyList();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      for (int i = 0; i < tokenTopic_.size(); i++) {
-        output.writeMessage(1, tokenTopic_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      for (int i = 0; i < tokenTopic_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, tokenTopic_.get(i));
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static artm.Messages.ModelTopics parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static artm.Messages.ModelTopics parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static artm.Messages.ModelTopics parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static artm.Messages.ModelTopics parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static artm.Messages.ModelTopics parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static artm.Messages.ModelTopics parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static artm.Messages.ModelTopics parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static artm.Messages.ModelTopics parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static artm.Messages.ModelTopics parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static artm.Messages.ModelTopics parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(artm.Messages.ModelTopics prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code artm.ModelTopics}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements artm.Messages.ModelTopicsOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return artm.Messages.internal_static_artm_ModelTopics_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return artm.Messages.internal_static_artm_ModelTopics_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                artm.Messages.ModelTopics.class, artm.Messages.ModelTopics.Builder.class);
-      }
-
-      // Construct using artm.Messages.ModelTopics.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getTokenTopicFieldBuilder();
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        if (tokenTopicBuilder_ == null) {
-          tokenTopic_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          tokenTopicBuilder_.clear();
-        }
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return artm.Messages.internal_static_artm_ModelTopics_descriptor;
-      }
-
-      public artm.Messages.ModelTopics getDefaultInstanceForType() {
-        return artm.Messages.ModelTopics.getDefaultInstance();
-      }
-
-      public artm.Messages.ModelTopics build() {
-        artm.Messages.ModelTopics result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public artm.Messages.ModelTopics buildPartial() {
-        artm.Messages.ModelTopics result = new artm.Messages.ModelTopics(this);
-        int from_bitField0_ = bitField0_;
-        if (tokenTopicBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            tokenTopic_ = java.util.Collections.unmodifiableList(tokenTopic_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.tokenTopic_ = tokenTopic_;
-        } else {
-          result.tokenTopic_ = tokenTopicBuilder_.build();
-        }
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof artm.Messages.ModelTopics) {
-          return mergeFrom((artm.Messages.ModelTopics)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(artm.Messages.ModelTopics other) {
-        if (other == artm.Messages.ModelTopics.getDefaultInstance()) return this;
-        if (tokenTopicBuilder_ == null) {
-          if (!other.tokenTopic_.isEmpty()) {
-            if (tokenTopic_.isEmpty()) {
-              tokenTopic_ = other.tokenTopic_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureTokenTopicIsMutable();
-              tokenTopic_.addAll(other.tokenTopic_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.tokenTopic_.isEmpty()) {
-            if (tokenTopicBuilder_.isEmpty()) {
-              tokenTopicBuilder_.dispose();
-              tokenTopicBuilder_ = null;
-              tokenTopic_ = other.tokenTopic_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              tokenTopicBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getTokenTopicFieldBuilder() : null;
-            } else {
-              tokenTopicBuilder_.addAllMessages(other.tokenTopic_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        artm.Messages.ModelTopics parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (artm.Messages.ModelTopics) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // repeated .artm.TokenTopics token_topic = 1;
-      private java.util.List<artm.Messages.TokenTopics> tokenTopic_ =
-        java.util.Collections.emptyList();
-      private void ensureTokenTopicIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          tokenTopic_ = new java.util.ArrayList<artm.Messages.TokenTopics>(tokenTopic_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          artm.Messages.TokenTopics, artm.Messages.TokenTopics.Builder, artm.Messages.TokenTopicsOrBuilder> tokenTopicBuilder_;
-
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public java.util.List<artm.Messages.TokenTopics> getTokenTopicList() {
-        if (tokenTopicBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(tokenTopic_);
-        } else {
-          return tokenTopicBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public int getTokenTopicCount() {
-        if (tokenTopicBuilder_ == null) {
-          return tokenTopic_.size();
-        } else {
-          return tokenTopicBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public artm.Messages.TokenTopics getTokenTopic(int index) {
-        if (tokenTopicBuilder_ == null) {
-          return tokenTopic_.get(index);
-        } else {
-          return tokenTopicBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder setTokenTopic(
-          int index, artm.Messages.TokenTopics value) {
-        if (tokenTopicBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureTokenTopicIsMutable();
-          tokenTopic_.set(index, value);
-          onChanged();
-        } else {
-          tokenTopicBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder setTokenTopic(
-          int index, artm.Messages.TokenTopics.Builder builderForValue) {
-        if (tokenTopicBuilder_ == null) {
-          ensureTokenTopicIsMutable();
-          tokenTopic_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          tokenTopicBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder addTokenTopic(artm.Messages.TokenTopics value) {
-        if (tokenTopicBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureTokenTopicIsMutable();
-          tokenTopic_.add(value);
-          onChanged();
-        } else {
-          tokenTopicBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder addTokenTopic(
-          int index, artm.Messages.TokenTopics value) {
-        if (tokenTopicBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureTokenTopicIsMutable();
-          tokenTopic_.add(index, value);
-          onChanged();
-        } else {
-          tokenTopicBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder addTokenTopic(
-          artm.Messages.TokenTopics.Builder builderForValue) {
-        if (tokenTopicBuilder_ == null) {
-          ensureTokenTopicIsMutable();
-          tokenTopic_.add(builderForValue.build());
-          onChanged();
-        } else {
-          tokenTopicBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder addTokenTopic(
-          int index, artm.Messages.TokenTopics.Builder builderForValue) {
-        if (tokenTopicBuilder_ == null) {
-          ensureTokenTopicIsMutable();
-          tokenTopic_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          tokenTopicBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder addAllTokenTopic(
-          java.lang.Iterable<? extends artm.Messages.TokenTopics> values) {
-        if (tokenTopicBuilder_ == null) {
-          ensureTokenTopicIsMutable();
-          super.addAll(values, tokenTopic_);
-          onChanged();
-        } else {
-          tokenTopicBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder clearTokenTopic() {
-        if (tokenTopicBuilder_ == null) {
-          tokenTopic_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          tokenTopicBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public Builder removeTokenTopic(int index) {
-        if (tokenTopicBuilder_ == null) {
-          ensureTokenTopicIsMutable();
-          tokenTopic_.remove(index);
-          onChanged();
-        } else {
-          tokenTopicBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public artm.Messages.TokenTopics.Builder getTokenTopicBuilder(
-          int index) {
-        return getTokenTopicFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public artm.Messages.TokenTopicsOrBuilder getTokenTopicOrBuilder(
-          int index) {
-        if (tokenTopicBuilder_ == null) {
-          return tokenTopic_.get(index);  } else {
-          return tokenTopicBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public java.util.List<? extends artm.Messages.TokenTopicsOrBuilder> 
-           getTokenTopicOrBuilderList() {
-        if (tokenTopicBuilder_ != null) {
-          return tokenTopicBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(tokenTopic_);
-        }
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public artm.Messages.TokenTopics.Builder addTokenTopicBuilder() {
-        return getTokenTopicFieldBuilder().addBuilder(
-            artm.Messages.TokenTopics.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public artm.Messages.TokenTopics.Builder addTokenTopicBuilder(
-          int index) {
-        return getTokenTopicFieldBuilder().addBuilder(
-            index, artm.Messages.TokenTopics.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .artm.TokenTopics token_topic = 1;</code>
-       */
-      public java.util.List<artm.Messages.TokenTopics.Builder> 
-           getTokenTopicBuilderList() {
-        return getTokenTopicFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          artm.Messages.TokenTopics, artm.Messages.TokenTopics.Builder, artm.Messages.TokenTopicsOrBuilder> 
-          getTokenTopicFieldBuilder() {
-        if (tokenTopicBuilder_ == null) {
-          tokenTopicBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              artm.Messages.TokenTopics, artm.Messages.TokenTopics.Builder, artm.Messages.TokenTopicsOrBuilder>(
-                  tokenTopic_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
-                  getParentForChildren(),
-                  isClean());
-          tokenTopic_ = null;
-        }
-        return tokenTopicBuilder_;
-      }
-
-      // @@protoc_insertion_point(builder_scope:artm.ModelTopics)
-    }
-
-    static {
-      defaultInstance = new ModelTopics(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:artm.ModelTopics)
-  }
-
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_artm_Field_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_artm_Field_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_artm_Item_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_artm_Item_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_artm_Field_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_artm_Field_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_artm_Batch_descriptor;
   private static
@@ -7455,6 +9069,11 @@ public final class Messages {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_artm_DataLoaderConfig_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_artm_Stream_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_artm_Stream_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_artm_InstanceConfig_descriptor;
   private static
@@ -7471,6 +9090,16 @@ public final class Messages {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_artm_LoggerConfig_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_artm_ModelTopics_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_artm_ModelTopics_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_artm_TokenTopics_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_artm_TokenTopics_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_artm_ItemTopics_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -7480,16 +9109,6 @@ public final class Messages {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_artm_BatchTopics_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_artm_TokenTopics_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_artm_TokenTopics_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_artm_ModelTopics_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_artm_ModelTopics_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -7499,45 +9118,52 @@ public final class Messages {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\016messages.proto\022\004artm\"I\n\005Field\022\031\n\nfield" +
-      "_name\030\001 \001(\t:\005@body\022\020\n\010token_id\030\002 \003(\005\022\023\n\013" +
-      "token_count\030\003 \003(\005\".\n\004Item\022\n\n\002id\030\001 \001(\005\022\032\n" +
-      "\005field\030\002 \003(\0132\013.artm.Field\"0\n\005Batch\022\r\n\005to" +
-      "ken\030\001 \003(\t\022\030\n\004item\030\003 \003(\0132\n.artm.Item\"R\n\020D" +
+      "\n\016messages.proto\022\004artm\".\n\004Item\022\n\n\002id\030\001 \001" +
+      "(\005\022\032\n\005field\030\002 \003(\0132\013.artm.Field\"I\n\005Field\022" +
+      "\031\n\nfield_name\030\001 \001(\t:\005@body\022\020\n\010token_id\030\002" +
+      " \003(\005\022\023\n\013token_count\030\003 \003(\005\"0\n\005Batch\022\r\n\005to" +
+      "ken\030\001 \003(\t\022\030\n\004item\030\002 \003(\0132\n.artm.Item\"p\n\020D" +
       "ataLoaderConfig\022\023\n\013instance_id\030\001 \002(\005\022\021\n\t" +
-      "disk_path\030\002 \001(\t\022\026\n\nqueue_size\030\003 \001(\005:\00210\"" +
-      "-\n\016InstanceConfig\022\033\n\020processors_count\030\001 " +
-      "\001(\005:\0011\"~\n\013ModelConfig\022\030\n\014topics_count\030\002 " +
-      "\001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inner",
-      "_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_nam" +
-      "e\030\005 \001(\t:\005@body\"\231\001\n\014LoggerConfig\022\024\n\014log_l" +
-      "ocation\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.Logg" +
-      "erConfig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLE" +
-      "D\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n" +
-      "\007VERBOSE\020\004\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014" +
-      "topic_weight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013ite" +
-      "m_topics\030\001 \003(\0132\020.artm.ItemTopics\"D\n\013Toke" +
-      "nTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005" +
-      "\022\024\n\014topic_weight\030\003 \003(\002\"5\n\013ModelTopics\022&\n",
-      "\013token_topic\030\001 \003(\0132\021.artm.TokenTopics"
+      "disk_path\030\002 \001(\t\022\026\n\nqueue_size\030\003 \001(\005:\00210\022" +
+      "\034\n\006stream\030\004 \003(\0132\014.artm.Stream\"\250\001\n\006Stream" +
+      "\022\'\n\004type\030\001 \002(\0162\021.artm.Stream.Type:\006Globa" +
+      "l\022\025\n\004name\030\002 \001(\t:\007@global\022\017\n\007modulus\030\003 \001(",
+      "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000" +
+      "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003" +
+      "\"-\n\016InstanceConfig\022\033\n\020processors_count\030\001" +
+      " \001(\005:\0011\"\234\001\n\013ModelConfig\022\030\n\014topics_count\030" +
+      "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn" +
+      "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n" +
+      "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@" +
+      "global\"\231\001\n\014LoggerConfig\022\024\n\014log_location\030" +
+      "\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerConfig" +
+      ".Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005E",
+      "RROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE" +
+      "\020\004\"N\n\013ModelTopics\022&\n\013token_topic\030\001 \003(\0132\021" +
+      ".artm.TokenTopics\022\027\n\017items_processed\030\002 \001" +
+      "(\005\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010toke" +
+      "n_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItem" +
+      "Topics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002" +
+      "\"4\n\013BatchTopics\022%\n\013item_topics\030\001 \003(\0132\020.a" +
+      "rtm.ItemTopics"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_artm_Field_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_artm_Field_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_artm_Field_descriptor,
-              new java.lang.String[] { "FieldName", "TokenId", "TokenCount", });
           internal_static_artm_Item_descriptor =
-            getDescriptor().getMessageTypes().get(1);
+            getDescriptor().getMessageTypes().get(0);
           internal_static_artm_Item_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_Item_descriptor,
               new java.lang.String[] { "Id", "Field", });
+          internal_static_artm_Field_descriptor =
+            getDescriptor().getMessageTypes().get(1);
+          internal_static_artm_Field_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_artm_Field_descriptor,
+              new java.lang.String[] { "FieldName", "TokenId", "TokenCount", });
           internal_static_artm_Batch_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_artm_Batch_fieldAccessorTable = new
@@ -7549,49 +9175,55 @@ public final class Messages {
           internal_static_artm_DataLoaderConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_DataLoaderConfig_descriptor,
-              new java.lang.String[] { "InstanceId", "DiskPath", "QueueSize", });
-          internal_static_artm_InstanceConfig_descriptor =
+              new java.lang.String[] { "InstanceId", "DiskPath", "QueueSize", "Stream", });
+          internal_static_artm_Stream_descriptor =
             getDescriptor().getMessageTypes().get(4);
+          internal_static_artm_Stream_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_artm_Stream_descriptor,
+              new java.lang.String[] { "Type", "Name", "Modulus", "Residuals", });
+          internal_static_artm_InstanceConfig_descriptor =
+            getDescriptor().getMessageTypes().get(5);
           internal_static_artm_InstanceConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_InstanceConfig_descriptor,
               new java.lang.String[] { "ProcessorsCount", });
           internal_static_artm_ModelConfig_descriptor =
-            getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_artm_ModelConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_ModelConfig_descriptor,
-              new java.lang.String[] { "TopicsCount", "Enabled", "InnerIterationsCount", "FieldName", });
+              new java.lang.String[] { "TopicsCount", "Enabled", "InnerIterationsCount", "FieldName", "StreamName", });
           internal_static_artm_LoggerConfig_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_artm_LoggerConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_LoggerConfig_descriptor,
               new java.lang.String[] { "LogLocation", "Level", });
-          internal_static_artm_ItemTopics_descriptor =
-            getDescriptor().getMessageTypes().get(7);
-          internal_static_artm_ItemTopics_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_artm_ItemTopics_descriptor,
-              new java.lang.String[] { "Id", "TopicWeight", });
-          internal_static_artm_BatchTopics_descriptor =
+          internal_static_artm_ModelTopics_descriptor =
             getDescriptor().getMessageTypes().get(8);
-          internal_static_artm_BatchTopics_fieldAccessorTable = new
+          internal_static_artm_ModelTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_artm_BatchTopics_descriptor,
-              new java.lang.String[] { "ItemTopics", });
+              internal_static_artm_ModelTopics_descriptor,
+              new java.lang.String[] { "TokenTopic", "ItemsProcessed", });
           internal_static_artm_TokenTopics_descriptor =
             getDescriptor().getMessageTypes().get(9);
           internal_static_artm_TokenTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_TokenTopics_descriptor,
               new java.lang.String[] { "Token", "TokenId", "TopicWeight", });
-          internal_static_artm_ModelTopics_descriptor =
+          internal_static_artm_ItemTopics_descriptor =
             getDescriptor().getMessageTypes().get(10);
-          internal_static_artm_ModelTopics_fieldAccessorTable = new
+          internal_static_artm_ItemTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_artm_ModelTopics_descriptor,
-              new java.lang.String[] { "TokenTopic", });
+              internal_static_artm_ItemTopics_descriptor,
+              new java.lang.String[] { "Id", "TopicWeight", });
+          internal_static_artm_BatchTopics_descriptor =
+            getDescriptor().getMessageTypes().get(11);
+          internal_static_artm_BatchTopics_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_artm_BatchTopics_descriptor,
+              new java.lang.String[] { "ItemTopics", });
           return null;
         }
       };

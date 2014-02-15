@@ -1,4 +1,5 @@
 #include "artm/processor.h"
+#include "artm/protobuf_helpers.h"
 
 #include "stdlib.h"
 
@@ -29,7 +30,7 @@ namespace artm { namespace core {
         // which also throws boost::thread_interrupted
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-        std::shared_ptr<const Batch> part;
+        std::shared_ptr<const ProcessorInput> part;
         {
           boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
           if (processor_queue_.empty()) {
@@ -45,6 +46,15 @@ namespace artm { namespace core {
         std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
           const ModelConfig& model = schema->get_model_config(model_id);
 
+          int index_of_stream = repeated_field_index_of(part->stream_name(), model.stream_name());
+          const Flags* stream_flags = NULL;
+
+          if (index_of_stream == -1) {
+            // log a warning and process all documents from the stream
+          } else {
+            stream_flags = &part->stream_flags(index_of_stream);
+          }
+
           // do not process disabled models.
           if (!model.enabled()) return; // return from lambda; goes to next step of std::for_each
 
@@ -52,12 +62,14 @@ namespace artm { namespace core {
               = merger_.GetLatestTokenTopicMatrix(model_id);
           assert(token_topic_matrix.get() != NULL);
           int topics_count = token_topic_matrix->topics_count();
-          int items_count = part->item_size();
+          int items_count = part->batch().item_size();
           
           // process part and store result in merger queue
           auto po = std::make_shared<ProcessorOutput>();
           po->set_model_id(model_id);
-          po->set_items_processed(items_count);
+
+          int items_processed = 0;
+          
           po->set_topics_count(topics_count);
           for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
             po->mutable_topic_counters()->add_value(0.0f);
@@ -75,7 +87,14 @@ namespace artm { namespace core {
                 item_index < items_count;
                 ++item_index)
           {
-            const Item& item = part->item(item_index);
+            // verify if this item has to be skipped in model's stream
+            if (stream_flags && !stream_flags->value(item_index)) {
+              continue; // item is not included in the stream => don't process it.
+            } 
+
+            items_processed++;
+
+            const Item& item = part->batch().item(item_index);
             const Field* field = nullptr;
             for (int iField = 0; iField < item.field_size(); iField++) {
               if (item.field(iField).field_name() == model.field_name()) {
@@ -99,7 +118,7 @@ namespace artm { namespace core {
                  token_index < field->token_id_size();
                  token_index++)
             {
-              std::string token = part->token(field->token_id(token_index));
+              std::string token = part->batch().token(field->token_id(token_index));
               int token_id = token_topic_matrix->token_id(token);
               if (token_id < 0) {
                 // Unknown token
@@ -175,7 +194,9 @@ namespace artm { namespace core {
                 }
               }
             }
-          }
+          } // loop across items
+
+          po->set_items_processed(items_processed);
 
           {
             boost::lock_guard<boost::mutex> guard(merger_queue_lock_);

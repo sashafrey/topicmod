@@ -30,11 +30,21 @@ extern "C" {
                          const char* data_loader_config_blob);
 
   DLL_PUBLIC 
+  int reconfigure_data_loader(int data_loader_id, 
+                              int length, 
+                              const char* data_loader_config_blob);
+
+  DLL_PUBLIC 
   void dispose_data_loader(int data_loader_id);
 
   DLL_PUBLIC 
   int add_batch(int data_loader_id, int length, const char* batch_blob);
 
+  DLL_PUBLIC 
+  int invoke_iteration(int data_loader_id, int iterations_count);
+
+  DLL_PUBLIC
+  int wait_idle_data_loader(int data_loader_id);
   // =========================================================================
   // Instance interface
   // =========================================================================
@@ -46,7 +56,6 @@ extern "C" {
 
   DLL_PUBLIC
   int create_model(int instance_id,
-                   int model_id,
                    int length, 
                    const char* model_config_blob);
 
@@ -80,7 +89,10 @@ extern "C" {
   DLL_PUBLIC int wait_model_processed(int instance_id,
                                       int model_id,
                                       int processed_items);
+
+  DLL_PUBLIC int wait_idle_instance(int instance_id);
 }
+
 
 
 #endif // ARTM_H_

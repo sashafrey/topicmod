@@ -13,6 +13,7 @@ namespace artm { namespace core {
     lock_(),
     instance_id_(id),
     schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
+    next_model_id_(0),
     processor_queue_lock_(),
     processor_queue_(),
     merger_queue_lock_(),
@@ -26,7 +27,13 @@ namespace artm { namespace core {
   Instance::~Instance() {
   }
 
-  int Instance::UpdateModel(int model_id, const ModelConfig& config) {
+  int Instance::CreateModel(const ModelConfig& config) {
+    int model_id = next_model_id_++;
+    ReconfigureModel(model_id, config);
+    return model_id;
+  }
+
+  int Instance::ReconfigureModel(int model_id, const ModelConfig& config) {
     merger_.UpdateModel(model_id, config);
     
     auto new_schema = schema_.get_copy();
@@ -76,6 +83,8 @@ namespace artm { namespace core {
       for (int iTopic = 0; iTopic < nTopics; ++iTopic) {
         token_topics->add_topic_weight(token_weights.at(iTopic));
       }
+
+      model_topics->set_items_processed(ttm->items_processed());
     }
     
     return ARTM_SUCCESS;
@@ -92,14 +101,35 @@ namespace artm { namespace core {
     }
   }
 
+  int Instance::WaitIdle() {
+    for (;;) {
+      bool retval = true;
+      {
+        boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
+        if (!processor_queue_.empty()) retval = false;
+      }
+
+      {
+        boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
+        if (!merger_queue_.empty()) retval = false;
+      }
+
+      if (retval) {
+        return true;
+      }
+
+      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    }
+  }
+
   int Instance::ProcessorQueueSize() {
     boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
     return processor_queue_.size();
   }
 
-  int Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const Batch> batch) {
+  int Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input) {
     boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
-    processor_queue_.push(batch);
+    processor_queue_.push(input);
     return ARTM_SUCCESS;
   }
 }} // namespace artm/core

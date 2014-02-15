@@ -52,14 +52,13 @@ TEST(CppInterface, Basic) {
 
   DataLoaderConfig config;
   DataLoader data_loader(instance, config);
-  
   // Index doc-token matrix
   data_loader.AddBatch(batch);
+  data_loader.InvokeIteration(3);
   
   model.Enable();
-
-  boost::this_thread::sleep(boost::posix_time::milliseconds(50));
-
+  data_loader.WaitIdle();
+  instance.WaitIdle();
   model.Disable();
 
   // Request model topics

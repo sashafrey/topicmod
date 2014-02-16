@@ -55,14 +55,14 @@ namespace artm { namespace core {
     {
       boost::lock_guard<boost::mutex> guard(lock_);
       auto iter = map_.find(id);
-      return iter->second;
+      return (iter == map_.end()) ? nullptr : iter->second;
     }
 
     std::shared_ptr<Type> Get(int id)
     {
       boost::lock_guard<boost::mutex> guard(lock_);
       auto iter = map_.find(id);
-      return iter->second;
+      return (iter == map_.end()) ? nullptr : iter->second;
     }
 
     void Erase(int id)

@@ -26,7 +26,6 @@ namespace artm {
     int id() const { return id_; }
     std::shared_ptr<ModelTopics> GetTopics(const Model& model);
     void WaitModelProcessed(const Model& model, int nDocs);
-    void WaitIdle();
     void Reconfigure(const InstanceConfig& config);
 
     const InstanceConfig& config() const { return config_; }

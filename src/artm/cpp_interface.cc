@@ -57,10 +57,6 @@ void Instance::WaitModelProcessed(const Model& model, int nDocs) {
   wait_model_processed(id(), model.model_id(), nDocs);
 }
 
-void Instance::WaitIdle() {
-  wait_idle_instance(id());
-}
-
 Model::Model(const Instance& instance, const ModelConfig& config) : instance_id_(instance.id()), model_id_(0), config_(config) 
 {
   string model_config_blob;

@@ -58,7 +58,6 @@ TEST(CppInterface, Basic) {
   
   model.Enable();
   data_loader.WaitIdle();
-  instance.WaitIdle();
   model.Disable();
 
   // Request model topics

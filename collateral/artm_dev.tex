@@ -210,7 +210,7 @@ It has the following implementation details:
         and K is the desired number of scans.
 \end{enumerate}
 
-Current perplexity calculation is also cumulative. 
+Current perplexity calculation is also cumulative.
 There is stupid limitation: perplexity can't be calculated for a single iteration.
 
 \section{How to build sources}
@@ -273,5 +273,8 @@ The key responsibility of Integrator is to ensure stability of the master branch
     \item Verify code style
 \end{itemize}
 Everyone should periodically merge master branch into their feature branches.
+
+code review:
+python upload.py --server=http://codereview.appspot.com/ --email=rdkl.hrd@gmail.com  -t Test_issue -m Test_descr --rev=e26b8107520e219cac89f3cb6ed83b5680240a79
 
 \end{document} 

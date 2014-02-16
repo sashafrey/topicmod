@@ -96,7 +96,6 @@ double proc(int argc, char * argv[], int processors_count) {
   for (int iIter = 0; iIter < 40; ++iIter) {
     data_loader.InvokeIteration(1);
     data_loader.WaitIdle();
-    instance.WaitIdle();
     model_topics = instance.GetTopics(model);
     std::cout << "Iteration #" << (iIter + 1) << ": " 
               << "#Tokens = "  << model_topics->token_topic_size() << ", "
@@ -148,7 +147,7 @@ int main(int argc, char * argv[]) {
     return 0;
   }
 
-  cout << proc(argc, argv, 4) << " sec. ================= " << endl << endl;
+  cout << proc(argc, argv, 2) << " sec. ================= " << endl << endl;
   // cout << proc(argc, argv, 3) << " sec. ================= " << endl << endl;
   // cout << proc(argc, argv, 2) << " sec. ================= " << endl << endl;
   // cout << proc(argc, argv, 1) << " sec. ================= " << endl << endl;

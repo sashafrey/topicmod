@@ -39,6 +39,7 @@ class Counters;
 class Flags;
 class ProcessorInput;
 class ProcessorOutput;
+class ProcessorCacheEntry;
 
 // ===================================================================
 
@@ -277,10 +278,29 @@ class ProcessorInput : public ::google::protobuf::Message {
   inline ::artm::Batch* release_batch();
   inline void set_allocated_batch(::artm::Batch* batch);
 
-  // repeated .artm.core.Flags stream_flags = 2;
+  // required string uuid = 2;
+  inline bool has_uuid() const;
+  inline void clear_uuid();
+  static const int kUuidFieldNumber = 2;
+  inline const ::std::string& uuid() const;
+  inline void set_uuid(const ::std::string& value);
+  inline void set_uuid(const char* value);
+  inline void set_uuid(const char* value, size_t size);
+  inline ::std::string* mutable_uuid();
+  inline ::std::string* release_uuid();
+  inline void set_allocated_uuid(::std::string* uuid);
+
+  // required int32 data_loader_id = 3;
+  inline bool has_data_loader_id() const;
+  inline void clear_data_loader_id();
+  static const int kDataLoaderIdFieldNumber = 3;
+  inline ::google::protobuf::int32 data_loader_id() const;
+  inline void set_data_loader_id(::google::protobuf::int32 value);
+
+  // repeated .artm.core.Flags stream_flags = 4;
   inline int stream_flags_size() const;
   inline void clear_stream_flags();
-  static const int kStreamFlagsFieldNumber = 2;
+  static const int kStreamFlagsFieldNumber = 4;
   inline const ::artm::core::Flags& stream_flags(int index) const;
   inline ::artm::core::Flags* mutable_stream_flags(int index);
   inline ::artm::core::Flags* add_stream_flags();
@@ -289,10 +309,10 @@ class ProcessorInput : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::core::Flags >*
       mutable_stream_flags();
 
-  // repeated string stream_name = 3;
+  // repeated string stream_name = 5;
   inline int stream_name_size() const;
   inline void clear_stream_name();
-  static const int kStreamNameFieldNumber = 3;
+  static const int kStreamNameFieldNumber = 5;
   inline const ::std::string& stream_name(int index) const;
   inline ::std::string* mutable_stream_name(int index);
   inline void set_stream_name(int index, const ::std::string& value);
@@ -305,19 +325,37 @@ class ProcessorInput : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& stream_name() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_stream_name();
 
+  // optional .artm.core.ProcessorCacheEntry cache = 6;
+  inline bool has_cache() const;
+  inline void clear_cache();
+  static const int kCacheFieldNumber = 6;
+  inline const ::artm::core::ProcessorCacheEntry& cache() const;
+  inline ::artm::core::ProcessorCacheEntry* mutable_cache();
+  inline ::artm::core::ProcessorCacheEntry* release_cache();
+  inline void set_allocated_cache(::artm::core::ProcessorCacheEntry* cache);
+
   // @@protoc_insertion_point(class_scope:artm.core.ProcessorInput)
  private:
   inline void set_has_batch();
   inline void clear_has_batch();
+  inline void set_has_uuid();
+  inline void clear_has_uuid();
+  inline void set_has_data_loader_id();
+  inline void clear_has_data_loader_id();
+  inline void set_has_cache();
+  inline void clear_has_cache();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::artm::Batch* batch_;
+  ::std::string* uuid_;
   ::google::protobuf::RepeatedPtrField< ::artm::core::Flags > stream_flags_;
   ::google::protobuf::RepeatedPtrField< ::std::string> stream_name_;
+  ::artm::core::ProcessorCacheEntry* cache_;
+  ::google::protobuf::int32 data_loader_id_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_internals_2eproto();
   friend void protobuf_AssignDesc_internals_2eproto();
@@ -412,22 +450,10 @@ class ProcessorOutput : public ::google::protobuf::Message {
   inline ::artm::core::Counters* release_topic_counters();
   inline void set_allocated_topic_counters(::artm::core::Counters* topic_counters);
 
-  // repeated .artm.core.Counters token_counters = 5;
-  inline int token_counters_size() const;
-  inline void clear_token_counters();
-  static const int kTokenCountersFieldNumber = 5;
-  inline const ::artm::core::Counters& token_counters(int index) const;
-  inline ::artm::core::Counters* mutable_token_counters(int index);
-  inline ::artm::core::Counters* add_token_counters();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >&
-      token_counters() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >*
-      mutable_token_counters();
-
-  // repeated string token = 6;
+  // repeated string token = 5;
   inline int token_size() const;
   inline void clear_token();
-  static const int kTokenFieldNumber = 6;
+  static const int kTokenFieldNumber = 5;
   inline const ::std::string& token(int index) const;
   inline ::std::string* mutable_token(int index);
   inline void set_token(int index, const ::std::string& value);
@@ -440,10 +466,10 @@ class ProcessorOutput : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_token();
 
-  // repeated string discovered_token = 7;
+  // repeated string discovered_token = 6;
   inline int discovered_token_size() const;
   inline void clear_discovered_token();
-  static const int kDiscoveredTokenFieldNumber = 7;
+  static const int kDiscoveredTokenFieldNumber = 6;
   inline const ::std::string& discovered_token(int index) const;
   inline ::std::string* mutable_discovered_token(int index);
   inline void set_discovered_token(int index, const ::std::string& value);
@@ -455,6 +481,18 @@ class ProcessorOutput : public ::google::protobuf::Message {
   inline void add_discovered_token(const char* value, size_t size);
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& discovered_token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_discovered_token();
+
+  // repeated .artm.core.Counters token_counters = 7;
+  inline int token_counters_size() const;
+  inline void clear_token_counters();
+  static const int kTokenCountersFieldNumber = 7;
+  inline const ::artm::core::Counters& token_counters(int index) const;
+  inline ::artm::core::Counters* mutable_token_counters(int index);
+  inline ::artm::core::Counters* add_token_counters();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >&
+      token_counters() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >*
+      mutable_token_counters();
 
   // repeated double score = 8;
   inline int score_size() const;
@@ -480,6 +518,30 @@ class ProcessorOutput : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< double >*
       mutable_score_norm();
 
+  // repeated int32 item_id = 10;
+  inline int item_id_size() const;
+  inline void clear_item_id();
+  static const int kItemIdFieldNumber = 10;
+  inline ::google::protobuf::int32 item_id(int index) const;
+  inline void set_item_id(int index, ::google::protobuf::int32 value);
+  inline void add_item_id(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      item_id() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_item_id();
+
+  // repeated .artm.core.Counters theta = 11;
+  inline int theta_size() const;
+  inline void clear_theta();
+  static const int kThetaFieldNumber = 11;
+  inline const ::artm::core::Counters& theta(int index) const;
+  inline ::artm::core::Counters* mutable_theta(int index);
+  inline ::artm::core::Counters* add_theta();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >&
+      theta() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >*
+      mutable_theta();
+
   // @@protoc_insertion_point(class_scope:artm.core.ProcessorOutput)
  private:
   inline void set_has_model_id();
@@ -496,15 +558,17 @@ class ProcessorOutput : public ::google::protobuf::Message {
   ::google::protobuf::int32 model_id_;
   ::google::protobuf::int32 topics_count_;
   ::artm::core::Counters* topic_counters_;
-  ::google::protobuf::RepeatedPtrField< ::artm::core::Counters > token_counters_;
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
   ::google::protobuf::RepeatedPtrField< ::std::string> discovered_token_;
+  ::google::protobuf::RepeatedPtrField< ::artm::core::Counters > token_counters_;
   ::google::protobuf::RepeatedField< double > score_;
   ::google::protobuf::RepeatedField< double > score_norm_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > item_id_;
+  ::google::protobuf::RepeatedPtrField< ::artm::core::Counters > theta_;
   ::google::protobuf::int32 items_processed_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
 
   friend void  protobuf_AddDesc_internals_2eproto();
   friend void protobuf_AssignDesc_internals_2eproto();
@@ -512,6 +576,106 @@ class ProcessorOutput : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ProcessorOutput* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ProcessorCacheEntry : public ::google::protobuf::Message {
+ public:
+  ProcessorCacheEntry();
+  virtual ~ProcessorCacheEntry();
+
+  ProcessorCacheEntry(const ProcessorCacheEntry& from);
+
+  inline ProcessorCacheEntry& operator=(const ProcessorCacheEntry& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ProcessorCacheEntry& default_instance();
+
+  void Swap(ProcessorCacheEntry* other);
+
+  // implements Message ----------------------------------------------
+
+  ProcessorCacheEntry* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ProcessorCacheEntry& from);
+  void MergeFrom(const ProcessorCacheEntry& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string uuid = 1;
+  inline bool has_uuid() const;
+  inline void clear_uuid();
+  static const int kUuidFieldNumber = 1;
+  inline const ::std::string& uuid() const;
+  inline void set_uuid(const ::std::string& value);
+  inline void set_uuid(const char* value);
+  inline void set_uuid(const char* value, size_t size);
+  inline ::std::string* mutable_uuid();
+  inline ::std::string* release_uuid();
+  inline void set_allocated_uuid(::std::string* uuid);
+
+  // repeated .artm.core.ProcessorOutput output = 2;
+  inline int output_size() const;
+  inline void clear_output();
+  static const int kOutputFieldNumber = 2;
+  inline const ::artm::core::ProcessorOutput& output(int index) const;
+  inline ::artm::core::ProcessorOutput* mutable_output(int index);
+  inline ::artm::core::ProcessorOutput* add_output();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::core::ProcessorOutput >&
+      output() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::core::ProcessorOutput >*
+      mutable_output();
+
+  // @@protoc_insertion_point(class_scope:artm.core.ProcessorCacheEntry)
+ private:
+  inline void set_has_uuid();
+  inline void clear_has_uuid();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* uuid_;
+  ::google::protobuf::RepeatedPtrField< ::artm::core::ProcessorOutput > output_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_internals_2eproto();
+  friend void protobuf_AssignDesc_internals_2eproto();
+  friend void protobuf_ShutdownFile_internals_2eproto();
+
+  void InitAsDefaultInstance();
+  static ProcessorCacheEntry* default_instance_;
 };
 // ===================================================================
 
@@ -616,7 +780,99 @@ inline void ProcessorInput::set_allocated_batch(::artm::Batch* batch) {
   }
 }
 
-// repeated .artm.core.Flags stream_flags = 2;
+// required string uuid = 2;
+inline bool ProcessorInput::has_uuid() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ProcessorInput::set_has_uuid() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ProcessorInput::clear_has_uuid() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ProcessorInput::clear_uuid() {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    uuid_->clear();
+  }
+  clear_has_uuid();
+}
+inline const ::std::string& ProcessorInput::uuid() const {
+  return *uuid_;
+}
+inline void ProcessorInput::set_uuid(const ::std::string& value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void ProcessorInput::set_uuid(const char* value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void ProcessorInput::set_uuid(const char* value, size_t size) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProcessorInput::mutable_uuid() {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  return uuid_;
+}
+inline ::std::string* ProcessorInput::release_uuid() {
+  clear_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = uuid_;
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProcessorInput::set_allocated_uuid(::std::string* uuid) {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    delete uuid_;
+  }
+  if (uuid) {
+    set_has_uuid();
+    uuid_ = uuid;
+  } else {
+    clear_has_uuid();
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required int32 data_loader_id = 3;
+inline bool ProcessorInput::has_data_loader_id() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ProcessorInput::set_has_data_loader_id() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ProcessorInput::clear_has_data_loader_id() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ProcessorInput::clear_data_loader_id() {
+  data_loader_id_ = 0;
+  clear_has_data_loader_id();
+}
+inline ::google::protobuf::int32 ProcessorInput::data_loader_id() const {
+  return data_loader_id_;
+}
+inline void ProcessorInput::set_data_loader_id(::google::protobuf::int32 value) {
+  set_has_data_loader_id();
+  data_loader_id_ = value;
+}
+
+// repeated .artm.core.Flags stream_flags = 4;
 inline int ProcessorInput::stream_flags_size() const {
   return stream_flags_.size();
 }
@@ -641,7 +897,7 @@ ProcessorInput::mutable_stream_flags() {
   return &stream_flags_;
 }
 
-// repeated string stream_name = 3;
+// repeated string stream_name = 5;
 inline int ProcessorInput::stream_name_size() const {
   return stream_name_.size();
 }
@@ -683,6 +939,44 @@ ProcessorInput::stream_name() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 ProcessorInput::mutable_stream_name() {
   return &stream_name_;
+}
+
+// optional .artm.core.ProcessorCacheEntry cache = 6;
+inline bool ProcessorInput::has_cache() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void ProcessorInput::set_has_cache() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void ProcessorInput::clear_has_cache() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void ProcessorInput::clear_cache() {
+  if (cache_ != NULL) cache_->::artm::core::ProcessorCacheEntry::Clear();
+  clear_has_cache();
+}
+inline const ::artm::core::ProcessorCacheEntry& ProcessorInput::cache() const {
+  return cache_ != NULL ? *cache_ : *default_instance_->cache_;
+}
+inline ::artm::core::ProcessorCacheEntry* ProcessorInput::mutable_cache() {
+  set_has_cache();
+  if (cache_ == NULL) cache_ = new ::artm::core::ProcessorCacheEntry;
+  return cache_;
+}
+inline ::artm::core::ProcessorCacheEntry* ProcessorInput::release_cache() {
+  clear_has_cache();
+  ::artm::core::ProcessorCacheEntry* temp = cache_;
+  cache_ = NULL;
+  return temp;
+}
+inline void ProcessorInput::set_allocated_cache(::artm::core::ProcessorCacheEntry* cache) {
+  delete cache_;
+  cache_ = cache;
+  if (cache) {
+    set_has_cache();
+  } else {
+    clear_has_cache();
+  }
 }
 
 // -------------------------------------------------------------------
@@ -793,32 +1087,7 @@ inline void ProcessorOutput::set_allocated_topic_counters(::artm::core::Counters
   }
 }
 
-// repeated .artm.core.Counters token_counters = 5;
-inline int ProcessorOutput::token_counters_size() const {
-  return token_counters_.size();
-}
-inline void ProcessorOutput::clear_token_counters() {
-  token_counters_.Clear();
-}
-inline const ::artm::core::Counters& ProcessorOutput::token_counters(int index) const {
-  return token_counters_.Get(index);
-}
-inline ::artm::core::Counters* ProcessorOutput::mutable_token_counters(int index) {
-  return token_counters_.Mutable(index);
-}
-inline ::artm::core::Counters* ProcessorOutput::add_token_counters() {
-  return token_counters_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >&
-ProcessorOutput::token_counters() const {
-  return token_counters_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >*
-ProcessorOutput::mutable_token_counters() {
-  return &token_counters_;
-}
-
-// repeated string token = 6;
+// repeated string token = 5;
 inline int ProcessorOutput::token_size() const {
   return token_.size();
 }
@@ -862,7 +1131,7 @@ ProcessorOutput::mutable_token() {
   return &token_;
 }
 
-// repeated string discovered_token = 7;
+// repeated string discovered_token = 6;
 inline int ProcessorOutput::discovered_token_size() const {
   return discovered_token_.size();
 }
@@ -904,6 +1173,31 @@ ProcessorOutput::discovered_token() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 ProcessorOutput::mutable_discovered_token() {
   return &discovered_token_;
+}
+
+// repeated .artm.core.Counters token_counters = 7;
+inline int ProcessorOutput::token_counters_size() const {
+  return token_counters_.size();
+}
+inline void ProcessorOutput::clear_token_counters() {
+  token_counters_.Clear();
+}
+inline const ::artm::core::Counters& ProcessorOutput::token_counters(int index) const {
+  return token_counters_.Get(index);
+}
+inline ::artm::core::Counters* ProcessorOutput::mutable_token_counters(int index) {
+  return token_counters_.Mutable(index);
+}
+inline ::artm::core::Counters* ProcessorOutput::add_token_counters() {
+  return token_counters_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >&
+ProcessorOutput::token_counters() const {
+  return token_counters_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >*
+ProcessorOutput::mutable_token_counters() {
+  return &token_counters_;
 }
 
 // repeated double score = 8;
@@ -954,6 +1248,155 @@ ProcessorOutput::score_norm() const {
 inline ::google::protobuf::RepeatedField< double >*
 ProcessorOutput::mutable_score_norm() {
   return &score_norm_;
+}
+
+// repeated int32 item_id = 10;
+inline int ProcessorOutput::item_id_size() const {
+  return item_id_.size();
+}
+inline void ProcessorOutput::clear_item_id() {
+  item_id_.Clear();
+}
+inline ::google::protobuf::int32 ProcessorOutput::item_id(int index) const {
+  return item_id_.Get(index);
+}
+inline void ProcessorOutput::set_item_id(int index, ::google::protobuf::int32 value) {
+  item_id_.Set(index, value);
+}
+inline void ProcessorOutput::add_item_id(::google::protobuf::int32 value) {
+  item_id_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+ProcessorOutput::item_id() const {
+  return item_id_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+ProcessorOutput::mutable_item_id() {
+  return &item_id_;
+}
+
+// repeated .artm.core.Counters theta = 11;
+inline int ProcessorOutput::theta_size() const {
+  return theta_.size();
+}
+inline void ProcessorOutput::clear_theta() {
+  theta_.Clear();
+}
+inline const ::artm::core::Counters& ProcessorOutput::theta(int index) const {
+  return theta_.Get(index);
+}
+inline ::artm::core::Counters* ProcessorOutput::mutable_theta(int index) {
+  return theta_.Mutable(index);
+}
+inline ::artm::core::Counters* ProcessorOutput::add_theta() {
+  return theta_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >&
+ProcessorOutput::theta() const {
+  return theta_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::core::Counters >*
+ProcessorOutput::mutable_theta() {
+  return &theta_;
+}
+
+// -------------------------------------------------------------------
+
+// ProcessorCacheEntry
+
+// required string uuid = 1;
+inline bool ProcessorCacheEntry::has_uuid() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ProcessorCacheEntry::set_has_uuid() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ProcessorCacheEntry::clear_has_uuid() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ProcessorCacheEntry::clear_uuid() {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    uuid_->clear();
+  }
+  clear_has_uuid();
+}
+inline const ::std::string& ProcessorCacheEntry::uuid() const {
+  return *uuid_;
+}
+inline void ProcessorCacheEntry::set_uuid(const ::std::string& value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void ProcessorCacheEntry::set_uuid(const char* value) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(value);
+}
+inline void ProcessorCacheEntry::set_uuid(const char* value, size_t size) {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  uuid_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ProcessorCacheEntry::mutable_uuid() {
+  set_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    uuid_ = new ::std::string;
+  }
+  return uuid_;
+}
+inline ::std::string* ProcessorCacheEntry::release_uuid() {
+  clear_has_uuid();
+  if (uuid_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = uuid_;
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ProcessorCacheEntry::set_allocated_uuid(::std::string* uuid) {
+  if (uuid_ != &::google::protobuf::internal::kEmptyString) {
+    delete uuid_;
+  }
+  if (uuid) {
+    set_has_uuid();
+    uuid_ = uuid;
+  } else {
+    clear_has_uuid();
+    uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .artm.core.ProcessorOutput output = 2;
+inline int ProcessorCacheEntry::output_size() const {
+  return output_.size();
+}
+inline void ProcessorCacheEntry::clear_output() {
+  output_.Clear();
+}
+inline const ::artm::core::ProcessorOutput& ProcessorCacheEntry::output(int index) const {
+  return output_.Get(index);
+}
+inline ::artm::core::ProcessorOutput* ProcessorCacheEntry::mutable_output(int index) {
+  return output_.Mutable(index);
+}
+inline ::artm::core::ProcessorOutput* ProcessorCacheEntry::add_output() {
+  return output_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::core::ProcessorOutput >&
+ProcessorCacheEntry::output() const {
+  return output_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::core::ProcessorOutput >*
+ProcessorCacheEntry::mutable_output() {
+  return &output_;
 }
 
 

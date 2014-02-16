@@ -90,8 +90,8 @@ namespace artm { namespace core {
     }
 
     std::shared_ptr<T> get_copy(const K& key) const {
-      auto iter = object_.find(key);
-      return (iter != object_.end()) ? std::make_shared<T>(*(iter->second)) : std::shared_ptr<T>();
+      auto value = get(key);
+      return value != nullptr ? std::make_shared<T>(*value) : std::shared_ptr<T>();
     }
     
     void set(const K& key, const std::shared_ptr<T>& object)

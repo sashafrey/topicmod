@@ -104,27 +104,6 @@ namespace artm { namespace core {
     }
   }
 
-  int Instance::WaitIdle() {
-    for (;;) {
-      bool retval = true;
-      {
-        boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
-        if (!processor_queue_.empty()) retval = false;
-      }
-
-      {
-        boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
-        if (!merger_queue_.empty()) retval = false;
-      }
-
-      if (retval) {
-        return true;
-      }
-
-      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-    }
-  }
-
   int Instance::ProcessorQueueSize() {
     boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
     return processor_queue_.size();

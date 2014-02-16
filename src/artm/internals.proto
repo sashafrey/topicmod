@@ -2,40 +2,78 @@ package artm.core;
 
 import "messages.proto";
 
+// vector<float>; can be utilized for various purposes.
 message Counters {
-	repeated float value = 1 [packed = true];
+  repeated float value = 1 [packed = true];
 }
 
+// vector<bool>; can be utilized for various purposes.
 message Flags {
-	repeated bool value = 1 [packed = true];
+  repeated bool value = 1 [packed = true];
 }
 
+// A message to pass from DataLoader to Processor.
 message ProcessorInput
 {
-	required Batch batch = 1;
-	repeated Flags stream_flags = 2;
-	repeated string stream_name = 3;
+  required Batch batch = 1;
+  
+  // Identificator of the batch
+  required string uuid = 2;
+  
+  // Id of DataLoader
+  required int32 data_loader_id = 3;
+  
+  // Information about streams (for example, training and testing items).
+  // Withing each stream the length of flags vector 
+  // is the same as number of items in the batch.
+  repeated Flags stream_flags = 4;
+  repeated string stream_name = 5;
+  
+  // Contains processor outputs from previous iteration.
+  optional ProcessorCacheEntry cache = 6;
 }
 
+// A massage to pass from Processor to Merger
 message ProcessorOutput
 {
-	required int32 model_id = 1;
-	required int32 topics_count = 2;
-	optional int32 items_processed = 3;
+  required int32 model_id = 1;
+  required int32 topics_count = 2;
+  optional int32 items_processed = 3;
 	
-	// The sum of token counters
-	required Counters topic_counters = 4;
-	
-	// Counters for each token
-	repeated Counters token_counters = 5;
+  // The sum of token counters across all tokens
+  // (one number for each topic; length = topics_count)
+  required Counters topic_counters = 4;
 
-	// Known tokens
-	repeated string token = 6;
+  // Known tokens
+  repeated string token = 5;
 
-	// Newly discovered tokens, not yet included in matrix Phi.
-	repeated string discovered_token = 7;
-	
-	// Messages related to scores such as perplexity.
-	repeated double score = 8; 	// cumulative part of perplexity
-	repeated double score_norm = 9; // total number of tokens accumulated so far
+  // Newly discovered tokens, not yet included in matrix Phi.
+  repeated string discovered_token = 6;
+  
+  // n_wt values for this batch; the length of this repeated field 
+  // equals the number of known tokens. 
+  // For each token, the length of Counters array equals topics_count.
+  repeated Counters token_counters = 7;
+
+  // Messages related to scores such as perplexity.
+  repeated double score = 8; 	  // cumulative part of perplexity
+  repeated double score_norm = 9; // total 'n' (accumulated number of tokens)
+  
+  // Cached thetas from previous iteration
+  repeated int32 item_id = 10;
+  repeated Counters theta = 11;
+}
+
+// An object to return back from Processor to DataLoader
+// when Processor finishe processing a batch.
+// Whenever DataLoader sents the same batch to processor during the next iteration
+// it will include this information in ProcessorInput.
+// This allows processor to re-use Theta's, inferred on previous iteration.
+message ProcessorCacheEntry
+{
+  // Identificator of the batch.
+  required string uuid = 1;
+  
+  // Several outputs (each output corresponds to one model).
+  repeated ProcessorOutput output = 2;
 }

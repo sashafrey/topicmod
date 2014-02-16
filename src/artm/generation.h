@@ -29,6 +29,11 @@ namespace artm { namespace core {
       return id_;
     }
     
+    std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid) {
+      auto retval = generation_.find(uuid);
+      return (retval != generation_.end()) ? retval->second : nullptr;
+    }
+
     void AddBatch(const std::shared_ptr<const Batch>& batch) 
     {
       generation_.insert(std::make_pair(boost::uuids::random_generator()(), batch));
@@ -40,7 +45,7 @@ namespace artm { namespace core {
            iter != generation_.end();
            ++iter) 
       {
-        fn(iter->second);
+        fn(iter->first, iter->second);
       }
     }
 

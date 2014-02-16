@@ -1,5 +1,7 @@
 #include "artm/processor.h"
 #include "artm/protobuf_helpers.h"
+#include "artm/data_loader.h"
+#include "artm/call_on_destruction.h"
 
 #include "stdlib.h"
 
@@ -90,18 +92,13 @@ namespace artm { namespace core {
   void Processor::ItemProcessor::InferTheta(const ModelConfig& model, 
                                             const Item& item,  
                                             ProcessorOutput* processor_output, 
-                                            float* theta_out) 
+                                            float* theta) 
   {
     int topics_count = token_topic_matrix_.topics_count();
 
     if (processor_output != nullptr) {
       processor_output->set_items_processed(
         processor_output->items_processed() + 1);
-    }
-
-    std::vector<float> theta(topics_count);
-    for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-      theta[iTopic] = (float)rand() / (float)RAND_MAX;
     }
 
     if (processor_output != nullptr) {
@@ -126,6 +123,10 @@ namespace artm { namespace core {
       Z.push_back(0.0f);
       known_tokens_count++;
     }
+
+    //if (known_tokens_count == 0) {
+    //  return;
+    //}
 
     int numInnerIters = model.inner_iterations_count();
     for (int iInnerIter = 0;
@@ -179,7 +180,7 @@ namespace artm { namespace core {
             }
           }
 
-          if ((iInnerIter == numInnerIters) && (theta_out != nullptr)) {
+          if (iInnerIter == numInnerIters) {
             // Last iteration, reporting theta vector
 
             // Normalize theta_next. For normal iterations this is handled by curZ value.
@@ -188,7 +189,7 @@ namespace artm { namespace core {
               sum += theta_next[iTopic];
             
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-              theta_out[iTopic] = (sum > 0) ? (theta_next[iTopic] / sum) : 0.0f;
+              theta[iTopic] = (sum > 0) ? (theta_next[iTopic] / sum) : 0.0f;
             }
           }
         }
@@ -274,6 +275,18 @@ namespace artm { namespace core {
           processor_queue_.pop();
         }
 
+        std::shared_ptr<ProcessorCacheEntry> cache_new = std::make_shared<ProcessorCacheEntry>();
+        cache_new->set_uuid(part->uuid());
+        helpers::call_on_destruction c([&]() {
+          // Callback to DataLoader
+          auto data_loader = DataLoaderManager::singleton().Get(part->data_loader_id());
+          if (data_loader != nullptr) {
+            data_loader->Callback(cache_new);
+          }
+        });
+
+        const ProcessorCacheEntry* cache_old = part->has_cache() ? &part->cache() : nullptr;
+
         std::shared_ptr<InstanceSchema> schema = schema_.get();
         std::vector<int> model_ids = schema->get_model_ids();
         std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
@@ -281,6 +294,16 @@ namespace artm { namespace core {
           
           // do not process disabled models.
           if (!model.enabled()) return; // return from lambda; goes to next step of std::for_each
+
+          // find cache
+          const ProcessorOutput* old_cache_this_model = nullptr;
+          if (cache_old != nullptr) {
+            for (int i = 0; i < cache_old->output_size(); ++i) {
+              if (cache_old->output(i).model_id() == model_id) {
+                old_cache_this_model = &cache_old->output(i);
+              }
+            }            
+          }
 
           std::shared_ptr<const TokenTopicMatrix> token_topic_matrix
               = merger_.GetLatestTokenTopicMatrix(model_id);
@@ -291,6 +314,8 @@ namespace artm { namespace core {
 
           assert(topics_count > 0);
           
+          // TODO: if (cache_old != nullptr), deduct old values
+
           // process part and store result in merger queue
           auto po = std::make_shared<ProcessorOutput>();
           po->set_model_id(model_id);
@@ -319,8 +344,35 @@ namespace artm { namespace core {
           StreamIterator iter(*part, model.stream_name());
           while (iter.Next() != nullptr) 
           {
+            // ToDo: add an option to always start with random iteration!
             const Item* item = iter.Current();
-            item_processor.InferTheta(model, *item, po.get(), nullptr);
+
+            // ToDo: if (cache_old != nullptr), use it as a starting iteration.
+            std::vector<float> theta(topics_count);
+            int index_of_item = -1;
+            if (old_cache_this_model != nullptr) {
+              index_of_item = repeated_field_index_of(old_cache_this_model->item_id(), item->id());
+            }
+
+            if (index_of_item != -1) {
+              const Counters& old_thetas = old_cache_this_model->theta(index_of_item);
+              for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+                theta[iTopic] = old_thetas.value(iTopic);
+              }              
+            } else {
+              for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+                theta[iTopic] = (float)rand() / (float)RAND_MAX;
+              }
+            }
+
+            item_processor.InferTheta(model, *item, po.get(), &theta[0]);
+
+            // Cache theta for the next iteration
+            po->add_item_id(item->id());
+            Counters* cached_theta = po->add_theta();
+            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+              cached_theta->add_value(theta[iTopic]);
+            }
           }
 
           // Calculate all requested scores (such as perplexity)
@@ -334,6 +386,9 @@ namespace artm { namespace core {
             std::vector<float> theta_vec;
             theta_vec.resize(topics_count);
             float* theta = &theta_vec[0];
+            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+              theta[iTopic] = (float)rand() / (float)RAND_MAX;
+            }
 
             double perplexity_score = 0.0;
             double perplexity_norm = 0.0;
@@ -354,6 +409,9 @@ namespace artm { namespace core {
             boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
             merger_queue_.push(po);
           }
+
+          ProcessorOutput* cached_output = cache_new->add_output();
+          cached_output->CopyFrom(*po);
         });
       }
     }

@@ -199,12 +199,3 @@ int wait_model_processed(int instance_id,
   auto instance = InstanceManager::singleton().Get(instance_id);
   return instance->WaitModelProcessed(model_id, processed_items);
 }
-
-int wait_idle_instance(int instance_id) {
-  if (!InstanceManager::singleton().Contains(instance_id)) {
-    return ARTM_ERROR;
-  }
-
-  auto instance = InstanceManager::singleton().Get(instance_id);
-  return instance->WaitIdle();
-}

@@ -72,7 +72,7 @@ namespace artm { namespace core {
       void InferTheta(const ModelConfig& model, 
                       const Item& item, 
                       ProcessorOutput* processor_output, 
-                      float* theta_out);
+                      float* theta);
       
       void CalculateScore(const Score& score, 
                           const Item& item, 

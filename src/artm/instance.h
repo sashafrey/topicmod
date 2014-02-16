@@ -36,7 +36,6 @@ namespace artm { namespace core {
     int Reconfigure(const InstanceConfig& config);
     int RequestModelTopics(int model_id, ModelTopics* model_topics);
     int WaitModelProcessed(int model_id, int processed_items);
-    int WaitIdle();
     int ProcessorQueueSize();
     int AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 

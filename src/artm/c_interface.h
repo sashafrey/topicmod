@@ -89,8 +89,6 @@ extern "C" {
   DLL_PUBLIC int wait_model_processed(int instance_id,
                                       int model_id,
                                       int processed_items);
-
-  DLL_PUBLIC int wait_idle_instance(int instance_id);
 }
 
 

@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <iostream>
 
+#include "artm/call_on_destruction.h"
+#include "artm/data_loader.h"
+
 namespace artm { namespace core {
 
 Merger::Merger(boost::mutex& merger_queue_lock,
@@ -71,39 +74,54 @@ void Merger::ThreadFunction()
           merger_queue_.pop();
         }
 
-        int model_id = processor_output->model_id();
-        auto cur_ttm = token_topic_matrix_.get(model_id);
-        if (cur_ttm.get() == nullptr) {
-          // a model had been disposed during ongoing processing;
-          continue;
-        }
+        helpers::call_on_destruction c([&]() {
+          // Callback to DataLoader
+          auto data_loader = DataLoaderManager::singleton().Get(processor_output->data_loader_id());
+          if (data_loader != nullptr) {
+            data_loader->Callback(processor_output);
+          }
+        });
+
+        for (int iModel = 0; iModel < processor_output->entry_size(); iModel++) {
+          auto processor_output_entry = processor_output->entry(iModel);
+          int model_id = processor_output_entry.model_id();
+          auto cur_ttm = token_topic_matrix_.get(model_id);
+          if (cur_ttm.get() == nullptr) {
+            // a model had been disposed during ongoing processing;
+            continue;
+          }
         
-        auto new_ttm = std::make_shared<TokenTopicMatrix>(*cur_ttm);
-        new_ttm->IncreaseItemsProcessed(processor_output->items_processed());
-        for (int iScore = 0; iScore < processor_output->score_size(); ++iScore) {
-          new_ttm->IncreaseScores(iScore, processor_output->score(iScore), processor_output->score_norm(iScore));
-        }
-
-        // Add new tokens discovered by processor
-        for (int iNewToken = 0; iNewToken < processor_output->discovered_token_size(); ++iNewToken) {
-          std::string new_token = processor_output->discovered_token(iNewToken);
-          if (new_ttm->token_id(new_token) == -1) {
-            new_ttm->AddToken(new_token);
+          auto new_ttm = std::make_shared<TokenTopicMatrix>(*cur_ttm);
+          new_ttm->IncreaseItemsProcessed(processor_output_entry.items_processed());
+          for (int iScore = 0; iScore < processor_output_entry.score_size(); ++iScore) {
+            new_ttm->IncreaseScores(iScore, processor_output_entry.score(iScore), processor_output_entry.score_norm(iScore));
           }
-        }
 
-        int topics_count = new_ttm->topics_count();
-
-        for (int iToken = 0; iToken < processor_output->token_counters_size(); ++iToken) {
-          const Counters& counters = processor_output->token_counters(iToken);
-          const std::string& token = processor_output->token(iToken);
-          int id = new_ttm->token_id(token);
-          for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-            new_ttm->IncreaseTokenWeight(id, iTopic, counters.value(iTopic));
+          // Add new tokens discovered by processor
+          for (int iNewToken = 0; iNewToken < processor_output_entry.discovered_token_size(); ++iNewToken) {
+            std::string new_token = processor_output_entry.discovered_token(iNewToken);
+            if (new_ttm->token_id(new_token) == -1) {
+              new_ttm->AddToken(new_token);
+            }
           }
-        }
 
-        token_topic_matrix_.set(model_id, new_ttm);
+          int topics_count = new_ttm->topics_count();
+
+          for (int iToken = 0; iToken < processor_output_entry.token_counters_size(); ++iToken) {
+            const Counters& counters = processor_output_entry.token_counters(iToken);
+            const std::string& token = processor_output_entry.token(iToken);
+            int id = new_ttm->token_id(token);
+            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+              new_ttm->IncreaseTokenWeight(id, iTopic, counters.value(iTopic));
+            }
+          }
+
+          {
+            boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
+            // new_ttm->ToString();
+          }
+          token_topic_matrix_.set(model_id, new_ttm);
+        }
       }
     }
   }

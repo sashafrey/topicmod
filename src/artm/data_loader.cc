@@ -106,7 +106,7 @@ int DataLoader::WaitIdle() {
   }
 }
 
-void DataLoader::Callback(std::shared_ptr<const ProcessorCacheEntry> cache) {
+void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
   boost::uuids::uuid uuid(boost::uuids::string_generator()(cache->uuid().c_str()));
   batch_manager_.Done(uuid);
   cache_.set(uuid, cache);

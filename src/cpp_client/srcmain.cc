@@ -46,8 +46,9 @@ double proc(int argc, char * argv[], int processors_count) {
   int nTopics = atoi(argv[3]);
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-  model_config.set_inner_iterations_count(10);
+  model_config.set_inner_iterations_count(1);
   model_config.set_stream_name("train_stream");
+  model_config.set_reuse_theta(false);
 
   Score* score = model_config.add_score();
   score->set_type(Score_Type::Score_Type_Perplexity);
@@ -93,7 +94,7 @@ double proc(int argc, char * argv[], int processors_count) {
   // Enable model and wait while each document pass through processor about 10 times.
   model.Enable();
   std::shared_ptr<ModelTopics> model_topics;
-  for (int iIter = 0; iIter < 40; ++iIter) {
+  for (int iIter = 0; iIter < 50; ++iIter) {
     data_loader.InvokeIteration(1);
     data_loader.WaitIdle();
     model_topics = instance.GetTopics(model);
@@ -102,6 +103,7 @@ double proc(int argc, char * argv[], int processors_count) {
               << "Items processed = " << model_topics->items_processed() << ", "
               << "Perplexity = " << model_topics->score(0) << endl;
   }
+
   model.Disable();
 
   std::cout << endl;
@@ -147,7 +149,7 @@ int main(int argc, char * argv[]) {
     return 0;
   }
 
-  cout << proc(argc, argv, 2) << " sec. ================= " << endl << endl;
+  cout << proc(argc, argv, 4) << " sec. ================= " << endl << endl;
   // cout << proc(argc, argv, 3) << " sec. ================= " << endl << endl;
   // cout << proc(argc, argv, 2) << " sec. ================= " << endl << endl;
   // cout << proc(argc, argv, 1) << " sec. ================= " << endl << endl;

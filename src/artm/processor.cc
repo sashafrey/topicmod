@@ -1,6 +1,5 @@
 #include "artm/processor.h"
 #include "artm/protobuf_helpers.h"
-#include "artm/data_loader.h"
 #include "artm/call_on_destruction.h"
 
 #include "stdlib.h"
@@ -91,7 +90,7 @@ namespace artm { namespace core {
 
   void Processor::ItemProcessor::InferTheta(const ModelConfig& model, 
                                             const Item& item,  
-                                            ProcessorOutput* processor_output, 
+                                            ProcessorOutputEntry* processor_output, 
                                             float* theta) 
   {
     int topics_count = token_topic_matrix_.topics_count();
@@ -124,9 +123,9 @@ namespace artm { namespace core {
       known_tokens_count++;
     }
 
-    //if (known_tokens_count == 0) {
-    //  return;
-    //}
+    if (known_tokens_count == 0) {
+      return;
+    }
 
     int numInnerIters = model.inner_iterations_count();
     for (int iInnerIter = 0;
@@ -172,8 +171,8 @@ namespace artm { namespace core {
             Counters* hat_n_t = processor_output->mutable_topic_counters();
                 
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-              float val = n_dw * (cur_token_weights.at(iTopic)) *
-                  theta[iTopic] / curZ;
+              float w = cur_token_weights.at(iTopic);
+              float val = n_dw * w * theta[iTopic] / curZ;
 
               hat_n_wt_cur->set_value(iTopic, hat_n_wt_cur->value(iTopic) + val);
               hat_n_t->set_value(iTopic, hat_n_t->value(iTopic) + val);
@@ -181,24 +180,18 @@ namespace artm { namespace core {
           }
 
           if (iInnerIter == numInnerIters) {
-            // Last iteration, reporting theta vector
-
-            // Normalize theta_next. For normal iterations this is handled by curZ value.
-            float sum = 0.0f; 
-            for (int iTopic = 0; iTopic < topics_count; ++iTopic) 
-              sum += theta_next[iTopic];
             
-            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-              theta[iTopic] = (sum > 0) ? (theta_next[iTopic] / sum) : 0.0f;
-            }
           }
         }
       }                
 
-      if (iInnerIter < numInnerIters) {
-        for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-          theta[iTopic] = theta_next[iTopic];
-        }
+      // Normalize theta_next. For normal iterations this is handled by curZ value.
+      float sum = 0.0f; 
+      for (int iTopic = 0; iTopic < topics_count; ++iTopic) 
+        sum += theta_next[iTopic];
+            
+      for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+        theta[iTopic] = (sum > 0) ? (theta_next[iTopic] / sum) : 0.0f;
       }
     }
   }
@@ -275,17 +268,15 @@ namespace artm { namespace core {
           processor_queue_.pop();
         }
 
-        std::shared_ptr<ProcessorCacheEntry> cache_new = std::make_shared<ProcessorCacheEntry>();
-        cache_new->set_uuid(part->uuid());
+        std::shared_ptr<ProcessorOutput> processor_output = std::make_shared<ProcessorOutput>();
+        processor_output->set_uuid(part->uuid());
+        processor_output->set_data_loader_id(part->data_loader_id());
         helpers::call_on_destruction c([&]() {
-          // Callback to DataLoader
-          auto data_loader = DataLoaderManager::singleton().Get(part->data_loader_id());
-          if (data_loader != nullptr) {
-            data_loader->Callback(cache_new);
-          }
+          boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
+          merger_queue_.push(processor_output);
         });
 
-        const ProcessorCacheEntry* cache_old = part->has_cache() ? &part->cache() : nullptr;
+        const ProcessorOutput* cache_old = part->has_cache() ? &part->cache() : nullptr;
 
         std::shared_ptr<InstanceSchema> schema = schema_.get();
         std::vector<int> model_ids = schema->get_model_ids();
@@ -296,11 +287,11 @@ namespace artm { namespace core {
           if (!model.enabled()) return; // return from lambda; goes to next step of std::for_each
 
           // find cache
-          const ProcessorOutput* old_cache_this_model = nullptr;
+          const ProcessorOutputEntry* old_cache_this_model = nullptr;
           if (cache_old != nullptr) {
-            for (int i = 0; i < cache_old->output_size(); ++i) {
-              if (cache_old->output(i).model_id() == model_id) {
-                old_cache_this_model = &cache_old->output(i);
+            for (int i = 0; i < cache_old->entry_size(); ++i) {
+              if (cache_old->entry(i).model_id() == model_id) {
+                old_cache_this_model = &cache_old->entry(i);
               }
             }            
           }
@@ -317,7 +308,7 @@ namespace artm { namespace core {
           // TODO: if (cache_old != nullptr), deduct old values
 
           // process part and store result in merger queue
-          auto po = std::make_shared<ProcessorOutput>();
+          auto po = processor_output->add_entry();
           po->set_model_id(model_id);
           po->set_items_processed(0);
 
@@ -354,7 +345,7 @@ namespace artm { namespace core {
               index_of_item = repeated_field_index_of(old_cache_this_model->item_id(), item->id());
             }
 
-            if (index_of_item != -1) {
+            if ((index_of_item != -1) && model.reuse_theta()) {
               const Counters& old_thetas = old_cache_this_model->theta(index_of_item);
               for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
                 theta[iTopic] = old_thetas.value(iTopic);
@@ -365,7 +356,7 @@ namespace artm { namespace core {
               }
             }
 
-            item_processor.InferTheta(model, *item, po.get(), &theta[0]);
+            item_processor.InferTheta(model, *item, po, &theta[0]);
 
             // Cache theta for the next iteration
             po->add_item_id(item->id());
@@ -383,13 +374,6 @@ namespace artm { namespace core {
             if (score.type() != Score_Type_Perplexity) 
               continue;
 
-            std::vector<float> theta_vec;
-            theta_vec.resize(topics_count);
-            float* theta = &theta_vec[0];
-            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-              theta[iTopic] = (float)rand() / (float)RAND_MAX;
-            }
-
             double perplexity_score = 0.0;
             double perplexity_norm = 0.0;
             StreamIterator test_iter(*part, score.stream_name());
@@ -397,6 +381,14 @@ namespace artm { namespace core {
             while (test_iter.Next() != nullptr) 
             {
               const Item* item = test_iter.Current();
+
+              std::vector<float> theta_vec;
+              theta_vec.resize(topics_count);
+              float* theta = &theta_vec[0];
+              for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+                theta[iTopic] = (float)rand() / (float)RAND_MAX;
+              }
+
               test_item_processor.InferTheta(model, *item, nullptr, theta);
               test_item_processor.CalculateScore(score, *item, theta, &perplexity_score, &perplexity_norm);
             }
@@ -404,14 +396,6 @@ namespace artm { namespace core {
             po->set_score(iScore, po->score(iScore) + perplexity_score);
             po->set_score_norm(iScore, po->score_norm(iScore) + perplexity_norm);
           }
-
-          {
-            boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
-            merger_queue_.push(po);
-          }
-
-          ProcessorOutput* cached_output = cache_new->add_output();
-          cached_output->CopyFrom(*po);
         });
       }
     }

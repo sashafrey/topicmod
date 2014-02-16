@@ -68,6 +68,7 @@ message ModelConfig {
   optional string field_name = 5 [default = "@body"];
   optional string stream_name = 6 [default = "@global"];
   repeated Score score = 7;
+  optional bool reuse_theta = 8 [default = false];
 }
 
 message Score {

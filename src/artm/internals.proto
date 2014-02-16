@@ -29,13 +29,11 @@ message ProcessorInput
   repeated Flags stream_flags = 4;
   repeated string stream_name = 5;
   
-  // Contains processor outputs from previous iteration.
-  optional ProcessorCacheEntry cache = 6;
+  // Contains processor output from previous iteration.
+  optional ProcessorOutput cache = 6;
 }
 
-// A massage to pass from Processor to Merger
-message ProcessorOutput
-{
+message ProcessorOutputEntry {
   required int32 model_id = 1;
   required int32 topics_count = 2;
   optional int32 items_processed = 3;
@@ -64,16 +62,15 @@ message ProcessorOutput
   repeated Counters theta = 11;
 }
 
-// An object to return back from Processor to DataLoader
-// when Processor finishe processing a batch.
-// Whenever DataLoader sents the same batch to processor during the next iteration
-// it will include this information in ProcessorInput.
-// This allows processor to re-use Theta's, inferred on previous iteration.
-message ProcessorCacheEntry
+// A massage to pass from Processor to Merger
+message ProcessorOutput
 {
   // Identificator of the batch.
-  required string uuid = 1;
-  
-  // Several outputs (each output corresponds to one model).
-  repeated ProcessorOutput output = 2;
+  required string uuid = 1;  
+
+  // Id of DataLoader
+  required int32 data_loader_id = 2;
+
+  // One entry for each model
+  repeated ProcessorOutputEntry entry = 3;
 }

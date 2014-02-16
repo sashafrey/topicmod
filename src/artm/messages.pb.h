@@ -880,6 +880,13 @@ class ModelConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::Score >*
       mutable_score();
 
+  // optional bool reuse_theta = 8 [default = false];
+  inline bool has_reuse_theta() const;
+  inline void clear_reuse_theta();
+  static const int kReuseThetaFieldNumber = 8;
+  inline bool reuse_theta() const;
+  inline void set_reuse_theta(bool value);
+
   // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
   inline void set_has_topics_count();
@@ -892,20 +899,23 @@ class ModelConfig : public ::google::protobuf::Message {
   inline void clear_has_field_name();
   inline void set_has_stream_name();
   inline void clear_has_stream_name();
+  inline void set_has_reuse_theta();
+  inline void clear_has_reuse_theta();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::int32 topics_count_;
-  bool enabled_;
+  ::google::protobuf::int32 inner_iterations_count_;
   ::std::string* field_name_;
   static ::std::string* _default_field_name_;
   ::std::string* stream_name_;
   static ::std::string* _default_stream_name_;
   ::google::protobuf::RepeatedPtrField< ::artm::Score > score_;
-  ::google::protobuf::int32 inner_iterations_count_;
+  bool enabled_;
+  bool reuse_theta_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2370,6 +2380,28 @@ ModelConfig::score() const {
 inline ::google::protobuf::RepeatedPtrField< ::artm::Score >*
 ModelConfig::mutable_score() {
   return &score_;
+}
+
+// optional bool reuse_theta = 8 [default = false];
+inline bool ModelConfig::has_reuse_theta() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void ModelConfig::set_has_reuse_theta() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void ModelConfig::clear_has_reuse_theta() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void ModelConfig::clear_reuse_theta() {
+  reuse_theta_ = false;
+  clear_has_reuse_theta();
+}
+inline bool ModelConfig::reuse_theta() const {
+  return reuse_theta_;
+}
+inline void ModelConfig::set_reuse_theta(bool value) {
+  set_has_reuse_theta();
+  reuse_theta_ = value;
 }
 
 // -------------------------------------------------------------------

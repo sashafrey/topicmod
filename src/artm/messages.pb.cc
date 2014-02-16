@@ -174,13 +174,14 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(InstanceConfig));
   ModelConfig_descriptor_ = file->message_type(6);
-  static const int ModelConfig_offsets_[6] = {
+  static const int ModelConfig_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, topics_count_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, enabled_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, inner_iterations_count_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, field_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, stream_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, score_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, reuse_theta_),
   };
   ModelConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -390,25 +391,26 @@ void protobuf_AddDesc_messages_2eproto() {
     "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000"
     "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003"
     "\"-\n\016InstanceConfig\022\033\n\020processors_count\030\001"
-    " \001(\005:\0011\"\270\001\n\013ModelConfig\022\030\n\014topics_count\030"
+    " \001(\005:\0011\"\324\001\n\013ModelConfig\022\030\n\014topics_count\030"
     "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn"
     "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n"
     "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@"
-    "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\"x\n\005Sc"
-    "ore\022\036\n\004type\030\001 \002(\0162\020.artm.Score.Type\022\031\n\nf"
-    "ield_name\030\002 \001(\t:\005@body\022\034\n\013stream_name\030\003 "
-    "\001(\t:\007@global\"\026\n\004Type\022\016\n\nPerplexity\020\000\"\231\001\n"
-    "\014LoggerConfig\022\024\n\014log_location\030\001 \001(\t\022-\n\005l"
-    "evel\030\002 \001(\0162\030.artm.LoggerConfig.Level:\004IN"
-    "FO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007"
-    "WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013Mode"
-    "lTopics\022&\n\013token_topic\030\001 \003(\0132\021.artm.Toke"
-    "nTopics\022\027\n\017items_processed\030\002 \001(\005\022\r\n\005scor"
-    "e\030\003 \003(\001\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n"
-    "\010token_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n"
-    "\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030"
-    "\002 \003(\002\"4\n\013BatchTopics\022%\n\013item_topics\030\001 \003("
-    "\0132\020.artm.ItemTopics", 1259);
+    "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013re"
+    "use_theta\030\010 \001(\010:\005false\"x\n\005Score\022\036\n\004type\030"
+    "\001 \002(\0162\020.artm.Score.Type\022\031\n\nfield_name\030\002 "
+    "\001(\t:\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@global"
+    "\"\026\n\004Type\022\016\n\nPerplexity\020\000\"\231\001\n\014LoggerConfi"
+    "g\022\024\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030"
+    ".artm.LoggerConfig.Level:\004INFO\"D\n\005Level\022"
+    "\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n"
+    "\004INFO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013ModelTopics\022&\n\013t"
+    "oken_topic\030\001 \003(\0132\021.artm.TokenTopics\022\027\n\017i"
+    "tems_processed\030\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013T"
+    "okenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 "
+    "\001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItemTopics\022"
+    "\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"4\n\013Bat"
+    "chTopics\022%\n\013item_topics\030\001 \003(\0132\020.artm.Ite"
+    "mTopics", 1287);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -2232,6 +2234,7 @@ const int ModelConfig::kInnerIterationsCountFieldNumber;
 const int ModelConfig::kFieldNameFieldNumber;
 const int ModelConfig::kStreamNameFieldNumber;
 const int ModelConfig::kScoreFieldNumber;
+const int ModelConfig::kReuseThetaFieldNumber;
 #endif  // !_MSC_VER
 
 ModelConfig::ModelConfig()
@@ -2255,6 +2258,7 @@ void ModelConfig::SharedCtor() {
   inner_iterations_count_ = 10;
   field_name_ = const_cast< ::std::string*>(_default_field_name_);
   stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
+  reuse_theta_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2309,6 +2313,7 @@ void ModelConfig::Clear() {
         stream_name_->assign(*_default_stream_name_);
       }
     }
+    reuse_theta_ = false;
   }
   score_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2413,6 +2418,22 @@ bool ModelConfig::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(58)) goto parse_score;
+        if (input->ExpectTag(64)) goto parse_reuse_theta;
+        break;
+      }
+
+      // optional bool reuse_theta = 8 [default = false];
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_reuse_theta:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &reuse_theta_)));
+          set_has_reuse_theta();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2474,6 +2495,11 @@ void ModelConfig::SerializeWithCachedSizes(
       7, this->score(i), output);
   }
 
+  // optional bool reuse_theta = 8 [default = false];
+  if (has_reuse_theta()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(8, this->reuse_theta(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2524,6 +2550,11 @@ void ModelConfig::SerializeWithCachedSizes(
         7, this->score(i), target);
   }
 
+  // optional bool reuse_theta = 8 [default = false];
+  if (has_reuse_theta()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(8, this->reuse_theta(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -2566,6 +2597,11 @@ int ModelConfig::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->stream_name());
+    }
+
+    // optional bool reuse_theta = 8 [default = false];
+    if (has_reuse_theta()) {
+      total_size += 1 + 1;
     }
 
   }
@@ -2619,6 +2655,9 @@ void ModelConfig::MergeFrom(const ModelConfig& from) {
     if (from.has_stream_name()) {
       set_stream_name(from.stream_name());
     }
+    if (from.has_reuse_theta()) {
+      set_reuse_theta(from.reuse_theta());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2651,6 +2690,7 @@ void ModelConfig::Swap(ModelConfig* other) {
     std::swap(field_name_, other->field_name_);
     std::swap(stream_name_, other->stream_name_);
     score_.Swap(&other->score_);
+    std::swap(reuse_theta_, other->reuse_theta_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

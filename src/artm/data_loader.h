@@ -34,7 +34,7 @@ namespace artm { namespace core {
 
     int InvokeIteration(int iterations_count);
 
-    void Callback(std::shared_ptr<const ProcessorCacheEntry> cache);
+    void Callback(std::shared_ptr<const ProcessorOutput> cache);
 
     int WaitIdle();
 
@@ -85,7 +85,7 @@ namespace artm { namespace core {
     ThreadSafeHolder<Generation> generation_;
 
     boost::mutex cache_lock_;
-    ThreadSafeCollectionHolder<boost::uuids::uuid, const ProcessorCacheEntry> cache_;
+    ThreadSafeCollectionHolder<boost::uuids::uuid, const ProcessorOutput> cache_;
 
     boost::mutex batch_manager_lock_;
     BatchManager batch_manager_;

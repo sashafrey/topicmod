@@ -120,7 +120,7 @@ TEST(Instance, Basic) {
   int model_id = instance->CreateModel(config);
 
   data_loader->InvokeIteration(20);
-  instance->WaitModelProcessed(model_id, 150);
+  data_loader->WaitIdle();
 
   config.set_enabled(false);
   instance->ReconfigureModel(model_id, config);
@@ -192,12 +192,10 @@ TEST(Instance, MultipleStreamsAndModels) {
 
 
   test.data_loader()->InvokeIteration(1);
-  test.instance()->WaitModelProcessed(m1_id, 3);
-  test.instance()->WaitModelProcessed(m2_id, 3);
-
+  test.data_loader()->WaitIdle();
+  
   test.data_loader()->InvokeIteration(1);
-  test.instance()->WaitModelProcessed(m1_id, 6);
-  test.instance()->WaitModelProcessed(m2_id, 6);
+  test.data_loader()->WaitIdle();
 
   ModelTopics m1t;
   test.instance()->RequestModelTopics(m1_id, &m1t);

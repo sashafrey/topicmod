@@ -93,17 +93,6 @@ namespace artm { namespace core {
     return ARTM_SUCCESS;
   }
 
-  int Instance::WaitModelProcessed(int model_id, int processed_items) {
-    for (;;) {
-      std::shared_ptr<const TokenTopicMatrix> ttm = merger_.GetLatestTokenTopicMatrix(model_id);
-      if (ttm->items_processed() >= processed_items) {
-        return ARTM_SUCCESS;
-      }
-
-      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-    }
-  }
-
   int Instance::ProcessorQueueSize() {
     boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
     return processor_queue_.size();

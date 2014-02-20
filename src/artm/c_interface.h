@@ -85,10 +85,6 @@ extern "C" {
                                       int model_id,
                                       int *length,
                                       char **address);
-
-  DLL_PUBLIC int wait_model_processed(int instance_id,
-                                      int model_id,
-                                      int processed_items);
 }
 
 

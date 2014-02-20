@@ -187,15 +187,3 @@ int request_model_topics(int instance_id,
   *address = string_as_array(&message);
   return ARTM_SUCCESS;
 }
-
-int wait_model_processed(int instance_id,
-                         int model_id,
-                         int processed_items) 
-{
-  if (!InstanceManager::singleton().Contains(instance_id)) {
-    return ARTM_ERROR;
-  }
-
-  auto instance = InstanceManager::singleton().Get(instance_id);
-  return instance->WaitModelProcessed(model_id, processed_items);
-}

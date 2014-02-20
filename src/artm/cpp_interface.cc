@@ -53,10 +53,6 @@ std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
   return model_topics;
 }
 
-void Instance::WaitModelProcessed(const Model& model, int nDocs) {
-  wait_model_processed(id(), model.model_id(), nDocs);
-}
-
 Model::Model(const Instance& instance, const ModelConfig& config) : instance_id_(instance.id()), model_id_(0), config_(config) 
 {
   string model_config_blob;

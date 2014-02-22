@@ -8,25 +8,28 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
-namespace artm { namespace core {
+#include "artm/common.h"
+
+namespace artm {
+namespace core {
 
   // A helper-class, which magically turns any class into thread-safe thing.
   // The only requirement: the class must have deep copy constructor.
   // The key idea is in const get() method, which returns const shared_ptr<T>.
-  // This object can be further used without any locks, assuming that all 
+  // This object can be further used without any locks, assuming that all
   // access is read-only. In the meantime the object in ThreadSafeHolder
   // might be replaced with a new instance (via set() method).
   template<typename T>
   class ThreadSafeHolder : boost::noncopyable {
   public:
     explicit ThreadSafeHolder(boost::mutex& lock) :
-      lock_(lock), object_(std::make_shared<T>()) 
+      lock_(lock), object_(std::make_shared<T>())
     {
     }
 
     ThreadSafeHolder(boost::mutex& lock, const std::shared_ptr<T>& object)
       : lock_(lock), object_(object) {}
- 
+
     ~ThreadSafeHolder() {}
 
     std::shared_ptr<T> get() const {
@@ -43,7 +46,7 @@ namespace artm { namespace core {
       boost::lock_guard<boost::mutex> guard(lock_);
       return std::make_shared<T>(*object_);
     }
-    
+   
     void set(const std::shared_ptr<T>& object)
     {
       boost::lock_guard<boost::mutex> guard(lock_);
@@ -59,7 +62,7 @@ namespace artm { namespace core {
   class ThreadSafeCollectionHolder : boost::noncopyable {
   public:
     explicit ThreadSafeCollectionHolder(boost::mutex& lock) :
-      lock_(lock), object_(std::map<K, std::shared_ptr<T>>()) 
+      lock_(lock), object_(std::map<K, std::shared_ptr<T>>())
     {
     }
 
@@ -93,7 +96,7 @@ namespace artm { namespace core {
       auto value = get(key);
       return value != nullptr ? std::make_shared<T>(*value) : std::shared_ptr<T>();
     }
-    
+   
     void set(const K& key, const std::shared_ptr<T>& object)
     {
       boost::lock_guard<boost::mutex> guard(lock_);

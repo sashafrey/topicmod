@@ -220,29 +220,21 @@ There is stupid limitation: perplexity can't be calculated for a single iteratio
 \begin{enumerate}
 \item Register a user on https://github.com and send login to sashafrey@gmail.com.
 \item Install msysgit:
-	https://msysgit.googlecode.com/files/Git-1.8.5.2-preview20131230.exe
+  https://msysgit.googlecode.com/files/Git-1.8.5.2-preview20131230.exe
    During installation select "Run Git from the Windows Command Prompt"
    (then you will be able to use git from any cmd window)
 \item git clone https://github.com/sashafrey/topicmod
 \item Download and unpack boost 1.55 (http://sourceforge.net/projects/boost/files/)
    Set environmental variable BOOST\_ROOT to the root of our boost installation. To do so you may use cmd.exe:
  \begin{verbatim}
- 	setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"
+  setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"
  \end{verbatim}
 \item Download and unpack protobuf 2.5.0 (https://protobuf.googlecode.com/files/protobuf-2.5.0.zip).
    Set environmental variable PROTOBUF\_ROOT to the root protocol buffers library.
   \begin{verbatim}
-	setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
+  setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
   \end{verbatim}
 \item Install Visual Studio 2010 + SP1, or Visual Studio 2012.
-\item Configure Visual Studio to use spaces instead of tabs; tab is 2 spaces.
-    To do so, open Tools / Text Editor / All languages / Tabs, and select the following:
-    \begin{itemize}
-        \item Indenting "--- smart,
-        \item Tab size "--- 2,
-        \item Indent size "--- 2,
-        \item Select "insert spaces"
-    \end{itemize}
 \item Open root/src/artm.sln
 \item Build all projects (debug or release, Win32) and execute tests. No 64-bit builds yet.
 \end{enumerate}
@@ -261,6 +253,20 @@ In the code we follow google code style, with the following changes:
 \begin{enumerate}
     \item exceptions are allowed
 \end{enumerate}
+
+\item Indentation must be 2 spaces. Tabs are not allowed.
+      If you use visual studio, please configure it as follows:
+      Open Tools / Text Editor / All languages / Tabs, and select the following:
+      \begin{itemize}
+          \item Indenting "--- smart,
+          \item Tab size "--- 2,
+          \item Indent size "--- 2,
+          \item Select "insert spaces"
+      \end{itemize}
+   We also suggest to show space and tab crlf characters in editor of visual studio (shortcut: Ctrl+R, Ctrl+W)
+\item No lines should exceed 100 characters.
+      If you use visual studio, please enable vertical line at 100 characters:
+      \url{http://stackoverflow.com/questions/9894397/100-characters-line-marker-in-visual-studio}
 
 \subsection{Branching strategy.}
 Every new feature in a separate branch.

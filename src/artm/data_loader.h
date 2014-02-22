@@ -4,7 +4,7 @@
 #include <list>
 #include <set>
 
-#include <boost/thread.hpp>   
+#include <boost/thread.hpp>  
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 #include <boost/uuid/uuid.hpp>
@@ -17,7 +17,9 @@
 #include "artm/template_manager.h"
 #include "artm/thread_safe_holder.h"
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
+
   class DataLoader : boost::noncopyable {
   public:
     ~DataLoader();
@@ -46,7 +48,7 @@ namespace artm { namespace core {
     // Each batch should be processed by at max one processor at a time.
     // Consider a scenario when there is a very slow processor,
     // and it keeps processing the batch when DataLoader starts the next iteration.
-    // In such situation BatchManager will ensure that no other processors will receive the 
+    // In such situation BatchManager will ensure that no other processors will receive the
     // batch until slow processor is done.
     class BatchManager : boost::noncopyable {
     public:
@@ -79,7 +81,7 @@ namespace artm { namespace core {
     DataLoader(int id, const DataLoaderConfig& config);
 
     int data_loader_id_;
-    
+   
     boost::mutex lock_;
     ThreadSafeHolder<DataLoaderConfig> config_;
     ThreadSafeHolder<Generation> generation_;

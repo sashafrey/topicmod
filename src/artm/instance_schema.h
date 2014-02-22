@@ -4,9 +4,11 @@
 #include <map>
 #include <memory>
 
+#include "artm/common.h"
 #include "artm/messages.pb.h"
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
 
 class InstanceSchema {
   private:
@@ -18,14 +20,14 @@ class InstanceSchema {
     }
 
     InstanceSchema(const InstanceSchema& schema) :
-        instance_config_(schema.instance_config_), 
-        models_config_(schema.models_config_) 
+        instance_config_(schema.instance_config_),
+        models_config_(schema.models_config_)
     {
     }
 
     InstanceSchema(const InstanceConfig& config) :
-        instance_config_(config), 
-        models_config_() 
+        instance_config_(config),
+        models_config_()
     {
     }
 
@@ -75,4 +77,4 @@ class InstanceSchema {
 
 }} // namespace artm/core
 
-#endif // ARTM_INSTANCE_SCHEMA_ 
+#endif // ARTM_INSTANCE_SCHEMA_

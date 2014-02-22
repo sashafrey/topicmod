@@ -26,14 +26,14 @@ DocWordMatrix::Ptr loadMatrixFileUCI(string matFileName)
     matFile >> sizeD >> sizeW >> numNonZero;
 
     DocWordMatrix::Ptr retval(new DocWordMatrix(sizeD, sizeW));
-    
+   
     int docId, termId, freq;
-    for (int i = 0; i < numNonZero; i++) 
+    for (int i = 0; i < numNonZero; i++)
     {
         matFile >> docId >> termId >> freq;
-        
+       
         // convert unity-based indexes into zero-based
-        docId--; 
+        docId--;
         termId--;
         retval->getFreq(docId).push_back( (DataType)freq );
         retval->getTermId(docId).push_back( termId );

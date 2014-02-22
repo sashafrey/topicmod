@@ -28,14 +28,14 @@ double proc(int argc, char * argv[], int processors_count) {
   // Configure train and test streams
   Stream train_stream, test_stream;
   train_stream.set_name("train_stream");
-  train_stream.set_type(Stream_Type::Stream_Type_ItemIdModulus);
+  train_stream.set_type(Stream_Type_ItemIdModulus);
   train_stream.set_modulus(10);
   for (int i = 0; i <= 8; ++i) {
     train_stream.add_residuals(i);
   }
 
   test_stream.set_name("test_stream");
-  test_stream.set_type(Stream_Type::Stream_Type_ItemIdModulus);
+  test_stream.set_type(Stream_Type_ItemIdModulus);
   test_stream.set_modulus(10);
   test_stream.add_residuals(9);
 
@@ -51,21 +51,21 @@ double proc(int argc, char * argv[], int processors_count) {
   model_config.set_reuse_theta(false);
 
   Score* score = model_config.add_score();
-  score->set_type(Score_Type::Score_Type_Perplexity);
+  score->set_type(Score_Type_Perplexity);
   score->set_stream_name("test_stream");
 
   Model model(instance, model_config);
-  
+ 
   // Load doc-word matrix
   DocWordMatrix::Ptr pD = loadMatrixFileUCI(argv[1]);
   VocabPtr pVocab = loadVocab(argv[2], pD->getW());
   int nWords = pD->getW();
   int nDocs = pD->getD();
 
-  int nParts = 16; 
-  int iDoc = 0; 
+  int nParts = 16;
+  int iDoc = 0;
   int docsPerPart = nDocs / nParts + 1;
-  for (int iPart = 1; iPart <= nParts; iPart++) 
+  for (int iPart = 1; iPart <= nParts; iPart++)
   {
     Batch batch;
     for (int i = 0; i < nWords; i++) {
@@ -98,7 +98,7 @@ double proc(int argc, char * argv[], int processors_count) {
     data_loader.InvokeIteration(1);
     data_loader.WaitIdle();
     model_topics = instance.GetTopics(model);
-    std::cout << "Iteration #" << (iIter + 1) << ": " 
+    std::cout << "Iteration #" << (iIter + 1) << ": "
               << "#Tokens = "  << model_topics->token_topic_size() << ", "
               << "Items processed = " << model_topics->items_processed() << ", "
               << "Perplexity = " << model_topics->score(0) << endl;
@@ -134,7 +134,7 @@ double proc(int argc, char * argv[], int processors_count) {
         {
           std::cout << p_w[iWord].second << " ";
         }
-      
+     
       std::cout << std::endl;
     }
   }

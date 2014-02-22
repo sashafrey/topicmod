@@ -5,10 +5,11 @@
 #include <memory>
 #include <queue>
 #include <vector>
-  
+ 
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
+#include "artm/common.h"
 #include "artm/instance_schema.h"
 #include "artm/internals.pb.h"
 #include "artm/merger.h"
@@ -17,7 +18,9 @@
 #include "artm/template_manager.h"
 #include "artm/thread_safe_holder.h"
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
+
   class Instance : boost::noncopyable {
   public:
     ~Instance();
@@ -30,12 +33,13 @@ namespace artm { namespace core {
       return schema_.get();
     }
 
+    int processor_queue_size() const;
+
     int CreateModel(const ModelConfig& config);
     int ReconfigureModel(int model_id, const ModelConfig& config);
     int DisposeModel(int model_id);
     int Reconfigure(const InstanceConfig& config);
     int RequestModelTopics(int model_id, ModelTopics* model_topics);
-    int ProcessorQueueSize();
     int AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
   private:
@@ -57,10 +61,10 @@ namespace artm { namespace core {
     std::queue<std::shared_ptr<const ProcessorOutput> > merger_queue_;
 
     // creates a background thread that keep merging processor output
-    Merger merger_; 
+    Merger merger_;
 
     // creates background threads for processing
-    std::vector<std::shared_ptr<Processor> > processors_;     
+    std::vector<std::shared_ptr<Processor> > processors_;    
   };
 
   typedef TemplateManager<Instance, InstanceConfig> InstanceManager;

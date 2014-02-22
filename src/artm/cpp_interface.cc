@@ -1,19 +1,19 @@
 #include "artm/cpp_interface.h"
 #include "artm/protobuf_helpers.h"
 
-namespace artm { 
+namespace artm {
 
-inline char* string_as_array(string* str) {
+inline char* string_as_array(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
 }
 
 Instance::Instance(const InstanceConfig& config) : id_(0), config_(config)
 {
-  string instance_config_blob;
+  std::string instance_config_blob;
   config.SerializeToString(&instance_config_blob);
   id_ = create_instance(
     0,
-    instance_config_blob.size(), 
+    instance_config_blob.size(),
     string_as_array(&instance_config_blob));
 }
 
@@ -22,7 +22,7 @@ Instance::~Instance() {
 }
 
 void Instance::Reconfigure(const InstanceConfig& config) {
-  string config_blob;
+  std::string config_blob;
   config.SerializeToString(&config_blob);
   reconfigure_instance(id(), config_blob.size(), string_as_array(&config_blob));
   config_.CopyFrom(config);
@@ -32,18 +32,18 @@ std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
   // Request model topics
   int length;
   char* address;
-  int request_id = 
+  int request_id =
     request_model_topics(
-      id(), 
-      model.model_id(), 
+      id(),
+      model.model_id(),
       &length,
       &address);
 
-  string model_topics_blob;
+  std::string model_topics_blob;
   model_topics_blob.resize(length);
   copy_request_result(
-    request_id, 
-    length, 
+    request_id,
+    length,
     string_as_array(&model_topics_blob));
 
   dispose_request(request_id);
@@ -53,13 +53,16 @@ std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
   return model_topics;
 }
 
-Model::Model(const Instance& instance, const ModelConfig& config) : instance_id_(instance.id()), model_id_(0), config_(config) 
+Model::Model(const Instance& instance, const ModelConfig& config)
+    : instance_id_(instance.id()),
+      model_id_(0),
+      config_(config)
 {
-  string model_config_blob;
+  std::string model_config_blob;
     config.SerializeToString(&model_config_blob);
     model_id_ = create_model(
-      instance_id_, 
-      model_config_blob.size(), 
+      instance_id_,
+      model_config_blob.size(),
       string_as_array(&model_config_blob));
 }
 
@@ -68,10 +71,11 @@ Model::~Model() {
 }
 
 void Model::Reconfigure(const ModelConfig& config) {
-  string model_config_blob;
+  std::string model_config_blob;
   config.SerializeToString(&model_config_blob);
-  reconfigure_model(instance_id(), model_id(), model_config_blob.size(), string_as_array(&model_config_blob));
-  config_.CopyFrom(config);      
+  reconfigure_model(instance_id(), model_id(), model_config_blob.size(),
+                    string_as_array(&model_config_blob));
+  config_.CopyFrom(config);    
 }
 
 void Model::Enable() {
@@ -83,31 +87,32 @@ void Model::Disable() {
   config_.set_enabled(false);
   Reconfigure(config_);
 }
- 
-DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config) : id_(0), config_(config)
+
+DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config)
+    : id_(0), config_(config)
 {
   config_.set_instance_id(instance.id());
-  string data_loader_config_blob;
+  std::string data_loader_config_blob;
   config_.SerializeToString(&data_loader_config_blob);
   id_ =
     create_data_loader(
       0,
       data_loader_config_blob.size(),
-      string_as_array(&data_loader_config_blob));      
+      string_as_array(&data_loader_config_blob));    
 }
 
 DataLoader::~DataLoader() {
   dispose_data_loader(id());
 }
-   
+ 
 void DataLoader::AddBatch(const Batch& batch) {
-  string batch_blob;
+  std::string batch_blob;
   batch.SerializeToString(&batch_blob);
   add_batch(id(), batch_blob.size(), string_as_array(&batch_blob));
 }
 
 void DataLoader::Reconfigure(const DataLoaderConfig& config) {
-  string config_blob;
+  std::string config_blob;
   config.SerializeToString(&config_blob);
   reconfigure_data_loader(id(), config_blob.size(), string_as_array(&config_blob));
   config_.CopyFrom(config);

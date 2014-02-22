@@ -3,8 +3,6 @@
 #include <boost/thread.hpp>
 #include <iostream>
 
-using namespace std;
-
 void ThreadFunction()
 {
   int counter = 0;
@@ -30,12 +28,12 @@ void ThreadFunction()
     }
 }
 
-TEST(Boost, Thread) 
+TEST(Boost, Thread)
 {
   // Start thread
   boost::thread t(&ThreadFunction);
 
-  EXPECT_EQ(t.joinable(), 1);
+  EXPECT_EQ(t.joinable(), true);
 
   // Ask thread to stop
   t.interrupt();
@@ -43,5 +41,5 @@ TEST(Boost, Thread)
   // Join - wait when thread actually exits
   t.join();
 
-  EXPECT_EQ(t.joinable(), 0);
+  EXPECT_EQ(t.joinable(), false);
 }

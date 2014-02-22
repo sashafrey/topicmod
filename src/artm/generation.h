@@ -9,18 +9,20 @@
 
 #include "messages.pb.h"
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
+
   class Generation {
   private:
     int id_;
     std::map<boost::uuids::uuid, std::shared_ptr<const Batch> > generation_;
   public:
-    Generation() : id_(0), generation_() 
+    Generation() : id_(0), generation_()
     {
     }
 
-    Generation(const Generation& generation) : 
-        id_(generation.id_ + 1), 
+    Generation(const Generation& generation) :
+        id_(generation.id_ + 1),
         generation_(generation.generation_)
     {
     }
@@ -28,13 +30,13 @@ namespace artm { namespace core {
     int get_id() const {
       return id_;
     }
-    
+   
     std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid) {
       auto retval = generation_.find(uuid);
       return (retval != generation_.end()) ? retval->second : nullptr;
     }
 
-    void AddBatch(const std::shared_ptr<const Batch>& batch) 
+    void AddBatch(const std::shared_ptr<const Batch>& batch)
     {
       generation_.insert(std::make_pair(boost::uuids::random_generator()(), batch));
     }
@@ -43,7 +45,7 @@ namespace artm { namespace core {
     void InvokeOnEachPartition(Function fn) const {
       for (auto iter = generation_.begin();
            iter != generation_.end();
-           ++iter) 
+           ++iter)
       {
         fn(iter->first, iter->second);
       }
@@ -53,7 +55,7 @@ namespace artm { namespace core {
       int retval = 0;
       for (auto iter = generation_.begin();
            iter != generation_.end();
-           ++iter) 
+           ++iter)
       {
         retval += (*iter).second->item_size();
       }

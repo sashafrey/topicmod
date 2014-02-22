@@ -4886,6 +4886,16 @@ public final class Messages {
      * <code>optional bool reuse_theta = 8 [default = false];</code>
      */
     boolean getReuseTheta();
+
+    // optional bool cache_token_counters = 9 [default = false];
+    /**
+     * <code>optional bool cache_token_counters = 9 [default = false];</code>
+     */
+    boolean hasCacheTokenCounters();
+    /**
+     * <code>optional bool cache_token_counters = 9 [default = false];</code>
+     */
+    boolean getCacheTokenCounters();
   }
   /**
    * Protobuf type {@code artm.ModelConfig}
@@ -4978,6 +4988,11 @@ public final class Messages {
             case 64: {
               bitField0_ |= 0x00000020;
               reuseTheta_ = input.readBool();
+              break;
+            }
+            case 72: {
+              bitField0_ |= 0x00000040;
+              cacheTokenCounters_ = input.readBool();
               break;
             }
           }
@@ -5209,6 +5224,22 @@ public final class Messages {
       return reuseTheta_;
     }
 
+    // optional bool cache_token_counters = 9 [default = false];
+    public static final int CACHE_TOKEN_COUNTERS_FIELD_NUMBER = 9;
+    private boolean cacheTokenCounters_;
+    /**
+     * <code>optional bool cache_token_counters = 9 [default = false];</code>
+     */
+    public boolean hasCacheTokenCounters() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional bool cache_token_counters = 9 [default = false];</code>
+     */
+    public boolean getCacheTokenCounters() {
+      return cacheTokenCounters_;
+    }
+
     private void initFields() {
       topicsCount_ = 32;
       enabled_ = false;
@@ -5217,6 +5248,7 @@ public final class Messages {
       streamName_ = "@global";
       score_ = java.util.Collections.emptyList();
       reuseTheta_ = false;
+      cacheTokenCounters_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -5257,6 +5289,9 @@ public final class Messages {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeBool(8, reuseTheta_);
       }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeBool(9, cacheTokenCounters_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -5293,6 +5328,10 @@ public final class Messages {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(8, reuseTheta_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(9, cacheTokenCounters_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5433,6 +5472,8 @@ public final class Messages {
         }
         reuseTheta_ = false;
         bitField0_ = (bitField0_ & ~0x00000040);
+        cacheTokenCounters_ = false;
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -5494,6 +5535,10 @@ public final class Messages {
           to_bitField0_ |= 0x00000020;
         }
         result.reuseTheta_ = reuseTheta_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.cacheTokenCounters_ = cacheTokenCounters_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5557,6 +5602,9 @@ public final class Messages {
         }
         if (other.hasReuseTheta()) {
           setReuseTheta(other.getReuseTheta());
+        }
+        if (other.hasCacheTokenCounters()) {
+          setCacheTokenCounters(other.getCacheTokenCounters());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -6107,6 +6155,39 @@ public final class Messages {
       public Builder clearReuseTheta() {
         bitField0_ = (bitField0_ & ~0x00000040);
         reuseTheta_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional bool cache_token_counters = 9 [default = false];
+      private boolean cacheTokenCounters_ ;
+      /**
+       * <code>optional bool cache_token_counters = 9 [default = false];</code>
+       */
+      public boolean hasCacheTokenCounters() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional bool cache_token_counters = 9 [default = false];</code>
+       */
+      public boolean getCacheTokenCounters() {
+        return cacheTokenCounters_;
+      }
+      /**
+       * <code>optional bool cache_token_counters = 9 [default = false];</code>
+       */
+      public Builder setCacheTokenCounters(boolean value) {
+        bitField0_ |= 0x00000080;
+        cacheTokenCounters_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool cache_token_counters = 9 [default = false];</code>
+       */
+      public Builder clearCacheTokenCounters() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        cacheTokenCounters_ = false;
         onChanged();
         return this;
       }
@@ -10595,26 +10676,27 @@ public final class Messages {
       "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000" +
       "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003" +
       "\"-\n\016InstanceConfig\022\033\n\020processors_count\030\001" +
-      " \001(\005:\0011\"\324\001\n\013ModelConfig\022\030\n\014topics_count\030" +
+      " \001(\005:\0011\"\371\001\n\013ModelConfig\022\030\n\014topics_count\030" +
       "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn" +
       "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n" +
       "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@" +
       "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013re" +
-      "use_theta\030\010 \001(\010:\005false\"x\n\005Score\022\036\n\004type\030" +
-      "\001 \002(\0162\020.artm.Score.Type\022\031\n\nfield_name\030\002 ",
-      "\001(\t:\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@global" +
-      "\"\026\n\004Type\022\016\n\nPerplexity\020\000\"\231\001\n\014LoggerConfi" +
-      "g\022\024\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030" +
-      ".artm.LoggerConfig.Level:\004INFO\"D\n\005Level\022" +
-      "\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n" +
-      "\004INFO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013ModelTopics\022&\n\013t" +
-      "oken_topic\030\001 \003(\0132\021.artm.TokenTopics\022\027\n\017i" +
-      "tems_processed\030\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013T" +
-      "okenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 " +
-      "\001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItemTopics\022",
-      "\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"4\n\013Bat" +
-      "chTopics\022%\n\013item_topics\030\001 \003(\0132\020.artm.Ite" +
-      "mTopics"
+      "use_theta\030\010 \001(\010:\005false\022#\n\024cache_token_co" +
+      "unters\030\t \001(\010:\005false\"x\n\005Score\022\036\n\004type\030\001 \002",
+      "(\0162\020.artm.Score.Type\022\031\n\nfield_name\030\002 \001(\t" +
+      ":\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@global\"\026\n" +
+      "\004Type\022\016\n\nPerplexity\020\000\"\231\001\n\014LoggerConfig\022\024" +
+      "\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.ar" +
+      "tm.LoggerConfig.Level:\004INFO\"D\n\005Level\022\014\n\010" +
+      "DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004IN" +
+      "FO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013ModelTopics\022&\n\013toke" +
+      "n_topic\030\001 \003(\0132\021.artm.TokenTopics\022\027\n\017item" +
+      "s_processed\030\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013Toke" +
+      "nTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005",
+      "\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItemTopics\022\n\n\002" +
+      "id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"4\n\013BatchT" +
+      "opics\022%\n\013item_topics\030\001 \003(\0132\020.artm.ItemTo" +
+      "pics"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -10662,7 +10744,7 @@ public final class Messages {
           internal_static_artm_ModelConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_ModelConfig_descriptor,
-              new java.lang.String[] { "TopicsCount", "Enabled", "InnerIterationsCount", "FieldName", "StreamName", "Score", "ReuseTheta", });
+              new java.lang.String[] { "TopicsCount", "Enabled", "InnerIterationsCount", "FieldName", "StreamName", "Score", "ReuseTheta", "CacheTokenCounters", });
           internal_static_artm_Score_descriptor =
             getDescriptor().getMessageTypes().get(7);
           internal_static_artm_Score_fieldAccessorTable = new

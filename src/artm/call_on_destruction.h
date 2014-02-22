@@ -3,7 +3,8 @@
 
 #include <functional>
 
-namespace artm { namespace helpers {
+namespace artm {
+namespace helpers {
 
 // A macro to disallow the copy constructor and operator= functions
 // This should be used in the private: declarations for a class
@@ -13,8 +14,7 @@ namespace artm { namespace helpers {
     void operator=(const TypeName&)        \
 
 // An object that accepts a lambda expression end executes it in destructor
-class call_on_destruction
-{
+class call_on_destruction {
 private:
     std::function<void()> f_;
     DISALLOW_COPY_AND_ASSIGN(call_on_destruction);

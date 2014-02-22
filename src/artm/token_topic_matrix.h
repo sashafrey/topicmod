@@ -9,7 +9,10 @@
 
 #include <boost/utility.hpp>
 
-namespace artm { namespace core {
+#include "artm/common.h"
+
+namespace artm {
+namespace core {
 
 class TokenWeights
 {
@@ -60,9 +63,9 @@ private:
   std::vector<std::string> token_id_to_token_;
   int topics_count_;
 
-  // Statistics: how many documents in total 
+  // Statistics: how many documents in total
   // have made a contribution into this token topic matrix
-  int items_processed_; 
+  int items_processed_;
 
   // Scores (such as perplexity), defined by ModelConfig.
   std::vector<double> scores_;

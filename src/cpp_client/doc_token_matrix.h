@@ -8,7 +8,7 @@
 
 #include "common.h"
 
-class DocWordMatrix 
+class DocWordMatrix
 {
 private:
     DISALLOW_COPY_AND_ASSIGN(DocWordMatrix);
@@ -17,7 +17,7 @@ private:
     int sizeD;
     int sizeW;
 public:
-    DocWordMatrix(int _sizeD, int _sizeW) : sizeD(_sizeD), sizeW(_sizeW) 
+    DocWordMatrix(int _sizeD, int _sizeW) : sizeD(_sizeD), sizeW(_sizeW)
     {
         assert(_sizeD > 0);
         assert(_sizeW > 0);
@@ -33,19 +33,19 @@ public:
         return dataFreq[docId];
     }
 
-    std::vector<int>& getTermId(int docId) 
+    std::vector<int>& getTermId(int docId)
     {
         assert(docId < sizeD && docId >= 0);
         return dataTermId[docId];
     }
 
-    const std::vector<DataType>& getFreq(int docId) const 
+    const std::vector<DataType>& getFreq(int docId) const
     {
         assert(docId < sizeD && docId >= 0);
         return dataFreq[docId];
     }
 
-    const std::vector<int>& getTermId(int docId) const 
+    const std::vector<int>& getTermId(int docId) const
     {
         assert(docId < sizeD && docId >= 0);
         return dataTermId[docId];

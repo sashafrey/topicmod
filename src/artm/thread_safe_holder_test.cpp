@@ -5,8 +5,8 @@
 
 #include "gtest/gtest.h"
 
-using namespace ::artm;
-using namespace ::artm::core;
+using ::artm::core::ThreadSafeHolder;
+using ::artm::core::ThreadSafeCollectionHolder;
 
 // To run this particular test:
 // artm_tests.exe --gtest_filter=ThreadSafeHolder.*
@@ -22,7 +22,7 @@ TEST(ThreadSafeHolder, Basic) {
   collection_holder.set(key2, std::make_shared<double>(8.0));
   EXPECT_EQ(*collection_holder.get(key1), 7.0);
   EXPECT_EQ(*collection_holder.get(key2), 8.0);
-  
+ 
   EXPECT_TRUE(collection_holder.has_key(key1));
   EXPECT_FALSE(collection_holder.has_key(key3));
   collection_holder.erase(key1);

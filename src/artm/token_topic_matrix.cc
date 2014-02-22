@@ -5,7 +5,8 @@
 
 #include <algorithm>
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
 
 TokenTopicMatrix::TokenTopicMatrix(int topics_count, int scores_count) :
     token_to_token_id_(),
@@ -32,7 +33,7 @@ TokenTopicMatrix::TokenTopicMatrix(const TokenTopicMatrix& rhs) :
     items_processed_(rhs.items_processed_),
     scores_(rhs.scores_),
     scores_norm_(rhs.scores_norm_),
-    data_(), // must be deep-copied 
+    data_(), // must be deep-copied
     normalizer_(rhs.normalizer_)
 {
   for (size_t i = 0; i < rhs.data_.size(); i++) {
@@ -44,8 +45,8 @@ TokenTopicMatrix::TokenTopicMatrix(const TokenTopicMatrix& rhs) :
 
 TokenTopicMatrix::~TokenTopicMatrix() {
   std::for_each(data_.begin(), data_.end(), [&](float* value) {
-    delete [] value; 
-  }); 
+    delete [] value;
+  });
 }
 
 void TokenTopicMatrix::AddToken(const std::string& token) {
@@ -54,11 +55,11 @@ void TokenTopicMatrix::AddToken(const std::string& token) {
   {
     return;
   }
-    
+   
   token_to_token_id_.insert(
       std::make_pair(token, tokens_count()));
   token_id_to_token_.push_back(token);
-  float* values = new float[topics_count()];      
+  float* values = new float[topics_count()];     
   data_.push_back(values);
   float sum = 0.0f;
   for (int i = 0; i < topics_count(); ++i) {
@@ -122,7 +123,7 @@ std::string TokenTopicMatrix::token(int index) const {
   assert(index < tokens_count());
   return token_id_to_token_[index];
 }
-  
+ 
 TokenWeights TokenTopicMatrix::token_weights(const std::string& token) const {
   auto iter = token_to_token_id_.find(token);
   return TokenWeights(data_[iter->second], &normalizer_[0], topics_count_);

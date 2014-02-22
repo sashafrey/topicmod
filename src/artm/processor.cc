@@ -4,8 +4,9 @@
 
 #include "stdlib.h"
 
-namespace artm { namespace core {
-  
+namespace artm {
+namespace core {
+
   Processor::~Processor() {
     if (thread_.joinable()) {
       thread_.interrupt();
@@ -21,22 +22,21 @@ namespace artm { namespace core {
     thread_.join();
   }
 
- 
-  Processor::TokenIterator::TokenIterator(const google::protobuf::RepeatedPtrField<std::string>& token_dict, 
-                const TokenTopicMatrix& token_topic_matrix, 
-                const Item& item, 
-                const std::string& field_name, 
-                Mode mode) :
-      token_dict_(token_dict),
-      token_topic_matrix_(token_topic_matrix),
-      field_(nullptr),
-      token_size_(0),
-      iterate_known_(mode & Known),
-      iterate_unknown_(mode & Unknown),
-      token_index_(-1), // dirty trick (!!!)
-      token_(),
-      token_id_(-1)
-  {
+
+  Processor::TokenIterator::TokenIterator(
+      const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+      const TokenTopicMatrix& token_topic_matrix,
+      const Item& item, const std::string& field_name,
+      Mode mode)
+      : token_dict_(token_dict),
+        token_topic_matrix_(token_topic_matrix),
+        field_(nullptr),
+        token_size_(0),
+        iterate_known_((mode & Mode_Known) != 0),
+        iterate_unknown_((mode & Mode_Unknown) != 0),
+        token_index_(-1), // dirty trick (!!!)
+        token_(),
+        token_id_(-1) {
     for (int iField = 0; iField < item.field_size(); iField++) {
       if (item.field(iField).field_name() == field_name) {
         field_ = &item.field(iField);
@@ -60,7 +60,7 @@ namespace artm { namespace core {
     for (;;) {
       token_index_++; // dirty trick pays you back! (!!!)
 
-      if (token_index_ >= token_size_) 
+      if (token_index_ >= token_size_)
         return false; // reached the end of the stream
 
       token_ = token_dict_.Get(field_->token_id(token_index_));
@@ -68,7 +68,7 @@ namespace artm { namespace core {
       token_id_ = token_topic_matrix_.token_id(token_);
 
       if (iterate_known_ && (token_id_ >= 0)) {
-        
+       
         return true;
       }
 
@@ -80,31 +80,31 @@ namespace artm { namespace core {
     return false;
   }
 
-    
-  Processor::ItemProcessor::ItemProcessor(const TokenTopicMatrix& token_topic_matrix, 
-                                          const google::protobuf::RepeatedPtrField<std::string>& token_dict) :
-      token_topic_matrix_(token_topic_matrix),
-      token_dict_(token_dict)
-  {
-  }
+   
+  Processor::ItemProcessor::ItemProcessor(
+      const TokenTopicMatrix& token_topic_matrix,
+      const google::protobuf::RepeatedPtrField<std::string>& token_dict)
+      : token_topic_matrix_(token_topic_matrix),
+        token_dict_(token_dict) { }
 
-  void Processor::ItemProcessor::InferTheta(const ModelConfig& model, 
-                                            const Item& item,  
-                                            ProcessorOutputEntry* processor_output, 
-                                            float* theta) 
+  void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
+                                            const Item& item, 
+                                            ModelIncrement* model_increment,
+                                            float* theta)
   {
     int topics_count = token_topic_matrix_.topics_count();
 
-    if (processor_output != nullptr) {
-      processor_output->set_items_processed(
-        processor_output->items_processed() + 1);
+    if (model_increment != nullptr) {
+      model_increment->set_items_processed(model_increment->items_processed() + 1);
     }
 
-    if (processor_output != nullptr) {
+    if (model_increment != nullptr) {
       // Process unknown tokens (if any)
-      TokenIterator iter(token_dict_, token_topic_matrix_, item, model.field_name(), TokenIterator::Mode::Unknown);
+      TokenIterator iter(token_dict_, token_topic_matrix_, item, model.field_name(),
+                         TokenIterator::Mode_Unknown);
+
       while (iter.Next()) {
-        processor_output->add_discovered_token(iter.token());
+        model_increment->add_discovered_token(iter.token());
       }
     }
 
@@ -114,10 +114,12 @@ namespace artm { namespace core {
     std::vector<TokenWeights> token_weights;
     std::vector<float> Z;
     int known_tokens_count = 0;
-    TokenIterator iter(token_dict_, token_topic_matrix_, item, model.field_name(), TokenIterator::Mode::Known);
+    TokenIterator iter(token_dict_, token_topic_matrix_, item, model.field_name(),
+                       TokenIterator::Mode_Known);
+
     while (iter.Next()) {
       token_id.push_back(iter.id());
-      token_count.push_back(iter.count());
+      token_count.push_back(static_cast<float>(iter.count()));
       token_weights.push_back(iter.weights());
       Z.push_back(0.0f);
       known_tokens_count++;
@@ -156,7 +158,7 @@ namespace artm { namespace core {
         float n_dw = token_count[token_index];
         TokenWeights cur_token_weights = token_weights[token_index];
         float curZ = Z[token_index];
-          
+         
         if (curZ > 0) {
           // updating theta_next
           for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
@@ -164,40 +166,37 @@ namespace artm { namespace core {
             theta_next[iTopic] += n_dw * w * theta[iTopic] / curZ;
           }
 
-          if ((iInnerIter == numInnerIters) && (processor_output != nullptr)) {
+          if ((iInnerIter == numInnerIters) && (model_increment != nullptr)) {
             // Last iteration, updating final counters
-            Counters* hat_n_wt_cur = processor_output->mutable_token_counters(
+            FloatArray* hat_n_wt_cur = model_increment->mutable_token_increment(
               token_id[token_index]);
-            Counters* hat_n_t = processor_output->mutable_topic_counters();
-                
+               
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
               float w = cur_token_weights.at(iTopic);
               float val = n_dw * w * theta[iTopic] / curZ;
 
               hat_n_wt_cur->set_value(iTopic, hat_n_wt_cur->value(iTopic) + val);
-              hat_n_t->set_value(iTopic, hat_n_t->value(iTopic) + val);
             }
           }
-
-          if (iInnerIter == numInnerIters) {
-            
-          }
         }
-      }                
+      }
 
       // Normalize theta_next. For normal iterations this is handled by curZ value.
-      float sum = 0.0f; 
-      for (int iTopic = 0; iTopic < topics_count; ++iTopic) 
+      float sum = 0.0f;
+      for (int iTopic = 0; iTopic < topics_count; ++iTopic)
         sum += theta_next[iTopic];
-            
+           
       for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
         theta[iTopic] = (sum > 0) ? (theta_next[iTopic] / sum) : 0.0f;
       }
     }
   }
 
-  void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& item, const float* theta, double* perplexity, double* normalizer) {
-    TokenIterator iter(token_dict_, token_topic_matrix_, item, score.field_name(), TokenIterator::Mode::Known);
+  void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& item,
+                                                const float* theta, double* perplexity,
+                                                double* normalizer) {
+    TokenIterator iter(token_dict_, token_topic_matrix_, item, score.field_name(),
+                       TokenIterator::Mode_Known);
     while(iter.Next()) {
       TokenWeights weights = iter.weights();
       float sum = 0.0f;
@@ -210,18 +209,19 @@ namespace artm { namespace core {
     }
   }
 
-  Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input, const std::string stream_name) : 
-      items_count_(processor_input.batch().item_size()), 
-      item_index_(-1), // dirty trick (!!!)
-      stream_flags_(nullptr), 
-      processor_input_(processor_input)
+  Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input,
+                                            const std::string stream_name)
+      : items_count_(processor_input.batch().item_size()),
+        item_index_(-1), // dirty trick (!!!)
+        stream_flags_(nullptr),
+        processor_input_(processor_input)
   {
     int index_of_stream = repeated_field_index_of(processor_input.stream_name(), stream_name);
 
     if (index_of_stream == -1) {
       // log a warning and process all documents from the stream
     } else {
-      stream_flags_ = &processor_input.stream_flags(index_of_stream);
+      stream_flags_ = &processor_input.stream_mask(index_of_stream);
     }
   }
 
@@ -229,7 +229,7 @@ namespace artm { namespace core {
     for (;;) {
       item_index_++; // dirty trick pays you back! (!!!)
 
-      if (item_index_ >= items_count_) 
+      if (item_index_ >= items_count_)
         break; // reached the end of the stream
 
       if (!stream_flags_ || stream_flags_->value(item_index_)) {
@@ -263,69 +263,67 @@ namespace artm { namespace core {
           if (processor_queue_.empty()) {
             continue;
           }
-        
+       
           part = processor_queue_.front();
           processor_queue_.pop();
         }
 
         std::shared_ptr<ProcessorOutput> processor_output = std::make_shared<ProcessorOutput>();
-        processor_output->set_uuid(part->uuid());
+        processor_output->set_batch_uuid(part->batch_uuid());
         processor_output->set_data_loader_id(part->data_loader_id());
         helpers::call_on_destruction c([&]() {
           boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
           merger_queue_.push(processor_output);
         });
 
-        const ProcessorOutput* cache_old = part->has_cache() ? &part->cache() : nullptr;
+        const ProcessorOutput* previous_processor_output =
+          part->has_previous_processor_output() ? &part->previous_processor_output() : nullptr;
 
         std::shared_ptr<InstanceSchema> schema = schema_.get();
         std::vector<int> model_ids = schema->get_model_ids();
         std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
           const ModelConfig& model = schema->get_model_config(model_id);
-          
+
           // do not process disabled models.
           if (!model.enabled()) return; // return from lambda; goes to next step of std::for_each
 
           // find cache
-          const ProcessorOutputEntry* old_cache_this_model = nullptr;
-          if (cache_old != nullptr) {
-            for (int i = 0; i < cache_old->entry_size(); ++i) {
-              if (cache_old->entry(i).model_id() == model_id) {
-                old_cache_this_model = &cache_old->entry(i);
+          const ModelIncrement* previous_model_increment = nullptr;
+          if (previous_processor_output != nullptr) {
+            for (int i = 0; i < previous_processor_output->model_increment_size(); ++i) {
+              if (previous_processor_output->model_increment(i).model_id() == model_id) {
+                previous_model_increment = &previous_processor_output->model_increment(i);
               }
-            }            
+            }
           }
 
           std::shared_ptr<const TokenTopicMatrix> token_topic_matrix
               = merger_.GetLatestTokenTopicMatrix(model_id);
           assert(token_topic_matrix.get() != nullptr);
-          
+         
           int topics_count = token_topic_matrix->topics_count();
           int items_count = part->batch().item_size();
 
           assert(topics_count > 0);
-          
+         
           // TODO: if (cache_old != nullptr), deduct old values
 
           // process part and store result in merger queue
-          auto po = processor_output->add_entry();
-          po->set_model_id(model_id);
-          po->set_items_processed(0);
+          auto model_increment = processor_output->add_model_increment();
+          model_increment->set_model_id(model_id);
+          model_increment->set_items_processed(0);
 
           // Prepare score vector
           for (int iScore = 0; iScore < model.score_size(); ++iScore) {
-            po->add_score(0.0);
-            po->add_score_norm(0.0);
+            model_increment->add_score(0.0);
+            model_increment->add_score_norm(0.0);
           }
 
-          po->set_topics_count(topics_count);
-          for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-            po->mutable_topic_counters()->add_value(0.0f);
-          }
+          model_increment->set_topics_count(topics_count);
 
           for (int iToken = 0; iToken < token_topic_matrix->tokens_count(); iToken++) {
-            po->add_token(token_topic_matrix->token(iToken));
-            Counters* counters = po->add_token_counters();
+            model_increment->add_token(token_topic_matrix->token(iToken));
+            FloatArray* counters = model_increment->add_token_increment();
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
               counters->add_value(0.0f);
             }
@@ -333,34 +331,34 @@ namespace artm { namespace core {
 
           ItemProcessor item_processor(*token_topic_matrix, part->batch().token());
           StreamIterator iter(*part, model.stream_name());
-          while (iter.Next() != nullptr) 
-          {
+          while (iter.Next() != nullptr) {
             // ToDo: add an option to always start with random iteration!
             const Item* item = iter.Current();
 
             // ToDo: if (cache_old != nullptr), use it as a starting iteration.
             std::vector<float> theta(topics_count);
             int index_of_item = -1;
-            if (old_cache_this_model != nullptr) {
-              index_of_item = repeated_field_index_of(old_cache_this_model->item_id(), item->id());
+            if (previous_model_increment != nullptr) {
+              index_of_item = repeated_field_index_of(
+                previous_model_increment->item_id(), item->id());
             }
 
             if ((index_of_item != -1) && model.reuse_theta()) {
-              const Counters& old_thetas = old_cache_this_model->theta(index_of_item);
+              const FloatArray& old_thetas = previous_model_increment->theta(index_of_item);
               for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
                 theta[iTopic] = old_thetas.value(iTopic);
-              }              
+              }
             } else {
               for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
                 theta[iTopic] = (float)rand() / (float)RAND_MAX;
               }
             }
 
-            item_processor.InferTheta(model, *item, po, &theta[0]);
+            item_processor.InferTheta(model, *item, model_increment, &theta[0]);
 
             // Cache theta for the next iteration
-            po->add_item_id(item->id());
-            Counters* cached_theta = po->add_theta();
+            model_increment->add_item_id(item->id());
+            FloatArray* cached_theta = model_increment->add_theta();
             for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
               cached_theta->add_value(theta[iTopic]);
             }
@@ -369,17 +367,16 @@ namespace artm { namespace core {
           // Calculate all requested scores (such as perplexity)
           for (int iScore = 0; iScore < model.score_size(); ++iScore) {
             const Score& score = model.score(iScore);
-            
+           
             // Perplexity is so far the only score that Processor know how to calculate.
-            if (score.type() != Score_Type_Perplexity) 
+            if (score.type() != Score_Type_Perplexity)
               continue;
 
             double perplexity_score = 0.0;
             double perplexity_norm = 0.0;
             StreamIterator test_iter(*part, score.stream_name());
             ItemProcessor test_item_processor(*token_topic_matrix, part->batch().token());
-            while (test_iter.Next() != nullptr) 
-            {
+            while (test_iter.Next() != nullptr) {
               const Item* item = test_iter.Current();
 
               std::vector<float> theta_vec;
@@ -390,11 +387,13 @@ namespace artm { namespace core {
               }
 
               test_item_processor.InferTheta(model, *item, nullptr, theta);
-              test_item_processor.CalculateScore(score, *item, theta, &perplexity_score, &perplexity_norm);
+              test_item_processor.CalculateScore(
+                score, *item, theta, &perplexity_score, &perplexity_norm);
             }
 
-            po->set_score(iScore, po->score(iScore) + perplexity_score);
-            po->set_score_norm(iScore, po->score_norm(iScore) + perplexity_norm);
+            model_increment->set_score(iScore, model_increment->score(iScore) + perplexity_score);
+            model_increment->set_score_norm(
+              iScore, model_increment->score_norm(iScore) + perplexity_norm);
           }
         });
       }

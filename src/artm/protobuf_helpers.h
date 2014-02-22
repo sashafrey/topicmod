@@ -5,10 +5,11 @@
 
 #include "artm/messages.pb.h"
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
 
 template<class T, class V>
-bool repeated_field_contains(const T& field, V value) 
+bool repeated_field_contains(const T& field, V value)
 {
   for (int i = 0; i < field.size(); ++i) {
     if (field.Get(i) == value) {
@@ -20,7 +21,7 @@ bool repeated_field_contains(const T& field, V value)
 }
 
 template<class T, class V>
-int repeated_field_index_of(const T& field, V value) 
+int repeated_field_index_of(const T& field, V value)
 {
   for (int i = 0; i < field.size(); ++i) {
     if (field.Get(i) == value) {

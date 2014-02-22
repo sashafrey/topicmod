@@ -2,71 +2,71 @@ package artm.core;
 
 import "messages.proto";
 
-// Similar to vector<float>
+// FloatArray message is similar to std::vector<float>
 message FloatArray {
   repeated float value = 1 [packed = true];
 }
 
-// Similar to vector<bool>
+// Mask message is similar to std::vector<bool>
 message Mask {
   repeated bool value = 1 [packed = true];
 }
 
-// A message to pass from DataLoader to Processor.
+// A message containing all data to transfer from DataLoader to Processor
 message ProcessorInput
 {
   required Batch batch = 1;
-  
+
   // Identificator of the batch
   required string batch_uuid = 2;
-  
+
   // Id of DataLoader
   required int32 data_loader_id = 3;
-  
+
   // Information about streams (for example, training and testing items).
-  // Withing each stream the length of flags vector 
+  // Withing each stream the length of flags vector
   // is the same as number of items in the batch.
-  repeated Flags stream_mask = 4;
+  repeated Mask stream_mask = 4;
   repeated string stream_name = 5;
-  
+
   // Contains processor output from previous iteration.
-  optional ProcessorOutput cache = 6;
+  optional ProcessorOutput previous_processor_output = 6;
 }
 
 // A massage to pass from Processor to Merger
 message ProcessorOutput
 {
   // Identificator of the batch.
-  required string batch_uuid = 1;  
+  required string batch_uuid = 1; 
 
   // Id of DataLoader
   required int32 data_loader_id = 2;
 
   // One entry per model
-  repeated ModelUpdate model_update = 3;
+  repeated ModelIncrement model_increment = 3;
 }
 
 // All information, gathered by Processor for a particular batch and model.
-message ModelUpdate {
+message ModelIncrement {
   required int32 model_id = 1;
   required int32 topics_count = 2;
   optional int32 items_processed = 3;
 
   // Newly discovered tokens, not yet included in matrix Phi.
   repeated string discovered_token = 4;
-	
+
   // Known tokens
   repeated string token = 5;
-  
-  // n_wt values for this batch; the length of this repeated field 
-  // equals the number of known tokens. 
+
+  // n_wt values for this batch; the length of this repeated field
+  // equals the number of known tokens.
   // For each token, the length of Counters array equals topics_count.
-  repeated FloatArray token_counters = 6;
+  repeated FloatArray token_increment = 6;
 
   // Messages related to scores such as perplexity.
-  repeated double score = 7; 	  // cumulative part of perplexity
+  repeated double score = 7;      // cumulative part of perplexity
   repeated double score_norm = 8; // total 'n' (accumulated number of tokens)
-  
+
   // Cached thetas from previous iteration
   repeated int32 item_id = 9;
   repeated FloatArray theta = 10;

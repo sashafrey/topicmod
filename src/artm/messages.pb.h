@@ -887,6 +887,13 @@ class ModelConfig : public ::google::protobuf::Message {
   inline bool reuse_theta() const;
   inline void set_reuse_theta(bool value);
 
+  // optional bool cache_token_counters = 9 [default = false];
+  inline bool has_cache_token_counters() const;
+  inline void clear_cache_token_counters();
+  static const int kCacheTokenCountersFieldNumber = 9;
+  inline bool cache_token_counters() const;
+  inline void set_cache_token_counters(bool value);
+
   // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
   inline void set_has_topics_count();
@@ -901,6 +908,8 @@ class ModelConfig : public ::google::protobuf::Message {
   inline void clear_has_stream_name();
   inline void set_has_reuse_theta();
   inline void clear_has_reuse_theta();
+  inline void set_has_cache_token_counters();
+  inline void clear_has_cache_token_counters();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -913,9 +922,10 @@ class ModelConfig : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::artm::Score > score_;
   bool enabled_;
   bool reuse_theta_;
+  bool cache_token_counters_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2402,6 +2412,28 @@ inline bool ModelConfig::reuse_theta() const {
 inline void ModelConfig::set_reuse_theta(bool value) {
   set_has_reuse_theta();
   reuse_theta_ = value;
+}
+
+// optional bool cache_token_counters = 9 [default = false];
+inline bool ModelConfig::has_cache_token_counters() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void ModelConfig::set_has_cache_token_counters() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void ModelConfig::clear_has_cache_token_counters() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void ModelConfig::clear_cache_token_counters() {
+  cache_token_counters_ = false;
+  clear_has_cache_token_counters();
+}
+inline bool ModelConfig::cache_token_counters() const {
+  return cache_token_counters_;
+}
+inline void ModelConfig::set_cache_token_counters(bool value) {
+  set_has_cache_token_counters();
+  cache_token_counters_ = value;
 }
 
 // -------------------------------------------------------------------

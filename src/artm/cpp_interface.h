@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <string>
-using namespace std;
 
 #include "artm/messages.pb.h"
 #include "artm/c_interface.h"
@@ -12,7 +11,7 @@ using namespace std;
   TypeName(const TypeName&);   \
   void operator=(const TypeName&)
 
-namespace artm { 
+namespace artm {
 
   class Instance;
   class Model;

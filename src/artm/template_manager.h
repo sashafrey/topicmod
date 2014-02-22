@@ -11,7 +11,8 @@
 #include "artm/common.h"
 #include "artm/messages.pb.h"
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
 
   template<class Type, class Config>
   class TemplateManager : boost::noncopyable {
@@ -23,8 +24,7 @@ namespace artm { namespace core {
       return manager;
     }
 
-    int Create(int id, const Config& config)
-    {
+    int Create(int id, const Config& config) {
       boost::lock_guard<boost::mutex> guard(lock_);
       if (id <= 0) {
         // iterate through instance_map_ until find some slot
@@ -43,12 +43,6 @@ namespace artm { namespace core {
       map_.insert(std::make_pair(id, ptr));
 
       return id;
-    }
-
-    bool Contains(int id) const
-    {
-      boost::lock_guard<boost::mutex> guard(lock_);      
-      return map_.find(id) != map_.end();
     }
 
     const std::shared_ptr<Type> Get(int id) const

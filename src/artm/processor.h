@@ -9,13 +9,15 @@
 #include <boost/bind.hpp>
 #include <boost/utility.hpp>
 
+#include "artm/common.h"
 #include "artm/instance_schema.h"
 #include "artm/internals.pb.h"
 #include "artm/merger.h"
 #include "artm/messages.pb.h"
 #include "artm/thread_safe_holder.h"
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
 
   class Processor : boost::noncopyable {
   public:
@@ -31,8 +33,12 @@ namespace artm { namespace core {
       merger_queue_(merger_queue),
       merger_(merger),
       schema_(schema),
-      thread_(boost::bind(&Processor::ThreadFunction, this))
+      thread_()
     {
+      // Keep this at the last action in constructor.
+      // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
+      boost::thread t(&Processor::ThreadFunction, this);
+      thread_.swap(t);
     }
 
     ~Processor();
@@ -58,26 +64,26 @@ namespace artm { namespace core {
      private:
        int items_count_;
        int item_index_;
-       const Flags* stream_flags_;
+       const Mask* stream_flags_;
        const ProcessorInput& processor_input_;
     };
 
-    // Helper class to perform the actual job 
+    // Helper class to perform the actual job
     // (inferring theta distribution or perplexity calculation)
     class ItemProcessor : boost::noncopyable {
      public:
-      ItemProcessor(const TokenTopicMatrix& token_topic_matrix, 
+      ItemProcessor(const TokenTopicMatrix& token_topic_matrix,
                     const google::protobuf::RepeatedPtrField<std::string>& token_dict);
-      
-      void InferTheta(const ModelConfig& model, 
-                      const Item& item, 
-                      ProcessorOutputEntry* processor_output, 
+     
+      void InferTheta(const ModelConfig& model,
+                      const Item& item,
+                      ModelIncrement* model_increment,
                       float* theta);
-      
-      void CalculateScore(const Score& score, 
-                          const Item& item, 
-                          const float* theta, 
-                          double* perplexity, 
+     
+      void CalculateScore(const Score& score,
+                          const Item& item,
+                          const float* theta,
+                          double* perplexity,
                           double* normalizer);
      private:
       const TokenTopicMatrix& token_topic_matrix_;
@@ -88,16 +94,16 @@ namespace artm { namespace core {
     class TokenIterator : boost::noncopyable {
      public:
       enum Mode {
-        Known = 1,
-        Unknown = 2,
-        KnownAndUnknown = 3
+        Mode_Known = 1,
+        Mode_Unknown = 2,
+        Mode_KnownAndUnknown = 3
       };
 
-      TokenIterator(const google::protobuf::RepeatedPtrField<std::string>& token_dict, 
-                    const TokenTopicMatrix& token_topic_matrix, 
-                    const Item& item, 
-                    const std::string& field_name, 
-                    Mode mode = KnownAndUnknown);
+      TokenIterator(const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+                    const TokenTopicMatrix& token_topic_matrix,
+                    const Item& item,
+                    const std::string& field_name,
+                    Mode mode = Mode_KnownAndUnknown);
 
      bool Next();
      void Reset();
@@ -114,7 +120,7 @@ namespace artm { namespace core {
       int token_size_;
       bool iterate_known_;
       bool iterate_unknown_;
-      
+     
       // Current state of the iterator
       int token_index_;
       std::string token_;

@@ -8,7 +8,9 @@
 #include "artm/processor.h"
 #include "artm/template_manager.h"
 
-namespace artm { namespace core {
+namespace artm {
+namespace core {
+
   Instance::Instance(int id, const InstanceConfig& config) :
     lock_(),
     instance_id_(id),
@@ -35,7 +37,7 @@ namespace artm { namespace core {
 
   int Instance::ReconfigureModel(int model_id, const ModelConfig& config) {
     merger_.UpdateModel(model_id, config);
-    
+   
     auto new_schema = schema_.get_copy();
     new_schema->set_model_config(model_id, std::make_shared<const ModelConfig>(config));
     schema_.set(new_schema);
@@ -56,17 +58,16 @@ namespace artm { namespace core {
     new_schema->set_instance_config(config);
     schema_.set(new_schema);
 
-    // Adjust size of processors_ 
+    // Adjust size of processors_
     while ((int)processors_.size() > config.processors_count()) processors_.pop_back();
-    while ((int)processors_.size() < config.processors_count()) 
-    {
+    while ((int)processors_.size() < config.processors_count()) {
       processors_.push_back(
         std::shared_ptr<Processor>(new Processor(
-          processor_queue_lock_, 
-          processor_queue_, 
-          merger_queue_lock_, 
-          merger_queue_, 
-          merger_, 
+          processor_queue_lock_,
+          processor_queue_,
+          merger_queue_lock_,
+          merger_queue_,
+          merger_,
           schema_)));
     }
 
@@ -75,7 +76,7 @@ namespace artm { namespace core {
 
   int Instance::RequestModelTopics(int model_id, ModelTopics* model_topics) {
     std::shared_ptr<const TokenTopicMatrix> ttm = merger_.GetLatestTokenTopicMatrix(model_id);
-    int nTopics = ttm->topics_count(); 
+    int nTopics = ttm->topics_count();
     for (int iToken = 0; iToken < ttm->tokens_count(); iToken++) {
       TokenTopics* token_topics = model_topics->add_token_topic();
       token_topics->set_token(ttm->token(iToken));
@@ -93,7 +94,7 @@ namespace artm { namespace core {
     return ARTM_SUCCESS;
   }
 
-  int Instance::ProcessorQueueSize() {
+  int Instance::processor_queue_size() const {
     boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
     return processor_queue_.size();
   }

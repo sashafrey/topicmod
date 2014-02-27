@@ -37,7 +37,7 @@ message ProcessorInput
 message ProcessorOutput
 {
   // Identificator of the batch.
-  required string batch_uuid = 1; 
+  required string batch_uuid = 1;
 
   // Id of DataLoader
   required int32 data_loader_id = 2;
@@ -65,7 +65,7 @@ message ModelIncrement {
 
   // Messages related to scores such as perplexity.
   repeated double score = 7;      // cumulative part of perplexity
-  repeated double score_norm = 8; // total 'n' (accumulated number of tokens)
+  repeated double score_norm = 8;  // total 'n' (accumulated number of tokens)
 
   // Cached thetas from previous iteration
   repeated int32 item_id = 9;

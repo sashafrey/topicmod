@@ -1,3 +1,5 @@
+// Copyright 2014, Additive Regularization of Topic Models.
+
 #include "gtest/gtest.h"
 
 #include "artm/messages.pb.h"

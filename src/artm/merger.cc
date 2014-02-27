@@ -1,7 +1,8 @@
-#include "merger.h"
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#include "artm/merger.h"
 
 #include <algorithm>
-#include <iostream>
 
 #include "artm/call_on_destruction.h"
 #include "artm/data_loader.h"
@@ -9,16 +10,15 @@
 namespace artm {
 namespace core {
 
-Merger::Merger(boost::mutex& merger_queue_lock,
-               std::queue<std::shared_ptr<const ProcessorOutput> >& merger_queue,
-               ThreadSafeHolder<InstanceSchema>& schema) :
-    lock_(),
-    token_topic_matrix_(lock_),
-    schema_(schema),
-    merger_queue_lock_(merger_queue_lock),
-    merger_queue_(merger_queue),
-    thread_()
-{
+Merger::Merger(boost::mutex* merger_queue_lock,
+               std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+               ThreadSafeHolder<InstanceSchema>* schema)
+    : lock_(),
+      token_topic_matrix_(lock_),
+      schema_(schema),
+      merger_queue_lock_(merger_queue_lock),
+      merger_queue_(merger_queue),
+      thread_() {
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
   boost::thread t(&Merger::ThreadFunction, this);
@@ -50,16 +50,13 @@ void Merger::UpdateModel(int model_id, const ModelConfig& model) {
 }
 
 std::shared_ptr<const TokenTopicMatrix>
-Merger::GetLatestTokenTopicMatrix(int model_id) const
-{
+Merger::GetLatestTokenTopicMatrix(int model_id) const {
   return token_topic_matrix_.get(model_id);
 }
 
-void Merger::ThreadFunction()
-{
+void Merger::ThreadFunction() {
   try {
-    for (;;)
-    {
+    for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
       // use boost::this_thread::interruption_point()
@@ -70,13 +67,13 @@ void Merger::ThreadFunction()
       for (;;) {
         std::shared_ptr<const ProcessorOutput> processor_output;
         {
-          boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
-          if (merger_queue_.empty()) {
+          boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
+          if (merger_queue_->empty()) {
             break;
           }
 
-          processor_output = merger_queue_.front();
-          merger_queue_.pop();
+          processor_output = merger_queue_->front();
+          merger_queue_->pop();
         }
 
         helpers::call_on_destruction c([&]() {
@@ -89,25 +86,29 @@ void Merger::ThreadFunction()
           }
         });
 
-        for (int iModel = 0; iModel < processor_output->model_increment_size(); iModel++) {
-          auto model_increment = processor_output->model_increment(iModel);
+        for (int modex_index = 0;
+             modex_index < processor_output->model_increment_size();
+             modex_index++) {
+          auto model_increment = processor_output->model_increment(modex_index);
           int model_id = model_increment.model_id();
           auto cur_ttm = token_topic_matrix_.get(model_id);
           if (cur_ttm.get() == nullptr) {
             // a model had been disposed during ongoing processing;
             continue;
           }
-       
+
           auto new_ttm = std::make_shared<TokenTopicMatrix>(*cur_ttm);
           new_ttm->IncreaseItemsProcessed(model_increment.items_processed());
-          for (int iScore = 0; iScore < model_increment.score_size(); ++iScore) {
-            new_ttm->IncreaseScores(
-              iScore, model_increment.score(iScore), model_increment.score_norm(iScore));
+          for (int score_index = 0; score_index < model_increment.score_size(); ++score_index) {
+            new_ttm->IncreaseScores(score_index, model_increment.score(score_index),
+                                    model_increment.score_norm(score_index));
           }
 
           // Add new tokens discovered by processor
-          for (int iToken = 0; iToken < model_increment.discovered_token_size(); ++iToken) {
-            std::string new_token = model_increment.discovered_token(iToken);
+          for (int token_index = 0;
+               token_index < model_increment.discovered_token_size();
+               ++token_index) {
+            std::string new_token = model_increment.discovered_token(token_index);
             if (new_ttm->token_id(new_token) == -1) {
               new_ttm->AddToken(new_token);
             }
@@ -115,17 +116,19 @@ void Merger::ThreadFunction()
 
           int topics_count = new_ttm->topics_count();
 
-          for (int iToken = 0; iToken < model_increment.token_increment_size(); ++iToken) {
-            const FloatArray& counters = model_increment.token_increment(iToken);
-            const std::string& token = model_increment.token(iToken);
+          for (int token_index = 0;
+               token_index < model_increment.token_increment_size();
+               ++token_index) {
+            const FloatArray& counters = model_increment.token_increment(token_index);
+            const std::string& token = model_increment.token(token_index);
             int id = new_ttm->token_id(token);
-            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
-              new_ttm->IncreaseTokenWeight(id, iTopic, counters.value(iTopic));
+            for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
+              new_ttm->IncreaseTokenWeight(id, topic_index, counters.value(topic_index));
             }
           }
 
           {
-            boost::lock_guard<boost::mutex> guard(merger_queue_lock_);
+            boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
             // new_ttm->ToString();
           }
           token_topic_matrix_.set(model_id, new_ttm);
@@ -138,4 +141,6 @@ void Merger::ThreadFunction()
   }
 }
 
-}} // namespace artm/core
+}  // namespace core
+}  // namespace artm
+

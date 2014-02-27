@@ -46,42 +46,42 @@ double proc(int argc, char * argv[], int processors_count) {
   int nTopics = atoi(argv[3]);
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-  model_config.set_inner_iterations_count(1);
+  model_config.set_inner_iterations_count(10);
   model_config.set_stream_name("train_stream");
-  model_config.set_reuse_theta(false);
+  model_config.set_reuse_theta(true);
 
   Score* score = model_config.add_score();
   score->set_type(Score_Type_Perplexity);
   score->set_stream_name("test_stream");
 
   Model model(instance, model_config);
- 
-  // Load doc-word matrix
-  DocWordMatrix::Ptr pD = loadMatrixFileUCI(argv[1]);
-  VocabPtr pVocab = loadVocab(argv[2], pD->getW());
-  int nWords = pD->getW();
-  int nDocs = pD->getD();
 
-  int nParts = 16;
-  int iDoc = 0;
-  int docsPerPart = nDocs / nParts + 1;
-  for (int iPart = 1; iPart <= nParts; iPart++)
+  // Load doc-word matrix
+  DocWordMatrix::Ptr doc_word_ptr = loadMatrixFileUCI(argv[1]);
+  VocabPtr vocab_ptr = loadVocab(argv[2], doc_word_ptr->getW());
+  int no_words = doc_word_ptr->getW();
+  int no_docs = doc_word_ptr->getD();
+
+  int no_parts = 16;
+  int doc_index = 0;
+  int no_docs_per_part = no_docs / no_parts + 1;
+  for (int part_index = 1; part_index <= no_parts; part_index++)
   {
     Batch batch;
-    for (int i = 0; i < nWords; i++) {
-      batch.add_token((*pVocab)[i]);
+    for (int i = 0; i < no_words; i++) {
+      batch.add_token((*vocab_ptr)[i]);
     }
 
-    for (; iDoc < (docsPerPart * iPart) && (iDoc < nDocs) ; iDoc++) {
-      auto term_ids = pD->getTermId(iDoc);
-      auto term_counts = pD->getFreq(iDoc);
+    for (; doc_index < (no_docs_per_part * part_index) && (doc_index < no_docs); doc_index++) {
+      auto term_ids = doc_word_ptr->getTermId(doc_index);
+      auto term_counts = doc_word_ptr->getFreq(doc_index);
 
       Item* item = batch.add_item();
-      item->set_id(iDoc);
+      item->set_id(doc_index);
       Field* field = item->add_field();
-      for (int iWord = 0; iWord < (int)term_ids.size(); ++iWord) {
-        field->add_token_id(term_ids[iWord]);
-        field->add_token_count((google::protobuf::int32) term_counts[iWord]);
+      for (int word_index = 0; word_index < (int)term_ids.size(); ++word_index) {
+        field->add_token_id(term_ids[word_index]);
+        field->add_token_count((google::protobuf::int32) term_counts[word_index]);
       }
     }
 
@@ -94,11 +94,11 @@ double proc(int argc, char * argv[], int processors_count) {
   // Enable model and wait while each document pass through processor about 10 times.
   model.Enable();
   std::shared_ptr<ModelTopics> model_topics;
-  for (int iIter = 0; iIter < 50; ++iIter) {
+  for (int iter = 0; iter < 10; ++iter) {
     data_loader.InvokeIteration(1);
     data_loader.WaitIdle();
     model_topics = instance.GetTopics(model);
-    std::cout << "Iteration #" << (iIter + 1) << ": "
+    std::cout << "Iteration #" << (iter + 1) << ": "
               << "#Tokens = "  << model_topics->token_topic_size() << ", "
               << "Items processed = " << model_topics->items_processed() << ", "
               << "Perplexity = " << model_topics->score(0) << endl;
@@ -113,28 +113,28 @@ double proc(int argc, char * argv[], int processors_count) {
   // Log top 7 words per each topic
   {
     int wordsToSort = 7;
-    int nTokens = model_topics->token_topic_size();
+    int no_tokens = model_topics->token_topic_size();
     int nTopics = model_topics->token_topic(0).topic_weight_size();
 
-    for (int iTopic = 0; iTopic < nTopics; iTopic++) {
-      std::cout << "#" << (iTopic+1) << ": ";
+    for (int topic_index = 0; topic_index < nTopics; topic_index++) {
+      std::cout << "#" << (topic_index+1) << ": ";
 
       std::vector<std::pair<float, std::string> > p_w;
-      for (int iToken = 0; iToken < nTokens; ++iToken) {
-        const TokenTopics& token_topic = model_topics->token_topic(iToken);
+      for (int token_index = 0; token_index < no_tokens; ++token_index) {
+        const TokenTopics& token_topic = model_topics->token_topic(token_index);
         string token = token_topic.token();
-        float weight = token_topic.topic_weight(iTopic);
+        float weight = token_topic.topic_weight(topic_index);
           p_w.push_back(std::pair<float, std::string>(weight, token));
       }
 
         std::sort(p_w.begin(), p_w.end());
-        for (int iWord = (int)p_w.size() - 1;
-             (iWord >= 0) && (iWord >= (int)p_w.size() - wordsToSort);
-             iWord--)
+        for (int word_index = (int)p_w.size() - 1;
+             (word_index >= 0) && (word_index >= (int)p_w.size() - wordsToSort);
+             word_index--)
         {
-          std::cout << p_w[iWord].second << " ";
+          std::cout << p_w[word_index].second << " ";
         }
-     
+
       std::cout << std::endl;
     }
   }

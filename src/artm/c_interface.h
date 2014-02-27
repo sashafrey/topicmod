@@ -1,5 +1,7 @@
-#ifndef ARTM_H_
-#define ARTM_H_
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#ifndef SRC_ARTM_C_INTERFACE_H_
+#define SRC_ARTM_C_INTERFACE_H_
 
 #ifdef _WIN32
   #ifdef ARTM_DLL_EXPORTS
@@ -44,7 +46,7 @@ extern "C" {
   int invoke_iteration(int data_loader_id, int iterations_count);
 
   DLL_PUBLIC
-  int wait_idle_data_loader(int data_loader_id);
+  void wait_idle_data_loader(int data_loader_id);
   // =========================================================================
   // Instance interface
   // =========================================================================
@@ -79,7 +81,7 @@ extern "C" {
                                       int batch_length,
                                       const char* batch_blob,
                                       int *length,
-                                      const char** result);     
+                                      const char** result);
 
   DLL_PUBLIC int request_model_topics(int instance_id,
                                       int model_id,
@@ -87,6 +89,4 @@ extern "C" {
                                       char **address);
 }
 
-
-
-#endif // ARTM_H_
+#endif  // SRC_ARTM_C_INTERFACE_H_

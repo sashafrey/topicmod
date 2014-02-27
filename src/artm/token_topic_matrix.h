@@ -1,5 +1,7 @@
-#ifndef ARTM_TOKEN_TOPIC_MATRIX
-#define ARTM_TOKEN_TOPIC_MATRIX
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#ifndef SRC_ARTM_TOKEN_TOPIC_MATRIX_H_
+#define SRC_ARTM_TOKEN_TOPIC_MATRIX_H_
 
 #include <assert.h>
 
@@ -7,36 +9,31 @@
 #include <vector>
 #include <string>
 
-#include <boost/utility.hpp>
+#include "boost/utility.hpp"
 
 #include "artm/common.h"
 
 namespace artm {
 namespace core {
 
-class TokenWeights
-{
-  private:
-   const float* vector_;
-   const float* normalizer_;
-   int topics_count_;
+class TokenWeights {
+ private:
+  const float* vector_;
+  const float* normalizer_;
+  int topics_count_;
 
-  public:
-   TokenWeights(const float* vector, const float* normalizer, int topics_count) :
-     vector_(vector),
-     normalizer_(normalizer),
-     topics_count_(topics_count)
-   {
-     assert(vector != nullptr);
-     assert(normalizer != nullptr);
-     assert(topics_count > 0);
-   }
+ public:
+  TokenWeights(const float* vector, const float* normalizer, int topics_count)
+      : vector_(vector), normalizer_(normalizer), topics_count_(topics_count) {
+    assert(vector != nullptr);
+    assert(normalizer != nullptr);
+    assert(topics_count > 0);
+  }
 
-   inline float at(int topic) const { return vector_[topic] / normalizer_[topic]; }
+  inline float at(int topic) const { return vector_[topic] / normalizer_[topic]; }
 };
 
-class TokenTopicMatrix
-{
+class TokenTopicMatrix {
  public:
   explicit TokenTopicMatrix(int topics_count, int scores_count);
   explicit TokenTopicMatrix(const TokenTopicMatrix& rhs);
@@ -58,7 +55,8 @@ class TokenTopicMatrix
   std::string token(int index) const;
   TokenWeights token_weights(const std::string& token) const;
   TokenWeights token_weights(int token_id) const;
-private:
+
+ private:
   std::map<std::string, int> token_to_token_id_;
   std::vector<std::string> token_id_to_token_;
   int topics_count_;
@@ -71,10 +69,11 @@ private:
   std::vector<double> scores_;
   std::vector<double> scores_norm_;
 
-  std::vector<float*> data_; // vector of length tokens_count
-  std::vector<float> normalizer_; // normalization constant for each topic
+  std::vector<float*> data_;  // vector of length tokens_count
+  std::vector<float> normalizer_;  // normalization constant for each topic
 };
 
-}} // namespace artm/core
+}  // namespace core
+}  // namespace artm
 
-#endif // ARTM_TOKEN_TOPIC_MATRIX
+#endif  // SRC_ARTM_TOKEN_TOPIC_MATRIX_H_

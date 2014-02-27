@@ -1,5 +1,7 @@
-#ifndef ARTM_PROTOBUF_HELPERS_
-#define ARTM_PROTOBUF_HELPERS_
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#ifndef SRC_ARTM_PROTOBUF_HELPERS_H_
+#define SRC_ARTM_PROTOBUF_HELPERS_H_
 
 #include <string>
 
@@ -9,8 +11,7 @@ namespace artm {
 namespace core {
 
 template<class T, class V>
-bool repeated_field_contains(const T& field, V value)
-{
+bool repeated_field_contains(const T& field, V value) {
   for (int i = 0; i < field.size(); ++i) {
     if (field.Get(i) == value) {
       return true;
@@ -21,8 +22,7 @@ bool repeated_field_contains(const T& field, V value)
 }
 
 template<class T, class V>
-int repeated_field_index_of(const T& field, V value)
-{
+int repeated_field_index_of(const T& field, V value) {
   for (int i = 0; i < field.size(); ++i) {
     if (field.Get(i) == value) {
       return i;
@@ -41,6 +41,7 @@ inline bool model_has_token(const ModelTopics& model_topics, std::string token) 
   return false;
 }
 
-}} // namespace artm::core
+}  // namespace core
+}  // namespace artm
 
-#endif // ARTM_PROTOBUF_HELPERS_
+#endif  // SRC_ARTM_PROTOBUF_HELPERS_H_

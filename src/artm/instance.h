@@ -1,13 +1,15 @@
-#ifndef ARTM_INSTANCE_
-#define ARTM_INSTANCE_
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#ifndef SRC_ARTM_INSTANCE_H_
+#define SRC_ARTM_INSTANCE_H_
 
 #include <map>
 #include <memory>
 #include <queue>
 #include <vector>
- 
-#include <boost/thread/mutex.hpp>
-#include <boost/utility.hpp>
+
+#include "boost/thread/mutex.hpp"
+#include "boost/utility.hpp"
 
 #include "artm/common.h"
 #include "artm/instance_schema.h"
@@ -21,54 +23,55 @@
 namespace artm {
 namespace core {
 
-  class Instance : boost::noncopyable {
-  public:
-    ~Instance();
+class Instance : boost::noncopyable {
+ public:
+  ~Instance();
 
-    int id() const {
-      return instance_id_;
-    }
+  int id() const {
+    return instance_id_;
+  }
 
-    const std::shared_ptr<InstanceSchema> schema() const {
-      return schema_.get();
-    }
+  const std::shared_ptr<InstanceSchema> schema() const {
+    return schema_.get();
+  }
 
-    int processor_queue_size() const;
+  int processor_queue_size() const;
 
-    int CreateModel(const ModelConfig& config);
-    int ReconfigureModel(int model_id, const ModelConfig& config);
-    int DisposeModel(int model_id);
-    int Reconfigure(const InstanceConfig& config);
-    int RequestModelTopics(int model_id, ModelTopics* model_topics);
-    int AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
+  int CreateModel(const ModelConfig& config);
+  int ReconfigureModel(int model_id, const ModelConfig& config);
+  int DisposeModel(int model_id);
+  int Reconfigure(const InstanceConfig& config);
+  int RequestModelTopics(int model_id, ModelTopics* model_topics);
+  int AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
-  private:
-    friend class TemplateManager<Instance, InstanceConfig>;
+ private:
+  friend class TemplateManager<Instance, InstanceConfig>;
 
-    // All instances must be created via TemplateManager.
-    Instance(int id, const InstanceConfig& config);
+  // All instances must be created via TemplateManager.
+  Instance(int id, const InstanceConfig& config);
 
-    mutable boost::mutex lock_;
-    int instance_id_;
-    ThreadSafeHolder<InstanceSchema> schema_;
+  mutable boost::mutex lock_;
+  int instance_id_;
+  ThreadSafeHolder<InstanceSchema> schema_;
 
-    int next_model_id_;
+  int next_model_id_;
 
-    mutable boost::mutex processor_queue_lock_;
-    std::queue<std::shared_ptr<const ProcessorInput> > processor_queue_;
+  mutable boost::mutex processor_queue_lock_;
+  std::queue<std::shared_ptr<const ProcessorInput> > processor_queue_;
 
-    mutable boost::mutex merger_queue_lock_;
-    std::queue<std::shared_ptr<const ProcessorOutput> > merger_queue_;
+  mutable boost::mutex merger_queue_lock_;
+  std::queue<std::shared_ptr<const ProcessorOutput> > merger_queue_;
 
-    // creates a background thread that keep merging processor output
-    Merger merger_;
+  // creates a background thread that keep merging processor output
+  Merger merger_;
 
-    // creates background threads for processing
-    std::vector<std::shared_ptr<Processor> > processors_;    
-  };
+  // creates background threads for processing
+  std::vector<std::shared_ptr<Processor> > processors_;
+};
 
-  typedef TemplateManager<Instance, InstanceConfig> InstanceManager;
+typedef TemplateManager<Instance, InstanceConfig> InstanceManager;
 
+}  // namespace core
+}  // namespace artm
 
-}} // namespace artm/core
-#endif // ARTM_INSTANCE_
+#endif  // SRC_ARTM_INSTANCE_H_

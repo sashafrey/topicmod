@@ -1,3 +1,5 @@
+// Copyright 2014, Additive Regularization of Topic Models.
+
 #include "artm/thread_safe_holder.h"
 
 #include <boost/thread/mutex.hpp>
@@ -22,7 +24,7 @@ TEST(ThreadSafeHolder, Basic) {
   collection_holder.set(key2, std::make_shared<double>(8.0));
   EXPECT_EQ(*collection_holder.get(key1), 7.0);
   EXPECT_EQ(*collection_holder.get(key2), 8.0);
- 
+
   EXPECT_TRUE(collection_holder.has_key(key1));
   EXPECT_FALSE(collection_holder.has_key(key3));
   collection_holder.erase(key1);

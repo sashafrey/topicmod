@@ -1,6 +1,7 @@
-#include "gtest/gtest.h"
+// Copyright 2014, Additive Regularization of Topic Models.
 
-#include <boost/thread.hpp>
+#include "boost/thread.hpp"
+#include "gtest/gtest.h"
 
 #include "artm/cpp_interface.h"
 #include "artm/messages.pb.h"
@@ -53,7 +54,7 @@ TEST(CppInterface, Basic) {
   // Index doc-token matrix
   data_loader.AddBatch(batch);
   data_loader.InvokeIteration(3);
- 
+
   model.Enable();
   data_loader.WaitIdle();
   model.Disable();

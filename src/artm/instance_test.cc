@@ -1,6 +1,7 @@
-#include "gtest/gtest.h"
+// Copyright 2014, Additive Regularization of Topic Models.
 
-#include <boost/thread/mutex.hpp>
+#include "boost/thread/mutex.hpp"
+#include "gtest/gtest.h"
 
 #include "artm/instance.h"
 #include "artm/data_loader.h"
@@ -8,10 +9,7 @@
 #include "artm/protobuf_helpers.h"
 
 class InstanceTest : boost::noncopyable {
-private:
-  std::shared_ptr<artm::core::DataLoader> data_loader_;
-  std::shared_ptr<artm::core::Instance> instance_;
-public:
+ public:
   std::shared_ptr<artm::core::DataLoader> data_loader() { return data_loader_; }
   std::shared_ptr<artm::core::Instance> instance() { return instance_; }
 
@@ -35,10 +33,10 @@ public:
   // the only promise of this function is to generate a batch that will have fixed
   // number of items (nItems). Under normal parameters it will
   // also have nTokens of unique tokens, and each item won't exceed maxLength.
-  std::shared_ptr<artm::Batch> GenerateBatch(int nTokens, int nItems, int startId, int maxLength,
-                                             int maxOccurences) {
+  std::shared_ptr<artm::Batch> GenerateBatch(int n_tokens, int n_items, int start_id,
+                                             int max_length, int max_occurences) {
     std::shared_ptr<artm::Batch> batch(std::make_shared<artm::Batch>());
-    for (int i = 0; i < nTokens; ++i) {
+    for (int i = 0; i < n_tokens; ++i) {
       std::stringstream str;
       str << "token" << i;
       batch->add_token(str.str());
@@ -48,23 +46,27 @@ public:
     int iLength = 0;
     int iOccurences = 0;
 
-    for (int iItem = 0; iItem < nItems; ++iItem) {
+    for (int iItem = 0; iItem < n_items; ++iItem) {
       artm::Item* item = batch->add_item();
-      item->set_id(startId++);
+      item->set_id(start_id++);
       artm::Field* field = item->add_field();
       for (int i = 0; i <= iLength; ++i) {
         field->add_token_id(iToken);
         field->add_token_count(iOccurences + 1);
-       
-        iOccurences = (iOccurences + 1) % maxOccurences;
-        iToken = (iToken + 1) % nTokens;
+
+        iOccurences = (iOccurences + 1) % max_occurences;
+        iToken = (iToken + 1) % n_tokens;
       }
 
-      iLength = (iLength + 1) % maxLength;
+      iLength = (iLength + 1) % max_length;
     }
 
     return batch;
   }
+
+ private:
+  std::shared_ptr<artm::core::DataLoader> data_loader_;
+  std::shared_ptr<artm::core::Instance> instance_;
 };
 
 // artm_tests.exe --gtest_filter=Instance.*
@@ -78,7 +80,7 @@ TEST(Instance, Basic) {
   int data_loader_id = artm::core::DataLoaderManager::singleton().Create(0, data_loader_config);
   std::shared_ptr<artm::core::DataLoader> data_loader =
     artm::core::DataLoaderManager::singleton().Get(data_loader_id);
- 
+
   artm::Batch batch1;
   batch1.add_token("first token");
   batch1.add_token("second");
@@ -89,11 +91,11 @@ TEST(Instance, Basic) {
     field->add_token_count(i+1);
   }
 
-  data_loader->AddBatch(batch1); // +2
- 
+  data_loader->AddBatch(batch1);  // +2
+
   for (int iBatch = 0; iBatch < 2; ++iBatch) {
     artm::Batch batch;
-    for (int i = 0; i < (3 + iBatch); ++i) batch.add_item(); // +3, +4
+    for (int i = 0; i < (3 + iBatch); ++i) batch.add_item();  // +3, +4
     data_loader->AddBatch(batch);
   }
 
@@ -113,7 +115,7 @@ TEST(Instance, Basic) {
   }
 
   data_loader->AddBatch(batch4);
- 
+
   artm::ModelConfig config;
   config.set_enabled(true);
   config.set_topics_count(3);
@@ -145,7 +147,7 @@ TEST(Instance, MultipleStreamsAndModels) {
   // - second model have Token1, Token3, Token6,
   auto batch = test.GenerateBatch(6, 6, 0, 1, 1);
   test.data_loader()->AddBatch(*batch);
- 
+
   artm::DataLoaderConfig config;
   config.set_instance_id(test.instance()->id());
   artm::Stream* s1 = config.add_stream();
@@ -165,7 +167,7 @@ TEST(Instance, MultipleStreamsAndModels) {
   m1.set_enabled(true);
   artm::Score* score = m1.add_score();
   score->set_type(artm::Score_Type_Perplexity);
- 
+
   // In the little synthetic dataset created below
   // tokens in 'train' and 'test' sample won't overlap.
   // If we chose to calc perplexity on test sample
@@ -183,7 +185,7 @@ TEST(Instance, MultipleStreamsAndModels) {
 
   test.data_loader()->InvokeIteration(1);
   test.data_loader()->WaitIdle();
- 
+
   test.data_loader()->InvokeIteration(1);
   test.data_loader()->WaitIdle();
 
@@ -205,5 +207,5 @@ TEST(Instance, MultipleStreamsAndModels) {
   EXPECT_TRUE(artm::core::model_has_token(m2t, "token5"));
 
   EXPECT_EQ(m1t.score_size(), 1);
-  EXPECT_TRUE(m1t.score(0) > 0);
+  EXPECT_GT(m1t.score(0), 0);
 }

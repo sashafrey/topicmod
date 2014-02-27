@@ -1,5 +1,7 @@
-#ifndef __CALL_ON_DESTRUCTION_H
-#define __CALL_ON_DESTRUCTION_H
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#ifndef SRC_ARTM_CALL_ON_DESTRUCTION_H_
+#define SRC_ARTM_CALL_ON_DESTRUCTION_H_
 
 #include <functional>
 
@@ -15,14 +17,15 @@ namespace helpers {
 
 // An object that accepts a lambda expression end executes it in destructor
 class call_on_destruction {
-private:
-    std::function<void()> f_;
-    DISALLOW_COPY_AND_ASSIGN(call_on_destruction);
-public:
-    call_on_destruction(std::function<void()> f) : f_(f) {}
-    ~call_on_destruction() { f_(); }
+ public:
+  call_on_destruction(std::function<void()> f) : f_(f) {}
+  ~call_on_destruction() { f_(); }
+ private:
+  std::function<void()> f_;
+  DISALLOW_COPY_AND_ASSIGN(call_on_destruction);
 };
 
-}} // namespace artm::helpers
+}  // namespace helpers
+}  // namespace artm
 
-#endif // __CALL_ON_DESTRUCTION_H
+#endif  // SRC_ARTM_CALL_ON_DESTRUCTION_H_

@@ -35,12 +35,12 @@ message Batch {
 // Configuration of DataLoader component.
 message DataLoaderConfig {
   required int32 instance_id = 1;
-  optional string disk_path = 2; 
+  optional string disk_path = 2;
   optional int32 queue_size = 3 [default = 10];
   repeated Stream stream = 4;
 }
 
-// Defines a stream in DataLoader
+// Defines a stream in DataLoader.
 message Stream {
   enum Type {
     Global = 0;

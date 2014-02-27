@@ -3,6 +3,7 @@
 #include <artm/token_topic_matrix.h>
 
 #include <assert.h>
+#include <string.h>
 
 #include <algorithm>
 #include <string>

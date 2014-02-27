@@ -301,8 +301,6 @@ void Processor::ThreadFunction() {
         assert(token_topic_matrix.get() != nullptr);
 
         int topics_count = token_topic_matrix->topics_count();
-        int items_count = part->batch().item_size();
-
         assert(topics_count > 0);
 
         // TODO(alfrey): if (cache_old != nullptr), deduct old values

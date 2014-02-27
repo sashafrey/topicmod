@@ -1,61 +1,62 @@
-#ifndef ARTM_GENERATION_
-#define ARTM_GENERATION_
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#ifndef SRC_ARTM_GENERATION_H_
+#define SRC_ARTM_GENERATION_H_
 
 #include <map>
 #include <memory>
 
-#include <boost/uuid/uuid.hpp>            // uuid class
-#include <boost/uuid/uuid_generators.hpp> // generators
+#include "boost/uuid/uuid.hpp"             // uuid class
+#include "boost/uuid/uuid_generators.hpp"  // generators
 
-#include "messages.pb.h"
+#include "artm/messages.pb.h"
 
-namespace artm { namespace core {
-  class Generation {
-  private:
-    int id_;
-    std::map<boost::uuids::uuid, std::shared_ptr<const Batch> > generation_;
-  public:
-    Generation() : id_(0), generation_() 
-    {
+namespace artm {
+namespace core {
+
+class Generation {
+ public:
+  Generation() : id_(0), generation_() {}
+
+  Generation(const Generation& generation)
+      : id_(generation.id_ + 1), generation_(generation.generation_) {}
+
+  int get_id() const {
+    return id_;
+  }
+
+  std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid) {
+    auto retval = generation_.find(uuid);
+    return (retval != generation_.end()) ? retval->second : nullptr;
+  }
+
+  void AddBatch(const std::shared_ptr<const Batch>& batch) {
+    generation_.insert(std::make_pair(boost::uuids::random_generator()(), batch));
+  }
+
+  template<class Function>
+  void InvokeOnEachPartition(Function fn) const {
+    for (auto iter = generation_.begin(); iter != generation_.end(); ++iter) {
+      fn(iter->first, iter->second);
+    }
+  }
+
+  int GetTotalItemsCount() const {
+    int retval = 0;
+    for (auto iter = generation_.begin(); iter != generation_.end(); ++iter) {
+      retval += (*iter).second->item_size();
     }
 
-    Generation(const Generation& generation) : 
-        id_(generation.id_ + 1), 
-        generation_(generation.generation_)
-    {
-    }
+    return retval;
+  }
 
-    int get_id() const {
-      return id_;
-    }
-    
-    void AddBatch(const std::shared_ptr<const Batch>& batch) 
-    {
-      generation_.insert(std::make_pair(boost::uuids::random_generator()(), batch));
-    }
+ private:
+  int id_;
+  std::map<boost::uuids::uuid, std::shared_ptr<const Batch> > generation_;
+};
 
-    template<class Function>
-    void InvokeOnEachPartition(Function fn) const {
-      for (auto iter = generation_.begin();
-           iter != generation_.end();
-           ++iter) 
-      {
-        fn(iter->second);
-      }
-    }
+}  // namespace core
+}  // namespace artm
 
-    int GetTotalItemsCount() const {
-      int retval = 0;
-      for (auto iter = generation_.begin();
-           iter != generation_.end();
-           ++iter) 
-      {
-        retval += (*iter).second->item_size();
-      }
 
-      return retval;
-    }
-  };
-}} // namespace artm/core
-
-#endif // ARTM_GENERATION_
+#endif  // SRC_ARTM_GENERATION_H_

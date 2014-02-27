@@ -1,9 +1,10 @@
-#ifndef ARTM_CPP_H
-#define ARTM_CPP_H
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#ifndef SRC_ARTM_CPP_INTERFACE_H_
+#define SRC_ARTM_CPP_INTERFACE_H_
 
 #include <memory>
 #include <string>
-using namespace std;
 
 #include "artm/messages.pb.h"
 #include "artm/c_interface.h"
@@ -12,71 +13,70 @@ using namespace std;
   TypeName(const TypeName&);   \
   void operator=(const TypeName&)
 
-namespace artm { 
+namespace artm {
 
-  class Instance;
-  class Model;
-  class DataLoader;
+class Instance;
+class Model;
+class DataLoader;
 
-  class Instance {
-  public:
-    explicit Instance(const InstanceConfig& config);
-    ~Instance();
+class Instance {
+ public:
+  explicit Instance(const InstanceConfig& config);
+  ~Instance();
 
-    int id() const { return id_; }
-    std::shared_ptr<ModelTopics> GetTopics(const Model& model);
-    void WaitModelProcessed(const Model& model, int nDocs);
-    void WaitIdle();
-    void Reconfigure(const InstanceConfig& config);
+  int id() const { return id_; }
+  std::shared_ptr<ModelTopics> GetTopics(const Model& model);
+  void Reconfigure(const InstanceConfig& config);
 
-    const InstanceConfig& config() const { return config_; }
-  private:
-    int id_;
-    InstanceConfig config_;
-    DISALLOW_COPY_AND_ASSIGN(Instance);
-  };
+  const InstanceConfig& config() const { return config_; }
 
-  class Model {
-  public:
-    Model(const Instance& instance, const ModelConfig& config);
-    ~Model();
+ private:
+  int id_;
+  InstanceConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(Instance);
+};
 
-    void Reconfigure(const ModelConfig& config);
-    void Enable();
-    void Disable();
+class Model {
+ public:
+  Model(const Instance& instance, const ModelConfig& config);
+  ~Model();
 
-    int instance_id() const { return instance_id_; }
-    int model_id() const { return model_id_; }
+  void Reconfigure(const ModelConfig& config);
+  void Enable();
+  void Disable();
 
-    const ModelConfig& config() const { return config_; }
+  int instance_id() const { return instance_id_; }
+  int model_id() const { return model_id_; }
 
-  private:
-    int instance_id_;
-    int model_id_;
-    ModelConfig config_;
-    DISALLOW_COPY_AND_ASSIGN(Model);
-  };
+  const ModelConfig& config() const { return config_; }
 
-  class DataLoader {
-  public:
-    DataLoader(const Instance& instance, const DataLoaderConfig& config);
-    ~DataLoader();
+ private:
+  int instance_id_;
+  int model_id_;
+  ModelConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(Model);
+};
 
-    int id() const { return id_; }
-    void AddBatch(const Batch& batch);
-    void AddStream(const Stream& stream);
-    void RemoveStream(std::string stream_name);
-    void Reconfigure(const DataLoaderConfig& config);
-    void InvokeIteration(int iterations_count);
-    void WaitIdle();
-    const DataLoaderConfig& config() const { return config_; }
+class DataLoader {
+ public:
+  DataLoader(const Instance& instance, const DataLoaderConfig& config);
+  ~DataLoader();
 
-  private:
-    int id_;
-    DataLoaderConfig config_;
-    DISALLOW_COPY_AND_ASSIGN(DataLoader);
-  };
+  int id() const { return id_; }
+  void AddBatch(const Batch& batch);
+  void AddStream(const Stream& stream);
+  void RemoveStream(std::string stream_name);
+  void Reconfigure(const DataLoaderConfig& config);
+  void InvokeIteration(int iterations_count);
+  void WaitIdle();
+  const DataLoaderConfig& config() const { return config_; }
 
-} // namespace artm
+ private:
+  int id_;
+  DataLoaderConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(DataLoader);
+};
 
-#endif // ARTM_CPP_H
+}  // namespace artm
+
+#endif  // SRC_ARTM_CPP_INTERFACE_H_

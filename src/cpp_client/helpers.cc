@@ -22,18 +22,18 @@ DocWordMatrix::Ptr loadMatrixFileUCI(string matFileName)
         throw "Error opening matrix file.";
     }
 
-    int sizeD, sizeW, numNonZero;
-    matFile >> sizeD >> sizeW >> numNonZero;
+    int sizeD, sizeW, num_non_zero;
+    matFile >> sizeD >> sizeW >> num_non_zero;
 
     DocWordMatrix::Ptr retval(new DocWordMatrix(sizeD, sizeW));
-    
+
     int docId, termId, freq;
-    for (int i = 0; i < numNonZero; i++) 
+    for (int i = 0; i < num_non_zero; i++)
     {
         matFile >> docId >> termId >> freq;
-        
+
         // convert unity-based indexes into zero-based
-        docId--; 
+        docId--;
         termId--;
         retval->getFreq(docId).push_back( (DataType)freq );
         retval->getTermId(docId).push_back( termId );
@@ -53,7 +53,7 @@ VocabPtr loadVocab(string vocabFile, int nWords) {
 
     VocabPtr vocab(new Vocab());
     char buff[128];
-    for (int iWord = 0; iWord < nWords; ++iWord) {
+    for (int word_index = 0; word_index < nWords; ++word_index) {
         matFile.getline(buff, 128);
         vocab->push_back(buff);
     }
@@ -62,19 +62,19 @@ VocabPtr loadVocab(string vocabFile, int nWords) {
 }
 
 void logTopWordsPerTopic(const WordTopicMatrix& mat, int N) {
-    int wordsToSort = N;
-    int nTopics = mat.getT();
-    int nWords = mat.getW();
-    for (int i = 0; i < nTopics; i++) {
+    int words_to_sort = N;
+    int no_topics = mat.getT();
+    int no_words = mat.getW();
+    for (int i = 0; i < no_topics; i++) {
         cout << "#" << (i+1) << ": ";
         std::vector<std::pair<DataType, int> > p_w;
-        for (int iWord = 0; iWord < mat.getW(); iWord++) {
-            p_w.push_back(std::pair<DataType, int>(mat.get()[iWord * nTopics + i], iWord));
+        for (int word_index = 0; word_index < mat.getW(); word_index++) {
+            p_w.push_back(std::pair<DataType, int>(mat.get()[word_index * no_topics + i], word_index));
         }
 
         std::sort(p_w.begin(), p_w.end());
-        for (int iWord = nWords - 1; (iWord >= 0) && (iWord >= nWords - wordsToSort); iWord--) {
-            cout << mat.getVocab()[p_w[iWord].second] << " ";
+        for (int word_index = no_words - 1; (word_index >= 0) && (word_index >= no_words - words_to_sort); word_index--) {
+            cout << mat.getVocab()[p_w[word_index].second] << " ";
         }
 
         cout << endl;

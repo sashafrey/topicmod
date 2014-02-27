@@ -7,7 +7,7 @@
 #include "common.h"
 #include "vocab.h"
 
-class WordTopicMatrix 
+class WordTopicMatrix
 {
 private:
     DISALLOW_COPY_AND_ASSIGN(WordTopicMatrix);
@@ -16,7 +16,7 @@ private:
     DataType* data;
     const Vocab* vocab;
 public:
-    WordTopicMatrix(int _sizeW, int _sizeT, const Vocab* _vocab = NULL) : sizeW(_sizeW), sizeT(_sizeT), vocab(_vocab) 
+    WordTopicMatrix(int _sizeW, int _sizeT, const Vocab* _vocab = NULL) : sizeW(_sizeW), sizeT(_sizeT), vocab(_vocab)
     {
         assert(_sizeW > 0);
         assert(_sizeT > 0);

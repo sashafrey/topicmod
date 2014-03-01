@@ -7,6 +7,7 @@
 #include "artm/common.h"
 #include "artm/processor.h"
 #include "artm/template_manager.h"
+#include "artm/topic_model.h"
 
 namespace artm {
 namespace core {
@@ -72,20 +73,20 @@ int Instance::Reconfigure(const InstanceConfig& config) {
   return ARTM_SUCCESS;
 }
 
-int Instance::RequestModelTopics(int model_id, ModelTopics* model_topics) {
-  std::shared_ptr<const TokenTopicMatrix> ttm = merger_.GetLatestTokenTopicMatrix(model_id);
-  int nTopics = ttm->topics_count();
-  for (int token_index = 0; token_index < ttm->tokens_count(); token_index++) {
+int Instance::RequestModelTopics(int model_id, ::artm::ModelTopics* model_topics) {
+  std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_.GetLatestTopicModel(model_id);
+  int topics_size = ttm->topic_size();
+  for (int token_index = 0; token_index < ttm->token_size(); token_index++) {
     TokenTopics* token_topics = model_topics->add_token_topic();
     token_topics->set_token(ttm->token(token_index));
-    TokenWeights token_weights = ttm->token_weights(token_index);
-    for (int topic_index = 0; topic_index < nTopics; ++topic_index) {
-      token_topics->add_topic_weight(token_weights.at(topic_index));
+    TopicWeightIterator iter = ttm->GetTopicWeightIterator(token_index);
+    while (iter.NextTopic() < topics_size) {
+      token_topics->add_topic_weight(iter.Weight());
     }
   }
 
   model_topics->set_items_processed(ttm->items_processed());
-  for (int score_index = 0; score_index < ttm->scores_count(); ++score_index) {
+  for (int score_index = 0; score_index < ttm->score_size(); ++score_index) {
     model_topics->add_score(ttm->score(score_index));
   }
 

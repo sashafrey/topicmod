@@ -17,7 +17,7 @@
     <ClCompile Include="merger.cc" />
     <ClCompile Include="messages.pb.cc" />
     <ClCompile Include="processor.cc" />
-    <ClCompile Include="token_topic_matrix.cc" />
+    <ClCompile Include="topic_model.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="call_on_destruction.h" />
@@ -33,7 +33,7 @@
     <ClInclude Include="protobuf_helpers.h" />
     <ClInclude Include="template_manager.h" />
     <ClInclude Include="thread_safe_holder.h" />
-    <ClInclude Include="token_topic_matrix.h" />
+    <ClInclude Include="topic_model.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\collateral\artm_dev.tex" />

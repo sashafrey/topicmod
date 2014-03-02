@@ -16,7 +16,7 @@ Instance::Instance(int id, const InstanceConfig& config)
     : lock_(),
       instance_id_(id),
       schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
-      next_model_id_(0),
+      next_model_id_(1),
       processor_queue_lock_(),
       processor_queue_(),
       merger_queue_lock_(),
@@ -34,25 +34,23 @@ int Instance::CreateModel(const ModelConfig& config) {
   return model_id;
 }
 
-int Instance::ReconfigureModel(int model_id, const ModelConfig& config) {
+void Instance::ReconfigureModel(int model_id, const ModelConfig& config) {
   merger_.UpdateModel(model_id, config);
 
   auto new_schema = schema_.get_copy();
   new_schema->set_model_config(model_id, std::make_shared<const ModelConfig>(config));
   schema_.set(new_schema);
-  return ARTM_SUCCESS;
 }
 
-int Instance::DisposeModel(int model_id) {
+void Instance::DisposeModel(int model_id) {
   auto new_schema = schema_.get_copy();
   new_schema->clear_model_config(model_id);
   schema_.set(new_schema);
 
   merger_.DisposeModel(model_id);
-  return ARTM_SUCCESS;
 }
 
-int Instance::Reconfigure(const InstanceConfig& config) {
+void Instance::Reconfigure(const InstanceConfig& config) {
   auto new_schema = schema_.get_copy();
   new_schema->set_instance_config(config);
   schema_.set(new_schema);
@@ -69,12 +67,12 @@ int Instance::Reconfigure(const InstanceConfig& config) {
         merger_,
         schema_)));
   }
-
-  return ARTM_SUCCESS;
 }
 
-int Instance::RequestModelTopics(int model_id, ::artm::ModelTopics* model_topics) {
+bool Instance::RequestModelTopics(int model_id, ::artm::ModelTopics* model_topics) {
   std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_.GetLatestTopicModel(model_id);
+  if (ttm == nullptr) return false;
+
   int topics_size = ttm->topic_size();
   for (int token_index = 0; token_index < ttm->token_size(); token_index++) {
     TokenTopics* token_topics = model_topics->add_token_topic();
@@ -90,7 +88,7 @@ int Instance::RequestModelTopics(int model_id, ::artm::ModelTopics* model_topics
     model_topics->add_score(ttm->score(score_index));
   }
 
-  return ARTM_SUCCESS;
+  return true;
 }
 
 int Instance::processor_queue_size() const {
@@ -98,10 +96,9 @@ int Instance::processor_queue_size() const {
   return processor_queue_.size();
 }
 
-int Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input) {
+void Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input) {
   boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
   processor_queue_.push(input);
-  return ARTM_SUCCESS;
 }
 
 }  // namespace core

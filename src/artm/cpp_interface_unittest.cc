@@ -53,9 +53,9 @@ TEST(CppInterface, Basic) {
   artm::DataLoader data_loader(instance, config);
   // Index doc-token matrix
   data_loader.AddBatch(batch);
-  data_loader.InvokeIteration(3);
 
   model.Enable();
+  data_loader.InvokeIteration(3);
   data_loader.WaitIdle();
   model.Disable();
 
@@ -66,4 +66,18 @@ TEST(CppInterface, Basic) {
   EXPECT_EQ(nUniqueTokens, model_topics->token_topic_size());
   const artm::TokenTopics& first_token_topics = model_topics->token_topic(0);
   EXPECT_EQ(first_token_topics.topic_weight_size(), nTopics);
+}
+
+TEST(CppInterface, Exceptions) {
+  // Create instance
+  artm::InstanceConfig instance_config;
+  artm::Instance instance(instance_config);
+
+  // Create model
+  artm::ModelConfig model_config;
+  model_config.set_topics_count(10);
+  artm::Model model(instance, model_config);
+
+  model_config.set_topics_count(20);
+  ASSERT_THROW(model.Reconfigure(model_config), artm::UnsupportedReconfiguration);
 }

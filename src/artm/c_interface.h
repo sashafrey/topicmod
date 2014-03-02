@@ -17,6 +17,14 @@
 #endif
 
 extern "C" {
+  DLL_PUBLIC enum ArtmErrorCodes {
+    ARTM_SUCCESS = 0,
+    ARTM_GENERAL_ERROR = -1,
+    ARTM_OBJECT_NOT_FOUND = -2,
+    ARTM_INVALID_MESSAGE = -3,
+    ARTM_UNSUPPORTED_RECONFIGURATION = -4,
+  };
+
   // ===============================================================================================
   // Common routines
   // ===============================================================================================

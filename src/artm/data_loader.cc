@@ -7,6 +7,7 @@
 #include "boost/lexical_cast.hpp"
 #include "boost/uuid/uuid_io.hpp"
 
+#include "artm/exceptions.h"
 #include "artm/protobuf_helpers.h"
 
 namespace artm {
@@ -43,16 +44,14 @@ void DataLoader::Join() {
   thread_.join();
 }
 
-int DataLoader::Reconfigure(const DataLoaderConfig& config) {
+void DataLoader::Reconfigure(const DataLoaderConfig& config) {
   config_.set(std::make_shared<DataLoaderConfig>(config));
-  return ARTM_SUCCESS;
 }
 
-int DataLoader::AddBatch(const Batch& batch) {
+void DataLoader::AddBatch(const Batch& batch) {
   std::shared_ptr<Generation> next_gen = generation_.get_copy();
   next_gen->AddBatch(std::make_shared<Batch>(batch));
   generation_.set(next_gen);
-  return ARTM_SUCCESS;
 }
 
 int DataLoader::GetTotalItemsCount() const {
@@ -96,8 +95,12 @@ bool DataLoader::BatchManager::IsEverythingProcessed() const {
   return (tasks_.empty() && in_progress_.empty());
 }
 
-int DataLoader::InvokeIteration(int iterations_count) {
-  if (iterations_count <= 0) return ARTM_ERROR;
+void DataLoader::InvokeIteration(int iterations_count) {
+  if (iterations_count <= 0) {
+    // ToDo(alfrey) Log a warning
+    return;
+  }
+
   auto latest_generation = generation_.get();
   for (int iter = 0; iter < iterations_count; ++iter) {
     latest_generation->InvokeOnEachPartition(
@@ -105,8 +108,6 @@ int DataLoader::InvokeIteration(int iterations_count) {
         batch_manager_.Add(uuid);
       });
   }
-
-  return ARTM_SUCCESS;
 }
 
 void DataLoader::WaitIdle() {
@@ -186,7 +187,7 @@ void DataLoader::ThreadFunction() {
 
             case Stream_Type_ItemHashModulus:
             default:
-              throw "bad santa";  // not implemented.
+              BOOST_THROW_EXCEPTION(NotImplementedException("Stream_Type_ItemHashModulus"));
           }
 
           mask->add_value(value);

@@ -26,12 +26,12 @@ class DataLoader : boost::noncopyable {
  public:
   ~DataLoader();
 
-  int AddBatch(const Batch& batch);
   int GetTotalItemsCount() const;
-  int InvokeIteration(int iterations_count);
-  int Reconfigure(const DataLoaderConfig& config);
+  void AddBatch(const Batch& batch);
   void Callback(std::shared_ptr<const ProcessorOutput> cache);
+  void Reconfigure(const DataLoaderConfig& config);
   void Interrupt();
+  void InvokeIteration(int iterations_count);
   void Join();
   void WaitIdle();
 

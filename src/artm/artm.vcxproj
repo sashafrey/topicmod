@@ -25,6 +25,7 @@
     <ClInclude Include="call_on_destruction.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="data_loader.h" />
+    <ClInclude Include="exceptions.h" />
     <ClInclude Include="generation.h" />
     <ClInclude Include="instance.h" />
     <ClInclude Include="instance_schema.h" />

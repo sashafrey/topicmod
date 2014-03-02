@@ -6,6 +6,7 @@
 
 #include "artm/call_on_destruction.h"
 #include "artm/data_loader.h"
+#include "artm/exceptions.h"
 
 namespace artm {
 namespace core {
@@ -45,7 +46,8 @@ void Merger::UpdateModel(int model_id, const ModelConfig& model) {
 
   auto ttm = topic_model_.get(model_id);
   if (ttm->topic_size() != model.topics_count()) {
-    throw "Unsupported reconfiguration";
+    std::string message("Unable to change the number of topics in topic model");
+    BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(message));
   }
 }
 

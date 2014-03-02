@@ -37,12 +37,19 @@ class Instance : boost::noncopyable {
 
   int processor_queue_size() const;
 
+  // Creates a model and returns model_id
   int CreateModel(const ModelConfig& config);
-  int ReconfigureModel(int model_id, const ModelConfig& config);
-  int DisposeModel(int model_id);
-  int Reconfigure(const InstanceConfig& config);
-  int RequestModelTopics(int model_id, ModelTopics* model_topics);
-  int AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
+
+  // Retrieves topic model.
+  // Returns true if succeeded, and false if model_id hasn't been found.
+  bool RequestModelTopics(int model_id, ModelTopics* model_topics);
+
+  // Reconfigures topic model if already exists, otherwise creates a new model.
+  void ReconfigureModel(int model_id, const ModelConfig& config);
+
+  void DisposeModel(int model_id);
+  void Reconfigure(const InstanceConfig& config);
+  void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

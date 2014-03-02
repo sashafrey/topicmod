@@ -16,6 +16,7 @@
 namespace artm {
 namespace core {
 
+// Singleton class to manage a collection of objects, identifiable with some integer ID.
 template<class Type, class Config>
 class TemplateManager : boost::noncopyable {
  public:
@@ -26,24 +27,31 @@ class TemplateManager : boost::noncopyable {
     return manager;
   }
 
-  int Create(int id, const Config& config) {
+  // Tries to create an object with given id.
+  // Return: true if id() was available and object was created successfully, and false otherwise.
+  bool TryCreate(int id, const Config& config) {
     boost::lock_guard<boost::mutex> guard(lock_);
-    if (id <= 0) {
-      // iterate through instance_map_ until find some slot
-      while (map_.find(next_id_) != map_.end()) {
-        next_id_++;
-      }
-
-      id = next_id_++;
-    }
-
     if (map_.find(id) != map_.end()) {
-      return ARTM_ERROR;
+      return false;
     }
 
     std::shared_ptr<Type> ptr(new Type(id, config));
     map_.insert(std::make_pair(id, ptr));
+    return true;
+  }
 
+  // Create an object and returns its ID.
+  int Create(const Config& config) {
+    boost::lock_guard<boost::mutex> guard(lock_);
+
+    // iterate through instance_map_ until find an available slot
+    while (map_.find(next_id_) != map_.end()) {
+      next_id_++;
+    }
+
+    int id = next_id_++;
+    std::shared_ptr<Type> ptr(new Type(id, config));
+    map_.insert(std::make_pair(id, ptr));
     return id;
   }
 

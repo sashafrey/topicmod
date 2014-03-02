@@ -20,6 +20,7 @@ class call_on_destruction {
  public:
   call_on_destruction(std::function<void()> f) : f_(f) {}
   ~call_on_destruction() { f_(); }
+
  private:
   std::function<void()> f_;
   DISALLOW_COPY_AND_ASSIGN(call_on_destruction);

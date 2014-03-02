@@ -55,6 +55,15 @@ int DataLoader::AddBatch(const Batch& batch) {
   return ARTM_SUCCESS;
 }
 
+int DataLoader::GetTotalItemsCount() const {
+  auto ptr = generation_.get();
+  return ptr->GetTotalItemsCount();
+}
+
+int DataLoader::id() const {
+  return data_loader_id_;
+}
+
 DataLoader::BatchManager::BatchManager(boost::mutex* lock)
     : lock_(lock), tasks_(), in_progress_() {}
 

@@ -35,11 +35,11 @@ class TopicWeightIterator {
   // Moves the iterator to the next topic topic.
   inline int NextTopic() { return ++current_topic_; }
 
-  // Returns current position of the iterator.
+  // Returns the current position of the iterator.
   inline int TopicIndex() {return current_topic_; }
 
   // Returns the weight of current topic.
-  // This method must not be called if Current() returns an index exceeding the number of topics.
+  // This method must not be called if TopicIndex() returns an index exceeding the number of topics.
   // It is caller responsibility to verify this condition.
   inline float Weight() {
     assert(current_topic_ < topics_count_);

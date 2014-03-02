@@ -283,9 +283,9 @@ void Processor::ThreadFunction() {
         part->has_previous_processor_output() ? &part->previous_processor_output() : nullptr;
 
       std::shared_ptr<InstanceSchema> schema = schema_.get();
-      std::vector<int> model_ids = schema->get_model_ids();
+      std::vector<int> model_ids = schema->GetModelIds();
       std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
-        const ModelConfig& model = schema->get_model_config(model_id);
+        const ModelConfig& model = schema->model_config(model_id);
 
         // do not process disabled models.
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each

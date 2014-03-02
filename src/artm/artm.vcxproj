@@ -12,7 +12,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="data_loader.cc" />
+    <ClCompile Include="generation.cc" />
     <ClCompile Include="instance.cc" />
+    <ClCompile Include="instance_schema.cc" />
     <ClCompile Include="internals.pb.cc" />
     <ClCompile Include="merger.cc" />
     <ClCompile Include="messages.pb.cc" />

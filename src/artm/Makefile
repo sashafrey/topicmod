@@ -40,7 +40,9 @@ TARGET_LIB    = libartm.so
 SRCS_LIB      = cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
+		generation.cc \
 		instance.cc \
+		instance_schema.cc \
 		internals.pb.cc \
 		merger.cc \
 		messages.pb.cc \

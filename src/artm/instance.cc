@@ -45,7 +45,7 @@ int Instance::ReconfigureModel(int model_id, const ModelConfig& config) {
 
 int Instance::DisposeModel(int model_id) {
   auto new_schema = schema_.get_copy();
-  new_schema->discard_model(model_id);
+  new_schema->clear_model_config(model_id);
   schema_.set(new_schema);
 
   merger_.DisposeModel(model_id);

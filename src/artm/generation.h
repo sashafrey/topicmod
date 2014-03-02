@@ -21,18 +21,11 @@ class Generation {
   Generation(const Generation& generation)
       : id_(generation.id_ + 1), generation_(generation.generation_) {}
 
-  int get_id() const {
-    return id_;
-  }
+  int id() const;
+  std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid);
 
-  std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid) {
-    auto retval = generation_.find(uuid);
-    return (retval != generation_.end()) ? retval->second : nullptr;
-  }
-
-  void AddBatch(const std::shared_ptr<const Batch>& batch) {
-    generation_.insert(std::make_pair(boost::uuids::random_generator()(), batch));
-  }
+  void AddBatch(const std::shared_ptr<const Batch>& batch);
+  int GetTotalItemsCount() const;
 
   template<class Function>
   void InvokeOnEachPartition(Function fn) const {
@@ -41,14 +34,6 @@ class Generation {
     }
   }
 
-  int GetTotalItemsCount() const {
-    int retval = 0;
-    for (auto iter = generation_.begin(); iter != generation_.end(); ++iter) {
-      retval += (*iter).second->item_size();
-    }
-
-    return retval;
-  }
 
  private:
   int id_;
@@ -57,6 +42,5 @@ class Generation {
 
 }  // namespace core
 }  // namespace artm
-
 
 #endif  // SRC_ARTM_GENERATION_H_

@@ -44,13 +44,11 @@ class Instance : boost::noncopyable {
   // Returns true if succeeded, and false if model_id hasn't been found.
   bool RequestModelTopics(int model_id, ModelTopics* model_topics);
 
-<<<<<<< HEAD
+  // Resolving the conflict is just about removing '<<<<' and '>>>' conflict marks, 
+  // and keeping the change from our branch.
   // Reconfigures topic model if already exists, otherwise creates a new model.
   // Change from alfrey_git_demo_branch1 : rename the method
   void ReconfigureModelNicely(int model_id, const ModelConfig& config);
-=======
-  // a change from alfrey_git_demo_master branch: some lines were removed here
->>>>>>> alfrey_git_demo_master
 
   void DisposeModel(int model_id);
   void Reconfigure(const InstanceConfig& config);

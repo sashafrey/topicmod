@@ -54,7 +54,7 @@ double proc(int argc, char * argv[], int processors_count) {
   DocWordMatrix::Ptr pD = loadMatrixFileUCI(argv[1]);
   VocabPtr pVocab = loadVocab(argv[2], pD->getW());
   int nWords = pD->getW();
-  int nDocs = pD->getD();
+  int nDocs = 100; // pD->getD();
 
   int nParts = 16; 
   int iDoc = 0; 

@@ -44,12 +44,14 @@ class Instance : boost::noncopyable {
   // Returns true if succeeded, and false if model_id hasn't been found.
   bool RequestModelTopics(int model_id, ModelTopics* model_topics);
 
-  // Reconfigures topic model if already exists, otherwise creates a new model.
-  void ReconfigureModel(int model_id, const ModelConfig& config);
+  // a change from alfrey_git_demo_master branch: some lines were removed here
 
   void DisposeModel(int model_id);
   void Reconfigure(const InstanceConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
+
+  // a change from alfrey_git_demo_master branch: and here let's say we've added some stuff
+  void DoFuncyStuff() { ; }
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

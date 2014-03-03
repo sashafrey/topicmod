@@ -47,7 +47,7 @@ SRCS_LIB      = cpp_interface.cc \
 		merger.cc \
 		messages.pb.cc \
 		processor.cc \
-		token_topic_matrix.cc
+		topic_model.cc
 
 OBJS_LIB      = $(SRCS_LIB:.cc=.o)
 DEPS_LIB      = $(SRCS_LIB:.cc=.depends)

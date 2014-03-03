@@ -32,7 +32,7 @@ class TopicWeightIterator {
   // Moves the iterator to the next non-zero topic, and return the index of that topic.
   inline int NextNonZeroTopic() { return ++current_topic_; }
 
-  // Moves the iterator to the next topic topic.
+  // Moves the iterator to the next topic.
   inline int NextTopic() { return ++current_topic_; }
 
   // Returns the current position of the iterator.

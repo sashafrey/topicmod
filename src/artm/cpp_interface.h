@@ -21,8 +21,7 @@ class DataLoader;
 
 // Exception handling in cpp_interface
 #define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
-class Type : public BaseType {                         \
- public:                                               \  // NOLINT
+class Type : public BaseType { public:  /*NOLINT*/     \
   explicit Type() : BaseType("") {}                    \
 };
 

@@ -26,8 +26,7 @@ namespace artm {
 namespace core {
 
 #define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
-class Type : public BaseType {                         \
- public:                                               \  // NOLINT
+class Type : public BaseType { public:  /*NOLINT*/     \
   explicit Type(std::string what) : BaseType(what) {}  \
   explicit Type(const char* what) : BaseType(what) {}  \
 };

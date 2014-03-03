@@ -16,7 +16,7 @@
     Then send the name of your github user to \href{mailto:sashafrey@gmail.com}{sashafrey@gmail.com},
     using ``BigARTM: request access'' in the title of your e-mail.
     In few days you will receive a reply confirming that access had been granted.
-\item To clone the repository and build sources, please refer to paragraph 
+\item To clone the repository and build sources, please refer to paragraph
     \hyperref[label:how_to_build]{How to build sources}.
 \item Read about the math behind BigARTM library: \\ \url{http://www.machinelearning.ru/wiki/images/2/22/Voron-2013-ptm.pdf}
 \item Review the list of open issues: \\
@@ -53,7 +53,7 @@ This is likely to be added in later versions.
 \paragraph{Success criteria.}
 When codebase meets this success criteria we are free to release the library.
 \begin{itemize}
-    \item The algorithm scales linearly up to 32 CPU cores when process 
+    \item The algorithm scales linearly up to 32 CPU cores when process
     \href{http://archive.ics.uci.edu/ml/datasets/Bag+of+Words}{pubmed task}.
     \item On small datasets perplexity of our method is on parity with other libraries
     \item Builds with gcc, intel and cl.exe compiler; runs on Ubuntu, Solaris and Windows.
@@ -115,7 +115,7 @@ At any moment there exist two copies of token-topic matrix,
 an ``active'' and a ``background''.
 The ``active'' token-topic matrix is used by processors,
 while ``background'' token-topic matrix can be safely updated by merger.
-Currently it is merger who automatically decides when to switch ``active'' 
+Currently it is merger who automatically decides when to switch ``active''
 token-topic matrix to the ``background'' one.
 (but ideally user of the library should be able to control this).
 Even after switching ``active'' topic-matrix the previous (deprecated) active matrix
@@ -147,7 +147,7 @@ but it is designed to support Python and Java.
 \end{figure}
 
 \subsection{Concurrency and thread safety}
-All interfaces of the library are not thread safe, 
+All interfaces of the library are not thread safe,
 and must not be used concurrently from multiple threads.
 
 Internally the library creates multiple threads
@@ -156,7 +156,7 @@ Interaction between those threads is synchronized with the following locks:
 \begin{enumerate}
     \item Lock access to the processors queue
     \item Lock access to the merger queue
-    \item Lock access to the token-topic matrix 
+    \item Lock access to the token-topic matrix
 \end{enumerate}
 
 We assume that batches are large enough,
@@ -178,6 +178,40 @@ Look at /src/artm/thread\_safe\_holder.h for details.
 \end{enumerate}
 
 Due to caching in CPU it is important to have topics as a minor dimension in both token-topic and doc-topic matrices.
+
+\subsection{Exceptions and error handling}
+
+\textbf{In c\_interface} all error handling is happening through the error codes.
+\begin{verbatim}
+  enum ArtmErrorCodes {
+    ARTM_SUCCESS = 0,
+    ARTM_GENERAL_ERROR = -1,
+    ARTM_OBJECT_NOT_FOUND = -2,
+    ARTM_INVALID_MESSAGE = -3,
+    ARTM_UNSUPPORTED_RECONFIGURATION = -4,
+  };
+\end{verbatim}  
+You are free to add more error types when needed.
+The reason for negative values is due to some API methods
+returning the actual result; for example, this method returns an ID of newly created object.
+\begin{verbatim}
+int ArtmCreateDataLoader(int data_loader_id, int length, 
+                         const char* config);
+\end{verbatim}
+
+\textbf{In artm::core} you should use C++ exceptions 
+or simple true/false return values instead of error codes.
+Please, follow guidelines in /artm/core/exceptions.h.
+Some highlights:
+\begin{enumerate}
+    \item All exceptions should be inherited for std::runtime\_error
+    \item Use BOOST\_THROW\_EXCEPTION macro to throw an exception
+    \item Remember to catch all exceptions in c\_interface, and convert them to error codes.
+\end{enumerate}
+
+\textbf{In cpp\_interface} all error codes should be converted to exceptions.
+Here you should use exceptions, defined in artm/core/cpp\_interface.h file.
+Do not re-use existing exceptions from artm::core namespace.
 
 \section{FAQ}
 
@@ -239,12 +273,12 @@ Try to run cpp\_client step by step in debugger and see what exactly it does.
 To do so you have to unpack all archives under the /datasets folder,
 and run cpp\_client with corresponding parameters.
 In Linux you may simply use ``make kos'' or ``make nips'' commands.
-To run cpp\_client in Windows directly from Visual Studio 
+To run cpp\_client in Windows directly from Visual Studio
 you should configure the following command for debugger:
 
 {\small
 \begin{verbatim}
-$(SolutionDir)..\datasets\docword.kos.txt $(SolutionDir)..\datasets\vocab.kos.txt 16 
+$(SolutionDir)..\datasets\docword.kos.txt $(SolutionDir)..\datasets\vocab.kos.txt 16
 \end{verbatim}}
 
 \section{Algorithms}
@@ -257,13 +291,13 @@ It has the following implementation details:
     \item Strategy of updating matrix $\Phi$: whenever Merger finishes processing of the next Processors output,
     it updates matrix $\Phi$. It will be picked by each processor whenever it starts processing next partition.
     \item Matrix Phi is initialized with random [0..1] values.
-    \item By default distributions $\theta_{t d}$ are inferred from scratch on every scan of the collection. 
+    \item By default distributions $\theta_{t d}$ are inferred from scratch on every scan of the collection.
           Processors can be configured to re-use the $\Theta$ values from previous iteration.
     \item Counters $n_{w t}$ and $n_t$ keep increasing, even between scans of the whole collection.
           No exponential decay is currently implemented.
     \item Current perplexity calculation is also cumulative.
           There is stupid limitation: perplexity can't be calculated for a single iteration.
-    \item Perplexity can be evaluated on testing items.  
+    \item Perplexity can be evaluated on testing items.
           Each item from the testing set is used to both infer theta, and evaluate perplexity.
           An alternative is to randomly split each testing document into two halves.
 \end{enumerate}
@@ -333,20 +367,20 @@ into their feature branches.
 In case if you are absolutely sure you change is safe, feel free to submit the change yourself.
 Technically you do have write permissions, so no one can stop you :).
 But please do the following:
-verify your \hyperref[label:code_style]{code style}, 
-perform \hyperref[label:code_review]{code review}, 
+verify your \hyperref[label:code_style]{code style},
+perform \hyperref[label:code_review]{code review},
 and make sure everything builds in both Linux and Windows, and unit test passes.
 
 \subsection{Code style}
 \label{label:code_style}
-In the code we follow 
+In the code we follow
 \href{http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml}{google code style},
 with the following changes:
 \begin{enumerate}
     \item Exceptions are allowed
     \item Indentation must be 2 spaces. Tabs are not allowed.
-    
-      If you use Visual Studio, 
+
+      If you use Visual Studio,
       please open ``Tools / Text Editor / All languages / Tabs''
       and configure as follows:
       \begin{itemize}
@@ -355,23 +389,23 @@ with the following changes:
           \item Indent size "--- 2,
           \item Select "insert spaces".
       \end{itemize}
-   
-      We also suggest to show space and tab crlf characters 
+
+      We also suggest to show space and tab crlf characters
       in the editor of Visual Studio (shortcut: Ctrl+R, Ctrl+W)
-      
+
 \item No lines should exceed 100 characters.
 
       If you use Visual Studio, please \href{http://stackoverflow.com/questions/9894397/100-characters-line-marker-in-visual-studio}{enable
        vertical line at 100 characters}.
-      
-\item All .h and .cpp files under /src/artm/ must be verified for code style with 
+
+\item All .h and .cpp files under /src/artm/ must be verified for code style with
       \href{http://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py}{cpplint.py} script.
       It is very easy to use the script; just install
       \href{http://www.python.org/downloads/}{Python 2.7.6}, and run
 
 \begin{verbatim}
 python cpplint.py --linelength=100 <filename>
-\end{verbatim}      
+\end{verbatim}
       Files, generated by protobuf compiler, are the only exceptions from this rule.
 
 \item Be careful with C++11 features, and make sure your change builds in Visual Studio 2010.
@@ -380,16 +414,16 @@ python cpplint.py --linelength=100 <filename>
 
 \subsection{Code review}
 \label{label:code_review}
-We use 
+We use
 \href{https://code.google.com/p/rietveld/wiki/UploadPyUsage}{rietveld}
-tool for code review. 
-When you have your first change, please learn how to use the 
+tool for code review.
+When you have your first change, please learn how to use the
 \href{http://codereview.appspot.com/static/upload.py}{unload.py} script.
 For example, to upload all changes in between two git revisions you may use this command:
 \begin{verbatim}
 code review:
-python upload.py --server=http://codereview.appspot.com/ 
- --email=<your_email> -t <review_title> -m <review_description> 
+python upload.py --server=http://codereview.appspot.com/
+ --email=<your_email> -t <review_title> -m <review_description>
  --rev=<from_revision>:<to_revision>
 \end{verbatim}
 where ``from\_revision'' and ``to\_revision'' may look as follows:

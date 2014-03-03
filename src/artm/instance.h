@@ -45,7 +45,8 @@ class Instance : boost::noncopyable {
   bool RequestModelTopics(int model_id, ModelTopics* model_topics);
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
-  void ReconfigureModel(int model_id, const ModelConfig& config);
+  // Change from alfrey_git_demo_branch1 : rename the method
+  void ReconfigureModelNicely(int model_id, const ModelConfig& config);
 
   void DisposeModel(int model_id);
   void Reconfigure(const InstanceConfig& config);

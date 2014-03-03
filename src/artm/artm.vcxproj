@@ -20,6 +20,7 @@
     <ClCompile Include="token_topic_matrix.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="call_on_destruction.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="data_loader.h" />
     <ClInclude Include="generation.h" />
@@ -33,6 +34,11 @@
     <ClInclude Include="template_manager.h" />
     <ClInclude Include="thread_safe_holder.h" />
     <ClInclude Include="token_topic_matrix.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\collateral\artm_dev.tex" />
+    <None Include="internals.proto" />
+    <None Include="messages.proto" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}</ProjectGuid>
@@ -85,6 +91,9 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir);$(BOOST_ROOT);$(PROTOBUF_ROOT)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>
+      </DisableSpecificWarnings>
+      <AdditionalOptions>" -D_SCL_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,6 +112,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BUILDING_DLL;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir);$(BOOST_ROOT);$(PROTOBUF_ROOT)</AdditionalIncludeDirectories>
+      <AdditionalOptions>" -D_SCL_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

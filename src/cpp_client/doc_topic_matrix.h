@@ -6,7 +6,7 @@
 
 #include "common.h"
 
-class DocTopicMatrix 
+class DocTopicMatrix
 {
 private:
     DISALLOW_COPY_AND_ASSIGN(DocTopicMatrix);
@@ -14,7 +14,7 @@ private:
     int sizeT;
     DataType* data;
 public:
-    DocTopicMatrix(int _sizeD, int _sizeT) : sizeD(_sizeD), sizeT(_sizeT) 
+    DocTopicMatrix(int _sizeD, int _sizeT) : sizeD(_sizeD), sizeT(_sizeT)
     {
         assert(_sizeD > 0);
         assert(_sizeT > 0);

@@ -1,5 +1,7 @@
-#ifndef ARTM_H_
-#define ARTM_H_
+// Copyright 2014, Additive Regularization of Topic Models.
+
+#ifndef SRC_ARTM_C_INTERFACE_H_
+#define SRC_ARTM_C_INTERFACE_H_
 
 #ifdef _WIN32
   #ifdef ARTM_DLL_EXPORTS
@@ -24,39 +26,39 @@ extern "C" {
   // Data loader interface
   // =========================================================================
 
-  DLL_PUBLIC 
-  int create_data_loader(int data_loader_id, 
-                         int length, 
+  DLL_PUBLIC
+  int create_data_loader(int data_loader_id,
+                         int length,
                          const char* data_loader_config_blob);
 
-  DLL_PUBLIC 
-  int reconfigure_data_loader(int data_loader_id, 
-                              int length, 
+  DLL_PUBLIC
+  int reconfigure_data_loader(int data_loader_id,
+                              int length,
                               const char* data_loader_config_blob);
 
-  DLL_PUBLIC 
+  DLL_PUBLIC
   void dispose_data_loader(int data_loader_id);
 
-  DLL_PUBLIC 
+  DLL_PUBLIC
   int add_batch(int data_loader_id, int length, const char* batch_blob);
 
-  DLL_PUBLIC 
+  DLL_PUBLIC
   int invoke_iteration(int data_loader_id, int iterations_count);
 
   DLL_PUBLIC
-  int wait_idle_data_loader(int data_loader_id);
+  void wait_idle_data_loader(int data_loader_id);
   // =========================================================================
   // Instance interface
   // =========================================================================
 
   DLL_PUBLIC
-  int create_instance(int instance_id, 
-                      int length, 
+  int create_instance(int instance_id,
+                      int length,
                       const char* instance_config_blob);
 
   DLL_PUBLIC
   int create_model(int instance_id,
-                   int length, 
+                   int length,
                    const char* model_config_blob);
 
   DLL_PUBLIC void dispose_instance(int instance_id);
@@ -66,7 +68,7 @@ extern "C" {
   DLL_PUBLIC void dispose_request(int request_id);
 
   DLL_PUBLIC int reconfigure_instance(int instance_id,
-                                      int length, 
+                                      int length,
                                       const char* instance_config_blob);
 
   DLL_PUBLIC int reconfigure_model(int instance_id,
@@ -79,20 +81,12 @@ extern "C" {
                                       int batch_length,
                                       const char* batch_blob,
                                       int *length,
-                                      const char** result);      
+                                      const char** result);
 
   DLL_PUBLIC int request_model_topics(int instance_id,
                                       int model_id,
                                       int *length,
                                       char **address);
-
-  DLL_PUBLIC int wait_model_processed(int instance_id,
-                                      int model_id,
-                                      int processed_items);
-
-  DLL_PUBLIC int wait_idle_instance(int instance_id);
 }
 
-
-
-#endif // ARTM_H_
+#endif  // SRC_ARTM_C_INTERFACE_H_

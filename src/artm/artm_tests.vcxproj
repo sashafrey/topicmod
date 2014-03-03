@@ -113,6 +113,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;WIN32;_DEBUG;_WINDOWS;_USRDLL;LINEARSAMPLING_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\gtest\include\;$(SolutionDir)..\gtest;$(SolutionDir);$(BOOST_ROOT);$(PROTOBUF_ROOT)</AdditionalIncludeDirectories>
+      <AdditionalOptions>" -D_SCL_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -145,6 +146,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;WIN32;NDEBUG;_WINDOWS;_USRDLL;LINEARSAMPLING_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)..\gtest\include\;$(SolutionDir)..\gtest;$(SolutionDir);$(BOOST_ROOT);$(PROTOBUF_ROOT)</AdditionalIncludeDirectories>
+      <AdditionalOptions>" -D_SCL_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

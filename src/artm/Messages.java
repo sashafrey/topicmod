@@ -4851,6 +4851,51 @@ public final class Messages {
      */
     com.google.protobuf.ByteString
         getStreamNameBytes();
+
+    // repeated .artm.Score score = 7;
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    java.util.List<artm.Messages.Score> 
+        getScoreList();
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    artm.Messages.Score getScore(int index);
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    int getScoreCount();
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    java.util.List<? extends artm.Messages.ScoreOrBuilder> 
+        getScoreOrBuilderList();
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    artm.Messages.ScoreOrBuilder getScoreOrBuilder(
+        int index);
+
+    // optional bool reuse_theta = 8 [default = false];
+    /**
+     * <code>optional bool reuse_theta = 8 [default = false];</code>
+     */
+    boolean hasReuseTheta();
+    /**
+     * <code>optional bool reuse_theta = 8 [default = false];</code>
+     */
+    boolean getReuseTheta();
+
+    // optional bool cache_token_counters = 9 [default = false];
+    /**
+     * <code>optional bool cache_token_counters = 9 [default = false];</code>
+     */
+    boolean hasCacheTokenCounters();
+    /**
+     * <code>optional bool cache_token_counters = 9 [default = false];</code>
+     */
+    boolean getCacheTokenCounters();
   }
   /**
    * Protobuf type {@code artm.ModelConfig}
@@ -4932,6 +4977,24 @@ public final class Messages {
               streamName_ = input.readBytes();
               break;
             }
+            case 58: {
+              if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+                score_ = new java.util.ArrayList<artm.Messages.Score>();
+                mutable_bitField0_ |= 0x00000020;
+              }
+              score_.add(input.readMessage(artm.Messages.Score.PARSER, extensionRegistry));
+              break;
+            }
+            case 64: {
+              bitField0_ |= 0x00000020;
+              reuseTheta_ = input.readBool();
+              break;
+            }
+            case 72: {
+              bitField0_ |= 0x00000040;
+              cacheTokenCounters_ = input.readBool();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -4940,6 +5003,9 @@ public final class Messages {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
+          score_ = java.util.Collections.unmodifiableList(score_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -5106,18 +5172,95 @@ public final class Messages {
       }
     }
 
+    // repeated .artm.Score score = 7;
+    public static final int SCORE_FIELD_NUMBER = 7;
+    private java.util.List<artm.Messages.Score> score_;
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    public java.util.List<artm.Messages.Score> getScoreList() {
+      return score_;
+    }
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    public java.util.List<? extends artm.Messages.ScoreOrBuilder> 
+        getScoreOrBuilderList() {
+      return score_;
+    }
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    public int getScoreCount() {
+      return score_.size();
+    }
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    public artm.Messages.Score getScore(int index) {
+      return score_.get(index);
+    }
+    /**
+     * <code>repeated .artm.Score score = 7;</code>
+     */
+    public artm.Messages.ScoreOrBuilder getScoreOrBuilder(
+        int index) {
+      return score_.get(index);
+    }
+
+    // optional bool reuse_theta = 8 [default = false];
+    public static final int REUSE_THETA_FIELD_NUMBER = 8;
+    private boolean reuseTheta_;
+    /**
+     * <code>optional bool reuse_theta = 8 [default = false];</code>
+     */
+    public boolean hasReuseTheta() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional bool reuse_theta = 8 [default = false];</code>
+     */
+    public boolean getReuseTheta() {
+      return reuseTheta_;
+    }
+
+    // optional bool cache_token_counters = 9 [default = false];
+    public static final int CACHE_TOKEN_COUNTERS_FIELD_NUMBER = 9;
+    private boolean cacheTokenCounters_;
+    /**
+     * <code>optional bool cache_token_counters = 9 [default = false];</code>
+     */
+    public boolean hasCacheTokenCounters() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional bool cache_token_counters = 9 [default = false];</code>
+     */
+    public boolean getCacheTokenCounters() {
+      return cacheTokenCounters_;
+    }
+
     private void initFields() {
       topicsCount_ = 32;
       enabled_ = false;
       innerIterationsCount_ = 10;
       fieldName_ = "@body";
       streamName_ = "@global";
+      score_ = java.util.Collections.emptyList();
+      reuseTheta_ = false;
+      cacheTokenCounters_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
+      for (int i = 0; i < getScoreCount(); i++) {
+        if (!getScore(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -5139,6 +5282,15 @@ public final class Messages {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(6, getStreamNameBytes());
+      }
+      for (int i = 0; i < score_.size(); i++) {
+        output.writeMessage(7, score_.get(i));
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeBool(8, reuseTheta_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeBool(9, cacheTokenCounters_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -5168,6 +5320,18 @@ public final class Messages {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(6, getStreamNameBytes());
+      }
+      for (int i = 0; i < score_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(7, score_.get(i));
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(8, reuseTheta_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(9, cacheTokenCounters_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -5281,6 +5445,7 @@ public final class Messages {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getScoreFieldBuilder();
         }
       }
       private static Builder create() {
@@ -5299,6 +5464,16 @@ public final class Messages {
         bitField0_ = (bitField0_ & ~0x00000008);
         streamName_ = "@global";
         bitField0_ = (bitField0_ & ~0x00000010);
+        if (scoreBuilder_ == null) {
+          score_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000020);
+        } else {
+          scoreBuilder_.clear();
+        }
+        reuseTheta_ = false;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        cacheTokenCounters_ = false;
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -5347,6 +5522,23 @@ public final class Messages {
           to_bitField0_ |= 0x00000010;
         }
         result.streamName_ = streamName_;
+        if (scoreBuilder_ == null) {
+          if (((bitField0_ & 0x00000020) == 0x00000020)) {
+            score_ = java.util.Collections.unmodifiableList(score_);
+            bitField0_ = (bitField0_ & ~0x00000020);
+          }
+          result.score_ = score_;
+        } else {
+          result.score_ = scoreBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.reuseTheta_ = reuseTheta_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.cacheTokenCounters_ = cacheTokenCounters_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -5382,11 +5574,49 @@ public final class Messages {
           streamName_ = other.streamName_;
           onChanged();
         }
+        if (scoreBuilder_ == null) {
+          if (!other.score_.isEmpty()) {
+            if (score_.isEmpty()) {
+              score_ = other.score_;
+              bitField0_ = (bitField0_ & ~0x00000020);
+            } else {
+              ensureScoreIsMutable();
+              score_.addAll(other.score_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.score_.isEmpty()) {
+            if (scoreBuilder_.isEmpty()) {
+              scoreBuilder_.dispose();
+              scoreBuilder_ = null;
+              score_ = other.score_;
+              bitField0_ = (bitField0_ & ~0x00000020);
+              scoreBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getScoreFieldBuilder() : null;
+            } else {
+              scoreBuilder_.addAllMessages(other.score_);
+            }
+          }
+        }
+        if (other.hasReuseTheta()) {
+          setReuseTheta(other.getReuseTheta());
+        }
+        if (other.hasCacheTokenCounters()) {
+          setCacheTokenCounters(other.getCacheTokenCounters());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
 
       public final boolean isInitialized() {
+        for (int i = 0; i < getScoreCount(); i++) {
+          if (!getScore(i).isInitialized()) {
+            
+            return false;
+          }
+        }
         return true;
       }
 
@@ -5656,6 +5886,312 @@ public final class Messages {
         return this;
       }
 
+      // repeated .artm.Score score = 7;
+      private java.util.List<artm.Messages.Score> score_ =
+        java.util.Collections.emptyList();
+      private void ensureScoreIsMutable() {
+        if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+          score_ = new java.util.ArrayList<artm.Messages.Score>(score_);
+          bitField0_ |= 0x00000020;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilder<
+          artm.Messages.Score, artm.Messages.Score.Builder, artm.Messages.ScoreOrBuilder> scoreBuilder_;
+
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public java.util.List<artm.Messages.Score> getScoreList() {
+        if (scoreBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(score_);
+        } else {
+          return scoreBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public int getScoreCount() {
+        if (scoreBuilder_ == null) {
+          return score_.size();
+        } else {
+          return scoreBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public artm.Messages.Score getScore(int index) {
+        if (scoreBuilder_ == null) {
+          return score_.get(index);
+        } else {
+          return scoreBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder setScore(
+          int index, artm.Messages.Score value) {
+        if (scoreBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureScoreIsMutable();
+          score_.set(index, value);
+          onChanged();
+        } else {
+          scoreBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder setScore(
+          int index, artm.Messages.Score.Builder builderForValue) {
+        if (scoreBuilder_ == null) {
+          ensureScoreIsMutable();
+          score_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          scoreBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder addScore(artm.Messages.Score value) {
+        if (scoreBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureScoreIsMutable();
+          score_.add(value);
+          onChanged();
+        } else {
+          scoreBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder addScore(
+          int index, artm.Messages.Score value) {
+        if (scoreBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureScoreIsMutable();
+          score_.add(index, value);
+          onChanged();
+        } else {
+          scoreBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder addScore(
+          artm.Messages.Score.Builder builderForValue) {
+        if (scoreBuilder_ == null) {
+          ensureScoreIsMutable();
+          score_.add(builderForValue.build());
+          onChanged();
+        } else {
+          scoreBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder addScore(
+          int index, artm.Messages.Score.Builder builderForValue) {
+        if (scoreBuilder_ == null) {
+          ensureScoreIsMutable();
+          score_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          scoreBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder addAllScore(
+          java.lang.Iterable<? extends artm.Messages.Score> values) {
+        if (scoreBuilder_ == null) {
+          ensureScoreIsMutable();
+          super.addAll(values, score_);
+          onChanged();
+        } else {
+          scoreBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder clearScore() {
+        if (scoreBuilder_ == null) {
+          score_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000020);
+          onChanged();
+        } else {
+          scoreBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public Builder removeScore(int index) {
+        if (scoreBuilder_ == null) {
+          ensureScoreIsMutable();
+          score_.remove(index);
+          onChanged();
+        } else {
+          scoreBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public artm.Messages.Score.Builder getScoreBuilder(
+          int index) {
+        return getScoreFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public artm.Messages.ScoreOrBuilder getScoreOrBuilder(
+          int index) {
+        if (scoreBuilder_ == null) {
+          return score_.get(index);  } else {
+          return scoreBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public java.util.List<? extends artm.Messages.ScoreOrBuilder> 
+           getScoreOrBuilderList() {
+        if (scoreBuilder_ != null) {
+          return scoreBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(score_);
+        }
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public artm.Messages.Score.Builder addScoreBuilder() {
+        return getScoreFieldBuilder().addBuilder(
+            artm.Messages.Score.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public artm.Messages.Score.Builder addScoreBuilder(
+          int index) {
+        return getScoreFieldBuilder().addBuilder(
+            index, artm.Messages.Score.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .artm.Score score = 7;</code>
+       */
+      public java.util.List<artm.Messages.Score.Builder> 
+           getScoreBuilderList() {
+        return getScoreFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          artm.Messages.Score, artm.Messages.Score.Builder, artm.Messages.ScoreOrBuilder> 
+          getScoreFieldBuilder() {
+        if (scoreBuilder_ == null) {
+          scoreBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              artm.Messages.Score, artm.Messages.Score.Builder, artm.Messages.ScoreOrBuilder>(
+                  score_,
+                  ((bitField0_ & 0x00000020) == 0x00000020),
+                  getParentForChildren(),
+                  isClean());
+          score_ = null;
+        }
+        return scoreBuilder_;
+      }
+
+      // optional bool reuse_theta = 8 [default = false];
+      private boolean reuseTheta_ ;
+      /**
+       * <code>optional bool reuse_theta = 8 [default = false];</code>
+       */
+      public boolean hasReuseTheta() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional bool reuse_theta = 8 [default = false];</code>
+       */
+      public boolean getReuseTheta() {
+        return reuseTheta_;
+      }
+      /**
+       * <code>optional bool reuse_theta = 8 [default = false];</code>
+       */
+      public Builder setReuseTheta(boolean value) {
+        bitField0_ |= 0x00000040;
+        reuseTheta_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool reuse_theta = 8 [default = false];</code>
+       */
+      public Builder clearReuseTheta() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        reuseTheta_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional bool cache_token_counters = 9 [default = false];
+      private boolean cacheTokenCounters_ ;
+      /**
+       * <code>optional bool cache_token_counters = 9 [default = false];</code>
+       */
+      public boolean hasCacheTokenCounters() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional bool cache_token_counters = 9 [default = false];</code>
+       */
+      public boolean getCacheTokenCounters() {
+        return cacheTokenCounters_;
+      }
+      /**
+       * <code>optional bool cache_token_counters = 9 [default = false];</code>
+       */
+      public Builder setCacheTokenCounters(boolean value) {
+        bitField0_ |= 0x00000080;
+        cacheTokenCounters_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool cache_token_counters = 9 [default = false];</code>
+       */
+      public Builder clearCacheTokenCounters() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        cacheTokenCounters_ = false;
+        onChanged();
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:artm.ModelConfig)
     }
 
@@ -5665,6 +6201,804 @@ public final class Messages {
     }
 
     // @@protoc_insertion_point(class_scope:artm.ModelConfig)
+  }
+
+  public interface ScoreOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // required .artm.Score.Type type = 1;
+    /**
+     * <code>required .artm.Score.Type type = 1;</code>
+     */
+    boolean hasType();
+    /**
+     * <code>required .artm.Score.Type type = 1;</code>
+     */
+    artm.Messages.Score.Type getType();
+
+    // optional string field_name = 2 [default = "@body"];
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    boolean hasFieldName();
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    java.lang.String getFieldName();
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    com.google.protobuf.ByteString
+        getFieldNameBytes();
+
+    // optional string stream_name = 3 [default = "@global"];
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
+     */
+    boolean hasStreamName();
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
+     */
+    java.lang.String getStreamName();
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
+     */
+    com.google.protobuf.ByteString
+        getStreamNameBytes();
+  }
+  /**
+   * Protobuf type {@code artm.Score}
+   */
+  public static final class Score extends
+      com.google.protobuf.GeneratedMessage
+      implements ScoreOrBuilder {
+    // Use Score.newBuilder() to construct.
+    private Score(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private Score(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final Score defaultInstance;
+    public static Score getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public Score getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Score(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              artm.Messages.Score.Type value = artm.Messages.Score.Type.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                type_ = value;
+              }
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              fieldName_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              streamName_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return artm.Messages.internal_static_artm_Score_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return artm.Messages.internal_static_artm_Score_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              artm.Messages.Score.class, artm.Messages.Score.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<Score> PARSER =
+        new com.google.protobuf.AbstractParser<Score>() {
+      public Score parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Score(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Score> getParserForType() {
+      return PARSER;
+    }
+
+    /**
+     * Protobuf enum {@code artm.Score.Type}
+     */
+    public enum Type
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>Perplexity = 0;</code>
+       */
+      Perplexity(0, 0),
+      ;
+
+      /**
+       * <code>Perplexity = 0;</code>
+       */
+      public static final int Perplexity_VALUE = 0;
+
+
+      public final int getNumber() { return value; }
+
+      public static Type valueOf(int value) {
+        switch (value) {
+          case 0: return Perplexity;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<Type>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<Type>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Type>() {
+              public Type findValueByNumber(int number) {
+                return Type.valueOf(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(index);
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return artm.Messages.Score.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final Type[] VALUES = values();
+
+      public static Type valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int index;
+      private final int value;
+
+      private Type(int index, int value) {
+        this.index = index;
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:artm.Score.Type)
+    }
+
+    private int bitField0_;
+    // required .artm.Score.Type type = 1;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private artm.Messages.Score.Type type_;
+    /**
+     * <code>required .artm.Score.Type type = 1;</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .artm.Score.Type type = 1;</code>
+     */
+    public artm.Messages.Score.Type getType() {
+      return type_;
+    }
+
+    // optional string field_name = 2 [default = "@body"];
+    public static final int FIELD_NAME_FIELD_NUMBER = 2;
+    private java.lang.Object fieldName_;
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    public boolean hasFieldName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    public java.lang.String getFieldName() {
+      java.lang.Object ref = fieldName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          fieldName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string field_name = 2 [default = "@body"];</code>
+     */
+    public com.google.protobuf.ByteString
+        getFieldNameBytes() {
+      java.lang.Object ref = fieldName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        fieldName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string stream_name = 3 [default = "@global"];
+    public static final int STREAM_NAME_FIELD_NUMBER = 3;
+    private java.lang.Object streamName_;
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
+     */
+    public boolean hasStreamName() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
+     */
+    public java.lang.String getStreamName() {
+      java.lang.Object ref = streamName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          streamName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string stream_name = 3 [default = "@global"];</code>
+     */
+    public com.google.protobuf.ByteString
+        getStreamNameBytes() {
+      java.lang.Object ref = streamName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        streamName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private void initFields() {
+      type_ = artm.Messages.Score.Type.Perplexity;
+      fieldName_ = "@body";
+      streamName_ = "@global";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, type_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getFieldNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, getStreamNameBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, type_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getFieldNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getStreamNameBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static artm.Messages.Score parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.Score parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.Score parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static artm.Messages.Score parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static artm.Messages.Score parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.Score parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.Score parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static artm.Messages.Score parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static artm.Messages.Score parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static artm.Messages.Score parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(artm.Messages.Score prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code artm.Score}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements artm.Messages.ScoreOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return artm.Messages.internal_static_artm_Score_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return artm.Messages.internal_static_artm_Score_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                artm.Messages.Score.class, artm.Messages.Score.Builder.class);
+      }
+
+      // Construct using artm.Messages.Score.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        type_ = artm.Messages.Score.Type.Perplexity;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        fieldName_ = "@body";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        streamName_ = "@global";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return artm.Messages.internal_static_artm_Score_descriptor;
+      }
+
+      public artm.Messages.Score getDefaultInstanceForType() {
+        return artm.Messages.Score.getDefaultInstance();
+      }
+
+      public artm.Messages.Score build() {
+        artm.Messages.Score result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public artm.Messages.Score buildPartial() {
+        artm.Messages.Score result = new artm.Messages.Score(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.type_ = type_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.fieldName_ = fieldName_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.streamName_ = streamName_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof artm.Messages.Score) {
+          return mergeFrom((artm.Messages.Score)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(artm.Messages.Score other) {
+        if (other == artm.Messages.Score.getDefaultInstance()) return this;
+        if (other.hasType()) {
+          setType(other.getType());
+        }
+        if (other.hasFieldName()) {
+          bitField0_ |= 0x00000002;
+          fieldName_ = other.fieldName_;
+          onChanged();
+        }
+        if (other.hasStreamName()) {
+          bitField0_ |= 0x00000004;
+          streamName_ = other.streamName_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasType()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        artm.Messages.Score parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (artm.Messages.Score) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required .artm.Score.Type type = 1;
+      private artm.Messages.Score.Type type_ = artm.Messages.Score.Type.Perplexity;
+      /**
+       * <code>required .artm.Score.Type type = 1;</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .artm.Score.Type type = 1;</code>
+       */
+      public artm.Messages.Score.Type getType() {
+        return type_;
+      }
+      /**
+       * <code>required .artm.Score.Type type = 1;</code>
+       */
+      public Builder setType(artm.Messages.Score.Type value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        type_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .artm.Score.Type type = 1;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = artm.Messages.Score.Type.Perplexity;
+        onChanged();
+        return this;
+      }
+
+      // optional string field_name = 2 [default = "@body"];
+      private java.lang.Object fieldName_ = "@body";
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public boolean hasFieldName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public java.lang.String getFieldName() {
+        java.lang.Object ref = fieldName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          fieldName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public com.google.protobuf.ByteString
+          getFieldNameBytes() {
+        java.lang.Object ref = fieldName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          fieldName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public Builder setFieldName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        fieldName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public Builder clearFieldName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        fieldName_ = getDefaultInstance().getFieldName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string field_name = 2 [default = "@body"];</code>
+       */
+      public Builder setFieldNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        fieldName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string stream_name = 3 [default = "@global"];
+      private java.lang.Object streamName_ = "@global";
+      /**
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
+       */
+      public boolean hasStreamName() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
+       */
+      public java.lang.String getStreamName() {
+        java.lang.Object ref = streamName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          streamName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
+       */
+      public com.google.protobuf.ByteString
+          getStreamNameBytes() {
+        java.lang.Object ref = streamName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          streamName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
+       */
+      public Builder setStreamName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        streamName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
+       */
+      public Builder clearStreamName() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        streamName_ = getDefaultInstance().getStreamName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string stream_name = 3 [default = "@global"];</code>
+       */
+      public Builder setStreamNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        streamName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:artm.Score)
+    }
+
+    static {
+      defaultInstance = new Score(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:artm.Score)
   }
 
   public interface LoggerConfigOrBuilder
@@ -6382,6 +7716,32 @@ public final class Messages {
      * <code>optional int32 items_processed = 2;</code>
      */
     int getItemsProcessed();
+
+    // repeated double score = 3;
+    /**
+     * <code>repeated double score = 3;</code>
+     *
+     * <pre>
+     * scores, calculated for the model
+     * </pre>
+     */
+    java.util.List<java.lang.Double> getScoreList();
+    /**
+     * <code>repeated double score = 3;</code>
+     *
+     * <pre>
+     * scores, calculated for the model
+     * </pre>
+     */
+    int getScoreCount();
+    /**
+     * <code>repeated double score = 3;</code>
+     *
+     * <pre>
+     * scores, calculated for the model
+     * </pre>
+     */
+    double getScore(int index);
   }
   /**
    * Protobuf type {@code artm.ModelTopics}
@@ -6451,6 +7811,27 @@ public final class Messages {
               itemsProcessed_ = input.readInt32();
               break;
             }
+            case 25: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                score_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              score_.add(input.readDouble());
+              break;
+            }
+            case 26: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
+                score_ = new java.util.ArrayList<java.lang.Double>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              while (input.getBytesUntilLimit() > 0) {
+                score_.add(input.readDouble());
+              }
+              input.popLimit(limit);
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -6461,6 +7842,9 @@ public final class Messages {
       } finally {
         if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
           tokenTopic_ = java.util.Collections.unmodifiableList(tokenTopic_);
+        }
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          score_ = java.util.Collections.unmodifiableList(score_);
         }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
@@ -6546,9 +7930,45 @@ public final class Messages {
       return itemsProcessed_;
     }
 
+    // repeated double score = 3;
+    public static final int SCORE_FIELD_NUMBER = 3;
+    private java.util.List<java.lang.Double> score_;
+    /**
+     * <code>repeated double score = 3;</code>
+     *
+     * <pre>
+     * scores, calculated for the model
+     * </pre>
+     */
+    public java.util.List<java.lang.Double>
+        getScoreList() {
+      return score_;
+    }
+    /**
+     * <code>repeated double score = 3;</code>
+     *
+     * <pre>
+     * scores, calculated for the model
+     * </pre>
+     */
+    public int getScoreCount() {
+      return score_.size();
+    }
+    /**
+     * <code>repeated double score = 3;</code>
+     *
+     * <pre>
+     * scores, calculated for the model
+     * </pre>
+     */
+    public double getScore(int index) {
+      return score_.get(index);
+    }
+
     private void initFields() {
       tokenTopic_ = java.util.Collections.emptyList();
       itemsProcessed_ = 0;
+      score_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -6568,6 +7988,9 @@ public final class Messages {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(2, itemsProcessed_);
       }
+      for (int i = 0; i < score_.size(); i++) {
+        output.writeDouble(3, score_.get(i));
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -6584,6 +8007,12 @@ public final class Messages {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, itemsProcessed_);
+      }
+      {
+        int dataSize = 0;
+        dataSize = 8 * getScoreList().size();
+        size += dataSize;
+        size += 1 * getScoreList().size();
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -6714,6 +8143,8 @@ public final class Messages {
         }
         itemsProcessed_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
+        score_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -6755,6 +8186,11 @@ public final class Messages {
           to_bitField0_ |= 0x00000001;
         }
         result.itemsProcessed_ = itemsProcessed_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          score_ = java.util.Collections.unmodifiableList(score_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.score_ = score_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -6799,6 +8235,16 @@ public final class Messages {
         }
         if (other.hasItemsProcessed()) {
           setItemsProcessed(other.getItemsProcessed());
+        }
+        if (!other.score_.isEmpty()) {
+          if (score_.isEmpty()) {
+            score_ = other.score_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureScoreIsMutable();
+            score_.addAll(other.score_);
+          }
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -7096,6 +8542,100 @@ public final class Messages {
       public Builder clearItemsProcessed() {
         bitField0_ = (bitField0_ & ~0x00000002);
         itemsProcessed_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // repeated double score = 3;
+      private java.util.List<java.lang.Double> score_ = java.util.Collections.emptyList();
+      private void ensureScoreIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          score_ = new java.util.ArrayList<java.lang.Double>(score_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      /**
+       * <code>repeated double score = 3;</code>
+       *
+       * <pre>
+       * scores, calculated for the model
+       * </pre>
+       */
+      public java.util.List<java.lang.Double>
+          getScoreList() {
+        return java.util.Collections.unmodifiableList(score_);
+      }
+      /**
+       * <code>repeated double score = 3;</code>
+       *
+       * <pre>
+       * scores, calculated for the model
+       * </pre>
+       */
+      public int getScoreCount() {
+        return score_.size();
+      }
+      /**
+       * <code>repeated double score = 3;</code>
+       *
+       * <pre>
+       * scores, calculated for the model
+       * </pre>
+       */
+      public double getScore(int index) {
+        return score_.get(index);
+      }
+      /**
+       * <code>repeated double score = 3;</code>
+       *
+       * <pre>
+       * scores, calculated for the model
+       * </pre>
+       */
+      public Builder setScore(
+          int index, double value) {
+        ensureScoreIsMutable();
+        score_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double score = 3;</code>
+       *
+       * <pre>
+       * scores, calculated for the model
+       * </pre>
+       */
+      public Builder addScore(double value) {
+        ensureScoreIsMutable();
+        score_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double score = 3;</code>
+       *
+       * <pre>
+       * scores, calculated for the model
+       * </pre>
+       */
+      public Builder addAllScore(
+          java.lang.Iterable<? extends java.lang.Double> values) {
+        ensureScoreIsMutable();
+        super.addAll(values, score_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated double score = 3;</code>
+       *
+       * <pre>
+       * scores, calculated for the model
+       * </pre>
+       */
+      public Builder clearScore() {
+        score_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
         onChanged();
         return this;
       }
@@ -9085,6 +10625,11 @@ public final class Messages {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_artm_ModelConfig_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_artm_Score_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_artm_Score_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_artm_LoggerConfig_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -9131,21 +10676,27 @@ public final class Messages {
       "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000" +
       "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003" +
       "\"-\n\016InstanceConfig\022\033\n\020processors_count\030\001" +
-      " \001(\005:\0011\"\234\001\n\013ModelConfig\022\030\n\014topics_count\030" +
+      " \001(\005:\0011\"\371\001\n\013ModelConfig\022\030\n\014topics_count\030" +
       "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn" +
       "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n" +
       "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@" +
-      "global\"\231\001\n\014LoggerConfig\022\024\n\014log_location\030" +
-      "\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerConfig" +
-      ".Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n\005E",
-      "RROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE" +
-      "\020\004\"N\n\013ModelTopics\022&\n\013token_topic\030\001 \003(\0132\021" +
-      ".artm.TokenTopics\022\027\n\017items_processed\030\002 \001" +
-      "(\005\"D\n\013TokenTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010toke" +
-      "n_id\030\002 \001(\005\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItem" +
-      "Topics\022\n\n\002id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002" +
-      "\"4\n\013BatchTopics\022%\n\013item_topics\030\001 \003(\0132\020.a" +
-      "rtm.ItemTopics"
+      "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013re" +
+      "use_theta\030\010 \001(\010:\005false\022#\n\024cache_token_co" +
+      "unters\030\t \001(\010:\005false\"x\n\005Score\022\036\n\004type\030\001 \002",
+      "(\0162\020.artm.Score.Type\022\031\n\nfield_name\030\002 \001(\t" +
+      ":\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@global\"\026\n" +
+      "\004Type\022\016\n\nPerplexity\020\000\"\231\001\n\014LoggerConfig\022\024" +
+      "\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.ar" +
+      "tm.LoggerConfig.Level:\004INFO\"D\n\005Level\022\014\n\010" +
+      "DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004IN" +
+      "FO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013ModelTopics\022&\n\013toke" +
+      "n_topic\030\001 \003(\0132\021.artm.TokenTopics\022\027\n\017item" +
+      "s_processed\030\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013Toke" +
+      "nTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005",
+      "\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItemTopics\022\n\n\002" +
+      "id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"4\n\013BatchT" +
+      "opics\022%\n\013item_topics\030\001 \003(\0132\020.artm.ItemTo" +
+      "pics"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -9193,33 +10744,39 @@ public final class Messages {
           internal_static_artm_ModelConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_ModelConfig_descriptor,
-              new java.lang.String[] { "TopicsCount", "Enabled", "InnerIterationsCount", "FieldName", "StreamName", });
-          internal_static_artm_LoggerConfig_descriptor =
+              new java.lang.String[] { "TopicsCount", "Enabled", "InnerIterationsCount", "FieldName", "StreamName", "Score", "ReuseTheta", "CacheTokenCounters", });
+          internal_static_artm_Score_descriptor =
             getDescriptor().getMessageTypes().get(7);
+          internal_static_artm_Score_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_artm_Score_descriptor,
+              new java.lang.String[] { "Type", "FieldName", "StreamName", });
+          internal_static_artm_LoggerConfig_descriptor =
+            getDescriptor().getMessageTypes().get(8);
           internal_static_artm_LoggerConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_LoggerConfig_descriptor,
               new java.lang.String[] { "LogLocation", "Level", });
           internal_static_artm_ModelTopics_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(9);
           internal_static_artm_ModelTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_ModelTopics_descriptor,
-              new java.lang.String[] { "TokenTopic", "ItemsProcessed", });
+              new java.lang.String[] { "TokenTopic", "ItemsProcessed", "Score", });
           internal_static_artm_TokenTopics_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_artm_TokenTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_TokenTopics_descriptor,
               new java.lang.String[] { "Token", "TokenId", "TopicWeight", });
           internal_static_artm_ItemTopics_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(11);
           internal_static_artm_ItemTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_ItemTopics_descriptor,
               new java.lang.String[] { "Id", "TopicWeight", });
           internal_static_artm_BatchTopics_descriptor =
-            getDescriptor().getMessageTypes().get(11);
+            getDescriptor().getMessageTypes().get(12);
           internal_static_artm_BatchTopics_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_BatchTopics_descriptor,

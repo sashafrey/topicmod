@@ -1,0 +1,14 @@
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Intermediate\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(PROTOBUF_ROOT);$(BOOST_ROOT);$(SolutionDir)..\gtest\;$(SolutionDir)..\gtest\include;</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\libs\vc$(VisualStudioVersion)\$(Platform)\$(Configuration)\;$(SolutionDir)..\libs\</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>  
+</Project>

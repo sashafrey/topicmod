@@ -17,7 +17,7 @@
 #include "rpcz/server.hpp"
 #include <signal.h>
 #include <string.h>
-#ifndef _WIN32 && _WIN64
+#if !defined(_WIN32) && !defined(_IN64)
 #include <sys/errno.h>
 #include <sys/signal.h>
 #endif

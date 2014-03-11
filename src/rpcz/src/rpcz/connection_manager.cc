@@ -22,14 +22,14 @@
 #include <boost/thread/tss.hpp>
 #include <map>
 #include <ostream>
-#ifndef _WIN32 && _WIN64
+#if !defined(_WIN32) && !defined(_WIN64)
 #include <pthread.h>
 #endif
 #include "process.h"
 #include <sstream>
 #include <stddef.h>
 #include <string>
-#ifndef _WIN32 && _WIN64
+#if !defined(_WIN32) && !defined(_WIN64)
 #include <unistd.h>
 #endif
 #include <utility>

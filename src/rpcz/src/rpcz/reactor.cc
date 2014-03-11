@@ -119,7 +119,7 @@ void reactor::set_should_quit() {
 }
 
 void install_signal_handler() {
-#ifndef _WIN32 && _WIN64
+#if !defined(_WIN32) && !defined(_WIN64)
   struct sigaction action;
   action.sa_handler = signal_handler;
   action.sa_flags = 0;

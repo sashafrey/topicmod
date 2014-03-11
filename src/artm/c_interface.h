@@ -6,7 +6,7 @@
 #ifndef SRC_ARTM_C_INTERFACE_H_
 #define SRC_ARTM_C_INTERFACE_H_
 
-#ifdef _WIN32 || _WIN64
+#if defined(_WIN32) || defined(_WIN64)
   #ifdef ARTM_DLL_EXPORTS
     #define DLL_PUBLIC __declspec(dllexport)
   #else

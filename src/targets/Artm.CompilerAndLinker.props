@@ -4,7 +4,9 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_VARIADIC_MAX=10;WIN32;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>" -D_SCL_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>	  
+      <AdditionalOptions>" -D_SCL_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

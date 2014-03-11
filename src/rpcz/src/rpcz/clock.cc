@@ -15,14 +15,16 @@
 // Author: nadavs@google.com <Nadav Samet>
 
 #include "rpcz/clock.hpp"
-#include <sys/time.h>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 
 namespace rpcz {
 
 uint64 zclock_time(void) {
-    struct timeval tv;
-    gettimeofday (&tv, NULL);
-    return (int64_t) (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+    // http://stackoverflow.com/questions/3134821/local-time-with-milliseconds
+    boost::posix_time::ptime time = boost::posix_time::microsec_clock::local_time();
+    boost::posix_time::time_duration duration( time.time_of_day() );
+    uint64 retval = duration.total_milliseconds();
+		return retval;
 }
 
 }  // namespace rpcz

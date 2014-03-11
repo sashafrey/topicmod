@@ -22,11 +22,16 @@
 #include <boost/thread/tss.hpp>
 #include <map>
 #include <ostream>
+#ifndef _WIN32 && _WIN64
 #include <pthread.h>
+#endif
+#include "process.h"
 #include <sstream>
 #include <stddef.h>
 #include <string>
+#ifndef _WIN32 && _WIN64
 #include <unistd.h>
+#endif
 #include <utility>
 #include <vector>
 #include "zmq.h"
@@ -50,7 +55,7 @@ typedef uint64 event_id;
 class event_id_generator {
  public:
   event_id_generator() {
-    state_ = (reinterpret_cast<uint64>(this) << 32) + getpid();
+    state_ = (reinterpret_cast<uint64>(this) << 32) + _getpid();
   }
 
   event_id get_next() {

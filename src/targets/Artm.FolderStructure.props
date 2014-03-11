@@ -5,10 +5,10 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir);$(PROTOBUF_ROOT);$(BOOST_ROOT);$(SolutionDir)..\gtest\;$(SolutionDir)..\gtest\include;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir);$(PROTOBUF_ROOT);$(BOOST_ROOT);$(ZEROMQ32_ROOT)\include;$(SolutionDir)..\gtest\;$(SolutionDir)..\gtest\include;$(SolutionDir)rpcz\include;$(SolutionDir)rpcz\src;$(SolutionDir)..\glog\src\windows;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\libs\vc$(VisualStudioVersion)\$(Platform)\$(Configuration)\;$(SolutionDir)..\libs\</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\libs\$(PlatformToolset)\$(Platform)\$(Configuration)\;$(SolutionDir)..\libs\;$(ZEROMQ32_ROOT)\lib</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>  
 </Project>

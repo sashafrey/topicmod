@@ -119,11 +119,13 @@ void reactor::set_should_quit() {
 }
 
 void install_signal_handler() {
+#ifndef _WIN32 && _WIN64
   struct sigaction action;
   action.sa_handler = signal_handler;
   action.sa_flags = 0;
   sigemptyset(&action.sa_mask);
   sigaction(SIGINT, &action, NULL);
   sigaction(SIGTERM, &action, NULL);
+#endif
 }
 }  // namespace rpcz

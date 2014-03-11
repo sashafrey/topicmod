@@ -33,6 +33,7 @@
       <AdditionalDependencies>artm.lib;libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>  
+  <Import Project="$(SolutionDir)\targets\Artm.CopyDependencies.props" />  
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>

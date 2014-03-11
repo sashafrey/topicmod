@@ -190,16 +190,16 @@ Due to caching in CPU it is important to have topics as a minor dimension in bot
     ARTM_INVALID_MESSAGE = -3,
     ARTM_UNSUPPORTED_RECONFIGURATION = -4,
   };
-\end{verbatim}  
+\end{verbatim}
 You are free to add more error types when needed.
 The reason for negative values is due to some API methods
 returning the actual result; for example, this method returns an ID of newly created object.
 \begin{verbatim}
-int ArtmCreateDataLoader(int data_loader_id, int length, 
+int ArtmCreateDataLoader(int data_loader_id, int length,
                          const char* config);
 \end{verbatim}
 
-\textbf{In artm::core} you should use C++ exceptions 
+\textbf{In artm::core} you should use C++ exceptions
 or simple true/false return values instead of error codes.
 Please, follow guidelines in /artm/core/exceptions.h.
 Some highlights:
@@ -312,16 +312,22 @@ It has the following implementation details:
    \item Clone \url{https://github.com/sashafrey/topicmod/} repository
    \item Download and unpack boost 1.55  \\
          \url{http://sourceforge.net/projects/boost/files/} \\
-         Set environmental variable BOOST\_ROOT to the root of our boost installation.
+         Set environmental variable BOOST\_ROOT to the root of your boost installation.
          To do so you may use cmd.exe:
 \begin{verbatim}
 setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"
 \end{verbatim}
    \item Download and unpack protobuf 2.5.0 \\
          \url{https://protobuf.googlecode.com/files/protobuf-2.5.0.zip} \\
-         Set environmental variable PROTOBUF\_ROOT to the root protocol buffers library.
+         Set environmental variable PROTOBUF\_ROOT to the root of protocol buffers library.
 \begin{verbatim}
 setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
+\end{verbatim}
+   \item Download and install \href{http://zeromq.org/distro:microsoft-windows}{ZeroMQ 4.0.3 x86} \\
+         \url{http://miru.hk/archive/ZeroMQ-4.0.3~miru1.0-x86.exe} \\
+         Set environmental variable ZEROMQ32\_ROOT to ZeroMQ include folder
+\begin{verbatim}
+setx ZEROMQ32_ROOT "C:\\Program Files (x86)\\ZeroMQ 4.0.3"
 \end{verbatim}
     \item Install Visual Studio 2010 + SP1, or Visual Studio 2012. \\
     {\bf Note: if you use VS2010, you must install Service Pack 1.}
@@ -332,9 +338,9 @@ setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
 Note: if you got a weird linker error (``error LNK1104: cannot open file 'libprotobuf.lib''')
       in Visual Studio 2010, try this from cmd.exe:
 \begin{verbatim}
-    setx $(VisualStudioVersion) 10.0
+    setx VisualStudioVersion 10.0
 \end{verbatim}
-(and then close and reopen Visual Studio, and try clean build).
+(then close and reopen Visual Studio and try a clean build).
 
 \subsection{Linux}
 

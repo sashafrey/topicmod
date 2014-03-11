@@ -25,12 +25,13 @@
 #if !defined(_WIN32) && !defined(_WIN64)
 #include <pthread.h>
 #endif
-#include "process.h"
 #include <sstream>
 #include <stddef.h>
 #include <string>
 #if !defined(_WIN32) && !defined(_WIN64)
 #include <unistd.h>
+#else
+#include "process.h"
 #endif
 #include <utility>
 #include <vector>
@@ -55,7 +56,11 @@ typedef uint64 event_id;
 class event_id_generator {
  public:
   event_id_generator() {
+#if !defined(_WIN32) && !defined(_WIN64)
+    state_ = (reinterpret_cast<uint64>(this) << 32) + getpid();
+#else
     state_ = (reinterpret_cast<uint64>(this) << 32) + _getpid();
+#endif
   }
 
   event_id get_next() {

@@ -14,7 +14,7 @@ GTEST_DIR = ../../gtest
 # Defines the compiler
 CXX = g++
 
-CPPFLAGS += -I..
+CPPFLAGS += -I.. -I../rpcz/include -I../rpcz/src
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -26,7 +26,6 @@ CXXFLAGS += -g -Wall -pthread -fPIC -std=c++11
 
 # Improved debugging capabilities
 # CXXFLAGS += -O0 -fno-inline
-
 # Directory where to put our library
 USR_LIB_DIR = ../../libs
 
@@ -64,7 +63,7 @@ SRCS_TEST     = boost_thread_test.cc \
 		instance_manager_test.cc \
 		instance_test.cc \
 		memcached_service_test.cc \
-		thread_safe_holder_test.cpp
+		thread_safe_holder_test.cc
 
 OBJS_TEST     = $(SRCS_TEST:.cc=.o)
 DEPS_TEST     = $(SRCS_TEST:.cc=.depends)
@@ -113,7 +112,7 @@ install:
 	cp libartm.so $(INSTALL_DIR)
 
 $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -L$(USR_LIB_DIR) -lartm -lprotobuf $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -L$(USR_LIB_DIR) -lartm -lprotobuf -lrpcz $(LDFLAGS)
 
 .cc.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@

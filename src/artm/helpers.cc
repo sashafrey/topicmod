@@ -25,7 +25,7 @@ namespace core {
 
 // How to: Set a Thread Name in Native Code:
 // http://msdn.microsoft.com/en-us/library/xcb2z8hs.aspx
-void SetThreadName(int thread_id, char* thread_name) {
+void Helpers::SetThreadName(int thread_id, const char* thread_name) {
   THREADNAME_INFO info;
   info.dwType = 0x1000;
   info.szName = thread_name;
@@ -41,7 +41,7 @@ void SetThreadName(int thread_id, char* thread_name) {
 
 #else
 
-void SetThreadName(int thread_id, char* thread_name) {
+void Helpers::SetThreadName(int thread_id, const char* thread_name) {
   // Currently not implemented for Linux.
 }
 

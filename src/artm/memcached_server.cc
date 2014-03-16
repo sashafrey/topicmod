@@ -20,7 +20,7 @@ MemcachedServer::MemcachedServer(int id, const std::string& endpoint)
 }
 
 void MemcachedServer::ThreadFunction() {
-  SetThreadName(-1, "Memcached thread");
+  Helpers::SetThreadName(-1, "Memcached thread");
   rpcz::application application;
   rpcz::server server(application);
   ::artm::memcached::MemcachedServiceImpl memcached_service_impl;

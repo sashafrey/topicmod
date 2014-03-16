@@ -65,7 +65,7 @@ Merger::GetLatestTopicModel(int model_id) const {
 
 void Merger::ThreadFunction() {
   try {
-    SetThreadName(-1, "Merger thread");
+    Helpers::SetThreadName(-1, "Merger thread");
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
@@ -187,11 +187,7 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     }
 
     artm::memcached::UpdateKeyResult update_key_result;
-    try {
     memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(...) {
-      __debugbreak();
-    }
 
     if (update_key_result.error_code() != artm::memcached::kSuccess) {
       BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));

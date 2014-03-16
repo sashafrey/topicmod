@@ -32,8 +32,8 @@ class MemcachedServer : boost::noncopyable {
   // All instances of MemcachedServiceInstance should be created via MemcachedServiceManager
   MemcachedServer(int id, const std::string& endpoint);
 
-  std::string endpoint_;
   int id_;
+  std::string endpoint_;
 
   // Keep all threads at the end of class members
   // (because the order of class members defines initialization order;

@@ -254,7 +254,7 @@ const Item* Processor::StreamIterator::Current() const {
 
 void Processor::ThreadFunction() {
   try {
-    SetThreadName(-1, "Processor thread");
+    Helpers::SetThreadName(-1, "Processor thread");
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,

@@ -6,9 +6,12 @@
 namespace artm {
 namespace core {
 
-// Usage: SetThreadName (-1, "MainThread");
-// (thread_id == -1 stands for the current thread)
-void SetThreadName(int thread_id, char* thread_name);
+class Helpers {
+ public:
+  // Usage: SetThreadName (-1, "MainThread");
+  // (thread_id == -1 stands for the current thread)
+  static void SetThreadName(int thread_id, const char* thread_name);
+};
 
 }  // namespace core
 }  // namespace artm

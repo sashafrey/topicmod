@@ -128,7 +128,7 @@ void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
 
 void DataLoader::ThreadFunction() {
   try {
-    SetThreadName(-1, "DataLoader thread");
+    Helpers::SetThreadName(-1, "DataLoader thread");
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,

@@ -1,5 +1,5 @@
 all: helpers.cc srcmain.cc
-	g++ -g -std=c++11 -o cpp_client helpers.cc srcmain.cc -I. -I../ -lprotobuf -L../../libs -lartm
+	g++ -g -std=c++11 -o cpp_client helpers.cc srcmain.cc -I. -I../ -L../../libs -lartm -lrpcz -lprotobuf
 
 clean:
 	rm cpp_client
@@ -12,4 +12,7 @@ nips:
 
 debug:
 	gdb --args ./cpp_client ../../datasets/docword.kos.txt ../../datasets/vocab.kos.txt 16
+
+valgrind:
+	valgrind ./cpp_client ../../datasets/docword.kos.txt ../../datasets/vocab.kos.txt 16
 

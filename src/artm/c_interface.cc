@@ -9,6 +9,9 @@
 #include "artm/instance.h"
 #include "artm/exceptions.h"
 #include "artm/data_loader.h"
+#include "artm/memcached_server.h"
+
+#include "rpcz/rpc.hpp"
 
 std::string message;
 
@@ -18,7 +21,11 @@ inline char* StringAsArray(std::string* str) {
 
 // ToDo(alfrey) log exception to file.
 #define CATCH_EXCEPTIONS                                    \
-catch (const artm::core::UnsupportedReconfiguration&) {     \
+catch (const rpcz::rpc_error&) {                            \
+  return ARTM_NETWORK_ERROR;                                \
+} catch (const artm::core::NetworkException&) {             \
+  return ARTM_NETWORK_ERROR;                                \
+} catch (const artm::core::UnsupportedReconfiguration&) {   \
   return ARTM_UNSUPPORTED_RECONFIGURATION;                  \
 } catch (const std::runtime_error&) {                       \
   return ARTM_GENERAL_ERROR;                                \
@@ -35,6 +42,22 @@ int ArtmConfigureLogger(int length, const char* logger_config) {
 int ArtmCopyRequestResult(int request_id, int length, char* address) {
   memcpy(address, StringAsArray(&message), length);
   return ARTM_SUCCESS;
+}
+
+// ===============================================================================================
+// Memcached service - host
+// ===============================================================================================
+DLL_PUBLIC int ArtmCreateMemcachedServer(const char* endpoint) {
+  try {
+    return artm::core::MemcachedServerManager::singleton().Create(std::string(endpoint));
+  } CATCH_EXCEPTIONS;
+}
+
+DLL_PUBLIC int ArtmDisposeMemcachedServer(int memcached_server_id) {
+  try {
+    artm::core::MemcachedServerManager::singleton().Erase(memcached_server_id);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }
 
 // =========================================================================

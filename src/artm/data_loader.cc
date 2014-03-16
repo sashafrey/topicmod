@@ -9,6 +9,7 @@
 
 #include "artm/exceptions.h"
 #include "artm/protobuf_helpers.h"
+#include "artm/helpers.h"
 
 namespace artm {
 namespace core {
@@ -127,6 +128,7 @@ void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
 
 void DataLoader::ThreadFunction() {
   try {
+    SetThreadName(-1, "DataLoader thread");
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,

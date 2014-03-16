@@ -23,6 +23,7 @@ extern "C" {
     ARTM_OBJECT_NOT_FOUND = -2,
     ARTM_INVALID_MESSAGE = -3,
     ARTM_UNSUPPORTED_RECONFIGURATION = -4,
+    ARTM_NETWORK_ERROR = -5,
   };
 
   // ===============================================================================================
@@ -30,6 +31,12 @@ extern "C" {
   // ===============================================================================================
   DLL_PUBLIC int ArtmConfigureLogger(int length, const char* logger_config);
   DLL_PUBLIC int ArtmCopyRequestResult(int request_id, int length, char* address);
+
+  // ===============================================================================================
+  // Memcached service - host
+  // ===============================================================================================
+  DLL_PUBLIC int ArtmCreateMemcachedServer(const char* endpoint);
+  DLL_PUBLIC int ArtmDisposeMemcachedServer(int memcached_server_id);
 
   // ===============================================================================================
   // Data loader interface

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <Import Project="$(SolutionDir)\Artm.targets" />  
+  <Import Project="$(SolutionDir)\Artm.targets" />
   <PropertyGroup Label="Globals">
     <ProjectGuid>{615DE847-3EEA-4D7D-A4F5-A336733EE213}</ProjectGuid>
   </PropertyGroup>
@@ -16,6 +16,7 @@
     <ClCompile Include="cpp_interface_unittest.cc" />
     <ClCompile Include="instance_manager_test.cc" />
     <ClCompile Include="instance_test.cc" />
+    <ClCompile Include="memcached_service_test.cc" />
     <ClCompile Include="thread_safe_holder_test.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -30,10 +31,10 @@
   <ItemDefinitionGroup>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>artm.lib;libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(LIBZEROMQ);artm.lib;rpcz.lib;libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-  </ItemDefinitionGroup>  
-  <Import Project="$(SolutionDir)\targets\Artm.CopyDependencies.props" />  
+  </ItemDefinitionGroup>
+  <Import Project="$(SolutionDir)\targets\Artm.CopyDependencies.props" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>

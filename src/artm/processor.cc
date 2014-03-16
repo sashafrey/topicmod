@@ -8,6 +8,7 @@
 
 #include "artm/protobuf_helpers.h"
 #include "artm/call_on_destruction.h"
+#include "artm/helpers.h"
 
 namespace artm {
 namespace core {
@@ -253,6 +254,7 @@ const Item* Processor::StreamIterator::Current() const {
 
 void Processor::ThreadFunction() {
   try {
+    SetThreadName(-1, "Processor thread");
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,

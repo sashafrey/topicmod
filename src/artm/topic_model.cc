@@ -77,15 +77,35 @@ void TopicModel::IncreaseItemsProcessed(int value) {
   items_processed_ += value;
 }
 
+void TopicModel::SetItemsProcessed(int value) {
+  items_processed_ = value;
+}
+
 void TopicModel::IncreaseScores(int score_index, double value, double norm) {
   assert(score_index < static_cast<int>(scores_.size()));
   scores_[score_index] += value;
   scores_norm_[score_index] += norm;
 }
 
-double TopicModel::score(int iScore) const {
+void TopicModel::SetScores(int score_index, double value, double norm) {
+  assert(score_index < static_cast<int>(scores_.size()));
+  scores_[score_index] = value;
+  scores_norm_[score_index] = norm;
+}
+
+double TopicModel::score(int score_index) const {
   // The only supported type so far is perplexity.
-  return exp(- scores_[iScore] / scores_norm_[iScore]);
+  return exp(- scores_[score_index] / scores_norm_[score_index]);
+}
+
+double TopicModel::score_not_normalized(int score_index) const {
+  if (score_index >= score_size()) return 0.0f;
+  return scores_[score_index];
+}
+
+double TopicModel::score_normalizer(int score_index) const {
+  if (score_index >= score_size()) return 0.0f;
+  return scores_norm_[score_index];
 }
 
 void TopicModel::IncreaseTokenWeight(const std::string& token, int topic_id, float value) {
@@ -100,6 +120,21 @@ void TopicModel::IncreaseTokenWeight(const std::string& token, int topic_id, flo
 void TopicModel::IncreaseTokenWeight(int token_id, int topic_id, float value) {
   data_[token_id][topic_id] += value;
   normalizer_[topic_id] += value;
+}
+
+void TopicModel::SetTokenWeight(const std::string& token, int topic_id, float value) {
+  if (!has_token(token)) {
+    // TODO(alfrey) Log a warning.
+    return;
+  }
+
+  SetTokenWeight(token_id(token), topic_id, value);
+}
+
+void TopicModel::SetTokenWeight(int token_id, int topic_id, float value) {
+  // Adjust normalizer. (!) Don't switch these lines (1) and (2).
+  normalizer_[topic_id] += (value - data_[token_id][topic_id]);  // (1)
+  data_[token_id][topic_id] = value;  // (2)
 }
 
 int TopicModel::token_size() const {

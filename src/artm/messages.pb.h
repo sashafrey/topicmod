@@ -748,17 +748,32 @@ class InstanceConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 processors_count() const;
   inline void set_processors_count(::google::protobuf::int32 value);
 
+  // optional string memcached_endpoint = 2;
+  inline bool has_memcached_endpoint() const;
+  inline void clear_memcached_endpoint();
+  static const int kMemcachedEndpointFieldNumber = 2;
+  inline const ::std::string& memcached_endpoint() const;
+  inline void set_memcached_endpoint(const ::std::string& value);
+  inline void set_memcached_endpoint(const char* value);
+  inline void set_memcached_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_memcached_endpoint();
+  inline ::std::string* release_memcached_endpoint();
+  inline void set_allocated_memcached_endpoint(::std::string* memcached_endpoint);
+
   // @@protoc_insertion_point(class_scope:artm.InstanceConfig)
  private:
   inline void set_has_processors_count();
   inline void clear_has_processors_count();
+  inline void set_has_memcached_endpoint();
+  inline void clear_has_memcached_endpoint();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* memcached_endpoint_;
   ::google::protobuf::int32 processors_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2155,6 +2170,76 @@ inline ::google::protobuf::int32 InstanceConfig::processors_count() const {
 inline void InstanceConfig::set_processors_count(::google::protobuf::int32 value) {
   set_has_processors_count();
   processors_count_ = value;
+}
+
+// optional string memcached_endpoint = 2;
+inline bool InstanceConfig::has_memcached_endpoint() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void InstanceConfig::set_has_memcached_endpoint() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void InstanceConfig::clear_has_memcached_endpoint() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void InstanceConfig::clear_memcached_endpoint() {
+  if (memcached_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    memcached_endpoint_->clear();
+  }
+  clear_has_memcached_endpoint();
+}
+inline const ::std::string& InstanceConfig::memcached_endpoint() const {
+  return *memcached_endpoint_;
+}
+inline void InstanceConfig::set_memcached_endpoint(const ::std::string& value) {
+  set_has_memcached_endpoint();
+  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    memcached_endpoint_ = new ::std::string;
+  }
+  memcached_endpoint_->assign(value);
+}
+inline void InstanceConfig::set_memcached_endpoint(const char* value) {
+  set_has_memcached_endpoint();
+  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    memcached_endpoint_ = new ::std::string;
+  }
+  memcached_endpoint_->assign(value);
+}
+inline void InstanceConfig::set_memcached_endpoint(const char* value, size_t size) {
+  set_has_memcached_endpoint();
+  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    memcached_endpoint_ = new ::std::string;
+  }
+  memcached_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* InstanceConfig::mutable_memcached_endpoint() {
+  set_has_memcached_endpoint();
+  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    memcached_endpoint_ = new ::std::string;
+  }
+  return memcached_endpoint_;
+}
+inline ::std::string* InstanceConfig::release_memcached_endpoint() {
+  clear_has_memcached_endpoint();
+  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = memcached_endpoint_;
+    memcached_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void InstanceConfig::set_allocated_memcached_endpoint(::std::string* memcached_endpoint) {
+  if (memcached_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete memcached_endpoint_;
+  }
+  if (memcached_endpoint) {
+    set_has_memcached_endpoint();
+    memcached_endpoint_ = memcached_endpoint;
+  } else {
+    clear_has_memcached_endpoint();
+    memcached_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

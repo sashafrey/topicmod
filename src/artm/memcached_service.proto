@@ -1,0 +1,44 @@
+package artm.memcached;
+
+enum ErrorCode {
+  kSuccess = 0;
+  kKeyNotFound = 1;
+  kKeyGroupNotFound = 2;
+  kInvalidArgument = 3;
+}
+
+message UpdateKeyArgs {
+  required string key_group = 1;
+  required string key = 2;
+  repeated float value = 3 [packed = true]; 
+}
+
+message UpdateKeyResult {
+  required ErrorCode error_code = 1;
+  repeated float value = 2 [packed = true];
+}
+
+message RetrieveKeyArgs {
+  required string key_group = 1;
+  required string key = 2;
+}
+
+message RetrieveKeyResult {
+  required ErrorCode error_code = 1;
+  repeated float value = 2 [packed = true];
+}
+
+message RetrieveGroupArgs {
+  required string key_group = 1;
+}
+
+message RetrieveGroupResult {
+  required ErrorCode error_code = 1;
+  repeated string key = 2;
+}
+
+service MemcachedService {
+  rpc UpdateKey(UpdateKeyArgs) returns (UpdateKeyResult);
+  rpc RetrieveKey(RetrieveKeyArgs) returns (RetrieveKeyResult);
+  rpc RetrieveGroup(RetrieveGroupArgs) returns (RetrieveGroupResult);
+}

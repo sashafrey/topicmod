@@ -24,7 +24,7 @@ uint64 zclock_time(void) {
     boost::posix_time::ptime time = boost::posix_time::microsec_clock::local_time();
     boost::posix_time::time_duration duration( time.time_of_day() );
     uint64 retval = duration.total_milliseconds();
-		return retval;
+    return retval;
 }
 
 }  // namespace rpcz

@@ -41,9 +41,14 @@ SRCS_LIB      = cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
 		generation.cc \
+		helpers.cc \
 		instance.cc \
 		instance_schema.cc \
 		internals.pb.cc \
+		memcached_server.cc \
+		memcached_service.pb.cc \
+		memcached_service.rpcz.cc \
+		memcached_service_impl.cc \
 		merger.cc \
 		messages.pb.cc \
 		processor.cc \
@@ -54,10 +59,12 @@ DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
 
 # Second target - executable (unittests)
 TARGET_TEST   = unittests
-SRCS_TEST     = cpp_interface_unittest.cc \
-		instance_test.cc \
+SRCS_TEST     = boost_thread_test.cc \
+		cpp_interface_unittest.cc \
 		instance_manager_test.cc \
-		boost_thread_test.cc \
+		instance_test.cc \
+		memcached_service_test.cc \
+		thread_safe_holder_test.cpp
 
 OBJS_TEST     = $(SRCS_TEST:.cc=.o)
 DEPS_TEST     = $(SRCS_TEST:.cc=.depends)

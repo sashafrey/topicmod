@@ -100,13 +100,13 @@ const char kWorkerDone = 0x22;   // Sent just before the worker quits.
 struct remote_response_wrapper {
   int64 deadline_ms;
   uint64 start_time;
-  connection_manager::client_request_callback callback;
+  connection_manager::client_request_callback* callback;
 };
 
 void connection::send_request(
     message_vector& request,
     int64 deadline_ms,
-    connection_manager::client_request_callback callback) {
+    connection_manager::client_request_callback* callback) {
   remote_response_wrapper wrapper;
   wrapper.start_time = zclock_time();
   wrapper.deadline_ms = deadline_ms;
@@ -150,25 +150,25 @@ void worker_thread(connection_manager* connection_manager,
         interpret_message<closure*>(iter.next())->run();
         break;
       case krunserver_function: {
-        connection_manager::server_function sf =
-            interpret_message<connection_manager::server_function>(iter.next());
+        connection_manager::server_function* sf =
+            interpret_message<connection_manager::server_function*>(iter.next());
         uint64 socket_id = interpret_message<uint64>(iter.next());
         std::string sender(message_to_string(iter.next()));
         if (iter.next().size() != 0) {
           break;
         }
         std::string event_id(message_to_string(iter.next()));
-        sf(client_connection(connection_manager, socket_id, sender, event_id),
+        (*sf)(client_connection(connection_manager, socket_id, sender, event_id),
            iter);
         }
         break;
       case kInvokeclient_request_callback: {
-        connection_manager::client_request_callback cb =
-            interpret_message<connection_manager::client_request_callback>(
+        connection_manager::client_request_callback* cb =
+            interpret_message<connection_manager::client_request_callback*>(
                 iter.next());
         connection_manager::status status = connection_manager::status(
             interpret_message<uint64>(iter.next()));
-        cb(status, iter);
+        (*cb)(status, iter);
       }
     }
   }
@@ -237,8 +237,8 @@ class connection_manager_thread {
         break;
       case kBind: {
         std::string endpoint(message_to_string(iter.next()));
-        connection_manager::server_function sf(
-            interpret_message<connection_manager::server_function>(
+        connection_manager::server_function* sf(
+            interpret_message<connection_manager::server_function*>(
                 iter.next()));
         handle_bind_command(sender, endpoint, sf);
         break;
@@ -300,7 +300,7 @@ class connection_manager_thread {
   inline void handle_bind_command(
       const std::string& sender,
       const std::string& endpoint,
-      connection_manager::server_function server_function) {
+      connection_manager::server_function* server_function) {
     zmq::socket_t* socket = new zmq::socket_t(*context_, ZMQ_ROUTER);
     int linger_ms = 0;
     socket->setsockopt(ZMQ_LINGER, &linger_ms, sizeof(linger_ms));
@@ -317,7 +317,7 @@ class connection_manager_thread {
   }
 
   void handle_server_socket(uint64 socket_id,
-                          connection_manager::server_function server_function) {
+                          connection_manager::server_function* server_function) {
     message_iterator iter(*server_sockets_[socket_id]);
     begin_worker_command(krunserver_function);
     send_object(frontend_socket_, server_function, ZMQ_SNDMORE);
@@ -356,7 +356,7 @@ class connection_manager_thread {
     if (response_iter == remote_response_map_.end()) {
       return;
     }
-    connection_manager::client_request_callback& callback = response_iter->second;
+    connection_manager::client_request_callback* callback = response_iter->second;
     begin_worker_command(kInvokeclient_request_callback);
     send_object(frontend_socket_, callback, ZMQ_SNDMORE);
     send_uint64(frontend_socket_, connection_manager::DONE, ZMQ_SNDMORE);
@@ -369,7 +369,7 @@ class connection_manager_thread {
     if (response_iter == remote_response_map_.end()) {
       return;
     }
-    connection_manager::client_request_callback& callback = response_iter->second;
+    connection_manager::client_request_callback* callback = response_iter->second;
     begin_worker_command(kInvokeclient_request_callback);
     send_object(frontend_socket_, callback, ZMQ_SNDMORE);
     send_uint64(frontend_socket_, connection_manager::DEADLINE_EXCEEDED, 0);
@@ -383,7 +383,7 @@ class connection_manager_thread {
   }
 
  private:
-  typedef std::map<event_id, connection_manager::client_request_callback>
+  typedef std::map<event_id, connection_manager::client_request_callback*>
       remote_response_map;
   typedef std::map<uint64, event_id> deadline_map;
   connection_manager* connection_manager_;
@@ -443,7 +443,7 @@ connection connection_manager::connect(const std::string& endpoint) {
 }
 
 void connection_manager::bind(const std::string& endpoint,
-                             server_function function) {
+                             server_function* function) {
   zmq::socket_t& socket = get_frontend_socket();
   send_empty_message(&socket, ZMQ_SNDMORE);
   send_char(&socket, kBind, ZMQ_SNDMORE);

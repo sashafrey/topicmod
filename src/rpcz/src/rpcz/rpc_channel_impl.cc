@@ -84,12 +84,14 @@ void rpc_channel_impl::call_method_full(
   response_context.response_str = response_str;
   response_context.response_msg = response_msg;
   rpc_->set_status(status::ACTIVE);
+  rpc_->set_callback(boost::bind(
+    &rpc_channel_impl::handle_client_response,
+    this, response_context, _1, _2));
 
   connection_.send_request(
       msg_vector,
       rpc_->get_deadline_ms(),
-      bind(&rpc_channel_impl::handle_client_response, this,
-           response_context, _1, _2));
+      &rpc_->get_callback());
 }
 
 void rpc_channel_impl::call_method0(const std::string& service_name,

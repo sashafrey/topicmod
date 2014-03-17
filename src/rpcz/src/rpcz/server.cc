@@ -167,9 +167,9 @@ void server::register_service(rpcz::rpc_service *rpc_service,
 }
 
 void server::bind(const std::string& endpoint) {
-  connection_manager::server_function f = boost::bind(
+  server_function_ = boost::bind(
       &server::handle_request, this, _1, _2);
-  connection_manager_.bind(endpoint, f);
+  connection_manager_.bind(endpoint, &server_function_);
 }
 
 void server::handle_request(const client_connection& connection,

@@ -22,6 +22,7 @@
 
 #include "rpcz/macros.hpp"
 #include "rpcz/rpcz.pb.h"
+#include "rpcz/connection_manager.hpp"
 
 namespace rpcz {
 
@@ -80,6 +81,14 @@ class rpc {
 
   void set_failed(int application_error_code, const std::string& message);
 
+  inline void set_callback(const connection_manager::client_request_callback& callback) {
+    callback_ = callback;
+  }
+
+  inline connection_manager::client_request_callback& get_callback() {
+    return callback_;
+  }
+
   int wait();
 
   std::string to_string() const;
@@ -92,6 +101,7 @@ class rpc {
   int application_error_code_;
   int64 deadline_ms_;
   scoped_ptr<sync_event> sync_event_;
+  connection_manager::client_request_callback callback_;
 
   friend class rpc_channel_impl;
   friend class server_channel_impl;

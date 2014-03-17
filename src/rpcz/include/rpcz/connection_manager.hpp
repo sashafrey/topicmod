@@ -89,7 +89,7 @@ class connection_manager {
   // handler for requests to this socket. The function gets executed on one of
   // the worker threads. When the function returns, the endpoint is already
   // bound.
-  virtual void bind(const std::string& endpoint, server_function function);
+  virtual void bind(const std::string& endpoint, server_function* function);
 
   // Executes the closure on one of the worker threads.
   virtual void add(closure* closure);
@@ -138,7 +138,7 @@ class connection {
   void send_request(
       message_vector& request,
       int64 deadline_ms,
-      connection_manager::client_request_callback callback);
+      connection_manager::client_request_callback* callback);
 
  private:
   connection(connection_manager *manager, uint64 connection_id) :

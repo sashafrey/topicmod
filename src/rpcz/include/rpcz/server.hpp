@@ -19,6 +19,7 @@
 
 #include "rpcz/macros.hpp"
 #include "rpcz/rpcz.pb.h"
+#include "rpcz/connection_manager.hpp"
 
 namespace zmq {
 class socket_t;
@@ -67,6 +68,7 @@ class server {
   connection_manager& connection_manager_;
   typedef std::map<std::string, rpcz::rpc_service*> rpc_service_map;
   rpc_service_map service_map_;
+  connection_manager::server_function server_function_;
   DISALLOW_COPY_AND_ASSIGN(server);
 };
 

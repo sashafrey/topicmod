@@ -11,6 +11,8 @@
 #include "artm/exceptions.h"
 #include "artm/helpers.h"
 
+#include "rpcz/rpc.hpp"
+
 using ::artm::memcached::MemcachedService_Stub;
 
 namespace artm {
@@ -148,6 +150,8 @@ void Merger::ThreadFunction() {
   }
   catch(boost::thread_interrupted&) {
     return;
+  } catch(...) {
+    return;
   }
 }
 
@@ -187,10 +191,17 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     }
 
     artm::memcached::UpdateKeyResult update_key_result;
-    memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
+    try {
+      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
+    } catch(const rpcz::rpc_error& err) {
+      // todo(alfrey): log an error and continue
+      continue;
+    }
 
     if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
+      // BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
+      // todo(alfrey): log an error and continue
+      continue;
     }
 
     if (update_key_result.value_size() != topic_size) {
@@ -217,10 +228,17 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
       new_ttm->score_normalizer(score_index) - old_ttm.score_normalizer(score_index));
 
     artm::memcached::UpdateKeyResult update_key_result;
+    try {
     memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
+    } catch(const rpcz::rpc_error& err) {
+      // todo(alfrey): log an error and continue
+      continue;
+    }
 
     if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
+      // BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
+      // todo(alfrey): log an error and continue
+      continue;
     }
 
     new_ttm->SetScores(score_index, update_key_result.value(0), update_key_result.value(1));
@@ -235,10 +253,17 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     update_key_args.add_value(new_ttm->items_processed() - old_ttm.items_processed());
 
     artm::memcached::UpdateKeyResult update_key_result;
-    memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
+    try {
+      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
+    } catch(const rpcz::rpc_error& err) {
+      // todo(alfrey): log an error and continue
+      return;
+    }
 
     if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
+      // BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
+      // todo(alfrey): log an error and continue
+      return;
     }
 
     new_ttm->SetItemsProcessed(update_key_result.value(0));

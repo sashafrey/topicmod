@@ -133,47 +133,51 @@ void client_connection::reply(message_vector* v) {
 
 void worker_thread(connection_manager* connection_manager,
                   zmq::context_t* context, std::string endpoint) {
-  zmq::socket_t socket(*context, ZMQ_DEALER);
-  socket.connect(endpoint.c_str());
-  send_empty_message(&socket, ZMQ_SNDMORE);
-  send_char(&socket, kReady);
-  bool should_quit = false;
-  while (!should_quit) {
-    message_iterator iter(socket);
-    CHECK_EQ(0, iter.next().size());
-    char command(interpret_message<char>(iter.next()));
-    switch (command) {
-      case kWorkerQuit:
-        should_quit = true;
-        break;
-      case krunclosure:
-        interpret_message<closure*>(iter.next())->run();
-        break;
-      case krunserver_function: {
-        connection_manager::server_function sf =
-            interpret_message<connection_manager::server_function>(iter.next());
-        uint64 socket_id = interpret_message<uint64>(iter.next());
-        std::string sender(message_to_string(iter.next()));
-        if (iter.next().size() != 0) {
+  try {
+    zmq::socket_t socket(*context, ZMQ_DEALER);
+    socket.connect(endpoint.c_str());
+    send_empty_message(&socket, ZMQ_SNDMORE);
+    send_char(&socket, kReady);
+    bool should_quit = false;
+    while (!should_quit) {
+      message_iterator iter(socket);
+      CHECK_EQ(0, iter.next().size());
+      char command(interpret_message<char>(iter.next()));
+      switch (command) {
+        case kWorkerQuit:
+          should_quit = true;
           break;
+        case krunclosure:
+          interpret_message<closure*>(iter.next())->run();
+          break;
+        case krunserver_function: {
+          connection_manager::server_function sf =
+              interpret_message<connection_manager::server_function>(iter.next());
+          uint64 socket_id = interpret_message<uint64>(iter.next());
+          std::string sender(message_to_string(iter.next()));
+          if (iter.next().size() != 0) {
+            break;
+          }
+          std::string event_id(message_to_string(iter.next()));
+          sf(client_connection(connection_manager, socket_id, sender, event_id),
+             iter);
+          }
+          break;
+        case kInvokeclient_request_callback: {
+          connection_manager::client_request_callback cb =
+              interpret_message<connection_manager::client_request_callback>(
+                  iter.next());
+          connection_manager::status status = connection_manager::status(
+              interpret_message<uint64>(iter.next()));
+          cb(status, iter);
         }
-        std::string event_id(message_to_string(iter.next()));
-        sf(client_connection(connection_manager, socket_id, sender, event_id),
-           iter);
-        }
-        break;
-      case kInvokeclient_request_callback: {
-        connection_manager::client_request_callback cb =
-            interpret_message<connection_manager::client_request_callback>(
-                iter.next());
-        connection_manager::status status = connection_manager::status(
-            interpret_message<uint64>(iter.next()));
-        cb(status, iter);
       }
     }
+    send_empty_message(&socket, ZMQ_SNDMORE);
+    send_char(&socket, kWorkerDone);
+  } catch(...) {
+    return;
   }
-  send_empty_message(&socket, ZMQ_SNDMORE);
-  send_char(&socket, kWorkerDone);
 }
 
 class connection_manager_thread {
@@ -215,7 +219,11 @@ class connection_manager_thread {
     connection_manager_thread cmt(context, nthreads,
                                 ready_event,
                                 connection_manager, frontend_socket);
-    cmt.reactor_.loop();
+    try {
+      cmt.reactor_.loop();
+    } catch(...) {
+      return;
+    }
   }
 
   void handle_frontend_socket(zmq::socket_t* frontend_socket) {

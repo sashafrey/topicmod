@@ -20,13 +20,17 @@ MemcachedServer::MemcachedServer(int id, const std::string& endpoint)
 }
 
 void MemcachedServer::ThreadFunction() {
-  Helpers::SetThreadName(-1, "Memcached thread");
-  rpcz::application application;
-  rpcz::server server(application);
-  ::artm::memcached::MemcachedServiceImpl memcached_service_impl;
-  server.register_service(&memcached_service_impl);
-  server.bind(endpoint());
-  application.run();
+  try {
+    Helpers::SetThreadName(-1, "Memcached thread");
+    rpcz::application application;
+    rpcz::server server(application);
+    ::artm::memcached::MemcachedServiceImpl memcached_service_impl;
+    server.register_service(&memcached_service_impl);
+    server.bind(endpoint());
+    application.run();
+  } catch(...) {
+    return;
+  }
 }
 
 }  // namespace core

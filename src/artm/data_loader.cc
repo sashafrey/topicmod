@@ -202,6 +202,9 @@ void DataLoader::ThreadFunction() {
   catch(boost::thread_interrupted&) {
     return;
   }
+  catch(...) {
+    return;
+  }
 }
 
 }  // namespace core

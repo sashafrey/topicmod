@@ -404,6 +404,8 @@ void Processor::ThreadFunction() {
   }
   catch(boost::thread_interrupted&) {
     return;
+  } catch(...) {
+    return;
   }
 }
 

@@ -1,5 +1,7 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
+#include <glog/logging.h>
+
 #include <artm/topic_model.h>
 
 #include <assert.h>
@@ -110,7 +112,7 @@ double TopicModel::score_normalizer(int score_index) const {
 
 void TopicModel::IncreaseTokenWeight(const std::string& token, int topic_id, float value) {
   if (!has_token(token)) {
-    // TODO(alfrey) Log a warning.
+    LOG(ERROR) << "Token '" << token << "' not found in the model";
     return;
   }
 
@@ -124,7 +126,7 @@ void TopicModel::IncreaseTokenWeight(int token_id, int topic_id, float value) {
 
 void TopicModel::SetTokenWeight(const std::string& token, int topic_id, float value) {
   if (!has_token(token)) {
-    // TODO(alfrey) Log a warning.
+    LOG(ERROR) << "Token '" << token << "' not found in the model";
     return;
   }
 

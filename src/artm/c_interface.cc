@@ -19,15 +19,21 @@ inline char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
 }
 
-// ToDo(alfrey) log exception to file.
 #define CATCH_EXCEPTIONS                                    \
-catch (const rpcz::rpc_error&) {                            \
+catch (const rpcz::rpc_error& e) {                          \
+  LOG(ERROR) << "rpc_error: " << e.what();                  \
   return ARTM_NETWORK_ERROR;                                \
-} catch (const artm::core::NetworkException&) {             \
+} catch (const artm::core::NetworkException& e) {           \
+  LOG(ERROR) << "NetworkException: " << e.what();           \
   return ARTM_NETWORK_ERROR;                                \
-} catch (const artm::core::UnsupportedReconfiguration&) {   \
+} catch (const artm::core::UnsupportedReconfiguration& e) { \
+  LOG(ERROR) << "UnsupportedReconfiguration: " << e.what(); \
   return ARTM_UNSUPPORTED_RECONFIGURATION;                  \
-} catch (const std::runtime_error&) {                       \
+} catch (const std::runtime_error& e) {                     \
+  LOG(ERROR) << "runtime_error: " << e.what();              \
+  return ARTM_GENERAL_ERROR;                                \
+} catch (...) {                                             \
+  LOG(ERROR) << "unknown error.";                           \
   return ARTM_GENERAL_ERROR;                                \
 }
 

@@ -12,6 +12,7 @@ using namespace std;
 
 #include "artm/cpp_interface.h"
 #include "artm/messages.pb.h"
+#include "glog/logging.h"
 
 using namespace artm;
 
@@ -165,6 +166,10 @@ int main(int argc, char * argv[]) {
     cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
     return 0;
   }
+
+  FLAGS_log_dir = ".";
+  FLAGS_logbufsecs = 0;
+  ::google::InitGoogleLogging(argv[0]);
 
   int instance_size = 4;
   int processors_size = 1;

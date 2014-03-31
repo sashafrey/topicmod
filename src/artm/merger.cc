@@ -6,6 +6,8 @@
 
 #include "boost/lexical_cast.hpp"
 
+#include "glog/logging.h"
+
 #include "artm/call_on_destruction.h"
 #include "artm/data_loader.h"
 #include "artm/exceptions.h"
@@ -68,6 +70,7 @@ Merger::GetLatestTopicModel(int model_id) const {
 void Merger::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "Merger thread");
+    LOG(INFO) << "Merger thread started";
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
@@ -149,9 +152,11 @@ void Merger::ThreadFunction() {
     }
   }
   catch(boost::thread_interrupted&) {
+    LOG(WARNING) << "thread_interrupted exception in Merger::ThreadFunction() function";
     return;
   } catch(...) {
-    return;
+    LOG(FATAL) << "Fatal exception in Merger::ThreadFunction() function";
+    throw;
   }
 }
 
@@ -194,18 +199,17 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     try {
       memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
     } catch(const rpcz::rpc_error& err) {
-      // todo(alfrey): log an error and continue
+      LOG(ERROR) << "Merger failed to send updates to memcached service.";
       continue;
     }
 
     if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      // BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
-      // todo(alfrey): log an error and continue
+      LOG(ERROR) << "Merger failed to send updates to memcached service.";
       continue;
     }
 
     if (update_key_result.value_size() != topic_size) {
-      // todo(alfrey) log an error and continue;
+      LOG(ERROR) << "Merger failed to send updates to memcached service.";
       continue;
     }
 
@@ -231,13 +235,12 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     try {
     memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
     } catch(const rpcz::rpc_error& err) {
-      // todo(alfrey): log an error and continue
+      LOG(ERROR) << "Merger failed to send updates to memcached service.";
       continue;
     }
 
     if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      // BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
-      // todo(alfrey): log an error and continue
+      LOG(ERROR) << "Merger failed to send updates to memcached service.";
       continue;
     }
 
@@ -256,13 +259,12 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     try {
       memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
     } catch(const rpcz::rpc_error& err) {
-      // todo(alfrey): log an error and continue
+      LOG(ERROR) << "Merger failed to send updates to memcached service.";
       return;
     }
 
     if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      // BOOST_THROW_EXCEPTION(NetworkException("Unable to synchronize with memcached service"));
-      // todo(alfrey): log an error and continue
+      LOG(ERROR) << "Merger failed to send updates to memcached service.";
       return;
     }
 

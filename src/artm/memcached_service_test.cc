@@ -14,7 +14,44 @@
 #include "rpcz/application.hpp"
 
 // To run this particular test:
-// artm_tests.exe --gtest_filter=MemcachedService.*
+// artm_tests.exe --gtest_filter=MemcachedService.StartStop
+TEST(MemcachedService, StartStop) {
+  int server_id = artm::core::MemcachedServerManager::singleton().Create("tcp://*:5555");
+  artm::core::MemcachedServerManager::singleton().Erase(server_id);
+}
+
+TEST(MemcachedService, StartConnectAndStop) {
+  int server_id = artm::core::MemcachedServerManager::singleton().Create("tcp://*:5555");
+
+  rpcz::application app(rpcz::application::options(1));
+  artm::memcached::MemcachedService_Stub proxy(
+    app.create_rpc_channel("tcp://localhost:5555"), true);
+
+  artm::core::MemcachedServerManager::singleton().Erase(server_id);
+}
+
+TEST(MemcachedService, StartConnectInvokeAndStop) {
+  LOG(INFO) << "Start server";
+  int server_id = artm::core::MemcachedServerManager::singleton().Create("tcp://*:5555");
+
+  LOG(INFO) << "Connect client";
+  rpcz::application app(rpcz::application::options(1));
+  artm::memcached::MemcachedService_Stub proxy(
+    app.create_rpc_channel("tcp://localhost:5555"), true);
+
+  artm::memcached::UpdateKeyArgs update_key_args;
+  artm::memcached::UpdateKeyResult update_key_result;
+  update_key_args.set_key("the_key");
+  update_key_args.set_key_group("the_key_group");
+  update_key_args.add_value(10.0);
+
+  LOG(INFO) << "Send request";
+  proxy.UpdateKey(update_key_args, &update_key_result);
+
+  LOG(INFO) << "Stop server";
+  artm::core::MemcachedServerManager::singleton().Erase(server_id);
+}
+
 TEST(MemcachedService, Basic) {
   // Start memcached server
   int server_id = artm::core::MemcachedServerManager::singleton().Create("tcp://*:5555");

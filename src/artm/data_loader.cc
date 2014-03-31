@@ -7,6 +7,8 @@
 #include "boost/lexical_cast.hpp"
 #include "boost/uuid/uuid_io.hpp"
 
+#include "glog/logging.h"
+
 #include "artm/exceptions.h"
 #include "artm/protobuf_helpers.h"
 #include "artm/helpers.h"
@@ -98,7 +100,8 @@ bool DataLoader::BatchManager::IsEverythingProcessed() const {
 
 void DataLoader::InvokeIteration(int iterations_count) {
   if (iterations_count <= 0) {
-    // ToDo(alfrey) Log a warning
+    LOG(WARNING) << "DataLoader::InvokeIteration() was called with argument '"
+                 << iterations_count << "'. Call is ignored.";
     return;
   }
 
@@ -129,6 +132,7 @@ void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
 void DataLoader::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "DataLoader thread");
+    LOG(INFO) << "DataLoader thread started";
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
@@ -200,10 +204,12 @@ void DataLoader::ThreadFunction() {
     }
   }
   catch(boost::thread_interrupted&) {
+    LOG(WARNING) << "thread_interrupted exception in DataLoader::ThreadFunction() function";
     return;
   }
   catch(...) {
-    return;
+    LOG(FATAL) << "Fatal exception in DataLoader::ThreadFunction() function";
+    throw;
   }
 }
 

@@ -18,6 +18,7 @@
 #define RPCZ_APPLICATION_H
 
 #include <string>
+#include "rpcz/logging.hpp"
 #include "rpcz/macros.hpp"
 
 namespace zmq {
@@ -38,6 +39,10 @@ class application {
     options() : connection_manager_threads(10),
                 zeromq_context(NULL),
                 zeromq_io_threads(1) {}
+    options(int connection_manager_threads_size)
+        : connection_manager_threads(connection_manager_threads_size),
+          zeromq_context(NULL),
+          zeromq_io_threads(1) {}
 
     // Number of connection manager threads. Those threads are used for
     // running user code: handling server requests or running callbacks.
@@ -77,6 +82,7 @@ class application {
   bool owns_context_;
   zmq::context_t* context_;
   scoped_ptr<connection_manager> connection_manager_;
+  LogModule log_module_;
   friend class server;
 };
 }  // namespace rpcz

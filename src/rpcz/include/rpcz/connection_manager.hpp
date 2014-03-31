@@ -20,6 +20,7 @@
 #include <string>
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
+#include "rpcz/logging.hpp"
 #include "rpcz/macros.hpp"
 #include "rpcz/sync_event.hpp"
 
@@ -100,6 +101,8 @@ class connection_manager {
   // Releases all the threads that are blocked inside run()
   virtual void terminate();
 
+  const std::string& log_module() { return log_module_(); }
+
  private:
   zmq::context_t* context_;
 
@@ -110,6 +113,7 @@ class connection_manager {
   boost::thread_specific_ptr<zmq::socket_t> socket_;
   std::string frontend_endpoint_;
   sync_event is_termating_;
+  LogModule log_module_;
 
   DISALLOW_COPY_AND_ASSIGN(connection_manager);
   friend class connection;

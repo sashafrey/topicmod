@@ -34,6 +34,7 @@ class MemcachedServer : boost::noncopyable {
 
   int id_;
   std::string endpoint_;
+  rpcz::application application_;
 
   // Keep all threads at the end of class members
   // (because the order of class members defines initialization order;

@@ -9,8 +9,6 @@
 #include "artm/template_manager.h"
 #include "artm/topic_model.h"
 
-#include <iostream>
-
 namespace artm {
 namespace core {
 

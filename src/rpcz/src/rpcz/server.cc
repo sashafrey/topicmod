@@ -22,7 +22,6 @@
 #include <sys/signal.h>
 #endif
 #include <functional>
-#include <iostream>
 #include <utility>
 
 #include <boost/bind.hpp>

@@ -190,16 +190,16 @@ Due to caching in CPU it is important to have topics as a minor dimension in bot
     ARTM_INVALID_MESSAGE = -3,
     ARTM_UNSUPPORTED_RECONFIGURATION = -4,
   };
-\end{verbatim}  
+\end{verbatim}
 You are free to add more error types when needed.
 The reason for negative values is due to some API methods
 returning the actual result; for example, this method returns an ID of newly created object.
 \begin{verbatim}
-int ArtmCreateDataLoader(int data_loader_id, int length, 
+int ArtmCreateDataLoader(int data_loader_id, int length,
                          const char* config);
 \end{verbatim}
 
-\textbf{In artm::core} you should use C++ exceptions 
+\textbf{In artm::core} you should use C++ exceptions
 or simple true/false return values instead of error codes.
 Please, follow guidelines in /artm/core/exceptions.h.
 Some highlights:
@@ -338,13 +338,18 @@ Note: if you got a weird linker error (``error LNK1104: cannot open file 'libpro
 
 Note: to use python in project you need to do the following steps:
 \begin{enumerate}
-	\item install python 2.7
+	\item install python 2.7.
+
+    {\bf Important:} on Windows you MUST use
+    \href{https://www.python.org/ftp/python/2.7.6/python-2.7.6.msi}{Python x86},
+    which is a 32bit version of Python. The 64bit Python is incompatible with artm\_dll.dll
+    (which only compiles in 32 bits for now).
 	\item download and add to MSVS Python Tools 2.0 (all necessary instructions can be found here: \\
 	\url{https://pytools.codeplex.com/}) \\
-	\item add python folder to PATH. To do so open: \\
+	\item add python folder to PATH. To do so open:
 \begin{verbatim}
     Control Panel\All Control Panel Items\System
-\end{verbatim}	
+\end{verbatim}
 	then \verb'Advanced system settings', \verb'Environment variables'.
 	\item follow the instructions in README file in directory \verb'python' in your protobuf folder.
 \end{enumerate}
@@ -357,6 +362,8 @@ Note: to use python in project you need to do the following steps:
     \item Install boost (it is preferable to use version 1.55 or newer; \hbox{libboost-all-dev} is package name in Debian-based OS).
     \item Install protobuf (it is necessary to use version 2.5.0 or newer; \hbox{libprotobuf-dev} is package name in Debian-based OS). You can get it from ppa: \hbox{ppa:chris-lea/protobuf}
     \item Use Makefiles under /src/artm/ and /src/cpp\_client/.
+    \item Python interface hasn't been used from Linux yet. Please, contribute to this documentation if you
+    found some solution to this.
 \end{enumerate}
 
 \section{How to submit my change to master branch?}

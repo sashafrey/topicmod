@@ -64,14 +64,17 @@ instance_config_new.processors_count = 1
 #################################################################################
 # TEST SECTION
 
-instance = Instance(instance_config)
+address = os.path.abspath(os.path.join(os.curdir, os.pardir))
+library = ArtmLibrary(address + '\\Win32\\Debug\\artm_dll.dll')
+
+instance = library.CreateInstance(instance_config)
 instance.Reconfigure(instance_config_new)
-model = Model(instance, model_config)
+model = library.CreateModel(instance, model_config)
 instance.GetTopics(model)
 model.Reconfigure(model_config_new)
 model.Disable()
 model.Enable()
-data_loader = DataLoader(instance, data_loader_config)
+data_loader = library.CreateDataLoader(instance, data_loader_config)
 data_loader.AddBatch(batch)
 data_loader.Reconfigure(data_loader_config_new)
 data_loader.InvokeIteration(10)

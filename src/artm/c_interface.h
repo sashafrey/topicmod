@@ -30,6 +30,7 @@ extern "C" {
   // ===============================================================================================
   DLL_PUBLIC int ArtmConfigureLogger(int length, const char* logger_config);
   DLL_PUBLIC int ArtmCopyRequestResult(int request_id, int length, char* address);
+  DLL_PUBLIC int ArtmGetRequestLength(int request_id);
 
   // ===============================================================================================
   // Data loader interface
@@ -50,8 +51,8 @@ extern "C" {
   DLL_PUBLIC int ArtmReconfigureModel(int instance_id, int model_id, int length,
                                       const char* config);
   DLL_PUBLIC int ArtmRequestBatchTopics(int instance_id, int model_id, int batch_length,
-                                        const char* batch_blob, int *length, const char** result);
-  DLL_PUBLIC int ArtmRequestModelTopics(int instance_id, int model_id, int *length, char **address);
+                                        const char* batch_blob);
+  DLL_PUBLIC int ArtmRequestModelTopics(int instance_id, int model_id);
 
   DLL_PUBLIC void ArtmDisposeInstance(int instance_id);
   DLL_PUBLIC void ArtmDisposeModel(int instance_id, int model_id);

@@ -263,6 +263,19 @@ setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
 \end{verbatim}
 (закройте и переоткройте Visual Studio, очистите решение и соберите заново).
 
+Заметка: для использования python в проекте нужно ввыполнить следующие действия:
+\begin{enumerate}
+	\item установить python 2.7
+	\item загрузить и добавить в MSVS плагин Python Tools 2.0 (все необходимые инструкции можно найти здесь: \\
+	\url{https://pytools.codeplex.com/}) \\
+	\item добавьте папку с python в PATH. Чтобы сделать это, откройте: \\
+\begin{verbatim}
+    Control Panel\All Control Panel Items\System
+\end{verbatim}	
+	затем \verb'Advanced system settings', \verb'Environment variables'.
+	\item выполните описанное в README файле в директории \verb'python' в вашей папке с protobuf.
+\end{enumerate}
+
 \subsubsection{Linux}
 
 \begin{enumerate}

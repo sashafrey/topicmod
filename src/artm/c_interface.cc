@@ -37,6 +37,10 @@ int ArtmCopyRequestResult(int request_id, int length, char* address) {
   return ARTM_SUCCESS;
 }
 
+int ArtmGetRequestLength(int request_id) {
+  return message.size();
+}
+
 // =========================================================================
 // Data loader interface
 // =========================================================================
@@ -175,13 +179,13 @@ int ArtmReconfigureModel(int instance_id, int model_id, int length, const char* 
 }
 
 int ArtmRequestBatchTopics(int instance_id, int model_id, int batch_length,
-                           const char* batch_blob, int *length, const char** result) {
+                           const char* batch_blob) {
   try {
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmRequestModelTopics(int instance_id, int model_id, int *length, char **address) {
+int ArtmRequestModelTopics(int instance_id, int model_id) {
   try {
     artm::ModelTopics model_topics;
     auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
@@ -189,8 +193,6 @@ int ArtmRequestModelTopics(int instance_id, int model_id, int *length, char **ad
 
     instance->RequestModelTopics(model_id, &model_topics);
     model_topics.SerializeToString(&message);
-    *length = message.size();
-    *address = StringAsArray(&message);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }

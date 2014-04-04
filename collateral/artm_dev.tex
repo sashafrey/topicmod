@@ -336,6 +336,19 @@ Note: if you got a weird linker error (``error LNK1104: cannot open file 'libpro
 \end{verbatim}
 (and then close and reopen Visual Studio, and try clean build).
 
+Note: to use python in project you need to do the following steps:
+\begin{enumerate}
+	\item install python 2.7
+	\item download and add to MSVS Python Tools 2.0 (all necessary instructions can be found here: \\
+	\url{https://pytools.codeplex.com/}) \\
+	\item add python folder to PATH. To do so open: \\
+\begin{verbatim}
+    Control Panel\All Control Panel Items\System
+\end{verbatim}	
+	then \verb'Advanced system settings', \verb'Environment variables'.
+	\item follow the instructions in README file in directory \verb'python' in your protobuf folder.
+\end{enumerate}
+
 \subsection{Linux}
 
 \begin{enumerate}

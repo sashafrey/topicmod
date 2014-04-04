@@ -50,11 +50,10 @@ void Instance::Reconfigure(const InstanceConfig& config) {
 
 std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
   // Request model topics
-  int length;
-  char* address;
   int request_id = HandleErrorCode(ArtmRequestModelTopics(
-    id(), model.model_id(), &length, &address));
+    id(), model.model_id()));
 
+  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
   std::string model_topics_blob;
   model_topics_blob.resize(length);
   HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&model_topics_blob)));

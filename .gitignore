@@ -36,6 +36,12 @@ collateral/artm_dev.pdf
 collateral/artm_dev.toc
 collateral/artm_dev.synctex.gz
 
+src/Intermediate/*
+src/Win32/*
+
+*.log.INFO.*
+*.log.WARNING.*
+*.log.ERROR.*
 
 # Binaries
 /src/artm/unittests

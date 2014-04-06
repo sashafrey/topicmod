@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp_client", "cpp_client\cpp_client.vcxproj", "{6D1B2081-22AE-45C9-9507-9B41FEF0FBFE}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artm", "artm\artm.vcxproj", "{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F18D2FB0-7884-49E6-A3D3-F7804BAC305C} = {F18D2FB0-7884-49E6-A3D3-F7804BAC305C}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artm_dll", "artm\artm_dll.vcxproj", "{94B610AD-18C4-4C67-AE30-A4FA360F3150}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -11,6 +14,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artm_dll", "artm\artm_dll.v
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artm_tests", "artm\artm_tests.vcxproj", "{615DE847-3EEA-4D7D-A4F5-A336733EE213}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4288A4B1-B51E-4621-AD44-9F2CBA7351BE} = {4288A4B1-B51E-4621-AD44-9F2CBA7351BE}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rpcz", "rpcz\vsprojects\rpcz.vcxproj", "{F18D2FB0-7884-49E6-A3D3-F7804BAC305C}"
 EndProject

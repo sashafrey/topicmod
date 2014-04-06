@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <Import Project="$(SolutionDir)\Artm.targets" />
   <PropertyGroup Label="Globals">
     <ProjectGuid>{f18d2fb0-7884-49e6-a3d3-f7804bac305c}</ProjectGuid>
   </PropertyGroup>
@@ -9,6 +8,8 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <Import Project="$(SolutionDir)\Artm.targets" />
   <ItemGroup>
     <ClInclude Include="..\include\rpcz\application.hpp" />
     <ClInclude Include="..\include\rpcz\callback.hpp" />
@@ -38,12 +39,11 @@
     <ClCompile Include="..\src\rpcz\server.cc" />
     <ClCompile Include="..\src\rpcz\sync_event.cc" />
     <ClCompile Include="..\src\rpcz\zmq_utils.cc" />
-    <ClCompile Include="..\src\rpcz\zsendrpc.cc" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>libprotobuf.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(LIBZEROMQ);libprotobuf.lib;libglog.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup Label="ProjectConfigurations">
@@ -56,6 +56,5 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

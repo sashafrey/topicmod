@@ -35,6 +35,12 @@ collateral/artm_dev.log
 collateral/artm_dev.pdf
 collateral/artm_dev.toc
 collateral/artm_dev.synctex.gz
+collateral/artm_dev.bbl
+collateral/artm_dev.blg
+collateral/artm_dev.dvi
+collateral/artm_dev.out
+collateral/artm_dev.ps
+collateral/artm_dev.synctex
 
 src/Intermediate/*
 src/Win32/*

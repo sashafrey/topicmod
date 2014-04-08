@@ -1,7 +1,0 @@
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(SolutionDir)targets\Artm.FolderStructure.props" />
-  <Import Project="$(SolutionDir)targets\Artm.VisualStudioVersion.props" />
-  <Import Project="$(SolutionDir)targets\Artm.DebugAndRelease.props" />
-  <Import Project="$(SolutionDir)targets\Artm.CompilerAndLinker.props" />
-  <Import Project="$(SolutionDir)targets\Artm.Libs.props" />
-</Project>

@@ -198,7 +198,7 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     artm::memcached::UpdateKeyResult update_key_result;
     try {
       memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error& err) {
+    } catch(const rpcz::rpc_error&) {
       LOG(ERROR) << "Merger failed to send updates to memcached service.";
       continue;
     }
@@ -226,15 +226,15 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     // ToDo(alfrey): score_guid
     update_key_args.set_key(kPrefixScore + boost::lexical_cast<std::string>(score_index));
 
-    update_key_args.add_value(
-      new_ttm->score_not_normalized(score_index) - old_ttm.score_not_normalized(score_index));
-    update_key_args.add_value(
-      new_ttm->score_normalizer(score_index) - old_ttm.score_normalizer(score_index));
+    update_key_args.add_value(static_cast<float>(
+        new_ttm->score_not_normalized(score_index) - old_ttm.score_not_normalized(score_index)));
+    update_key_args.add_value(static_cast<float>(
+      new_ttm->score_normalizer(score_index) - old_ttm.score_normalizer(score_index)));
 
     artm::memcached::UpdateKeyResult update_key_result;
     try {
-    memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error& err) {
+      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
+    } catch(const rpcz::rpc_error&) {
       LOG(ERROR) << "Merger failed to send updates to memcached service.";
       continue;
     }
@@ -253,12 +253,13 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
     update_key_args.set_key_group(key_group);
     update_key_args.set_key(kPrefixItemsProcessed);
 
-    update_key_args.add_value(new_ttm->items_processed() - old_ttm.items_processed());
+    update_key_args.add_value(static_cast<float>(
+      new_ttm->items_processed() - old_ttm.items_processed()));
 
     artm::memcached::UpdateKeyResult update_key_result;
     try {
       memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error& err) {
+    } catch(const rpcz::rpc_error&) {
       LOG(ERROR) << "Merger failed to send updates to memcached service.";
       return;
     }
@@ -268,7 +269,7 @@ void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
       return;
     }
 
-    new_ttm->SetItemsProcessed(update_key_result.value(0));
+    new_ttm->SetItemsProcessed(static_cast<int>(update_key_result.value(0)));
   }
 }
 

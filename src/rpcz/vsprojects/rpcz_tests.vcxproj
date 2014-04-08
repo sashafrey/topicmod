@@ -25,6 +25,9 @@
     <ClInclude Include="..\test\proto\search.rpcz.h" />
   </ItemGroup>
   <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalOptions>" -D_CRT_SECURE_NO_WARNINGS" %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>$(LIBZEROMQ);libprotobuf.lib;rpcz.lib;libglog.lib;%(AdditionalDependencies)</AdditionalDependencies>

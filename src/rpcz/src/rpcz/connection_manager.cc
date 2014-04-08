@@ -46,6 +46,12 @@
 #include "rpcz/reactor.hpp"
 #include "rpcz/zmq_utils.hpp"
 
+#ifdef _MSC_VER
+#pragma warning( disable : 4018 )  // 'expression' : signed/unsigned mismatch
+#pragma warning( disable : 4244 )  // 'argument' : conversion from 'T1' to 'T2'
+#pragma warning( disable : 4355 )  // 'this' : used in base member initializer list
+#endif
+
 namespace rpcz {
 namespace {
 const uint64 kLargePrime = (1ULL << 63) - 165;
@@ -110,6 +116,8 @@ std::string describe_command(char command) {
     case kReady: return "kReady";
     case kWorkerDone: return "kWorkerDone";
   }
+
+  return "kUnknown";
 }
 
 }  // unnamed namespace

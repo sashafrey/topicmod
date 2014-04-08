@@ -23,6 +23,10 @@
 #include "rpcz/macros.hpp"
 #include "zmq.hpp"
 
+#ifdef _MSC_VER
+#pragma warning( disable : 4244 )  // 'argument' : conversion from 'T1' to 'T2'
+#endif
+
 namespace rpcz {
 namespace {
 static bool g_interrupted = false;

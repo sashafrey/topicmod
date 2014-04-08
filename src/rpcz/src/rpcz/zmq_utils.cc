@@ -29,6 +29,10 @@
 #include "rpcz/logging.hpp"
 #include "rpcz/macros.hpp"
 
+#ifdef _MSC_VER
+#pragma warning( disable : 4018 )  // 'expression' : signed/unsigned mismatch
+#endif
+
 namespace rpcz {
 std::string message_to_string(zmq::message_t& msg) {
   return std::string((char*)msg.data(), msg.size());

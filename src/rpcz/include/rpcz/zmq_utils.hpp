@@ -22,6 +22,11 @@
 #include "zmq.hpp"
 #include "rpcz/macros.hpp"
 
+#ifdef _MSC_VER
+#pragma warning( push )
+#pragma warning( disable : 4800 )  // 'type' : forcing value to bool 'true' or 'false'
+#endif
+
 namespace zmq {
 class socket_t;
 class message_t;
@@ -171,4 +176,9 @@ inline void forward_messages(message_iterator& iter, zmq::socket_t& socket) {
   }
 }
 }  // namespace rpcz
+
+#ifdef _MSC_VER
+#pragma warning( pop )
+#endif
+
 #endif

@@ -23,6 +23,10 @@
 #include "rpcz/rpc_channel.hpp"
 #include "rpcz/server.hpp"
 
+#ifdef _MSC_VER
+#pragma warning( disable : 4355 )  // 'this' : used in base member initializer list
+#endif
+
 namespace rpcz {
 
 application::application() : log_module_("application", this) {

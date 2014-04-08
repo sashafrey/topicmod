@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Globals">
@@ -8,10 +8,13 @@
     <ConfigurationType>Application</ConfigurationType>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <Import Project="$(SolutionDir)\Artm.targets" />
+  <PropertyGroup>
+    <RepositoryRoot>$(SolutionDir)..</RepositoryRoot>
+  </PropertyGroup>
+  <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)..\gtest\src\gtest-all.cc" />
-    <ClCompile Include="$(SolutionDir)..\gtest\src\gtest_main.cc" />
+    <ClCompile Include="$(RepositoryRoot)\3rdparty\gtest\src\gtest-all.cc" />
+    <ClCompile Include="$(RepositoryRoot)\3rdparty\gtest\src\gtest_main.cc" />
     <ClCompile Include="boost_thread_test.cc" />
     <ClCompile Include="cpp_interface.cc" />
     <ClCompile Include="cpp_interface_unittest.cc" />
@@ -21,21 +24,15 @@
     <ClCompile Include="thread_safe_holder_test.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(SolutionDir)..\gtest\include\gtest\gtest.h" />
     <ClInclude Include="cpp_interface.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="artm_dll.vcxproj">
-      <Project>{94b610ad-18c4-4c67-ae30-a4fa360f3150}</Project>
-    </ProjectReference>
   </ItemGroup>
   <ItemDefinitionGroup>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>$(LIBZEROMQ);artm.lib;rpcz.lib;libprotobuf.lib;libglog.lib;;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(LIBZEROMQ);libartm.lib;librpcz.lib;libprotobuf.lib;libglog.lib;;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <Import Project="$(SolutionDir)\targets\Artm.CopyDependencies.props" />
+  <Import Project="$(RepositoryRoot)\utils\targets\Artm.CopyDependencies.props" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -45,6 +42,11 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="artm.vcxproj">
+      <Project>{94b610ad-18c4-4c67-ae30-a4fa360f3150}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

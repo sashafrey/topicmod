@@ -1,14 +1,17 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6D1B2081-22AE-45C9-9507-9B41FEF0FBFE}</ProjectGuid>
-  </PropertyGroup>  
+  </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-  </PropertyGroup>  
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
-  <Import Project="$(SolutionDir)\Artm.targets" />
+  <PropertyGroup>
+    <RepositoryRoot>$(SolutionDir)..</RepositoryRoot>
+  </PropertyGroup>
+  <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
   <ItemGroup>
     <ClCompile Include="$(SolutionDir)artm\cpp_interface.cc" />
     <ClCompile Include="$(SolutionDir)artm\messages.pb.cc" />
@@ -30,12 +33,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>libprotobuf.lib;libglog.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-  </ItemDefinitionGroup>  
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)artm\artm_dll.vcxproj">
-      <Project>{94b610ad-18c4-4c67-ae30-a4fa360f3150}</Project>
-    </ProjectReference>
-  </ItemGroup>
+  </ItemDefinitionGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -45,6 +43,11 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-  </ItemGroup>  
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\artm\artm.vcxproj">
+      <Project>{94b610ad-18c4-4c67-ae30-a4fa360f3150}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{94B610AD-18C4-4C67-AE30-A4FA360F3150}</ProjectGuid>
+    <ProjectGuid>{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}</ProjectGuid>
     <ProjectName>artm</ProjectName>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">

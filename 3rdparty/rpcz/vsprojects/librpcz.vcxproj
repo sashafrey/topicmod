@@ -50,11 +50,6 @@
       <AdditionalDependencies>$(LIBZEROMQ);libprotobuf.lib;libglog.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup>
-    <PostBuildEvent>
-      <Command>copy $(OutDir)\librpcz.lib $(RepositoryRoot)\libs\$(PlatformToolset)\$(Platform)\$(Configuration)\</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>

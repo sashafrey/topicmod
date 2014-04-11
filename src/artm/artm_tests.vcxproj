@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="artm.vcxproj">
-      <Project>{94b610ad-18c4-4c67-ae30-a4fa360f3150}</Project>
+      <Project>{4288a4b1-b51e-4621-ad44-9f2cba7351be}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

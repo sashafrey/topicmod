@@ -21,6 +21,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
   </PropertyGroup>
+  <Import Project="..\..\..\utils\targets\Artm.VisualStudioVersion.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -139,12 +140,6 @@
     <ClCompile Include="..\src\google\protobuf\compiler\java\java_service.cc" />
     <ClCompile Include="..\src\google\protobuf\compiler\java\java_string_field.cc" />
     <ClCompile Include="..\src\google\protobuf\compiler\python\python_generator.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="libprotobuf.vcxproj">
-      <Project>{3e283f37-a4ed-41b7-a3e6-a2d89d131a30}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

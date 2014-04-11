@@ -50,5 +50,16 @@ src/Win32/*
 *.log.ERROR.*
 
 # Binaries
-/src/artm/unittests
+/src/artm/unittests/
 /src/cpp_client/cpp_client
+
+/3rdparty/protobuf/vsprojects/Debug/*
+/3rdparty/protobuf/vsprojects/Release/*
+/3rdparty/glog/Debug/*
+/3rdparty/glog/Release/*
+/3rdparty/glog/vsprojects/libglog/Debug/*
+/3rdparty/glog/vsprojects/libglog/Release/*
+/3rdparty/glog/vsprojects/libglog_static/Debug/*
+/3rdparty/glog/vsprojects/libglog_static/Release/*
+/3rdparty/rpcz/vsprojects/Intermediate/*
+/3rdparty/rpcz/vsprojects/Win32/*

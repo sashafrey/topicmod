@@ -827,7 +827,7 @@ public final class Messages {
    *
    * <pre>
    * Items consist of multiple fields.
-   * The idea behind fields is that each item might have its 
+   * The idea behind fields is that each item might have its
    * title, author, body, abstract, actual text, links, year of publication, etc.
    * Each of this entities should be represented as a Field.
    * The Model should define how those fields should be taken into account
@@ -1209,7 +1209,7 @@ public final class Messages {
      *
      * <pre>
      * Items consist of multiple fields.
-     * The idea behind fields is that each item might have its 
+     * The idea behind fields is that each item might have its
      * title, author, body, abstract, actual text, links, year of publication, etc.
      * Each of this entities should be represented as a Field.
      * The Model should define how those fields should be taken into account
@@ -3535,7 +3535,7 @@ public final class Messages {
    * Protobuf type {@code artm.Stream}
    *
    * <pre>
-   * Defines a stream in DataLoader
+   * Defines a stream in DataLoader.
    * </pre>
    */
   public static final class Stream extends
@@ -4006,7 +4006,7 @@ public final class Messages {
      * Protobuf type {@code artm.Stream}
      *
      * <pre>
-     * Defines a stream in DataLoader
+     * Defines a stream in DataLoader.
      * </pre>
      */
     public static final class Builder extends
@@ -4397,6 +4397,21 @@ public final class Messages {
      * <code>optional int32 processors_count = 1 [default = 1];</code>
      */
     int getProcessorsCount();
+
+    // optional string memcached_endpoint = 2;
+    /**
+     * <code>optional string memcached_endpoint = 2;</code>
+     */
+    boolean hasMemcachedEndpoint();
+    /**
+     * <code>optional string memcached_endpoint = 2;</code>
+     */
+    java.lang.String getMemcachedEndpoint();
+    /**
+     * <code>optional string memcached_endpoint = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getMemcachedEndpointBytes();
   }
   /**
    * Protobuf type {@code artm.InstanceConfig}
@@ -4458,6 +4473,11 @@ public final class Messages {
               processorsCount_ = input.readInt32();
               break;
             }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              memcachedEndpoint_ = input.readBytes();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -4514,8 +4534,52 @@ public final class Messages {
       return processorsCount_;
     }
 
+    // optional string memcached_endpoint = 2;
+    public static final int MEMCACHED_ENDPOINT_FIELD_NUMBER = 2;
+    private java.lang.Object memcachedEndpoint_;
+    /**
+     * <code>optional string memcached_endpoint = 2;</code>
+     */
+    public boolean hasMemcachedEndpoint() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string memcached_endpoint = 2;</code>
+     */
+    public java.lang.String getMemcachedEndpoint() {
+      java.lang.Object ref = memcachedEndpoint_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          memcachedEndpoint_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string memcached_endpoint = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getMemcachedEndpointBytes() {
+      java.lang.Object ref = memcachedEndpoint_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        memcachedEndpoint_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       processorsCount_ = 1;
+      memcachedEndpoint_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -4532,6 +4596,9 @@ public final class Messages {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeInt32(1, processorsCount_);
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getMemcachedEndpointBytes());
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -4544,6 +4611,10 @@ public final class Messages {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(1, processorsCount_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getMemcachedEndpointBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -4667,6 +4738,8 @@ public final class Messages {
         super.clear();
         processorsCount_ = 1;
         bitField0_ = (bitField0_ & ~0x00000001);
+        memcachedEndpoint_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -4699,6 +4772,10 @@ public final class Messages {
           to_bitField0_ |= 0x00000001;
         }
         result.processorsCount_ = processorsCount_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.memcachedEndpoint_ = memcachedEndpoint_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -4717,6 +4794,11 @@ public final class Messages {
         if (other == artm.Messages.InstanceConfig.getDefaultInstance()) return this;
         if (other.hasProcessorsCount()) {
           setProcessorsCount(other.getProcessorsCount());
+        }
+        if (other.hasMemcachedEndpoint()) {
+          bitField0_ |= 0x00000002;
+          memcachedEndpoint_ = other.memcachedEndpoint_;
+          onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -4774,6 +4856,80 @@ public final class Messages {
       public Builder clearProcessorsCount() {
         bitField0_ = (bitField0_ & ~0x00000001);
         processorsCount_ = 1;
+        onChanged();
+        return this;
+      }
+
+      // optional string memcached_endpoint = 2;
+      private java.lang.Object memcachedEndpoint_ = "";
+      /**
+       * <code>optional string memcached_endpoint = 2;</code>
+       */
+      public boolean hasMemcachedEndpoint() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string memcached_endpoint = 2;</code>
+       */
+      public java.lang.String getMemcachedEndpoint() {
+        java.lang.Object ref = memcachedEndpoint_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          memcachedEndpoint_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string memcached_endpoint = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMemcachedEndpointBytes() {
+        java.lang.Object ref = memcachedEndpoint_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          memcachedEndpoint_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string memcached_endpoint = 2;</code>
+       */
+      public Builder setMemcachedEndpoint(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        memcachedEndpoint_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string memcached_endpoint = 2;</code>
+       */
+      public Builder clearMemcachedEndpoint() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        memcachedEndpoint_ = getDefaultInstance().getMemcachedEndpoint();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string memcached_endpoint = 2;</code>
+       */
+      public Builder setMemcachedEndpointBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        memcachedEndpoint_ = value;
         onChanged();
         return this;
       }
@@ -10675,28 +10831,28 @@ public final class Messages {
       "l\022\025\n\004name\030\002 \001(\t:\007@global\022\017\n\007modulus\030\003 \001(",
       "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000" +
       "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003" +
-      "\"-\n\016InstanceConfig\022\033\n\020processors_count\030\001" +
-      " \001(\005:\0011\"\371\001\n\013ModelConfig\022\030\n\014topics_count\030" +
-      "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn" +
-      "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n" +
-      "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@" +
-      "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013re" +
-      "use_theta\030\010 \001(\010:\005false\022#\n\024cache_token_co" +
-      "unters\030\t \001(\010:\005false\"x\n\005Score\022\036\n\004type\030\001 \002",
-      "(\0162\020.artm.Score.Type\022\031\n\nfield_name\030\002 \001(\t" +
-      ":\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@global\"\026\n" +
-      "\004Type\022\016\n\nPerplexity\020\000\"\231\001\n\014LoggerConfig\022\024" +
-      "\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.ar" +
-      "tm.LoggerConfig.Level:\004INFO\"D\n\005Level\022\014\n\010" +
-      "DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004IN" +
-      "FO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013ModelTopics\022&\n\013toke" +
-      "n_topic\030\001 \003(\0132\021.artm.TokenTopics\022\027\n\017item" +
-      "s_processed\030\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013Toke" +
-      "nTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005",
-      "\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItemTopics\022\n\n\002" +
-      "id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"4\n\013BatchT" +
-      "opics\022%\n\013item_topics\030\001 \003(\0132\020.artm.ItemTo" +
-      "pics"
+      "\"I\n\016InstanceConfig\022\033\n\020processors_count\030\001" +
+      " \001(\005:\0011\022\032\n\022memcached_endpoint\030\002 \001(\t\"\371\001\n\013" +
+      "ModelConfig\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n" +
+      "\007enabled\030\003 \001(\010:\005false\022\"\n\026inner_iteration" +
+      "s_count\030\004 \001(\005:\00210\022\031\n\nfield_name\030\005 \001(\t:\005@" +
+      "body\022\034\n\013stream_name\030\006 \001(\t:\007@global\022\032\n\005sc" +
+      "ore\030\007 \003(\0132\013.artm.Score\022\032\n\013reuse_theta\030\010 " +
+      "\001(\010:\005false\022#\n\024cache_token_counters\030\t \001(\010",
+      ":\005false\"x\n\005Score\022\036\n\004type\030\001 \002(\0162\020.artm.Sc" +
+      "ore.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body\022\034\n\013s" +
+      "tream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n\nPer" +
+      "plexity\020\000\"\231\001\n\014LoggerConfig\022\024\n\014log_locati" +
+      "on\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerCon" +
+      "fig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t" +
+      "\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERB" +
+      "OSE\020\004\"]\n\013ModelTopics\022&\n\013token_topic\030\001 \003(" +
+      "\0132\021.artm.TokenTopics\022\027\n\017items_processed\030" +
+      "\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013TokenTopics\022\r\n\005t",
+      "oken\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_we" +
+      "ight\030\003 \003(\002\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014" +
+      "topic_weight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013ite" +
+      "m_topics\030\001 \003(\0132\020.artm.ItemTopics"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -10738,7 +10894,7 @@ public final class Messages {
           internal_static_artm_InstanceConfig_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_artm_InstanceConfig_descriptor,
-              new java.lang.String[] { "ProcessorsCount", });
+              new java.lang.String[] { "ProcessorsCount", "MemcachedEndpoint", });
           internal_static_artm_ModelConfig_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_artm_ModelConfig_fieldAccessorTable = new

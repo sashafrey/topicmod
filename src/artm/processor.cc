@@ -6,8 +6,11 @@
 #include <string>
 #include <vector>
 
+#include "glog/logging.h"
+
 #include "artm/protobuf_helpers.h"
 #include "artm/call_on_destruction.h"
+#include "artm/helpers.h"
 
 namespace artm {
 namespace core {
@@ -253,6 +256,8 @@ const Item* Processor::StreamIterator::Current() const {
 
 void Processor::ThreadFunction() {
   try {
+    Helpers::SetThreadName(-1, "Processor thread");
+    LOG(INFO) << "Processor thread started";
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
@@ -401,7 +406,11 @@ void Processor::ThreadFunction() {
     }
   }
   catch(boost::thread_interrupted&) {
+    LOG(WARNING) << "thread_interrupted exception in Processor::ThreadFunction() function";
     return;
+  } catch(...) {
+    LOG(FATAL) << "Fatal exception in Processor::ThreadFunction() function";
+    throw;
   }
 }
 

@@ -14,7 +14,7 @@ GTEST_DIR = ../../gtest
 # Defines the compiler
 CXX = g++
 
-CPPFLAGS += -I..
+CPPFLAGS += -I.. -I../rpcz/include -I../rpcz/src
 
 # Flags passed to the preprocessor.
 # Set Google Test's header directory as a system directory, such that
@@ -26,7 +26,6 @@ CXXFLAGS += -g -Wall -pthread -fPIC -std=c++11
 
 # Improved debugging capabilities
 # CXXFLAGS += -O0 -fno-inline
-
 # Directory where to put our library
 USR_LIB_DIR = ../../libs
 
@@ -41,9 +40,14 @@ SRCS_LIB      = cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
 		generation.cc \
+		helpers.cc \
 		instance.cc \
 		instance_schema.cc \
 		internals.pb.cc \
+		memcached_server.cc \
+		memcached_service.pb.cc \
+		memcached_service.rpcz.cc \
+		memcached_service_impl.cc \
 		merger.cc \
 		messages.pb.cc \
 		processor.cc \
@@ -54,10 +58,12 @@ DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
 
 # Second target - executable (unittests)
 TARGET_TEST   = unittests
-SRCS_TEST     = cpp_interface_unittest.cc \
-		instance_test.cc \
+SRCS_TEST     = boost_thread_test.cc \
+		cpp_interface_unittest.cc \
 		instance_manager_test.cc \
-		boost_thread_test.cc \
+		instance_test.cc \
+		memcached_service_test.cc \
+		thread_safe_holder_test.cc
 
 OBJS_TEST     = $(SRCS_TEST:.cc=.o)
 DEPS_TEST     = $(SRCS_TEST:.cc=.depends)
@@ -106,7 +112,7 @@ install:
 	cp libartm.so $(INSTALL_DIR)
 
 $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -L$(USR_LIB_DIR) -lartm -lprotobuf $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -L$(USR_LIB_DIR) -lartm -lprotobuf -lrpcz $(LDFLAGS)
 
 .cc.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
@@ -121,10 +127,12 @@ clean:
 -include $(DEPS_LIB)
 -include $(DEPS_TEST)
 
+#ToDo(alfrey): add '.\protoc.exe --cpp_out=. --rpcz_plugin_out=. .\memcached_service.proto'
 proto : 
 	protoc --cpp_out=. messages.proto; \
 	protoc --python_out=. messages.proto; \
 	protoc --java_out=./.. messages.proto; \
+	
 
 proto-install :
 	mkdir ~/protobuf; \
@@ -137,6 +145,34 @@ proto-install :
 	make check; \
 	sudo make install; \
 	export LD_LIBRARY_PATH="/usr/local/lib"; \
+
+zeromq-install :
+	mkdir ~/zeromq; \
+	cd ~/zeromq; \
+	wget http://download.zeromq.org/zeromq-4.0.4.tar.gz; \
+	tar -xzf zeromq-4.0.4.tar.gz; \
+	cd zeromq-4.0.4/; \
+	export ZEROMQ_ROOT=~/zeromq/zeromq-4.0.4/; \
+	./autoget.sh; \
+	./configure; \
+	make; \
+	sudo make install; \
+
+rpcz-install :
+	cd ../rpcz; \
+	mkdir build; \
+	cd build; \
+	cmake .. -Drpcz_build_examples=0 -DZeroMQ_INCLUDE_DIR="$ZEROMQ_ROOT/include"; \
+	make; \
+	sudo make install; \
+	cd ../../artm; \
+
+glog-install :
+	cd ../../glog; \
+	chmod 700 configure; \
+	./configure; \
+	make; \
+	sudo make install; \
 
 test : unittests
 	export LD_LIBRARY_PATH=$$(pwd)/$(USR_LIB_DIR)

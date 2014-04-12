@@ -65,7 +65,8 @@ instance_config_new.processors_count = 1
 # TEST SECTION
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
-library = ArtmLibrary(address + '\\Win32\\Debug\\artm_dll.dll')
+os.environ['PATH'] = ';'.join([address + '\\Win32\\Debug', os.environ['PATH']])
+library = ArtmLibrary(address + '\\Win32\\Debug\\artm.dll')
 
 instance = library.CreateInstance(instance_config)
 instance.Reconfigure(instance_config_new)

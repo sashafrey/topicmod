@@ -17,11 +17,13 @@ Instance::Instance(int id, const InstanceConfig& config)
       instance_id_(id),
       schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
       next_model_id_(1),
+      application_(),
+      memcached_service_proxy_(lock_, nullptr),
       processor_queue_lock_(),
       processor_queue_(),
       merger_queue_lock_(),
       merger_queue_(),
-      merger_(&merger_queue_lock_, &merger_queue_, &schema_),
+      merger_(&merger_queue_lock_, &merger_queue_, &schema_, &memcached_service_proxy_),
       processors_() {
   Reconfigure(config);
 }
@@ -66,6 +68,16 @@ void Instance::Reconfigure(const InstanceConfig& config) {
         &merger_queue_,
         merger_,
         schema_)));
+  }
+
+  // Recreate memcached_service_proxy_;
+  if (config.has_memcached_endpoint()) {
+    std::shared_ptr<artm::memcached::MemcachedService_Stub> new_ptr(
+      new artm::memcached::MemcachedService_Stub(
+        application_.create_rpc_channel(config.memcached_endpoint()), true));
+    memcached_service_proxy_.set(new_ptr);
+  } else {
+    memcached_service_proxy_.set(nullptr);
   }
 }
 

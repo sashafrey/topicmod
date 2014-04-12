@@ -90,6 +90,15 @@ class DataLoader {
   DISALLOW_COPY_AND_ASSIGN(DataLoader);
 };
 
+class MemcachedServer {
+ public:
+  explicit MemcachedServer(const std::string& endpoint);
+  ~MemcachedServer();
+
+ private:
+  int id_;
+};
+
 }  // namespace artm
 
 #endif  // SRC_ARTM_CPP_INTERFACE_H_

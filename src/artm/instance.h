@@ -20,6 +20,11 @@
 #include "artm/template_manager.h"
 #include "artm/thread_safe_holder.h"
 
+#include "artm/memcached_service.rpcz.h"
+#include "artm/memcached_service.pb.h"
+#include "rpcz/application.hpp"
+
+
 namespace artm {
 namespace core {
 
@@ -62,6 +67,9 @@ class Instance : boost::noncopyable {
   ThreadSafeHolder<InstanceSchema> schema_;
 
   int next_model_id_;
+
+  rpcz::application application_;
+  ThreadSafeHolder<artm::memcached::MemcachedService_Stub> memcached_service_proxy_;
 
   mutable boost::mutex processor_queue_lock_;
   std::queue<std::shared_ptr<const ProcessorInput> > processor_queue_;

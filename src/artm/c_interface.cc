@@ -9,6 +9,9 @@
 #include "artm/instance.h"
 #include "artm/exceptions.h"
 #include "artm/data_loader.h"
+#include "artm/memcached_server.h"
+
+#include "rpcz/rpc.hpp"
 
 std::string message;
 
@@ -16,11 +19,21 @@ inline char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
 }
 
-// ToDo(alfrey) log exception to file.
 #define CATCH_EXCEPTIONS                                    \
-catch (const artm::core::UnsupportedReconfiguration&) {     \
+catch (const rpcz::rpc_error& e) {                          \
+  LOG(ERROR) << "rpc_error: " << e.what();                  \
+  return ARTM_NETWORK_ERROR;                                \
+} catch (const artm::core::NetworkException& e) {           \
+  LOG(ERROR) << "NetworkException: " << e.what();           \
+  return ARTM_NETWORK_ERROR;                                \
+} catch (const artm::core::UnsupportedReconfiguration& e) { \
+  LOG(ERROR) << "UnsupportedReconfiguration: " << e.what(); \
   return ARTM_UNSUPPORTED_RECONFIGURATION;                  \
-} catch (const std::runtime_error&) {                       \
+} catch (const std::runtime_error& e) {                     \
+  LOG(ERROR) << "runtime_error: " << e.what();              \
+  return ARTM_GENERAL_ERROR;                                \
+} catch (...) {                                             \
+  LOG(ERROR) << "unknown error.";                           \
   return ARTM_GENERAL_ERROR;                                \
 }
 
@@ -39,6 +52,22 @@ int ArtmCopyRequestResult(int request_id, int length, char* address) {
 
 int ArtmGetRequestLength(int request_id) {
   return message.size();
+}
+
+// ===============================================================================================
+// Memcached service - host
+// ===============================================================================================
+DLL_PUBLIC int ArtmCreateMemcachedServer(const char* endpoint) {
+  try {
+    return artm::core::MemcachedServerManager::singleton().Create(std::string(endpoint));
+  } CATCH_EXCEPTIONS;
+}
+
+DLL_PUBLIC int ArtmDisposeMemcachedServer(int memcached_server_id) {
+  try {
+    artm::core::MemcachedServerManager::singleton().Erase(memcached_server_id);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }
 
 // =========================================================================

@@ -46,6 +46,12 @@ class TopicWeightIterator {
     return vector_[current_topic_] / normalizer_[current_topic_];
   }
 
+  // Not normalized weight.
+  inline float NotNormalizedWeight() {
+    assert(current_topic_ < topics_count_);
+    return vector_[current_topic_];
+  }
+
   // Resets the iterator to the initial state.
   inline void Reset() { current_topic_ = -1; }
 
@@ -77,8 +83,14 @@ class TopicModel {
   void AddToken(const std::string& token);
   void IncreaseTokenWeight(const std::string& token, int topic_id, float value);
   void IncreaseTokenWeight(int token_id, int topic_id, float value);
+  void SetTokenWeight(const std::string& token, int topic_id, float value);
+  void SetTokenWeight(int token_id, int topic_id, float value);
+
   void IncreaseItemsProcessed(int value);
+  void SetItemsProcessed(int value);
+
   void IncreaseScores(int iScore, double value, double score_norm);
+  void SetScores(int iScore, double value, double score_norm);
   TopicWeightIterator GetTopicWeightIterator(const std::string& token) const;
   TopicWeightIterator GetTopicWeightIterator(int token_id) const;
 
@@ -88,6 +100,9 @@ class TopicModel {
   int topic_size() const;
 
   double score(int score_index) const;
+  double score_not_normalized(int score_index) const;
+  double score_normalizer(int score_index) const;
+
   int has_token(const std::string& token) const;
   int token_id(const std::string& token) const;
   std::string token(int index) const;

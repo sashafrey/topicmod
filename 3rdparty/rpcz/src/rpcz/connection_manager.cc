@@ -430,7 +430,11 @@ connection_manager::connection_manager(zmq::context_t* context, int nthreads)
   broker_thread_ = boost::thread(&connection_manager_thread::run,
                                  context, nthreads, &event,
                                  frontend_socket, this);
-  event.wait();
+  try {
+    event.wait();
+  } catch(boost::thread_interrupted& ) {
+    std::cerr << "FATAL ERROR: connection_manager() constructor was interrupted\n";
+  }
 }
 
 zmq::socket_t& connection_manager::get_frontend_socket() {

@@ -152,4 +152,6 @@ TEST(MemcachedService, Stress) {
   for (int i = 0; i < thread_size; ++i) {
     threads[i]->join();
   }
+
+  artm::core::MemcachedServerManager::singleton().Erase(server_id);
 }

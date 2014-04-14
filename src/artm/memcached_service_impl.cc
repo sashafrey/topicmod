@@ -24,7 +24,7 @@ void MemcachedServiceImpl::UpdateKey(const UpdateKeyArgs& request,
     return;
   }
 
-  if (value_store.size() == request.value_size()) {
+  if (static_cast<int>(value_store.size()) == request.value_size()) {
     for (int i = 0; i < request.value_size(); ++i) {
       value_store[i] += request.value(i);
       result.add_value(value_store[i]);

@@ -16,10 +16,8 @@
 
 #include <string>
 #include <zmq.hpp>
-
 #include "rpcz/application.hpp"
 #include "rpcz/connection_manager.hpp"
-#include "rpcz/logging.hpp"
 #include "rpcz/rpc_channel.hpp"
 #include "rpcz/server.hpp"
 
@@ -29,29 +27,22 @@
 
 namespace rpcz {
 
-application::application() : log_module_("application", this) {
+application::application() {
   init(options());
 };
 
-application::application(const application::options& options) : log_module_("application", this) {
+application::application(const application::options& options) {
   init(options);
 };
 
 application::~application() {
-  LOG(INFO) << log_module_() << "destructor...";
-
   connection_manager_.reset();
   if (owns_context_) {
     delete context_;
   }
-
-  LOG(INFO) << log_module_() << "destructor done.";
 }
 
 void application::init(const application::options& options) {
-  LOG(INFO) << log_module_()
-            << "init(worker_threads=" << options.connection_manager_threads
-            << ",  zeromq_io_thread=" << options.zeromq_io_threads << ")...";
   if (options.zeromq_context) {
     context_ = options.zeromq_context;
     owns_context_ = false;
@@ -62,12 +53,9 @@ void application::init(const application::options& options) {
   connection_manager_.reset(new connection_manager(
           context_,
           options.connection_manager_threads));
-  LOG(INFO) << log_module_() << "init() done, connection_manager_ == " << Log::ptr_to_hex(connection_manager_.get());
 }
 
 rpc_channel* application::create_rpc_channel(const std::string& endpoint) {
-  LOG(INFO) << log_module_() << "create_rpc_channel("
-            << "endpoint=" << endpoint << ")";
   return rpc_channel::create(
       connection_manager_->connect(endpoint));
 }

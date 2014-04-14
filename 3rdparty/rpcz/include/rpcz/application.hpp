@@ -18,7 +18,6 @@
 #define RPCZ_APPLICATION_H
 
 #include <string>
-#include "rpcz/logging.hpp"
 #include "rpcz/macros.hpp"
 
 namespace zmq {
@@ -82,7 +81,6 @@ class application {
   bool owns_context_;
   zmq::context_t* context_;
   scoped_ptr<connection_manager> connection_manager_;
-  LogModule log_module_;
   friend class server;
 };
 }  // namespace rpcz

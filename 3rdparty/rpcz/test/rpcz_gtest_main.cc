@@ -21,11 +21,7 @@
 int main(int argc, char** argv) {
   ::testing::InitGoogleTest(&argc, argv);
   // ::google::InstallFailureSignalHandler();
-
-  FLAGS_log_dir = ".";
-  FLAGS_logbufsecs = 0;
   ::google::InitGoogleLogging(argv[0]);
-
   int retval = RUN_ALL_TESTS();
   ::google::protobuf::ShutdownProtobufLibrary();
   ::google::ShutdownGoogleLogging();

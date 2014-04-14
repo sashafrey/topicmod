@@ -101,25 +101,6 @@ const char kWorkerQuit = 0x1f;          // Asks the worker to quit.
 // Messages sent from a worker thread to the broker:
 const char kReady = 0x21;        // Always the first message sent.
 const char kWorkerDone = 0x22;   // Sent just before the worker quits.
-
-std::string describe_command(char command) {
-  switch (command) {
-    case kRequest: return "kRequest";
-    case kConnect: return "kConnect";
-    case kBind: return "kBind";
-    case kReply: return "kReply";
-    case kQuit: return "kQuit";
-    case krunclosure: return "krunclosure";
-    case krunserver_function: return "krunserver_function";
-    case kInvokeclient_request_callback: return "kInvokeclient_request_callback";
-    case kWorkerQuit: return "kWorkerQuit";
-    case kReady: return "kReady";
-    case kWorkerDone: return "kWorkerDone";
-  }
-
-  return "kUnknown";
-}
-
 }  // unnamed namespace
 
 struct remote_response_wrapper {
@@ -132,7 +113,6 @@ void connection::send_request(
     message_vector& request,
     int64 deadline_ms,
     connection_manager::client_request_callback callback) {
-  VLOG(1) << "connection::send_request()";
   remote_response_wrapper wrapper;
   wrapper.start_time = zclock_time();
   wrapper.deadline_ms = deadline_ms;
@@ -147,7 +127,6 @@ void connection::send_request(
 }
 
 void client_connection::reply(message_vector* v) {
-  VLOG(1) << "client_connection::reply()";
   zmq::socket_t& socket = manager_->get_frontend_socket();
   send_empty_message(&socket, ZMQ_SNDMORE);
   send_char(&socket, kReply, ZMQ_SNDMORE);
@@ -162,28 +141,21 @@ void worker_thread(connection_manager* connection_manager,
                   zmq::context_t* context, std::string endpoint) {
   try {
     zmq::socket_t socket(*context, ZMQ_DEALER);
-    std::string worker_id = Log::ptr_to_hex((void *)socket);
-    LogModule worker_log_module("worker", worker_id);
-    LOG(INFO) << connection_manager->log_module() << worker_log_module() << "is started";
     socket.connect(endpoint.c_str());
     send_empty_message(&socket, ZMQ_SNDMORE);
-    send_string(&socket, worker_id, ZMQ_SNDMORE);
     send_char(&socket, kReady);
     bool should_quit = false;
     while (!should_quit) {
       message_iterator iter(socket);
       CHECK_EQ(0, iter.next().size());
       char command(interpret_message<char>(iter.next()));
-      VLOG(1) << connection_manager->log_module() << worker_log_module() << describe_command(command);
       switch (command) {
-        case kWorkerQuit: {
+        case kWorkerQuit:
           should_quit = true;
           break;
-        }
-        case krunclosure: {
+        case krunclosure:
           interpret_message<closure*>(iter.next())->run();
           break;
-        }
         case krunserver_function: {
           connection_manager::server_function sf =
               interpret_message<connection_manager::server_function>(iter.next());
@@ -192,32 +164,25 @@ void worker_thread(connection_manager* connection_manager,
           if (iter.next().size() != 0) {
             break;
           }
-
           std::string event_id(message_to_string(iter.next()));
-
           sf(client_connection(connection_manager, socket_id, sender, event_id),
              iter);
-
+          }
           break;
-        }
         case kInvokeclient_request_callback: {
           connection_manager::client_request_callback cb =
               interpret_message<connection_manager::client_request_callback>(
                   iter.next());
           connection_manager::status status = connection_manager::status(
               interpret_message<uint64>(iter.next()));
-
           cb(status, iter);
-
-          break;
         }
       }
     }
     send_empty_message(&socket, ZMQ_SNDMORE);
     send_char(&socket, kWorkerDone);
-    LOG(INFO) << connection_manager->log_module() << worker_log_module() << "is stopped";
   } catch(...) {
-    LOG(FATAL) << "Fatal exception in worker_thread(connection_manager*) function";
+    std::cerr << "Fatal exception in worker_thread(connection_manager*) function";
     throw;
   }
 }
@@ -233,18 +198,13 @@ class connection_manager_thread {
     connection_manager_(connection_manager),
     context_(context),
     frontend_socket_(frontend_socket),
-    current_worker_(0),
-    log_module_("cmt", connection_manager){
-      LOG(INFO) << log_module_() << "constructor...";
-
+    current_worker_(0) {
       wait_for_workers_ready_reply(nthreads);
       ready_event->signal();
       reactor_.add_socket(
           frontend_socket, new_permanent_callback(
               this, &connection_manager_thread::handle_frontend_socket,
               frontend_socket));
-
-      LOG(INFO) << log_module_() << "constructor done";
     }
 
   void wait_for_workers_ready_reply(int nthreads) {
@@ -252,9 +212,6 @@ class connection_manager_thread {
       message_iterator iter(*frontend_socket_);
       std::string sender = message_to_string(iter.next());
       CHECK_EQ(0, iter.next().size());
-      std::string worker_id = message_to_string(iter.next());
-      LOG(INFO) << log_module_() <<  "worker_id=" << worker_id
-                <<" aka sender=" << Log::string_to_hex(sender) << " is ready.";
       char command(interpret_message<char>(iter.next()));
       CHECK_EQ(kReady, command) << "Got unexpected command " << (int)command;
       workers_.push_back(sender);
@@ -270,12 +227,9 @@ class connection_manager_thread {
                                 ready_event,
                                 connection_manager, frontend_socket);
     try {
-      LOG(INFO) << cmt.log_module() << "enter reactor loop";
       cmt.reactor_.loop();
-      LOG(INFO) << cmt.log_module() << "leave reactor loop";
     } catch(...) {
-      LOG(FATAL) << "Fatal exception in connection_manager_thread::run() function";
-      throw;
+      std::cerr << "Fatal exception in connection_manager_thread::run() function";
     }
   }
 
@@ -284,11 +238,6 @@ class connection_manager_thread {
     std::string sender = message_to_string(iter.next());
     CHECK_EQ(0, iter.next().size());
     char command(interpret_message<char>(iter.next()));
-
-    VLOG(1) << log_module_() << "handle_frontend_socket("
-            << "sender=" << Log::string_to_hex(sender) << ", "
-            << "command=" << describe_command(command) << ")";
-
     switch (command) {
       case kQuit:
         // Ask the workers to quit. They'll in turn send kWorkerDone.
@@ -333,7 +282,6 @@ class connection_manager_thread {
   }
 
   inline void begin_worker_command(char command) {
-    VLOG(1) << log_module_() << "begin_worker_command()";
     send_string(frontend_socket_, workers_[current_worker_], ZMQ_SNDMORE);
     send_empty_message(frontend_socket_, ZMQ_SNDMORE);
     send_char(frontend_socket_, command, ZMQ_SNDMORE);
@@ -344,14 +292,12 @@ class connection_manager_thread {
   }
 
   inline void add_closure(closure* closure) {
-    LOG(INFO) << log_module_() << "add_closure()";
     begin_worker_command(krunclosure);
     send_pointer(frontend_socket_, closure, 0);
   }
 
   inline void handle_connect_command(const std::string& sender,
                                    const std::string& endpoint) {
-    LOG(INFO) << log_module_() << "handle_connect_command()";
     zmq::socket_t* socket = new zmq::socket_t(*context_, ZMQ_DEALER);
     connections_.push_back(socket);
     int linger_ms = 0;
@@ -370,7 +316,6 @@ class connection_manager_thread {
       const std::string& sender,
       const std::string& endpoint,
       connection_manager::server_function server_function) {
-    LOG(INFO) << log_module_() << "handle_bind_command()";
     zmq::socket_t* socket = new zmq::socket_t(*context_, ZMQ_ROUTER);
     int linger_ms = 0;
     socket->setsockopt(ZMQ_LINGER, &linger_ms, sizeof(linger_ms));
@@ -388,7 +333,6 @@ class connection_manager_thread {
 
   void handle_server_socket(uint64 socket_id,
                           connection_manager::server_function server_function) {
-    VLOG(1) << log_module_() << "handle_server_socket()";
     message_iterator iter(*server_sockets_[socket_id]);
     begin_worker_command(krunserver_function);
     send_object(frontend_socket_, server_function, ZMQ_SNDMORE);
@@ -397,7 +341,6 @@ class connection_manager_thread {
   }
 
   inline void send_request(message_iterator& iter) {
-    VLOG(1) << log_module_() << "send_request()";
     uint64 connection_id = interpret_message<uint64>(iter.next());
     remote_response_wrapper remote_response_wrapper =
         interpret_message<rpcz::remote_response_wrapper>(iter.next());
@@ -416,7 +359,6 @@ class connection_manager_thread {
   }
 
   void handle_client_socket(zmq::socket_t* socket) {
-    VLOG(1) << log_module_() << "handle_client_socket()";
     message_iterator iter(*socket);
     if (!iter.next().size() == 0) {
       return;
@@ -438,7 +380,6 @@ class connection_manager_thread {
   }
 
   void handle_timeout(event_id event_id) {
-    LOG(INFO) << log_module_() << "handle_timeout()";
     remote_response_map::iterator response_iter = remote_response_map_.find(event_id);
     if (response_iter == remote_response_map_.end()) {
       return;
@@ -451,13 +392,10 @@ class connection_manager_thread {
   }
 
   inline void send_reply(message_iterator& iter) {
-    VLOG(1) << log_module_() << "send_reply()";
     uint64 socket_id = interpret_message<uint64>(iter.next());
     zmq::socket_t* socket = server_sockets_[socket_id];
     forward_messages(iter, *socket);
   }
-
-  const std::string& log_module() const { return log_module_(); }
 
  private:
   typedef std::map<event_id, connection_manager::client_request_callback>
@@ -474,17 +412,12 @@ class connection_manager_thread {
   zmq::socket_t* frontend_socket_;
   std::vector<std::string> workers_;
   int current_worker_;
-  LogModule log_module_;
 };
 
 connection_manager::connection_manager(zmq::context_t* context, int nthreads)
   : context_(context),
     frontend_endpoint_(
-        "inproc://" + boost::lexical_cast<std::string>(this) + ".cm.frontend"),
-    log_module_("connection_manager", this) {
-  LOG(INFO) << log_module_() << "constructor...";
-  LOG(INFO) << log_module_() << "frontend_endpoint_=" << frontend_endpoint_;
-
+        "inproc://" + boost::lexical_cast<std::string>(this) + ".cm.frontend") {
   zmq::socket_t* frontend_socket = new zmq::socket_t(*context, ZMQ_ROUTER);
   int linger_ms = 0;
   frontend_socket->setsockopt(ZMQ_LINGER, &linger_ms, sizeof(linger_ms));
@@ -498,7 +431,6 @@ connection_manager::connection_manager(zmq::context_t* context, int nthreads)
                                  context, nthreads, &event,
                                  frontend_socket, this);
   event.wait();
-  LOG(INFO) << log_module_() << "constructor done.";
 }
 
 zmq::socket_t& connection_manager::get_frontend_socket() {
@@ -514,7 +446,6 @@ zmq::socket_t& connection_manager::get_frontend_socket() {
 }
 
 connection connection_manager::connect(const std::string& endpoint) {
-  LOG(INFO) << log_module_() << "connect(endpoint=" << endpoint << ")";
   zmq::socket_t& socket = get_frontend_socket();
   send_empty_message(&socket, ZMQ_SNDMORE);
   send_char(&socket, kConnect, ZMQ_SNDMORE);
@@ -528,7 +459,6 @@ connection connection_manager::connect(const std::string& endpoint) {
 
 void connection_manager::bind(const std::string& endpoint,
                              server_function function) {
-  LOG(INFO) << log_module_() << "bing(" << endpoint << ")";
   zmq::socket_t& socket = get_frontend_socket();
   send_empty_message(&socket, ZMQ_SNDMORE);
   send_char(&socket, kBind, ZMQ_SNDMORE);
@@ -541,7 +471,6 @@ void connection_manager::bind(const std::string& endpoint,
 }
 
 void connection_manager::add(closure* closure) {
-  LOG(INFO) << log_module_() << "add closure";
   zmq::socket_t& socket = get_frontend_socket();
   send_empty_message(&socket, ZMQ_SNDMORE);
   send_char(&socket, krunclosure, ZMQ_SNDMORE);
@@ -558,13 +487,11 @@ void connection_manager::terminate() {
 }
 
 connection_manager::~connection_manager() {
-  LOG(INFO) << log_module_() << "destructor...";
   zmq::socket_t& socket = get_frontend_socket();
   send_empty_message(&socket, ZMQ_SNDMORE);
   send_char(&socket, kQuit, 0);
   broker_thread_.join();
   worker_threads_.join_all();
   socket_.reset(NULL);
-  LOG(INFO) << log_module_() << "destructor done.";
 }
 }  // namespace rpcz

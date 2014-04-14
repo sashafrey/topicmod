@@ -7,6 +7,7 @@
 #include "boost/lexical_cast.hpp"
 
 #include "gtest/gtest.h"
+#include "glog/logging.h"
 
 #include "artm/memcached_server.h"
 #include "artm/memcached_service.rpcz.h"

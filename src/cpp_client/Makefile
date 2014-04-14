@@ -1,5 +1,5 @@
 all: helpers.cc srcmain.cc
-	g++ -g -std=c++11 -o cpp_client helpers.cc srcmain.cc -I. -I../ -L../../libs -lartm -lrpcz -lprotobuf
+	g++ -g -std=c++11 -o cpp_client helpers.cc srcmain.cc -I. -I../ -L../../libs -lartm -lrpcz -lprotobuf -lglog
 
 clean:
 	rm cpp_client

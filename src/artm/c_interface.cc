@@ -12,6 +12,7 @@
 #include "artm/memcached_server.h"
 
 #include "rpcz/rpc.hpp"
+#include "glog/logging.h"
 
 std::string message;
 

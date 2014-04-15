@@ -22,6 +22,7 @@ zeromq-install :
 
 rpcz-install :
 	cd rpcz; \
+	sudo rm -rf build; \
 	mkdir build; \
 	cd build; \
 	cmake .. -Drpcz_build_examples=0 -DZeroMQ_INCLUDE_DIR="$ZEROMQ_ROOT/include"; \

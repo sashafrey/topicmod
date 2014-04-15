@@ -26,16 +26,15 @@ CXXFLAGS += -g -Wall -pthread -fPIC -std=c++11
 
 # Improved debugging capabilities
 # CXXFLAGS += -O0 -fno-inline
+
 # Directory where to put our library
-USR_LIB_DIR = ../../libs
+OUT_DIR = ../bin/
 
 # Linker flags
 LDFLAGS += -lboost_system -lboost_thread
 
-INSTALL_DIR = /usr/lib
-
 # First target - shared library
-TARGET_LIB    = libartm.so
+TARGET_LIB    = $(OUT_DIR)libartm.so
 SRCS_LIB      = cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
@@ -57,7 +56,7 @@ OBJS_LIB      = $(SRCS_LIB:.cc=.o)
 DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
 
 # Second target - executable (unittests)
-TARGET_TEST   = unittests
+TARGET_TEST   = $(OUT_DIR)unittests
 SRCS_TEST     = boost_thread_test.cc \
 		cpp_interface_unittest.cc \
 		instance_manager_test.cc \
@@ -105,14 +104,11 @@ gtest_main.a : gtest-all.o gtest_main.o
 	$(AR) $(ARFLAGS) $@ $^
 
 $(TARGET_LIB): $(OBJS_LIB)
+	mkdir ../bin/; \
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -shared $^ -o $@ $(LDFLAGS); \
-	cp libartm.so $(USR_LIB_DIR); \
-
-install:
-	cp libartm.so $(INSTALL_DIR)
 
 $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -L$(USR_LIB_DIR) -lartm -lprotobuf -lrpcz -lglog $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $^ -o $@ -L$(OUT_DIR) -lartm -lprotobuf -lrpcz -lglog $(LDFLAGS); \
 
 .cc.o:
 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
@@ -121,8 +117,9 @@ $(TARGET_TEST): $(OBJS_TEST) gtest_main.a
 	$(CXX) -M $(CPPFLAGS) $(CXXFLAGS) $< > $@
 
 clean:
-	 rm -f $(OBJS_LIB) $(DEPS_LIB) $(TARGET_LIB) \
-               $(OBJS_TEST) $(DEPS_TEST) $(TARGET_TEST)
+	rm -f $(OBJS_LIB) $(DEPS_LIB) $(TARGET_LIB) \
+              $(OBJS_TEST) $(DEPS_TEST) $(TARGET_TEST); \
+	rm unittests.*
 
 -include $(DEPS_LIB)
 -include $(DEPS_TEST)
@@ -133,6 +130,6 @@ proto :
 	protoc --python_out=. messages.proto; \
 	protoc --java_out=./.. messages.proto; \
 
-test : unittests
-	export LD_LIBRARY_PATH=$$(pwd)/$(USR_LIB_DIR)
-	./unittests; \
+test : $(TARGET_TEST)
+	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$$(pwd)/$(OUT_DIR); \
+	$(TARGET_TEST); \

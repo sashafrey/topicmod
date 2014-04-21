@@ -94,7 +94,7 @@ double proc(int argc, char * argv[], int processors_count) {
   // Enable model and wait while each document pass through processor about 10 times.
   model.Enable();
   std::shared_ptr<ModelTopics> model_topics;
-  for (int iter = 0; iter < 10; ++iter) {
+  for (int iter = 0; iter < 50; ++iter) {
     data_loader.InvokeIteration(1);
     data_loader.WaitIdle();
     model_topics = instance.GetTopics(model);

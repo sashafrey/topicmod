@@ -70,6 +70,29 @@ message ModelConfig {
   repeated Score score = 7;
   optional bool reuse_theta = 8 [default = false];
   optional bool cache_token_counters  = 9 [default = false];
+  repeated string regularizer_name = 10;
+}
+
+// Configuration of a regularizer
+message RegularizerConfig {
+  enum Type {
+    DirichletRegularizerTheta = 1;
+  }
+
+  required string name = 1;
+  required Type type = 2;
+  required bytes config = 3; 
+}
+
+// Configuration of a Dirichlet Theta regularizer
+message DirichletRegularizerThetaConfig {
+  repeated double alpha_0 = 1;
+  repeated DoubleArray tilde_alpha = 2;
+}
+
+// One set of parametres fot Dirichlet Theta regularizer
+message DoubleArray {
+  repeated double alpha = 1;
 }
 
 message Score {

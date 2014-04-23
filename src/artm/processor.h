@@ -18,6 +18,7 @@
 #include "artm/merger.h"
 #include "artm/messages.pb.h"
 #include "artm/thread_safe_holder.h"
+#include "artm/regularizer_interface.h"
 
 namespace artm {
 namespace core {
@@ -77,7 +78,9 @@ class Processor : boost::noncopyable {
   class ItemProcessor : boost::noncopyable {
    public:
     ItemProcessor(const TopicModel& topic_model,
-                  const google::protobuf::RepeatedPtrField<std::string>& token_dict);
+                  const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+                  std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >>  
+                  regularizers);
 
     void InferTheta(const ModelConfig& model,
                     const Item& item,
@@ -93,6 +96,7 @@ class Processor : boost::noncopyable {
    private:
     const TopicModel& topic_model_;
     const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
+    std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >> regularizers_;
   };
 
   // Helper class to iterate through tokens in one item

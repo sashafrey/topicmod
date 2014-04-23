@@ -19,6 +19,7 @@
 #include "artm/processor.h"
 #include "artm/template_manager.h"
 #include "artm/thread_safe_holder.h"
+#include "artm/regularizer_interface.h"
 
 #include "artm/memcached_service.rpcz.h"
 #include "artm/memcached_service.pb.h"
@@ -55,6 +56,10 @@ class Instance : boost::noncopyable {
   void DisposeModel(int model_id);
   void Reconfigure(const InstanceConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
+
+  // void Create(const RegularizerConfig& config);
+  // void DisposeRegularizer(int regularizer_id);
+  // void ReconfigureRegularizer(int regularizer_id, const RegularizerConfig& config);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

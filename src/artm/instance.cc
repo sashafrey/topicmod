@@ -113,5 +113,17 @@ void Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> 
   processor_queue_.push(input);
 }
 
+//void CreateRegularizer(const RegularizerConfig& config) {
+//
+//}
+//
+//void DisposeRegularizer(int regularizer_id) {
+//
+//}
+//
+//void ReconfigureRegularizer(int regularizer_id, const RegularizerConfig& config) {
+//
+//}
+
 }  // namespace core
 }  // namespace artm

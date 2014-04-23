@@ -91,9 +91,11 @@ bool Processor::TokenIterator::Next() {
 
 Processor::ItemProcessor::ItemProcessor(
     const TopicModel& topic_model,
-    const google::protobuf::RepeatedPtrField<std::string>& token_dict)
+    const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+    std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >> regularizers)
     : topic_model_(topic_model),
-      token_dict_(token_dict) {}
+      token_dict_(token_dict),
+      regularizers_(regularizers) {}
 
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
@@ -334,7 +336,8 @@ void Processor::ThreadFunction() {
           }
         }
 
-        ItemProcessor item_processor(*topic_model, part->batch().token());
+        ItemProcessor item_processor(*topic_model, part->batch().token(), 
+                                      schema_.get()->GetPointerToRegularizers());
         StreamIterator iter(*part, model.stream_name());
         while (iter.Next() != nullptr) {
           // ToDo: add an option to always start with random iteration!
@@ -380,7 +383,8 @@ void Processor::ThreadFunction() {
           double perplexity_score = 0.0;
           double perplexity_norm = 0.0;
           StreamIterator test_iter(*part, score.stream_name());
-          ItemProcessor test_item_processor(*topic_model, part->batch().token());
+          ItemProcessor test_item_processor(*topic_model, part->batch().token(), 
+                                              schema_.get()->GetPointerToRegularizers());
           while (test_iter.Next() != nullptr) {
             const Item* item = test_iter.Current();
 

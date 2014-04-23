@@ -28,6 +28,11 @@ class InstanceSchema {
   bool has_model_config(int id) const;
   void clear_model_config(int id);
 
+  void set_regularizer(std::string name, 
+    std::shared_ptr<RegularizerInterface>& regularizer_config);
+  bool has_regularizer(std::string name) const;
+  void clear_regularizer(std::string name);
+
   std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >> 
     GetPointerToRegularizers();
 

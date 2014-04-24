@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5CDF866C-F13C-49A1-81C7-B51F7420AA09}</ProjectGuid>
+    <ProjectName>libartm</ProjectName>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <RepositoryRoot>$(SolutionDir)..</RepositoryRoot>
+  </PropertyGroup>
+  <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
+  <ItemGroup>
+    <ClCompile Include="data_loader.cc" />
+    <ClCompile Include="generation.cc" />
+    <ClCompile Include="helpers.cc" />
+    <ClCompile Include="instance.cc" />
+    <ClCompile Include="instance_schema.cc" />
+    <ClCompile Include="internals.pb.cc" />
+    <ClCompile Include="memcached_server.cc" />
+    <ClCompile Include="memcached_service.pb.cc" />
+    <ClCompile Include="memcached_service.rpcz.cc" />
+    <ClCompile Include="memcached_service_impl.cc" />
+    <ClCompile Include="merger.cc" />
+    <ClCompile Include="messages.pb.cc" />
+    <ClCompile Include="processor.cc" />
+    <ClCompile Include="topic_model.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="call_on_destruction.h" />
+    <ClInclude Include="common.h" />
+    <ClInclude Include="data_loader.h" />
+    <ClInclude Include="exceptions.h" />
+    <ClInclude Include="generation.h" />
+    <ClInclude Include="helpers.h" />
+    <ClInclude Include="instance.h" />
+    <ClInclude Include="instance_schema.h" />
+    <ClInclude Include="internals.pb.h" />
+    <ClInclude Include="memcached_server.h" />
+    <ClInclude Include="memcached_service.pb.h" />
+    <ClInclude Include="memcached_service.rpcz.h" />
+    <ClInclude Include="memcached_service_impl.h" />
+    <ClInclude Include="merger.h" />
+    <ClInclude Include="messages.pb.h" />
+    <ClInclude Include="processor.h" />
+    <ClInclude Include="protobuf_helpers.h" />
+    <ClInclude Include="template_manager.h" />
+    <ClInclude Include="thread_safe_holder.h" />
+    <ClInclude Include="topic_model.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />
+    <None Include="internals.proto" />
+    <None Include="messages.proto" />
+  </ItemGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>$(LIBZEROMQ);libprotobuf.lib;libglog.lib;rpcz.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(RepositoryRoot)\utils\targets\Artm.CopyDependencies.props" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

@@ -159,8 +159,9 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(Stream));
   Stream_Type_descriptor_ = Stream_descriptor_->enum_type(0);
   InstanceConfig_descriptor_ = file->message_type(5);
-  static const int InstanceConfig_offsets_[1] = {
+  static const int InstanceConfig_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InstanceConfig, processors_count_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(InstanceConfig, memcached_endpoint_),
   };
   InstanceConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -391,28 +392,28 @@ void protobuf_AddDesc_messages_2eproto() {
     "l\022\025\n\004name\030\002 \001(\t:\007@global\022\017\n\007modulus\030\003 \001("
     "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000"
     "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003"
-    "\"-\n\016InstanceConfig\022\033\n\020processors_count\030\001"
-    " \001(\005:\0011\"\371\001\n\013ModelConfig\022\030\n\014topics_count\030"
-    "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn"
-    "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n"
-    "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@"
-    "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013re"
-    "use_theta\030\010 \001(\010:\005false\022#\n\024cache_token_co"
-    "unters\030\t \001(\010:\005false\"x\n\005Score\022\036\n\004type\030\001 \002"
-    "(\0162\020.artm.Score.Type\022\031\n\nfield_name\030\002 \001(\t"
-    ":\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@global\"\026\n"
-    "\004Type\022\016\n\nPerplexity\020\000\"\231\001\n\014LoggerConfig\022\024"
-    "\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.ar"
-    "tm.LoggerConfig.Level:\004INFO\"D\n\005Level\022\014\n\010"
-    "DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004IN"
-    "FO\020\003\022\013\n\007VERBOSE\020\004\"]\n\013ModelTopics\022&\n\013toke"
-    "n_topic\030\001 \003(\0132\021.artm.TokenTopics\022\027\n\017item"
-    "s_processed\030\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013Toke"
-    "nTopics\022\r\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005"
-    "\022\024\n\014topic_weight\030\003 \003(\002\".\n\nItemTopics\022\n\n\002"
-    "id\030\001 \001(\005\022\024\n\014topic_weight\030\002 \003(\002\"4\n\013BatchT"
-    "opics\022%\n\013item_topics\030\001 \003(\0132\020.artm.ItemTo"
-    "pics", 1324);
+    "\"I\n\016InstanceConfig\022\033\n\020processors_count\030\001"
+    " \001(\005:\0011\022\032\n\022memcached_endpoint\030\002 \001(\t\"\371\001\n\013"
+    "ModelConfig\022\030\n\014topics_count\030\002 \001(\005:\00232\022\026\n"
+    "\007enabled\030\003 \001(\010:\005false\022\"\n\026inner_iteration"
+    "s_count\030\004 \001(\005:\00210\022\031\n\nfield_name\030\005 \001(\t:\005@"
+    "body\022\034\n\013stream_name\030\006 \001(\t:\007@global\022\032\n\005sc"
+    "ore\030\007 \003(\0132\013.artm.Score\022\032\n\013reuse_theta\030\010 "
+    "\001(\010:\005false\022#\n\024cache_token_counters\030\t \001(\010"
+    ":\005false\"x\n\005Score\022\036\n\004type\030\001 \002(\0162\020.artm.Sc"
+    "ore.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body\022\034\n\013s"
+    "tream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n\nPer"
+    "plexity\020\000\"\231\001\n\014LoggerConfig\022\024\n\014log_locati"
+    "on\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerCon"
+    "fig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t"
+    "\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERB"
+    "OSE\020\004\"]\n\013ModelTopics\022&\n\013token_topic\030\001 \003("
+    "\0132\021.artm.TokenTopics\022\027\n\017items_processed\030"
+    "\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013TokenTopics\022\r\n\005t"
+    "oken\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_we"
+    "ight\030\003 \003(\002\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014"
+    "topic_weight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013ite"
+    "m_topics\030\001 \003(\0132\020.artm.ItemTopics", 1352);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -2021,6 +2022,7 @@ void Stream::Swap(Stream* other) {
 
 #ifndef _MSC_VER
 const int InstanceConfig::kProcessorsCountFieldNumber;
+const int InstanceConfig::kMemcachedEndpointFieldNumber;
 #endif  // !_MSC_VER
 
 InstanceConfig::InstanceConfig()
@@ -2040,6 +2042,7 @@ InstanceConfig::InstanceConfig(const InstanceConfig& from)
 void InstanceConfig::SharedCtor() {
   _cached_size_ = 0;
   processors_count_ = 1;
+  memcached_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2048,6 +2051,9 @@ InstanceConfig::~InstanceConfig() {
 }
 
 void InstanceConfig::SharedDtor() {
+  if (memcached_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete memcached_endpoint_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -2076,6 +2082,11 @@ InstanceConfig* InstanceConfig::New() const {
 void InstanceConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     processors_count_ = 1;
+    if (has_memcached_endpoint()) {
+      if (memcached_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+        memcached_endpoint_->clear();
+      }
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2095,6 +2106,23 @@ bool InstanceConfig::MergePartialFromCodedStream(
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &processors_count_)));
           set_has_processors_count();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_memcached_endpoint;
+        break;
+      }
+
+      // optional string memcached_endpoint = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_memcached_endpoint:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_memcached_endpoint()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->memcached_endpoint().data(), this->memcached_endpoint().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -2125,6 +2153,15 @@ void InstanceConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->processors_count(), output);
   }
 
+  // optional string memcached_endpoint = 2;
+  if (has_memcached_endpoint()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->memcached_endpoint().data(), this->memcached_endpoint().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->memcached_endpoint(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2136,6 +2173,16 @@ void InstanceConfig::SerializeWithCachedSizes(
   // optional int32 processors_count = 1 [default = 1];
   if (has_processors_count()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->processors_count(), target);
+  }
+
+  // optional string memcached_endpoint = 2;
+  if (has_memcached_endpoint()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->memcached_endpoint().data(), this->memcached_endpoint().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->memcached_endpoint(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2154,6 +2201,13 @@ int InstanceConfig::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->processors_count());
+    }
+
+    // optional string memcached_endpoint = 2;
+    if (has_memcached_endpoint()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->memcached_endpoint());
     }
 
   }
@@ -2186,6 +2240,9 @@ void InstanceConfig::MergeFrom(const InstanceConfig& from) {
     if (from.has_processors_count()) {
       set_processors_count(from.processors_count());
     }
+    if (from.has_memcached_endpoint()) {
+      set_memcached_endpoint(from.memcached_endpoint());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2210,6 +2267,7 @@ bool InstanceConfig::IsInitialized() const {
 void InstanceConfig::Swap(InstanceConfig* other) {
   if (other != this) {
     std::swap(processors_count_, other->processors_count_);
+    std::swap(memcached_endpoint_, other->memcached_endpoint_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

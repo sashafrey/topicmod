@@ -19,6 +19,19 @@ class Instance;
 class Model;
 class DataLoader;
 
+// Exception handling in cpp_interface
+#define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
+class Type : public BaseType { public:  /*NOLINT*/     \
+  explicit Type() : BaseType("") {}                    \
+};
+
+DEFINE_EXCEPTION_TYPE(GeneralError, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(ObjectNotFound, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(InvalidMessage, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(UnsupportedReconfiguration, std::runtime_error);
+
+#undef DEFINE_EXCEPTION_TYPE
+
 class Instance {
  public:
   explicit Instance(const InstanceConfig& config);
@@ -75,6 +88,15 @@ class DataLoader {
   int id_;
   DataLoaderConfig config_;
   DISALLOW_COPY_AND_ASSIGN(DataLoader);
+};
+
+class MemcachedServer {
+ public:
+  explicit MemcachedServer(const std::string& endpoint);
+  ~MemcachedServer();
+
+ private:
+  int id_;
 };
 
 }  // namespace artm

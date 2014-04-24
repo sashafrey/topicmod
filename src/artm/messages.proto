@@ -57,6 +57,7 @@ message Stream {
 // Configuration of Instance component.
 message InstanceConfig {
   optional int32 processors_count = 1 [default = 1];
+  optional string memcached_endpoint = 2;
 }
 
 // Configuration of a model.

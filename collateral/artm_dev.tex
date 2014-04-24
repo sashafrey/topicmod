@@ -1,6 +1,7 @@
 \documentclass[11pt,a4paper,twoside]{report}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{soul}
 
 \newcommand{\Csharp}{%
   {\settoheight{\dimen0}{C}C\kern-.05em \resizebox{!}{\dimen0}{\raisebox{\depth}{\#}}}}
@@ -16,7 +17,7 @@
     Then send the name of your github user to \href{mailto:sashafrey@gmail.com}{sashafrey@gmail.com},
     using ``BigARTM: request access'' in the title of your e-mail.
     In few days you will receive a reply confirming that access had been granted.
-\item To clone the repository and build sources, please refer to paragraph 
+\item To clone the repository and build sources, please refer to paragraph
     \hyperref[label:how_to_build]{How to build sources}.
 \item Read about the math behind BigARTM library: \\ \url{http://www.machinelearning.ru/wiki/images/2/22/Voron-2013-ptm.pdf}
 \item Review the list of open issues: \\
@@ -53,7 +54,7 @@ This is likely to be added in later versions.
 \paragraph{Success criteria.}
 When codebase meets this success criteria we are free to release the library.
 \begin{itemize}
-    \item The algorithm scales linearly up to 32 CPU cores when process 
+    \item The algorithm scales linearly up to 32 CPU cores when process
     \href{http://archive.ics.uci.edu/ml/datasets/Bag+of+Words}{pubmed task}.
     \item On small datasets perplexity of our method is on parity with other libraries
     \item Builds with gcc, intel and cl.exe compiler; runs on Ubuntu, Solaris and Windows.
@@ -115,7 +116,7 @@ At any moment there exist two copies of token-topic matrix,
 an ``active'' and a ``background''.
 The ``active'' token-topic matrix is used by processors,
 while ``background'' token-topic matrix can be safely updated by merger.
-Currently it is merger who automatically decides when to switch ``active'' 
+Currently it is merger who automatically decides when to switch ``active''
 token-topic matrix to the ``background'' one.
 (but ideally user of the library should be able to control this).
 Even after switching ``active'' topic-matrix the previous (deprecated) active matrix
@@ -147,7 +148,7 @@ but it is designed to support Python and Java.
 \end{figure}
 
 \subsection{Concurrency and thread safety}
-All interfaces of the library are not thread safe, 
+All interfaces of the library are not thread safe,
 and must not be used concurrently from multiple threads.
 
 Internally the library creates multiple threads
@@ -156,7 +157,7 @@ Interaction between those threads is synchronized with the following locks:
 \begin{enumerate}
     \item Lock access to the processors queue
     \item Lock access to the merger queue
-    \item Lock access to the token-topic matrix 
+    \item Lock access to the token-topic matrix
 \end{enumerate}
 
 We assume that batches are large enough,
@@ -178,6 +179,40 @@ Look at /src/artm/thread\_safe\_holder.h for details.
 \end{enumerate}
 
 Due to caching in CPU it is important to have topics as a minor dimension in both token-topic and doc-topic matrices.
+
+\subsection{Exceptions and error handling}
+
+\textbf{In c\_interface} all error handling is happening through the error codes.
+\begin{verbatim}
+  enum ArtmErrorCodes {
+    ARTM_SUCCESS = 0,
+    ARTM_GENERAL_ERROR = -1,
+    ARTM_OBJECT_NOT_FOUND = -2,
+    ARTM_INVALID_MESSAGE = -3,
+    ARTM_UNSUPPORTED_RECONFIGURATION = -4,
+  };
+\end{verbatim}
+You are free to add more error types when needed.
+The reason for negative values is due to some API methods
+returning the actual result; for example, this method returns an ID of newly created object.
+\begin{verbatim}
+int ArtmCreateDataLoader(int data_loader_id, int length,
+                         const char* config);
+\end{verbatim}
+
+\textbf{In artm::core} you should use C++ exceptions
+or simple true/false return values instead of error codes.
+Please, follow guidelines in /artm/core/exceptions.h.
+Some highlights:
+\begin{enumerate}
+    \item All exceptions should be inherited for std::runtime\_error
+    \item Use BOOST\_THROW\_EXCEPTION macro to throw an exception
+    \item Remember to catch all exceptions in c\_interface, and convert them to error codes.
+\end{enumerate}
+
+\textbf{In cpp\_interface} all error codes should be converted to exceptions.
+Here you should use exceptions, defined in artm/core/cpp\_interface.h file.
+Do not re-use existing exceptions from artm::core namespace.
 
 \section{FAQ}
 
@@ -239,12 +274,12 @@ Try to run cpp\_client step by step in debugger and see what exactly it does.
 To do so you have to unpack all archives under the /datasets folder,
 and run cpp\_client with corresponding parameters.
 In Linux you may simply use ``make kos'' or ``make nips'' commands.
-To run cpp\_client in Windows directly from Visual Studio 
+To run cpp\_client in Windows directly from Visual Studio
 you should configure the following command for debugger:
 
 {\small
 \begin{verbatim}
-$(SolutionDir)..\datasets\docword.kos.txt $(SolutionDir)..\datasets\vocab.kos.txt 16 
+$(SolutionDir)..\datasets\docword.kos.txt $(SolutionDir)..\datasets\vocab.kos.txt 16
 \end{verbatim}}
 
 \section{Algorithms}
@@ -257,13 +292,13 @@ It has the following implementation details:
     \item Strategy of updating matrix $\Phi$: whenever Merger finishes processing of the next Processors output,
     it updates matrix $\Phi$. It will be picked by each processor whenever it starts processing next partition.
     \item Matrix Phi is initialized with random [0..1] values.
-    \item By default distributions $\theta_{t d}$ are inferred from scratch on every scan of the collection. 
+    \item By default distributions $\theta_{t d}$ are inferred from scratch on every scan of the collection.
           Processors can be configured to re-use the $\Theta$ values from previous iteration.
     \item Counters $n_{w t}$ and $n_t$ keep increasing, even between scans of the whole collection.
           No exponential decay is currently implemented.
     \item Current perplexity calculation is also cumulative.
           There is stupid limitation: perplexity can't be calculated for a single iteration.
-    \item Perplexity can be evaluated on testing items.  
+    \item Perplexity can be evaluated on testing items.
           Each item from the testing set is used to both infer theta, and evaluate perplexity.
           An alternative is to randomly split each testing document into two halves.
 \end{enumerate}
@@ -278,16 +313,20 @@ It has the following implementation details:
    \item Clone \url{https://github.com/sashafrey/topicmod/} repository
    \item Download and unpack boost 1.55  \\
          \url{http://sourceforge.net/projects/boost/files/} \\
-         Set environmental variable BOOST\_ROOT to the root of our boost installation.
+         Set environmental variable BOOST\_ROOT to the root of your boost installation.
          To do so you may use cmd.exe:
 \begin{verbatim}
 setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"
 \end{verbatim}
-   \item Download and unpack protobuf 2.5.0 \\
-         \url{https://protobuf.googlecode.com/files/protobuf-2.5.0.zip} \\
-         Set environmental variable PROTOBUF\_ROOT to the root protocol buffers library.
+   \item \st{Download and unpack protobuf 2.5.0} \\ (no longer needed, part of '3rdparty' folder)
+   \item Download and unpack libs: \\
+    \url{https://s3-eu-west-1.amazonaws.com/artm/libs_win32_v100.7z} --- for Visual Studio 2010 SP1 \\
+    \url{https://s3-eu-west-1.amazonaws.com/artm/libs_win32_v110.7z} --- for Visual Studio 2012
+   \item Download and install \href{http://zeromq.org/distro:microsoft-windows}{ZeroMQ 4.0.3 x86} \\
+         \url{http://miru.hk/archive/ZeroMQ-4.0.3~miru1.0-x86.exe} \\
+         Set environmental variable ZEROMQ32\_ROOT to ZeroMQ include folder
 \begin{verbatim}
-setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
+setx ZEROMQ32_ROOT "C:\\Program Files (x86)\\ZeroMQ 4.0.3"
 \end{verbatim}
     \item Install Visual Studio 2010 + SP1, or Visual Studio 2012. \\
     {\bf Note: if you use VS2010, you must install Service Pack 1.}
@@ -298,9 +337,27 @@ setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
 Note: if you got a weird linker error (``error LNK1104: cannot open file 'libprotobuf.lib''')
       in Visual Studio 2010, try this from cmd.exe:
 \begin{verbatim}
-    setx $(VisualStudioVersion) 10.0
+    setx VisualStudioVersion 10.0
 \end{verbatim}
-(and then close and reopen Visual Studio, and try clean build).
+(then close and reopen Visual Studio and try a clean build).
+
+Note: to use python in project you need to do the following steps:
+\begin{enumerate}
+	\item install python 2.7.
+
+    {\bf Important:} on Windows you MUST use
+    \href{https://www.python.org/ftp/python/2.7.6/python-2.7.6.msi}{Python x86},
+    which is a 32bit version of Python. The 64bit Python is incompatible with artm\_dll.dll
+    (which only compiles in 32 bits for now).
+	\item download and add to MSVS Python Tools 2.0 (all necessary instructions can be found here: \\
+	\url{https://pytools.codeplex.com/}) \\
+	\item add python folder to PATH. To do so open:
+\begin{verbatim}
+    Control Panel\All Control Panel Items\System
+\end{verbatim}
+	then \verb'Advanced system settings', \verb'Environment variables'.
+	\item follow the instructions in README file in directory \verb'python' in your protobuf folder.
+\end{enumerate}
 
 \subsection{Linux}
 
@@ -309,7 +366,9 @@ Note: if you got a weird linker error (``error LNK1104: cannot open file 'libpro
     \item git clone https://github.com/sashafrey/topicmod
     \item Install boost (it is preferable to use version 1.55 or newer; \hbox{libboost-all-dev} is package name in Debian-based OS).
     \item Install protobuf (it is necessary to use version 2.5.0 or newer; \hbox{libprotobuf-dev} is package name in Debian-based OS). You can get it from ppa: \hbox{ppa:chris-lea/protobuf}
-    \item Use Makefiles under /src/artm/ and /src/cpp\_client/.
+    \item Use Makefiles under /3rdparty, /src/artm/ and /src/cpp\_client/.
+    \item Python interface hasn't been used from Linux yet. Please, contribute to this documentation if you
+    found some solution to this.
 \end{enumerate}
 
 \section{How to submit my change to master branch?}
@@ -333,20 +392,20 @@ into their feature branches.
 In case if you are absolutely sure you change is safe, feel free to submit the change yourself.
 Technically you do have write permissions, so no one can stop you :).
 But please do the following:
-verify your \hyperref[label:code_style]{code style}, 
-perform \hyperref[label:code_review]{code review}, 
+verify your \hyperref[label:code_style]{code style},
+perform \hyperref[label:code_review]{code review},
 and make sure everything builds in both Linux and Windows, and unit test passes.
 
 \subsection{Code style}
 \label{label:code_style}
-In the code we follow 
+In the code we follow
 \href{http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml}{google code style},
 with the following changes:
 \begin{enumerate}
     \item Exceptions are allowed
     \item Indentation must be 2 spaces. Tabs are not allowed.
-    
-      If you use Visual Studio, 
+
+      If you use Visual Studio,
       please open ``Tools / Text Editor / All languages / Tabs''
       and configure as follows:
       \begin{itemize}
@@ -355,23 +414,24 @@ with the following changes:
           \item Indent size "--- 2,
           \item Select "insert spaces".
       \end{itemize}
-   
-      We also suggest to show space and tab crlf characters 
-      in the editor of Visual Studio (shortcut: Ctrl+R, Ctrl+W)
-      
+
+      We also suggest to show space and tab crlf characters
+      in the editor of Visual Studio 2010 (shortcut: Ctrl+R, Ctrl+W).
+      Note that this does not work in Visual Studio 2012.
+
 \item No lines should exceed 100 characters.
 
       If you use Visual Studio, please \href{http://stackoverflow.com/questions/9894397/100-characters-line-marker-in-visual-studio}{enable
        vertical line at 100 characters}.
-      
-\item All .h and .cpp files under /src/artm/ must be verified for code style with 
+
+\item All .h and .cpp files under /src/artm/ must be verified for code style with
       \href{http://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py}{cpplint.py} script.
       It is very easy to use the script; just install
       \href{http://www.python.org/downloads/}{Python 2.7.6}, and run
 
 \begin{verbatim}
 python cpplint.py --linelength=100 <filename>
-\end{verbatim}      
+\end{verbatim}
       Files, generated by protobuf compiler, are the only exceptions from this rule.
 
 \item Be careful with C++11 features, and make sure your change builds in Visual Studio 2010.
@@ -380,16 +440,16 @@ python cpplint.py --linelength=100 <filename>
 
 \subsection{Code review}
 \label{label:code_review}
-We use 
+We use
 \href{https://code.google.com/p/rietveld/wiki/UploadPyUsage}{rietveld}
-tool for code review. 
-When you have your first change, please learn how to use the 
+tool for code review.
+When you have your first change, please learn how to use the
 \href{http://codereview.appspot.com/static/upload.py}{unload.py} script.
 For example, to upload all changes in between two git revisions you may use this command:
 \begin{verbatim}
 code review:
-python upload.py --server=http://codereview.appspot.com/ 
- --email=<your_email> -t <review_title> -m <review_description> 
+python upload.py --server=http://codereview.appspot.com/
+ --email=<your_email> -t <review_title> -m <review_description>
  --rev=<from_revision>:<to_revision>
 \end{verbatim}
 where ``from\_revision'' and ``to\_revision'' may look as follows:

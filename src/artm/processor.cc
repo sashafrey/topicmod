@@ -6,8 +6,11 @@
 #include <string>
 #include <vector>
 
+#include "glog/logging.h"
+
 #include "artm/protobuf_helpers.h"
 #include "artm/call_on_destruction.h"
+#include "artm/helpers.h"
 
 namespace artm {
 namespace core {
@@ -29,11 +32,11 @@ void Processor::Join() {
 
 Processor::TokenIterator::TokenIterator(
     const google::protobuf::RepeatedPtrField<std::string>& token_dict,
-    const TokenTopicMatrix& token_topic_matrix,
+    const TopicModel& topic_model,
     const Item& item, const std::string& field_name,
     Mode mode)
     : token_dict_(token_dict),
-      token_topic_matrix_(token_topic_matrix),
+      topic_model_(topic_model),
       field_(nullptr),
       token_size_(0),
       iterate_known_((mode & Mode_Known) != 0),       // NOLINT
@@ -71,7 +74,7 @@ bool Processor::TokenIterator::Next() {
 
     token_ = token_dict_.Get(field_->token_id(token_index_));
     count_ = field_->token_count(token_index_);
-    token_id_ = token_topic_matrix_.token_id(token_);
+    token_id_ = topic_model_.has_token(token_) ? topic_model_.token_id(token_) : -1;
 
     if (iterate_known_ && (token_id_ >= 0)) {
       return true;
@@ -87,16 +90,16 @@ bool Processor::TokenIterator::Next() {
 
 
 Processor::ItemProcessor::ItemProcessor(
-    const TokenTopicMatrix& token_topic_matrix,
+    const TopicModel& topic_model,
     const google::protobuf::RepeatedPtrField<std::string>& token_dict)
-    : token_topic_matrix_(token_topic_matrix),
+    : topic_model_(topic_model),
       token_dict_(token_dict) {}
 
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
                                           ModelIncrement* model_increment,
                                           float* theta) {
-  int topics_count = token_topic_matrix_.topics_count();
+  int topic_size = topic_model_.topic_size();
 
   if (model_increment != nullptr) {
     model_increment->set_items_processed(model_increment->items_processed() + 1);
@@ -104,7 +107,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
   if (model_increment != nullptr) {
     // Process unknown tokens (if any)
-    TokenIterator iter(token_dict_, token_topic_matrix_, item, model.field_name(),
+    TokenIterator iter(token_dict_, topic_model_, item, model.field_name(),
                         TokenIterator::Mode_Unknown);
 
     while (iter.Next()) {
@@ -112,19 +115,19 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     }
   }
 
-  // find the id of token in token_topic_matrix
+  // find the id of token in topic_model
   std::vector<int> token_id;
   std::vector<float> token_count;
-  std::vector<TokenWeights> token_weights;
+  std::vector<TopicWeightIterator> token_weights;
   std::vector<float> z_normalizer;
   int known_tokens_count = 0;
-  TokenIterator iter(token_dict_, token_topic_matrix_, item, model.field_name(),
+  TokenIterator iter(token_dict_, topic_model_, item, model.field_name(),
                       TokenIterator::Mode_Known);
 
   while (iter.Next()) {
     token_id.push_back(iter.id());
     token_count.push_back(static_cast<float>(iter.count()));
-    token_weights.push_back(iter.weights());
+    token_weights.push_back(iter.GetTopicWeightIterator());
     z_normalizer.push_back(0.0f);
     known_tokens_count++;
   }
@@ -139,29 +142,31 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
           token_index < known_tokens_count;
           ++token_index) {
       float cur_z = 0.0f;
-      TokenWeights cur_token_weights = token_weights[token_index];
-      for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
-        cur_z += cur_token_weights.at(topic_index) * theta[topic_index];
+      TopicWeightIterator topic_iter = token_weights[token_index];
+      topic_iter.Reset();
+      while (topic_iter.NextNonZeroTopic() < topic_size) {
+        cur_z += topic_iter.Weight() * theta[topic_iter.TopicIndex()];
       }
 
       z_normalizer[token_index] = cur_z;
     }
 
     // 2. Find new theta (or store results if on the last iteration)
-    std::vector<float> theta_next(topics_count);
-    memset(&theta_next[0], 0, topics_count * sizeof(float));
+    std::vector<float> theta_next(topic_size);
+    memset(&theta_next[0], 0, topic_size * sizeof(float));
     for (int token_index = 0;
           token_index < known_tokens_count;
           ++token_index) {
       float n_dw = token_count[token_index];
-      TokenWeights cur_token_weights = token_weights[token_index];
+      TopicWeightIterator topic_iter = token_weights[token_index];
       float curZ = z_normalizer[token_index];
 
       if (curZ > 0) {
         // updating theta_next
-        for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
-          float w = cur_token_weights.at(topic_index);
-          theta_next[topic_index] += n_dw * w * theta[topic_index] / curZ;
+        topic_iter.Reset();
+        while (topic_iter.NextNonZeroTopic() < topic_size) {
+          theta_next[topic_iter.TopicIndex()] +=
+            n_dw * topic_iter.Weight() * theta[topic_iter.TopicIndex()] / curZ;
         }
 
         if ((inner_iter == inner_iters_count) && (model_increment != nullptr)) {
@@ -169,11 +174,12 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
           FloatArray* hat_n_wt_cur = model_increment->mutable_token_increment(
             token_id[token_index]);
 
-          for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
-            float w = cur_token_weights.at(topic_index);
-            float val = n_dw * w * theta[topic_index] / curZ;
-
-            hat_n_wt_cur->set_value(topic_index, hat_n_wt_cur->value(topic_index) + val);
+          topic_iter.Reset();
+          while (topic_iter.NextNonZeroTopic() < topic_size) {
+            float val = n_dw * topic_iter.Weight() * theta[topic_iter.TopicIndex()] / curZ;
+            hat_n_wt_cur->set_value(
+              topic_iter.TopicIndex(),
+              hat_n_wt_cur->value(topic_iter.TopicIndex()) + val);
           }
         }
       }
@@ -181,10 +187,10 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
     // Normalize theta_next. For normal iterations this is handled by curZ value.
     float sum = 0.0f;
-    for (int topic_index = 0; topic_index < topics_count; ++topic_index)
+    for (int topic_index = 0; topic_index < topic_size; ++topic_index)
       sum += theta_next[topic_index];
 
-    for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
+    for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
       theta[topic_index] = (sum > 0) ? (theta_next[topic_index] / sum) : 0.0f;
     }
   }
@@ -193,13 +199,14 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& item,
                                               const float* theta, double* perplexity,
                                               double* normalizer) {
-  TokenIterator iter(token_dict_, token_topic_matrix_, item, score.field_name(),
+  int topics_size = topic_model_.topic_size();
+  TokenIterator iter(token_dict_, topic_model_, item, score.field_name(),
                       TokenIterator::Mode_Known);
   while (iter.Next()) {
-    TokenWeights weights = iter.weights();
     float sum = 0.0f;
-    for (int topic_index = 0; topic_index < token_topic_matrix_.topics_count(); ++topic_index) {
-      sum += theta[topic_index] * weights.at(topic_index);
+    TopicWeightIterator topic_iter = iter.GetTopicWeightIterator();
+    while (topic_iter.NextNonZeroTopic() < topics_size) {
+      sum += theta[topic_iter.TopicIndex()] * topic_iter.Weight();
     }
 
     (*normalizer) += iter.count();
@@ -249,6 +256,8 @@ const Item* Processor::StreamIterator::Current() const {
 
 void Processor::ThreadFunction() {
   try {
+    Helpers::SetThreadName(-1, "Processor thread");
+    LOG(INFO) << "Processor thread started";
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
@@ -279,9 +288,9 @@ void Processor::ThreadFunction() {
         part->has_previous_processor_output() ? &part->previous_processor_output() : nullptr;
 
       std::shared_ptr<InstanceSchema> schema = schema_.get();
-      std::vector<int> model_ids = schema->get_model_ids();
+      std::vector<int> model_ids = schema->GetModelIds();
       std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
-        const ModelConfig& model = schema->get_model_config(model_id);
+        const ModelConfig& model = schema->model_config(model_id);
 
         // do not process disabled models.
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each
@@ -296,12 +305,11 @@ void Processor::ThreadFunction() {
           }
         }
 
-        std::shared_ptr<const TokenTopicMatrix> token_topic_matrix
-            = merger_.GetLatestTokenTopicMatrix(model_id);
-        assert(token_topic_matrix.get() != nullptr);
+        std::shared_ptr<const TopicModel> topic_model = merger_.GetLatestTopicModel(model_id);
+        assert(topic_model.get() != nullptr);
 
-        int topics_count = token_topic_matrix->topics_count();
-        assert(topics_count > 0);
+        int topic_size = topic_model->topic_size();
+        assert(topic_size > 0);
 
         // TODO(alfrey): if (cache_old != nullptr), deduct old values
 
@@ -316,24 +324,24 @@ void Processor::ThreadFunction() {
           model_increment->add_score_norm(0.0);
         }
 
-        model_increment->set_topics_count(topics_count);
+        model_increment->set_topics_count(topic_size);
 
-        for (int token_index = 0; token_index < token_topic_matrix->tokens_count(); token_index++) {
-          model_increment->add_token(token_topic_matrix->token(token_index));
+        for (int token_index = 0; token_index < topic_model->token_size(); token_index++) {
+          model_increment->add_token(topic_model->token(token_index));
           FloatArray* counters = model_increment->add_token_increment();
-          for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
+          for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
             counters->add_value(0.0f);
           }
         }
 
-        ItemProcessor item_processor(*token_topic_matrix, part->batch().token());
+        ItemProcessor item_processor(*topic_model, part->batch().token());
         StreamIterator iter(*part, model.stream_name());
         while (iter.Next() != nullptr) {
           // ToDo: add an option to always start with random iteration!
           const Item* item = iter.Current();
 
           // ToDo: if (cache_old != nullptr), use it as a starting iteration.
-          std::vector<float> theta(topics_count);
+          std::vector<float> theta(topic_size);
           int index_of_item = -1;
           if (previous_model_increment != nullptr) {
             index_of_item = repeated_field_index_of(
@@ -342,11 +350,11 @@ void Processor::ThreadFunction() {
 
           if ((index_of_item != -1) && model.reuse_theta()) {
             const FloatArray& old_thetas = previous_model_increment->theta(index_of_item);
-            for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
+            for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
               theta[topic_index] = old_thetas.value(topic_index);
             }
           } else {
-            for (int iTopic = 0; iTopic < topics_count; ++iTopic) {
+            for (int iTopic = 0; iTopic < topic_size; ++iTopic) {
               theta[iTopic] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
             }
           }
@@ -356,7 +364,7 @@ void Processor::ThreadFunction() {
           // Cache theta for the next iteration
           model_increment->add_item_id(item->id());
           FloatArray* cached_theta = model_increment->add_theta();
-          for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
+          for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
             cached_theta->add_value(theta[topic_index]);
           }
         }
@@ -372,14 +380,14 @@ void Processor::ThreadFunction() {
           double perplexity_score = 0.0;
           double perplexity_norm = 0.0;
           StreamIterator test_iter(*part, score.stream_name());
-          ItemProcessor test_item_processor(*token_topic_matrix, part->batch().token());
+          ItemProcessor test_item_processor(*topic_model, part->batch().token());
           while (test_iter.Next() != nullptr) {
             const Item* item = test_iter.Current();
 
             std::vector<float> theta_vec;
-            theta_vec.resize(topics_count);
+            theta_vec.resize(topic_size);
             float* theta = &theta_vec[0];
-            for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
+            for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
               theta[topic_index] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
             }
 
@@ -388,7 +396,9 @@ void Processor::ThreadFunction() {
               score, *item, theta, &perplexity_score, &perplexity_norm);
           }
 
-          model_increment->set_score(score_index, model_increment->score(score_index) + perplexity_score);
+          model_increment->set_score(score_index,
+            model_increment->score(score_index) + perplexity_score);
+
           model_increment->set_score_norm(
             score_index, model_increment->score_norm(score_index) + perplexity_norm);
         }
@@ -396,7 +406,11 @@ void Processor::ThreadFunction() {
     }
   }
   catch(boost::thread_interrupted&) {
+    LOG(WARNING) << "thread_interrupted exception in Processor::ThreadFunction() function";
     return;
+  } catch(...) {
+    LOG(FATAL) << "Fatal exception in Processor::ThreadFunction() function";
+    throw;
   }
 }
 

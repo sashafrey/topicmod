@@ -76,7 +76,7 @@ class Processor : boost::noncopyable {
   // (inferring theta distribution or perplexity calculation)
   class ItemProcessor : boost::noncopyable {
    public:
-    ItemProcessor(const TokenTopicMatrix& token_topic_matrix,
+    ItemProcessor(const TopicModel& topic_model,
                   const google::protobuf::RepeatedPtrField<std::string>& token_dict);
 
     void InferTheta(const ModelConfig& model,
@@ -91,7 +91,7 @@ class Processor : boost::noncopyable {
                         double* normalizer);
 
    private:
-    const TokenTopicMatrix& token_topic_matrix_;
+    const TopicModel& topic_model_;
     const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
   };
 
@@ -105,7 +105,7 @@ class Processor : boost::noncopyable {
     };
 
     TokenIterator(const google::protobuf::RepeatedPtrField<std::string>& token_dict,
-                  const TokenTopicMatrix& token_topic_matrix,
+                  const TopicModel& topic_model,
                   const Item& item,
                   const std::string& field_name,
                   Mode mode = Mode_KnownAndUnknown);
@@ -116,11 +116,13 @@ class Processor : boost::noncopyable {
     const std::string& token() const { return token_; }
     int id() const { return token_id_; }
     int count() const { return count_; }
-    TokenWeights weights() const { return token_topic_matrix_.token_weights(id()); }
+    TopicWeightIterator GetTopicWeightIterator() const {
+      return std::move(topic_model_.GetTopicWeightIterator(id()));
+    }
 
    private:
     const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
-    const TokenTopicMatrix& token_topic_matrix_;
+    const TopicModel& topic_model_;
     const Field* field_;
     int token_size_;
     bool iterate_known_;

@@ -25,26 +25,17 @@ namespace core {
 class DataLoader : boost::noncopyable {
  public:
   ~DataLoader();
-  void Interrupt();
-  void Join();
-  int AddBatch(const Batch& batch);
 
-  int GetTotalItemsCount() const {
-    auto ptr = generation_.get();
-    return ptr->GetTotalItemsCount();
-  }
-
-  int Reconfigure(const DataLoaderConfig& config);
-
-  int InvokeIteration(int iterations_count);
-
+  int GetTotalItemsCount() const;
+  void AddBatch(const Batch& batch);
   void Callback(std::shared_ptr<const ProcessorOutput> cache);
-
+  void Reconfigure(const DataLoaderConfig& config);
+  void Interrupt();
+  void InvokeIteration(int iterations_count);
+  void Join();
   void WaitIdle();
 
-  int id() const {
-    return data_loader_id_;
-  }
+  int id() const;
 
  private:
   // Each batch should be processed by at max one processor at a time.

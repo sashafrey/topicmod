@@ -5,49 +5,60 @@
 
 namespace artm {
 
-inline char* string_as_array(std::string* str) {
+inline char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
+}
+
+inline int HandleErrorCode(int artm_error_code) {
+  // All error codes are negative. Any non-negative value is a success.
+  if (artm_error_code >= 0) {
+    return artm_error_code;
+  }
+
+  switch (artm_error_code) {
+    case ARTM_SUCCESS:
+      return artm_error_code;
+    case ARTM_OBJECT_NOT_FOUND:
+      throw ObjectNotFound();
+    case ARTM_INVALID_MESSAGE:
+      throw InvalidMessage();
+    case ARTM_UNSUPPORTED_RECONFIGURATION:
+      throw UnsupportedReconfiguration();
+    case ARTM_GENERAL_ERROR:
+    default:
+      throw GeneralError();
+  }
 }
 
 Instance::Instance(const InstanceConfig& config) : id_(0), config_(config) {
   std::string instance_config_blob;
   config.SerializeToString(&instance_config_blob);
-  id_ = create_instance(
-    0,
-    instance_config_blob.size(),
-    string_as_array(&instance_config_blob));
+  id_ = HandleErrorCode(ArtmCreateInstance(0, instance_config_blob.size(),
+    StringAsArray(&instance_config_blob)));
 }
 
 Instance::~Instance() {
-  dispose_instance(id());
+  ArtmDisposeInstance(id());
 }
 
 void Instance::Reconfigure(const InstanceConfig& config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  reconfigure_instance(id(), config_blob.size(), string_as_array(&config_blob));
+  HandleErrorCode(ArtmReconfigureInstance(id(), config_blob.size(), StringAsArray(&config_blob)));
   config_.CopyFrom(config);
 }
 
 std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
   // Request model topics
-  int length;
-  char* address;
-  int request_id =
-    request_model_topics(
-      id(),
-      model.model_id(),
-      &length,
-      &address);
+  int request_id = HandleErrorCode(ArtmRequestModelTopics(
+    id(), model.model_id()));
 
+  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
   std::string model_topics_blob;
   model_topics_blob.resize(length);
-  copy_request_result(
-    request_id,
-    length,
-    string_as_array(&model_topics_blob));
+  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&model_topics_blob)));
 
-  dispose_request(request_id);
+  ArtmDisposeRequest(request_id);
 
   std::shared_ptr<ModelTopics> model_topics(new ModelTopics());
   model_topics->ParseFromString(model_topics_blob);
@@ -60,30 +71,32 @@ Model::Model(const Instance& instance, const ModelConfig& config)
       config_(config) {
   std::string model_config_blob;
   config.SerializeToString(&model_config_blob);
-  model_id_ = create_model(instance_id_, model_config_blob.size(),
-                           string_as_array(&model_config_blob));
+  model_id_ = HandleErrorCode(ArtmCreateModel(instance_id_, model_config_blob.size(),
+    StringAsArray(&model_config_blob)));
 }
 
 Model::~Model() {
-  dispose_model(instance_id(), model_id());
+  ArtmDisposeModel(instance_id(), model_id());
 }
 
 void Model::Reconfigure(const ModelConfig& config) {
   std::string model_config_blob;
   config.SerializeToString(&model_config_blob);
-  reconfigure_model(instance_id(), model_id(), model_config_blob.size(),
-                    string_as_array(&model_config_blob));
+  HandleErrorCode(ArtmReconfigureModel(instance_id(), model_id(), model_config_blob.size(),
+    StringAsArray(&model_config_blob)));
   config_.CopyFrom(config);
 }
 
 void Model::Enable() {
-  config_.set_enabled(true);
-  Reconfigure(config_);
+  ModelConfig config_copy_(config_);
+  config_copy_.set_enabled(true);
+  Reconfigure(config_copy_);
 }
 
 void Model::Disable() {
-  config_.set_enabled(false);
-  Reconfigure(config_);
+  ModelConfig config_copy_(config_);
+  config_copy_.set_enabled(false);
+  Reconfigure(config_copy_);
 }
 
 DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config)
@@ -91,33 +104,33 @@ DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config)
   config_.set_instance_id(instance.id());
   std::string data_loader_config_blob;
   config_.SerializeToString(&data_loader_config_blob);
-  id_ = create_data_loader(0, data_loader_config_blob.size(),
-                           string_as_array(&data_loader_config_blob));
+  id_ = HandleErrorCode(ArtmCreateDataLoader(0, data_loader_config_blob.size(),
+    StringAsArray(&data_loader_config_blob)));
 }
 
 DataLoader::~DataLoader() {
-  dispose_data_loader(id());
+  ArtmDisposeDataLoader(id());
 }
 
 void DataLoader::AddBatch(const Batch& batch) {
   std::string batch_blob;
   batch.SerializeToString(&batch_blob);
-  add_batch(id(), batch_blob.size(), string_as_array(&batch_blob));
+  HandleErrorCode(ArtmAddBatch(id(), batch_blob.size(), StringAsArray(&batch_blob)));
 }
 
 void DataLoader::Reconfigure(const DataLoaderConfig& config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  reconfigure_data_loader(id(), config_blob.size(), string_as_array(&config_blob));
+  HandleErrorCode(ArtmReconfigureDataLoader(id(), config_blob.size(), StringAsArray(&config_blob)));
   config_.CopyFrom(config);
 }
 
 void DataLoader::InvokeIteration(int iterations_count) {
-  invoke_iteration(id(), iterations_count);
+  HandleErrorCode(ArtmInvokeIteration(id(), iterations_count));
 }
 
 void DataLoader::WaitIdle() {
-  wait_idle_data_loader(id());
+  HandleErrorCode(ArtmWaitIdleDataLoader(id()));
 }
 
 void DataLoader::AddStream(const Stream& stream) {
@@ -138,6 +151,14 @@ void DataLoader::RemoveStream(std::string stream_name) {
   }
 
   Reconfigure(new_config);
+}
+
+MemcachedServer::MemcachedServer(const std::string& endpoint) {
+  id_ = HandleErrorCode(ArtmCreateMemcachedServer(endpoint.c_str()));
+}
+
+MemcachedServer::~MemcachedServer() {
+  ArtmDisposeMemcachedServer(id_);
 }
 
 }  // namespace artm

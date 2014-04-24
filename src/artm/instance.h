@@ -20,6 +20,11 @@
 #include "artm/template_manager.h"
 #include "artm/thread_safe_holder.h"
 
+#include "artm/memcached_service.rpcz.h"
+#include "artm/memcached_service.pb.h"
+#include "rpcz/application.hpp"
+
+
 namespace artm {
 namespace core {
 
@@ -37,12 +42,19 @@ class Instance : boost::noncopyable {
 
   int processor_queue_size() const;
 
+  // Creates a model and returns model_id
   int CreateModel(const ModelConfig& config);
-  int ReconfigureModel(int model_id, const ModelConfig& config);
-  int DisposeModel(int model_id);
-  int Reconfigure(const InstanceConfig& config);
-  int RequestModelTopics(int model_id, ModelTopics* model_topics);
-  int AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
+
+  // Retrieves topic model.
+  // Returns true if succeeded, and false if model_id hasn't been found.
+  bool RequestModelTopics(int model_id, ModelTopics* model_topics);
+
+  // Reconfigures topic model if already exists, otherwise creates a new model.
+  void ReconfigureModel(int model_id, const ModelConfig& config);
+
+  void DisposeModel(int model_id);
+  void Reconfigure(const InstanceConfig& config);
+  void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;
@@ -55,6 +67,9 @@ class Instance : boost::noncopyable {
   ThreadSafeHolder<InstanceSchema> schema_;
 
   int next_model_id_;
+
+  rpcz::application application_;
+  ThreadSafeHolder<artm::memcached::MemcachedService_Stub> memcached_service_proxy_;
 
   mutable boost::mutex processor_queue_lock_;
   std::queue<std::shared_ptr<const ProcessorInput> > processor_queue_;

@@ -3,11 +3,16 @@
 #include "artm/data_loader.h"
 
 #include <string>
+#include <fstream>
 
 #include "boost/lexical_cast.hpp"
 #include "boost/uuid/uuid_io.hpp"
 
+#include "glog/logging.h"
+
+#include "artm/exceptions.h"
 #include "artm/protobuf_helpers.h"
+#include "artm/helpers.h"
 
 namespace artm {
 namespace core {
@@ -43,16 +48,29 @@ void DataLoader::Join() {
   thread_.join();
 }
 
-int DataLoader::Reconfigure(const DataLoaderConfig& config) {
+void DataLoader::Reconfigure(const DataLoaderConfig& config) {
   config_.set(std::make_shared<DataLoaderConfig>(config));
-  return ARTM_SUCCESS;
 }
 
-int DataLoader::AddBatch(const Batch& batch) {
+void DataLoader::AddBatch(const Batch& batch) {
   std::shared_ptr<Generation> next_gen = generation_.get_copy();
   next_gen->AddBatch(std::make_shared<Batch>(batch));
   generation_.set(next_gen);
-  return ARTM_SUCCESS;
+  //std::string batch_file = config_.get()->disk_path() + "\\batch.dat";
+  //std::ofstream out_batch(batch_file, std::ofstream::out);
+  //if (out_batch.is_open()) {
+  //  bool is_serialized = batch.SerializeToOstream(&out_batch);
+  //  out_batch.close();
+  //}
+}
+
+int DataLoader::GetTotalItemsCount() const {
+  auto ptr = generation_.get();
+  return ptr->GetTotalItemsCount();
+}
+
+int DataLoader::id() const {
+  return data_loader_id_;
 }
 
 DataLoader::BatchManager::BatchManager(boost::mutex* lock)
@@ -87,8 +105,13 @@ bool DataLoader::BatchManager::IsEverythingProcessed() const {
   return (tasks_.empty() && in_progress_.empty());
 }
 
-int DataLoader::InvokeIteration(int iterations_count) {
-  if (iterations_count <= 0) return ARTM_ERROR;
+void DataLoader::InvokeIteration(int iterations_count) {
+  if (iterations_count <= 0) {
+    LOG(WARNING) << "DataLoader::InvokeIteration() was called with argument '"
+                 << iterations_count << "'. Call is ignored.";
+    return;
+  }
+
   auto latest_generation = generation_.get();
   for (int iter = 0; iter < iterations_count; ++iter) {
     latest_generation->InvokeOnEachPartition(
@@ -96,8 +119,6 @@ int DataLoader::InvokeIteration(int iterations_count) {
         batch_manager_.Add(uuid);
       });
   }
-
-  return ARTM_SUCCESS;
 }
 
 void DataLoader::WaitIdle() {
@@ -117,6 +138,8 @@ void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
 
 void DataLoader::ThreadFunction() {
   try {
+    Helpers::SetThreadName(-1, "DataLoader thread");
+    LOG(INFO) << "DataLoader thread started";
     for (;;) {
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
@@ -177,7 +200,7 @@ void DataLoader::ThreadFunction() {
 
             case Stream_Type_ItemHashModulus:
             default:
-              throw "bad santa";  // not implemented.
+              BOOST_THROW_EXCEPTION(NotImplementedException("Stream_Type_ItemHashModulus"));
           }
 
           mask->add_value(value);
@@ -188,7 +211,12 @@ void DataLoader::ThreadFunction() {
     }
   }
   catch(boost::thread_interrupted&) {
+    LOG(WARNING) << "thread_interrupted exception in DataLoader::ThreadFunction() function";
     return;
+  }
+  catch(...) {
+    LOG(FATAL) << "Fatal exception in DataLoader::ThreadFunction() function";
+    throw;
   }
 }
 

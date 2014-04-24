@@ -1,0 +1,8 @@
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemDefinitionGroup>
+    <PostBuildEvent>
+      <Command>copy $(RepositoryRoot)\libs\$(PlatformToolset)\$(Platform)\$(Configuration)\*.dll $(OutDir) 
+               copy "$(ZEROMQ32_ROOT)\bin\libzmq-$(PlatformToolset)-mt*.dll" $(OutDir)</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+</Project>

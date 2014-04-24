@@ -7,6 +7,7 @@
 #include "artm/common.h"
 #include "artm/processor.h"
 #include "artm/template_manager.h"
+#include "artm/topic_model.h"
 
 namespace artm {
 namespace core {
@@ -15,12 +16,14 @@ Instance::Instance(int id, const InstanceConfig& config)
     : lock_(),
       instance_id_(id),
       schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
-      next_model_id_(0),
+      next_model_id_(1),
+      application_(),
+      memcached_service_proxy_(lock_, nullptr),
       processor_queue_lock_(),
       processor_queue_(),
       merger_queue_lock_(),
       merger_queue_(),
-      merger_(&merger_queue_lock_, &merger_queue_, &schema_),
+      merger_(&merger_queue_lock_, &merger_queue_, &schema_, &memcached_service_proxy_),
       processors_() {
   Reconfigure(config);
 }
@@ -33,25 +36,23 @@ int Instance::CreateModel(const ModelConfig& config) {
   return model_id;
 }
 
-int Instance::ReconfigureModel(int model_id, const ModelConfig& config) {
+void Instance::ReconfigureModel(int model_id, const ModelConfig& config) {
   merger_.UpdateModel(model_id, config);
 
   auto new_schema = schema_.get_copy();
   new_schema->set_model_config(model_id, std::make_shared<const ModelConfig>(config));
   schema_.set(new_schema);
-  return ARTM_SUCCESS;
 }
 
-int Instance::DisposeModel(int model_id) {
+void Instance::DisposeModel(int model_id) {
   auto new_schema = schema_.get_copy();
-  new_schema->discard_model(model_id);
+  new_schema->clear_model_config(model_id);
   schema_.set(new_schema);
 
   merger_.DisposeModel(model_id);
-  return ARTM_SUCCESS;
 }
 
-int Instance::Reconfigure(const InstanceConfig& config) {
+void Instance::Reconfigure(const InstanceConfig& config) {
   auto new_schema = schema_.get_copy();
   new_schema->set_instance_config(config);
   schema_.set(new_schema);
@@ -69,27 +70,37 @@ int Instance::Reconfigure(const InstanceConfig& config) {
         schema_)));
   }
 
-  return ARTM_SUCCESS;
+  // Recreate memcached_service_proxy_;
+  if (config.has_memcached_endpoint()) {
+    std::shared_ptr<artm::memcached::MemcachedService_Stub> new_ptr(
+      new artm::memcached::MemcachedService_Stub(
+        application_.create_rpc_channel(config.memcached_endpoint()), true));
+    memcached_service_proxy_.set(new_ptr);
+  } else {
+    memcached_service_proxy_.set(nullptr);
+  }
 }
 
-int Instance::RequestModelTopics(int model_id, ModelTopics* model_topics) {
-  std::shared_ptr<const TokenTopicMatrix> ttm = merger_.GetLatestTokenTopicMatrix(model_id);
-  int nTopics = ttm->topics_count();
-  for (int token_index = 0; token_index < ttm->tokens_count(); token_index++) {
+bool Instance::RequestModelTopics(int model_id, ::artm::ModelTopics* model_topics) {
+  std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_.GetLatestTopicModel(model_id);
+  if (ttm == nullptr) return false;
+
+  int topics_size = ttm->topic_size();
+  for (int token_index = 0; token_index < ttm->token_size(); token_index++) {
     TokenTopics* token_topics = model_topics->add_token_topic();
     token_topics->set_token(ttm->token(token_index));
-    TokenWeights token_weights = ttm->token_weights(token_index);
-    for (int topic_index = 0; topic_index < nTopics; ++topic_index) {
-      token_topics->add_topic_weight(token_weights.at(topic_index));
+    TopicWeightIterator iter = ttm->GetTopicWeightIterator(token_index);
+    while (iter.NextTopic() < topics_size) {
+      token_topics->add_topic_weight(iter.Weight());
     }
   }
 
   model_topics->set_items_processed(ttm->items_processed());
-  for (int score_index = 0; score_index < ttm->scores_count(); ++score_index) {
+  for (int score_index = 0; score_index < ttm->score_size(); ++score_index) {
     model_topics->add_score(ttm->score(score_index));
   }
 
-  return ARTM_SUCCESS;
+  return true;
 }
 
 int Instance::processor_queue_size() const {
@@ -97,10 +108,9 @@ int Instance::processor_queue_size() const {
   return processor_queue_.size();
 }
 
-int Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input) {
+void Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input) {
   boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
   processor_queue_.push(input);
-  return ARTM_SUCCESS;
 }
 
 }  // namespace core

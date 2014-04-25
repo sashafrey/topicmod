@@ -57,9 +57,9 @@ class Instance : boost::noncopyable {
   void Reconfigure(const InstanceConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
-  std::string CreateRegularizer(std::string name, RegularizerInterface& regularizer);
+  void CreateRegularizer(std::string name, std::shared_ptr<RegularizerInterface> regularizer);
   void DisposeRegularizer(std::string name);
-  void ReconfigureRegularizer(std::string, RegularizerInterface& regularizer);
+  void ReconfigureRegularizer(std::string, std::shared_ptr<RegularizerInterface> regularizer);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

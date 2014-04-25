@@ -52,20 +52,20 @@ void Instance::DisposeModel(int model_id) {
   merger_.DisposeModel(model_id);
 }
 
-void Instance::DisposeRegularizer(std::string name) {
+void Instance::CreateRegularizer(std::string name, 
+                                  std::shared_ptr<RegularizerInterface> regularizer) {
+  ReconfigureRegularizer(name, regularizer);
+}
+
+void Instance::ReconfigureRegularizer(std::string name, std::shared_ptr<RegularizerInterface> regularizer) {
   auto new_schema = schema_.get_copy();
-  new_schema->clear_regularizer(name);
+  new_schema->set_regularizer(name, regularizer);
   schema_.set(new_schema);
 }
 
-std::string Instance::CreateRegularizer(std::string name, RegularizerInterface& regularizer) {
-  ReconfigureRegularizer(name, regularizer);
-  return name;
-}
-
-void Instance::ReconfigureRegularizer(std::string name, RegularizerInterface& regularizer) {
+void Instance::DisposeRegularizer(std::string name) {
   auto new_schema = schema_.get_copy();
-  new_schema->set_regularizer(name, std::make_shared<RegularizerInterface>(regularizer));
+  new_schema->clear_regularizer(name);
   schema_.set(new_schema);
 }
 

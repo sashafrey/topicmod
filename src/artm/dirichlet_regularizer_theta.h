@@ -11,14 +11,12 @@ namespace core {
 
 class DirichletRegularizerTheta : RegularizerInterface {
 public:
-  DirichletRegularizerTheta(const std::string& config);
-  ~DirichletRegularizerTheta();
+  DirichletRegularizerTheta(DirichletRegularizerThetaConfig config);
 
   void RegularizeTheta(const Item& item, float* n_dt, int topic_size, int inner_iter);
 
 private:
-  float* tilde_alpha_;
-  float* alpha_0;
+  DirichletRegularizerThetaConfig config_;
 };
 
 }  // namespace core

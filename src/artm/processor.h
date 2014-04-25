@@ -18,7 +18,10 @@
 #include "artm/merger.h"
 #include "artm/messages.pb.h"
 #include "artm/thread_safe_holder.h"
+
 #include "artm/regularizer_interface.h"
+// include here all files containig regularizers
+#include "artm/dirichlet_regularizer_theta.h"
 
 namespace artm {
 namespace core {

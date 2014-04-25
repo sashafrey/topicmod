@@ -187,6 +187,17 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
       }
     }
 
+    //3. The following block of code makes the regularization of theta_next
+    for (auto reg_iterator = regularizers_->begin(); reg_iterator != regularizers_->end(); reg_iterator++) {
+      std::shared_ptr<int> retval;
+      reg_iterator->second->RegularizeTheta(item, theta_next, topic_size, inner_iter, retval);
+
+      if (*retval.get() == REGULARIZATION_FAULT) {
+        std::cout << "Problems with type or number of parameters in regularizer " <<
+          reg_iterator->first << ". On this iteration this regularizer was turned off.\n";
+      }
+    }
+
     // Normalize theta_next. For normal iterations this is handled by curZ value.
     float sum = 0.0f;
     for (int topic_index = 0; topic_index < topic_size; ++topic_index)

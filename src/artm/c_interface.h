@@ -67,9 +67,9 @@ extern "C" {
 
   DLL_PUBLIC int ArtmCreateRegularizer(int instance_id, int length, 
                                         const char* regularizer_config_blob);
-  //DLL_PUBLIC int ArtmReconfigureRegularizer(int instance_id, int length,
-  //                                      const char* regularizer_config_blob);
-  //DLL_PUBLIC void ArtmDisposeRegularizer(int instance_id, char* regularizer_name);
+  DLL_PUBLIC int ArtmReconfigureRegularizer(int instance_id, int length,
+                                        const char* regularizer_config_blob);
+  DLL_PUBLIC void ArtmDisposeRegularizer(int instance_id, char* regularizer_name);
 }
 
 #endif  // SRC_ARTM_C_INTERFACE_H_

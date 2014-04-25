@@ -24,6 +24,7 @@ void DirichletRegularizerTheta::RegularizeTheta(const Item& item,
 
   // inner_iter is from [0 iter_num]
   if ((alpha_0_vector.size() >= inner_iter + 1) && (tilde_alpha_vector.size() >= inner_iter + 1)) {
+
     double alpha_0 = alpha_0_vector.Get(inner_iter);
     const artm::DoubleArray& tilde_alpha = tilde_alpha_vector.Get(inner_iter);
     
@@ -33,10 +34,10 @@ void DirichletRegularizerTheta::RegularizeTheta(const Item& item,
       }
       retval = std::make_shared<int>(REGULARIZATION_SUCCESS);
     } else {
-      retval = std::make_shared<int>(REGULARIZATION_FAULT);
+      retval = std::make_shared<int>(REGULARIZATION_FAILED);
     }
   } else {
-    retval = std::make_shared<int>(REGULARIZATION_FAULT);
+    retval = std::make_shared<int>(REGULARIZATION_FAILED);
   }
 }
 

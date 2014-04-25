@@ -17,6 +17,7 @@ namespace artm {
 
 class Instance;
 class Model;
+class Regularizer;
 class DataLoader;
 
 // Exception handling in cpp_interface
@@ -68,6 +69,22 @@ class Model {
   int model_id_;
   ModelConfig config_;
   DISALLOW_COPY_AND_ASSIGN(Model);
+};
+
+class Regularizer {
+ public:
+  Regularizer(const Instance& instance, const RegularizerConfig& config);
+  ~Regularizer();
+
+  void Reconfigure(const RegularizerConfig& config);
+
+  int instance_id() const { return instance_id_; }
+  const RegularizerConfig& config() const { return config_; }
+
+ private:
+  int instance_id_;
+  RegularizerConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(Regularizer);
 };
 
 class DataLoader {

@@ -192,7 +192,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
       std::shared_ptr<int> retval;
       reg_iterator->second->RegularizeTheta(item, theta_next, topic_size, inner_iter, retval);
 
-      if (*retval.get() == REGULARIZATION_FAULT) {
+      if (*retval.get() == REGULARIZATION_FAILED) {
         std::cout << "Problems with type or number of parameters in regularizer " <<
           reg_iterator->first << ". On this iteration this regularizer was turned off.\n";
       }

@@ -1,5 +1,7 @@
 # emacs backup files
 *~
+# python files
+*.pyc
 
 # Dependencies
 *.depends

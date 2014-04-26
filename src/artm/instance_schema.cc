@@ -50,8 +50,8 @@ void InstanceSchema::clear_model_config(int id) {
   }
 }
 
-void InstanceSchema::set_regularizer(
-  std::string name, std::shared_ptr<RegularizerInterface>& regularizer) {
+void InstanceSchema::set_regularizer(const std::string name,
+                                     const std::shared_ptr<RegularizerInterface>& regularizer) {
   auto iter = regularizers_.find(name);
   if (iter != regularizers_.end()) {
     iter->second = regularizer;
@@ -60,23 +60,24 @@ void InstanceSchema::set_regularizer(
   }
 }
 
-bool InstanceSchema::has_regularizer(std::string name) const {
+bool InstanceSchema::has_regularizer(const std::string name) const {
   auto iter = regularizers_.find(name);
   return iter != regularizers_.end();
 }
-void InstanceSchema::clear_regularizer(std::string name) {
-
+void InstanceSchema::clear_regularizer(const std::string name) {
   auto iter = regularizers_.find(name);
   if (iter != regularizers_.end()) {
     regularizers_.erase(iter);
   }
 }
 
-std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >> 
-  InstanceSchema::GetPointerToRegularizers() {
-
-  return std::make_shared<std::map<std::string, 
-    std::shared_ptr<RegularizerInterface> >> (regularizers_);
+std::shared_ptr<RegularizerInterface> InstanceSchema::get_regularizer(const std::string& name) {
+  auto iter = regularizers_.find(name);
+  if (iter != regularizers_.end()) {
+    return iter->second;
+  } else {
+    return NULL;
+  }
 }
 
 std::vector<int> InstanceSchema::GetModelIds() const {

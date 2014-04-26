@@ -92,10 +92,10 @@ bool Processor::TokenIterator::Next() {
 Processor::ItemProcessor::ItemProcessor(
     const TopicModel& topic_model,
     const google::protobuf::RepeatedPtrField<std::string>& token_dict,
-    std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >> regularizers)
+    std::shared_ptr<InstanceSchema> schema)
     : topic_model_(topic_model),
       token_dict_(token_dict),
-      regularizers_(regularizers) {}
+      schema_(schema) {}
 
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
@@ -187,14 +187,16 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
       }
     }
 
-    //3. The following block of code makes the regularization of theta_next
-    for (auto reg_iterator = regularizers_->begin(); reg_iterator != regularizers_->end(); reg_iterator++) {
-      int retval;
-      reg_iterator->second->RegularizeTheta(item, theta_next, topic_size, inner_iter, &retval);
+    // 3. The following block of code makes the regularization of theta_next
+    auto reg_names = model.regularizer_name();
+    for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
+      reg_name_iterator++) {
+        auto regularizer = schema_->get_regularizer(reg_name_iterator->c_str());
+      bool retval = regularizer->RegularizeTheta(item, theta_next, topic_size, inner_iter);
 
       if (retval == REGULARIZATION_FAILED) {
-          std::cout << "Problems with type or number of parameters in regularizer " <<
-          reg_iterator->first << ". On this iteration this regularizer was turned off.\n";
+        LOG(ERROR) << "Problems with type or number of parameters in regularizer " <<
+          reg_name_iterator->c_str() << ". On this iteration this regularizer was turned off.\n";
       }
     }
 
@@ -347,8 +349,7 @@ void Processor::ThreadFunction() {
           }
         }
 
-        ItemProcessor item_processor(*topic_model, part->batch().token(), 
-                                      schema_.get()->GetPointerToRegularizers());
+        ItemProcessor item_processor(*topic_model, part->batch().token(), schema_.get());
         StreamIterator iter(*part, model.stream_name());
         while (iter.Next() != nullptr) {
           // ToDo: add an option to always start with random iteration!
@@ -394,8 +395,7 @@ void Processor::ThreadFunction() {
           double perplexity_score = 0.0;
           double perplexity_norm = 0.0;
           StreamIterator test_iter(*part, score.stream_name());
-          ItemProcessor test_item_processor(*topic_model, part->batch().token(), 
-                                              schema_.get()->GetPointerToRegularizers());
+          ItemProcessor test_item_processor(*topic_model, part->batch().token(), schema_.get());
           while (test_iter.Next() != nullptr) {
             const Item* item = test_iter.Current();
 

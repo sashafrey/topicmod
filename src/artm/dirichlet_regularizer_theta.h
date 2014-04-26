@@ -5,6 +5,8 @@
 #ifndef SRC_ARTM_DIRICHLET_REGULARIZER_THETA_H_
 #define SRC_ARTM_DIRICHLET_REGULARIZER_THETA_H_
 
+#include <vector>
+
 #include "artm/messages.pb.h"
 #include "artm/regularizer_interface.h"
 
@@ -12,16 +14,16 @@ namespace artm {
 namespace core {
 
 class DirichletRegularizerTheta : public RegularizerInterface {
-public:
-  DirichletRegularizerTheta(DirichletRegularizerThetaConfig config);
+ public:
+  DirichletRegularizerTheta(DirichletRegularizerThetaConfig config)
+    : config_(config) {}
 
-  void RegularizeTheta(const Item& item, 
-                        std::vector<float> n_dt, 
-                        int topic_size, 
-                        int inner_iter, 
-                        int* retval);
+  bool RegularizeTheta(const Item& item,
+                        std::vector<float> n_dt,
+                        int topic_size,
+                        int inner_iter);
 
-private:
+ private:
   DirichletRegularizerThetaConfig config_;
 };
 

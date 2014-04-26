@@ -7,6 +7,7 @@
 #include <memory>
 #include <queue>
 #include <vector>
+#include <string>
 
 #include "boost/thread/mutex.hpp"
 #include "boost/utility.hpp"
@@ -57,9 +58,9 @@ class Instance : boost::noncopyable {
   void Reconfigure(const InstanceConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
-  void CreateRegularizer(std::string name, std::shared_ptr<RegularizerInterface> regularizer);
-  void DisposeRegularizer(std::string name);
-  void ReconfigureRegularizer(std::string, std::shared_ptr<RegularizerInterface> regularizer);
+  void CreateOrReconfigureRegularizer(const std::string name,
+                                      std::shared_ptr<RegularizerInterface> regularizer);
+  void DisposeRegularizer(const std::string name);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

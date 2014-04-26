@@ -25,7 +25,7 @@ TEST(CppInterface, Basic) {
   for (int i = 0; i < nTopics; ++i) {
     tilde_alpha.add_alpha(0);
   }
-  for (int i = 0; i < 3; ++i) {
+  for (int i = 0; i < 12; ++i) {
     regularizer_1_config.add_alpha_0(0.01);
     for (int j = 0; j < nTopics; ++j) {
       tilde_alpha.set_alpha(j, 0.05);
@@ -35,7 +35,7 @@ TEST(CppInterface, Basic) {
   }
 
   artm::DirichletRegularizerThetaConfig regularizer_2_config;
-  for (int i = 0; i < 3; ++i) {
+  for (int i = 0; i < 10; ++i) {
     regularizer_2_config.add_alpha_0(0.03);
     for (int j = 0; j < nTopics; ++j) {
       tilde_alpha.set_alpha(j, 0.08);
@@ -44,13 +44,16 @@ TEST(CppInterface, Basic) {
     *tilde_alpha_ptr = tilde_alpha;
   }
 
+  std::string regularizer_1_name = "regularizer_1";
+  std::string regularizer_2_name = "regularizer_2";
+
   artm::RegularizerConfig general_regularizer_1_config;
-  general_regularizer_1_config.set_name("regularizer_1");
+  general_regularizer_1_config.set_name(regularizer_1_name);
   general_regularizer_1_config.set_type(artm::RegularizerConfig_Type_DirichletRegularizerTheta);
   general_regularizer_1_config.set_config(regularizer_1_config.SerializeAsString());
 
   artm::RegularizerConfig general_regularizer_2_config;
-  general_regularizer_2_config.set_name("regularizer_2");
+  general_regularizer_2_config.set_name(regularizer_2_name);
   general_regularizer_2_config.set_type(artm::RegularizerConfig_Type_DirichletRegularizerTheta);
   general_regularizer_2_config.set_config(regularizer_2_config.SerializeAsString());
 
@@ -60,8 +63,8 @@ TEST(CppInterface, Basic) {
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-  model_config.add_regularizer_name("regularizer_1", 13);
-  model_config.add_regularizer_name("regularizer_2", 13);
+  model_config.add_regularizer_name(general_regularizer_1_config.name());
+  model_config.add_regularizer_name(general_regularizer_2_config.name());
   artm::Model model(instance, model_config);
 
   // Load doc-token matrix

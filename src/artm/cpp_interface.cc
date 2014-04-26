@@ -104,18 +104,18 @@ Regularizer::Regularizer(const Instance& instance, const RegularizerConfig& conf
       config_(config) {
   std::string regularizer_config_blob;
   config.SerializeToString(&regularizer_config_blob);
-  HandleErrorCode(ArtmCreateRegularizer(instance_id_, regularizer_config_blob.size(),
+  HandleErrorCode(ArtmCreateOrReconfigureRegularizer(instance_id_, regularizer_config_blob.size(),
     StringAsArray(&regularizer_config_blob)));
 }
 
 Regularizer::~Regularizer() {
-  ArtmDisposeRegularizer(instance_id(), const_cast<char*>(config_.name().c_str()));
+  ArtmDisposeRegularizer(instance_id(), config_.name().c_str());
 }
 
 void Regularizer::Reconfigure(const RegularizerConfig& config) {
   std::string regularizer_config_blob;
   config.SerializeToString(&regularizer_config_blob);
-  HandleErrorCode(ArtmReconfigureRegularizer(instance_id(), regularizer_config_blob.size(),
+  HandleErrorCode(ArtmCreateOrReconfigureRegularizer(instance_id(), regularizer_config_blob.size(),
     StringAsArray(&regularizer_config_blob)));
   config_.CopyFrom(config);
 }

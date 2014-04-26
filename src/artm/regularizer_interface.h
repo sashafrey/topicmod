@@ -5,12 +5,10 @@
 #ifndef SRC_ARTM_REGULARIZER_INTERFACE_H_
 #define SRC_ARTM_REGULARIZER_INTERFACE_H_
 
-#define REGULARIZATION_SUCCESS 0
-#define REGULARIZATION_FAILED -1
+#define REGULARIZATION_SUCCESS true
+#define REGULARIZATION_FAILED false
 
 #include <vector>
-
-#include "boost/thread/mutex.hpp"
 
 #include "artm/messages.pb.h"
 
@@ -18,14 +16,12 @@ namespace artm {
 namespace core {
 
 class RegularizerInterface {
-public:
-  virtual void RegularizeTheta(const Item& item, 
-                                std::vector<float> n_dt, 
-                                int topic_size, 
-                                int inner_iter, 
-                                int* retval) {}
+ public:
+  virtual bool RegularizeTheta(const Item& item,
+                                std::vector<float> n_dt,
+                                int topic_size,
+                                int inner_iter) { return false; }
   virtual void RegularizePhi() {}
-
 };
 
 }  // namespace core

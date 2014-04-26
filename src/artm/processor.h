@@ -82,8 +82,7 @@ class Processor : boost::noncopyable {
    public:
     ItemProcessor(const TopicModel& topic_model,
                   const google::protobuf::RepeatedPtrField<std::string>& token_dict,
-                  std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >>  
-                  regularizers);
+                  std::shared_ptr<InstanceSchema> schema);
 
     void InferTheta(const ModelConfig& model,
                     const Item& item,
@@ -99,7 +98,7 @@ class Processor : boost::noncopyable {
    private:
     const TopicModel& topic_model_;
     const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
-    std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >> regularizers_;
+    std::shared_ptr<InstanceSchema> schema_;
   };
 
   // Helper class to iterate through tokens in one item

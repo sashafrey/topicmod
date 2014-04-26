@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <string>
 
 #include "artm/common.h"
 #include "artm/messages.pb.h"
@@ -28,13 +29,12 @@ class InstanceSchema {
   bool has_model_config(int id) const;
   void clear_model_config(int id);
 
-  void set_regularizer(std::string name, 
-    std::shared_ptr<RegularizerInterface>& regularizer_config);
-  bool has_regularizer(std::string name) const;
-  void clear_regularizer(std::string name);
+  void set_regularizer(const std::string name,
+                       const std::shared_ptr<RegularizerInterface>& regularizer);
+  bool has_regularizer(const std::string name) const;
+  void clear_regularizer(const std::string name);
 
-  std::shared_ptr<std::map<std::string, std::shared_ptr<RegularizerInterface> >> 
-    GetPointerToRegularizers();
+  std::shared_ptr<RegularizerInterface> get_regularizer(const std::string& name);
 
   std::vector<int> GetModelIds() const;
 

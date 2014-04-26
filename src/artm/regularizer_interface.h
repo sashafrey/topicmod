@@ -23,7 +23,7 @@ public:
                                 std::vector<float> n_dt, 
                                 int topic_size, 
                                 int inner_iter, 
-                                std::shared_ptr<int> retval) {}
+                                int* retval) {}
   virtual void RegularizePhi() {}
 
 };

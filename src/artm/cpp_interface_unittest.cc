@@ -20,9 +20,48 @@ TEST(CppInterface, Basic) {
   instance_config.set_memcached_endpoint("tcp://localhost:5555");
   artm::Instance instance(instance_config);
 
+  artm::DirichletRegularizerThetaConfig regularizer_1_config;
+  artm::DoubleArray tilde_alpha;
+  for (int i = 0; i < nTopics; ++i) {
+    tilde_alpha.add_alpha(0);
+  }
+  for (int i = 0; i < 3; ++i) {
+    regularizer_1_config.add_alpha_0(0.01);
+    for (int j = 0; j < nTopics; ++j) {
+      tilde_alpha.set_alpha(j, 0.05);
+    }
+    artm::DoubleArray* tilde_alpha_ptr = regularizer_1_config.add_tilde_alpha();
+    *tilde_alpha_ptr = tilde_alpha;
+  }
+
+  artm::DirichletRegularizerThetaConfig regularizer_2_config;
+  for (int i = 0; i < 3; ++i) {
+    regularizer_2_config.add_alpha_0(0.03);
+    for (int j = 0; j < nTopics; ++j) {
+      tilde_alpha.set_alpha(j, 0.08);
+    }
+    artm::DoubleArray* tilde_alpha_ptr = regularizer_2_config.add_tilde_alpha();
+    *tilde_alpha_ptr = tilde_alpha;
+  }
+
+  artm::RegularizerConfig general_regularizer_1_config;
+  general_regularizer_1_config.set_name("regularizer_1");
+  general_regularizer_1_config.set_type(artm::RegularizerConfig_Type_DirichletRegularizerTheta);
+  general_regularizer_1_config.set_config(regularizer_1_config.SerializeAsString());
+
+  artm::RegularizerConfig general_regularizer_2_config;
+  general_regularizer_2_config.set_name("regularizer_2");
+  general_regularizer_2_config.set_type(artm::RegularizerConfig_Type_DirichletRegularizerTheta);
+  general_regularizer_2_config.set_config(regularizer_2_config.SerializeAsString());
+
+  artm::Regularizer regularizer_1(instance, general_regularizer_1_config);
+  artm::Regularizer regularizer_2(instance, general_regularizer_2_config);
+
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(nTopics);
+  model_config.add_regularizer_name("regularizer_1", 13);
+  model_config.add_regularizer_name("regularizer_2", 13);
   artm::Model model(instance, model_config);
 
   // Load doc-token matrix

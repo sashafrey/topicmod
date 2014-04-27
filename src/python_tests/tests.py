@@ -81,21 +81,21 @@ address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 os.environ['PATH'] = ';'.join([address + '\\Win32\\Debug', os.environ['PATH']])
 library = ArtmLibrary(address + '\\Win32\\Debug\\artm.dll')
 
-instance = library.CreateInstance(instance_config)
-instance.Reconfigure(instance_config_new)
-model = library.CreateModel(instance, model_config)
-instance.GetTopics(model)
-model.Reconfigure(model_config_new)
-model.Disable()
-model.Enable()
-regularizer = library.CreateRegularizer(instance, regularizer_config)
-regularizer.Reconfigure(regularizer_config)
-data_loader = library.CreateDataLoader(instance, data_loader_config)
-data_loader.AddBatch(batch)
-data_loader.Reconfigure(data_loader_config_new)
-data_loader.InvokeIteration(10)
-data_loader.AddStream(stream)
-data_loader.RemoveStream('stream_8')
-#data_loader.WaitIdle()
+with library.CreateInstance(instance_config) as instance:
+  instance.Reconfigure(instance_config_new)
+  with library.CreateModel(instance, model_config) as model:
+    instance.GetTopics(model)
+    model.Reconfigure(model_config_new)
+    model.Disable()
+    model.Enable()
+    with library.CreateRegularizer(instance, regularizer_config) as regularizer:
+      regularizer.Reconfigure(regularizer_config)
+      with library.CreateDataLoader(instance, data_loader_config) as data_loader:
+        data_loader.AddBatch(batch)
+        data_loader.Reconfigure(data_loader_config_new)
+        data_loader.InvokeIteration(10)
+        data_loader.AddStream(stream)
+        data_loader.RemoveStream('stream_8')
+        #data_loader.WaitIdle()
 
 print 'All tests have been successfully passed!'

@@ -4,7 +4,6 @@
 
 import messages_pb2
 import os
-from os import *
 import ctypes
 from ctypes import *
 

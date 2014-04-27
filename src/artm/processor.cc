@@ -187,13 +187,22 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
       }
     }
 
+    if (inner_iter == inner_iters_count) {
+      // inner_iter goes from 0 to inner_iters_count inclusively.
+      // The goal of this "last iteration" is to update model_increment.
+      // As soon as model_increment is updated, we should exit.
+      // This will save redundant calculations, and prevent
+      // calling RegularizeTheta with too large inner_iter.
+      break;
+    }
+
     // 3. The following block of code makes the regularization of theta_next
     auto reg_names = model.regularizer_name();
     for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
       reg_name_iterator++) { 
       auto regularizer = schema_->regularizer(reg_name_iterator->c_str());
       if (regularizer != nullptr) {
-        bool retval = regularizer->RegularizeTheta(item, theta_next, topic_size, inner_iter);
+        bool retval = regularizer->RegularizeTheta(item, &theta_next, topic_size, inner_iter);
         if (!retval) {
           LOG(ERROR) << "Problems with type or number of parameters in regularizer " <<
             reg_name_iterator->c_str() << ". On this iteration this regularizer was turned off.\n";
@@ -203,7 +212,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
       }
     }
 
-    // Normalize theta_next. For normal iterations this is handled by curZ value.
+    // Normalize theta_next.
     float sum = 0.0f;
     for (int topic_index = 0; topic_index < topic_size; ++topic_index)
       sum += theta_next[topic_index];

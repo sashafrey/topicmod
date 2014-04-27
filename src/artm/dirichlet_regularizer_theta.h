@@ -18,10 +18,10 @@ class DirichletRegularizerTheta : public RegularizerInterface {
   DirichletRegularizerTheta(const DirichletRegularizerThetaConfig& config)
     : config_(config) {}
 
-  bool RegularizeTheta(const Item& item,
-                        std::vector<float>* n_dt,
-                        int topic_size,
-                        int inner_iter);
+  virtual bool RegularizeTheta(const Item& item,
+                               std::vector<float>* n_dt,
+                               int topic_size,
+                               int inner_iter);
 
  private:
   DirichletRegularizerThetaConfig config_;

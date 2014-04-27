@@ -24,7 +24,7 @@ bool DirichletRegularizerTheta::RegularizeTheta(const Item& item,
 
     if (tilde_alpha.alpha_size() == topic_size) {
       for (int i = 0; i < topic_size; ++i) {
-        (*n_dt)[i] = (*n_dt)[i] + alpha_0 * tilde_alpha.alpha().Get(i);
+        (*n_dt)[i] = (*n_dt)[i] + static_cast<float>(alpha_0 * tilde_alpha.alpha().Get(i));
       }
       return true;
     } else {

@@ -15,7 +15,7 @@ namespace core {
 class RegularizerInterface {
  public:
   virtual bool RegularizeTheta(const Item& item,
-                                std::vector<float> n_dt,
+                                std::vector<float>* n_dt,
                                 int topic_size,
                                 int inner_iter) { return false; }
   virtual void RegularizePhi() {}

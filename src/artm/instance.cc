@@ -1,5 +1,7 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
+#include <string>
+
 #include "artm/instance.h"
 
 #include "boost/bind.hpp"
@@ -50,6 +52,19 @@ void Instance::DisposeModel(int model_id) {
   schema_.set(new_schema);
 
   merger_.DisposeModel(model_id);
+}
+
+void Instance::CreateOrReconfigureRegularizer(const std::string& name,
+                                              std::shared_ptr<RegularizerInterface> regularizer) {
+  auto new_schema = schema_.get_copy();
+  new_schema->set_regularizer(name, regularizer);
+  schema_.set(new_schema);
+}
+
+void Instance::DisposeRegularizer(const std::string& name) {
+  auto new_schema = schema_.get_copy();
+  new_schema->clear_regularizer(name);
+  schema_.set(new_schema);
 }
 
 void Instance::Reconfigure(const InstanceConfig& config) {

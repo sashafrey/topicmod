@@ -6,9 +6,11 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <string>
 
 #include "artm/common.h"
 #include "artm/messages.pb.h"
+#include "artm/regularizer_interface.h"
 
 namespace artm {
 namespace core {
@@ -27,11 +29,19 @@ class InstanceSchema {
   bool has_model_config(int id) const;
   void clear_model_config(int id);
 
+  void set_regularizer(const std::string& name,
+                       const std::shared_ptr<RegularizerInterface>& regularizer);
+  bool has_regularizer(const std::string& name) const;
+  void clear_regularizer(const std::string name);
+
+  std::shared_ptr<RegularizerInterface> regularizer(const std::string& name);
+
   std::vector<int> GetModelIds() const;
 
  private:
   InstanceConfig instance_config_;
   std::map<int, std::shared_ptr<const ModelConfig> > models_config_;
+  std::map<std::string, std::shared_ptr<RegularizerInterface> > regularizers_;
 };
 
 }  // namespace core

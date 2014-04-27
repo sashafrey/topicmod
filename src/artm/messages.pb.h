@@ -41,6 +41,9 @@ class DataLoaderConfig;
 class Stream;
 class InstanceConfig;
 class ModelConfig;
+class RegularizerConfig;
+class DirichletRegularizerThetaConfig;
+class DoubleArray;
 class Score;
 class LoggerConfig;
 class ModelTopics;
@@ -67,6 +70,24 @@ inline bool Stream_Type_Parse(
     const ::std::string& name, Stream_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<Stream_Type>(
     Stream_Type_descriptor(), name, value);
+}
+enum RegularizerConfig_Type {
+  RegularizerConfig_Type_DirichletRegularizerTheta = 1
+};
+bool RegularizerConfig_Type_IsValid(int value);
+const RegularizerConfig_Type RegularizerConfig_Type_Type_MIN = RegularizerConfig_Type_DirichletRegularizerTheta;
+const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_DirichletRegularizerTheta;
+const int RegularizerConfig_Type_Type_ARRAYSIZE = RegularizerConfig_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor();
+inline const ::std::string& RegularizerConfig_Type_Name(RegularizerConfig_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    RegularizerConfig_Type_descriptor(), value);
+}
+inline bool RegularizerConfig_Type_Parse(
+    const ::std::string& name, RegularizerConfig_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<RegularizerConfig_Type>(
+    RegularizerConfig_Type_descriptor(), name, value);
 }
 enum Score_Type {
   Score_Type_Perplexity = 0
@@ -909,6 +930,22 @@ class ModelConfig : public ::google::protobuf::Message {
   inline bool cache_token_counters() const;
   inline void set_cache_token_counters(bool value);
 
+  // repeated string regularizer_name = 10;
+  inline int regularizer_name_size() const;
+  inline void clear_regularizer_name();
+  static const int kRegularizerNameFieldNumber = 10;
+  inline const ::std::string& regularizer_name(int index) const;
+  inline ::std::string* mutable_regularizer_name(int index);
+  inline void set_regularizer_name(int index, const ::std::string& value);
+  inline void set_regularizer_name(int index, const char* value);
+  inline void set_regularizer_name(int index, const char* value, size_t size);
+  inline ::std::string* add_regularizer_name();
+  inline void add_regularizer_name(const ::std::string& value);
+  inline void add_regularizer_name(const char* value);
+  inline void add_regularizer_name(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& regularizer_name() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_regularizer_name();
+
   // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
   inline void set_has_topics_count();
@@ -935,12 +972,13 @@ class ModelConfig : public ::google::protobuf::Message {
   ::std::string* stream_name_;
   static ::std::string* _default_stream_name_;
   ::google::protobuf::RepeatedPtrField< ::artm::Score > score_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> regularizer_name_;
   bool enabled_;
   bool reuse_theta_;
   bool cache_token_counters_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -948,6 +986,324 @@ class ModelConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ModelConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class RegularizerConfig : public ::google::protobuf::Message {
+ public:
+  RegularizerConfig();
+  virtual ~RegularizerConfig();
+
+  RegularizerConfig(const RegularizerConfig& from);
+
+  inline RegularizerConfig& operator=(const RegularizerConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RegularizerConfig& default_instance();
+
+  void Swap(RegularizerConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  RegularizerConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const RegularizerConfig& from);
+  void MergeFrom(const RegularizerConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef RegularizerConfig_Type Type;
+  static const Type DirichletRegularizerTheta = RegularizerConfig_Type_DirichletRegularizerTheta;
+  static inline bool Type_IsValid(int value) {
+    return RegularizerConfig_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    RegularizerConfig_Type_Type_MIN;
+  static const Type Type_MAX =
+    RegularizerConfig_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    RegularizerConfig_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return RegularizerConfig_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return RegularizerConfig_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return RegularizerConfig_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // required .artm.RegularizerConfig.Type type = 2;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 2;
+  inline ::artm::RegularizerConfig_Type type() const;
+  inline void set_type(::artm::RegularizerConfig_Type value);
+
+  // required bytes config = 3;
+  inline bool has_config() const;
+  inline void clear_config();
+  static const int kConfigFieldNumber = 3;
+  inline const ::std::string& config() const;
+  inline void set_config(const ::std::string& value);
+  inline void set_config(const char* value);
+  inline void set_config(const void* value, size_t size);
+  inline ::std::string* mutable_config();
+  inline ::std::string* release_config();
+  inline void set_allocated_config(::std::string* config);
+
+  // @@protoc_insertion_point(class_scope:artm.RegularizerConfig)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_config();
+  inline void clear_has_config();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* name_;
+  ::std::string* config_;
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static RegularizerConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DirichletRegularizerThetaConfig : public ::google::protobuf::Message {
+ public:
+  DirichletRegularizerThetaConfig();
+  virtual ~DirichletRegularizerThetaConfig();
+
+  DirichletRegularizerThetaConfig(const DirichletRegularizerThetaConfig& from);
+
+  inline DirichletRegularizerThetaConfig& operator=(const DirichletRegularizerThetaConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DirichletRegularizerThetaConfig& default_instance();
+
+  void Swap(DirichletRegularizerThetaConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  DirichletRegularizerThetaConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DirichletRegularizerThetaConfig& from);
+  void MergeFrom(const DirichletRegularizerThetaConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated double alpha_0 = 1;
+  inline int alpha_0_size() const;
+  inline void clear_alpha_0();
+  static const int kAlpha0FieldNumber = 1;
+  inline double alpha_0(int index) const;
+  inline void set_alpha_0(int index, double value);
+  inline void add_alpha_0(double value);
+  inline const ::google::protobuf::RepeatedField< double >&
+      alpha_0() const;
+  inline ::google::protobuf::RepeatedField< double >*
+      mutable_alpha_0();
+
+  // repeated .artm.DoubleArray tilde_alpha = 2;
+  inline int tilde_alpha_size() const;
+  inline void clear_tilde_alpha();
+  static const int kTildeAlphaFieldNumber = 2;
+  inline const ::artm::DoubleArray& tilde_alpha(int index) const;
+  inline ::artm::DoubleArray* mutable_tilde_alpha(int index);
+  inline ::artm::DoubleArray* add_tilde_alpha();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
+      tilde_alpha() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
+      mutable_tilde_alpha();
+
+  // @@protoc_insertion_point(class_scope:artm.DirichletRegularizerThetaConfig)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedField< double > alpha_0_;
+  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > tilde_alpha_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static DirichletRegularizerThetaConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DoubleArray : public ::google::protobuf::Message {
+ public:
+  DoubleArray();
+  virtual ~DoubleArray();
+
+  DoubleArray(const DoubleArray& from);
+
+  inline DoubleArray& operator=(const DoubleArray& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DoubleArray& default_instance();
+
+  void Swap(DoubleArray* other);
+
+  // implements Message ----------------------------------------------
+
+  DoubleArray* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DoubleArray& from);
+  void MergeFrom(const DoubleArray& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated double alpha = 1;
+  inline int alpha_size() const;
+  inline void clear_alpha();
+  static const int kAlphaFieldNumber = 1;
+  inline double alpha(int index) const;
+  inline void set_alpha(int index, double value);
+  inline void add_alpha(double value);
+  inline const ::google::protobuf::RepeatedField< double >&
+      alpha() const;
+  inline ::google::protobuf::RepeatedField< double >*
+      mutable_alpha();
+
+  // @@protoc_insertion_point(class_scope:artm.DoubleArray)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedField< double > alpha_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static DoubleArray* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2521,6 +2877,300 @@ inline void ModelConfig::set_cache_token_counters(bool value) {
   cache_token_counters_ = value;
 }
 
+// repeated string regularizer_name = 10;
+inline int ModelConfig::regularizer_name_size() const {
+  return regularizer_name_.size();
+}
+inline void ModelConfig::clear_regularizer_name() {
+  regularizer_name_.Clear();
+}
+inline const ::std::string& ModelConfig::regularizer_name(int index) const {
+  return regularizer_name_.Get(index);
+}
+inline ::std::string* ModelConfig::mutable_regularizer_name(int index) {
+  return regularizer_name_.Mutable(index);
+}
+inline void ModelConfig::set_regularizer_name(int index, const ::std::string& value) {
+  regularizer_name_.Mutable(index)->assign(value);
+}
+inline void ModelConfig::set_regularizer_name(int index, const char* value) {
+  regularizer_name_.Mutable(index)->assign(value);
+}
+inline void ModelConfig::set_regularizer_name(int index, const char* value, size_t size) {
+  regularizer_name_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ModelConfig::add_regularizer_name() {
+  return regularizer_name_.Add();
+}
+inline void ModelConfig::add_regularizer_name(const ::std::string& value) {
+  regularizer_name_.Add()->assign(value);
+}
+inline void ModelConfig::add_regularizer_name(const char* value) {
+  regularizer_name_.Add()->assign(value);
+}
+inline void ModelConfig::add_regularizer_name(const char* value, size_t size) {
+  regularizer_name_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ModelConfig::regularizer_name() const {
+  return regularizer_name_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ModelConfig::mutable_regularizer_name() {
+  return &regularizer_name_;
+}
+
+// -------------------------------------------------------------------
+
+// RegularizerConfig
+
+// required string name = 1;
+inline bool RegularizerConfig::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void RegularizerConfig::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void RegularizerConfig::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void RegularizerConfig::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& RegularizerConfig::name() const {
+  return *name_;
+}
+inline void RegularizerConfig::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void RegularizerConfig::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void RegularizerConfig::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RegularizerConfig::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* RegularizerConfig::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RegularizerConfig::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// required .artm.RegularizerConfig.Type type = 2;
+inline bool RegularizerConfig::has_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void RegularizerConfig::set_has_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void RegularizerConfig::clear_has_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void RegularizerConfig::clear_type() {
+  type_ = 1;
+  clear_has_type();
+}
+inline ::artm::RegularizerConfig_Type RegularizerConfig::type() const {
+  return static_cast< ::artm::RegularizerConfig_Type >(type_);
+}
+inline void RegularizerConfig::set_type(::artm::RegularizerConfig_Type value) {
+  assert(::artm::RegularizerConfig_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// required bytes config = 3;
+inline bool RegularizerConfig::has_config() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void RegularizerConfig::set_has_config() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void RegularizerConfig::clear_has_config() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void RegularizerConfig::clear_config() {
+  if (config_ != &::google::protobuf::internal::kEmptyString) {
+    config_->clear();
+  }
+  clear_has_config();
+}
+inline const ::std::string& RegularizerConfig::config() const {
+  return *config_;
+}
+inline void RegularizerConfig::set_config(const ::std::string& value) {
+  set_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    config_ = new ::std::string;
+  }
+  config_->assign(value);
+}
+inline void RegularizerConfig::set_config(const char* value) {
+  set_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    config_ = new ::std::string;
+  }
+  config_->assign(value);
+}
+inline void RegularizerConfig::set_config(const void* value, size_t size) {
+  set_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    config_ = new ::std::string;
+  }
+  config_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RegularizerConfig::mutable_config() {
+  set_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    config_ = new ::std::string;
+  }
+  return config_;
+}
+inline ::std::string* RegularizerConfig::release_config() {
+  clear_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = config_;
+    config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RegularizerConfig::set_allocated_config(::std::string* config) {
+  if (config_ != &::google::protobuf::internal::kEmptyString) {
+    delete config_;
+  }
+  if (config) {
+    set_has_config();
+    config_ = config;
+  } else {
+    clear_has_config();
+    config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// DirichletRegularizerThetaConfig
+
+// repeated double alpha_0 = 1;
+inline int DirichletRegularizerThetaConfig::alpha_0_size() const {
+  return alpha_0_.size();
+}
+inline void DirichletRegularizerThetaConfig::clear_alpha_0() {
+  alpha_0_.Clear();
+}
+inline double DirichletRegularizerThetaConfig::alpha_0(int index) const {
+  return alpha_0_.Get(index);
+}
+inline void DirichletRegularizerThetaConfig::set_alpha_0(int index, double value) {
+  alpha_0_.Set(index, value);
+}
+inline void DirichletRegularizerThetaConfig::add_alpha_0(double value) {
+  alpha_0_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< double >&
+DirichletRegularizerThetaConfig::alpha_0() const {
+  return alpha_0_;
+}
+inline ::google::protobuf::RepeatedField< double >*
+DirichletRegularizerThetaConfig::mutable_alpha_0() {
+  return &alpha_0_;
+}
+
+// repeated .artm.DoubleArray tilde_alpha = 2;
+inline int DirichletRegularizerThetaConfig::tilde_alpha_size() const {
+  return tilde_alpha_.size();
+}
+inline void DirichletRegularizerThetaConfig::clear_tilde_alpha() {
+  tilde_alpha_.Clear();
+}
+inline const ::artm::DoubleArray& DirichletRegularizerThetaConfig::tilde_alpha(int index) const {
+  return tilde_alpha_.Get(index);
+}
+inline ::artm::DoubleArray* DirichletRegularizerThetaConfig::mutable_tilde_alpha(int index) {
+  return tilde_alpha_.Mutable(index);
+}
+inline ::artm::DoubleArray* DirichletRegularizerThetaConfig::add_tilde_alpha() {
+  return tilde_alpha_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
+DirichletRegularizerThetaConfig::tilde_alpha() const {
+  return tilde_alpha_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
+DirichletRegularizerThetaConfig::mutable_tilde_alpha() {
+  return &tilde_alpha_;
+}
+
+// -------------------------------------------------------------------
+
+// DoubleArray
+
+// repeated double alpha = 1;
+inline int DoubleArray::alpha_size() const {
+  return alpha_.size();
+}
+inline void DoubleArray::clear_alpha() {
+  alpha_.Clear();
+}
+inline double DoubleArray::alpha(int index) const {
+  return alpha_.Get(index);
+}
+inline void DoubleArray::set_alpha(int index, double value) {
+  alpha_.Set(index, value);
+}
+inline void DoubleArray::add_alpha(double value) {
+  alpha_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< double >&
+DoubleArray::alpha() const {
+  return alpha_;
+}
+inline ::google::protobuf::RepeatedField< double >*
+DoubleArray::mutable_alpha() {
+  return &alpha_;
+}
+
 // -------------------------------------------------------------------
 
 // Score
@@ -3074,6 +3724,10 @@ namespace protobuf {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::Stream_Type>() {
   return ::artm::Stream_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::RegularizerConfig_Type>() {
+  return ::artm::RegularizerConfig_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::Score_Type>() {

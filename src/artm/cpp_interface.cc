@@ -104,7 +104,7 @@ Regularizer::Regularizer(const Instance& instance, const RegularizerConfig& conf
       config_(config) {
   std::string regularizer_config_blob;
   config.SerializeToString(&regularizer_config_blob);
-  HandleErrorCode(ArtmCreateOrReconfigureRegularizer(instance_id_, regularizer_config_blob.size(),
+  HandleErrorCode(ArtmCreateRegularizer(instance_id_, regularizer_config_blob.size(),
     StringAsArray(&regularizer_config_blob)));
 }
 
@@ -115,7 +115,7 @@ Regularizer::~Regularizer() {
 void Regularizer::Reconfigure(const RegularizerConfig& config) {
   std::string regularizer_config_blob;
   config.SerializeToString(&regularizer_config_blob);
-  HandleErrorCode(ArtmCreateOrReconfigureRegularizer(instance_id(), regularizer_config_blob.size(),
+  HandleErrorCode(ArtmReconfigureRegularizer(instance_id(), regularizer_config_blob.size(),
     StringAsArray(&regularizer_config_blob)));
   config_.CopyFrom(config);
 }

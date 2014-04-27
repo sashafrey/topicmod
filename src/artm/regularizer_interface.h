@@ -5,9 +5,6 @@
 #ifndef SRC_ARTM_REGULARIZER_INTERFACE_H_
 #define SRC_ARTM_REGULARIZER_INTERFACE_H_
 
-#define REGULARIZATION_SUCCESS true
-#define REGULARIZATION_FAILED false
-
 #include <vector>
 
 #include "artm/messages.pb.h"

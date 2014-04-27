@@ -136,7 +136,7 @@ class Regularizer:
     self.name_ = config.name
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateOrReconfigureRegularizer(self.instance_id_,
+    HandleErrorCode(self.lib_.ArtmCreateRegularizer(self.instance_id_,
                      len(regularizer_config_blob), regularizer_config_blob_p));
 
   def __enter__(self):
@@ -148,7 +148,7 @@ class Regularizer:
   def Reconfigure(self, config):
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateOrReconfigureRegularizer(self.instance_id_, 
+    HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.instance_id_, 
                     len(regularizer_config_blob), regularizer_config_blob_p));
     self.config_.CopyFrom(config)
 

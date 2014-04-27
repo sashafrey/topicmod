@@ -20,6 +20,7 @@
 #include "artm/thread_safe_holder.h"
 
 #include "artm/regularizer_interface.h"
+
 // include here all files containig regularizers
 #include "artm/dirichlet_regularizer_theta.h"
 

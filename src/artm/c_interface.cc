@@ -10,8 +10,9 @@
 #include "artm/exceptions.h"
 #include "artm/data_loader.h"
 #include "artm/memcached_server.h"
-#include "artm/regularizer_interface.h"
+
 #include "artm/dirichlet_regularizer_theta.h"
+#include "artm/regularizer_interface.h"
 
 #include "rpcz/rpc.hpp"
 
@@ -240,8 +241,13 @@ void ArtmDisposeModel(int instance_id, int model_id) {
 
 void ArtmDisposeRequest(int request_id) {}
 
-int ArtmCreateOrReconfigureRegularizer(int instance_id, int length,
-                                       const char* regularizer_config_blob) {
+int ArtmCreateRegularizer(int instance_id, int length,
+                          const char* regularizer_config_blob) {
+  return ArtmReconfigureRegularizer(instance_id, length, regularizer_config_blob);
+}
+
+int ArtmReconfigureRegularizer(int instance_id, int length,
+                               const char* regularizer_config_blob) {
   try {
     artm::RegularizerConfig config;
     if (!config.ParseFromArray(regularizer_config_blob, length)) {

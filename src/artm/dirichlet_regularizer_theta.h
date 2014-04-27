@@ -15,11 +15,11 @@ namespace core {
 
 class DirichletRegularizerTheta : public RegularizerInterface {
  public:
-  DirichletRegularizerTheta(DirichletRegularizerThetaConfig config)
+  DirichletRegularizerTheta(const DirichletRegularizerThetaConfig& config)
     : config_(config) {}
 
   bool RegularizeTheta(const Item& item,
-                        std::vector<float> n_dt,
+                        std::vector<float>* n_dt,
                         int topic_size,
                         int inner_iter);
 

@@ -10,7 +10,7 @@ namespace artm {
 namespace core {
 
 bool DirichletRegularizerTheta::RegularizeTheta(const Item& item,
-                                                std::vector<float> n_dt,
+                                                std::vector<float>* n_dt,
                                                 int topic_size,
                                                 int inner_iter) {
   const ::google::protobuf::RepeatedField<double>& alpha_0_vector = config_.alpha_0();
@@ -24,14 +24,14 @@ bool DirichletRegularizerTheta::RegularizeTheta(const Item& item,
 
     if (tilde_alpha.alpha_size() == topic_size) {
       for (int i = 0; i < topic_size; ++i) {
-        n_dt[i] = n_dt[i] + alpha_0 * tilde_alpha.alpha().Get(i);
+        (*n_dt)[i] = (*n_dt)[i] + alpha_0 * tilde_alpha.alpha().Get(i);
       }
-      return REGULARIZATION_SUCCESS;
+      return true;
     } else {
-      return REGULARIZATION_FAILED;
+      return false;
     }
   } else {
-    return REGULARIZATION_FAILED;
+    return false;
   }
 }
 

@@ -15,7 +15,7 @@ namespace core {
 
 class DirichletRegularizerTheta : public RegularizerInterface {
  public:
-  DirichletRegularizerTheta(const DirichletRegularizerThetaConfig& config)
+  explicit DirichletRegularizerTheta(const DirichletRegularizerThetaConfig& config)
     : config_(config) {}
 
   virtual bool RegularizeTheta(const Item& item,

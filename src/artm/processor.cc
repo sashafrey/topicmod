@@ -199,7 +199,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     // 3. The following block of code makes the regularization of theta_next
     auto reg_names = model.regularizer_name();
     for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
-      reg_name_iterator++) { 
+      reg_name_iterator++) {
       auto regularizer = schema_->regularizer(reg_name_iterator->c_str());
       if (regularizer != nullptr) {
         bool retval = regularizer->RegularizeTheta(item, &theta_next, topic_size, inner_iter);

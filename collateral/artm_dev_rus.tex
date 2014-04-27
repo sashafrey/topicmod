@@ -250,18 +250,10 @@ setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"
 \begin{verbatim}
 setx PROTOBUF_ROOT "C:\\Program Files\\protobuf\\src"
 \end{verbatim}
-    \item Установить Visual Studio 2010 + SP1, или Visual Studio 2012. \\
-    {\bf Важно: при использовании VS2010, вы должны установить Service Pack 1.}
-    \item Откройте /src/artm\_vs2010.sln или /src/artm\_vs2012.sln, в зависимости от версии вашей Visual Studio.
+    \item Установить Visual Studio 2012 (другие версии сейчас не поддерживаются). \\
+    \item Откройте /src/artm\_vs2012.sln.
     \item Соберите все проекты (debug или release, Win32) и запустите тесты. 64-хбитная сборка пока недоступна.
 \end{enumerate}
-
-Заметка: если у вас появилась странная ошибка линковщика (``error LNK1104: cannot open file 'libprotobuf.lib''')
-      в Visual Studio 2010, попробуйте слудеющую команду в cmd.exe:
-\begin{verbatim}
-    setx $(VisualStudioVersion) 10.0
-\end{verbatim}
-(закройте и переоткройте Visual Studio, очистите решение и соберите заново).
 
 Заметка: для использования python в проекте нужно ввыполнить следующие действия:
 \begin{enumerate}
@@ -342,8 +334,6 @@ python cpplint.py --linelength=100 <filename>
 \end{verbatim}
       Единтсвенное исключение из этого правила --- файлы, генерируемые компилятором protobuf.
       
-\item Будьте аккуратны при использовании особенностей C++11, убедитесь, что ваш код компилируется в Visual Studio 2010.
-
 \end{enumerate}
 
 \subsubsection{Просмотр кода}

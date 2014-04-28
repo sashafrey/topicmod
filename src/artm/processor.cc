@@ -213,6 +213,12 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     }
 
     // Normalize theta_next.
+    for (int i = 0; i < theta_next.size(); ++i) {
+      if (theta_next[i] < 0) {
+        theta_next[i] = 0;
+      }
+    }
+
     float sum = 0.0f;
     for (int topic_index = 0; topic_index < topic_size; ++topic_index)
       sum += theta_next[topic_index];

@@ -35,7 +35,7 @@ with library.CreateInstance(instance_config) as instance:
             num_non_zero = int(docword.readline())
             for line in docword:
                 item_id, global_token_id, frequency = [int(x) for x in line.split()]
-                token = tokens[global_token_id]
+                token = tokens[global_token_id - 1]
 
                 if (item_id != prev_item_id):
                     prev_item_id = item_id

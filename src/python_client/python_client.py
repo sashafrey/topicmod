@@ -15,6 +15,7 @@ limit_collection_size = 50000  # don't load more that this docs
 topics_count = 16
 outer_iteration_count = 10
 inner_iterations_count = 10
+top_tokens_count_to_visualize = 4
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 os.environ['PATH'] = ';'.join([address + '\\Win32\\Release', os.environ['PATH']])
@@ -89,7 +90,7 @@ with library.CreateInstance(instance_config) as instance:
                     token = topics.token_topic[token_index]
                     token_map[token.token]=token.topic_weight[topic_index]
                 sorted_token_map = sorted(token_map.iteritems(), key=operator.itemgetter(1), reverse=True)
-                for best_token in range(0, 7):
+                for best_token in range(0, top_tokens_count_to_visualize):
                     best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '
                 print best_tokens
 

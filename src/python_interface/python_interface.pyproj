@@ -5,13 +5,18 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>2adc9dc7-a191-4800-867b-a25ee6cb8838</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>tests.py</StartupFile>
-    <SearchPath>
-    </SearchPath>
+    <StartupFile>
+    </StartupFile>
+    <SearchPath>..\python_interface</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>python_interface</Name>
     <RootNamespace>python_interface</RootNamespace>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <CommandLineArguments />
+    <InterpreterPath />
+    <InterpreterArguments />
+    <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -24,7 +29,6 @@
   <ItemGroup>
     <Compile Include="messages_pb2.py" />
     <Compile Include="python_interface.py" />
-    <Compile Include="tests.py" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

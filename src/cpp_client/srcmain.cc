@@ -25,7 +25,8 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   instance_config.set_processors_count(processors_count);
   // instance_config.set_memcached_endpoint("tcp://localhost:5555");
   DataLoaderConfig data_loader_config;
-  data_loader_config.set_disk_path("E:\\ARTM\\Batches");
+  std::string batches_disk_path("batches");
+  data_loader_config.set_disk_path(batches_disk_path);
 
   std::vector<std::shared_ptr<Instance>> instance;
   std::vector<std::shared_ptr<DataLoader>> data_loader;
@@ -71,40 +72,44 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     model.push_back(std::make_shared<Model>(*instance[i], model_config));
   }
 
-/*
-  // Load doc-word matrix
-  DocWordMatrix::Ptr doc_word_ptr = loadMatrixFileUCI(argv[1]);
-  VocabPtr vocab_ptr = loadVocab(argv[2]); //, doc_word_ptr->getW());
-  int no_words = vocab_ptr->size(); //doc_word_ptr->getW();
-  int no_docs = 100; //doc_word_ptr->getD();
+  if (countFilesInDirectory(batches_disk_path, ".batch") == 0) {
+    // Load doc-word matrix
+    DocWordMatrix::Ptr doc_word_ptr = loadMatrixFileUCI(argv[1]);
+    VocabPtr vocab_ptr = loadVocab(argv[2]); //, doc_word_ptr->getW());
+    int no_words = vocab_ptr->size(); //doc_word_ptr->getW();
+    int no_docs = doc_word_ptr->getD();
 
-  int no_parts = 16;
-  int doc_index = 0;
-  int no_docs_per_part = no_docs / no_parts + 1;
-  for (int part_index = 1; part_index <= no_parts; part_index++)
-  {
-    Batch batch;
-    for (int i = 0; i < no_words; i++) {
-      batch.add_token((*vocab_ptr)[i]);
-    }
-
-    for (; doc_index < (no_docs_per_part * part_index) && (doc_index < no_docs); doc_index++) {
-      auto term_ids = doc_word_ptr->getTermId(doc_index);
-      auto term_counts = doc_word_ptr->getFreq(doc_index);
-
-      Item* item = batch.add_item();
-      item->set_id(doc_index);
-      Field* field = item->add_field();
-      for (int word_index = 0; word_index < (int)term_ids.size(); ++word_index) {
-        field->add_token_id(term_ids[word_index]);
-        field->add_token_count((google::protobuf::int32) term_counts[word_index]);
+    //int no_parts = 16;
+    //int doc_index = 0;
+    //int no_docs_per_part = no_docs / no_parts + 1;
+    int no_docs_per_part = 1000;
+    int no_parts = no_docs / no_docs_per_part + 1;
+    int doc_index = 0;
+    for (int part_index = 1; part_index <= no_parts; part_index++)
+    {
+      Batch batch;
+      for (int i = 0; i < no_words; i++) {
+        batch.add_token((*vocab_ptr)[i]);
       }
-    }
 
-    // Index doc-word matrix
-    data_loader[part_index % instance_size]->AddBatch(batch);
+      for (; doc_index < (no_docs_per_part * part_index) && (doc_index < no_docs); doc_index++) {
+        auto term_ids = doc_word_ptr->getTermId(doc_index);
+        auto term_counts = doc_word_ptr->getFreq(doc_index);
+
+        Item* item = batch.add_item();
+        item->set_id(doc_index);
+        Field* field = item->add_field();
+        for (int word_index = 0; word_index < (int)term_ids.size(); ++word_index) {
+          field->add_token_id(term_ids[word_index]);
+          field->add_token_count((google::protobuf::int32) term_counts[word_index]);
+        }
+      }
+      // Index doc-word matrix
+      data_loader[part_index % instance_size]->AddBatch(batch);
+    }
   }
-*/
+
+
   clock_t begin = clock();
 
   // Enable model and wait while each document pass through processor about 10 times.

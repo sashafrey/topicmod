@@ -21,14 +21,14 @@ DataLoader::DataLoader(int id, const DataLoaderConfig& config)
     : data_loader_id_(id),
       lock_(),
       config_(lock_, std::make_shared<DataLoaderConfig>(config)),
-      generation_(lock_, std::make_shared<Generation>()),
+      generation_(lock_, std::make_shared<Generation>(config.disk_path())),
       cache_lock_(),
       cache_(cache_lock_),
       batch_manager_lock_(),
       batch_manager_(&batch_manager_lock_),
       thread_() 
 {
-  generation_.set(std::make_shared<Generation>(Generation(config.disk_path())));
+  //generation_.set(std::make_shared<Generation>(Generation(config.disk_path())));
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
   boost::thread t(&DataLoader::ThreadFunction, this);

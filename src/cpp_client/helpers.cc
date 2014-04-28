@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <boost/filesystem.hpp>
 
 #include "doc_topic_matrix.h"
 #include "token_topic_matrix.h"
@@ -96,4 +97,21 @@ void logTopWordsPerTopic(const WordTopicMatrix& mat, int N) {
 
     cout << endl;
   }
+}
+
+int countFilesInDirectory(std::string root, std::string ext) {
+{
+  int retval = 0;
+  if (boost::filesystem::exists(root) && boost::filesystem::is_directory(root)) {
+    boost::filesystem::recursive_directory_iterator it(root);
+    boost::filesystem::recursive_directory_iterator endit;
+    while(it != endit) {
+      if (boost::filesystem::is_regular_file(*it) && it->path().extension() == ext) {
+        retval++;
+      }
+      ++it;
+    }
+  }
+  return retval;
+}
 }

@@ -31,6 +31,18 @@ std::vector<boost::filesystem::path> GetAll(const boost::filesystem::path& root,
   return filesList;
 }
 
+std::string MakeBatchPath(std::string disk_path, boost::uuids::uuid uuid) {
+  boost::filesystem::path dir(disk_path);
+  if (!boost::filesystem::is_directory(dir)) {
+    bool is_created = boost::filesystem::create_directory(dir);
+  }
+  std::string batch_extension = ".batch";
+  boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + batch_extension);
+  boost::filesystem::path batch_path = dir / file;
+  std::string batch_file = batch_path.string();
+  return batch_file; 
+}
+
 Generation::Generation(const std::string disk_path) : id_(0), generation_() {
   std::string batchExtension = ".batch";
   std::vector<boost::filesystem::path> batchFiles = GetAll(disk_path, batchExtension);
@@ -54,7 +66,7 @@ std::shared_ptr<const Batch> Generation::batch(const boost::uuids::uuid& uuid, c
   auto retval = generation_.find(uuid);
   std::shared_ptr<Batch> batch_ptr = nullptr;
   if (retval != generation_.end()) {
-    std::string batch_file = disk_path + '\\' + boost::lexical_cast<std::string>(uuid) + ".batch";
+    std::string batch_file = MakeBatchPath(disk_path, uuid);
     std::ifstream fin(batch_file.c_str(), std::ifstream::binary);
     if (fin.is_open()) {
       Batch batch;
@@ -73,9 +85,9 @@ void Generation::AddBatch(const std::shared_ptr<const Batch>& batch) {
 }
 
 void Generation::AddBatch(const std::shared_ptr<const Batch>& batch, const std::string disk_path) {
-  boost::uuids::uuid id = boost::uuids::random_generator()();
-  generation_.insert(std::make_pair(id, nullptr));
-  std::string batch_file = disk_path + '\\' + boost::lexical_cast<std::string>(id) + ".batch";
+  boost::uuids::uuid uuid = boost::uuids::random_generator()();
+  generation_.insert(std::make_pair(uuid, nullptr));
+  std::string batch_file = MakeBatchPath(disk_path, uuid);
   std::ofstream fout(batch_file.c_str(), std::ofstream::binary);
   if (fout.is_open()) {
     bool is_serialized = batch->SerializeToOstream(&fout);

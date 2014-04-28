@@ -12,5 +12,6 @@ DocWordMatrix::Ptr loadMatrixFileUCI(std::string matFileName);
 VocabPtr loadVocab(std::string vocabFile, int nWords);
 VocabPtr loadVocab(std::string vocabFile);
 void logTopWordsPerTopic(const WordTopicMatrix& mat, int N);
+int countFilesInDirectory(std::string dir_path, std::string extension);
 
 #endif // __HELPERS_H

@@ -26,7 +26,9 @@ DataLoader::DataLoader(int id, const DataLoaderConfig& config)
       cache_(cache_lock_),
       batch_manager_lock_(),
       batch_manager_(&batch_manager_lock_),
-      thread_() {
+      thread_() 
+{
+  generation_.set(std::make_shared<Generation>(Generation(config.disk_path())));
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
   boost::thread t(&DataLoader::ThreadFunction, this);
@@ -54,14 +56,9 @@ void DataLoader::Reconfigure(const DataLoaderConfig& config) {
 
 void DataLoader::AddBatch(const Batch& batch) {
   std::shared_ptr<Generation> next_gen = generation_.get_copy();
-  next_gen->AddBatch(std::make_shared<Batch>(batch));
+  //next_gen->AddBatch(std::make_shared<Batch>(batch));
+  next_gen->AddBatch(std::make_shared<Batch>(batch), config_.get()->disk_path());
   generation_.set(next_gen);
-  //std::string batch_file = config_.get()->disk_path() + "\\batch.dat";
-  //std::ofstream out_batch(batch_file, std::ofstream::out);
-  //if (out_batch.is_open()) {
-  //  bool is_serialized = batch.SerializeToOstream(&out_batch);
-  //  out_batch.close();
-  //}
 }
 
 int DataLoader::GetTotalItemsCount() const {
@@ -161,7 +158,8 @@ void DataLoader::ThreadFunction() {
         continue;
 
       auto latest_generation = generation_.get();
-      std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid);
+      //std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid);
+      std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid, config_.get()->disk_path());
       if (batch == nullptr) {
         batch_manager_.Done(next_batch_uuid);
         continue;

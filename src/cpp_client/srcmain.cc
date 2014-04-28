@@ -25,7 +25,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   instance_config.set_processors_count(processors_count);
   // instance_config.set_memcached_endpoint("tcp://localhost:5555");
   DataLoaderConfig data_loader_config;
-  data_loader_config.set_disk_path("E:\\Batches");
+  data_loader_config.set_disk_path("E:\\ARTM\\Batches");
 
   std::vector<std::shared_ptr<Instance>> instance;
   std::vector<std::shared_ptr<DataLoader>> data_loader;
@@ -71,10 +71,11 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     model.push_back(std::make_shared<Model>(*instance[i], model_config));
   }
 
+/*
   // Load doc-word matrix
   DocWordMatrix::Ptr doc_word_ptr = loadMatrixFileUCI(argv[1]);
-  VocabPtr vocab_ptr = loadVocab(argv[2], doc_word_ptr->getW());
-  int no_words = doc_word_ptr->getW();
+  VocabPtr vocab_ptr = loadVocab(argv[2]); //, doc_word_ptr->getW());
+  int no_words = vocab_ptr->size(); //doc_word_ptr->getW();
   int no_docs = 100; //doc_word_ptr->getD();
 
   int no_parts = 16;
@@ -103,7 +104,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     // Index doc-word matrix
     data_loader[part_index % instance_size]->AddBatch(batch);
   }
-
+*/
   clock_t begin = clock();
 
   // Enable model and wait while each document pass through processor about 10 times.

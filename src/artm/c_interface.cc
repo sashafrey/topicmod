@@ -11,6 +11,9 @@
 #include "artm/data_loader.h"
 #include "artm/memcached_server.h"
 
+#include "artm/dirichlet_regularizer_theta.h"
+#include "artm/regularizer_interface.h"
+
 #include "rpcz/rpc.hpp"
 #include "glog/logging.h"
 
@@ -238,3 +241,47 @@ void ArtmDisposeModel(int instance_id, int model_id) {
 }
 
 void ArtmDisposeRequest(int request_id) {}
+
+int ArtmCreateRegularizer(int instance_id, int length,
+                          const char* regularizer_config_blob) {
+  return ArtmReconfigureRegularizer(instance_id, length, regularizer_config_blob);
+}
+
+int ArtmReconfigureRegularizer(int instance_id, int length,
+                               const char* regularizer_config_blob) {
+  try {
+    artm::RegularizerConfig config;
+    if (!config.ParseFromArray(regularizer_config_blob, length)) {
+      return ARTM_INVALID_MESSAGE;
+    }
+    std::string regularizer_name = config.name();
+    artm::RegularizerConfig_Type regularizer_type = config.type();
+    std::string config_blob = config.config();
+
+    // add here new case if adding new regularizer
+    switch (regularizer_type) {
+    case artm::RegularizerConfig_Type_DirichletRegularizerTheta: {
+      artm::DirichletRegularizerThetaConfig regularizer_config;
+      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
+        return ARTM_INVALID_MESSAGE;
+      }
+
+      std::shared_ptr<artm::core::RegularizerInterface> regularizer(
+        new artm::core::DirichletRegularizerTheta(regularizer_config));
+      auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
+      if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
+
+      instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
+      return ARTM_SUCCESS;
+    }
+    default:
+      return ARTM_INVALID_MESSAGE;
+    }
+  } CATCH_EXCEPTIONS;
+}
+
+void ArtmDisposeRegularizer(int instance_id, const char* regularizer_name) {
+  auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
+  if (instance == nullptr) return;
+  instance->DisposeRegularizer(regularizer_name);
+}

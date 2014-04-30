@@ -9,6 +9,12 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup>
     <RepositoryRoot>$(SolutionDir)..</RepositoryRoot>
@@ -16,6 +22,7 @@
   <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
   <ItemGroup>
     <ClCompile Include="data_loader.cc" />
+    <ClCompile Include="dirichlet_regularizer_theta.cc" />
     <ClCompile Include="generation.cc" />
     <ClCompile Include="helpers.cc" />
     <ClCompile Include="instance.cc" />
@@ -34,6 +41,7 @@
     <ClInclude Include="call_on_destruction.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="data_loader.h" />
+    <ClInclude Include="dirichlet_regularizer_theta.h" />
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="generation.h" />
     <ClInclude Include="helpers.h" />
@@ -48,6 +56,7 @@
     <ClInclude Include="messages.pb.h" />
     <ClInclude Include="processor.h" />
     <ClInclude Include="protobuf_helpers.h" />
+    <ClInclude Include="regularizer_interface.h" />
     <ClInclude Include="template_manager.h" />
     <ClInclude Include="thread_safe_holder.h" />
     <ClInclude Include="topic_model.h" />

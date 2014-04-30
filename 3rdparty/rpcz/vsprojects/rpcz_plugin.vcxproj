@@ -10,10 +10,11 @@
   <PropertyGroup>
     <TargetName>protoc-gen-rpcz_plugin</TargetName>
   </PropertyGroup>
-  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <PropertyGroup>
     <RepositoryRoot>$(SolutionDir)\..\..\..</RepositoryRoot>
   </PropertyGroup>
+  <Import Project="$(RepositoryRoot)\utils\targets\Artm.VisualStudioVersion.props" />
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
   <ItemGroup>
     <ClInclude Include="..\src\rpcz\plugin\common\common.h" />

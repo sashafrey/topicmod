@@ -91,9 +91,11 @@ bool Processor::TokenIterator::Next() {
 
 Processor::ItemProcessor::ItemProcessor(
     const TopicModel& topic_model,
-    const google::protobuf::RepeatedPtrField<std::string>& token_dict)
+    const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+    std::shared_ptr<InstanceSchema> schema)
     : topic_model_(topic_model),
-      token_dict_(token_dict) {}
+      token_dict_(token_dict),
+      schema_(schema) {}
 
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
@@ -185,7 +187,32 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
       }
     }
 
-    // Normalize theta_next. For normal iterations this is handled by curZ value.
+    if (inner_iter == inner_iters_count) {
+      // inner_iter goes from 0 to inner_iters_count inclusively.
+      // The goal of this "last iteration" is to update model_increment.
+      // As soon as model_increment is updated, we should exit.
+      // This will save redundant calculations, and prevent
+      // calling RegularizeTheta with too large inner_iter.
+      break;
+    }
+
+    // 3. The following block of code makes the regularization of theta_next
+    auto reg_names = model.regularizer_name();
+    for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
+      reg_name_iterator++) {
+      auto regularizer = schema_->regularizer(reg_name_iterator->c_str());
+      if (regularizer != nullptr) {
+        bool retval = regularizer->RegularizeTheta(item, &theta_next, topic_size, inner_iter);
+        if (!retval) {
+          LOG(ERROR) << "Problems with type or number of parameters in regularizer " <<
+            reg_name_iterator->c_str() << ". On this iteration this regularizer was turned off.\n";
+        }
+      } else {
+        LOG(ERROR) << "Regularizer with name " << reg_name_iterator->c_str() << " does not exist.";
+      }
+    }
+
+    // Normalize theta_next.
     float sum = 0.0f;
     for (int topic_index = 0; topic_index < topic_size; ++topic_index)
       sum += theta_next[topic_index];
@@ -334,7 +361,7 @@ void Processor::ThreadFunction() {
           }
         }
 
-        ItemProcessor item_processor(*topic_model, part->batch().token());
+        ItemProcessor item_processor(*topic_model, part->batch().token(), schema_.get());
         StreamIterator iter(*part, model.stream_name());
         while (iter.Next() != nullptr) {
           // ToDo: add an option to always start with random iteration!
@@ -380,7 +407,7 @@ void Processor::ThreadFunction() {
           double perplexity_score = 0.0;
           double perplexity_norm = 0.0;
           StreamIterator test_iter(*part, score.stream_name());
-          ItemProcessor test_item_processor(*topic_model, part->batch().token());
+          ItemProcessor test_item_processor(*topic_model, part->batch().token(), schema_.get());
           while (test_iter.Next() != nullptr) {
             const Item* item = test_iter.Current();
 

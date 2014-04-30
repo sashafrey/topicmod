@@ -7,6 +7,7 @@
 #include <memory>
 #include <queue>
 #include <vector>
+#include <string>
 
 #include "boost/thread/mutex.hpp"
 #include "boost/utility.hpp"
@@ -19,6 +20,7 @@
 #include "artm/processor.h"
 #include "artm/template_manager.h"
 #include "artm/thread_safe_holder.h"
+#include "artm/regularizer_interface.h"
 
 #include "artm/memcached_service.rpcz.h"
 #include "artm/memcached_service.pb.h"
@@ -55,6 +57,10 @@ class Instance : boost::noncopyable {
   void DisposeModel(int model_id);
   void Reconfigure(const InstanceConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
+
+  void CreateOrReconfigureRegularizer(const std::string& name,
+                                      std::shared_ptr<RegularizerInterface> regularizer);
+  void DisposeRegularizer(const std::string& name);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

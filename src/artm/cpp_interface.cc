@@ -99,6 +99,27 @@ void Model::Disable() {
   Reconfigure(config_copy_);
 }
 
+Regularizer::Regularizer(const Instance& instance, const RegularizerConfig& config)
+    : instance_id_(instance.id()),
+      config_(config) {
+  std::string regularizer_config_blob;
+  config.SerializeToString(&regularizer_config_blob);
+  HandleErrorCode(ArtmCreateRegularizer(instance_id_, regularizer_config_blob.size(),
+    StringAsArray(&regularizer_config_blob)));
+}
+
+Regularizer::~Regularizer() {
+  ArtmDisposeRegularizer(instance_id(), config_.name().c_str());
+}
+
+void Regularizer::Reconfigure(const RegularizerConfig& config) {
+  std::string regularizer_config_blob;
+  config.SerializeToString(&regularizer_config_blob);
+  HandleErrorCode(ArtmReconfigureRegularizer(instance_id(), regularizer_config_blob.size(),
+    StringAsArray(&regularizer_config_blob)));
+  config_.CopyFrom(config);
+}
+
 DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config)
     : id_(0), config_(config) {
   config_.set_instance_id(instance.id());

@@ -4,7 +4,6 @@
 
 import messages_pb2
 import os
-from os import *
 import ctypes
 from ctypes import *
 
@@ -48,6 +47,9 @@ class ArtmLibrary:
 
   def CreateModel(self, instance, config):
     return Model(instance, config, self.lib_)
+
+  def CreateRegularizer(self, instance, config):
+    return Regularizer(instance, config, self.lib_)
 
   def CreateDataLoader(self, instance, config):
     return DataLoader(instance, config, self.lib_)
@@ -122,6 +124,32 @@ class Model:
     config_copy_.CopyFrom(self.config_)
     config_copy_.enabled = False
     self.Reconfigure(config_copy_)
+
+#################################################################################
+
+class Regularizer:
+  def __init__(self, instance, config, lib):
+    self.lib_ = lib
+    self.instance_id_ = instance.id_
+    self.config_ = config
+    self.name_ = config.name
+    regularizer_config_blob = config.SerializeToString()
+    regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
+    HandleErrorCode(self.lib_.ArtmCreateRegularizer(self.instance_id_,
+                     len(regularizer_config_blob), regularizer_config_blob_p));
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, type, value, traceback):
+    self.lib_.ArtmDisposeRegularizer(self.instance_id_, self.name_)
+
+  def Reconfigure(self, config):
+    regularizer_config_blob = config.SerializeToString()
+    regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
+    HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.instance_id_, 
+                    len(regularizer_config_blob), regularizer_config_blob_p));
+    self.config_.CopyFrom(config)
 
 #################################################################################
 

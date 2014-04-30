@@ -19,6 +19,11 @@
 #include "artm/messages.pb.h"
 #include "artm/thread_safe_holder.h"
 
+#include "artm/regularizer_interface.h"
+
+// include here all files containig regularizers
+#include "artm/dirichlet_regularizer_theta.h"
+
 namespace artm {
 namespace core {
 
@@ -77,7 +82,8 @@ class Processor : boost::noncopyable {
   class ItemProcessor : boost::noncopyable {
    public:
     ItemProcessor(const TopicModel& topic_model,
-                  const google::protobuf::RepeatedPtrField<std::string>& token_dict);
+                  const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+                  std::shared_ptr<InstanceSchema> schema);
 
     void InferTheta(const ModelConfig& model,
                     const Item& item,
@@ -93,6 +99,7 @@ class Processor : boost::noncopyable {
    private:
     const TopicModel& topic_model_;
     const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
+    std::shared_ptr<InstanceSchema> schema_;
   };
 
   // Helper class to iterate through tokens in one item

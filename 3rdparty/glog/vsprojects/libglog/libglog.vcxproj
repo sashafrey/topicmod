@@ -63,13 +63,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-<<<<<<< HEAD:src/artm/artm_dll.vcxproj
-      <AdditionalDependencies>artm.lib;libprotobuf.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\libs\vc$(VisualStudioVersion)\$(Platform)\$(Configuration)\;$(SolutionDir)..\libs\;E:\ARTM\libs\vc10.0\win32\debug\</AdditionalLibraryDirectories>
-=======
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
->>>>>>> 9f3cb250202e7fc55771647ea72127e5d318a77e:3rdparty/glog/vsprojects/libglog/libglog.vcxproj
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -88,8 +83,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(OutDir);$(SolutionDir)..\libs\vc$(VisualStudioVersion)\$(Platform)\$(Configuration)\;$(SolutionDir)..\libs\;E:\ARTM\libs\vc10.0\win32\release\</AdditionalLibraryDirectories>
-      <AdditionalDependencies>artm.lib;libprotobuf.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
     </Link>

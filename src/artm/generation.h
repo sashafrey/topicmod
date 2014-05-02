@@ -10,6 +10,7 @@
 
 #include "boost/uuid/uuid.hpp"             // uuid class
 #include "boost/uuid/uuid_generators.hpp"  // generators
+#include <boost/filesystem.hpp>
 
 #include "artm/messages.pb.h"
 
@@ -25,8 +26,13 @@ class Generation {
       : id_(generation.id_ + 1), generation_(generation.generation_) {}
 
   int id() const;
-  std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid, const std::string& disk_path);
-  void Generation::AddBatch(const std::shared_ptr<const Batch>& batch, const std::string& disk_path);
+  std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid,
+                                     const std::string& disk_path);
+  void Generation::AddBatch(const std::shared_ptr<const Batch>& batch,
+                            const std::string& disk_path);
+  static std::vector<boost::filesystem::path> GetAll(const boost::filesystem::path& root,
+                                                     const std::string& ext);
+  static std::string MakeBatchPath(std::string disk_path, boost::uuids::uuid uuid);
   int GetTotalItemsCount() const;
 
   template<class Function>

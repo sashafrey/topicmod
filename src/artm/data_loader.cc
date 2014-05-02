@@ -156,7 +156,8 @@ void DataLoader::ThreadFunction() {
         continue;
 
       auto latest_generation = generation_.get();
-      std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid, config_.get()->disk_path());
+      std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid, 
+                                                                    config_.get()->disk_path());
       if (batch == nullptr) {
         batch_manager_.Done(next_batch_uuid);
         continue;

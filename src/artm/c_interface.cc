@@ -207,14 +207,14 @@ int ArtmRequestBatchTopics(int instance_id, const char* model_id, int batch_leng
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmRequestModelTopics(int instance_id, const char* model_id) {
+int ArtmRequestTopicModel(int instance_id, const char* model_id) {
   try {
-    artm::ModelTopics model_topics;
+    artm::TopicModel topic_model;
     auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
     if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
 
-    instance->RequestModelTopics(model_id, &model_topics);
-    model_topics.SerializeToString(&message);
+    instance->RequestTopicModel(model_id, &topic_model);
+    topic_model.SerializeToString(&message);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }

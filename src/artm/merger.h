@@ -38,7 +38,7 @@ class Merger : boost::noncopyable {
   void DisposeModel(ModelId model_id);
   void UpdateModel(const ModelConfig& model);
 
-  std::shared_ptr<const TopicModel> GetLatestTopicModel(ModelId model_id) const;
+  std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelId model_id) const;
 
  private:
   mutable boost::mutex lock_;

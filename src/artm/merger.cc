@@ -52,7 +52,8 @@ void Merger::DisposeModel(ModelId model_id) {
 void Merger::UpdateModel(const ModelConfig& model) {
   if (!topic_model_.has_key(model.model_id())) {
     // Handle more type of reconfigs - for example, changing the number of topics;
-    auto ttm = std::make_shared<TopicModel>(model.topics_count(), model.score_size());
+    auto ttm = std::make_shared<TopicModel>(model.model_id(), model.topics_count(),
+                                            model.score_size());
     topic_model_.set(model.model_id(), ttm);
   }
 
@@ -63,7 +64,7 @@ void Merger::UpdateModel(const ModelConfig& model) {
   }
 }
 
-std::shared_ptr<const TopicModel>
+std::shared_ptr<const ::artm::core::TopicModel>
 Merger::GetLatestTopicModel(ModelId model_id) const {
   return topic_model_.get(model_id);
 }

@@ -89,25 +89,10 @@ void Instance::Reconfigure(const InstanceConfig& config) {
   }
 }
 
-bool Instance::RequestModelTopics(ModelId model_id, ::artm::ModelTopics* model_topics) {
+bool Instance::RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model) {
   std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_.GetLatestTopicModel(model_id);
   if (ttm == nullptr) return false;
-
-  int topics_size = ttm->topic_size();
-  for (int token_index = 0; token_index < ttm->token_size(); token_index++) {
-    TokenTopics* token_topics = model_topics->add_token_topic();
-    token_topics->set_token(ttm->token(token_index));
-    TopicWeightIterator iter = ttm->GetTopicWeightIterator(token_index);
-    while (iter.NextTopic() < topics_size) {
-      token_topics->add_topic_weight(iter.Weight());
-    }
-  }
-
-  model_topics->set_items_processed(ttm->items_processed());
-  for (int score_index = 0; score_index < ttm->score_size(); ++score_index) {
-    model_topics->add_score(ttm->score(score_index));
-  }
-
+  ttm->RetrieveExternalTopicModel(topic_model);
   return true;
 }
 

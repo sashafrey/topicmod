@@ -12,9 +12,12 @@
 #include "boost/utility.hpp"
 
 #include "artm/common.h"
+#include "artm/messages.pb.h"
 
 namespace artm {
 namespace core {
+
+class TopicModel;
 
 // A class representing an iterator over one row from Phi matrix
 // (a vector of topic weights for a particular token of the topic model).
@@ -67,18 +70,21 @@ class TopicWeightIterator {
     assert(normalizer != nullptr);
   }
 
-  friend class TopicModel;
+  friend class ::artm::core::TopicModel;
 };
 
 // A class representing a topic model.
 // ::artm::core::TopicModel is an internal representation, used between Processor and Merger.
-// ::artm::ModelTopics is an external representation, implemented as protobuf message.
-// ::artm::ModelTopics should be perhaps renamed to ::artm::TopicModel.
+// ::artm::TopicModel is an external representation, implemented as protobuf message.
 class TopicModel {
  public:
-  explicit TopicModel(int topics_count, int scores_count);
+  explicit TopicModel(ModelId model_id, int topics_count, int scores_count);
   explicit TopicModel(const TopicModel& rhs);
+  explicit TopicModel(const ::artm::TopicModel& external_topic_model);
+
   ~TopicModel();
+
+  void RetrieveExternalTopicModel(::artm::TopicModel* topic_model) const;
 
   void AddToken(const std::string& token);
   void IncreaseTokenWeight(const std::string& token, int topic_id, float value);
@@ -103,11 +109,13 @@ class TopicModel {
   double score_not_normalized(int score_index) const;
   double score_normalizer(int score_index) const;
 
-  int has_token(const std::string& token) const;
+  bool has_token(const std::string& token) const;
   int token_id(const std::string& token) const;
   std::string token(int index) const;
 
  private:
+  ModelId model_id_;
+
   std::map<std::string, int> token_to_token_id_;
   std::vector<std::string> token_id_to_token_;
   int topics_count_;

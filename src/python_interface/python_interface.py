@@ -77,17 +77,17 @@ class Instance:
     HandleErrorCode(self.lib_.ArtmReconfigureInstance(self.id_, len(config_blob), config_blob_p));
     self.config_.CopyFrom(config)
 
-  def GetTopics(self, model):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestModelTopics(self.id_, model.model_id()));
+  def GetTopicModel(self, model):
+    request_id = HandleErrorCode(self.lib_.ArtmRequestTopicModel(self.id_, model.model_id()));
     length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
 
-    model_topics_blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, model_topics_blob));
+    topic_model_blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, topic_model_blob));
     self.lib_.ArtmDisposeRequest(request_id)
 
-    model_topics = messages_pb2.ModelTopics()
-    model_topics.ParseFromString(model_topics_blob)
-    return model_topics
+    topic_model = messages_pb2.TopicModel()
+    topic_model.ParseFromString(topic_model_blob)
+    return topic_model
 
 #################################################################################
 

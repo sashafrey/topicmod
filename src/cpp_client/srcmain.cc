@@ -107,18 +107,18 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   // Enable model and wait while each document pass through processor about 10 times.
   for (int i = 0; i < instance_size; ++i) model[i]->Enable();
-  std::shared_ptr<ModelTopics> model_topics;
+  std::shared_ptr<TopicModel> topic_model;
   for (int iter = 0; iter < 10; ++iter) {
     for (int i = 0; i < instance_size; ++i) data_loader[i]->InvokeIteration(1);
     for (int i = 0; i < instance_size; ++i) data_loader[i]->WaitIdle();
 
     for (int inst = 0; inst < instance_size; ++inst) {
-      model_topics = instance[inst]->GetTopics(*model[inst]);
+      topic_model = instance[inst]->GetTopicModel(*model[inst]);
       std::cout << "Iter #" << (iter + 1) << ": "
                 << "Inst #" << (inst + 1) << ": "
-                << "#Tokens = "  << model_topics->token_topic_size() << ", "
-                << "#Items = " << model_topics->items_processed() << ", "
-                << "Perplexity = " << model_topics->score(0) << endl;
+                << "#Tokens = "  << topic_model->token_size() << ", "
+                << "#Items = " << topic_model->items_processed() << ", "
+                << "Perplexity = " << topic_model->scores().value(0) << endl;
     }
   }
 
@@ -131,17 +131,16 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   // Log top 7 words per each topic
   {
     int wordsToSort = 7;
-    int no_tokens = model_topics->token_topic_size();
-    int nTopics = model_topics->token_topic(0).topic_weight_size();
+    int no_tokens = topic_model->token_size();
+    int nTopics = topic_model->topics_count();
 
     for (int topic_index = 0; topic_index < nTopics; topic_index++) {
       std::cout << "#" << (topic_index+1) << ": ";
 
       std::vector<std::pair<float, std::string> > p_w;
       for (int token_index = 0; token_index < no_tokens; ++token_index) {
-        const TokenTopics& token_topic = model_topics->token_topic(token_index);
-        string token = token_topic.token();
-        float weight = token_topic.topic_weight(topic_index);
+        string token = topic_model->token(token_index);
+        float weight = topic_model->token_weights(token_index).value(topic_index);
           p_w.push_back(std::pair<float, std::string>(weight, token));
       }
 

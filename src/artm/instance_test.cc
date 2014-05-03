@@ -135,13 +135,13 @@ TEST(Instance, Basic) {
   config.set_enabled(false);
   instance->ReconfigureModel(config);
 
-  artm::ModelTopics model_topics;
-  instance->RequestModelTopics(model_id, &model_topics);
-  EXPECT_EQ(model_topics.token_topic_size(), 3);
-  EXPECT_TRUE(artm::core::model_has_token(model_topics, "first token"));
-  EXPECT_TRUE(artm::core::model_has_token(model_topics, "second"));
-  EXPECT_TRUE(artm::core::model_has_token(model_topics, "last"));
-  EXPECT_FALSE(artm::core::model_has_token(model_topics, "of cource!"));
+  artm::TopicModel topic_model;
+  instance->RequestTopicModel(model_id, &topic_model);
+  EXPECT_EQ(topic_model.token_size(), 3);
+  EXPECT_TRUE(artm::core::model_has_token(topic_model, "first token"));
+  EXPECT_TRUE(artm::core::model_has_token(topic_model, "second"));
+  EXPECT_TRUE(artm::core::model_has_token(topic_model, "last"));
+  EXPECT_FALSE(artm::core::model_has_token(topic_model, "of cource!"));
 
   artm::core::InstanceManager::singleton().Erase(instance_id);
   artm::core::DataLoaderManager::singleton().Erase(data_loader_id);
@@ -198,14 +198,14 @@ TEST(Instance, MultipleStreamsAndModels) {
   test.data_loader()->InvokeIteration(1);
   test.data_loader()->WaitIdle();
 
-  artm::ModelTopics m1t;
-  test.instance()->RequestModelTopics(m1.model_id(), &m1t);
+  artm::TopicModel m1t;
+  test.instance()->RequestTopicModel(m1.model_id(), &m1t);
 
-  artm::ModelTopics m2t;
-  test.instance()->RequestModelTopics(m2.model_id(), &m2t);
+  artm::TopicModel m2t;
+  test.instance()->RequestTopicModel(m2.model_id(), &m2t);
 
-  EXPECT_EQ(m1t.token_topic_size(), 3);
-  EXPECT_EQ(m2t.token_topic_size(), 3);
+  EXPECT_EQ(m1t.token_size(), 3);
+  EXPECT_EQ(m2t.token_size(), 3);
 
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token0"));
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token2"));
@@ -215,6 +215,6 @@ TEST(Instance, MultipleStreamsAndModels) {
   EXPECT_TRUE(artm::core::model_has_token(m2t, "token3"));
   EXPECT_TRUE(artm::core::model_has_token(m2t, "token5"));
 
-  EXPECT_EQ(m1t.score_size(), 1);
-  EXPECT_GT(m1t.score(0), 0);
+  EXPECT_EQ(m1t.scores().value_size(), 1);
+  EXPECT_GT(m1t.scores().value(0), 0);
 }

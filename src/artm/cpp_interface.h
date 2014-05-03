@@ -39,7 +39,7 @@ class Instance {
   ~Instance();
 
   int id() const { return id_; }
-  std::shared_ptr<ModelTopics> GetTopics(const Model& model);
+  std::shared_ptr<TopicModel> GetTopicModel(const Model& model);
   void Reconfigure(const InstanceConfig& config);
 
   const InstanceConfig& config() const { return config_; }

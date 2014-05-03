@@ -74,21 +74,23 @@ with library.CreateInstance(instance_config) as instance:
             for iter in range(0, outer_iteration_count):
                 data_loader.InvokeIteration(1)
                 data_loader.WaitIdle();
-                topics = instance.GetTopics(model)
+                topic_model = instance.GetTopicModel(model)
                 print "Iter# = " + str(iter) + \
-                      ", Items# = " + str(topics.items_processed) + \
-                      ", Perplexity = " + str(topics.score[0])
+                      ", Items# = " + str(topic_model.items_processed) + \
+                      ", Perplexity = " + str(topic_model.scores.value[0])
             model.Disable();
 
             # Log to 7 words in each topic
-            tokens_size = len(topics.token_topic)
-            topics_size = len(topics.token_topic[0].topic_weight)
+            tokens_size = len(topic_model.token)
+            topics_size = topic_model.topics_count
+
             for topic_index in range(0, topics_size):
                 token_map = {}
                 best_tokens = '#' + str(topic_index + 1) + ': '
                 for token_index in range(0, tokens_size):
-                    token = topics.token_topic[token_index]
-                    token_map[token.token]=token.topic_weight[topic_index]
+                    token = topic_model.token[token_index];
+                    token_weight = topic_model.token_weights[token_index].value[topic_index]
+                    token_map[token] = token_weight
                 sorted_token_map = sorted(token_map.iteritems(), key=operator.itemgetter(1), reverse=True)
                 for best_token in range(0, top_tokens_count_to_visualize):
                     best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '

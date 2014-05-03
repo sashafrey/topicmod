@@ -54,21 +54,21 @@ void Instance::Reconfigure(const InstanceConfig& config) {
   config_.CopyFrom(config);
 }
 
-std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
+std::shared_ptr<TopicModel> Instance::GetTopicModel(const Model& model) {
   // Request model topics
-  int request_id = HandleErrorCode(ArtmRequestModelTopics(
+  int request_id = HandleErrorCode(ArtmRequestTopicModel(
     id(), model.model_id().c_str()));
 
   int length = HandleErrorCode(ArtmGetRequestLength(request_id));
-  std::string model_topics_blob;
-  model_topics_blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&model_topics_blob)));
+  std::string topic_model_blob;
+  topic_model_blob.resize(length);
+  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&topic_model_blob)));
 
   ArtmDisposeRequest(request_id);
 
-  std::shared_ptr<ModelTopics> model_topics(new ModelTopics());
-  model_topics->ParseFromString(model_topics_blob);
-  return model_topics;
+  std::shared_ptr<TopicModel> topic_model(new TopicModel());
+  topic_model->ParseFromString(topic_model_blob);
+  return topic_model;
 }
 
 Model::Model(const Instance& instance, const ModelConfig& config)

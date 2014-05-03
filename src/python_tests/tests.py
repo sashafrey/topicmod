@@ -62,7 +62,7 @@ instance_config_new = messages_pb2.InstanceConfig()
 instance_config_new.processors_count = 1
 
 tilde_alpha_1 = messages_pb2.DoubleArray()
-tilde_alpha_1.alpha.append(0.1)
+tilde_alpha_1.value.append(0.1)
 
 dirichlet_regularizer_config = messages_pb2.DirichletRegularizerThetaConfig()
 dirichlet_regularizer_config.alpha_0.append(0.01)
@@ -84,7 +84,7 @@ library = ArtmLibrary(address + '\\Win32\\Debug\\artm.dll')
 with library.CreateInstance(instance_config) as instance:
   instance.Reconfigure(instance_config_new)
   with library.CreateModel(instance, model_config) as model:
-    instance.GetTopics(model)
+    instance.GetTopicModel(model)
     model.Reconfigure(model_config_new)
     model.Disable()
     model.Enable()

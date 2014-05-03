@@ -46,7 +46,7 @@ class Instance : boost::noncopyable {
 
   // Retrieves topic model.
   // Returns true if succeeded, and false if model_id hasn't been found.
-  bool RequestModelTopics(ModelId model_id, ModelTopics* model_topics);
+  bool RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model);
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
   void ReconfigureModel(const ModelConfig& config);

@@ -58,7 +58,7 @@ extern "C" {
   DLL_PUBLIC int ArtmReconfigureModel(int instance_id, int length, const char* config);
   DLL_PUBLIC int ArtmRequestBatchTopics(int instance_id, const char* model_id, int batch_length,
                                         const char* batch_blob);
-  DLL_PUBLIC int ArtmRequestModelTopics(int instance_id, const char* model_id);
+  DLL_PUBLIC int ArtmRequestTopicModel(int instance_id, const char* model_id);
 
   DLL_PUBLIC void ArtmDisposeInstance(int instance_id);
   DLL_PUBLIC void ArtmDisposeModel(int instance_id, const char* model_id);

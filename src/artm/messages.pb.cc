@@ -132,11 +132,12 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Batch));
   DataLoaderConfig_descriptor_ = file->message_type(3);
-  static const int DataLoaderConfig_offsets_[4] = {
+  static const int DataLoaderConfig_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataLoaderConfig, instance_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataLoaderConfig, disk_path_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataLoaderConfig, queue_size_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataLoaderConfig, stream_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataLoaderConfig, compact_batches_),
   };
   DataLoaderConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -462,49 +463,50 @@ void protobuf_AddDesc_messages_2eproto() {
     "(\005\022\032\n\005field\030\002 \003(\0132\013.artm.Field\"I\n\005Field\022"
     "\031\n\nfield_name\030\001 \001(\t:\005@body\022\020\n\010token_id\030\002"
     " \003(\005\022\023\n\013token_count\030\003 \003(\005\"0\n\005Batch\022\r\n\005to"
-    "ken\030\001 \003(\t\022\030\n\004item\030\002 \003(\0132\n.artm.Item\"p\n\020D"
-    "ataLoaderConfig\022\023\n\013instance_id\030\001 \002(\005\022\021\n\t"
-    "disk_path\030\002 \001(\t\022\026\n\nqueue_size\030\003 \001(\005:\00210\022"
-    "\034\n\006stream\030\004 \003(\0132\014.artm.Stream\"\250\001\n\006Stream"
-    "\022\'\n\004type\030\001 \002(\0162\021.artm.Stream.Type:\006Globa"
-    "l\022\025\n\004name\030\002 \001(\t:\007@global\022\017\n\007modulus\030\003 \001("
-    "\005\022\021\n\tresiduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000"
-    "\022\021\n\rItemIdModulus\020\001\022\023\n\017ItemHashModulus\020\003"
-    "\"I\n\016InstanceConfig\022\033\n\020processors_count\030\001"
-    " \001(\005:\0011\022\032\n\022memcached_endpoint\030\002 \001(\t\"\247\002\n\013"
-    "ModelConfig\022\022\n\010model_id\030\001 \001(\t:\000\022\030\n\014topic"
-    "s_count\030\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005fals"
-    "e\022\"\n\026inner_iterations_count\030\004 \001(\005:\00210\022\031\n"
-    "\nfield_name\030\005 \001(\t:\005@body\022\034\n\013stream_name\030"
-    "\006 \001(\t:\007@global\022\032\n\005score\030\007 \003(\0132\013.artm.Sco"
-    "re\022\032\n\013reuse_theta\030\010 \001(\010:\005false\022#\n\024cache_"
-    "token_counters\030\t \001(\010:\005false\022\030\n\020regulariz"
-    "er_name\030\n \003(\t\"\204\001\n\021RegularizerConfig\022\014\n\004n"
-    "ame\030\001 \002(\t\022*\n\004type\030\002 \002(\0162\034.artm.Regulariz"
-    "erConfig.Type\022\016\n\006config\030\003 \002(\014\"%\n\004Type\022\035\n"
-    "\031DirichletRegularizerTheta\020\001\"Z\n\037Dirichle"
-    "tRegularizerThetaConfig\022\017\n\007alpha_0\030\001 \003(\001"
-    "\022&\n\013tilde_alpha\030\002 \003(\0132\021.artm.DoubleArray"
-    "\" \n\013DoubleArray\022\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFl"
-    "oatArray\022\021\n\005value\030\001 \003(\002B\002\020\001\"x\n\005Score\022\036\n\004"
-    "type\030\001 \002(\0162\020.artm.Score.Type\022\031\n\nfield_na"
-    "me\030\002 \001(\t:\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@g"
-    "lobal\"\026\n\004Type\022\016\n\nPerplexity\020\000\"\231\001\n\014Logger"
-    "Config\022\024\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 "
-    "\001(\0162\030.artm.LoggerConfig.Level:\004INFO\"D\n\005L"
-    "evel\022\014\n\010DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING"
-    "\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBOSE\020\004\"\351\002\n\nTopicModel"
-    "\022\022\n\010model_id\030\001 \001(\t:\000\022\024\n\014topics_count\030\002 \001"
-    "(\005\022\027\n\017items_processed\030\003 \001(\005\022\r\n\005token\030\004 \003"
-    "(\t\022\'\n\rtoken_weights\030\005 \003(\0132\020.artm.FloatAr"
-    "ray\022!\n\006scores\030\006 \001(\0132\021.artm.DoubleArray\022\021"
-    "\n\tinternals\030\007 \001(\014\032\251\001\n\023TopicModelInternal"
-    "s\022\036\n\004n_wt\030\001 \003(\0132\020.artm.FloatArray\022\035\n\003n_t"
-    "\030\002 \001(\0132\020.artm.FloatArray\022%\n\nscores_raw\030\003"
-    " \001(\0132\021.artm.DoubleArray\022,\n\021scores_normal"
-    "izer\030\004 \001(\0132\021.artm.DoubleArray\"F\n\013BatchTo"
-    "pics\022\017\n\007item_id\030\001 \003(\005\022&\n\014item_weights\030\002 "
-    "\003(\0132\020.artm.FloatArray", 1861);
+    "ken\030\001 \003(\t\022\030\n\004item\030\002 \003(\0132\n.artm.Item\"\217\001\n\020"
+    "DataLoaderConfig\022\023\n\013instance_id\030\001 \002(\005\022\021\n"
+    "\tdisk_path\030\002 \001(\t\022\026\n\nqueue_size\030\003 \001(\005:\00210"
+    "\022\034\n\006stream\030\004 \003(\0132\014.artm.Stream\022\035\n\017compac"
+    "t_batches\030\005 \001(\010:\004true\"\250\001\n\006Stream\022\'\n\004type"
+    "\030\001 \002(\0162\021.artm.Stream.Type:\006Global\022\025\n\004nam"
+    "e\030\002 \001(\t:\007@global\022\017\n\007modulus\030\003 \001(\005\022\021\n\tres"
+    "iduals\030\004 \003(\005\":\n\004Type\022\n\n\006Global\020\000\022\021\n\rItem"
+    "IdModulus\020\001\022\023\n\017ItemHashModulus\020\003\"I\n\016Inst"
+    "anceConfig\022\033\n\020processors_count\030\001 \001(\005:\0011\022"
+    "\032\n\022memcached_endpoint\030\002 \001(\t\"\247\002\n\013ModelCon"
+    "fig\022\022\n\010model_id\030\001 \001(\t:\000\022\030\n\014topics_count\030"
+    "\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026inn"
+    "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n"
+    "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@"
+    "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013re"
+    "use_theta\030\010 \001(\010:\005false\022#\n\024cache_token_co"
+    "unters\030\t \001(\010:\005false\022\030\n\020regularizer_name\030"
+    "\n \003(\t\"\204\001\n\021RegularizerConfig\022\014\n\004name\030\001 \002("
+    "\t\022*\n\004type\030\002 \002(\0162\034.artm.RegularizerConfig"
+    ".Type\022\016\n\006config\030\003 \002(\014\"%\n\004Type\022\035\n\031Dirichl"
+    "etRegularizerTheta\020\001\"Z\n\037DirichletRegular"
+    "izerThetaConfig\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013tild"
+    "e_alpha\030\002 \003(\0132\021.artm.DoubleArray\" \n\013Doub"
+    "leArray\022\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFloatArray"
+    "\022\021\n\005value\030\001 \003(\002B\002\020\001\"x\n\005Score\022\036\n\004type\030\001 \002"
+    "(\0162\020.artm.Score.Type\022\031\n\nfield_name\030\002 \001(\t"
+    ":\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@global\"\026\n"
+    "\004Type\022\016\n\nPerplexity\020\000\"\231\001\n\014LoggerConfig\022\024"
+    "\n\014log_location\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.ar"
+    "tm.LoggerConfig.Level:\004INFO\"D\n\005Level\022\014\n\010"
+    "DISABLED\020\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004IN"
+    "FO\020\003\022\013\n\007VERBOSE\020\004\"\351\002\n\nTopicModel\022\022\n\010mode"
+    "l_id\030\001 \001(\t:\000\022\024\n\014topics_count\030\002 \001(\005\022\027\n\017it"
+    "ems_processed\030\003 \001(\005\022\r\n\005token\030\004 \003(\t\022\'\n\rto"
+    "ken_weights\030\005 \003(\0132\020.artm.FloatArray\022!\n\006s"
+    "cores\030\006 \001(\0132\021.artm.DoubleArray\022\021\n\tintern"
+    "als\030\007 \001(\014\032\251\001\n\023TopicModelInternals\022\036\n\004n_w"
+    "t\030\001 \003(\0132\020.artm.FloatArray\022\035\n\003n_t\030\002 \001(\0132\020"
+    ".artm.FloatArray\022%\n\nscores_raw\030\003 \001(\0132\021.a"
+    "rtm.DoubleArray\022,\n\021scores_normalizer\030\004 \001"
+    "(\0132\021.artm.DoubleArray\"F\n\013BatchTopics\022\017\n\007"
+    "item_id\030\001 \003(\005\022&\n\014item_weights\030\002 \003(\0132\020.ar"
+    "tm.FloatArray", 1893);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -1389,6 +1391,7 @@ const int DataLoaderConfig::kInstanceIdFieldNumber;
 const int DataLoaderConfig::kDiskPathFieldNumber;
 const int DataLoaderConfig::kQueueSizeFieldNumber;
 const int DataLoaderConfig::kStreamFieldNumber;
+const int DataLoaderConfig::kCompactBatchesFieldNumber;
 #endif  // !_MSC_VER
 
 DataLoaderConfig::DataLoaderConfig()
@@ -1410,6 +1413,7 @@ void DataLoaderConfig::SharedCtor() {
   instance_id_ = 0;
   disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   queue_size_ = 10;
+  compact_batches_ = true;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1455,6 +1459,7 @@ void DataLoaderConfig::Clear() {
       }
     }
     queue_size_ = 10;
+    compact_batches_ = true;
   }
   stream_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1526,6 +1531,22 @@ bool DataLoaderConfig::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(34)) goto parse_stream;
+        if (input->ExpectTag(40)) goto parse_compact_batches;
+        break;
+      }
+
+      // optional bool compact_batches = 5 [default = true];
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_compact_batches:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &compact_batches_)));
+          set_has_compact_batches();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -1573,6 +1594,11 @@ void DataLoaderConfig::SerializeWithCachedSizes(
       4, this->stream(i), output);
   }
 
+  // optional bool compact_batches = 5 [default = true];
+  if (has_compact_batches()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(5, this->compact_batches(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -1608,6 +1634,11 @@ void DataLoaderConfig::SerializeWithCachedSizes(
         4, this->stream(i), target);
   }
 
+  // optional bool compact_batches = 5 [default = true];
+  if (has_compact_batches()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(5, this->compact_batches(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -1638,6 +1669,11 @@ int DataLoaderConfig::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->queue_size());
+    }
+
+    // optional bool compact_batches = 5 [default = true];
+    if (has_compact_batches()) {
+      total_size += 1 + 1;
     }
 
   }
@@ -1685,6 +1721,9 @@ void DataLoaderConfig::MergeFrom(const DataLoaderConfig& from) {
     if (from.has_queue_size()) {
       set_queue_size(from.queue_size());
     }
+    if (from.has_compact_batches()) {
+      set_compact_batches(from.compact_batches());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -1716,6 +1755,7 @@ void DataLoaderConfig::Swap(DataLoaderConfig* other) {
     std::swap(disk_path_, other->disk_path_);
     std::swap(queue_size_, other->queue_size_);
     stream_.Swap(&other->stream_);
+    std::swap(compact_batches_, other->compact_batches_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

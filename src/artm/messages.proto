@@ -38,6 +38,7 @@ message DataLoaderConfig {
   optional string disk_path = 2;
   optional int32 queue_size = 3 [default = 10];
   repeated Stream stream = 4;
+  optional bool compact_batches = 5 [default = true];
 }
 
 // Defines a stream in DataLoader.

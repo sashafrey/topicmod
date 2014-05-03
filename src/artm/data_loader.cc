@@ -53,8 +53,43 @@ void DataLoader::Reconfigure(const DataLoaderConfig& config) {
 
 void DataLoader::AddBatch(const Batch& batch) {
   std::shared_ptr<Generation> next_gen = generation_.get_copy();
-  next_gen->AddBatch(std::make_shared<Batch>(batch));
+  if (config_.get()->compact_batches()) {
+    Batch compacted_batch;
+    CompactBatch(batch, &compacted_batch);
+    next_gen->AddBatch(std::make_shared<Batch>(compacted_batch));
+  } else {
+    next_gen->AddBatch(std::make_shared<Batch>(batch));
+  }
+
   generation_.set(next_gen);
+}
+
+void DataLoader::CompactBatch(const Batch& batch, Batch* compacted_batch) {
+  std::vector<int> orig_to_compacted_id_map(batch.token_size(), -1);
+  int compacted_dictionary_size = 0;
+
+  for (int item_index = 0; item_index < batch.item_size(); ++item_index) {
+    auto item = batch.item(item_index);
+    auto compacted_item = compacted_batch->add_item();
+    compacted_item->CopyFrom(item);
+
+    for (int field_index = 0; field_index < item.field_size(); ++field_index) {
+      auto field = item.field(field_index);
+      auto compacted_field = compacted_item->mutable_field(field_index);
+
+      for (int token_index = 0; token_index < field.token_id_size(); ++token_index) {
+        int token_id = field.token_id(token_index);
+        int token_count = field.token_count(token_index);
+
+        if (orig_to_compacted_id_map[token_id] == -1) {
+          orig_to_compacted_id_map[token_id] = compacted_dictionary_size++;
+          compacted_batch->add_token(batch.token(token_id));
+        }
+
+        compacted_field->set_token_id(token_index, orig_to_compacted_id_map[token_id]);
+      }
+    }
+  }
 }
 
 int DataLoader::GetTotalItemsCount() const {

@@ -534,6 +534,13 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::Stream >*
       mutable_stream();
 
+  // optional bool compact_batches = 5 [default = true];
+  inline bool has_compact_batches() const;
+  inline void clear_compact_batches();
+  static const int kCompactBatchesFieldNumber = 5;
+  inline bool compact_batches() const;
+  inline void set_compact_batches(bool value);
+
   // @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
  private:
   inline void set_has_instance_id();
@@ -542,6 +549,8 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   inline void clear_has_disk_path();
   inline void set_has_queue_size();
   inline void clear_has_queue_size();
+  inline void set_has_compact_batches();
+  inline void clear_has_compact_batches();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -549,9 +558,10 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   ::google::protobuf::int32 instance_id_;
   ::google::protobuf::int32 queue_size_;
   ::google::protobuf::RepeatedPtrField< ::artm::Stream > stream_;
+  bool compact_batches_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2445,6 +2455,28 @@ DataLoaderConfig::stream() const {
 inline ::google::protobuf::RepeatedPtrField< ::artm::Stream >*
 DataLoaderConfig::mutable_stream() {
   return &stream_;
+}
+
+// optional bool compact_batches = 5 [default = true];
+inline bool DataLoaderConfig::has_compact_batches() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void DataLoaderConfig::set_has_compact_batches() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void DataLoaderConfig::clear_has_compact_batches() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void DataLoaderConfig::clear_compact_batches() {
+  compact_batches_ = true;
+  clear_has_compact_batches();
+}
+inline bool DataLoaderConfig::compact_batches() const {
+  return compact_batches_;
+}
+inline void DataLoaderConfig::set_compact_batches(bool value) {
+  set_has_compact_batches();
+  compact_batches_ = value;
 }
 
 // -------------------------------------------------------------------

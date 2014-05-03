@@ -198,7 +198,10 @@ double TopicModel::score_normalizer(int score_index) const {
 
 void TopicModel::IncreaseTokenWeight(const std::string& token, int topic_id, float value) {
   if (!has_token(token)) {
-    LOG(ERROR) << "Token '" << token << "' not found in the model";
+    if (value != 0.0f) {
+      LOG(ERROR) << "Token '" << token << "' not found in the model";
+    }
+
     return;
   }
 

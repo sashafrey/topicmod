@@ -43,7 +43,9 @@ Processor::TokenIterator::TokenIterator(
       iterate_unknown_((mode & Mode_Unknown) != 0),   // NOLINT
       token_index_(-1),  // handy trick for iterators
       token_(),
-      token_id_(-1) {
+      id_in_model_(-1),
+      id_in_batch_(-1),
+      count_(0) {
   for (int field_index = 0; field_index < item.field_size(); field_index++) {
     if (item.field(field_index).field_name() == field_name) {
       field_ = &item.field(field_index);
@@ -57,7 +59,16 @@ Processor::TokenIterator::TokenIterator(
   token_size_ = field_->token_id_size();
 }
 
-void Processor::TokenIterator::Reset() { token_index_ = -1; }  // handy trick for iterators
+void Processor::TokenIterator::Reset() {
+  token_index_ = -1;  // handy trick for iterators
+
+  // Reset all other data.
+  // This makes it less confusing if somebody access this data after Reset() but before Next().
+  token_.clear();
+  id_in_model_ = -1;
+  id_in_batch_ = -1;
+  count_ = 0;
+}
 
 bool Processor::TokenIterator::Next() {
   if (field_ == nullptr) {
@@ -72,15 +83,16 @@ bool Processor::TokenIterator::Next() {
       return false;
     }
 
-    token_ = token_dict_.Get(field_->token_id(token_index_));
+    id_in_batch_ = field_->token_id(token_index_);
+    token_ = token_dict_.Get(id_in_batch_);
     count_ = field_->token_count(token_index_);
-    token_id_ = topic_model_.has_token(token_) ? topic_model_.token_id(token_) : -1;
+    id_in_model_ = topic_model_.has_token(token_) ? topic_model_.token_id(token_) : -1;
 
-    if (iterate_known_ && (token_id_ >= 0)) {
+    if (iterate_known_ && (id_in_model_ >= 0)) {
       return true;
     }
 
-    if (iterate_unknown_ && (token_id_ < 0)) {
+    if (iterate_unknown_ && (id_in_model_ < 0)) {
       return true;
     }
   }
@@ -127,7 +139,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                       TokenIterator::Mode_Known);
 
   while (iter.Next()) {
-    token_id.push_back(iter.id());
+    token_id.push_back(iter.id_in_batch());
     token_count.push_back(static_cast<float>(iter.count()));
     token_weights.push_back(iter.GetTopicWeightIterator());
     z_normalizer.push_back(0.0f);
@@ -353,8 +365,8 @@ void Processor::ThreadFunction() {
 
         model_increment->set_topics_count(topic_size);
 
-        for (int token_index = 0; token_index < topic_model->token_size(); token_index++) {
-          model_increment->add_token(topic_model->token(token_index));
+        for (int token_index = 0; token_index < part->batch().token_size(); ++token_index) {
+          model_increment->add_token(part->batch().token(token_index));
           FloatArray* counters = model_increment->add_token_increment();
           for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
             counters->add_value(0.0f);

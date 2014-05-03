@@ -73,6 +73,7 @@ class DataLoader : boost::noncopyable {
 
   // All instances of DataLoader should be created via DataLoaderManager
   DataLoader(int id, const DataLoaderConfig& config);
+  static void CompactBatch(const Batch& batch, Batch* compacted_batch);
 
   int data_loader_id_;
 

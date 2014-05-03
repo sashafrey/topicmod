@@ -8,6 +8,7 @@
 
 #include "glog/logging.h"
 
+#include "artm/common.h"
 #include "artm/call_on_destruction.h"
 #include "artm/data_loader.h"
 #include "artm/exceptions.h"
@@ -44,18 +45,18 @@ Merger::~Merger() {
   }
 }
 
-void Merger::DisposeModel(int model_id) {
+void Merger::DisposeModel(ModelId model_id) {
   topic_model_.erase(model_id);
 }
 
-void Merger::UpdateModel(int model_id, const ModelConfig& model) {
-  if (!topic_model_.has_key(model_id)) {
+void Merger::UpdateModel(const ModelConfig& model) {
+  if (!topic_model_.has_key(model.model_id())) {
     // Handle more type of reconfigs - for example, changing the number of topics;
     auto ttm = std::make_shared<TopicModel>(model.topics_count(), model.score_size());
-    topic_model_.set(model_id, ttm);
+    topic_model_.set(model.model_id(), ttm);
   }
 
-  auto ttm = topic_model_.get(model_id);
+  auto ttm = topic_model_.get(model.model_id());
   if (ttm->topic_size() != model.topics_count()) {
     std::string message("Unable to change the number of topics in topic model");
     BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(message));
@@ -63,7 +64,7 @@ void Merger::UpdateModel(int model_id, const ModelConfig& model) {
 }
 
 std::shared_ptr<const TopicModel>
-Merger::GetLatestTopicModel(int model_id) const {
+Merger::GetLatestTopicModel(ModelId model_id) const {
   return topic_model_.get(model_id);
 }
 
@@ -105,7 +106,7 @@ void Merger::ThreadFunction() {
              modex_index < processor_output->model_increment_size();
              modex_index++) {
           auto model_increment = processor_output->model_increment(modex_index);
-          int model_id = model_increment.model_id();
+          ModelId model_id = model_increment.model_id();
           auto cur_ttm = topic_model_.get(model_id);
           if (cur_ttm.get() == nullptr) {
             // a model had been disposed during ongoing processing;

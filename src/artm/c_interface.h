@@ -55,14 +55,13 @@ extern "C" {
   DLL_PUBLIC int ArtmCreateInstance(int instance_id, int length, const char* instance_config_blob);
   DLL_PUBLIC int ArtmCreateModel(int instance_id, int length, const char* model_config_blob);
   DLL_PUBLIC int ArtmReconfigureInstance(int instance_id, int length, const char* config);
-  DLL_PUBLIC int ArtmReconfigureModel(int instance_id, int model_id, int length,
-                                      const char* config);
-  DLL_PUBLIC int ArtmRequestBatchTopics(int instance_id, int model_id, int batch_length,
+  DLL_PUBLIC int ArtmReconfigureModel(int instance_id, int length, const char* config);
+  DLL_PUBLIC int ArtmRequestBatchTopics(int instance_id, const char* model_id, int batch_length,
                                         const char* batch_blob);
-  DLL_PUBLIC int ArtmRequestModelTopics(int instance_id, int model_id);
+  DLL_PUBLIC int ArtmRequestModelTopics(int instance_id, const char* model_id);
 
   DLL_PUBLIC void ArtmDisposeInstance(int instance_id);
-  DLL_PUBLIC void ArtmDisposeModel(int instance_id, int model_id);
+  DLL_PUBLIC void ArtmDisposeModel(int instance_id, const char* model_id);
   DLL_PUBLIC void ArtmDisposeRequest(int request_id);
 
   DLL_PUBLIC int ArtmCreateRegularizer(int instance_id, int length,

@@ -35,14 +35,14 @@ class Merger : boost::noncopyable {
 
   ~Merger();
 
-  void DisposeModel(int model_id);
-  void UpdateModel(int model_id, const ModelConfig& model);
+  void DisposeModel(ModelId model_id);
+  void UpdateModel(const ModelConfig& model);
 
-  std::shared_ptr<const TopicModel> GetLatestTopicModel(int model_id) const;
+  std::shared_ptr<const TopicModel> GetLatestTopicModel(ModelId model_id) const;
 
  private:
   mutable boost::mutex lock_;
-  ThreadSafeCollectionHolder<int, TopicModel> topic_model_;
+  ThreadSafeCollectionHolder<ModelId, TopicModel> topic_model_;
   ThreadSafeHolder<InstanceSchema>* schema_;
   ThreadSafeHolder<artm::memcached::MemcachedService_Stub>* memcached_service_;
 

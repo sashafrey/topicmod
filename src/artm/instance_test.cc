@@ -1,6 +1,11 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
+#include "boost/lexical_cast.hpp"
 #include "boost/thread/mutex.hpp"
+#include "boost/uuid/uuid.hpp"
+#include "boost/uuid/uuid_generators.hpp"
+#include "boost/uuid/uuid_io.hpp"
+
 #include "gtest/gtest.h"
 
 #include "artm/instance.h"
@@ -119,13 +124,16 @@ TEST(Instance, Basic) {
   artm::ModelConfig config;
   config.set_enabled(true);
   config.set_topics_count(3);
-  int model_id = instance->CreateModel(config);
+  artm::core::ModelId model_id =
+    boost::lexical_cast<std::string>(boost::uuids::random_generator()());
+  config.set_model_id(boost::lexical_cast<std::string>(model_id));
+  instance->ReconfigureModel(config);
 
   data_loader->InvokeIteration(20);
   data_loader->WaitIdle();
 
   config.set_enabled(false);
-  instance->ReconfigureModel(model_id, config);
+  instance->ReconfigureModel(config);
 
   artm::ModelTopics model_topics;
   instance->RequestModelTopics(model_id, &model_topics);
@@ -165,6 +173,7 @@ TEST(Instance, MultipleStreamsAndModels) {
   artm::ModelConfig m1;
   m1.set_stream_name("train");
   m1.set_enabled(true);
+  m1.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
   artm::Score* score = m1.add_score();
   score->set_type(artm::Score_Type_Perplexity);
 
@@ -175,13 +184,13 @@ TEST(Instance, MultipleStreamsAndModels) {
   // are present in token-topic-matrix. Therefore,
   // using train sample to get non-zero perplexity score.
   score->set_stream_name("train");
-  int m1_id = test.instance()->CreateModel(m1);
+  test.instance()->ReconfigureModel(m1);
 
   artm::ModelConfig m2;
   m2.set_stream_name("test");
   m2.set_enabled(true);
-  int m2_id = test.instance()->CreateModel(m2);
-
+  m2.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
+  test.instance()->ReconfigureModel(m2);
 
   test.data_loader()->InvokeIteration(1);
   test.data_loader()->WaitIdle();
@@ -190,10 +199,10 @@ TEST(Instance, MultipleStreamsAndModels) {
   test.data_loader()->WaitIdle();
 
   artm::ModelTopics m1t;
-  test.instance()->RequestModelTopics(m1_id, &m1t);
+  test.instance()->RequestModelTopics(m1.model_id(), &m1t);
 
   artm::ModelTopics m2t;
-  test.instance()->RequestModelTopics(m2_id, &m2t);
+  test.instance()->RequestModelTopics(m2.model_id(), &m2t);
 
   EXPECT_EQ(m1t.token_topic_size(), 3);
   EXPECT_EQ(m2t.token_topic_size(), 3);

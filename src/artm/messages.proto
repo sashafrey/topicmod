@@ -62,6 +62,7 @@ message InstanceConfig {
 
 // Configuration of a model.
 message ModelConfig {
+  optional string model_id = 1 [default = ""];  // required; should be unique (guid?);
   optional int32 topics_count = 2 [default = 32];
   optional bool enabled = 3 [default = false];
   optional int32 inner_iterations_count = 4 [default = 10];

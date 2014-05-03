@@ -859,6 +859,18 @@ class ModelConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
+  // optional string model_id = 1 [default = ""];
+  inline bool has_model_id() const;
+  inline void clear_model_id();
+  static const int kModelIdFieldNumber = 1;
+  inline const ::std::string& model_id() const;
+  inline void set_model_id(const ::std::string& value);
+  inline void set_model_id(const char* value);
+  inline void set_model_id(const char* value, size_t size);
+  inline ::std::string* mutable_model_id();
+  inline ::std::string* release_model_id();
+  inline void set_allocated_model_id(::std::string* model_id);
+
   // optional int32 topics_count = 2 [default = 32];
   inline bool has_topics_count() const;
   inline void clear_topics_count();
@@ -948,6 +960,8 @@ class ModelConfig : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
+  inline void set_has_model_id();
+  inline void clear_has_model_id();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
   inline void set_has_enabled();
@@ -965,6 +979,7 @@ class ModelConfig : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::std::string* model_id_;
   ::google::protobuf::int32 topics_count_;
   ::google::protobuf::int32 inner_iterations_count_;
   ::std::string* field_name_;
@@ -978,7 +993,7 @@ class ModelConfig : public ::google::protobuf::Message {
   bool cache_token_counters_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2602,15 +2617,85 @@ inline void InstanceConfig::set_allocated_memcached_endpoint(::std::string* memc
 
 // ModelConfig
 
-// optional int32 topics_count = 2 [default = 32];
-inline bool ModelConfig::has_topics_count() const {
+// optional string model_id = 1 [default = ""];
+inline bool ModelConfig::has_model_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ModelConfig::set_has_topics_count() {
+inline void ModelConfig::set_has_model_id() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ModelConfig::clear_has_topics_count() {
+inline void ModelConfig::clear_has_model_id() {
   _has_bits_[0] &= ~0x00000001u;
+}
+inline void ModelConfig::clear_model_id() {
+  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
+    model_id_->clear();
+  }
+  clear_has_model_id();
+}
+inline const ::std::string& ModelConfig::model_id() const {
+  return *model_id_;
+}
+inline void ModelConfig::set_model_id(const ::std::string& value) {
+  set_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    model_id_ = new ::std::string;
+  }
+  model_id_->assign(value);
+}
+inline void ModelConfig::set_model_id(const char* value) {
+  set_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    model_id_ = new ::std::string;
+  }
+  model_id_->assign(value);
+}
+inline void ModelConfig::set_model_id(const char* value, size_t size) {
+  set_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    model_id_ = new ::std::string;
+  }
+  model_id_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ModelConfig::mutable_model_id() {
+  set_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    model_id_ = new ::std::string;
+  }
+  return model_id_;
+}
+inline ::std::string* ModelConfig::release_model_id() {
+  clear_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = model_id_;
+    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ModelConfig::set_allocated_model_id(::std::string* model_id) {
+  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_id_;
+  }
+  if (model_id) {
+    set_has_model_id();
+    model_id_ = model_id;
+  } else {
+    clear_has_model_id();
+    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional int32 topics_count = 2 [default = 32];
+inline bool ModelConfig::has_topics_count() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ModelConfig::set_has_topics_count() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ModelConfig::clear_has_topics_count() {
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void ModelConfig::clear_topics_count() {
   topics_count_ = 32;
@@ -2626,13 +2711,13 @@ inline void ModelConfig::set_topics_count(::google::protobuf::int32 value) {
 
 // optional bool enabled = 3 [default = false];
 inline bool ModelConfig::has_enabled() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void ModelConfig::set_has_enabled() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void ModelConfig::clear_has_enabled() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void ModelConfig::clear_enabled() {
   enabled_ = false;
@@ -2648,13 +2733,13 @@ inline void ModelConfig::set_enabled(bool value) {
 
 // optional int32 inner_iterations_count = 4 [default = 10];
 inline bool ModelConfig::has_inner_iterations_count() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void ModelConfig::set_has_inner_iterations_count() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void ModelConfig::clear_has_inner_iterations_count() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void ModelConfig::clear_inner_iterations_count() {
   inner_iterations_count_ = 10;
@@ -2670,13 +2755,13 @@ inline void ModelConfig::set_inner_iterations_count(::google::protobuf::int32 va
 
 // optional string field_name = 5 [default = "@body"];
 inline bool ModelConfig::has_field_name() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void ModelConfig::set_has_field_name() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void ModelConfig::clear_has_field_name() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void ModelConfig::clear_field_name() {
   if (field_name_ != _default_field_name_) {
@@ -2740,13 +2825,13 @@ inline void ModelConfig::set_allocated_field_name(::std::string* field_name) {
 
 // optional string stream_name = 6 [default = "@global"];
 inline bool ModelConfig::has_stream_name() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void ModelConfig::set_has_stream_name() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void ModelConfig::clear_has_stream_name() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void ModelConfig::clear_stream_name() {
   if (stream_name_ != _default_stream_name_) {
@@ -2835,13 +2920,13 @@ ModelConfig::mutable_score() {
 
 // optional bool reuse_theta = 8 [default = false];
 inline bool ModelConfig::has_reuse_theta() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void ModelConfig::set_has_reuse_theta() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void ModelConfig::clear_has_reuse_theta() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void ModelConfig::clear_reuse_theta() {
   reuse_theta_ = false;
@@ -2857,13 +2942,13 @@ inline void ModelConfig::set_reuse_theta(bool value) {
 
 // optional bool cache_token_counters = 9 [default = false];
 inline bool ModelConfig::has_cache_token_counters() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void ModelConfig::set_has_cache_token_counters() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void ModelConfig::clear_has_cache_token_counters() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void ModelConfig::clear_cache_token_counters() {
   cache_token_counters_ = false;

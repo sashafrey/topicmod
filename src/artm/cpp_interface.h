@@ -60,13 +60,12 @@ class Model {
   void Disable();
 
   int instance_id() const { return instance_id_; }
-  int model_id() const { return model_id_; }
+  const std::string& model_id() const { return config_.model_id(); }
 
   const ModelConfig& config() const { return config_; }
 
  private:
   int instance_id_;
-  int model_id_;
   ModelConfig config_;
   DISALLOW_COPY_AND_ASSIGN(Model);
 };

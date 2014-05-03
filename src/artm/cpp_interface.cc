@@ -1,6 +1,12 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
 #include "artm/cpp_interface.h"
+
+#include "boost/lexical_cast.hpp"
+#include "boost/uuid/uuid.hpp"
+#include "boost/uuid/uuid_generators.hpp"
+#include "boost/uuid/uuid_io.hpp"
+
 #include "artm/protobuf_helpers.h"
 
 namespace artm {
@@ -51,7 +57,7 @@ void Instance::Reconfigure(const InstanceConfig& config) {
 std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
   // Request model topics
   int request_id = HandleErrorCode(ArtmRequestModelTopics(
-    id(), model.model_id()));
+    id(), model.model_id().c_str()));
 
   int length = HandleErrorCode(ArtmGetRequestLength(request_id));
   std::string model_topics_blob;
@@ -67,22 +73,22 @@ std::shared_ptr<ModelTopics> Instance::GetTopics(const Model& model) {
 
 Model::Model(const Instance& instance, const ModelConfig& config)
     : instance_id_(instance.id()),
-      model_id_(0),
       config_(config) {
+  config_.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
   std::string model_config_blob;
   config.SerializeToString(&model_config_blob);
-  model_id_ = HandleErrorCode(ArtmCreateModel(instance_id_, model_config_blob.size(),
+  HandleErrorCode(ArtmCreateModel(instance_id_, model_config_blob.size(),
     StringAsArray(&model_config_blob)));
 }
 
 Model::~Model() {
-  ArtmDisposeModel(instance_id(), model_id());
+  ArtmDisposeModel(instance_id(), model_id().c_str());
 }
 
 void Model::Reconfigure(const ModelConfig& config) {
   std::string model_config_blob;
   config.SerializeToString(&model_config_blob);
-  HandleErrorCode(ArtmReconfigureModel(instance_id(), model_id(), model_config_blob.size(),
+  HandleErrorCode(ArtmReconfigureModel(instance_id(), model_config_blob.size(),
     StringAsArray(&model_config_blob)));
   config_.CopyFrom(config);
 }

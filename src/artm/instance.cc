@@ -18,7 +18,6 @@ Instance::Instance(int id, const InstanceConfig& config)
     : lock_(),
       instance_id_(id),
       schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
-      next_model_id_(1),
       application_(),
       memcached_service_proxy_(lock_, nullptr),
       processor_queue_lock_(),
@@ -32,21 +31,15 @@ Instance::Instance(int id, const InstanceConfig& config)
 
 Instance::~Instance() {}
 
-int Instance::CreateModel(const ModelConfig& config) {
-  int model_id = next_model_id_++;
-  ReconfigureModel(model_id, config);
-  return model_id;
-}
-
-void Instance::ReconfigureModel(int model_id, const ModelConfig& config) {
-  merger_.UpdateModel(model_id, config);
+void Instance::ReconfigureModel(const ModelConfig& config) {
+  merger_.UpdateModel(config);
 
   auto new_schema = schema_.get_copy();
-  new_schema->set_model_config(model_id, std::make_shared<const ModelConfig>(config));
+  new_schema->set_model_config(config.model_id(), std::make_shared<const ModelConfig>(config));
   schema_.set(new_schema);
 }
 
-void Instance::DisposeModel(int model_id) {
+void Instance::DisposeModel(ModelId model_id) {
   auto new_schema = schema_.get_copy();
   new_schema->clear_model_config(model_id);
   schema_.set(new_schema);
@@ -96,7 +89,7 @@ void Instance::Reconfigure(const InstanceConfig& config) {
   }
 }
 
-bool Instance::RequestModelTopics(int model_id, ::artm::ModelTopics* model_topics) {
+bool Instance::RequestModelTopics(ModelId model_id, ::artm::ModelTopics* model_topics) {
   std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_.GetLatestTopicModel(model_id);
   if (ttm == nullptr) return false;
 

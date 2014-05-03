@@ -5,6 +5,7 @@
 import messages_pb2
 import os
 import ctypes
+import uuid
 from ctypes import *
 
 #################################################################################
@@ -77,7 +78,7 @@ class Instance:
     self.config_.CopyFrom(config)
 
   def GetTopics(self, model):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestModelTopics(self.id_, model.model_id_));
+    request_id = HandleErrorCode(self.lib_.ArtmRequestModelTopics(self.id_, model.model_id()));
     length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
 
     model_topics_blob = ctypes.create_string_buffer(length)
@@ -95,21 +96,25 @@ class Model:
     self.lib_ = lib
     self.instance_id_ = instance.id_
     self.config_ = config
+    self.config_.model_id = uuid.uuid1().urn
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
-    self.model_id_ = HandleErrorCode(self.lib_.ArtmCreateModel(self.instance_id_,
-                     len(model_config_blob), model_config_blob_p));
+    HandleErrorCode(self.lib_.ArtmCreateModel(self.instance_id_,
+                    len(model_config_blob), model_config_blob_p));
 
   def __enter__(self):
     return self
 
   def __exit__(self, type, value, traceback):
-    self.lib_.ArtmDisposeModel(self.instance_id_, self.model_id_)
+    self.lib_.ArtmDisposeModel(self.instance_id_, self.config_.model_id)
+
+  def model_id(self):
+    return self.config_.model_id
 
   def Reconfigure(self, config):
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureModel(self.instance_id_, self.model_id_,
+    HandleErrorCode(self.lib_.ArtmReconfigureModel(self.instance_id_,
                     len(model_config_blob), model_config_blob_p));
     self.config_.CopyFrom(config)
 

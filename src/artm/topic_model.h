@@ -5,6 +5,7 @@
 
 #include <assert.h>
 
+#include <algorithm>
 #include <map>
 #include <vector>
 #include <string>
@@ -43,7 +44,7 @@ class TopicWeightIterator {
   // It is caller responsibility to verify this condition.
   inline float Weight() {
     assert(current_topic_ < topics_count_);
-    return vector_[current_topic_] / normalizer_[current_topic_];
+    return std::max(vector_[current_topic_] + regularizer_[current_topic_], 0.0f) / normalizer_[current_topic_];
   }
 
   // Not normalized weight.
@@ -58,12 +59,21 @@ class TopicWeightIterator {
  private:
   const float* vector_;
   const float* normalizer_;
+  const float* regularizer_;
   int topics_count_;
   mutable int current_topic_;
 
-  TopicWeightIterator(const float* vector, const float* normalizer, int topics_count)
-      : vector_(vector), normalizer_(normalizer), topics_count_(topics_count), current_topic_(-1) {
+  TopicWeightIterator(const float* vector, 
+                      const float* regularizer, 
+                      const float* normalizer, 
+                      int topics_count)
+      : vector_(vector), 
+        normalizer_(normalizer), 
+        regularizer_(regularizer),
+        topics_count_(topics_count),
+        current_topic_(-1) {
     assert(vector != nullptr);
+    assert(regularizer != nullptr);
     assert(normalizer != nullptr);
   }
 
@@ -85,6 +95,9 @@ class TopicModel {
   void IncreaseTokenWeight(int token_id, int topic_id, float value);
   void SetTokenWeight(const std::string& token, int topic_id, float value);
   void SetTokenWeight(int token_id, int topic_id, float value);
+
+  void SetRegularizerWeight(const std::string& token, int topic_id, float value);
+  void SetRegularizerWeight(int token_id, int topic_id, float value);
 
   void IncreaseItemsProcessed(int value);
   void SetItemsProcessed(int value);
@@ -122,6 +135,7 @@ class TopicModel {
 
   std::vector<float*> data_;  // vector of length tokens_count
   std::vector<float> normalizer_;  // normalization constant for each topic
+  std::vector<float*> regularizer_;  // regularizer's additions
 };
 
 }  // namespace core

@@ -21,6 +21,7 @@ TopicModel::TopicModel(int topics_count, int scores_count)
       scores_(),
       scores_norm_(),
       data_(),
+      regularizer_(),
       normalizer_() {
   assert(topics_count_ > 0);
   normalizer_.resize(topics_count_);
@@ -38,11 +39,18 @@ TopicModel::TopicModel(const TopicModel& rhs)
       scores_(rhs.scores_),
       scores_norm_(rhs.scores_norm_),
       data_(),  // must be deep-copied
+      regularizer_(),  // must be deep-copied
       normalizer_(rhs.normalizer_) {
   for (size_t i = 0; i < rhs.data_.size(); i++) {
     float* values = new float[topics_count_];
     data_.push_back(values);
     memcpy(values, rhs.data_[i], sizeof(float) * topics_count_);
+  }
+
+  for (size_t i = 0; i < rhs.regularizer_.size(); i++) {
+    float* values = new float[topics_count_];
+    regularizer_.push_back(values);
+    memcpy(values, rhs.regularizer_[i], sizeof(float) * topics_count_);
   }
 }
 
@@ -73,6 +81,12 @@ void TopicModel::AddToken(const std::string& token) {
     values[i] /= sum;
     normalizer_[i] += values[i];
   }
+
+  float* regularizer_values = new float[topic_size()];
+  for (int i = 0; i < topic_size(); ++i) {
+    regularizer_values[i] = 0.0f;
+  }
+  regularizer_.push_back(regularizer_values);
 }
 
 void TopicModel::IncreaseItemsProcessed(int value) {
@@ -120,8 +134,16 @@ void TopicModel::IncreaseTokenWeight(const std::string& token, int topic_id, flo
 }
 
 void TopicModel::IncreaseTokenWeight(int token_id, int topic_id, float value) {
+  float old_data_value = data_[token_id][topic_id];
   data_[token_id][topic_id] += value;
-  normalizer_[topic_id] += value;
+
+  if (old_data_value + regularizer_[token_id][topic_id] < 0) {
+    if (data_[token_id][topic_id] + regularizer_[token_id][topic_id] > 0) {
+      normalizer_[topic_id] += data_[token_id][topic_id] + regularizer_[token_id][topic_id];
+    }
+  } else {
+    normalizer_[topic_id] += value;
+  }
 }
 
 void TopicModel::SetTokenWeight(const std::string& token, int topic_id, float value) {
@@ -134,9 +156,45 @@ void TopicModel::SetTokenWeight(const std::string& token, int topic_id, float va
 }
 
 void TopicModel::SetTokenWeight(int token_id, int topic_id, float value) {
-  // Adjust normalizer. (!) Don't switch these lines (1) and (2).
-  normalizer_[topic_id] += (value - data_[token_id][topic_id]);  // (1)
-  data_[token_id][topic_id] = value;  // (2)
+  float old_data_value = data_[token_id][topic_id];
+  data_[token_id][topic_id] = value;
+
+  if (old_data_value + regularizer_[token_id][topic_id] < 0) {
+    if (data_[token_id][topic_id] + regularizer_[token_id][topic_id] > 0) {
+      normalizer_[topic_id] += data_[token_id][topic_id] + regularizer_[token_id][topic_id];
+    }
+  } else {
+    if (data_[token_id][topic_id] + regularizer_[token_id][topic_id] > 0) {
+      normalizer_[topic_id] += (data_[token_id][topic_id] - old_data_value);
+    } else {
+      normalizer_[topic_id] -= (old_data_value + regularizer_[token_id][topic_id]);
+    }
+  }
+}
+
+void TopicModel::SetRegularizerWeight(const std::string& token, int topic_id, float value) {
+  if (!has_token(token)) {
+    LOG(ERROR) << "Token '" << token << "' not found in the model";
+    return;
+  }
+
+  SetRegularizerWeight(token_id(token), topic_id, value);
+}
+void TopicModel::SetRegularizerWeight(int token_id, int topic_id, float value) {
+  float old_regularizer_value = regularizer_[token_id][topic_id];
+  regularizer_[token_id][topic_id] = value;
+
+  if (data_[token_id][topic_id] + old_regularizer_value < 0) {
+    if (data_[token_id][topic_id] + regularizer_[token_id][topic_id] > 0) {
+      normalizer_[topic_id] += data_[token_id][topic_id] + regularizer_[token_id][topic_id];
+    }
+  } else {
+    if (data_[token_id][topic_id] + regularizer_[token_id][topic_id] > 0) {
+      normalizer_[topic_id] += (regularizer_[token_id][topic_id] - old_regularizer_value);
+    } else {
+      normalizer_[topic_id] -= (data_[token_id][topic_id] + old_regularizer_value);
+    }
+  }
 }
 
 int TopicModel::token_size() const {
@@ -171,13 +229,15 @@ std::string TopicModel::token(int index) const {
 
 TopicWeightIterator TopicModel::GetTopicWeightIterator(const std::string& token) const {
   auto iter = token_to_token_id_.find(token);
-  return std::move(TopicWeightIterator(data_[iter->second], &normalizer_[0], topics_count_));
+  return std::move(TopicWeightIterator(data_[iter->second], regularizer_[iter->second], 
+    &normalizer_[0], topics_count_));
 }
 
 TopicWeightIterator TopicModel::GetTopicWeightIterator(int token_id) const {
   assert(token_id >= 0);
   assert(token_id < token_size());
-  return std::move(TopicWeightIterator(data_[token_id], &normalizer_[0], topics_count_));
+  return std::move(TopicWeightIterator(data_[token_id], regularizer_[token_id], 
+    &normalizer_[0], topics_count_));
 }
 
 }  // namespace core

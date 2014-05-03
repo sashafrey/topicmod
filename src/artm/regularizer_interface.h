@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "artm/messages.pb.h"
+#include "artm/topic_model.h"
 
 namespace artm {
 namespace core {
@@ -18,7 +19,7 @@ class RegularizerInterface {
                                 std::vector<float>* n_dt,
                                 int topic_size,
                                 int inner_iter) { return false; }
-  virtual void RegularizePhi() {}
+  virtual bool RegularizePhi(TopicModel* topic_model) { return false; }
 };
 
 }  // namespace core

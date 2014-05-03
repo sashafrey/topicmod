@@ -38,6 +38,8 @@ class Merger : boost::noncopyable {
   void DisposeModel(int model_id);
   void UpdateModel(int model_id, const ModelConfig& model);
 
+  void InvokePhiRegularizers();
+
   std::shared_ptr<const TopicModel> GetLatestTopicModel(int model_id) const;
 
  private:

@@ -44,36 +44,36 @@ class TopicWeightIterator {
   // It is caller responsibility to verify this condition.
   inline float Weight() {
     assert(current_topic_ < topics_count_);
-    return std::max(n_wt_[current_topic_] + r_wt_[current_topic_], 0.0f) / n_t_[current_topic_];
+    return std::max(n_w_[current_topic_] + r_w_[current_topic_], 0.0f) / n_t_[current_topic_];
   }
 
   // Not normalized weight.
   inline float NotNormalizedWeight() {
     assert(current_topic_ < topics_count_);
-    return n_wt_[current_topic_];
+    return n_w_[current_topic_];
   }
 
   // Resets the iterator to the initial state.
   inline void Reset() { current_topic_ = -1; }
 
  private:
-  const float* n_wt_;
+  const float* n_w_;
   const float* n_t_;
-  const float* r_wt_;
+  const float* r_w_;
   int topics_count_;
   mutable int current_topic_;
 
-  TopicWeightIterator(const float* n_wt, 
-                      const float* r_wt, 
+  TopicWeightIterator(const float* n_w, 
+                      const float* r_w, 
                       const float* n_t, 
                       int topics_count)
-      : n_wt_(n_wt), 
+      : n_w_(n_w), 
         n_t_(n_t), 
-        r_wt_(r_wt),
+        r_w_(r_w),
         topics_count_(topics_count),
         current_topic_(-1) {
-    assert(n_wt != nullptr);
-    assert(r_wt != nullptr);
+    assert(n_w != nullptr);
+    assert(r_w != nullptr);
     assert(n_t != nullptr);
   }
 

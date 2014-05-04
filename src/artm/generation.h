@@ -29,8 +29,8 @@ class Generation {
   std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid,
                                      const std::string& disk_path);
 
-  void Generation::AddBatch(const std::shared_ptr<const Batch>& batch,
-                            const std::string& disk_path);
+  void AddBatch(const std::shared_ptr<const Batch>& batch,
+                const std::string& disk_path);
 
 
   template<class Function>

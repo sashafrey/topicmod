@@ -10,7 +10,6 @@
 
 #include "glog/logging.h"
 
-
 namespace artm {
 namespace core {
 
@@ -96,7 +95,11 @@ std::string Generation::MakeBatchPath(std::string disk_path, boost::uuids::uuid 
   boost::filesystem::path dir(disk_path);
   if (!boost::filesystem::is_directory(dir)) {
     bool is_created = boost::filesystem::create_directory(dir);
+    if (!is_created) {
+      LOG(ERROR) << "Unable to create folder '" << dir << "'";
+    }
   }
+
   std::string batch_extension = ".batch";
   boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + batch_extension);
   boost::filesystem::path batch_path = dir / file;

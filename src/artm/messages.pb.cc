@@ -49,6 +49,9 @@ const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor_ = N
 const ::google::protobuf::Descriptor* DirichletRegularizerThetaConfig_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DirichletRegularizerThetaConfig_reflection_ = NULL;
+const ::google::protobuf::Descriptor* DirichletRegularizerPhiConfig_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  DirichletRegularizerPhiConfig_reflection_ = NULL;
 const ::google::protobuf::Descriptor* DoubleArray_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DoubleArray_reflection_ = NULL;
@@ -241,9 +244,25 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DirichletRegularizerThetaConfig));
-  DoubleArray_descriptor_ = file->message_type(9);
+  DirichletRegularizerPhiConfig_descriptor_ = file->message_type(9);
+  static const int DirichletRegularizerPhiConfig_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletRegularizerPhiConfig, beta_0_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletRegularizerPhiConfig, tilde_beta_),
+  };
+  DirichletRegularizerPhiConfig_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      DirichletRegularizerPhiConfig_descriptor_,
+      DirichletRegularizerPhiConfig::default_instance_,
+      DirichletRegularizerPhiConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletRegularizerPhiConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletRegularizerPhiConfig, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(DirichletRegularizerPhiConfig));
+  DoubleArray_descriptor_ = file->message_type(10);
   static const int DoubleArray_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DoubleArray, alpha_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DoubleArray, elem_),
   };
   DoubleArray_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -256,7 +275,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DoubleArray));
-  Score_descriptor_ = file->message_type(10);
+  Score_descriptor_ = file->message_type(11);
   static const int Score_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Score, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Score, field_name_),
@@ -274,7 +293,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(Score));
   Score_Type_descriptor_ = Score_descriptor_->enum_type(0);
-  LoggerConfig_descriptor_ = file->message_type(11);
+  LoggerConfig_descriptor_ = file->message_type(12);
   static const int LoggerConfig_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoggerConfig, log_location_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LoggerConfig, level_),
@@ -291,7 +310,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LoggerConfig));
   LoggerConfig_Level_descriptor_ = LoggerConfig_descriptor_->enum_type(0);
-  ModelTopics_descriptor_ = file->message_type(12);
+  ModelTopics_descriptor_ = file->message_type(13);
   static const int ModelTopics_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, token_topic_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelTopics, items_processed_),
@@ -308,7 +327,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ModelTopics));
-  TokenTopics_descriptor_ = file->message_type(13);
+  TokenTopics_descriptor_ = file->message_type(14);
   static const int TokenTopics_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TokenTopics, token_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TokenTopics, token_id_),
@@ -325,7 +344,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TokenTopics));
-  ItemTopics_descriptor_ = file->message_type(14);
+  ItemTopics_descriptor_ = file->message_type(15);
   static const int ItemTopics_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemTopics, id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ItemTopics, topic_weight_),
@@ -341,7 +360,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ItemTopics));
-  BatchTopics_descriptor_ = file->message_type(15);
+  BatchTopics_descriptor_ = file->message_type(16);
   static const int BatchTopics_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BatchTopics, item_topics_),
   };
@@ -387,6 +406,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     DirichletRegularizerThetaConfig_descriptor_, &DirichletRegularizerThetaConfig::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    DirichletRegularizerPhiConfig_descriptor_, &DirichletRegularizerPhiConfig::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     DoubleArray_descriptor_, &DoubleArray::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     Score_descriptor_, &Score::default_instance());
@@ -427,6 +448,8 @@ void protobuf_ShutdownFile_messages_2eproto() {
   delete RegularizerConfig_reflection_;
   delete DirichletRegularizerThetaConfig::default_instance_;
   delete DirichletRegularizerThetaConfig_reflection_;
+  delete DirichletRegularizerPhiConfig::default_instance_;
+  delete DirichletRegularizerPhiConfig_reflection_;
   delete DoubleArray::default_instance_;
   delete DoubleArray_reflection_;
   delete Score::default_instance_;
@@ -472,27 +495,30 @@ void protobuf_AddDesc_messages_2eproto() {
     "body\022\034\n\013stream_name\030\006 \001(\t:\007@global\022\032\n\005sc"
     "ore\030\007 \003(\0132\013.artm.Score\022\032\n\013reuse_theta\030\010 "
     "\001(\010:\005false\022#\n\024cache_token_counters\030\t \001(\010"
-    ":\005false\022\030\n\020regularizer_name\030\n \003(\t\"\204\001\n\021Re"
+    ":\005false\022\030\n\020regularizer_name\030\n \003(\t\"\241\001\n\021Re"
     "gularizerConfig\022\014\n\004name\030\001 \002(\t\022*\n\004type\030\002 "
     "\002(\0162\034.artm.RegularizerConfig.Type\022\016\n\006con"
-    "fig\030\003 \002(\014\"%\n\004Type\022\035\n\031DirichletRegularize"
-    "rTheta\020\001\"Z\n\037DirichletRegularizerThetaCon"
-    "fig\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013tilde_alpha\030\002 \003("
-    "\0132\021.artm.DoubleArray\"\034\n\013DoubleArray\022\r\n\005a"
-    "lpha\030\001 \003(\001\"x\n\005Score\022\036\n\004type\030\001 \002(\0162\020.artm"
-    ".Score.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body\022\034"
-    "\n\013stream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n\n"
-    "Perplexity\020\000\"\231\001\n\014LoggerConfig\022\024\n\014log_loc"
-    "ation\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.Logger"
-    "Config.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020"
-    "\000\022\t\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007V"
-    "ERBOSE\020\004\"]\n\013ModelTopics\022&\n\013token_topic\030\001"
-    " \003(\0132\021.artm.TokenTopics\022\027\n\017items_process"
-    "ed\030\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013TokenTopics\022\r"
-    "\n\005token\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic"
-    "_weight\030\003 \003(\002\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022"
-    "\024\n\014topic_weight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013"
-    "item_topics\030\001 \003(\0132\020.artm.ItemTopics", 1635);
+    "fig\030\003 \002(\014\"B\n\004Type\022\035\n\031DirichletRegularize"
+    "rTheta\020\001\022\033\n\027DirichletRegularizerPhi\020\002\"Z\n"
+    "\037DirichletRegularizerThetaConfig\022\017\n\007alph"
+    "a_0\030\001 \003(\001\022&\n\013tilde_alpha\030\002 \003(\0132\021.artm.Do"
+    "ubleArray\"V\n\035DirichletRegularizerPhiConf"
+    "ig\022\016\n\006beta_0\030\001 \002(\001\022%\n\ntilde_beta\030\002 \002(\0132\021"
+    ".artm.DoubleArray\"\033\n\013DoubleArray\022\014\n\004elem"
+    "\030\001 \003(\001\"x\n\005Score\022\036\n\004type\030\001 \002(\0162\020.artm.Sco"
+    "re.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body\022\034\n\013st"
+    "ream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n\nPerp"
+    "lexity\020\000\"\231\001\n\014LoggerConfig\022\024\n\014log_locatio"
+    "n\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerConf"
+    "ig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n"
+    "\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBO"
+    "SE\020\004\"]\n\013ModelTopics\022&\n\013token_topic\030\001 \003(\013"
+    "2\021.artm.TokenTopics\022\027\n\017items_processed\030\002"
+    " \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013TokenTopics\022\r\n\005to"
+    "ken\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_wei"
+    "ght\030\003 \003(\002\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014t"
+    "opic_weight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013item"
+    "_topics\030\001 \003(\0132\020.artm.ItemTopics", 1751);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -512,6 +538,7 @@ void protobuf_AddDesc_messages_2eproto() {
   ModelConfig::default_instance_ = new ModelConfig();
   RegularizerConfig::default_instance_ = new RegularizerConfig();
   DirichletRegularizerThetaConfig::default_instance_ = new DirichletRegularizerThetaConfig();
+  DirichletRegularizerPhiConfig::default_instance_ = new DirichletRegularizerPhiConfig();
   DoubleArray::default_instance_ = new DoubleArray();
   Score::_default_field_name_ =
       new ::std::string("@body", 5);
@@ -532,6 +559,7 @@ void protobuf_AddDesc_messages_2eproto() {
   ModelConfig::default_instance_->InitAsDefaultInstance();
   RegularizerConfig::default_instance_->InitAsDefaultInstance();
   DirichletRegularizerThetaConfig::default_instance_->InitAsDefaultInstance();
+  DirichletRegularizerPhiConfig::default_instance_->InitAsDefaultInstance();
   DoubleArray::default_instance_->InitAsDefaultInstance();
   Score::default_instance_->InitAsDefaultInstance();
   LoggerConfig::default_instance_->InitAsDefaultInstance();
@@ -2946,6 +2974,7 @@ const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor() {
 bool RegularizerConfig_Type_IsValid(int value) {
   switch(value) {
     case 1:
+    case 2:
       return true;
     default:
       return false;
@@ -2954,6 +2983,7 @@ bool RegularizerConfig_Type_IsValid(int value) {
 
 #ifndef _MSC_VER
 const RegularizerConfig_Type RegularizerConfig::DirichletRegularizerTheta;
+const RegularizerConfig_Type RegularizerConfig::DirichletRegularizerPhi;
 const RegularizerConfig_Type RegularizerConfig::Type_MIN;
 const RegularizerConfig_Type RegularizerConfig::Type_MAX;
 const int RegularizerConfig::Type_ARRAYSIZE;
@@ -3527,7 +3557,259 @@ void DirichletRegularizerThetaConfig::Swap(DirichletRegularizerThetaConfig* othe
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DoubleArray::kAlphaFieldNumber;
+const int DirichletRegularizerPhiConfig::kBeta0FieldNumber;
+const int DirichletRegularizerPhiConfig::kTildeBetaFieldNumber;
+#endif  // !_MSC_VER
+
+DirichletRegularizerPhiConfig::DirichletRegularizerPhiConfig()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void DirichletRegularizerPhiConfig::InitAsDefaultInstance() {
+  tilde_beta_ = const_cast< ::artm::DoubleArray*>(&::artm::DoubleArray::default_instance());
+}
+
+DirichletRegularizerPhiConfig::DirichletRegularizerPhiConfig(const DirichletRegularizerPhiConfig& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void DirichletRegularizerPhiConfig::SharedCtor() {
+  _cached_size_ = 0;
+  beta_0_ = 0;
+  tilde_beta_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+DirichletRegularizerPhiConfig::~DirichletRegularizerPhiConfig() {
+  SharedDtor();
+}
+
+void DirichletRegularizerPhiConfig::SharedDtor() {
+  if (this != default_instance_) {
+    delete tilde_beta_;
+  }
+}
+
+void DirichletRegularizerPhiConfig::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* DirichletRegularizerPhiConfig::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return DirichletRegularizerPhiConfig_descriptor_;
+}
+
+const DirichletRegularizerPhiConfig& DirichletRegularizerPhiConfig::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_messages_2eproto();
+  return *default_instance_;
+}
+
+DirichletRegularizerPhiConfig* DirichletRegularizerPhiConfig::default_instance_ = NULL;
+
+DirichletRegularizerPhiConfig* DirichletRegularizerPhiConfig::New() const {
+  return new DirichletRegularizerPhiConfig;
+}
+
+void DirichletRegularizerPhiConfig::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    beta_0_ = 0;
+    if (has_tilde_beta()) {
+      if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool DirichletRegularizerPhiConfig::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required double beta_0 = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &beta_0_)));
+          set_has_beta_0();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_tilde_beta;
+        break;
+      }
+
+      // required .artm.DoubleArray tilde_beta = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_tilde_beta:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_tilde_beta()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void DirichletRegularizerPhiConfig::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // required double beta_0 = 1;
+  if (has_beta_0()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->beta_0(), output);
+  }
+
+  // required .artm.DoubleArray tilde_beta = 2;
+  if (has_tilde_beta()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->tilde_beta(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* DirichletRegularizerPhiConfig::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // required double beta_0 = 1;
+  if (has_beta_0()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->beta_0(), target);
+  }
+
+  // required .artm.DoubleArray tilde_beta = 2;
+  if (has_tilde_beta()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->tilde_beta(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int DirichletRegularizerPhiConfig::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required double beta_0 = 1;
+    if (has_beta_0()) {
+      total_size += 1 + 8;
+    }
+
+    // required .artm.DoubleArray tilde_beta = 2;
+    if (has_tilde_beta()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->tilde_beta());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void DirichletRegularizerPhiConfig::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const DirichletRegularizerPhiConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const DirichletRegularizerPhiConfig*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void DirichletRegularizerPhiConfig::MergeFrom(const DirichletRegularizerPhiConfig& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_beta_0()) {
+      set_beta_0(from.beta_0());
+    }
+    if (from.has_tilde_beta()) {
+      mutable_tilde_beta()->::artm::DoubleArray::MergeFrom(from.tilde_beta());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void DirichletRegularizerPhiConfig::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void DirichletRegularizerPhiConfig::CopyFrom(const DirichletRegularizerPhiConfig& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool DirichletRegularizerPhiConfig::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
+
+  return true;
+}
+
+void DirichletRegularizerPhiConfig::Swap(DirichletRegularizerPhiConfig* other) {
+  if (other != this) {
+    std::swap(beta_0_, other->beta_0_);
+    std::swap(tilde_beta_, other->tilde_beta_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata DirichletRegularizerPhiConfig::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = DirichletRegularizerPhiConfig_descriptor_;
+  metadata.reflection = DirichletRegularizerPhiConfig_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int DoubleArray::kElemFieldNumber;
 #endif  // !_MSC_VER
 
 DoubleArray::DoubleArray()
@@ -3580,7 +3862,7 @@ DoubleArray* DoubleArray::New() const {
 }
 
 void DoubleArray::Clear() {
-  alpha_.Clear();
+  elem_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3591,24 +3873,24 @@ bool DoubleArray::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated double alpha = 1;
+      // repeated double elem = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_alpha:
+         parse_elem:
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 1, 9, input, this->mutable_alpha())));
+                 1, 9, input, this->mutable_elem())));
         } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
                    == ::google::protobuf::internal::WireFormatLite::
                       WIRETYPE_LENGTH_DELIMITED) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, this->mutable_alpha())));
+                 input, this->mutable_elem())));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(9)) goto parse_alpha;
+        if (input->ExpectTag(9)) goto parse_elem;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3631,10 +3913,10 @@ bool DoubleArray::MergePartialFromCodedStream(
 
 void DoubleArray::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated double alpha = 1;
-  for (int i = 0; i < this->alpha_size(); i++) {
+  // repeated double elem = 1;
+  for (int i = 0; i < this->elem_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(
-      1, this->alpha(i), output);
+      1, this->elem(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3645,10 +3927,10 @@ void DoubleArray::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DoubleArray::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated double alpha = 1;
-  for (int i = 0; i < this->alpha_size(); i++) {
+  // repeated double elem = 1;
+  for (int i = 0; i < this->elem_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleToArray(1, this->alpha(i), target);
+      WriteDoubleToArray(1, this->elem(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3661,11 +3943,11 @@ void DoubleArray::SerializeWithCachedSizes(
 int DoubleArray::ByteSize() const {
   int total_size = 0;
 
-  // repeated double alpha = 1;
+  // repeated double elem = 1;
   {
     int data_size = 0;
-    data_size = 8 * this->alpha_size();
-    total_size += 1 * this->alpha_size() + data_size;
+    data_size = 8 * this->elem_size();
+    total_size += 1 * this->elem_size() + data_size;
   }
 
   if (!unknown_fields().empty()) {
@@ -3693,7 +3975,7 @@ void DoubleArray::MergeFrom(const ::google::protobuf::Message& from) {
 
 void DoubleArray::MergeFrom(const DoubleArray& from) {
   GOOGLE_CHECK_NE(&from, this);
-  alpha_.MergeFrom(from.alpha_);
+  elem_.MergeFrom(from.elem_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -3716,7 +3998,7 @@ bool DoubleArray::IsInitialized() const {
 
 void DoubleArray::Swap(DoubleArray* other) {
   if (other != this) {
-    alpha_.Swap(&other->alpha_);
+    elem_.Swap(&other->elem_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

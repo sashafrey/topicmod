@@ -77,6 +77,7 @@ message ModelConfig {
 message RegularizerConfig {
   enum Type {
     DirichletRegularizerTheta = 1;
+	DirichletRegularizerPhi = 2;
   }
 
   required string name = 1;
@@ -90,9 +91,15 @@ message DirichletRegularizerThetaConfig {
   repeated DoubleArray tilde_alpha = 2;
 }
 
-// One set of parametres fot Dirichlet Theta regularizer
+// Configuration of a Dirichlet Phi regularizer
+message DirichletRegularizerPhiConfig {
+  required double beta_0 = 1;
+  required DoubleArray tilde_beta = 2;
+}
+
+// One set of parameters for Dirichlet regularizer
 message DoubleArray {
-  repeated double alpha = 1;
+  repeated double elem = 1;
 }
 
 message Score {

@@ -119,16 +119,6 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     model_increment->set_items_processed(model_increment->items_processed() + 1);
   }
 
-  if (model_increment != nullptr) {
-    // Process unknown tokens (if any)
-    TokenIterator iter(token_dict_, topic_model_, item, model.field_name(),
-                        TokenIterator::Mode_Unknown);
-
-    while (iter.Next()) {
-      model_increment->add_discovered_token(iter.token());
-    }
-  }
-
   // find the id of token in topic_model
   std::vector<int> token_id;
   std::vector<float> token_count;
@@ -340,6 +330,7 @@ void Processor::ThreadFunction() {
 
         // find cache
         const ModelIncrement* previous_model_increment = nullptr;
+        /*
         if (previous_processor_output != nullptr) {
           for (int i = 0; i < previous_processor_output->model_increment_size(); ++i) {
             if (previous_processor_output->model_increment(i).model_id() == model_id) {
@@ -347,6 +338,7 @@ void Processor::ThreadFunction() {
             }
           }
         }
+        */
 
         std::shared_ptr<const TopicModel> topic_model = merger_.GetLatestTopicModel(model_id);
         assert(topic_model.get() != nullptr);
@@ -370,10 +362,15 @@ void Processor::ThreadFunction() {
         model_increment->set_topics_count(topic_size);
 
         for (int token_index = 0; token_index < part->batch().token_size(); ++token_index) {
-          model_increment->add_token(part->batch().token(token_index));
+          std::string token = part->batch().token(token_index);
+          model_increment->add_token(token);
           FloatArray* counters = model_increment->add_token_increment();
           for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
             counters->add_value(0.0f);
+          }
+
+          if (!topic_model->has_token(token)) {
+            model_increment->add_discovered_token(token);
           }
         }
 
@@ -446,6 +443,19 @@ void Processor::ThreadFunction() {
             score_index, model_increment->score_norm(score_index) + perplexity_norm);
         }
       });
+
+      for(;;) {
+        int merger_queue_size = 0;
+        {
+          boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
+          merger_queue_size = merger_queue_->size();
+        }
+
+        if (merger_queue_size < schema_.get()->instance_config().merger_queue_max_size())
+          break;
+
+        boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      }
     }
   }
   catch(boost::thread_interrupted&) {

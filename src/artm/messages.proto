@@ -39,6 +39,7 @@ message DataLoaderConfig {
   optional int32 queue_size = 3 [default = 10];
   repeated Stream stream = 4;
   optional bool compact_batches = 5 [default = true];
+  optional bool cache_processor_output = 6 [default = false];
 }
 
 // Defines a stream in DataLoader.
@@ -59,6 +60,7 @@ message Stream {
 message InstanceConfig {
   optional int32 processors_count = 1 [default = 1];
   optional string memcached_endpoint = 2;
+  optional int32 merger_queue_max_size = 3 [default = 10];
 }
 
 // Configuration of a model.

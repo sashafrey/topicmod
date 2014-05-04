@@ -169,7 +169,9 @@ void DataLoader::WaitIdle() {
 void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
   boost::uuids::uuid uuid(boost::uuids::string_generator()(cache->batch_uuid().c_str()));
   batch_manager_.Done(uuid);
-  cache_.set(uuid, cache);
+  if (config_.get()->cache_processor_output()) {
+    cache_.set(uuid, cache);
+  }
 }
 
 void DataLoader::ThreadFunction() {

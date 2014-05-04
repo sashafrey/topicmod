@@ -541,6 +541,13 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   inline bool compact_batches() const;
   inline void set_compact_batches(bool value);
 
+  // optional bool cache_processor_output = 6 [default = false];
+  inline bool has_cache_processor_output() const;
+  inline void clear_cache_processor_output();
+  static const int kCacheProcessorOutputFieldNumber = 6;
+  inline bool cache_processor_output() const;
+  inline void set_cache_processor_output(bool value);
+
   // @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
  private:
   inline void set_has_instance_id();
@@ -551,6 +558,8 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   inline void clear_has_queue_size();
   inline void set_has_compact_batches();
   inline void clear_has_compact_batches();
+  inline void set_has_cache_processor_output();
+  inline void clear_has_cache_processor_output();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -559,9 +568,10 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   ::google::protobuf::int32 queue_size_;
   ::google::protobuf::RepeatedPtrField< ::artm::Stream > stream_;
   bool compact_batches_;
+  bool cache_processor_output_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -791,20 +801,30 @@ class InstanceConfig : public ::google::protobuf::Message {
   inline ::std::string* release_memcached_endpoint();
   inline void set_allocated_memcached_endpoint(::std::string* memcached_endpoint);
 
+  // optional int32 merger_queue_max_size = 3 [default = 10];
+  inline bool has_merger_queue_max_size() const;
+  inline void clear_merger_queue_max_size();
+  static const int kMergerQueueMaxSizeFieldNumber = 3;
+  inline ::google::protobuf::int32 merger_queue_max_size() const;
+  inline void set_merger_queue_max_size(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:artm.InstanceConfig)
  private:
   inline void set_has_processors_count();
   inline void clear_has_processors_count();
   inline void set_has_memcached_endpoint();
   inline void clear_has_memcached_endpoint();
+  inline void set_has_merger_queue_max_size();
+  inline void clear_has_merger_queue_max_size();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* memcached_endpoint_;
   ::google::protobuf::int32 processors_count_;
+  ::google::protobuf::int32 merger_queue_max_size_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2479,6 +2499,28 @@ inline void DataLoaderConfig::set_compact_batches(bool value) {
   compact_batches_ = value;
 }
 
+// optional bool cache_processor_output = 6 [default = false];
+inline bool DataLoaderConfig::has_cache_processor_output() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void DataLoaderConfig::set_has_cache_processor_output() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void DataLoaderConfig::clear_has_cache_processor_output() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void DataLoaderConfig::clear_cache_processor_output() {
+  cache_processor_output_ = false;
+  clear_has_cache_processor_output();
+}
+inline bool DataLoaderConfig::cache_processor_output() const {
+  return cache_processor_output_;
+}
+inline void DataLoaderConfig::set_cache_processor_output(bool value) {
+  set_has_cache_processor_output();
+  cache_processor_output_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // Stream
@@ -2717,6 +2759,28 @@ inline void InstanceConfig::set_allocated_memcached_endpoint(::std::string* memc
     clear_has_memcached_endpoint();
     memcached_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// optional int32 merger_queue_max_size = 3 [default = 10];
+inline bool InstanceConfig::has_merger_queue_max_size() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void InstanceConfig::set_has_merger_queue_max_size() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void InstanceConfig::clear_has_merger_queue_max_size() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void InstanceConfig::clear_merger_queue_max_size() {
+  merger_queue_max_size_ = 10;
+  clear_has_merger_queue_max_size();
+}
+inline ::google::protobuf::int32 InstanceConfig::merger_queue_max_size() const {
+  return merger_queue_max_size_;
+}
+inline void InstanceConfig::set_merger_queue_max_size(::google::protobuf::int32 value) {
+  set_has_merger_queue_max_size();
+  merger_queue_max_size_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -73,7 +73,9 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     model.push_back(std::make_shared<Model>(*instance[i], model_config));
   }
 
-  if (countFilesInDirectory(batches_disk_path, ".batch") == 0) {
+  int batch_files_count = countFilesInDirectory(batches_disk_path, ".batch");
+  if (batch_files_count == 0) {
+    std::cout << "No batches found, parsing collection from text files... ";
     // Load doc-word matrix
     DocWordMatrix::Ptr doc_word_ptr = loadMatrixFileUCI(argv[1]);
     VocabPtr vocab_ptr = loadVocab(argv[2]); //, doc_word_ptr->getW());
@@ -108,6 +110,11 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
       // Index doc-word matrix
       data_loader[part_index % instance_size]->AddBatch(batch);
     }
+
+    std::cout << "OK.\n";
+  } else {
+    std::cout << "Found " << batch_files_count << " batches in folder '"
+              << batches_disk_path << "', will use them.\n";
   }
 
 

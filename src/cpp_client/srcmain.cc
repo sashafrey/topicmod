@@ -23,7 +23,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   // Create instance and data_loader configs
   InstanceConfig instance_config;
   instance_config.set_processors_count(processors_count);
-  // instance_config.set_memcached_endpoint("tcp://localhost:5555");
+  instance_config.set_memcached_endpoint("tcp://localhost:5555");
   DataLoaderConfig data_loader_config;
 
   std::vector<std::shared_ptr<Instance>> instance;
@@ -59,6 +59,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_inner_iterations_count(10);
   model_config.set_stream_name("train_stream");
   model_config.set_reuse_theta(true);
+  model_config.set_model_id("15081980-90a7-4767-ab85-7cb551c39339");
 
   Score* score = model_config.add_score();
   score->set_type(Score_Type_Perplexity);
@@ -69,6 +70,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   for (int i = 0; i < instance_size; ++i) {
     model.push_back(std::make_shared<Model>(*instance[i], model_config));
   }
+
 
   // Load doc-word matrix
   DocWordMatrix::Ptr doc_word_ptr = loadMatrixFileUCI(argv[1]);
@@ -170,8 +172,8 @@ int main(int argc, char * argv[]) {
   FLAGS_logbufsecs = 0;
   ::google::InitGoogleLogging(argv[0]);
 
-  int instance_size = 1;
-  int processors_size = 4;
+  int instance_size = 2;
+  int processors_size = 2;
   cout << proc(argc, argv, processors_size, instance_size)
        << " sec. ================= " << endl << endl;
 

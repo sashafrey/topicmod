@@ -44,37 +44,37 @@ class TopicWeightIterator {
   // It is caller responsibility to verify this condition.
   inline float Weight() {
     assert(current_topic_ < topics_count_);
-    return std::max(vector_[current_topic_] + regularizer_[current_topic_], 0.0f) / normalizer_[current_topic_];
+    return std::max(n_wt_[current_topic_] + r_wt_[current_topic_], 0.0f) / n_t_[current_topic_];
   }
 
   // Not normalized weight.
   inline float NotNormalizedWeight() {
     assert(current_topic_ < topics_count_);
-    return vector_[current_topic_];
+    return n_wt_[current_topic_];
   }
 
   // Resets the iterator to the initial state.
   inline void Reset() { current_topic_ = -1; }
 
  private:
-  const float* vector_;
-  const float* normalizer_;
-  const float* regularizer_;
+  const float* n_wt_;
+  const float* n_t_;
+  const float* r_wt_;
   int topics_count_;
   mutable int current_topic_;
 
-  TopicWeightIterator(const float* vector, 
-                      const float* regularizer, 
-                      const float* normalizer, 
+  TopicWeightIterator(const float* n_wt, 
+                      const float* r_wt, 
+                      const float* n_t, 
                       int topics_count)
-      : vector_(vector), 
-        normalizer_(normalizer), 
-        regularizer_(regularizer),
+      : n_wt_(n_wt), 
+        n_t_(n_t), 
+        r_wt_(r_wt),
         topics_count_(topics_count),
         current_topic_(-1) {
-    assert(vector != nullptr);
-    assert(regularizer != nullptr);
-    assert(normalizer != nullptr);
+    assert(n_wt != nullptr);
+    assert(r_wt != nullptr);
+    assert(n_t != nullptr);
   }
 
   friend class TopicModel;
@@ -133,9 +133,9 @@ class TopicModel {
   std::vector<double> scores_;
   std::vector<double> scores_norm_;
 
-  std::vector<float*> data_;  // vector of length tokens_count
-  std::vector<float> normalizer_;  // normalization constant for each topic
-  std::vector<float*> regularizer_;  // regularizer's additions
+  std::vector<float*> n_wt_;  // vector of length tokens_count
+  std::vector<float> n_t_;  // normalization constant for each topic
+  std::vector<float*> r_wt_;  // regularizer's additions
 };
 
 }  // namespace core

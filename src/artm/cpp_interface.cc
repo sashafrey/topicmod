@@ -120,6 +120,10 @@ void Regularizer::Reconfigure(const RegularizerConfig& config) {
   config_.CopyFrom(config);
 }
 
+void Regularizer::InvokePhiRegularizers() {
+  ArtmInvokePhiRegularizers(instance_id());
+}
+
 DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config)
     : id_(0), config_(config) {
   config_.set_instance_id(instance.id());

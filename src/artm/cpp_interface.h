@@ -77,6 +77,7 @@ class Regularizer {
   ~Regularizer();
 
   void Reconfigure(const RegularizerConfig& config);
+  void InvokePhiRegularizers();
 
   int instance_id() const { return instance_id_; }
   const RegularizerConfig& config() const { return config_; }

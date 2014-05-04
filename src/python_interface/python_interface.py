@@ -63,7 +63,7 @@ class Instance:
     instance_config_blob = config.SerializeToString()
     instance_config_blob_p = ctypes.create_string_buffer(instance_config_blob)
     self.id_ = HandleErrorCode(self.lib_.ArtmCreateInstance(0,
-               len(instance_config_blob), instance_config_blob_p));
+               len(instance_config_blob), instance_config_blob_p))
   def __enter__(self):
     return self
 
@@ -73,15 +73,15 @@ class Instance:
   def Reconfigure(self, config):
     config_blob = config.SerializeToString()
     config_blob_p = ctypes.create_string_buffer(config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureInstance(self.id_, len(config_blob), config_blob_p));
+    HandleErrorCode(self.lib_.ArtmReconfigureInstance(self.id_, len(config_blob), config_blob_p))
     self.config_.CopyFrom(config)
 
   def GetTopics(self, model):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestModelTopics(self.id_, model.model_id_));
+    request_id = HandleErrorCode(self.lib_.ArtmRequestModelTopics(self.id_, model.model_id_))
     length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
 
     model_topics_blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, model_topics_blob));
+    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, model_topics_blob))
     self.lib_.ArtmDisposeRequest(request_id)
 
     model_topics = messages_pb2.ModelTopics()
@@ -98,7 +98,7 @@ class Model:
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
     self.model_id_ = HandleErrorCode(self.lib_.ArtmCreateModel(self.instance_id_,
-                     len(model_config_blob), model_config_blob_p));
+                     len(model_config_blob), model_config_blob_p))
 
   def __enter__(self):
     return self
@@ -110,7 +110,7 @@ class Model:
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
     HandleErrorCode(self.lib_.ArtmReconfigureModel(self.instance_id_, self.model_id_,
-                    len(model_config_blob), model_config_blob_p));
+                    len(model_config_blob), model_config_blob_p))
     self.config_.CopyFrom(config)
 
   def Enable(self):
@@ -136,7 +136,7 @@ class Regularizer:
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
     HandleErrorCode(self.lib_.ArtmCreateRegularizer(self.instance_id_,
-                     len(regularizer_config_blob), regularizer_config_blob_p));
+                     len(regularizer_config_blob), regularizer_config_blob_p))
 
   def __enter__(self):
     return self
@@ -148,14 +148,17 @@ class Regularizer:
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
     HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.instance_id_, 
-                    len(regularizer_config_blob), regularizer_config_blob_p));
+                    len(regularizer_config_blob), regularizer_config_blob_p))
     self.config_.CopyFrom(config)
+    
+  def InvokePhiRegularizer(self):
+    self.lib_.ArtmInvokePhiRegularizers(self.instance_id)
 
 #################################################################################
 
 class DataLoader:
   def __init__(self, instance, config, lib):
-    self.lib_ = lib;
+    self.lib_ = lib
     self.config_ = config
     self.config_.instance_id = instance.id_
     data_loader_config_blob = self.config_.SerializeToString()

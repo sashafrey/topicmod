@@ -53,6 +53,13 @@ class TopicWeightIterator {
     return n_w_[current_topic_];
   }
 
+  inline float NotNormalizedRegularizerWeight() {
+    assert(current_topic_ < topics_count_);
+    return r_w_[current_topic_];
+  }
+
+  inline const float* GetNormalizer() { return n_t_; }
+
   // Resets the iterator to the initial state.
   inline void Reset() { current_topic_ = -1; }
 

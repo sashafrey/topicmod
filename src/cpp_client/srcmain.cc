@@ -20,12 +20,16 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   // Create memcached server
   MemcachedServer memcached_server("tcp://*:5555");
 
+  std::string batches_folder = "batches";
+  std::string vocab_file = "";
+  std::string docword_file = "";
+
   // Create instance and data_loader configs
   InstanceConfig instance_config;
   instance_config.set_processors_count(processors_count);
   instance_config.set_memcached_endpoint("tcp://localhost:5555");
   DataLoaderConfig data_loader_config;
-  std::string batches_disk_path("batches");
+  std::string batches_disk_path(batches_folder);
   data_loader_config.set_disk_path(batches_disk_path);
 
   std::vector<std::shared_ptr<Instance>> instance;
@@ -77,14 +81,11 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   if (batch_files_count == 0) {
     std::cout << "No batches found, parsing collection from text files... ";
     // Load doc-word matrix
-    DocWordMatrix::Ptr doc_word_ptr = loadMatrixFileUCI(argv[1]);
-    VocabPtr vocab_ptr = loadVocab(argv[2]); //, doc_word_ptr->getW());
-    int no_words = vocab_ptr->size(); //doc_word_ptr->getW();
+    auto doc_word_ptr = loadMatrixFileUCI(docword_file.empty() ? argv[1] : docword_file);
+    VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
+    int no_words = vocab_ptr->size();
     int no_docs = doc_word_ptr->getD();
 
-    //int no_parts = 16;
-    //int doc_index = 0;
-    //int no_docs_per_part = no_docs / no_parts + 1;
     int no_docs_per_part = 1000;
     int no_parts = no_docs / no_docs_per_part + 1;
     int doc_index = 0;
@@ -116,7 +117,6 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     std::cout << "Found " << batch_files_count << " batches in folder '"
               << batches_disk_path << "', will use them.\n";
   }
-
 
   clock_t begin = clock();
 

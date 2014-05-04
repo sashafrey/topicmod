@@ -3,7 +3,7 @@
 #include "artm/data_loader.h"
 
 #include <string>
-#include <fstream>
+#include <fstream>  // NOLINT
 
 #include "boost/lexical_cast.hpp"
 #include "boost/uuid/uuid_io.hpp"
@@ -26,8 +26,7 @@ DataLoader::DataLoader(int id, const DataLoaderConfig& config)
       cache_(cache_lock_),
       batch_manager_lock_(),
       batch_manager_(&batch_manager_lock_),
-      thread_() 
-{
+      thread_() {
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
   boost::thread t(&DataLoader::ThreadFunction, this);
@@ -156,7 +155,7 @@ void DataLoader::ThreadFunction() {
         continue;
 
       auto latest_generation = generation_.get();
-      std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid, 
+      std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid,
                                                                     config_.get()->disk_path());
       if (batch == nullptr) {
         batch_manager_.Done(next_batch_uuid);

@@ -2,10 +2,12 @@
 
 #include "artm/generation.h"
 
-#include <boost/lexical_cast.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <boost/filesystem.hpp>
-#include <fstream>
+#include <fstream>  // NOLINT
+
+#include "boost/lexical_cast.hpp"
+#include "boost/uuid/uuid_io.hpp"
+#include "boost/filesystem.hpp"
+
 #include "glog/logging.h"
 
 
@@ -73,14 +75,13 @@ void Generation::AddBatch(const std::shared_ptr<const Batch>& batch,
 // Return the filenames of all files that have the specified extension
 // in the specified directory.
 std::vector<boost::filesystem::path> Generation::GetAll(const boost::filesystem::path& root,
-                                                        const std::string& ext)
-{
+                                                        const std::string& ext) {
   std::vector<boost::filesystem::path> filesList;
 
   if (boost::filesystem::exists(root) && boost::filesystem::is_directory(root)) {
     boost::filesystem::recursive_directory_iterator it(root);
     boost::filesystem::recursive_directory_iterator endit;
-    while(it != endit) {
+    while (it != endit) {
       if (boost::filesystem::is_regular_file(*it) && it->path().extension() == ext) {
         filesList.push_back(it->path().filename());
       }
@@ -100,7 +101,7 @@ std::string Generation::MakeBatchPath(std::string disk_path, boost::uuids::uuid 
   boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + batch_extension);
   boost::filesystem::path batch_path = dir / file;
   std::string batch_file = batch_path.string();
-  return batch_file; 
+  return batch_file;
 }
 
 int Generation::GetTotalItemsCount() const {

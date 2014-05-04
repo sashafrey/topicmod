@@ -3,6 +3,6 @@
 #ifndef SRC_ARTM_COMMON_H_
 #define SRC_ARTM_COMMON_H_
 
-#define tolerance 0.00001
+#define tolerance 10e-5
 
 #endif  // SRC_ARTM_COMMON_H_

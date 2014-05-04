@@ -153,10 +153,16 @@ void DataLoader::InvokeIteration(int iterations_count) {
 void DataLoader::WaitIdle() {
   for (;;) {
     if (batch_manager_.IsEverythingProcessed())
-      return;
+      break;
 
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));
   }
+
+  auto instance = InstanceManager::singleton().Get(config_.get()->instance_id());
+  if (instance == nullptr)
+    return;
+
+  instance->ForceSyncWithMemcached(ModelId());
 }
 
 void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {

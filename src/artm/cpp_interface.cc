@@ -74,7 +74,10 @@ std::shared_ptr<TopicModel> Instance::GetTopicModel(const Model& model) {
 Model::Model(const Instance& instance, const ModelConfig& config)
     : instance_id_(instance.id()),
       config_(config) {
-  config_.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
+  if (!config_.has_model_id()) {
+    config_.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
+  }
+
   std::string model_config_blob;
   config.SerializeToString(&model_config_blob);
   HandleErrorCode(ArtmCreateModel(instance_id_, model_config_blob.size(),

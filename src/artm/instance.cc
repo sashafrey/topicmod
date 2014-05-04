@@ -60,6 +60,10 @@ void Instance::DisposeRegularizer(const std::string& name) {
   schema_.set(new_schema);
 }
 
+void Instance::ForceSyncWithMemcached(ModelId model_id) {
+  merger_.ForceSyncWithMemcached(model_id);
+}
+
 void Instance::Reconfigure(const InstanceConfig& config) {
   auto new_schema = schema_.get_copy();
   new_schema->set_instance_config(config);

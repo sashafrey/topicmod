@@ -27,6 +27,7 @@ Merger::Merger(boost::mutex* merger_queue_lock,
                ThreadSafeHolder<artm::memcached::MemcachedService_Stub>* memcached_service)
     : lock_(),
       topic_model_(lock_),
+      new_topic_model_(),
       schema_(schema),
       memcached_service_(memcached_service),
       merger_queue_lock_(merger_queue_lock),
@@ -47,6 +48,12 @@ Merger::~Merger() {
 
 void Merger::DisposeModel(ModelId model_id) {
   topic_model_.erase(model_id);
+
+  MergerTask task;
+  task.task_type = kDisposeModel;
+  task.model_id = model_id;
+  task.sync_event = nullptr;
+  internal_task_queue_.push(task);
 }
 
 void Merger::UpdateModel(const ModelConfig& model) {
@@ -62,6 +69,18 @@ void Merger::UpdateModel(const ModelConfig& model) {
     std::string message("Unable to change the number of topics in topic model");
     BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(message));
   }
+}
+
+void Merger::ForceSyncWithMemcached(ModelId model_id) {
+  rpcz::sync_event sync_event;
+
+  MergerTask task;
+  task.task_type = kForceSyncWithMemcached;
+  task.model_id = model_id;
+  task.sync_event = &sync_event;
+  internal_task_queue_.push(task);
+
+  sync_event.wait();
 }
 
 std::shared_ptr<const ::artm::core::TopicModel>
@@ -80,13 +99,32 @@ void Merger::ThreadFunction() {
       // which also throws boost::thread_interrupted
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-      // Merge everything from the queue and update topic model.
-      for (;;) {
+      for (;;) {  // MAIN FOR LOOP
+        // First, handle priority tasks in the internal_task_queue.
+        MergerTask merger_task;
+        if (internal_task_queue_.try_pop(&merger_task)) {
+          switch (merger_task.task_type) {
+            case kDisposeModel:
+              new_topic_model_.erase(merger_task.model_id);
+              break;
+            case kForceSyncWithMemcached:
+              SyncWithMemcached(merger_task.model_id);
+              break;
+          }
+
+          if (merger_task.sync_event != nullptr) {
+            merger_task.sync_event->signal();
+          }
+
+          continue;  // MAIN FOR LOOP
+        }
+
+        // Second, merge everything from the queue and update topic model.
         std::shared_ptr<const ProcessorOutput> processor_output;
         {
           boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
           if (merger_queue_->empty()) {
-            break;
+            break;  // MAIN FOR LOOP
           }
 
           processor_output = merger_queue_->front();
@@ -110,21 +148,20 @@ void Merger::ThreadFunction() {
           ModelId model_id = model_increment.model_id();
           auto cur_ttm = topic_model_.get(model_id);
           if (cur_ttm.get() == nullptr) {
-            // a model had been disposed during ongoing processing;
-            continue;
+            // model had been disposed during ongoing processing;
+            continue;  // for (int modex_index = 0; ...
           }
 
-          auto new_ttm = std::make_shared<TopicModel>(*cur_ttm);
-          new_ttm->ApplyDiff(model_increment);
-
-          std::shared_ptr<MemcachedService_Stub> memcached_service = memcached_service_->get();
-          if (memcached_service != nullptr) {
-            SyncWithMemcached(*cur_ttm, new_ttm.get(), memcached_service.get());
+          auto iter = new_topic_model_.find(model_id);
+          if (iter == new_topic_model_.end()) {
+            new_topic_model_.insert(std::make_pair(
+              model_id, std::make_shared<::artm::core::TopicModel>(*cur_ttm)));
+            iter = new_topic_model_.find(model_id);
           }
 
-          topic_model_.set(model_id, new_ttm);
+          iter->second->ApplyDiff(model_increment);
         }
-      }
+      }  // MAIN FOR LOOP
     }
   }
   catch(boost::thread_interrupted&) {
@@ -136,22 +173,46 @@ void Merger::ThreadFunction() {
   }
 }
 
-void Merger::SyncWithMemcached(const ::artm::core::TopicModel& old_ttm,
-                               ::artm::core::TopicModel* new_ttm,
-                               artm::memcached::MemcachedService_Stub* memcached_proxy) {
-  // This method (SyncWithMemcached) calculates a diff between new_ttm and old_ttm,
-  // and then sends it to MemcachedService as ModelIncrement.
+void Merger::SyncWithMemcached(ModelId model_id) {
+  std::vector<ModelId> model_ids;
+  if (model_id.empty()) {
+    for (auto iter = new_topic_model_.begin(); iter != new_topic_model_.end(); ++iter) {
+      model_ids.push_back(iter->first);
+    }
+  }
 
-  ModelIncrement model_increment;
-  new_ttm->CalculateDiff(old_ttm, &model_increment);
+  for (auto &model_id : model_ids) {
+    // This method (SyncWithMemcached) calculates a diff between new_ttm and old_ttm,
+    // and then sends it to MemcachedService as ModelIncrement.
+    auto old_ttm = topic_model_.get(model_id);
+    if (old_ttm.get() == nullptr)
+      return;  // model had been disposed during ongoing processing;
 
-  try {
-    ::artm::TopicModel new_global_ttm;
-    memcached_proxy->UpdateModel(model_increment, &new_global_ttm);
-    new_ttm->CopyFromExternalTopicModel(new_global_ttm);
-  } catch(const rpcz::rpc_error&) {
-    LOG(ERROR) << "Merger failed to send updates to memcached service.";
-    throw;
+    auto new_ttm = new_topic_model_.find(model_id);
+    if (new_ttm == new_topic_model_.end())
+      return;  // model had been disposed during ongoing processing;
+
+    std::shared_ptr<MemcachedService_Stub> memcached_service = memcached_service_->get();
+    if (memcached_service == nullptr) {
+      topic_model_.set(model_id, new_ttm->second);
+      new_topic_model_.erase(model_id);
+    } else {
+      ModelIncrement model_increment;
+      new_ttm->second->CalculateDiff(*old_ttm, &model_increment);
+
+      try {
+        ::artm::TopicModel reply;
+        memcached_service->UpdateModel(model_increment, &reply);
+        std::shared_ptr<::artm::core::TopicModel> new_global_ttm(
+          new ::artm::core::TopicModel(reply));
+
+        topic_model_.set(model_id, new_global_ttm);
+        new_topic_model_.erase(model_id);
+      } catch(const rpcz::rpc_error&) {
+        LOG(ERROR) << "Merger failed to send updates to memcached service.";
+        throw;
+      }
+    }
   }
 }
 

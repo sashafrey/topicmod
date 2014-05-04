@@ -3,6 +3,8 @@ package artm.memcached;
 import "messages.proto";
 import "internals.proto";
 
+// ======== MemcachedService ========
+
 message ModelId {
   required string model_id = 1;
 }
@@ -10,4 +12,24 @@ message ModelId {
 service MemcachedService {
   rpc UpdateModel(artm.core.ModelIncrement) returns (TopicModel);
   rpc RetrieveModel(ModelId) returns (TopicModel);
+}
+
+// ====== BatchManagerService =======
+
+message BatchIds {
+  repeated string batch_id = 1;
+}
+
+message Void {
+}
+
+message Bool {
+  required bool value = 1;
+}
+
+service BatchManagerService {
+  rpc Schedule(BatchIds) returns (Void);
+  rpc Next(Void) returns (BatchIds);
+  rpc Done(BatchIds) returns (Void);
+  rpc IsEverythingProcessed(Void) returns (Bool);
 }

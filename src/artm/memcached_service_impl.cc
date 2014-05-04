@@ -21,6 +21,7 @@ void MemcachedServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& reque
   iter->second->RetrieveExternalTopicModel(&topic_model);
   response.send(topic_model);
 }
+
 void MemcachedServiceImpl::RetrieveModel(const ::artm::memcached::ModelId& request,
                                          ::rpcz::reply< ::artm::TopicModel> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
@@ -32,6 +33,27 @@ void MemcachedServiceImpl::RetrieveModel(const ::artm::memcached::ModelId& reque
     iter->second->RetrieveExternalTopicModel(&topic_model);
     response.send(topic_model);
   }
+}
+
+BatchManagerServiceImpl::BatchManagerServiceImpl()
+    : batch_manager_lock_(),
+      batch_manager_(&batch_manager_lock_) {
+}
+
+void BatchManagerServiceImpl::Schedule(const ::artm::memcached::BatchIds& request,
+                      ::rpcz::reply< ::artm::memcached::Void> response) {
+}
+
+void BatchManagerServiceImpl::Next(const ::artm::memcached::Void& request,
+                      ::rpcz::reply< ::artm::memcached::BatchIds> response) {
+}
+
+void BatchManagerServiceImpl::Done(const ::artm::memcached::BatchIds& request,
+                      ::rpcz::reply< ::artm::memcached::Void> response) {
+}
+
+void BatchManagerServiceImpl::IsEverythingProcessed(const ::artm::memcached::Void& request,
+                      ::rpcz::reply< ::artm::memcached::Bool> response) {
 }
 
 }  // namespace memcached

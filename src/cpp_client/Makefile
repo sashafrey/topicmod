@@ -1,7 +1,7 @@
 OUT_DIR = ../bin/
 
 all: helpers.cc srcmain.cc
-	g++ -g -std=c++11 -o $(OUT_DIR)cpp_client helpers.cc srcmain.cc -I. -I../ -L../bin -lartm -lrpcz -lprotobuf -lglog
+	g++ -g -std=c++11 -o $(OUT_DIR)cpp_client helpers.cc srcmain.cc -I. -I../ -L../bin -lartm -lrpcz -lprotobuf -lglog -lboost_system -lboost_filesystem
 
 clean:
 	rm $(OUT_DIR)cpp_client

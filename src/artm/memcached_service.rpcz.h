@@ -18,6 +18,8 @@ class rpc;
 class closure;
 class rpc_channel;
 }  //namesacpe rpcz
+#include "messages.pb.h"
+#include "internals.pb.h"
 #include "memcached_service.pb.h"
 
 namespace artm {
@@ -38,12 +40,10 @@ class MemcachedService : public rpcz::service {
 
   static const ::google::protobuf::ServiceDescriptor* descriptor();
 
-  virtual void UpdateKey(const ::artm::memcached::UpdateKeyArgs& request,
-                       ::rpcz::reply< ::artm::memcached::UpdateKeyResult> response);
-  virtual void RetrieveKey(const ::artm::memcached::RetrieveKeyArgs& request,
-                       ::rpcz::reply< ::artm::memcached::RetrieveKeyResult> response);
-  virtual void RetrieveGroup(const ::artm::memcached::RetrieveGroupArgs& request,
-                       ::rpcz::reply< ::artm::memcached::RetrieveGroupResult> response);
+  virtual void UpdateModel(const ::artm::core::ModelIncrement& request,
+                       ::rpcz::reply< ::artm::TopicModel> response);
+  virtual void RetrieveModel(const ::artm::memcached::ModelId& request,
+                       ::rpcz::reply< ::artm::TopicModel> response);
 
   // implements Service ----------------------------------------------
 
@@ -72,23 +72,17 @@ class MemcachedService_Stub {
   inline ::rpcz::rpc_channel* channel() { return channel_; }
 
 
-  void UpdateKey(const ::artm::memcached::UpdateKeyArgs& request,
-                       ::artm::memcached::UpdateKeyResult* response,
+  void UpdateModel(const ::artm::core::ModelIncrement& request,
+                       ::artm::TopicModel* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void UpdateKey(const ::artm::memcached::UpdateKeyArgs& request,
-                       ::artm::memcached::UpdateKeyResult* response,
+  void UpdateModel(const ::artm::core::ModelIncrement& request,
+                       ::artm::TopicModel* response,
                        long deadline_ms = -1);
-  void RetrieveKey(const ::artm::memcached::RetrieveKeyArgs& request,
-                       ::artm::memcached::RetrieveKeyResult* response,
+  void RetrieveModel(const ::artm::memcached::ModelId& request,
+                       ::artm::TopicModel* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void RetrieveKey(const ::artm::memcached::RetrieveKeyArgs& request,
-                       ::artm::memcached::RetrieveKeyResult* response,
-                       long deadline_ms = -1);
-  void RetrieveGroup(const ::artm::memcached::RetrieveGroupArgs& request,
-                       ::artm::memcached::RetrieveGroupResult* response,
-                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void RetrieveGroup(const ::artm::memcached::RetrieveGroupArgs& request,
-                       ::artm::memcached::RetrieveGroupResult* response,
+  void RetrieveModel(const ::artm::memcached::ModelId& request,
+                       ::artm::TopicModel* response,
                        long deadline_ms = -1);
  private:
   ::rpcz::rpc_channel* channel_;

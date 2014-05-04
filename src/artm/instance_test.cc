@@ -204,16 +204,35 @@ TEST(Instance, MultipleStreamsAndModels) {
   artm::TopicModel m2t;
   test.instance()->RequestTopicModel(m2.model_id(), &m2t);
 
-  EXPECT_EQ(m1t.token_size(), 3);
-  EXPECT_EQ(m2t.token_size(), 3);
-
+  // Verification for m1t (the first model)
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token0"));
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token2"));
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token4"));
 
+  // if model has other tokens, their Phi weight should be at zero.
+  for (int token_index = 0; token_index < m1t.token_size(); ++token_index) {
+    std::string token = m1t.token(token_index);
+    if ((token == "token1") || (token == "token3") || (token == "token5")) {
+      for (int topic_index = 0; topic_index < m1t.topics_count(); ++topic_index) {
+        EXPECT_EQ(m1t.token_weights(token_index).value(topic_index), 0);
+      }
+    }
+  }
+
+  // Verification for m2t (the second model)
   EXPECT_TRUE(artm::core::model_has_token(m2t, "token1"));
   EXPECT_TRUE(artm::core::model_has_token(m2t, "token3"));
   EXPECT_TRUE(artm::core::model_has_token(m2t, "token5"));
+
+  // if model has other tokens, their Phi weight should be at zero.
+  for (int token_index = 0; token_index < m2t.token_size(); ++token_index) {
+    std::string token = m2t.token(token_index);
+    if ((token == "token0") || (token == "token2") || (token == "token4")) {
+      for (int topic_index = 0; topic_index < m2t.topics_count(); ++topic_index) {
+        EXPECT_EQ(m2t.token_weights(token_index).value(topic_index), 0);
+      }
+    }
+  }
 
   EXPECT_EQ(m1t.scores().value_size(), 1);
   EXPECT_GT(m1t.scores().value(0), 0);

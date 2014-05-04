@@ -248,8 +248,12 @@ void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& it
       sum += theta[topic_iter.TopicIndex()] * topic_iter.Weight();
     }
 
-    (*normalizer) += iter.count();
-    (*perplexity) += iter.count() * log(sum);
+    if (sum > 0) {
+      (*normalizer) += iter.count();
+      (*perplexity) += iter.count() * log(sum);
+    } else {
+      LOG(WARNING) << "Skipping negative summand in perplexity calculation.";
+    }
   }
 }
 

@@ -52,7 +52,8 @@ class Merger : boost::noncopyable {
   boost::thread thread_;
   void ThreadFunction();
 
-  static void SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
+  static void SyncWithMemcached(const ::artm::core::TopicModel& old_ttm,
+                                ::artm::core::TopicModel* new_ttm,
                                 artm::memcached::MemcachedService_Stub* memcached_proxy);
 };
 

@@ -13,6 +13,7 @@
 
 #include "artm/common.h"
 #include "artm/messages.pb.h"
+#include "artm/internals.pb.h"
 
 namespace artm {
 namespace core {
@@ -74,19 +75,36 @@ class TopicWeightIterator {
 };
 
 // A class representing a topic model.
-// ::artm::core::TopicModel is an internal representation, used between Processor and Merger.
-// ::artm::TopicModel is an external representation, implemented as protobuf message.
+// - ::artm::core::TopicModel is an internal representation, used in Processor, Merger,
+//   and in Memcached service. It supports efficient lookup of words in the matrix.
+// - ::artm::TopicModel is an external representation, implemented as protobuf message.
+//   It is used to transfer model back to user, or between Merger and MemcachedService.
+// - ::artm::core::ModelIncrement is very similar to the model, but it used to represent
+//   an increment to the model. This representation is used to transfer an updates from
+//   processor to Merger, and from Merger to MemcachedService.
 class TopicModel {
  public:
   explicit TopicModel(ModelId model_id, int topics_count, int scores_count);
   explicit TopicModel(const TopicModel& rhs);
   explicit TopicModel(const ::artm::TopicModel& external_topic_model);
+  explicit TopicModel(const ::artm::core::ModelIncrement& model_increment);
 
+  void Clear(ModelId model_id, int topics_count, int scores_count);
   ~TopicModel();
 
   void RetrieveExternalTopicModel(::artm::TopicModel* topic_model) const;
+  void CopyFromExternalTopicModel(const ::artm::TopicModel& topic_model);
 
-  void AddToken(const std::string& token);
+  // Calculates a diff between this model and rhs, assuming that this model is newer.
+  // The output is stored as ModelIncrement in the diff object.
+  // This operation can be summarized as "diff = this - rhs"
+  void CalculateDiff(const ::artm::core::TopicModel& rhs,
+                     ::artm::core::ModelIncrement* diff) const;
+
+  // Applies model increment to this TopicModel.
+  void ApplyDiff(const ::artm::core::ModelIncrement& diff);
+
+  int  AddToken(const std::string& token, bool random_init = true);
   void IncreaseTokenWeight(const std::string& token, int topic_id, float value);
   void IncreaseTokenWeight(int token_id, int topic_id, float value);
   void SetTokenWeight(const std::string& token, int topic_id, float value);
@@ -99,6 +117,8 @@ class TopicModel {
   void SetScores(int iScore, double value, double score_norm);
   TopicWeightIterator GetTopicWeightIterator(const std::string& token) const;
   TopicWeightIterator GetTopicWeightIterator(int token_id) const;
+
+  ModelId model_id() const;
 
   int items_processed() const;
   int score_size() const;

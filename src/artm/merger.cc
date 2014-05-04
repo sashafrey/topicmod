@@ -115,33 +115,7 @@ void Merger::ThreadFunction() {
           }
 
           auto new_ttm = std::make_shared<TopicModel>(*cur_ttm);
-          new_ttm->IncreaseItemsProcessed(model_increment.items_processed());
-          for (int score_index = 0; score_index < model_increment.score_size(); ++score_index) {
-            new_ttm->IncreaseScores(score_index, model_increment.score(score_index),
-                                    model_increment.score_norm(score_index));
-          }
-
-          // Add new tokens discovered by processor
-          for (int token_index = 0;
-               token_index < model_increment.discovered_token_size();
-               ++token_index) {
-            std::string new_token = model_increment.discovered_token(token_index);
-            if (!new_ttm->has_token(new_token)) {
-              new_ttm->AddToken(new_token);
-            }
-          }
-
-          int topics_count = new_ttm->topic_size();
-
-          for (int token_index = 0;
-               token_index < model_increment.token_increment_size();
-               ++token_index) {
-            const FloatArray& counters = model_increment.token_increment(token_index);
-            const std::string& token = model_increment.token(token_index);
-            for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
-              new_ttm->IncreaseTokenWeight(token, topic_index, counters.value(topic_index));
-            }
-          }
+          new_ttm->ApplyDiff(model_increment);
 
           std::shared_ptr<MemcachedService_Stub> memcached_service = memcached_service_->get();
           if (memcached_service != nullptr) {
@@ -162,116 +136,22 @@ void Merger::ThreadFunction() {
   }
 }
 
-// ToDo(alfrey): do we need some special sync for newly added tokens?
-void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
+void Merger::SyncWithMemcached(const ::artm::core::TopicModel& old_ttm,
+                               ::artm::core::TopicModel* new_ttm,
                                artm::memcached::MemcachedService_Stub* memcached_proxy) {
-  const std::string kPrefixToken = "tk_";
-  const std::string kPrefixScore = "sc_";  // todo(alfrey) scores should also have GUIDs.
-  const std::string kPrefixItemsProcessed = "ip_";
+  // This method (SyncWithMemcached) calculates a diff between new_ttm and old_ttm,
+  // and then sends it to MemcachedService as ModelIncrement.
 
-  assert(old_ttm.topic_size() == new_ttm->topic_size());
-  int topic_size = new_ttm->topic_size();
+  ModelIncrement model_increment;
+  new_ttm->CalculateDiff(old_ttm, &model_increment);
 
-  int timeout = -1;
-
-  // ToDo(alfrey): model should be identified by a guid, consistent across all instances.
-  std::string key_group = "<model_guid>";
-
-  // 1. Synchronize tokens.
-  for (int token_index = 0; token_index < new_ttm->token_size(); ++token_index) {
-    const std::string& token = new_ttm->token(token_index);
-    auto new_iter = new_ttm->GetTopicWeightIterator(token_index);
-
-    artm::memcached::UpdateKeyArgs update_key_args;
-    update_key_args.set_key_group(key_group);
-    update_key_args.set_key(kPrefixToken + token);
-
-    if (old_ttm.has_token(token)) {
-      auto old_iter = old_ttm.GetTopicWeightIterator(token);
-      while ((old_iter.NextTopic() < topic_size) && (new_iter.NextTopic() < topic_size)) {
-        update_key_args.add_value(new_iter.NotNormalizedWeight() - old_iter.NotNormalizedWeight());
-      }
-    } else {
-      while (new_iter.NextTopic() < topic_size) {
-        update_key_args.add_value(new_iter.NotNormalizedWeight());
-      }
-    }
-
-    artm::memcached::UpdateKeyResult update_key_result;
-    try {
-      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error&) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    if (update_key_result.value_size() != topic_size) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-      new_ttm->SetTokenWeight(token_index, topic_index, update_key_result.value(topic_index));
-    }
-  }
-
-  // 2. Synchronize scores.
-  for (int score_index = 0; score_index < new_ttm->score_size(); ++score_index) {
-    artm::memcached::UpdateKeyArgs update_key_args;
-    update_key_args.set_key_group(key_group);
-
-    // ToDo(alfrey): score_guid
-    update_key_args.set_key(kPrefixScore + boost::lexical_cast<std::string>(score_index));
-
-    update_key_args.add_value(static_cast<float>(
-        new_ttm->score_not_normalized(score_index) - old_ttm.score_not_normalized(score_index)));
-    update_key_args.add_value(static_cast<float>(
-      new_ttm->score_normalizer(score_index) - old_ttm.score_normalizer(score_index)));
-
-    artm::memcached::UpdateKeyResult update_key_result;
-    try {
-      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error&) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    new_ttm->SetScores(score_index, update_key_result.value(0), update_key_result.value(1));
-  }
-
-  // 3. Synchronize items processed.
-  {
-    artm::memcached::UpdateKeyArgs update_key_args;
-    update_key_args.set_key_group(key_group);
-    update_key_args.set_key(kPrefixItemsProcessed);
-
-    update_key_args.add_value(static_cast<float>(
-      new_ttm->items_processed() - old_ttm.items_processed()));
-
-    artm::memcached::UpdateKeyResult update_key_result;
-    try {
-      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error&) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      return;
-    }
-
-    if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      return;
-    }
-
-    new_ttm->SetItemsProcessed(static_cast<int>(update_key_result.value(0)));
+  try {
+    ::artm::TopicModel new_global_ttm;
+    memcached_proxy->UpdateModel(model_increment, &new_global_ttm);
+    new_ttm->CopyFromExternalTopicModel(new_global_ttm);
+  } catch(const rpcz::rpc_error&) {
+    LOG(ERROR) << "Merger failed to send updates to memcached service.";
+    throw;
   }
 }
 

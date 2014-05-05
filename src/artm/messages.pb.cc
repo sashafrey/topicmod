@@ -262,7 +262,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(DirichletRegularizerPhiConfig));
   DoubleArray_descriptor_ = file->message_type(10);
   static const int DoubleArray_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DoubleArray, elem_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DoubleArray, value_),
   };
   DoubleArray_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -504,21 +504,21 @@ void protobuf_AddDesc_messages_2eproto() {
     "a_0\030\001 \003(\001\022&\n\013tilde_alpha\030\002 \003(\0132\021.artm.Do"
     "ubleArray\"V\n\035DirichletRegularizerPhiConf"
     "ig\022\016\n\006beta_0\030\001 \002(\001\022%\n\ntilde_beta\030\002 \002(\0132\021"
-    ".artm.DoubleArray\"\033\n\013DoubleArray\022\014\n\004elem"
-    "\030\001 \003(\001\"x\n\005Score\022\036\n\004type\030\001 \002(\0162\020.artm.Sco"
-    "re.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body\022\034\n\013st"
-    "ream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n\nPerp"
-    "lexity\020\000\"\231\001\n\014LoggerConfig\022\024\n\014log_locatio"
-    "n\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerConf"
-    "ig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t\n"
-    "\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERBO"
-    "SE\020\004\"]\n\013ModelTopics\022&\n\013token_topic\030\001 \003(\013"
-    "2\021.artm.TokenTopics\022\027\n\017items_processed\030\002"
-    " \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013TokenTopics\022\r\n\005to"
-    "ken\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_wei"
-    "ght\030\003 \003(\002\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014t"
-    "opic_weight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013item"
-    "_topics\030\001 \003(\0132\020.artm.ItemTopics", 1751);
+    ".artm.DoubleArray\"\034\n\013DoubleArray\022\r\n\005valu"
+    "e\030\001 \003(\001\"x\n\005Score\022\036\n\004type\030\001 \002(\0162\020.artm.Sc"
+    "ore.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body\022\034\n\013s"
+    "tream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n\nPer"
+    "plexity\020\000\"\231\001\n\014LoggerConfig\022\024\n\014log_locati"
+    "on\030\001 \001(\t\022-\n\005level\030\002 \001(\0162\030.artm.LoggerCon"
+    "fig.Level:\004INFO\"D\n\005Level\022\014\n\010DISABLED\020\000\022\t"
+    "\n\005ERROR\020\001\022\013\n\007WARNING\020\002\022\010\n\004INFO\020\003\022\013\n\007VERB"
+    "OSE\020\004\"]\n\013ModelTopics\022&\n\013token_topic\030\001 \003("
+    "\0132\021.artm.TokenTopics\022\027\n\017items_processed\030"
+    "\002 \001(\005\022\r\n\005score\030\003 \003(\001\"D\n\013TokenTopics\022\r\n\005t"
+    "oken\030\001 \001(\t\022\020\n\010token_id\030\002 \001(\005\022\024\n\014topic_we"
+    "ight\030\003 \003(\002\".\n\nItemTopics\022\n\n\002id\030\001 \001(\005\022\024\n\014"
+    "topic_weight\030\002 \003(\002\"4\n\013BatchTopics\022%\n\013ite"
+    "m_topics\030\001 \003(\0132\020.artm.ItemTopics", 1752);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -3809,7 +3809,7 @@ void DirichletRegularizerPhiConfig::Swap(DirichletRegularizerPhiConfig* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DoubleArray::kElemFieldNumber;
+const int DoubleArray::kValueFieldNumber;
 #endif  // !_MSC_VER
 
 DoubleArray::DoubleArray()
@@ -3862,7 +3862,7 @@ DoubleArray* DoubleArray::New() const {
 }
 
 void DoubleArray::Clear() {
-  elem_.Clear();
+  value_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3873,24 +3873,24 @@ bool DoubleArray::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated double elem = 1;
+      // repeated double value = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_elem:
+         parse_value:
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 1, 9, input, this->mutable_elem())));
+                 1, 9, input, this->mutable_value())));
         } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
                    == ::google::protobuf::internal::WireFormatLite::
                       WIRETYPE_LENGTH_DELIMITED) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
                    double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, this->mutable_elem())));
+                 input, this->mutable_value())));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(9)) goto parse_elem;
+        if (input->ExpectTag(9)) goto parse_value;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3913,10 +3913,10 @@ bool DoubleArray::MergePartialFromCodedStream(
 
 void DoubleArray::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated double elem = 1;
-  for (int i = 0; i < this->elem_size(); i++) {
+  // repeated double value = 1;
+  for (int i = 0; i < this->value_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(
-      1, this->elem(i), output);
+      1, this->value(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3927,10 +3927,10 @@ void DoubleArray::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DoubleArray::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated double elem = 1;
-  for (int i = 0; i < this->elem_size(); i++) {
+  // repeated double value = 1;
+  for (int i = 0; i < this->value_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleToArray(1, this->elem(i), target);
+      WriteDoubleToArray(1, this->value(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3943,11 +3943,11 @@ void DoubleArray::SerializeWithCachedSizes(
 int DoubleArray::ByteSize() const {
   int total_size = 0;
 
-  // repeated double elem = 1;
+  // repeated double value = 1;
   {
     int data_size = 0;
-    data_size = 8 * this->elem_size();
-    total_size += 1 * this->elem_size() + data_size;
+    data_size = 8 * this->value_size();
+    total_size += 1 * this->value_size() + data_size;
   }
 
   if (!unknown_fields().empty()) {
@@ -3975,7 +3975,7 @@ void DoubleArray::MergeFrom(const ::google::protobuf::Message& from) {
 
 void DoubleArray::MergeFrom(const DoubleArray& from) {
   GOOGLE_CHECK_NE(&from, this);
-  elem_.MergeFrom(from.elem_);
+  value_.MergeFrom(from.value_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -3998,7 +3998,7 @@ bool DoubleArray::IsInitialized() const {
 
 void DoubleArray::Swap(DoubleArray* other) {
   if (other != this) {
-    elem_.Swap(&other->elem_);
+    value_.Swap(&other->value_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

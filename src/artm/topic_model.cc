@@ -58,6 +58,10 @@ TopicModel::~TopicModel() {
   std::for_each(n_wt_.begin(), n_wt_.end(), [&](float* value) {
     delete [] value;
   });
+
+  std::for_each(r_wt_.begin(), r_wt_.end(), [&](float* value) {
+    delete [] value;
+  });
 }
 
 void TopicModel::AddToken(const std::string& token) {
@@ -142,7 +146,11 @@ void TopicModel::IncreaseTokenWeight(int token_id, int topic_id, float value) {
       n_t_[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
     }
   } else {
-    n_t_[topic_id] += value;
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += value;
+    } else {
+      n_t_[topic_id] -= (old_data_value + r_wt_[token_id][topic_id]);
+    }
   }
 }
 

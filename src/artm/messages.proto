@@ -77,7 +77,7 @@ message ModelConfig {
 message RegularizerConfig {
   enum Type {
     DirichletRegularizerTheta = 0;
-	DirichletRegularizerPhi = 1;
+    DirichletRegularizerPhi = 1;
   }
 
   required string name = 1;
@@ -99,7 +99,7 @@ message DirichletRegularizerPhiConfig {
 
 // One set of parameters for Dirichlet regularizer
 message DoubleArray {
-  repeated double elem = 1;
+  repeated double value = 1;
 }
 
 message Score {

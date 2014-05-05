@@ -15,6 +15,8 @@ namespace core {
 
 class RegularizerInterface {
  public:
+  virtual ~RegularizerInterface() { }
+
   virtual bool RegularizeTheta(const Item& item,
                                 std::vector<float>* n_dt,
                                 int topic_size,

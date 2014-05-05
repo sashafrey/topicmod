@@ -1373,24 +1373,24 @@ class DoubleArray : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated double elem = 1;
-  inline int elem_size() const;
-  inline void clear_elem();
-  static const int kElemFieldNumber = 1;
-  inline double elem(int index) const;
-  inline void set_elem(int index, double value);
-  inline void add_elem(double value);
+  // repeated double value = 1;
+  inline int value_size() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 1;
+  inline double value(int index) const;
+  inline void set_value(int index, double value);
+  inline void add_value(double value);
   inline const ::google::protobuf::RepeatedField< double >&
-      elem() const;
+      value() const;
   inline ::google::protobuf::RepeatedField< double >*
-      mutable_elem();
+      mutable_value();
 
   // @@protoc_insertion_point(class_scope:artm.DoubleArray)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedField< double > elem_;
+  ::google::protobuf::RepeatedField< double > value_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -3307,29 +3307,29 @@ inline void DirichletRegularizerPhiConfig::set_allocated_tilde_beta(::artm::Doub
 
 // DoubleArray
 
-// repeated double elem = 1;
-inline int DoubleArray::elem_size() const {
-  return elem_.size();
+// repeated double value = 1;
+inline int DoubleArray::value_size() const {
+  return value_.size();
 }
-inline void DoubleArray::clear_elem() {
-  elem_.Clear();
+inline void DoubleArray::clear_value() {
+  value_.Clear();
 }
-inline double DoubleArray::elem(int index) const {
-  return elem_.Get(index);
+inline double DoubleArray::value(int index) const {
+  return value_.Get(index);
 }
-inline void DoubleArray::set_elem(int index, double value) {
-  elem_.Set(index, value);
+inline void DoubleArray::set_value(int index, double value) {
+  value_.Set(index, value);
 }
-inline void DoubleArray::add_elem(double value) {
-  elem_.Add(value);
+inline void DoubleArray::add_value(double value) {
+  value_.Add(value);
 }
 inline const ::google::protobuf::RepeatedField< double >&
-DoubleArray::elem() const {
-  return elem_;
+DoubleArray::value() const {
+  return value_;
 }
 inline ::google::protobuf::RepeatedField< double >*
-DoubleArray::mutable_elem() {
-  return &elem_;
+DoubleArray::mutable_value() {
+  return &value_;
 }
 
 // -------------------------------------------------------------------

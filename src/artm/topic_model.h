@@ -59,6 +59,8 @@ class TopicWeightIterator {
   }
 
   inline const float* GetNormalizer() { return n_t_; }
+  inline const float* GetRegularizer() { return r_w_; }
+  inline const float* GetData() { return n_w_; }
 
   // Resets the iterator to the initial state.
   inline void Reset() { current_topic_ = -1; }
@@ -74,9 +76,9 @@ class TopicWeightIterator {
                       const float* r_w, 
                       const float* n_t, 
                       int topics_count)
-      : n_w_(n_w), 
-        n_t_(n_t), 
+      : n_w_(n_w),  
         r_w_(r_w),
+        n_t_(n_t),
         topics_count_(topics_count),
         current_topic_(-1) {
     assert(n_w != nullptr);
@@ -141,8 +143,8 @@ class TopicModel {
   std::vector<double> scores_norm_;
 
   std::vector<float*> n_wt_;  // vector of length tokens_count
-  std::vector<float> n_t_;  // normalization constant for each topic
   std::vector<float*> r_wt_;  // regularizer's additions
+  std::vector<float> n_t_;  // normalization constant for each topic
 };
 
 }  // namespace core

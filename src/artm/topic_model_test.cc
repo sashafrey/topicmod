@@ -29,7 +29,7 @@ TEST(TopicModelTest, Basic) {
     real_normalizer += n_t[j];
   }
   float expected_normalizer = no_tokens * no_topics;   
-  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < tolerance);
+  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 2
   real_normalizer = 0;
@@ -43,7 +43,7 @@ TEST(TopicModelTest, Basic) {
     real_normalizer += n_t[j];
   }
   expected_normalizer = no_tokens * no_topics / 2.0;   
-  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < tolerance);
+  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 3
   real_normalizer = 0;
@@ -57,7 +57,7 @@ TEST(TopicModelTest, Basic) {
     real_normalizer += n_t[j];
   }
   expected_normalizer = 0;   
-  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < tolerance);
+  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 4
   real_normalizer = 0;
@@ -71,7 +71,7 @@ TEST(TopicModelTest, Basic) {
     real_normalizer += n_t[j];
   }
   expected_normalizer = 0;   
-  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < tolerance);
+  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 5
   real_normalizer = 0;
@@ -85,7 +85,7 @@ TEST(TopicModelTest, Basic) {
     real_normalizer += n_t[j];
   }
   expected_normalizer = no_tokens * no_topics / 2.0;   
-  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < tolerance);
+  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 6
   real_normalizer = 0;
@@ -99,7 +99,7 @@ TEST(TopicModelTest, Basic) {
     real_normalizer += n_t[j];
   }
   expected_normalizer = 0;   
-  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < tolerance);
+  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 7
   real_normalizer = 0;
@@ -113,5 +113,47 @@ TEST(TopicModelTest, Basic) {
     real_normalizer += n_t[j];
   }
   expected_normalizer = no_tokens * no_topics / 2.0;   
-  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < tolerance);
+  EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
+
+  //test 8
+  no_topics = 1;
+  for (int i = 1; i < 10; ++i) {
+    artm::core::TopicModel topic_model_1(no_topics, scores_count);
+    topic_model_1.AddToken("token_1");
+    topic_model_1.AddToken("token_2");
+    topic_model_1.AddToken("token_3");
+    topic_model_1.AddToken("token_4");
+    topic_model_1.AddToken("token_5");
+
+    for (int j = 0; j < 100; ++j) {
+      int index = 0 + rand() % 5;
+      int func = 0 + rand() % 3;
+      float value = -1.0 + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2));
+      switch (func) {
+      case 0:
+        topic_model_1.SetRegularizerWeight(index, 0, value);
+        break;
+      case 1:
+        topic_model_1.SetTokenWeight(index, 0, value);
+        break;
+      case 2:
+        topic_model_1.IncreaseTokenWeight(index, 0, value);
+        break;
+      }
+
+      float expected_norm = 0;
+      float real_norm = 0;
+      for (int token_id = 0; token_id < no_tokens; ++token_id) {
+        auto iter = topic_model_1.GetTopicWeightIterator(token_id);
+        iter.NextTopic();
+        float r = (iter.GetRegularizer())[0];
+        float n = (iter.GetData())[0];
+        expected_norm = (iter.GetNormalizer())[0];
+        if (r + n > 0.0) {
+          real_norm += (r + n);
+        }
+      }
+      EXPECT_TRUE(std::abs(real_norm - expected_norm) < kTolerance);
+    }
+  }
 }

@@ -303,6 +303,7 @@ void ArtmDisposeRegularizer(int instance_id, const char* regularizer_name) {
 
 void ArtmInvokePhiRegularizers(int instance_id) {
   auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
-  if (instance == nullptr) ARTM_OBJECT_NOT_FOUND;
-  instance->InvokePhiRegularizers();
+  if (instance != nullptr) { 
+    instance->InvokePhiRegularizers();
+  }
 }

@@ -80,13 +80,13 @@ void Merger::InvokePhiRegularizers() {
         if (regularizer != nullptr) {
           bool retval = regularizer->RegularizePhi(new_ttm.get());
           if (!retval) {
-            LOG(ERROR) << "Problems with type or number of parameters in regularizer " <<
+            LOG(ERROR) << "Problems with type or number of parameters in Phi regularizer <" <<
               reg_name_iterator->c_str() << 
-              ". On this iteration this regularizer was turned off.\n";
+              ">. On this iteration this regularizer was turned off.\n";
           }
         } else {
-          LOG(ERROR) << "Regularizer with name " << 
-            reg_name_iterator->c_str() << " does not exist.";
+          LOG(ERROR) << "Phi Regularizer with name <" << 
+            reg_name_iterator->c_str() << "> does not exist.";
         }
       }
       topic_model_.set(model_id, new_ttm);

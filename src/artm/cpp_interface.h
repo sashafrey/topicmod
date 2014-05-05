@@ -58,6 +58,7 @@ class Model {
   void Reconfigure(const ModelConfig& config);
   void Enable();
   void Disable();
+  void InvokePhiRegularizers();
 
   int instance_id() const { return instance_id_; }
   int model_id() const { return model_id_; }
@@ -77,7 +78,6 @@ class Regularizer {
   ~Regularizer();
 
   void Reconfigure(const RegularizerConfig& config);
-  void InvokePhiRegularizers();
 
   int instance_id() const { return instance_id_; }
   const RegularizerConfig& config() const { return config_; }

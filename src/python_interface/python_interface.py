@@ -113,6 +113,9 @@ class Model:
                     len(model_config_blob), model_config_blob_p))
     self.config_.CopyFrom(config)
 
+  def InvokePhiRegularizers(self):
+    self.lib_.ArtmInvokePhiRegularizers(self.instance_id_)
+
   def Enable(self):
     config_copy_ = messages_pb2.ModelConfig()
     config_copy_.CopyFrom(self.config_)
@@ -150,9 +153,6 @@ class Regularizer:
     HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.instance_id_, 
                     len(regularizer_config_blob), regularizer_config_blob_p))
     self.config_.CopyFrom(config)
-    
-  def InvokePhiRegularizer(self):
-    self.lib_.ArtmInvokePhiRegularizers(self.instance_id)
 
 #################################################################################
 

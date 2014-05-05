@@ -19,6 +19,10 @@ class DirichletRegularizerPhi : public RegularizerInterface {
     : config_(config) {}
 
   virtual bool RegularizePhi(TopicModel* topic_model);
+  virtual bool RegularizeTheta(const Item& item,
+                               std::vector<float>* n_dt,
+                               int topic_size,
+                               int inner_iter) { return true; } 
 
  private:
   DirichletRegularizerPhiConfig config_;

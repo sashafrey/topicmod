@@ -12,6 +12,7 @@
 #include "artm/memcached_server.h"
 
 #include "artm/dirichlet_regularizer_theta.h"
+#include "artm/dirichlet_regularizer_phi.h"
 #include "artm/regularizer_interface.h"
 
 #include "rpcz/rpc.hpp"
@@ -268,6 +269,20 @@ int ArtmReconfigureRegularizer(int instance_id, int length,
 
       std::shared_ptr<artm::core::RegularizerInterface> regularizer(
         new artm::core::DirichletRegularizerTheta(regularizer_config));
+      auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
+      if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
+
+      instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
+      return ARTM_SUCCESS;
+    }
+    case artm::RegularizerConfig_Type_DirichletRegularizerPhi: {
+      artm::DirichletRegularizerPhiConfig regularizer_config;
+      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
+        return ARTM_INVALID_MESSAGE;
+      }
+
+      std::shared_ptr<artm::core::RegularizerInterface> regularizer(
+        new artm::core::DirichletRegularizerPhi(regularizer_config));
       auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
       if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
 

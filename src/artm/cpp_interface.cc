@@ -99,6 +99,10 @@ void Model::Disable() {
   Reconfigure(config_copy_);
 }
 
+void Model::InvokePhiRegularizers() {
+  ArtmInvokePhiRegularizers(instance_id());
+}
+
 Regularizer::Regularizer(const Instance& instance, const RegularizerConfig& config)
     : instance_id_(instance.id()),
       config_(config) {
@@ -118,10 +122,6 @@ void Regularizer::Reconfigure(const RegularizerConfig& config) {
   HandleErrorCode(ArtmReconfigureRegularizer(instance_id(), regularizer_config_blob.size(),
     StringAsArray(&regularizer_config_blob)));
   config_.CopyFrom(config);
-}
-
-void Regularizer::InvokePhiRegularizers() {
-  ArtmInvokePhiRegularizers(instance_id());
 }
 
 DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config)

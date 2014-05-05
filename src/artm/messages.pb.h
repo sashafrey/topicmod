@@ -73,8 +73,8 @@ inline bool Stream_Type_Parse(
     Stream_Type_descriptor(), name, value);
 }
 enum RegularizerConfig_Type {
-  RegularizerConfig_Type_DirichletRegularizerTheta = 1,
-  RegularizerConfig_Type_DirichletRegularizerPhi = 2
+  RegularizerConfig_Type_DirichletRegularizerTheta = 0,
+  RegularizerConfig_Type_DirichletRegularizerPhi = 1
 };
 bool RegularizerConfig_Type_IsValid(int value);
 const RegularizerConfig_Type RegularizerConfig_Type_Type_MIN = RegularizerConfig_Type_DirichletRegularizerTheta;
@@ -3103,7 +3103,7 @@ inline void RegularizerConfig::clear_has_type() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void RegularizerConfig::clear_type() {
-  type_ = 1;
+  type_ = 0;
   clear_has_type();
 }
 inline ::artm::RegularizerConfig_Type RegularizerConfig::type() const {

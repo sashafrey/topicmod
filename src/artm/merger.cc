@@ -69,7 +69,7 @@ void Merger::InvokePhiRegularizers() {
   std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
     const ModelConfig& model = schema->model_config(model_id);
     auto cur_ttm = topic_model_.get(model_id);
-  
+
     if (cur_ttm.get() != nullptr) {
       auto reg_names = model.regularizer_name();
       auto new_ttm = std::make_shared<TopicModel>(*cur_ttm);
@@ -81,11 +81,11 @@ void Merger::InvokePhiRegularizers() {
           bool retval = regularizer->RegularizePhi(new_ttm.get());
           if (!retval) {
             LOG(ERROR) << "Problems with type or number of parameters in Phi regularizer <" <<
-              reg_name_iterator->c_str() << 
+              reg_name_iterator->c_str() <<
               ">. On this iteration this regularizer was turned off.\n";
           }
         } else {
-          LOG(ERROR) << "Phi Regularizer with name <" << 
+          LOG(ERROR) << "Phi Regularizer with name <" <<
             reg_name_iterator->c_str() << "> does not exist.";
         }
       }

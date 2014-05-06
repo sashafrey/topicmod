@@ -237,14 +237,14 @@ std::string TopicModel::token(int index) const {
 
 TopicWeightIterator TopicModel::GetTopicWeightIterator(const std::string& token) const {
   auto iter = token_to_token_id_.find(token);
-  return std::move(TopicWeightIterator(n_wt_[iter->second], r_wt_[iter->second], 
+  return std::move(TopicWeightIterator(n_wt_[iter->second], r_wt_[iter->second],
     &n_t_[0], topics_count_));
 }
 
 TopicWeightIterator TopicModel::GetTopicWeightIterator(int token_id) const {
   assert(token_id >= 0);
   assert(token_id < token_size());
-  return std::move(TopicWeightIterator(n_wt_[token_id], r_wt_[token_id], 
+  return std::move(TopicWeightIterator(n_wt_[token_id], r_wt_[token_id],
     &n_t_[0], topics_count_));
 }
 

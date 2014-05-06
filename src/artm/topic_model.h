@@ -72,11 +72,11 @@ class TopicWeightIterator {
   int topics_count_;
   mutable int current_topic_;
 
-  TopicWeightIterator(const float* n_w, 
-                      const float* r_w, 
-                      const float* n_t, 
+  TopicWeightIterator(const float* n_w,
+                      const float* r_w,
+                      const float* n_t,
                       int topics_count)
-      : n_w_(n_w),  
+      : n_w_(n_w),
         r_w_(r_w),
         n_t_(n_t),
         topics_count_(topics_count),

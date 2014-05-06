@@ -205,11 +205,11 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
         bool retval = regularizer->RegularizeTheta(item, &theta_next, topic_size, inner_iter);
         if (!retval) {
           LOG(ERROR) << "Problems with type or number of parameters in Theta regularizer <" <<
-            reg_name_iterator->c_str() << 
+            reg_name_iterator->c_str() <<
             ">. On this iteration this regularizer was turned off.\n";
         }
       } else {
-        LOG(ERROR) << "Theta Regularizer with name <" << reg_name_iterator->c_str() << 
+        LOG(ERROR) << "Theta Regularizer with name <" << reg_name_iterator->c_str() <<
           "> does not exist.";
       }
     }

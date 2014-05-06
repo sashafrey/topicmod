@@ -17,7 +17,7 @@ TEST(TopicModelTest, Basic) {
   topic_model.AddToken("token_4");
   topic_model.AddToken("token_5");
 
-  //test 1
+  //  test 1
   float real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
@@ -31,7 +31,7 @@ TEST(TopicModelTest, Basic) {
   float expected_normalizer = static_cast<float>(no_tokens * no_topics);
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
-  //test 2
+  //  test 2
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
@@ -45,7 +45,7 @@ TEST(TopicModelTest, Basic) {
   expected_normalizer = no_tokens * no_topics / 2.0f;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
-  //test 3
+  //  test 3
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
@@ -59,7 +59,7 @@ TEST(TopicModelTest, Basic) {
   expected_normalizer = 0;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
-  //test 4
+  //  test 4
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
@@ -73,7 +73,7 @@ TEST(TopicModelTest, Basic) {
   expected_normalizer = 0;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
-  //test 5
+  //  test 5
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
@@ -87,7 +87,7 @@ TEST(TopicModelTest, Basic) {
   expected_normalizer = no_tokens * no_topics / 2.0f;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
-  //test 6
+  //  test 6
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
@@ -101,7 +101,7 @@ TEST(TopicModelTest, Basic) {
   expected_normalizer = 0;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
-  //test 7
+  //  test 7
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
@@ -115,7 +115,7 @@ TEST(TopicModelTest, Basic) {
   expected_normalizer = no_tokens * no_topics / 2.0f;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
-  //test 8
+  //  test 8
   no_topics = 1;
   for (int i = 1; i < 10; ++i) {
     artm::core::TopicModel topic_model_1(no_topics, scores_count);
@@ -126,9 +126,9 @@ TEST(TopicModelTest, Basic) {
     topic_model_1.AddToken("token_5");
 
     for (int j = 0; j < 100; ++j) {
-      int index = 0 + rand() % 5;
-      int func = 0 + rand() % 3;
-      float value = -1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2));
+      int index = 0 + rand() % 5;  // NOLINT
+      int func = 0 + rand() % 3;   // NOLINT
+      float value = -1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2));  // NOLINT
       switch (func) {
       case 0:
         topic_model_1.SetRegularizerWeight(index, 0, value);

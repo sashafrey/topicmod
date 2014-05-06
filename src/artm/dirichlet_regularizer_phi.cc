@@ -16,7 +16,7 @@ bool DirichletRegularizerPhi::RegularizePhi(TopicModel* topic_model) {
   if (tilde_beta.value_size() != topic_model->token_size()) {
     return false;
   }
-    
+
   for (int topic_id = 0; topic_id < topic_model->topic_size(); ++topic_id) {
     for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
       float value = static_cast<float>(beta_0 * tilde_beta.value(token_id));

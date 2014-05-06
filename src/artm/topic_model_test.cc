@@ -28,21 +28,21 @@ TEST(TopicModelTest, Basic) {
   for (int j = 0; j < no_topics; ++j) {
     real_normalizer += n_t[j];
   }
-  float expected_normalizer = no_tokens * no_topics;   
+  float expected_normalizer = static_cast<float>(no_tokens * no_topics);
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 2
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
-      topic_model.SetRegularizerWeight(i, j, -0.5);
+      topic_model.SetRegularizerWeight(i, j, -0.5f);
     }
   }
   n_t = topic_model.GetTopicWeightIterator(0).GetNormalizer();
   for (int j = 0; j < no_topics; ++j) {
     real_normalizer += n_t[j];
   }
-  expected_normalizer = no_tokens * no_topics / 2.0;   
+  expected_normalizer = no_tokens * no_topics / 2.0f;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 3
@@ -56,35 +56,35 @@ TEST(TopicModelTest, Basic) {
   for (int j = 0; j < no_topics; ++j) {
     real_normalizer += n_t[j];
   }
-  expected_normalizer = 0;   
+  expected_normalizer = 0;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 4
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
-      topic_model.IncreaseTokenWeight(i, j, 0.4);
+      topic_model.IncreaseTokenWeight(i, j, 0.4f);
     }
   }
   n_t = topic_model.GetTopicWeightIterator(0).GetNormalizer();
   for (int j = 0; j < no_topics; ++j) {
     real_normalizer += n_t[j];
   }
-  expected_normalizer = 0;   
+  expected_normalizer = 0;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 5
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
-      topic_model.IncreaseTokenWeight(i, j, 0.6);
+      topic_model.IncreaseTokenWeight(i, j, 0.6f);
     }
   }
   n_t = topic_model.GetTopicWeightIterator(0).GetNormalizer();
   for (int j = 0; j < no_topics; ++j) {
     real_normalizer += n_t[j];
   }
-  expected_normalizer = no_tokens * no_topics / 2.0;   
+  expected_normalizer = no_tokens * no_topics / 2.0f;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 6
@@ -98,21 +98,21 @@ TEST(TopicModelTest, Basic) {
   for (int j = 0; j < no_topics; ++j) {
     real_normalizer += n_t[j];
   }
-  expected_normalizer = 0;   
+  expected_normalizer = 0;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 7
   real_normalizer = 0;
   for (int i = 0; i < no_tokens; ++i) {
     for (int j = 0; j < no_topics; ++j) {
-      topic_model.SetRegularizerWeight(i, j, -0.5);
+      topic_model.SetRegularizerWeight(i, j, -0.5f);
     }
   }
   n_t = topic_model.GetTopicWeightIterator(0).GetNormalizer();
   for (int j = 0; j < no_topics; ++j) {
     real_normalizer += n_t[j];
   }
-  expected_normalizer = no_tokens * no_topics / 2.0;   
+  expected_normalizer = no_tokens * no_topics / 2.0f;
   EXPECT_TRUE(std::abs(real_normalizer - expected_normalizer) < kTolerance);
 
   //test 8
@@ -128,7 +128,7 @@ TEST(TopicModelTest, Basic) {
     for (int j = 0; j < 100; ++j) {
       int index = 0 + rand() % 5;
       int func = 0 + rand() % 3;
-      float value = -1.0 + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2));
+      float value = -1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2));
       switch (func) {
       case 0:
         topic_model_1.SetRegularizerWeight(index, 0, value);

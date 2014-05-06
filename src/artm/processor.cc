@@ -215,7 +215,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     }
 
     // Normalize theta_next.
-    for (int i = 0; i < theta_next.size(); ++i) {
+    for (int i = 0; i < static_cast<int>(theta_next.size()); ++i) {
       if (theta_next[i] < 0) {
         theta_next[i] = 0;
       }

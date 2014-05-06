@@ -35,7 +35,8 @@ LDFLAGS += -lboost_filesystem -lboost_system -lboost_thread
 
 # First target - shared library
 TARGET_LIB    = $(OUT_DIR)libartm.so
-SRCS_LIB      = dirichlet_regularizer_theta.cc \
+SRCS_LIB      = dirichlet_regularizer_phi.cc \
+		dirichlet_regularizer_theta.cc \
 		cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
@@ -63,6 +64,7 @@ SRCS_TEST     = boost_thread_test.cc \
 		instance_manager_test.cc \
 		instance_test.cc \
 		memcached_service_test.cc \
+		topic_model_test.cc \
 		thread_safe_holder_test.cc
 
 OBJS_TEST     = $(SRCS_TEST:.cc=.o)

@@ -23,12 +23,12 @@ TEST(CppInterface, Basic) {
   artm::DirichletRegularizerThetaConfig regularizer_1_config;
   artm::DoubleArray tilde_alpha;
   for (int i = 0; i < nTopics; ++i) {
-    tilde_alpha.add_alpha(0);
+    tilde_alpha.add_value(0);
   }
   for (int i = 0; i < 12; ++i) {
     regularizer_1_config.add_alpha_0(0.01 * (i + 1));
     for (int j = 0; j < nTopics; ++j) {
-      tilde_alpha.set_alpha(j, 0.05 + j * 0.01);
+      tilde_alpha.set_value(j, 0.05 + j * 0.01);
     }
     artm::DoubleArray* tilde_alpha_ptr = regularizer_1_config.add_tilde_alpha();
     *tilde_alpha_ptr = tilde_alpha;
@@ -38,7 +38,7 @@ TEST(CppInterface, Basic) {
   for (int i = 0; i < 10; ++i) {
     regularizer_2_config.add_alpha_0(0.03 * (i + 1));
     for (int j = 0; j < nTopics; ++j) {
-      tilde_alpha.set_alpha(j, 0.08 + j * 0.01);
+      tilde_alpha.set_value(j, 0.08 + j * 0.01);
     }
     artm::DoubleArray* tilde_alpha_ptr = regularizer_2_config.add_tilde_alpha();
     *tilde_alpha_ptr = tilde_alpha;

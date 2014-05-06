@@ -22,9 +22,9 @@ bool DirichletRegularizerTheta::RegularizeTheta(const Item& item,
     double alpha_0 = alpha_0_vector.Get(inner_iter);
     const artm::DoubleArray& tilde_alpha = tilde_alpha_vector.Get(inner_iter);
 
-    if (tilde_alpha.alpha_size() == topic_size) {
+    if (tilde_alpha.value_size() == topic_size) {
       for (int i = 0; i < topic_size; ++i) {
-        (*n_dt)[i] = (*n_dt)[i] + static_cast<float>(alpha_0 * tilde_alpha.alpha().Get(i));
+        (*n_dt)[i] = (*n_dt)[i] + static_cast<float>(alpha_0 * tilde_alpha.value().Get(i));
       }
       return true;
     } else {

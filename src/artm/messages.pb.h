@@ -43,6 +43,7 @@ class InstanceConfig;
 class ModelConfig;
 class RegularizerConfig;
 class DirichletRegularizerThetaConfig;
+class DirichletRegularizerPhiConfig;
 class DoubleArray;
 class Score;
 class LoggerConfig;
@@ -72,11 +73,12 @@ inline bool Stream_Type_Parse(
     Stream_Type_descriptor(), name, value);
 }
 enum RegularizerConfig_Type {
-  RegularizerConfig_Type_DirichletRegularizerTheta = 1
+  RegularizerConfig_Type_DirichletRegularizerTheta = 0,
+  RegularizerConfig_Type_DirichletRegularizerPhi = 1
 };
 bool RegularizerConfig_Type_IsValid(int value);
 const RegularizerConfig_Type RegularizerConfig_Type_Type_MIN = RegularizerConfig_Type_DirichletRegularizerTheta;
-const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_DirichletRegularizerTheta;
+const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_DirichletRegularizerPhi;
 const int RegularizerConfig_Type_Type_ARRAYSIZE = RegularizerConfig_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor();
@@ -1043,6 +1045,7 @@ class RegularizerConfig : public ::google::protobuf::Message {
 
   typedef RegularizerConfig_Type Type;
   static const Type DirichletRegularizerTheta = RegularizerConfig_Type_DirichletRegularizerTheta;
+  static const Type DirichletRegularizerPhi = RegularizerConfig_Type_DirichletRegularizerPhi;
   static inline bool Type_IsValid(int value) {
     return RegularizerConfig_Type_IsValid(value);
   }
@@ -1222,6 +1225,100 @@ class DirichletRegularizerThetaConfig : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class DirichletRegularizerPhiConfig : public ::google::protobuf::Message {
+ public:
+  DirichletRegularizerPhiConfig();
+  virtual ~DirichletRegularizerPhiConfig();
+
+  DirichletRegularizerPhiConfig(const DirichletRegularizerPhiConfig& from);
+
+  inline DirichletRegularizerPhiConfig& operator=(const DirichletRegularizerPhiConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DirichletRegularizerPhiConfig& default_instance();
+
+  void Swap(DirichletRegularizerPhiConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  DirichletRegularizerPhiConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DirichletRegularizerPhiConfig& from);
+  void MergeFrom(const DirichletRegularizerPhiConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required double beta_0 = 1;
+  inline bool has_beta_0() const;
+  inline void clear_beta_0();
+  static const int kBeta0FieldNumber = 1;
+  inline double beta_0() const;
+  inline void set_beta_0(double value);
+
+  // required .artm.DoubleArray tilde_beta = 2;
+  inline bool has_tilde_beta() const;
+  inline void clear_tilde_beta();
+  static const int kTildeBetaFieldNumber = 2;
+  inline const ::artm::DoubleArray& tilde_beta() const;
+  inline ::artm::DoubleArray* mutable_tilde_beta();
+  inline ::artm::DoubleArray* release_tilde_beta();
+  inline void set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta);
+
+  // @@protoc_insertion_point(class_scope:artm.DirichletRegularizerPhiConfig)
+ private:
+  inline void set_has_beta_0();
+  inline void clear_has_beta_0();
+  inline void set_has_tilde_beta();
+  inline void clear_has_tilde_beta();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double beta_0_;
+  ::artm::DoubleArray* tilde_beta_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static DirichletRegularizerPhiConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class DoubleArray : public ::google::protobuf::Message {
  public:
   DoubleArray();
@@ -1276,24 +1373,24 @@ class DoubleArray : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated double alpha = 1;
-  inline int alpha_size() const;
-  inline void clear_alpha();
-  static const int kAlphaFieldNumber = 1;
-  inline double alpha(int index) const;
-  inline void set_alpha(int index, double value);
-  inline void add_alpha(double value);
+  // repeated double value = 1;
+  inline int value_size() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 1;
+  inline double value(int index) const;
+  inline void set_value(int index, double value);
+  inline void add_value(double value);
   inline const ::google::protobuf::RepeatedField< double >&
-      alpha() const;
+      value() const;
   inline ::google::protobuf::RepeatedField< double >*
-      mutable_alpha();
+      mutable_value();
 
   // @@protoc_insertion_point(class_scope:artm.DoubleArray)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedField< double > alpha_;
+  ::google::protobuf::RepeatedField< double > value_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -3006,7 +3103,7 @@ inline void RegularizerConfig::clear_has_type() {
   _has_bits_[0] &= ~0x00000002u;
 }
 inline void RegularizerConfig::clear_type() {
-  type_ = 1;
+  type_ = 0;
   clear_has_type();
 }
 inline ::artm::RegularizerConfig_Type RegularizerConfig::type() const {
@@ -3144,31 +3241,95 @@ DirichletRegularizerThetaConfig::mutable_tilde_alpha() {
 
 // -------------------------------------------------------------------
 
+// DirichletRegularizerPhiConfig
+
+// required double beta_0 = 1;
+inline bool DirichletRegularizerPhiConfig::has_beta_0() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DirichletRegularizerPhiConfig::set_has_beta_0() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DirichletRegularizerPhiConfig::clear_has_beta_0() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DirichletRegularizerPhiConfig::clear_beta_0() {
+  beta_0_ = 0;
+  clear_has_beta_0();
+}
+inline double DirichletRegularizerPhiConfig::beta_0() const {
+  return beta_0_;
+}
+inline void DirichletRegularizerPhiConfig::set_beta_0(double value) {
+  set_has_beta_0();
+  beta_0_ = value;
+}
+
+// required .artm.DoubleArray tilde_beta = 2;
+inline bool DirichletRegularizerPhiConfig::has_tilde_beta() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DirichletRegularizerPhiConfig::set_has_tilde_beta() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DirichletRegularizerPhiConfig::clear_has_tilde_beta() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DirichletRegularizerPhiConfig::clear_tilde_beta() {
+  if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
+  clear_has_tilde_beta();
+}
+inline const ::artm::DoubleArray& DirichletRegularizerPhiConfig::tilde_beta() const {
+  return tilde_beta_ != NULL ? *tilde_beta_ : *default_instance_->tilde_beta_;
+}
+inline ::artm::DoubleArray* DirichletRegularizerPhiConfig::mutable_tilde_beta() {
+  set_has_tilde_beta();
+  if (tilde_beta_ == NULL) tilde_beta_ = new ::artm::DoubleArray;
+  return tilde_beta_;
+}
+inline ::artm::DoubleArray* DirichletRegularizerPhiConfig::release_tilde_beta() {
+  clear_has_tilde_beta();
+  ::artm::DoubleArray* temp = tilde_beta_;
+  tilde_beta_ = NULL;
+  return temp;
+}
+inline void DirichletRegularizerPhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta) {
+  delete tilde_beta_;
+  tilde_beta_ = tilde_beta;
+  if (tilde_beta) {
+    set_has_tilde_beta();
+  } else {
+    clear_has_tilde_beta();
+  }
+}
+
+// -------------------------------------------------------------------
+
 // DoubleArray
 
-// repeated double alpha = 1;
-inline int DoubleArray::alpha_size() const {
-  return alpha_.size();
+// repeated double value = 1;
+inline int DoubleArray::value_size() const {
+  return value_.size();
 }
-inline void DoubleArray::clear_alpha() {
-  alpha_.Clear();
+inline void DoubleArray::clear_value() {
+  value_.Clear();
 }
-inline double DoubleArray::alpha(int index) const {
-  return alpha_.Get(index);
+inline double DoubleArray::value(int index) const {
+  return value_.Get(index);
 }
-inline void DoubleArray::set_alpha(int index, double value) {
-  alpha_.Set(index, value);
+inline void DoubleArray::set_value(int index, double value) {
+  value_.Set(index, value);
 }
-inline void DoubleArray::add_alpha(double value) {
-  alpha_.Add(value);
+inline void DoubleArray::add_value(double value) {
+  value_.Add(value);
 }
 inline const ::google::protobuf::RepeatedField< double >&
-DoubleArray::alpha() const {
-  return alpha_;
+DoubleArray::value() const {
+  return value_;
 }
 inline ::google::protobuf::RepeatedField< double >*
-DoubleArray::mutable_alpha() {
-  return &alpha_;
+DoubleArray::mutable_value() {
+  return &value_;
 }
 
 // -------------------------------------------------------------------

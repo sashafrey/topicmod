@@ -5,9 +5,12 @@
 
 #include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
 #include "boost/uuid/uuid.hpp"             // uuid class
 #include "boost/uuid/uuid_generators.hpp"  // generators
+#include "boost/filesystem.hpp"
 
 #include "artm/messages.pb.h"
 
@@ -16,16 +19,19 @@ namespace core {
 
 class Generation {
  public:
-  Generation() : id_(0), generation_() {}
-
-  Generation(const Generation& generation)
+  explicit Generation(const std::string& disk_path);
+  explicit Generation(const Generation& generation)
       : id_(generation.id_ + 1), generation_(generation.generation_) {}
 
   int id() const;
-  std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid);
-
-  void AddBatch(const std::shared_ptr<const Batch>& batch);
   int GetTotalItemsCount() const;
+
+  std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid,
+                                     const std::string& disk_path);
+
+  void AddBatch(const std::shared_ptr<const Batch>& batch,
+                const std::string& disk_path);
+
 
   template<class Function>
   void InvokeOnEachPartition(Function fn) const {
@@ -34,8 +40,11 @@ class Generation {
     }
   }
 
-
  private:
+  static std::vector<boost::filesystem::path> GetAll(const boost::filesystem::path& root,
+                                                     const std::string& ext);
+  static std::string MakeBatchPath(std::string disk_path, boost::uuids::uuid uuid);
+
   int id_;
   std::map<boost::uuids::uuid, std::shared_ptr<const Batch> > generation_;
 };

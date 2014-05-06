@@ -54,6 +54,11 @@ src/Win32/*
 # Binaries
 /src/artm/unittests/
 /src/cpp_client/cpp_client
+/src/Intermediate/
+/src/Win32/
+/src/artm/Debug/
+/src/artm/Release/
+
 
 /3rdparty/protobuf/vsprojects/Debug/*
 /3rdparty/protobuf/vsprojects/Release/*

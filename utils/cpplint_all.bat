@@ -3,6 +3,7 @@ call cpplint.bat ../src/artm/cpp_interface.cc
 call cpplint.bat ../src/artm/cpp_interface_unittest.cc
 call cpplint.bat ../src/artm/c_interface.cc
 call cpplint.bat ../src/artm/data_loader.cc
+call cpplint.bat ../src/artm/dirichlet_regularizer_phi.cc
 call cpplint.bat ../src/artm/dirichlet_regularizer_theta.cc
 call cpplint.bat ../src/artm/generation.cc
 call cpplint.bat ../src/artm/helpers.cc
@@ -16,12 +17,14 @@ call cpplint.bat ../src/artm/memcached_service_test.cc
 call cpplint.bat ../src/artm/merger.cc
 call cpplint.bat ../src/artm/processor.cc
 call cpplint.bat ../src/artm/topic_model.cc
+call cpplint.bat ../src/artm/topic_model_test.cc
 
 call cpplint.bat ../src/artm/call_on_destruction.h
 call cpplint.bat ../src/artm/common.h
 call cpplint.bat ../src/artm/cpp_interface.h
 call cpplint.bat ../src/artm/c_interface.h
 call cpplint.bat ../src/artm/data_loader.h
+call cpplint.bat ../src/artm/dirichlet_regularizer_phi.h
 call cpplint.bat ../src/artm/dirichlet_regularizer_theta.h
 call cpplint.bat ../src/artm/exceptions.h
 call cpplint.bat ../src/artm/generation.h

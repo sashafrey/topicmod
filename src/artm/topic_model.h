@@ -67,8 +67,8 @@ class TopicWeightIterator {
 
  private:
   const float* n_w_;
-  const float* n_t_;
   const float* r_w_;
+  const float* n_t_;
   int topics_count_;
   mutable int current_topic_;
 

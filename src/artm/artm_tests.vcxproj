@@ -28,6 +28,7 @@
     <ClCompile Include="instance_test.cc" />
     <ClCompile Include="memcached_service_test.cc" />
     <ClCompile Include="thread_safe_holder_test.cpp" />
+    <ClCompile Include="topic_model_test.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cpp_interface.h" />

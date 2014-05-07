@@ -192,11 +192,11 @@ TEST(Instance, MultipleStreamsAndModels) {
   m2.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
   test.instance()->ReconfigureModel(m2);
 
+  for (int iter = 0; iter < 100; ++iter) {
   test.data_loader()->InvokeIteration(1);
-  test.data_loader()->WaitIdle();
+    test.data_loader()->WaitIdle();
+  }
 
-  test.data_loader()->InvokeIteration(1);
-  test.data_loader()->WaitIdle();
 
   artm::TopicModel m1t;
   test.instance()->RequestTopicModel(m1.model_id(), &m1t);
@@ -214,7 +214,8 @@ TEST(Instance, MultipleStreamsAndModels) {
     std::string token = m1t.token(token_index);
     if ((token == "token1") || (token == "token3") || (token == "token5")) {
       for (int topic_index = 0; topic_index < m1t.topics_count(); ++topic_index) {
-        EXPECT_EQ(m1t.token_weights(token_index).value(topic_index), 0);
+        // todo(alfrey) Verification was disabled because now all tokens are initialized with random values.
+        // EXPECT_EQ(m1t.token_weights(token_index).value(topic_index), 0);
       }
     }
   }
@@ -229,7 +230,8 @@ TEST(Instance, MultipleStreamsAndModels) {
     std::string token = m2t.token(token_index);
     if ((token == "token0") || (token == "token2") || (token == "token4")) {
       for (int topic_index = 0; topic_index < m2t.topics_count(); ++topic_index) {
-        EXPECT_EQ(m2t.token_weights(token_index).value(topic_index), 0);
+        // todo(alfrey) Verification was disabled because now all tokens are initialized with random values.
+        // EXPECT_EQ(m2t.token_weights(token_index).value(topic_index), 0);
       }
     }
   }

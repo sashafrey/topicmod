@@ -88,6 +88,38 @@ Merger::GetLatestTopicModel(ModelId model_id) const {
   return topic_model_.get(model_id);
 }
 
+void Merger::InvokePhiRegularizers() {
+  auto schema = schema_->get();
+  std::vector<ModelId> model_ids = schema->GetModelIds();
+
+  std::for_each(model_ids.begin(), model_ids.end(), [&](ModelId model_id) {
+    const ModelConfig& model = schema->model_config(model_id);
+    auto cur_ttm = topic_model_.get(model_id);
+
+    if (cur_ttm.get() != nullptr) {
+      auto reg_names = model.regularizer_name();
+      auto new_ttm = std::make_shared<::artm::core::TopicModel>(*cur_ttm);
+
+      for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
+        reg_name_iterator++) {
+        auto regularizer = schema->regularizer(reg_name_iterator->c_str());
+        if (regularizer != nullptr) {
+          bool retval = regularizer->RegularizePhi(new_ttm.get());
+          if (!retval) {
+            LOG(ERROR) << "Problems with type or number of parameters in Phi regularizer <" <<
+              reg_name_iterator->c_str() <<
+              ">. On this iteration this regularizer was turned off.\n";
+          }
+        } else {
+          LOG(ERROR) << "Phi Regularizer with name <" <<
+            reg_name_iterator->c_str() << "> does not exist.";
+        }
+      }
+      topic_model_.set(model_id, new_ttm);
+    }
+  });
+}
+
 void Merger::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "Merger thread");

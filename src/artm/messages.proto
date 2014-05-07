@@ -81,11 +81,18 @@ message ModelConfig {
 message RegularizerConfig {
   enum Type {
     DirichletRegularizerTheta = 1;
+    DirichletRegularizerPhi = 2;
   }
 
   required string name = 1;
   required Type type = 2;
   required bytes config = 3; 
+}
+
+// Configuration of a Dirichlet Phi regularizer
+message DirichletRegularizerPhiConfig {
+  required double beta_0 = 1;
+  required DoubleArray tilde_beta = 2;
 }
 
 // Configuration of a Dirichlet Theta regularizer
@@ -143,9 +150,10 @@ message TopicModel {
   // This allows users to send a TopicModel back into BigARTM library.
   message TopicModelInternals {
     repeated FloatArray n_wt = 1;
-    optional FloatArray n_t = 2;
-    optional DoubleArray scores_raw = 3;
-    optional DoubleArray scores_normalizer = 4;
+    repeated FloatArray r_wt = 2;
+    optional FloatArray n_t = 3;
+    optional DoubleArray scores_raw = 4;
+    optional DoubleArray scores_normalizer = 5;
   }
 
   optional bytes internals = 7;  // serialized instance of TopicModelInternals

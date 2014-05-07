@@ -61,18 +61,17 @@ instance_config.processors_count = 2
 instance_config_new = messages_pb2.InstanceConfig()
 instance_config_new.processors_count = 1
 
-tilde_alpha_1 = messages_pb2.DoubleArray()
-tilde_alpha_1.value.append(0.1)
-
 dirichlet_regularizer_config = messages_pb2.DirichletRegularizerThetaConfig()
 dirichlet_regularizer_config.alpha_0.append(0.01)
 tilde_alpha = dirichlet_regularizer_config.tilde_alpha.add()
-tilde_alpha = tilde_alpha_1
+tilde_alpha.value.append(0.1)
 
 regularizer_config = messages_pb2.RegularizerConfig()
 regularizer_config.name = 'regularizer_1'
 regularizer_config.type = 1
 regularizer_config.config = dirichlet_regularizer_config.SerializeToString()
+
+model_config_new.regularizer_name.append(regularizer_config.name)
 
 #################################################################################
 # TEST SECTION
@@ -85,6 +84,7 @@ with library.CreateInstance(instance_config) as instance:
   instance.Reconfigure(instance_config_new)
   with library.CreateModel(instance, model_config) as model:
     instance.GetTopicModel(model)
+    regularizer = library.CreateRegularizer(instance, regularizer_config)
     model.Reconfigure(model_config_new)
     model.Disable()
     model.Enable()

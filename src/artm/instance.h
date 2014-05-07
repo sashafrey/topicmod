@@ -59,6 +59,7 @@ class Instance : boost::noncopyable {
                                       std::shared_ptr<RegularizerInterface> regularizer);
   void DisposeRegularizer(const std::string& name);
   void ForceSyncWithMemcached(ModelId model_id);
+  void InvokePhiRegularizers();
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

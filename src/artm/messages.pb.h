@@ -42,6 +42,7 @@ class Stream;
 class InstanceConfig;
 class ModelConfig;
 class RegularizerConfig;
+class DirichletRegularizerPhiConfig;
 class DirichletRegularizerThetaConfig;
 class DoubleArray;
 class FloatArray;
@@ -72,11 +73,12 @@ inline bool Stream_Type_Parse(
     Stream_Type_descriptor(), name, value);
 }
 enum RegularizerConfig_Type {
-  RegularizerConfig_Type_DirichletRegularizerTheta = 1
+  RegularizerConfig_Type_DirichletRegularizerTheta = 1,
+  RegularizerConfig_Type_DirichletRegularizerPhi = 2
 };
 bool RegularizerConfig_Type_IsValid(int value);
 const RegularizerConfig_Type RegularizerConfig_Type_Type_MIN = RegularizerConfig_Type_DirichletRegularizerTheta;
-const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_DirichletRegularizerTheta;
+const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_DirichletRegularizerPhi;
 const int RegularizerConfig_Type_Type_ARRAYSIZE = RegularizerConfig_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor();
@@ -1088,6 +1090,7 @@ class RegularizerConfig : public ::google::protobuf::Message {
 
   typedef RegularizerConfig_Type Type;
   static const Type DirichletRegularizerTheta = RegularizerConfig_Type_DirichletRegularizerTheta;
+  static const Type DirichletRegularizerPhi = RegularizerConfig_Type_DirichletRegularizerPhi;
   static inline bool Type_IsValid(int value) {
     return RegularizerConfig_Type_IsValid(value);
   }
@@ -1166,6 +1169,100 @@ class RegularizerConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static RegularizerConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DirichletRegularizerPhiConfig : public ::google::protobuf::Message {
+ public:
+  DirichletRegularizerPhiConfig();
+  virtual ~DirichletRegularizerPhiConfig();
+
+  DirichletRegularizerPhiConfig(const DirichletRegularizerPhiConfig& from);
+
+  inline DirichletRegularizerPhiConfig& operator=(const DirichletRegularizerPhiConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DirichletRegularizerPhiConfig& default_instance();
+
+  void Swap(DirichletRegularizerPhiConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  DirichletRegularizerPhiConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DirichletRegularizerPhiConfig& from);
+  void MergeFrom(const DirichletRegularizerPhiConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required double beta_0 = 1;
+  inline bool has_beta_0() const;
+  inline void clear_beta_0();
+  static const int kBeta0FieldNumber = 1;
+  inline double beta_0() const;
+  inline void set_beta_0(double value);
+
+  // required .artm.DoubleArray tilde_beta = 2;
+  inline bool has_tilde_beta() const;
+  inline void clear_tilde_beta();
+  static const int kTildeBetaFieldNumber = 2;
+  inline const ::artm::DoubleArray& tilde_beta() const;
+  inline ::artm::DoubleArray* mutable_tilde_beta();
+  inline ::artm::DoubleArray* release_tilde_beta();
+  inline void set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta);
+
+  // @@protoc_insertion_point(class_scope:artm.DirichletRegularizerPhiConfig)
+ private:
+  inline void set_has_beta_0();
+  inline void clear_has_beta_0();
+  inline void set_has_tilde_beta();
+  inline void clear_has_tilde_beta();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double beta_0_;
+  ::artm::DoubleArray* tilde_beta_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static DirichletRegularizerPhiConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1766,28 +1863,40 @@ class TopicModel_TopicModelInternals : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
       mutable_n_wt();
 
-  // optional .artm.FloatArray n_t = 2;
+  // repeated .artm.FloatArray r_wt = 2;
+  inline int r_wt_size() const;
+  inline void clear_r_wt();
+  static const int kRWtFieldNumber = 2;
+  inline const ::artm::FloatArray& r_wt(int index) const;
+  inline ::artm::FloatArray* mutable_r_wt(int index);
+  inline ::artm::FloatArray* add_r_wt();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >&
+      r_wt() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
+      mutable_r_wt();
+
+  // optional .artm.FloatArray n_t = 3;
   inline bool has_n_t() const;
   inline void clear_n_t();
-  static const int kNTFieldNumber = 2;
+  static const int kNTFieldNumber = 3;
   inline const ::artm::FloatArray& n_t() const;
   inline ::artm::FloatArray* mutable_n_t();
   inline ::artm::FloatArray* release_n_t();
   inline void set_allocated_n_t(::artm::FloatArray* n_t);
 
-  // optional .artm.DoubleArray scores_raw = 3;
+  // optional .artm.DoubleArray scores_raw = 4;
   inline bool has_scores_raw() const;
   inline void clear_scores_raw();
-  static const int kScoresRawFieldNumber = 3;
+  static const int kScoresRawFieldNumber = 4;
   inline const ::artm::DoubleArray& scores_raw() const;
   inline ::artm::DoubleArray* mutable_scores_raw();
   inline ::artm::DoubleArray* release_scores_raw();
   inline void set_allocated_scores_raw(::artm::DoubleArray* scores_raw);
 
-  // optional .artm.DoubleArray scores_normalizer = 4;
+  // optional .artm.DoubleArray scores_normalizer = 5;
   inline bool has_scores_normalizer() const;
   inline void clear_scores_normalizer();
-  static const int kScoresNormalizerFieldNumber = 4;
+  static const int kScoresNormalizerFieldNumber = 5;
   inline const ::artm::DoubleArray& scores_normalizer() const;
   inline ::artm::DoubleArray* mutable_scores_normalizer();
   inline ::artm::DoubleArray* release_scores_normalizer();
@@ -1805,12 +1914,13 @@ class TopicModel_TopicModelInternals : public ::google::protobuf::Message {
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > n_wt_;
+  ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > r_wt_;
   ::artm::FloatArray* n_t_;
   ::artm::DoubleArray* scores_raw_;
   ::artm::DoubleArray* scores_normalizer_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -3345,6 +3455,70 @@ inline void RegularizerConfig::set_allocated_config(::std::string* config) {
 
 // -------------------------------------------------------------------
 
+// DirichletRegularizerPhiConfig
+
+// required double beta_0 = 1;
+inline bool DirichletRegularizerPhiConfig::has_beta_0() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DirichletRegularizerPhiConfig::set_has_beta_0() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DirichletRegularizerPhiConfig::clear_has_beta_0() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DirichletRegularizerPhiConfig::clear_beta_0() {
+  beta_0_ = 0;
+  clear_has_beta_0();
+}
+inline double DirichletRegularizerPhiConfig::beta_0() const {
+  return beta_0_;
+}
+inline void DirichletRegularizerPhiConfig::set_beta_0(double value) {
+  set_has_beta_0();
+  beta_0_ = value;
+}
+
+// required .artm.DoubleArray tilde_beta = 2;
+inline bool DirichletRegularizerPhiConfig::has_tilde_beta() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DirichletRegularizerPhiConfig::set_has_tilde_beta() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DirichletRegularizerPhiConfig::clear_has_tilde_beta() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DirichletRegularizerPhiConfig::clear_tilde_beta() {
+  if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
+  clear_has_tilde_beta();
+}
+inline const ::artm::DoubleArray& DirichletRegularizerPhiConfig::tilde_beta() const {
+  return tilde_beta_ != NULL ? *tilde_beta_ : *default_instance_->tilde_beta_;
+}
+inline ::artm::DoubleArray* DirichletRegularizerPhiConfig::mutable_tilde_beta() {
+  set_has_tilde_beta();
+  if (tilde_beta_ == NULL) tilde_beta_ = new ::artm::DoubleArray;
+  return tilde_beta_;
+}
+inline ::artm::DoubleArray* DirichletRegularizerPhiConfig::release_tilde_beta() {
+  clear_has_tilde_beta();
+  ::artm::DoubleArray* temp = tilde_beta_;
+  tilde_beta_ = NULL;
+  return temp;
+}
+inline void DirichletRegularizerPhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta) {
+  delete tilde_beta_;
+  tilde_beta_ = tilde_beta;
+  if (tilde_beta) {
+    set_has_tilde_beta();
+  } else {
+    clear_has_tilde_beta();
+  }
+}
+
+// -------------------------------------------------------------------
+
 // DirichletRegularizerThetaConfig
 
 // repeated double alpha_0 = 1;
@@ -3748,15 +3922,40 @@ TopicModel_TopicModelInternals::mutable_n_wt() {
   return &n_wt_;
 }
 
-// optional .artm.FloatArray n_t = 2;
+// repeated .artm.FloatArray r_wt = 2;
+inline int TopicModel_TopicModelInternals::r_wt_size() const {
+  return r_wt_.size();
+}
+inline void TopicModel_TopicModelInternals::clear_r_wt() {
+  r_wt_.Clear();
+}
+inline const ::artm::FloatArray& TopicModel_TopicModelInternals::r_wt(int index) const {
+  return r_wt_.Get(index);
+}
+inline ::artm::FloatArray* TopicModel_TopicModelInternals::mutable_r_wt(int index) {
+  return r_wt_.Mutable(index);
+}
+inline ::artm::FloatArray* TopicModel_TopicModelInternals::add_r_wt() {
+  return r_wt_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >&
+TopicModel_TopicModelInternals::r_wt() const {
+  return r_wt_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
+TopicModel_TopicModelInternals::mutable_r_wt() {
+  return &r_wt_;
+}
+
+// optional .artm.FloatArray n_t = 3;
 inline bool TopicModel_TopicModelInternals::has_n_t() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void TopicModel_TopicModelInternals::set_has_n_t() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void TopicModel_TopicModelInternals::clear_has_n_t() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void TopicModel_TopicModelInternals::clear_n_t() {
   if (n_t_ != NULL) n_t_->::artm::FloatArray::Clear();
@@ -3786,15 +3985,15 @@ inline void TopicModel_TopicModelInternals::set_allocated_n_t(::artm::FloatArray
   }
 }
 
-// optional .artm.DoubleArray scores_raw = 3;
+// optional .artm.DoubleArray scores_raw = 4;
 inline bool TopicModel_TopicModelInternals::has_scores_raw() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void TopicModel_TopicModelInternals::set_has_scores_raw() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void TopicModel_TopicModelInternals::clear_has_scores_raw() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void TopicModel_TopicModelInternals::clear_scores_raw() {
   if (scores_raw_ != NULL) scores_raw_->::artm::DoubleArray::Clear();
@@ -3824,15 +4023,15 @@ inline void TopicModel_TopicModelInternals::set_allocated_scores_raw(::artm::Dou
   }
 }
 
-// optional .artm.DoubleArray scores_normalizer = 4;
+// optional .artm.DoubleArray scores_normalizer = 5;
 inline bool TopicModel_TopicModelInternals::has_scores_normalizer() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void TopicModel_TopicModelInternals::set_has_scores_normalizer() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void TopicModel_TopicModelInternals::clear_has_scores_normalizer() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void TopicModel_TopicModelInternals::clear_scores_normalizer() {
   if (scores_normalizer_ != NULL) scores_normalizer_->::artm::DoubleArray::Clear();

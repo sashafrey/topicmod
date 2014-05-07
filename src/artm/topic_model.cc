@@ -22,11 +22,12 @@ TopicModel::TopicModel(ModelId model_id, int topics_count, int scores_count)
       items_processed_(0),
       scores_(),
       scores_norm_(),
-      data_(),
-      normalizer_() {
+      n_wt_(),
+      r_wt_(),
+      n_t_() {
   assert(topics_count_ > 0);
-  normalizer_.resize(topics_count_);
-  memset(&normalizer_[0], 0, sizeof(float) * topics_count_);
+  n_t_.resize(topics_count_);
+  memset(&n_t_[0], 0, sizeof(float) * topics_count_);
 
   scores_.resize(scores_count);
   scores_norm_.resize(scores_count);
@@ -40,12 +41,19 @@ TopicModel::TopicModel(const TopicModel& rhs)
       items_processed_(rhs.items_processed_),
       scores_(rhs.scores_),
       scores_norm_(rhs.scores_norm_),
-      data_(),  // must be deep-copied
-      normalizer_(rhs.normalizer_) {
-  for (size_t i = 0; i < rhs.data_.size(); i++) {
+      n_wt_(),  // must be deep-copied
+      r_wt_(),  // must be deep-copied
+      n_t_(rhs.n_t_) {
+  for (size_t i = 0; i < rhs.n_wt_.size(); i++) {
     float* values = new float[topics_count_];
-    data_.push_back(values);
-    memcpy(values, rhs.data_[i], sizeof(float) * topics_count_);
+    n_wt_.push_back(values);
+    memcpy(values, rhs.n_wt_[i], sizeof(float) * topics_count_);
+  }
+
+  for (size_t i = 0; i < rhs.r_wt_.size(); i++) {
+    float* values = new float[topics_count_];
+    r_wt_.push_back(values);
+    memcpy(values, rhs.r_wt_[i], sizeof(float) * topics_count_);
   }
 }
 
@@ -61,7 +69,7 @@ TopicModel::TopicModel(const ::artm::core::ModelIncrement& model_increment) {
   scores_.resize(model_increment.score_size());
   scores_norm_.resize(model_increment.score_size());
 
-  normalizer_.resize(topics_count_);
+  n_t_.resize(topics_count_);
 
   ApplyDiff(model_increment);
 }
@@ -71,7 +79,11 @@ TopicModel::~TopicModel() {
 }
 
 void TopicModel::Clear(ModelId model_id, int topics_count, int scores_count) {
-  std::for_each(data_.begin(), data_.end(), [&](float* value) {
+  std::for_each(n_wt_.begin(), n_wt_.end(), [&](float* value) {
+    delete [] value;
+  });
+
+  std::for_each(r_wt_.begin(), r_wt_.end(), [&](float* value) {
     delete [] value;
   });
 
@@ -81,7 +93,8 @@ void TopicModel::Clear(ModelId model_id, int topics_count, int scores_count) {
 
   token_to_token_id_.clear();
   token_id_to_token_.clear();
-  data_.clear();
+  n_wt_.clear();
+  r_wt_.clear();
 
   scores_.clear();
   scores_.resize(scores_count);
@@ -89,8 +102,8 @@ void TopicModel::Clear(ModelId model_id, int topics_count, int scores_count) {
   scores_norm_.clear();
   scores_norm_.resize(scores_count);
 
-  normalizer_.clear();
-  normalizer_.resize(topics_count);
+  n_t_.clear();
+  n_t_.resize(topics_count);
 }
 
 void TopicModel::CalculateDiff(const ::artm::core::TopicModel& rhs, ::artm::core::ModelIncrement* diff) const {
@@ -111,7 +124,7 @@ void TopicModel::CalculateDiff(const ::artm::core::TopicModel& rhs, ::artm::core
       diff->add_token(token(token_index));
       ::artm::core::FloatArray* token_increment = diff->add_token_increment();
       for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
-        token_increment->add_value(data_[token_index][topic_index] - rhs.data_[token_index][topic_index]);
+        token_increment->add_value(n_wt_[token_index][topic_index] - rhs.n_wt_[token_index][topic_index]);
       }
     } else {
       diff->add_discovered_token(token(token_index));
@@ -185,13 +198,15 @@ void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) con
   ::artm::TopicModel_TopicModelInternals topic_model_internals;
   for (int token_index = 0; token_index < token_size(); ++token_index) {
     ::artm::FloatArray* n_wt = topic_model_internals.add_n_wt();
+    ::artm::FloatArray* r_wt = topic_model_internals.add_r_wt();
     for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
-      n_wt->add_value(data_[token_index][topic_index]);
+      n_wt->add_value(n_wt_[token_index][topic_index]);
+      r_wt->add_value(r_wt_[token_index][topic_index]);
     }
   }
 
   for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
-    topic_model_internals.mutable_n_t()->add_value(normalizer_[topic_index]);
+    topic_model_internals.mutable_n_t()->add_value(n_t_[topic_index]);
   }
 
   for (int score_index = 0; score_index < score_size(); ++score_index) {
@@ -219,17 +234,19 @@ void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_t
   for (int token_index = 0; token_index < external_topic_model.token_size(); ++token_index) {
     const std::string& token = external_topic_model.token(token_index);
     auto n_wt = topic_model_internals.n_wt(token_index);
+    auto r_wt = topic_model_internals.r_wt(token_index);
 
     int token_id = AddToken(token, false);
     for (int topic_index = 0; topic_index < topics_count_; ++topic_index) {
-      IncreaseTokenWeight(token_id, topic_index, n_wt.value(topic_index));
+      SetTokenWeight(token_id, topic_index, n_wt.value(topic_index));
+      SetRegularizerWeight(token_id, topic_index, r_wt.value(topic_index));
     }
   }
 
   for (int score_index = 0; score_index < scores_size; ++score_index) {
-    IncreaseScores(score_index,
-                   topic_model_internals.scores_raw().value(score_index),
-                   topic_model_internals.scores_normalizer().value(score_index));
+    SetScores(score_index,
+              topic_model_internals.scores_raw().value(score_index),
+              topic_model_internals.scores_normalizer().value(score_index));
   }
 }
 
@@ -244,7 +261,7 @@ int TopicModel::AddToken(const std::string& token, bool random_init) {
       std::make_pair(token, token_id));
   token_id_to_token_.push_back(token);
   float* values = new float[topic_size()];
-  data_.push_back(values);
+  n_wt_.push_back(values);
 
   if (random_init) {
     float sum = 0.0f;
@@ -257,11 +274,18 @@ int TopicModel::AddToken(const std::string& token, bool random_init) {
 
     for (int i = 0; i < topic_size(); ++i) {
       values[i] /= sum;
-      normalizer_[i] += values[i];
+      n_t_[i] += values[i];
     }
   } else {
     memset(values, 0, sizeof(float) * topic_size());
   }
+
+  float* regularizer_values = new float[topic_size()];
+  for (int i = 0; i < topic_size(); ++i) {
+    regularizer_values[i] = 0.0f;
+  }
+
+  r_wt_.push_back(regularizer_values);
 
   return token_id;
 }
@@ -314,8 +338,20 @@ void TopicModel::IncreaseTokenWeight(const std::string& token, int topic_id, flo
 }
 
 void TopicModel::IncreaseTokenWeight(int token_id, int topic_id, float value) {
-  data_[token_id][topic_id] += value;
-  normalizer_[topic_id] += value;
+  float old_data_value = n_wt_[token_id][topic_id];
+  n_wt_[token_id][topic_id] += value;
+
+  if (old_data_value + r_wt_[token_id][topic_id] < 0) {
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
+    }
+  } else {
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += value;
+    } else {
+      n_t_[topic_id] -= (old_data_value + r_wt_[token_id][topic_id]);
+    }
+  }
 }
 
 void TopicModel::SetTokenWeight(const std::string& token, int topic_id, float value) {
@@ -328,13 +364,50 @@ void TopicModel::SetTokenWeight(const std::string& token, int topic_id, float va
 }
 
 void TopicModel::SetTokenWeight(int token_id, int topic_id, float value) {
-  // Adjust normalizer. (!) Don't switch these lines (1) and (2).
-  normalizer_[topic_id] += (value - data_[token_id][topic_id]);  // (1)
-  data_[token_id][topic_id] = value;  // (2)
+  float old_data_value = n_wt_[token_id][topic_id];
+  n_wt_[token_id][topic_id] = value;
+
+  if (old_data_value + r_wt_[token_id][topic_id] < 0) {
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
+    }
+  } else {
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += (n_wt_[token_id][topic_id] - old_data_value);
+    } else {
+      n_t_[topic_id] -= (old_data_value + r_wt_[token_id][topic_id]);
+    }
+  }
+}
+
+void TopicModel::SetRegularizerWeight(const std::string& token, int topic_id, float value) {
+  if (!has_token(token)) {
+    LOG(ERROR) << "Token '" << token << "' not found in the model";
+    return;
+  }
+
+  SetRegularizerWeight(token_id(token), topic_id, value);
+}
+
+void TopicModel::SetRegularizerWeight(int token_id, int topic_id, float value) {
+  float old_regularizer_value = r_wt_[token_id][topic_id];
+  r_wt_[token_id][topic_id] = value;
+
+  if (n_wt_[token_id][topic_id] + old_regularizer_value < 0) {
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
+    }
+  } else {
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += (r_wt_[token_id][topic_id] - old_regularizer_value);
+    } else {
+      n_t_[topic_id] -= (n_wt_[token_id][topic_id] + old_regularizer_value);
+    }
+  }
 }
 
 int TopicModel::token_size() const {
-  return data_.size();
+  return n_wt_.size();
 }
 
 int TopicModel::topic_size() const {
@@ -369,13 +442,15 @@ std::string TopicModel::token(int index) const {
 
 TopicWeightIterator TopicModel::GetTopicWeightIterator(const std::string& token) const {
   auto iter = token_to_token_id_.find(token);
-  return std::move(TopicWeightIterator(data_[iter->second], &normalizer_[0], topics_count_));
+  return std::move(TopicWeightIterator(n_wt_[iter->second], r_wt_[iter->second],
+    &n_t_[0], topics_count_));
 }
 
 TopicWeightIterator TopicModel::GetTopicWeightIterator(int token_id) const {
   assert(token_id >= 0);
   assert(token_id < token_size());
-  return std::move(TopicWeightIterator(data_[token_id], &normalizer_[0], topics_count_));
+  return std::move(TopicWeightIterator(n_wt_[token_id], r_wt_[token_id],
+    &n_t_[0], topics_count_));
 }
 
 }  // namespace core

@@ -40,6 +40,7 @@ class Merger : boost::noncopyable {
   void DisposeModel(ModelId model_id);
   void UpdateModel(const ModelConfig& model);
   void ForceSyncWithMemcached(ModelId model_id);
+  void InvokePhiRegularizers();
 
   std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelId model_id) const;
 

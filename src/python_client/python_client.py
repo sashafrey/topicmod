@@ -69,31 +69,114 @@ with library.CreateInstance(instance_config) as instance:
         score_ = model_config.score.add()
         score_.type = 0
 
+        #with library.CreateModel(instance, model_config) as model:
+        #    model.Enable()
+        #    for iter in range(0, outer_iteration_count):
+        #        data_loader.InvokeIteration(1)
+        #        data_loader.WaitIdle();
+        #        topics = instance.GetTopics(model)
+        #        print "Iter# = " + str(iter) + \
+        #              ", Items# = " + str(topics.items_processed) + \
+        #              ", Perplexity = " + str(topics.score[0])
+        #    model.Disable();
+
+        #    # Log to 7 words in each topic
+        #    tokens_size = len(topics.token_topic)
+        #    topics_size = len(topics.token_topic[0].topic_weight)
+        #    for topic_index in range(0, topics_size):
+        #        token_map = {}
+        #        best_tokens = '#' + str(topic_index + 1) + ': '
+        #        for token_index in range(0, tokens_size):
+        #            token = topics.token_topic[token_index]
+        #            token_map[token.token]=token.topic_weight[topic_index]
+        #        sorted_token_map = sorted(token_map.iteritems(), key=operator.itemgetter(1), reverse=True)
+        #        for best_token in range(0, top_tokens_count_to_visualize):
+        #            best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '
+        #        print best_tokens
+
+        #    print 'Done without regularization!'
+
+        ################################################################################
+        # include in model one Dirihlet Theta regularizer
+
+        regularizer_config_theta = messages_pb2.DirichletRegularizerThetaConfig()
+        for i in range(0, inner_iterations_count):
+          # make case for different iterations here if need
+          regularizer_config_theta.alpha_0.append(-1)
+          tilde_alpha_ref = regularizer_config_theta.tilde_alpha.add()
+          for j in range(0, topics_count):
+            tilde_alpha_ref.value.append(0.1)
+
+        regularizer_name_theta = 'regularizer_theta'
+        general_regularizer_config_theta = messages_pb2.RegularizerConfig()
+        general_regularizer_config_theta.name = regularizer_name_theta
+        general_regularizer_config_theta.type = 0
+        general_regularizer_config_theta.config = regularizer_config_theta.SerializeToString()
+
+        model_config.regularizer_name.append(regularizer_name_theta)
+        regularizer_theta = library.CreateRegularizer(instance, general_regularizer_config_theta)
+
+        ################################################################################
+        # include in model one Dirihlet Phi regularizer
+
+        regularizer_config_phi = messages_pb2.DirichletRegularizerPhiConfig()
+        regularizer_config_phi.beta_0 = -0.01
+        for j in range(0, 2):
+          regularizer_config_phi.tilde_beta.value.append(0.1)
+
+        regularizer_name_phi = 'regularizer_phi'
+        general_regularizer_config_phi = messages_pb2.RegularizerConfig()
+        general_regularizer_config_phi.name = regularizer_name_phi
+        general_regularizer_config_phi.type = 1
+        general_regularizer_config_phi.config = regularizer_config_phi.SerializeToString()
+
+        model_config.regularizer_name.append(regularizer_name_phi)
+        regularizer_phi = library.CreateRegularizer(instance, general_regularizer_config_phi)
+        ################################################################################
+
         with library.CreateModel(instance, model_config) as model:
             model.Enable()
             for iter in range(0, outer_iteration_count):
                 data_loader.InvokeIteration(1)
                 data_loader.WaitIdle();
-                topic_model = instance.GetTopicModel(model)
+                topics = instance.GetTopicModel(model)
+
+                ################################################################################
+                # include in model one Dirihlet Phi regularizer
+
+                regularizer_config_phi = messages_pb2.DirichletRegularizerPhiConfig()
+                regularizer_config_phi.beta_0 = -0.01
+                token_size = len(topics.token_topic)
+                for j in range(0, token_size):
+                  regularizer_config_phi.tilde_beta.value.append(0.1)
+
+                regularizer_name_phi = 'regularizer_phi'
+                general_regularizer_config_phi = messages_pb2.RegularizerConfig()
+                general_regularizer_config_phi.name = regularizer_name_phi
+                general_regularizer_config_phi.type = 1
+                general_regularizer_config_phi.config = regularizer_config_phi.SerializeToString()
+
+                regularizer_phi.Reconfigure(general_regularizer_config_phi)
+                ################################################################################
+                model.InvokePhiRegularizers();
+
                 print "Iter# = " + str(iter) + \
-                      ", Items# = " + str(topic_model.items_processed) + \
-                      ", Perplexity = " + str(topic_model.scores.value[0])
+                      ", Items# = " + str(topics.items_processed) + \
+                      ", Perplexity = " + str(topics.score[0])
             model.Disable();
 
             # Log to 7 words in each topic
-            tokens_size = len(topic_model.token)
-            topics_size = topic_model.topics_count
-
+            tokens_size = len(topics.token_topic)
+            topics_size = len(topics.token_topic[0].topic_weight)
             for topic_index in range(0, topics_size):
                 token_map = {}
                 best_tokens = '#' + str(topic_index + 1) + ': '
                 for token_index in range(0, tokens_size):
-                    token = topic_model.token[token_index];
-                    token_weight = topic_model.token_weights[token_index].value[topic_index]
-                    token_map[token] = token_weight
+                    token = topics.token_topic[token_index]
+                    token_map[token.token]=token.topic_weight[topic_index]
                 sorted_token_map = sorted(token_map.iteritems(), key=operator.itemgetter(1), reverse=True)
                 for best_token in range(0, top_tokens_count_to_visualize):
                     best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '
                 print best_tokens
 
-            print 'Done!'
+            print 'Done with regularization!'

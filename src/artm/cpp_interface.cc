@@ -108,6 +108,10 @@ void Model::Disable() {
   Reconfigure(config_copy_);
 }
 
+void Model::InvokePhiRegularizers() {
+  ArtmInvokePhiRegularizers(instance_id());
+}
+
 Regularizer::Regularizer(const Instance& instance, const RegularizerConfig& config)
     : instance_id_(instance.id()),
       config_(config) {

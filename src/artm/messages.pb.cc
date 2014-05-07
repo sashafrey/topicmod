@@ -512,8 +512,8 @@ void protobuf_AddDesc_messages_2eproto() {
     "\241\001\n\021RegularizerConfig\022\014\n\004name\030\001 \002(\t\022*\n\004t"
     "ype\030\002 \002(\0162\034.artm.RegularizerConfig.Type\022"
     "\016\n\006config\030\003 \002(\014\"B\n\004Type\022\035\n\031DirichletRegu"
-    "larizerTheta\020\001\022\033\n\027DirichletRegularizerPh"
-    "i\020\002\"V\n\035DirichletRegularizerPhiConfig\022\016\n\006"
+    "larizerTheta\020\000\022\033\n\027DirichletRegularizerPh"
+    "i\020\001\"V\n\035DirichletRegularizerPhiConfig\022\016\n\006"
     "beta_0\030\001 \002(\001\022%\n\ntilde_beta\030\002 \002(\0132\021.artm."
     "DoubleArray\"Z\n\037DirichletRegularizerTheta"
     "Config\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013tilde_alpha\030\002"
@@ -3171,8 +3171,8 @@ const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor() {
 }
 bool RegularizerConfig_Type_IsValid(int value) {
   switch(value) {
+    case 0:
     case 1:
-    case 2:
       return true;
     default:
       return false;
@@ -3209,7 +3209,7 @@ RegularizerConfig::RegularizerConfig(const RegularizerConfig& from)
 void RegularizerConfig::SharedCtor() {
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  type_ = 1;
+  type_ = 0;
   config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -3257,7 +3257,7 @@ void RegularizerConfig::Clear() {
         name_->clear();
       }
     }
-    type_ = 1;
+    type_ = 0;
     if (has_config()) {
       if (config_ != &::google::protobuf::internal::kEmptyString) {
         config_->clear();

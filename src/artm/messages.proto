@@ -80,8 +80,8 @@ message ModelConfig {
 // Configuration of a regularizer
 message RegularizerConfig {
   enum Type {
-    DirichletRegularizerTheta = 1;
-    DirichletRegularizerPhi = 2;
+    DirichletRegularizerTheta = 0;
+    DirichletRegularizerPhi = 1;
   }
 
   required string name = 1;

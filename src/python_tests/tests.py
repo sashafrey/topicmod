@@ -11,7 +11,6 @@ from python_interface import *
 
 data_loader_config = messages_pb2.DataLoaderConfig()
 data_loader_config.instance_id = 1
-data_loader_config.disk_path = ('D:\\')
 data_loader_config.queue_size = 5
 stream_ = data_loader_config.stream.add()
 stream_.name = ('stream_1')
@@ -62,13 +61,12 @@ instance_config_new = messages_pb2.InstanceConfig()
 instance_config_new.processors_count = 1
 
 dirichlet_regularizer_config = messages_pb2.DirichletRegularizerThetaConfig()
-dirichlet_regularizer_config.alpha_0.append(0.01)
 tilde_alpha = dirichlet_regularizer_config.tilde_alpha.add()
 tilde_alpha.value.append(0.1)
 
 regularizer_config = messages_pb2.RegularizerConfig()
 regularizer_config.name = 'regularizer_1'
-regularizer_config.type = 1
+regularizer_config.type = 0
 regularizer_config.config = dirichlet_regularizer_config.SerializeToString()
 
 model_config_new.regularizer_name.append(regularizer_config.name)

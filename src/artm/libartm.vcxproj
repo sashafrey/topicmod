@@ -36,6 +36,8 @@
     <ClCompile Include="processor.cc" />
     <ClCompile Include="regularizers_sandbox\dirichlet_phi.cc" />
     <ClCompile Include="regularizers_sandbox\dirichlet_theta.cc" />
+    <ClCompile Include="regularizers_sandbox\smooth_sparse_phi.cc" />
+    <ClCompile Include="regularizers_sandbox\smooth_sparse_theta.cc" />
     <ClCompile Include="topic_model.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -58,6 +60,8 @@
     <ClInclude Include="protobuf_helpers.h" />
     <ClInclude Include="regularizers_sandbox\dirichlet_phi.h" />
     <ClInclude Include="regularizers_sandbox\dirichlet_theta.h" />
+    <ClInclude Include="regularizers_sandbox\smooth_sparse_phi.h" />
+    <ClInclude Include="regularizers_sandbox\smooth_sparse_theta.h" />
     <ClInclude Include="regularizer_interface.h" />
     <ClInclude Include="template_manager.h" />
     <ClInclude Include="thread_safe_holder.h" />

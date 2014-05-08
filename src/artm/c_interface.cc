@@ -13,8 +13,8 @@
 
 #include "artm/regularizers_sandbox/dirichlet_theta.h"
 #include "artm/regularizers_sandbox/dirichlet_phi.h"
-// #include "artm/regularizers_sandbox/smooth_sparse_theta.h"
-// #include "artm/regularizers_sandbox/smooth_sparse_phi.h"
+#include "artm/regularizers_sandbox/smooth_sparse_theta.h"
+#include "artm/regularizers_sandbox/smooth_sparse_phi.h"
 
 #include "artm/regularizer_interface.h"
 
@@ -278,6 +278,7 @@ int ArtmReconfigureRegularizer(int instance_id, int length,
       instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
       return ARTM_SUCCESS;
     }
+
     case artm::RegularizerConfig_Type_DirichletPhi: {
       artm::DirichletPhiConfig regularizer_config;
       if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
@@ -292,6 +293,37 @@ int ArtmReconfigureRegularizer(int instance_id, int length,
       instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
       return ARTM_SUCCESS;
     }
+
+    case artm::RegularizerConfig_Type_SmoothSparsePhi: {
+      artm::SmoothSparsePhiConfig regularizer_config;
+      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
+        return ARTM_INVALID_MESSAGE;
+      }
+
+      std::shared_ptr<artm::core::regularizer::RegularizerInterface> regularizer(
+        new artm::core::regularizer::SmoothSparsePhi(regularizer_config));
+      auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
+      if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
+
+      instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
+      return ARTM_SUCCESS;
+    }
+
+    case artm::RegularizerConfig_Type_SmoothSparseTheta: {
+      artm::SmoothSparseThetaConfig regularizer_config;
+      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
+        return ARTM_INVALID_MESSAGE;
+      }
+
+      std::shared_ptr<artm::core::regularizer::RegularizerInterface> regularizer(
+        new artm::core::regularizer::SmoothSparseTheta(regularizer_config));
+      auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
+      if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
+
+      instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
+      return ARTM_SUCCESS;
+    }
+
     default:
       return ARTM_INVALID_MESSAGE;
     }

@@ -45,6 +45,18 @@ catch (const rpcz::rpc_error& e) {                          \
   return ARTM_GENERAL_ERROR;                                \
 }
 
+#define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType)               \
+ConfigType regularizer_config;                                                       \
+if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) { \
+  return ARTM_INVALID_MESSAGE;                                                       \
+}                                                                                    \
+std::shared_ptr<artm::core::regularizer::RegularizerInterface> regularizer(          \
+  new RegularizerType(regularizer_config));                                          \
+auto instance = artm::core::InstanceManager::singleton().Get(instance_id);           \
+if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;                               \
+  instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);           \
+return ARTM_SUCCESS;                                                                 \
+
 // =========================================================================
 // Common routines
 // =========================================================================
@@ -265,63 +277,23 @@ int ArtmReconfigureRegularizer(int instance_id, int length,
     // add here new case if adding new regularizer
     switch (regularizer_type) {
     case artm::RegularizerConfig_Type_DirichletTheta: {
-      artm::DirichletThetaConfig regularizer_config;
-      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
-        return ARTM_INVALID_MESSAGE;
-      }
-
-      std::shared_ptr<artm::core::regularizer::RegularizerInterface> regularizer(
-        new artm::core::regularizer::DirichletTheta(regularizer_config));
-      auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
-      if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-      instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
-      return ARTM_SUCCESS;
+      CREATE_OR_RECONFIGURE_REGULARIZER(artm::DirichletThetaConfig, 
+                                        artm::core::regularizer::DirichletTheta)
     }
 
     case artm::RegularizerConfig_Type_DirichletPhi: {
-      artm::DirichletPhiConfig regularizer_config;
-      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
-        return ARTM_INVALID_MESSAGE;
-      }
-
-      std::shared_ptr<artm::core::regularizer::RegularizerInterface> regularizer(
-        new artm::core::regularizer::DirichletPhi(regularizer_config));
-      auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
-      if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-      instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
-      return ARTM_SUCCESS;
-    }
-
-    case artm::RegularizerConfig_Type_SmoothSparsePhi: {
-      artm::SmoothSparsePhiConfig regularizer_config;
-      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
-        return ARTM_INVALID_MESSAGE;
-      }
-
-      std::shared_ptr<artm::core::regularizer::RegularizerInterface> regularizer(
-        new artm::core::regularizer::SmoothSparsePhi(regularizer_config));
-      auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
-      if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-      instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
-      return ARTM_SUCCESS;
+      CREATE_OR_RECONFIGURE_REGULARIZER(artm::DirichletPhiConfig, 
+                                        artm::core::regularizer::DirichletPhi)
     }
 
     case artm::RegularizerConfig_Type_SmoothSparseTheta: {
-      artm::SmoothSparseThetaConfig regularizer_config;
-      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
-        return ARTM_INVALID_MESSAGE;
-      }
+      CREATE_OR_RECONFIGURE_REGULARIZER(artm::SmoothSparseThetaConfig, 
+                                        artm::core::regularizer::SmoothSparseTheta)
+    }
 
-      std::shared_ptr<artm::core::regularizer::RegularizerInterface> regularizer(
-        new artm::core::regularizer::SmoothSparseTheta(regularizer_config));
-      auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
-      if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-      instance->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
-      return ARTM_SUCCESS;
+    case artm::RegularizerConfig_Type_SmoothSparsePhi: {
+      CREATE_OR_RECONFIGURE_REGULARIZER(artm::SmoothSparsePhiConfig, 
+                                        artm::core::regularizer::SmoothSparsePhi)
     }
 
     default:

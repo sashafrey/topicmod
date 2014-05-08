@@ -2,8 +2,8 @@
 
 // Author: Murat Apishev (great-mel@yandex.ru)
 
-#ifndef SRC_ARTM_DIRICHLET_REGULARIZER_THETA_H_
-#define SRC_ARTM_DIRICHLET_REGULARIZER_THETA_H_
+#ifndef SRC_ARTM_DIRICHLET_THETA_H_
+#define SRC_ARTM_DIRICHLET_THETA_H_
 
 #include <vector>
 
@@ -12,10 +12,11 @@
 
 namespace artm {
 namespace core {
+namespace regularizer {
 
-class DirichletRegularizerTheta : public RegularizerInterface {
+class DirichletTheta : public RegularizerInterface {
  public:
-  explicit DirichletRegularizerTheta(const DirichletRegularizerThetaConfig& config)
+  explicit DirichletTheta(const DirichletThetaConfig& config)
     : config_(config) {}
 
   virtual bool RegularizeTheta(const Item& item,
@@ -24,10 +25,11 @@ class DirichletRegularizerTheta : public RegularizerInterface {
                                int inner_iter);
 
  private:
-  DirichletRegularizerThetaConfig config_;
+  DirichletThetaConfig config_;
 };
 
+}  // namespace regularizer
 }  // namespace core
 }  // namespace artm
 
-#endif  // SRC_ARTM_DIRICHLET_REGULARIZER_THETA_H_
+#endif  // SRC_ARTM_DIRICHLET_THETA_H_

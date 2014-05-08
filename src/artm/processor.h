@@ -22,7 +22,7 @@
 #include "artm/regularizer_interface.h"
 
 // include here all files containig regularizers
-#include "artm/dirichlet_regularizer_theta.h"
+#include "artm/regularizers_sandbox/dirichlet_theta.h"
 
 namespace artm {
 namespace core {

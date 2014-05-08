@@ -76,8 +76,10 @@ message ModelConfig {
 // Configuration of a regularizer
 message RegularizerConfig {
   enum Type {
-    DirichletRegularizerTheta = 0;
-    DirichletRegularizerPhi = 1;
+    DirichletTheta = 0;
+    DirichletPhi = 1;
+	SmoothSparseTheta = 2;
+	SmoothSparsePhi = 3;
   }
 
   required string name = 1;
@@ -86,15 +88,33 @@ message RegularizerConfig {
 }
 
 // Configuration of a Dirichlet Theta regularizer
-message DirichletRegularizerThetaConfig {
+message DirichletThetaConfig {
   repeated double alpha_0 = 1;
   repeated DoubleArray tilde_alpha = 2;
 }
 
 // Configuration of a Dirichlet Phi regularizer
-message DirichletRegularizerPhiConfig {
+message DirichletPhiConfig {
   required double beta_0 = 1;
   required DoubleArray tilde_beta = 2;
+}
+
+// Configuration of a SmoothSparse Theta regularizer
+message SmoothSparseThetaConfig {
+  required int32 background_topics_count = 1; 
+  repeated double alpha_0 = 2;
+  repeated DoubleArray tilde_alpha = 3;
+  repeated double background_alpha_0 = 4;
+  repeated DoubleArray background_tilde_alpha = 5;
+}
+
+// Configuration of a SmoothSparse Phi regularizer
+message SmoothSparsePhiConfig {
+  required int32 background_topics_count = 1;
+  required double beta_0 = 2;
+  required DoubleArray tilde_beta = 3;
+  repeated double background_beta_0 = 4;
+  repeated DoubleArray background_tilde_beta = 5;
 }
 
 // One set of parameters for Dirichlet regularizer

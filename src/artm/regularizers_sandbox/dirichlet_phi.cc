@@ -4,12 +4,13 @@
 
 #include <vector>
 
-#include "artm/dirichlet_regularizer_phi.h"
+#include "artm/regularizers_sandbox/dirichlet_phi.h"
 
 namespace artm {
 namespace core {
+namespace regularizer {
 
-bool DirichletRegularizerPhi::RegularizePhi(TopicModel* topic_model) {
+bool DirichletPhi::RegularizePhi(TopicModel* topic_model) {
   const double beta_0 = config_.beta_0();
   const DoubleArray tilde_beta = config_.tilde_beta();
 
@@ -26,5 +27,6 @@ bool DirichletRegularizerPhi::RegularizePhi(TopicModel* topic_model) {
   return true;
 }
 
+}  // namespace regularizer
 }  // namespace core
 }  // namespace artm

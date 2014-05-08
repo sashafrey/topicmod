@@ -4,15 +4,16 @@
 
 #include <vector>
 
-#include "artm/dirichlet_regularizer_theta.h"
+#include "artm/regularizers_sandbox/dirichlet_theta.h"
 
 namespace artm {
 namespace core {
+namespace regularizer {
 
-bool DirichletRegularizerTheta::RegularizeTheta(const Item& item,
-                                                std::vector<float>* n_dt,
-                                                int topic_size,
-                                                int inner_iter) {
+bool DirichletTheta::RegularizeTheta(const Item& item,
+                                     std::vector<float>* n_dt,
+                                     int topic_size,
+                                     int inner_iter) {
   const ::google::protobuf::RepeatedField<double>& alpha_0_vector = config_.alpha_0();
   const ::google::protobuf::RepeatedPtrField<DoubleArray>& tilde_alpha_vector =
     config_.tilde_alpha();
@@ -35,5 +36,6 @@ bool DirichletRegularizerTheta::RegularizeTheta(const Item& item,
   }
 }
 
+}  // namespace regularizer
 }  // namespace core
 }  // namespace artm

@@ -59,7 +59,7 @@ class Instance : boost::noncopyable {
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
   void CreateOrReconfigureRegularizer(const std::string& name,
-                                      std::shared_ptr<RegularizerInterface> regularizer);
+                                      std::shared_ptr<regularizer::RegularizerInterface> regularizer);
   void DisposeRegularizer(const std::string& name);
   void InvokePhiRegularizers();
 

@@ -22,8 +22,6 @@
   <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
   <ItemGroup>
     <ClCompile Include="data_loader.cc" />
-    <ClCompile Include="dirichlet_regularizer_phi.cc" />
-    <ClCompile Include="dirichlet_regularizer_theta.cc" />
     <ClCompile Include="generation.cc" />
     <ClCompile Include="helpers.cc" />
     <ClCompile Include="instance.cc" />
@@ -36,14 +34,14 @@
     <ClCompile Include="merger.cc" />
     <ClCompile Include="messages.pb.cc" />
     <ClCompile Include="processor.cc" />
+    <ClCompile Include="regularizers_sandbox\dirichlet_phi.cc" />
+    <ClCompile Include="regularizers_sandbox\dirichlet_theta.cc" />
     <ClCompile Include="topic_model.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="call_on_destruction.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="data_loader.h" />
-    <ClInclude Include="dirichlet_regularizer_phi.h" />
-    <ClInclude Include="dirichlet_regularizer_theta.h" />
     <ClInclude Include="exceptions.h" />
     <ClInclude Include="generation.h" />
     <ClInclude Include="helpers.h" />
@@ -58,6 +56,8 @@
     <ClInclude Include="messages.pb.h" />
     <ClInclude Include="processor.h" />
     <ClInclude Include="protobuf_helpers.h" />
+    <ClInclude Include="regularizers_sandbox\dirichlet_phi.h" />
+    <ClInclude Include="regularizers_sandbox\dirichlet_theta.h" />
     <ClInclude Include="regularizer_interface.h" />
     <ClInclude Include="template_manager.h" />
     <ClInclude Include="thread_safe_holder.h" />

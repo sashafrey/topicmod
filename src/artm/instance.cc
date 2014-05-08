@@ -55,7 +55,8 @@ void Instance::DisposeModel(int model_id) {
 }
 
 void Instance::CreateOrReconfigureRegularizer(const std::string& name,
-                                              std::shared_ptr<RegularizerInterface> regularizer) {
+  std::shared_ptr<regularizer::RegularizerInterface> regularizer) {
+
   auto new_schema = schema_.get_copy();
   new_schema->set_regularizer(name, regularizer);
   schema_.set(new_schema);

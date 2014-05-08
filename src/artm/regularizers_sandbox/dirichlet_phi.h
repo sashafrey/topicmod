@@ -2,8 +2,8 @@
 
 // Author: Murat Apishev (great-mel@yandex.ru)
 
-#ifndef SRC_ARTM_DIRICHLET_REGULARIZER_PHI_H_
-#define SRC_ARTM_DIRICHLET_REGULARIZER_PHI_H_
+#ifndef SRC_ARTM_DIRICHLET_PHI_H_
+#define SRC_ARTM_DIRICHLET_PHI_H_
 
 #include <vector>
 
@@ -12,19 +12,21 @@
 
 namespace artm {
 namespace core {
+namespace regularizer {
 
-class DirichletRegularizerPhi : public RegularizerInterface {
+class DirichletPhi : public RegularizerInterface {
  public:
-  explicit DirichletRegularizerPhi(const DirichletRegularizerPhiConfig& config)
+  explicit DirichletPhi(const DirichletPhiConfig& config)
     : config_(config) {}
 
   virtual bool RegularizePhi(TopicModel* topic_model);
 
  private:
-  DirichletRegularizerPhiConfig config_;
+  DirichletPhiConfig config_;
 };
 
+}  // namespace regularizer
 }  // namespace core
 }  // namespace artm
 
-#endif  // SRC_ARTM_DIRICHLET_REGULARIZER_PHI_H_
+#endif  // SRC_ARTM_DIRICHLET_PHI_H_

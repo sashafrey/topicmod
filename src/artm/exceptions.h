@@ -31,6 +31,7 @@ class Type : public BaseType { public:  /*NOLINT*/     \
   explicit Type(const char* what) : BaseType(what) {}  \
 };
 
+DEFINE_EXCEPTION_TYPE(ArgumentOutOfRangeException, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(UnsupportedReconfiguration, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(NotImplementedException, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(NetworkException, std::runtime_error);

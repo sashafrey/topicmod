@@ -338,7 +338,6 @@ void Processor::ThreadFunction() {
 
         // find cache
         const ModelIncrement* previous_model_increment = nullptr;
-        /*
         if (previous_processor_output != nullptr) {
           for (int i = 0; i < previous_processor_output->model_increment_size(); ++i) {
             if (previous_processor_output->model_increment(i).model_id() == model_id) {
@@ -346,7 +345,6 @@ void Processor::ThreadFunction() {
             }
           }
         }
-        */
 
         std::shared_ptr<const TopicModel> topic_model = merger_.GetLatestTopicModel(model_id);
         assert(topic_model.get() != nullptr);

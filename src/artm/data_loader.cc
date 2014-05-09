@@ -81,7 +81,8 @@ void DataLoader::CompactBatch(const Batch& batch, Batch* compacted_batch) {
 
       for (int token_index = 0; token_index < field.token_id_size(); ++token_index) {
         int token_id = field.token_id(token_index);
-        int token_count = field.token_count(token_index);
+        if (token_id < 0 || token_id >= batch.token_size())
+          BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("field.token_id"));
 
         if (orig_to_compacted_id_map[token_id] == -1) {
           orig_to_compacted_id_map[token_id] = compacted_dictionary_size++;

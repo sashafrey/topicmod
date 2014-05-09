@@ -27,7 +27,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   // Create instance and data_loader configs
   InstanceConfig instance_config;
   instance_config.set_processors_count(processors_count);
-  instance_config.set_memcached_endpoint("tcp://localhost:5555");
+  // instance_config.set_memcached_endpoint("tcp://localhost:5555");
   DataLoaderConfig data_loader_config;
   std::string batches_disk_path(batches_folder);
   data_loader_config.set_disk_path(batches_disk_path);
@@ -186,7 +186,7 @@ int main(int argc, char * argv[]) {
   FLAGS_logbufsecs = 0;
   ::google::InitGoogleLogging(argv[0]);
 
-  int instance_size = 2;
+  int instance_size = 1;
   int processors_size = 2;
   cout << proc(argc, argv, processors_size, instance_size)
        << " sec. ================= " << endl << endl;

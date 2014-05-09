@@ -143,6 +143,12 @@ void DataLoader::InvokeIteration(int iterations_count) {
   }
 
   auto latest_generation = generation_.get();
+  if (latest_generation->empty()) {
+    LOG(WARNING) << "DataLoader::InvokeIteration() - current generation is empty, "
+                 << "please populate DataLoader data with some data";
+    return;
+  }
+
   for (int iter = 0; iter < iterations_count; ++iter) {
     latest_generation->InvokeOnEachPartition(
       [&](boost::uuids::uuid uuid, std::shared_ptr<const Batch> batch) {

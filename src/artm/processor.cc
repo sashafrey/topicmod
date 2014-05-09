@@ -452,7 +452,7 @@ void Processor::ThreadFunction() {
         }
       });
 
-      for(;;) {
+      for (;;) {
         int merger_queue_size = 0;
         {
           boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);

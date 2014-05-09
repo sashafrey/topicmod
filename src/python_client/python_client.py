@@ -16,7 +16,7 @@ topics_count = 16
 outer_iteration_count = 10
 inner_iterations_count = 10
 top_tokens_count_to_visualize = 4
-parse_collection_from_text = 0
+parse_collection_from_text = 1
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 os.environ['PATH'] = ';'.join([address + '\\Win32\\Release', os.environ['PATH']])

@@ -1379,17 +1379,10 @@ class SmoothSparseThetaConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 background_topics_count = 1;
-  inline bool has_background_topics_count() const;
-  inline void clear_background_topics_count();
-  static const int kBackgroundTopicsCountFieldNumber = 1;
-  inline ::google::protobuf::int32 background_topics_count() const;
-  inline void set_background_topics_count(::google::protobuf::int32 value);
-
-  // repeated double alpha_0 = 2;
+  // repeated double alpha_0 = 1;
   inline int alpha_0_size() const;
   inline void clear_alpha_0();
-  static const int kAlpha0FieldNumber = 2;
+  static const int kAlpha0FieldNumber = 1;
   inline double alpha_0(int index) const;
   inline void set_alpha_0(int index, double value);
   inline void add_alpha_0(double value);
@@ -1398,10 +1391,10 @@ class SmoothSparseThetaConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< double >*
       mutable_alpha_0();
 
-  // repeated .artm.DoubleArray tilde_alpha = 3;
+  // repeated .artm.DoubleArray tilde_alpha = 2;
   inline int tilde_alpha_size() const;
   inline void clear_tilde_alpha();
-  static const int kTildeAlphaFieldNumber = 3;
+  static const int kTildeAlphaFieldNumber = 2;
   inline const ::artm::DoubleArray& tilde_alpha(int index) const;
   inline ::artm::DoubleArray* mutable_tilde_alpha(int index);
   inline ::artm::DoubleArray* add_tilde_alpha();
@@ -1410,45 +1403,16 @@ class SmoothSparseThetaConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
       mutable_tilde_alpha();
 
-  // repeated double background_alpha_0 = 4;
-  inline int background_alpha_0_size() const;
-  inline void clear_background_alpha_0();
-  static const int kBackgroundAlpha0FieldNumber = 4;
-  inline double background_alpha_0(int index) const;
-  inline void set_background_alpha_0(int index, double value);
-  inline void add_background_alpha_0(double value);
-  inline const ::google::protobuf::RepeatedField< double >&
-      background_alpha_0() const;
-  inline ::google::protobuf::RepeatedField< double >*
-      mutable_background_alpha_0();
-
-  // repeated .artm.DoubleArray background_tilde_alpha = 5;
-  inline int background_tilde_alpha_size() const;
-  inline void clear_background_tilde_alpha();
-  static const int kBackgroundTildeAlphaFieldNumber = 5;
-  inline const ::artm::DoubleArray& background_tilde_alpha(int index) const;
-  inline ::artm::DoubleArray* mutable_background_tilde_alpha(int index);
-  inline ::artm::DoubleArray* add_background_tilde_alpha();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      background_tilde_alpha() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_background_tilde_alpha();
-
   // @@protoc_insertion_point(class_scope:artm.SmoothSparseThetaConfig)
  private:
-  inline void set_has_background_topics_count();
-  inline void clear_has_background_topics_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedField< double > alpha_0_;
   ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > tilde_alpha_;
-  ::google::protobuf::RepeatedField< double > background_alpha_0_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > background_tilde_alpha_;
-  ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -3577,29 +3541,7 @@ inline void DirichletPhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* ti
 
 // SmoothSparseThetaConfig
 
-// required int32 background_topics_count = 1;
-inline bool SmoothSparseThetaConfig::has_background_topics_count() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void SmoothSparseThetaConfig::set_has_background_topics_count() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void SmoothSparseThetaConfig::clear_has_background_topics_count() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void SmoothSparseThetaConfig::clear_background_topics_count() {
-  background_topics_count_ = 0;
-  clear_has_background_topics_count();
-}
-inline ::google::protobuf::int32 SmoothSparseThetaConfig::background_topics_count() const {
-  return background_topics_count_;
-}
-inline void SmoothSparseThetaConfig::set_background_topics_count(::google::protobuf::int32 value) {
-  set_has_background_topics_count();
-  background_topics_count_ = value;
-}
-
-// repeated double alpha_0 = 2;
+// repeated double alpha_0 = 1;
 inline int SmoothSparseThetaConfig::alpha_0_size() const {
   return alpha_0_.size();
 }
@@ -3624,7 +3566,7 @@ SmoothSparseThetaConfig::mutable_alpha_0() {
   return &alpha_0_;
 }
 
-// repeated .artm.DoubleArray tilde_alpha = 3;
+// repeated .artm.DoubleArray tilde_alpha = 2;
 inline int SmoothSparseThetaConfig::tilde_alpha_size() const {
   return tilde_alpha_.size();
 }
@@ -3647,56 +3589,6 @@ SmoothSparseThetaConfig::tilde_alpha() const {
 inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
 SmoothSparseThetaConfig::mutable_tilde_alpha() {
   return &tilde_alpha_;
-}
-
-// repeated double background_alpha_0 = 4;
-inline int SmoothSparseThetaConfig::background_alpha_0_size() const {
-  return background_alpha_0_.size();
-}
-inline void SmoothSparseThetaConfig::clear_background_alpha_0() {
-  background_alpha_0_.Clear();
-}
-inline double SmoothSparseThetaConfig::background_alpha_0(int index) const {
-  return background_alpha_0_.Get(index);
-}
-inline void SmoothSparseThetaConfig::set_background_alpha_0(int index, double value) {
-  background_alpha_0_.Set(index, value);
-}
-inline void SmoothSparseThetaConfig::add_background_alpha_0(double value) {
-  background_alpha_0_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< double >&
-SmoothSparseThetaConfig::background_alpha_0() const {
-  return background_alpha_0_;
-}
-inline ::google::protobuf::RepeatedField< double >*
-SmoothSparseThetaConfig::mutable_background_alpha_0() {
-  return &background_alpha_0_;
-}
-
-// repeated .artm.DoubleArray background_tilde_alpha = 5;
-inline int SmoothSparseThetaConfig::background_tilde_alpha_size() const {
-  return background_tilde_alpha_.size();
-}
-inline void SmoothSparseThetaConfig::clear_background_tilde_alpha() {
-  background_tilde_alpha_.Clear();
-}
-inline const ::artm::DoubleArray& SmoothSparseThetaConfig::background_tilde_alpha(int index) const {
-  return background_tilde_alpha_.Get(index);
-}
-inline ::artm::DoubleArray* SmoothSparseThetaConfig::mutable_background_tilde_alpha(int index) {
-  return background_tilde_alpha_.Mutable(index);
-}
-inline ::artm::DoubleArray* SmoothSparseThetaConfig::add_background_tilde_alpha() {
-  return background_tilde_alpha_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-SmoothSparseThetaConfig::background_tilde_alpha() const {
-  return background_tilde_alpha_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-SmoothSparseThetaConfig::mutable_background_tilde_alpha() {
-  return &background_tilde_alpha_;
 }
 
 // -------------------------------------------------------------------

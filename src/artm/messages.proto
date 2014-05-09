@@ -101,11 +101,8 @@ message DirichletPhiConfig {
 
 // Configuration of a SmoothSparse Theta regularizer
 message SmoothSparseThetaConfig {
-  required int32 background_topics_count = 1; 
-  repeated double alpha_0 = 2;
-  repeated DoubleArray tilde_alpha = 3;
-  repeated double background_alpha_0 = 4;
-  repeated DoubleArray background_tilde_alpha = 5;
+  repeated double alpha_0 = 1;
+  repeated DoubleArray tilde_alpha = 2;
 }
 
 // Configuration of a SmoothSparse Phi regularizer
@@ -117,7 +114,6 @@ message SmoothSparsePhiConfig {
   repeated DoubleArray background_tilde_beta = 5;
 }
 
-// One set of parameters for Dirichlet regularizer
 message DoubleArray {
   repeated double value = 1;
 }

@@ -45,6 +45,7 @@ SRCS_LIB      = dirichlet_regularizer_phi.cc \
 		instance.cc \
 		instance_schema.cc \
 		internals.pb.cc \
+		master_component.cc \
 		memcached_server.cc \
 		memcached_service.pb.cc \
 		memcached_service.rpcz.cc \

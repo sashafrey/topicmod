@@ -34,7 +34,7 @@ message Batch {
 
 // Configuration of DataLoader component.
 message DataLoaderConfig {
-  required int32 instance_id = 1;
+  optional int32 instance_id = 1;
   optional string disk_path = 2;
   optional int32 queue_size = 3 [default = 10];
   repeated Stream stream = 4;
@@ -50,7 +50,7 @@ message Stream {
     ItemHashModulus = 3;
   }
 
-  required Type type = 1 [default = Global];
+  optional Type type = 1 [default = Global];
   optional string name = 2 [default = "@global"];
   optional int32 modulus = 3;
   repeated int32 residuals = 4;
@@ -61,6 +61,19 @@ message InstanceConfig {
   optional int32 processors_count = 1 [default = 1];
   optional string memcached_endpoint = 2;
   optional int32 merger_queue_max_size = 3 [default = 10];
+}
+
+// Configuration of the Master component
+message MasterComponentConfig {
+  enum ModusOperandi {
+    Local = 0;
+    Network = 1;
+    Indexing = 2;
+  }
+
+  optional ModusOperandi modus_operandi = 1 [default = Local];
+  optional DataLoaderConfig data_loader_config = 2;
+  optional InstanceConfig instance_config = 3;
 }
 
 // Configuration of a model.
@@ -84,15 +97,15 @@ message RegularizerConfig {
     DirichletRegularizerPhi = 1;
   }
 
-  required string name = 1;
-  required Type type = 2;
-  required bytes config = 3; 
+  optional string name = 1;
+  optional Type type = 2;
+  optional bytes config = 3;
 }
 
 // Configuration of a Dirichlet Phi regularizer
 message DirichletRegularizerPhiConfig {
-  required double beta_0 = 1;
-  required DoubleArray tilde_beta = 2;
+  optional double beta_0 = 1;
+  optional DoubleArray tilde_beta = 2;
 }
 
 // Configuration of a Dirichlet Theta regularizer
@@ -115,7 +128,7 @@ message Score {
     Perplexity = 0;
   }
 
-  required Type type = 1;
+  optional Type type = 1;
   optional string field_name = 2 [default = "@body"];
   optional string stream_name = 3 [default = "@global"];
 }

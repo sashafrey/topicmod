@@ -16,9 +16,11 @@ TEST(CppInterface, Basic) {
 
   // Create instance
   artm::MemcachedServer memcached_server("tcp://*:5555");
-  artm::InstanceConfig instance_config;
-  instance_config.set_memcached_endpoint("tcp://localhost:5555");
-  artm::Instance instance(instance_config);
+  artm::MasterComponentConfig master_config;
+  artm::InstanceConfig* instance_config = master_config.mutable_instance_config();
+  instance_config->set_memcached_endpoint("tcp://localhost:5555");
+  artm::DataLoaderConfig* config = master_config.mutable_data_loader_config();
+  artm::MasterComponent master_component(master_config);
 
   artm::DirichletRegularizerThetaConfig regularizer_1_config;
   artm::DoubleArray tilde_alpha;
@@ -57,15 +59,15 @@ TEST(CppInterface, Basic) {
   general_regularizer_2_config.set_type(artm::RegularizerConfig_Type_DirichletRegularizerTheta);
   general_regularizer_2_config.set_config(regularizer_2_config.SerializeAsString());
 
-  artm::Regularizer regularizer_1(instance, general_regularizer_1_config);
-  artm::Regularizer regularizer_2(instance, general_regularizer_2_config);
+  artm::Regularizer regularizer_1(master_component, general_regularizer_1_config);
+  artm::Regularizer regularizer_2(master_component, general_regularizer_2_config);
 
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(nTopics);
   model_config.add_regularizer_name(general_regularizer_1_config.name());
   model_config.add_regularizer_name(general_regularizer_2_config.name());
-  artm::Model model(instance, model_config);
+  artm::Model model(master_component, model_config);
 
   // Load doc-token matrix
   int nTokens = 10;
@@ -93,18 +95,16 @@ TEST(CppInterface, Basic) {
         nTokens);
   }
 
-  artm::DataLoaderConfig config;
-  artm::DataLoader data_loader(instance, config);
   // Index doc-token matrix
-  data_loader.AddBatch(batch);
+  master_component.AddBatch(batch);
 
   model.Enable();
-  data_loader.InvokeIteration(3);
-  data_loader.WaitIdle();
+  master_component.InvokeIteration(3);
+  master_component.WaitIdle();
   model.Disable();
 
   // Request model topics
-  std::shared_ptr<artm::TopicModel> topic_model = instance.GetTopicModel(model);
+  std::shared_ptr<artm::TopicModel> topic_model = master_component.GetTopicModel(model);
 
   int nUniqueTokens = nTokens;
   EXPECT_EQ(nUniqueTokens, topic_model->token_size());
@@ -114,13 +114,14 @@ TEST(CppInterface, Basic) {
 
 TEST(CppInterface, Exceptions) {
   // Create instance
-  artm::InstanceConfig instance_config;
-  artm::Instance instance(instance_config);
+  artm::MasterComponentConfig master_config;
+  artm::InstanceConfig* instance_config = master_config.mutable_instance_config();
+  artm::MasterComponent master_component(master_config);
 
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(10);
-  artm::Model model(instance, model_config);
+  artm::Model model(master_component, model_config);
 
   model_config.set_topics_count(20);
   ASSERT_THROW(model.Reconfigure(model_config), artm::UnsupportedReconfiguration);

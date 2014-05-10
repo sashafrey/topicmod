@@ -40,6 +40,7 @@ class Batch;
 class DataLoaderConfig;
 class Stream;
 class InstanceConfig;
+class MasterComponentConfig;
 class ModelConfig;
 class RegularizerConfig;
 class DirichletRegularizerPhiConfig;
@@ -71,6 +72,26 @@ inline bool Stream_Type_Parse(
     const ::std::string& name, Stream_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<Stream_Type>(
     Stream_Type_descriptor(), name, value);
+}
+enum MasterComponentConfig_ModusOperandi {
+  MasterComponentConfig_ModusOperandi_Local = 0,
+  MasterComponentConfig_ModusOperandi_Network = 1,
+  MasterComponentConfig_ModusOperandi_Indexing = 2
+};
+bool MasterComponentConfig_ModusOperandi_IsValid(int value);
+const MasterComponentConfig_ModusOperandi MasterComponentConfig_ModusOperandi_ModusOperandi_MIN = MasterComponentConfig_ModusOperandi_Local;
+const MasterComponentConfig_ModusOperandi MasterComponentConfig_ModusOperandi_ModusOperandi_MAX = MasterComponentConfig_ModusOperandi_Indexing;
+const int MasterComponentConfig_ModusOperandi_ModusOperandi_ARRAYSIZE = MasterComponentConfig_ModusOperandi_ModusOperandi_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* MasterComponentConfig_ModusOperandi_descriptor();
+inline const ::std::string& MasterComponentConfig_ModusOperandi_Name(MasterComponentConfig_ModusOperandi value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    MasterComponentConfig_ModusOperandi_descriptor(), value);
+}
+inline bool MasterComponentConfig_ModusOperandi_Parse(
+    const ::std::string& name, MasterComponentConfig_ModusOperandi* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<MasterComponentConfig_ModusOperandi>(
+    MasterComponentConfig_ModusOperandi_descriptor(), name, value);
 }
 enum RegularizerConfig_Type {
   RegularizerConfig_Type_DirichletRegularizerTheta = 0,
@@ -498,7 +519,7 @@ class DataLoaderConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 instance_id = 1;
+  // optional int32 instance_id = 1;
   inline bool has_instance_id() const;
   inline void clear_instance_id();
   static const int kInstanceIdFieldNumber = 1;
@@ -663,7 +684,7 @@ class Stream : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required .artm.Stream.Type type = 1 [default = Global];
+  // optional .artm.Stream.Type type = 1 [default = Global];
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
@@ -834,6 +855,137 @@ class InstanceConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static InstanceConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class MasterComponentConfig : public ::google::protobuf::Message {
+ public:
+  MasterComponentConfig();
+  virtual ~MasterComponentConfig();
+
+  MasterComponentConfig(const MasterComponentConfig& from);
+
+  inline MasterComponentConfig& operator=(const MasterComponentConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MasterComponentConfig& default_instance();
+
+  void Swap(MasterComponentConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  MasterComponentConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MasterComponentConfig& from);
+  void MergeFrom(const MasterComponentConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef MasterComponentConfig_ModusOperandi ModusOperandi;
+  static const ModusOperandi Local = MasterComponentConfig_ModusOperandi_Local;
+  static const ModusOperandi Network = MasterComponentConfig_ModusOperandi_Network;
+  static const ModusOperandi Indexing = MasterComponentConfig_ModusOperandi_Indexing;
+  static inline bool ModusOperandi_IsValid(int value) {
+    return MasterComponentConfig_ModusOperandi_IsValid(value);
+  }
+  static const ModusOperandi ModusOperandi_MIN =
+    MasterComponentConfig_ModusOperandi_ModusOperandi_MIN;
+  static const ModusOperandi ModusOperandi_MAX =
+    MasterComponentConfig_ModusOperandi_ModusOperandi_MAX;
+  static const int ModusOperandi_ARRAYSIZE =
+    MasterComponentConfig_ModusOperandi_ModusOperandi_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  ModusOperandi_descriptor() {
+    return MasterComponentConfig_ModusOperandi_descriptor();
+  }
+  static inline const ::std::string& ModusOperandi_Name(ModusOperandi value) {
+    return MasterComponentConfig_ModusOperandi_Name(value);
+  }
+  static inline bool ModusOperandi_Parse(const ::std::string& name,
+      ModusOperandi* value) {
+    return MasterComponentConfig_ModusOperandi_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .artm.MasterComponentConfig.ModusOperandi modus_operandi = 1 [default = Local];
+  inline bool has_modus_operandi() const;
+  inline void clear_modus_operandi();
+  static const int kModusOperandiFieldNumber = 1;
+  inline ::artm::MasterComponentConfig_ModusOperandi modus_operandi() const;
+  inline void set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi value);
+
+  // optional .artm.DataLoaderConfig data_loader_config = 2;
+  inline bool has_data_loader_config() const;
+  inline void clear_data_loader_config();
+  static const int kDataLoaderConfigFieldNumber = 2;
+  inline const ::artm::DataLoaderConfig& data_loader_config() const;
+  inline ::artm::DataLoaderConfig* mutable_data_loader_config();
+  inline ::artm::DataLoaderConfig* release_data_loader_config();
+  inline void set_allocated_data_loader_config(::artm::DataLoaderConfig* data_loader_config);
+
+  // optional .artm.InstanceConfig instance_config = 3;
+  inline bool has_instance_config() const;
+  inline void clear_instance_config();
+  static const int kInstanceConfigFieldNumber = 3;
+  inline const ::artm::InstanceConfig& instance_config() const;
+  inline ::artm::InstanceConfig* mutable_instance_config();
+  inline ::artm::InstanceConfig* release_instance_config();
+  inline void set_allocated_instance_config(::artm::InstanceConfig* instance_config);
+
+  // @@protoc_insertion_point(class_scope:artm.MasterComponentConfig)
+ private:
+  inline void set_has_modus_operandi();
+  inline void clear_has_modus_operandi();
+  inline void set_has_data_loader_config();
+  inline void clear_has_data_loader_config();
+  inline void set_has_instance_config();
+  inline void clear_has_instance_config();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::artm::DataLoaderConfig* data_loader_config_;
+  ::artm::InstanceConfig* instance_config_;
+  int modus_operandi_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static MasterComponentConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1114,7 +1266,7 @@ class RegularizerConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string name = 1;
+  // optional string name = 1;
   inline bool has_name() const;
   inline void clear_name();
   static const int kNameFieldNumber = 1;
@@ -1126,14 +1278,14 @@ class RegularizerConfig : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
-  // required .artm.RegularizerConfig.Type type = 2;
+  // optional .artm.RegularizerConfig.Type type = 2;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 2;
   inline ::artm::RegularizerConfig_Type type() const;
   inline void set_type(::artm::RegularizerConfig_Type value);
 
-  // required bytes config = 3;
+  // optional bytes config = 3;
   inline bool has_config() const;
   inline void clear_config();
   static const int kConfigFieldNumber = 3;
@@ -1226,14 +1378,14 @@ class DirichletRegularizerPhiConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required double beta_0 = 1;
+  // optional double beta_0 = 1;
   inline bool has_beta_0() const;
   inline void clear_beta_0();
   static const int kBeta0FieldNumber = 1;
   inline double beta_0() const;
   inline void set_beta_0(double value);
 
-  // required .artm.DoubleArray tilde_beta = 2;
+  // optional .artm.DoubleArray tilde_beta = 2;
   inline bool has_tilde_beta() const;
   inline void clear_tilde_beta();
   static const int kTildeBetaFieldNumber = 2;
@@ -1613,7 +1765,7 @@ class Score : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required .artm.Score.Type type = 1;
+  // optional .artm.Score.Type type = 1;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
@@ -2448,7 +2600,7 @@ Batch::mutable_item() {
 
 // DataLoaderConfig
 
-// required int32 instance_id = 1;
+// optional int32 instance_id = 1;
 inline bool DataLoaderConfig::has_instance_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2635,7 +2787,7 @@ inline void DataLoaderConfig::set_cache_processor_output(bool value) {
 
 // Stream
 
-// required .artm.Stream.Type type = 1 [default = Global];
+// optional .artm.Stream.Type type = 1 [default = Global];
 inline bool Stream::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -2891,6 +3043,109 @@ inline ::google::protobuf::int32 InstanceConfig::merger_queue_max_size() const {
 inline void InstanceConfig::set_merger_queue_max_size(::google::protobuf::int32 value) {
   set_has_merger_queue_max_size();
   merger_queue_max_size_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// MasterComponentConfig
+
+// optional .artm.MasterComponentConfig.ModusOperandi modus_operandi = 1 [default = Local];
+inline bool MasterComponentConfig::has_modus_operandi() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void MasterComponentConfig::set_has_modus_operandi() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void MasterComponentConfig::clear_has_modus_operandi() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void MasterComponentConfig::clear_modus_operandi() {
+  modus_operandi_ = 0;
+  clear_has_modus_operandi();
+}
+inline ::artm::MasterComponentConfig_ModusOperandi MasterComponentConfig::modus_operandi() const {
+  return static_cast< ::artm::MasterComponentConfig_ModusOperandi >(modus_operandi_);
+}
+inline void MasterComponentConfig::set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi value) {
+  assert(::artm::MasterComponentConfig_ModusOperandi_IsValid(value));
+  set_has_modus_operandi();
+  modus_operandi_ = value;
+}
+
+// optional .artm.DataLoaderConfig data_loader_config = 2;
+inline bool MasterComponentConfig::has_data_loader_config() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void MasterComponentConfig::set_has_data_loader_config() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void MasterComponentConfig::clear_has_data_loader_config() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void MasterComponentConfig::clear_data_loader_config() {
+  if (data_loader_config_ != NULL) data_loader_config_->::artm::DataLoaderConfig::Clear();
+  clear_has_data_loader_config();
+}
+inline const ::artm::DataLoaderConfig& MasterComponentConfig::data_loader_config() const {
+  return data_loader_config_ != NULL ? *data_loader_config_ : *default_instance_->data_loader_config_;
+}
+inline ::artm::DataLoaderConfig* MasterComponentConfig::mutable_data_loader_config() {
+  set_has_data_loader_config();
+  if (data_loader_config_ == NULL) data_loader_config_ = new ::artm::DataLoaderConfig;
+  return data_loader_config_;
+}
+inline ::artm::DataLoaderConfig* MasterComponentConfig::release_data_loader_config() {
+  clear_has_data_loader_config();
+  ::artm::DataLoaderConfig* temp = data_loader_config_;
+  data_loader_config_ = NULL;
+  return temp;
+}
+inline void MasterComponentConfig::set_allocated_data_loader_config(::artm::DataLoaderConfig* data_loader_config) {
+  delete data_loader_config_;
+  data_loader_config_ = data_loader_config;
+  if (data_loader_config) {
+    set_has_data_loader_config();
+  } else {
+    clear_has_data_loader_config();
+  }
+}
+
+// optional .artm.InstanceConfig instance_config = 3;
+inline bool MasterComponentConfig::has_instance_config() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void MasterComponentConfig::set_has_instance_config() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void MasterComponentConfig::clear_has_instance_config() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void MasterComponentConfig::clear_instance_config() {
+  if (instance_config_ != NULL) instance_config_->::artm::InstanceConfig::Clear();
+  clear_has_instance_config();
+}
+inline const ::artm::InstanceConfig& MasterComponentConfig::instance_config() const {
+  return instance_config_ != NULL ? *instance_config_ : *default_instance_->instance_config_;
+}
+inline ::artm::InstanceConfig* MasterComponentConfig::mutable_instance_config() {
+  set_has_instance_config();
+  if (instance_config_ == NULL) instance_config_ = new ::artm::InstanceConfig;
+  return instance_config_;
+}
+inline ::artm::InstanceConfig* MasterComponentConfig::release_instance_config() {
+  clear_has_instance_config();
+  ::artm::InstanceConfig* temp = instance_config_;
+  instance_config_ = NULL;
+  return temp;
+}
+inline void MasterComponentConfig::set_allocated_instance_config(::artm::InstanceConfig* instance_config) {
+  delete instance_config_;
+  instance_config_ = instance_config;
+  if (instance_config) {
+    set_has_instance_config();
+  } else {
+    clear_has_instance_config();
+  }
 }
 
 // -------------------------------------------------------------------
@@ -3290,7 +3545,7 @@ ModelConfig::mutable_regularizer_name() {
 
 // RegularizerConfig
 
-// required string name = 1;
+// optional string name = 1;
 inline bool RegularizerConfig::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -3360,7 +3615,7 @@ inline void RegularizerConfig::set_allocated_name(::std::string* name) {
   }
 }
 
-// required .artm.RegularizerConfig.Type type = 2;
+// optional .artm.RegularizerConfig.Type type = 2;
 inline bool RegularizerConfig::has_type() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -3383,7 +3638,7 @@ inline void RegularizerConfig::set_type(::artm::RegularizerConfig_Type value) {
   type_ = value;
 }
 
-// required bytes config = 3;
+// optional bytes config = 3;
 inline bool RegularizerConfig::has_config() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -3457,7 +3712,7 @@ inline void RegularizerConfig::set_allocated_config(::std::string* config) {
 
 // DirichletRegularizerPhiConfig
 
-// required double beta_0 = 1;
+// optional double beta_0 = 1;
 inline bool DirichletRegularizerPhiConfig::has_beta_0() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -3479,7 +3734,7 @@ inline void DirichletRegularizerPhiConfig::set_beta_0(double value) {
   beta_0_ = value;
 }
 
-// required .artm.DoubleArray tilde_beta = 2;
+// optional .artm.DoubleArray tilde_beta = 2;
 inline bool DirichletRegularizerPhiConfig::has_tilde_beta() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -3633,7 +3888,7 @@ FloatArray::mutable_value() {
 
 // Score
 
-// required .artm.Score.Type type = 1;
+// optional .artm.Score.Type type = 1;
 inline bool Score::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -4422,6 +4677,10 @@ namespace protobuf {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::Stream_Type>() {
   return ::artm::Stream_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::MasterComponentConfig_ModusOperandi>() {
+  return ::artm::MasterComponentConfig_ModusOperandi_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::RegularizerConfig_Type>() {

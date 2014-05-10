@@ -43,39 +43,64 @@ class ArtmLibrary:
   def __init__(self, location):
     self.lib_ = ctypes.CDLL(location)
 
-  def CreateInstance(self, config):
-    return Instance(config, self.lib_)
+  def CreateMasterComponent(self, config):
+    return MasterComponent(config, self.lib_)
 
-  def CreateModel(self, instance, config):
-    return Model(instance, config, self.lib_)
+  def CreateModel(self, master_component, config):
+    return Model(master_component, config, self.lib_)
 
-  def CreateRegularizer(self, instance, config):
-    return Regularizer(instance, config, self.lib_)
-
-  def CreateDataLoader(self, instance, config):
-    return DataLoader(instance, config, self.lib_)
+  def CreateRegularizer(self, master_component, config):
+    return Regularizer(master_component, config, self.lib_)
 
 #################################################################################
 
-class Instance:
+class MasterComponent:
   def __init__(self, config, lib):
     self.lib_ = lib
     self.config_ = config
-    instance_config_blob = config.SerializeToString()
-    instance_config_blob_p = ctypes.create_string_buffer(instance_config_blob)
-    self.id_ = HandleErrorCode(self.lib_.ArtmCreateInstance(0,
-               len(instance_config_blob), instance_config_blob_p))
+    master_config_blob = config.SerializeToString()
+    master_config_blob_p = ctypes.create_string_buffer(master_config_blob)
+    self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
+               len(master_config_blob), master_config_blob_p))
+
   def __enter__(self):
     return self
 
   def __exit__(self, type, value, traceback):
-    self.lib_.ArtmDisposeInstance(self.id_)
+    self.lib_.ArtmDisposeMasterComponent(self.id_)
 
   def Reconfigure(self, config):
     config_blob = config.SerializeToString()
     config_blob_p = ctypes.create_string_buffer(config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureInstance(self.id_, len(config_blob), config_blob_p))
+    HandleErrorCode(self.lib_.ArtmReconfigureMasterComponent(self.id_, len(config_blob), config_blob_p))
     self.config_.CopyFrom(config)
+
+  def AddBatch(self, batch):
+    batch_blob = batch.SerializeToString()
+    batch_blob_p = ctypes.create_string_buffer(batch_blob)
+    HandleErrorCode(self.lib_.ArtmAddBatch(self.id_, len(batch_blob), batch_blob_p))
+
+  def InvokeIteration(self, iterations_count):
+    HandleErrorCode(self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
+
+  def WaitIdle(self):
+    HandleErrorCode(self.lib_.ArtmWaitIdle(self.id_))
+
+  def AddStream(self, stream):
+    s = self.config_.data_loader_config.stream.add()
+    s.CopyFrom(stream)
+    self.Reconfigure(self.config_)
+
+  def RemoveStream(self, stream_name):
+    new_config_ = messages_pb2.MasterComponentConfig()
+    new_config_.CopyFrom(self.config_)
+    new_config_.data_loader_config.ClearField('stream')
+
+    for stream_index in range(0, len(self.config_.data_loader_config.stream)):
+      if (self.config_.data_loader_config.stream[stream_index].name != stream_name):
+        s = new_config_.data_loader_config.stream.add()
+        s.CopyFrom(self.config_.data_loader_config.stream[stream_index])
+    self.Reconfigure(new_config_)
 
   def GetTopicModel(self, model):
     request_id = HandleErrorCode(self.lib_.ArtmRequestTopicModel(self.id_, model.model_id()))
@@ -92,21 +117,21 @@ class Instance:
 #################################################################################
 
 class Model:
-  def __init__(self, instance, config, lib):
+  def __init__(self, master_component, config, lib):
     self.lib_ = lib
-    self.instance_id_ = instance.id_
+    self.master_id_ = master_component.id_
     self.config_ = config
     self.config_.model_id = uuid.uuid1().urn
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateModel(self.instance_id_,
+    HandleErrorCode(self.lib_.ArtmCreateModel(self.master_id_,
                     len(model_config_blob), model_config_blob_p))
 
   def __enter__(self):
     return self
 
   def __exit__(self, type, value, traceback):
-    self.lib_.ArtmDisposeModel(self.instance_id_, self.config_.model_id)
+    self.lib_.ArtmDisposeModel(self.master_id_, self.config_.model_id)
 
   def model_id(self):
     return self.config_.model_id
@@ -114,12 +139,12 @@ class Model:
   def Reconfigure(self, config):
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureModel(self.instance_id_,
+    HandleErrorCode(self.lib_.ArtmReconfigureModel(self.master_id_,
                     len(model_config_blob), model_config_blob_p))
     self.config_.CopyFrom(config)
 
   def InvokePhiRegularizers(self):
-    self.lib_.ArtmInvokePhiRegularizers(self.instance_id_)
+    HandleErrorCode(self.lib_.ArtmInvokePhiRegularizers(self.master_id_))
 
   def Enable(self):
     config_copy_ = messages_pb2.ModelConfig()
@@ -136,76 +161,25 @@ class Model:
 #################################################################################
 
 class Regularizer:
-  def __init__(self, instance, config, lib):
+  def __init__(self, master_component, config, lib):
     self.lib_ = lib
-    self.instance_id_ = instance.id_
+    self.master_id_ = master_component.id_
     self.config_ = config
     self.name_ = config.name
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateRegularizer(self.instance_id_,
+    HandleErrorCode(self.lib_.ArtmCreateRegularizer(self.master_id_,
                      len(regularizer_config_blob), regularizer_config_blob_p))
 
   def __enter__(self):
     return self
 
   def __exit__(self, type, value, traceback):
-    self.lib_.ArtmDisposeRegularizer(self.instance_id_, self.name_)
+    self.lib_.ArtmDisposeRegularizer(self.master_id_, self.name_)
 
   def Reconfigure(self, config):
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.instance_id_, 
+    HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.master_id_,
                     len(regularizer_config_blob), regularizer_config_blob_p))
     self.config_.CopyFrom(config)
-
-#################################################################################
-
-class DataLoader:
-  def __init__(self, instance, config, lib):
-    self.lib_ = lib
-    self.config_ = config
-    self.config_.instance_id = instance.id_
-    data_loader_config_blob = self.config_.SerializeToString()
-    data_loader_config_blob_p = ctypes.create_string_buffer(data_loader_config_blob)
-    self.id_ = HandleErrorCode(self.lib_.ArtmCreateDataLoader(0,
-               len(data_loader_config_blob), data_loader_config_blob_p))
-
-  def __enter__(self):
-    return self
-
-  def __exit__(self, type, value, traceback):
-    self.lib_.ArtmDisposeDataLoader(self.id_)
-
-  def AddBatch(self, batch):
-    batch_blob = batch.SerializeToString()
-    batch_blob_p = ctypes.create_string_buffer(batch_blob)
-    HandleErrorCode(self.lib_.ArtmAddBatch(self.id_, len(batch_blob), batch_blob_p))
-
-  def Reconfigure(self, config):
-    config_blob = config.SerializeToString()
-    config_blob_p = ctypes.create_string_buffer(config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureDataLoader(self.id_, len(config_blob), config_blob_p))
-    self.config_.CopyFrom(config)
-
-  def InvokeIteration(self, iterations_count):
-    HandleErrorCode(self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
-
-  def WaitIdle(self):
-    HandleErrorCode(self.lib_.ArtmWaitIdleDataLoader(self.id_))
-
-  def AddStream(self, stream):
-    s = self.config_.stream.add()
-    s.CopyFrom(stream)
-    self.Reconfigure(self.config_)
-
-  def RemoveStream(self, stream_name):
-    new_config_ = messages_pb2.DataLoaderConfig()
-    new_config_.CopyFrom(self.config_)
-    new_config_.ClearField('stream')
-
-    for stream_index in range(0, len(self.config_.stream)):
-      if (self.config_.stream[stream_index].name != stream_name):
-        s = new_config_.stream.add()
-        s.CopyFrom(self.config_.stream[stream_index])
-    self.Reconfigure(new_config_)

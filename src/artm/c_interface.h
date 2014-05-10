@@ -30,8 +30,10 @@ extern "C" {
   // Common routines
   // ===============================================================================================
   DLL_PUBLIC int ArtmConfigureLogger(int length, const char* logger_config);
-  DLL_PUBLIC int ArtmCopyRequestResult(int request_id, int length, char* address);
+
   DLL_PUBLIC int ArtmGetRequestLength(int request_id);
+  DLL_PUBLIC int ArtmCopyRequestResult(int request_id, int length, char* address);
+  DLL_PUBLIC void ArtmDisposeRequest(int request_id);
 
   // ===============================================================================================
   // Memcached service - host
@@ -40,36 +42,30 @@ extern "C" {
   DLL_PUBLIC int ArtmDisposeMemcachedServer(int memcached_server_id);
 
   // ===============================================================================================
-  // Data loader interface
+  // MasterComponent interface
   // ===============================================================================================
-  DLL_PUBLIC int ArtmAddBatch(int data_loader_id, int length, const char* batch_blob);
-  DLL_PUBLIC int ArtmCreateDataLoader(int data_loader_id, int length, const char* config);
-  DLL_PUBLIC int ArtmInvokeIteration(int data_loader_id, int iterations_count);
-  DLL_PUBLIC int ArtmReconfigureDataLoader(int data_loader_id, int length, const char* config);
-  DLL_PUBLIC int ArtmWaitIdleDataLoader(int data_loader_id);
-  DLL_PUBLIC void ArtmDisposeDataLoader(int data_loader_id);
+  DLL_PUBLIC int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob);
+  DLL_PUBLIC int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
+  DLL_PUBLIC void ArtmDisposeMasterComponent(int master_id);
 
-  // ===============================================================================================
-  // Instance interface
-  // ===============================================================================================
-  DLL_PUBLIC int ArtmCreateInstance(int instance_id, int length, const char* instance_config_blob);
-  DLL_PUBLIC int ArtmCreateModel(int instance_id, int length, const char* model_config_blob);
-  DLL_PUBLIC int ArtmReconfigureInstance(int instance_id, int length, const char* config);
-  DLL_PUBLIC int ArtmReconfigureModel(int instance_id, int length, const char* config);
-  DLL_PUBLIC int ArtmRequestBatchTopics(int instance_id, const char* model_id, int batch_length,
-                                        const char* batch_blob);
-  DLL_PUBLIC int ArtmRequestTopicModel(int instance_id, const char* model_id);
+  DLL_PUBLIC int ArtmCreateModel(int master_id, int length, const char* model_config_blob);
+  DLL_PUBLIC int ArtmReconfigureModel(int master_id, int length, const char* config);
+  DLL_PUBLIC void ArtmDisposeModel(int master_id, const char* model_id);
 
-  DLL_PUBLIC void ArtmDisposeInstance(int instance_id);
-  DLL_PUBLIC void ArtmDisposeModel(int instance_id, const char* model_id);
-  DLL_PUBLIC void ArtmDisposeRequest(int request_id);
-
-  DLL_PUBLIC int ArtmCreateRegularizer(int instance_id, int length,
+  DLL_PUBLIC int ArtmCreateRegularizer(int master_id, int length,
                                        const char* regularizer_config_blob);
-  DLL_PUBLIC int ArtmReconfigureRegularizer(int instance_id, int length,
+  DLL_PUBLIC int ArtmReconfigureRegularizer(int master_id, int length,
                                             const char* regularizer_config_blob);
-  DLL_PUBLIC void ArtmDisposeRegularizer(int instance_id, const char* regularizer_name);
-  DLL_PUBLIC void ArtmInvokePhiRegularizers(int instance_id);
+  DLL_PUBLIC void ArtmDisposeRegularizer(int master_id, const char* regularizer_name);
+
+  DLL_PUBLIC int ArtmAddBatch(int master_id, int length, const char* batch_blob);
+  DLL_PUBLIC int ArtmInvokeIteration(int master_id, int iterations_count);
+  DLL_PUBLIC int ArtmInvokePhiRegularizers(int master_id);
+  DLL_PUBLIC int ArtmWaitIdle(int master_id);
+
+  DLL_PUBLIC int ArtmRequestBatchTopics(int master_id, const char* model_id, int batch_length,
+                                        const char* batch_blob);
+  DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_id);
 }
 
 #endif  // SRC_ARTM_C_INTERFACE_H_

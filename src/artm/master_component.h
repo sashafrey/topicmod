@@ -5,12 +5,19 @@
 
 #include <string>
 
+#include "boost/thread.hpp"
 #include "boost/thread/mutex.hpp"
 #include "boost/utility.hpp"
+
+#include "rpcz/application.hpp"
+#include "rpcz/rpc.hpp"
+#include "rpcz/server.hpp"
+#include "rpcz/service.hpp"
 
 #include "artm/common.h"
 #include "artm/data_loader.h"
 #include "artm/instance.h"
+#include "artm/master_component_service_impl.h"
 #include "artm/messages.pb.h"
 #include "artm/regularizer_interface.h"
 #include "artm/template_manager.h"
@@ -37,8 +44,7 @@ class MasterComponent : boost::noncopyable {
   void DisposeModel(ModelId model_id);
   void Reconfigure(const MasterComponentConfig& config);
 
-  void CreateOrReconfigureRegularizer(const std::string& name,
-                                      std::shared_ptr<RegularizerInterface> regularizer);
+  void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
   void InvokePhiRegularizers();
 
@@ -47,6 +53,24 @@ class MasterComponent : boost::noncopyable {
   void AddBatch(const Batch& batch);
 
  private:
+  class ServiceEndpoint : boost::noncopyable {
+   public:
+    ServiceEndpoint(const std::string& endpoint);
+    ~ServiceEndpoint();
+    std::string endpoint() const { return endpoint_; }
+
+   private:
+    std::string endpoint_;
+    rpcz::application application_;
+
+    // Keep all threads at the end of class members
+    // (because the order of class members defines initialization order;
+    // everything else should be initialized before creating threads).
+    boost::thread thread_;
+
+    void ThreadFunction();
+  };
+
   friend class TemplateManager<MasterComponent, MasterComponentConfig>;
 
   // All master components must be created via TemplateManager.
@@ -58,6 +82,7 @@ class MasterComponent : boost::noncopyable {
 
   std::shared_ptr<Instance> local_instance_;
   std::shared_ptr<DataLoader> local_data_loader_;
+  std::shared_ptr<ServiceEndpoint> service_endpoint_;
 };
 
 typedef TemplateManager<MasterComponent, MasterComponentConfig> MasterComponentManager;

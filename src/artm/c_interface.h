@@ -36,17 +36,14 @@ extern "C" {
   DLL_PUBLIC void ArtmDisposeRequest(int request_id);
 
   // ===============================================================================================
-  // Memcached service - host
-  // ===============================================================================================
-  DLL_PUBLIC int ArtmCreateMemcachedServer(const char* endpoint);
-  DLL_PUBLIC int ArtmDisposeMemcachedServer(int memcached_server_id);
-
-  // ===============================================================================================
   // MasterComponent interface
   // ===============================================================================================
   DLL_PUBLIC int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob);
   DLL_PUBLIC int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
   DLL_PUBLIC void ArtmDisposeMasterComponent(int master_id);
+
+  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length, const char* config_blob);
+  DLL_PUBLIC void ArtmDisposeNodeController(int node_controller_id);
 
   DLL_PUBLIC int ArtmCreateModel(int master_id, int length, const char* model_config_blob);
   DLL_PUBLIC int ArtmReconfigureModel(int master_id, int length, const char* config);

@@ -7,12 +7,8 @@
 #include "artm/common.h"
 #include "artm/master_component.h"
 #include "artm/messages.pb.h"
+#include "artm/node_controller.h"
 #include "artm/exceptions.h"
-#include "artm/memcached_server.h"
-
-#include "artm/dirichlet_regularizer_theta.h"
-#include "artm/dirichlet_regularizer_phi.h"
-#include "artm/regularizer_interface.h"
 
 #include "rpcz/rpc.hpp"
 #include "glog/logging.h"
@@ -58,22 +54,6 @@ int ArtmGetRequestLength(int request_id) {
   return message.size();
 }
 
-// ===============================================================================================
-// Memcached service - host
-// ===============================================================================================
-DLL_PUBLIC int ArtmCreateMemcachedServer(const char* endpoint) {
-  try {
-    return artm::core::MemcachedServerManager::singleton().Create(std::string(endpoint));
-  } CATCH_EXCEPTIONS;
-}
-
-DLL_PUBLIC int ArtmDisposeMemcachedServer(int memcached_server_id) {
-  try {
-    artm::core::MemcachedServerManager::singleton().Erase(memcached_server_id);
-    return ARTM_SUCCESS;
-  } CATCH_EXCEPTIONS;
-}
-
 int ArtmAddBatch(int master_id, int length, const char* batch_blob) {
   try {
     artm::Batch batch;
@@ -87,8 +67,6 @@ int ArtmAddBatch(int master_id, int length, const char* batch_blob) {
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
-
-
 
 int ArtmInvokeIteration(int master_id, int iterations_count) {
   try {
@@ -185,6 +163,28 @@ void ArtmDisposeMasterComponent(int master_id) {
   artm::core::MasterComponentManager::singleton().Erase(master_id);
 }
 
+int ArtmCreateNodeController(int node_controller_id, int length, const char* config_blob) {
+  try {
+    artm::NodeControllerConfig config;
+    if (!config.ParseFromArray(config_blob, length)) {
+      return ARTM_INVALID_MESSAGE;
+    }
+
+    if (node_controller_id > 0) {
+      bool succeeded = artm::core::NodeControllerManager::singleton().TryCreate(node_controller_id, config);
+      return succeeded ? ARTM_SUCCESS : ARTM_OBJECT_NOT_FOUND;
+    } else {
+      int retval = artm::core::NodeControllerManager::singleton().Create(config);
+      assert(retval > 0);
+      return retval;
+    }
+  } CATCH_EXCEPTIONS;
+}
+
+void ArtmDisposeNodeController(int node_controller_id) {
+  artm::core::NodeControllerManager::singleton().Erase(node_controller_id);
+}
+
 void ArtmDisposeModel(int master_id, const char* model_id) {
   auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
   if (master_component == nullptr) return;
@@ -205,43 +205,9 @@ int ArtmReconfigureRegularizer(int master_id, int length,
     if (!config.ParseFromArray(regularizer_config_blob, length)) {
       return ARTM_INVALID_MESSAGE;
     }
-    std::string regularizer_name = config.name();
-    artm::RegularizerConfig_Type regularizer_type = config.type();
-    std::string config_blob = config.config();
-
-    // add here new case if adding new regularizer
-    switch (regularizer_type) {
-    case artm::RegularizerConfig_Type_DirichletRegularizerTheta: {
-      artm::DirichletRegularizerThetaConfig regularizer_config;
-      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
-        return ARTM_INVALID_MESSAGE;
-      }
-
-      std::shared_ptr<artm::core::RegularizerInterface> regularizer(
-        new artm::core::DirichletRegularizerTheta(regularizer_config));
-      auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-      if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-      master_component->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
-      return ARTM_SUCCESS;
-    }
-    case artm::RegularizerConfig_Type_DirichletRegularizerPhi: {
-      artm::DirichletRegularizerPhiConfig regularizer_config;
-      if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
-        return ARTM_INVALID_MESSAGE;
-      }
-
-      std::shared_ptr<artm::core::RegularizerInterface> regularizer(
-        new artm::core::DirichletRegularizerPhi(regularizer_config));
-      auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-      if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-      master_component->CreateOrReconfigureRegularizer(regularizer_name, regularizer);
-      return ARTM_SUCCESS;
-    }
-    default:
-      return ARTM_INVALID_MESSAGE;
-    }
+    
+    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+    master_component->CreateOrReconfigureRegularizer(config);
   } CATCH_EXCEPTIONS;
 }
 

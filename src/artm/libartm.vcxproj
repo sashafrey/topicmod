@@ -30,13 +30,13 @@
     <ClCompile Include="instance.cc" />
     <ClCompile Include="instance_schema.cc" />
     <ClCompile Include="internals.pb.cc" />
+    <ClCompile Include="internals.rpcz.cc" />
     <ClCompile Include="master_component.cc" />
-    <ClCompile Include="memcached_server.cc" />
-    <ClCompile Include="memcached_service.pb.cc" />
-    <ClCompile Include="memcached_service.rpcz.cc" />
-    <ClCompile Include="memcached_service_impl.cc" />
+    <ClCompile Include="master_component_service_impl.cc" />
     <ClCompile Include="merger.cc" />
     <ClCompile Include="messages.pb.cc" />
+    <ClCompile Include="node_controller.cc" />
+    <ClCompile Include="node_controller_service_impl.cc" />
     <ClCompile Include="processor.cc" />
     <ClCompile Include="topic_model.cc" />
   </ItemGroup>
@@ -53,13 +53,13 @@
     <ClInclude Include="instance.h" />
     <ClInclude Include="instance_schema.h" />
     <ClInclude Include="internals.pb.h" />
+    <ClInclude Include="internals.rpcz.h" />
     <ClInclude Include="master_component.h" />
-    <ClInclude Include="memcached_server.h" />
-    <ClInclude Include="memcached_service.pb.h" />
-    <ClInclude Include="memcached_service.rpcz.h" />
-    <ClInclude Include="memcached_service_impl.h" />
+    <ClInclude Include="master_component_service_impl.h" />
     <ClInclude Include="merger.h" />
     <ClInclude Include="messages.pb.h" />
+    <ClInclude Include="node_controller.h" />
+    <ClInclude Include="node_controller_service_impl.h" />
     <ClInclude Include="processor.h" />
     <ClInclude Include="protobuf_helpers.h" />
     <ClInclude Include="regularizer_interface.h" />
@@ -70,7 +70,6 @@
   <ItemGroup>
     <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />
     <None Include="internals.proto" />
-    <None Include="memcached_service.proto" />
     <None Include="messages.proto" />
   </ItemGroup>
   <ItemDefinitionGroup>

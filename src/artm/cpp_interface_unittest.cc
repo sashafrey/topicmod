@@ -15,10 +15,8 @@ TEST(CppInterface, Basic) {
   const int nTopics = 5;
 
   // Create instance
-  artm::MemcachedServer memcached_server("tcp://*:5555");
   artm::MasterComponentConfig master_config;
   artm::InstanceConfig* instance_config = master_config.mutable_instance_config();
-  instance_config->set_memcached_endpoint("tcp://localhost:5555");
   artm::DataLoaderConfig* config = master_config.mutable_data_loader_config();
   artm::MasterComponent master_component(master_config);
 

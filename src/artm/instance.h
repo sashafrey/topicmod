@@ -15,6 +15,7 @@
 #include "artm/common.h"
 #include "artm/instance_schema.h"
 #include "artm/internals.pb.h"
+#include "artm/internals.rpcz.h"
 #include "artm/merger.h"
 #include "artm/messages.pb.h"
 #include "artm/processor.h"
@@ -22,8 +23,6 @@
 #include "artm/thread_safe_holder.h"
 #include "artm/regularizer_interface.h"
 
-#include "artm/memcached_service.rpcz.h"
-#include "artm/memcached_service.pb.h"
 #include "rpcz/application.hpp"
 
 
@@ -55,8 +54,7 @@ class Instance : boost::noncopyable {
   void Reconfigure(const InstanceConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
-  void CreateOrReconfigureRegularizer(const std::string& name,
-                                      std::shared_ptr<RegularizerInterface> regularizer);
+  void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
   void ForceSyncWithMemcached(ModelId model_id);
   void InvokePhiRegularizers();
@@ -72,7 +70,7 @@ class Instance : boost::noncopyable {
   ThreadSafeHolder<InstanceSchema> schema_;
 
   rpcz::application application_;
-  ThreadSafeHolder<artm::memcached::MemcachedService_Stub> memcached_service_proxy_;
+  ThreadSafeHolder<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
 
   mutable boost::mutex processor_queue_lock_;
   std::queue<std::shared_ptr<const ProcessorInput> > processor_queue_;

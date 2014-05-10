@@ -170,12 +170,4 @@ void MasterComponent::RemoveStream(std::string stream_name) {
   Reconfigure(new_config);
 }
 
-MemcachedServer::MemcachedServer(const std::string& endpoint) {
-  id_ = HandleErrorCode(ArtmCreateMemcachedServer(endpoint.c_str()));
-}
-
-MemcachedServer::~MemcachedServer() {
-  ArtmDisposeMemcachedServer(id_);
-}
-
 }  // namespace artm

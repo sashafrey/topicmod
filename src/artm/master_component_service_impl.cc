@@ -1,11 +1,13 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
-#include "artm/memcached_service_impl.h"
+#include "artm/master_component_service_impl.h"
+
+#include "boost/thread.hpp"
 
 namespace artm {
-namespace memcached {
+namespace core {
 
-void MemcachedServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& request,
+void MasterComponentServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& request,
                                        ::rpcz::reply< ::artm::TopicModel> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
   auto iter = topic_model_.find(request.model_id());
@@ -22,10 +24,10 @@ void MemcachedServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& reque
   response.send(topic_model);
 }
 
-void MemcachedServiceImpl::RetrieveModel(const ::artm::memcached::ModelId& request,
+void MasterComponentServiceImpl::RetrieveModel(const ::artm::core::String& request,
                                          ::rpcz::reply< ::artm::TopicModel> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
-  auto iter = topic_model_.find(request.model_id());
+  auto iter = topic_model_.find(request.value());
   if (iter == topic_model_.end()) {
     response.Error(0, "Model with requested ID was does not exist on server");
   } else {
@@ -35,26 +37,21 @@ void MemcachedServiceImpl::RetrieveModel(const ::artm::memcached::ModelId& reque
   }
 }
 
-BatchManagerServiceImpl::BatchManagerServiceImpl()
-    : batch_manager_lock_(),
-      batch_manager_(&batch_manager_lock_) {
+void MasterComponentServiceImpl::RequestBatches(const ::artm::core::Int& request,
+                      ::rpcz::reply< ::artm::core::BatchIds> response) {
 }
 
-void BatchManagerServiceImpl::Schedule(const ::artm::memcached::BatchIds& request,
-                      ::rpcz::reply< ::artm::memcached::Void> response) {
+void MasterComponentServiceImpl::ReportBatches(const ::artm::core::BatchIds& request,
+                      ::rpcz::reply< ::artm::core::Void> response) {
 }
 
-void BatchManagerServiceImpl::Next(const ::artm::memcached::Void& request,
-                      ::rpcz::reply< ::artm::memcached::BatchIds> response) {
+void MasterComponentServiceImpl::ConnectClient(const ::artm::core::String& request,
+                      ::rpcz::reply< ::artm::core::Void> response) {
 }
 
-void BatchManagerServiceImpl::Done(const ::artm::memcached::BatchIds& request,
-                      ::rpcz::reply< ::artm::memcached::Void> response) {
+void MasterComponentServiceImpl::DisconnectClient(const ::artm::core::String& request,
+                      ::rpcz::reply< ::artm::core::Void> response) {
 }
 
-void BatchManagerServiceImpl::IsEverythingProcessed(const ::artm::memcached::Void& request,
-                      ::rpcz::reply< ::artm::memcached::Bool> response) {
-}
-
-}  // namespace memcached
+}  // namespace core
 }  // namespace artm

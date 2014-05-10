@@ -1,7 +1,11 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
 #include "artm/master_component.h"
+
+#include "glog/logging.h"
+
 #include "artm/exceptions.h"
+#include "artm/helpers.h"
 
 namespace artm {
 namespace core {
@@ -11,7 +15,8 @@ MasterComponent::MasterComponent(int id, const MasterComponentConfig& config)
       master_id_(id),
       config_(lock_, std::make_shared<MasterComponentConfig>(MasterComponentConfig(config))),
       local_instance_(nullptr),
-      local_data_loader_(nullptr) {
+      local_data_loader_(nullptr),
+      service_endpoint_(nullptr) {
   Reconfigure(config);
 }
 
@@ -24,6 +29,10 @@ MasterComponent::~MasterComponent() {
   if (local_data_loader_ != nullptr) {
     artm::core::DataLoaderManager::singleton().Erase(local_data_loader_->id());
     local_data_loader_.reset();
+  }
+
+  if (service_endpoint_ != nullptr) {
+    service_endpoint_.reset();
   }
 }
 
@@ -65,10 +74,9 @@ void MasterComponent::DisposeModel(ModelId model_id) {
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
 }
 
-void MasterComponent::CreateOrReconfigureRegularizer(
-      const std::string& name, std::shared_ptr<RegularizerInterface> regularizer) {
+void MasterComponent::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   if (isInLocalModusOperandi()) {
-    local_instance_->CreateOrReconfigureRegularizer(name, regularizer);
+    local_instance_->CreateOrReconfigureRegularizer(config);
     return;
   }
 
@@ -108,6 +116,10 @@ void MasterComponent::InvokePhiRegularizers() {
 void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
   config_.set(std::make_shared<MasterComponentConfig>(config));
   if (isInLocalModusOperandi()) {
+    if (service_endpoint_ != nullptr) {
+      service_endpoint_.reset();
+    }
+
     if (local_instance_ == nullptr) {
       int instance_id = artm::core::InstanceManager::singleton().Create(config.instance_config());
       local_instance_ = artm::core::InstanceManager::singleton().Get(instance_id);
@@ -128,6 +140,20 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
   }
 
   if (isInNetworkModusOperandi()) {
+   if (local_instance_ != nullptr) {
+      artm::core::InstanceManager::singleton().Erase(local_instance_->id());
+      local_instance_.reset();
+    }
+
+    if (local_data_loader_ != nullptr) {
+      artm::core::DataLoaderManager::singleton().Erase(local_data_loader_->id());
+      local_data_loader_.reset();
+    }
+
+    if (service_endpoint_ == nullptr) {
+      service_endpoint_.reset(new ServiceEndpoint(config_.get()->service_endpoint()));
+    }
+
     BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
   }
 
@@ -180,6 +206,31 @@ void MasterComponent::AddBatch(const Batch& batch) {
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+}
+
+MasterComponent::ServiceEndpoint::~ServiceEndpoint() {
+  application_.terminate();
+  thread_.join();
+}
+
+MasterComponent::ServiceEndpoint::ServiceEndpoint(const std::string& endpoint)
+    : endpoint_(endpoint), application_(rpcz::application::options(1)), thread_() {
+  boost::thread t(&MasterComponent::ServiceEndpoint::ThreadFunction, this);
+  thread_.swap(t);
+}
+
+void MasterComponent::ServiceEndpoint::ThreadFunction() {
+  try {
+    Helpers::SetThreadName(-1, "MasterComponent");
+    rpcz::server server(application_);
+    ::artm::core::MasterComponentServiceImpl master_component_service_impl;
+    server.register_service(&master_component_service_impl);
+    server.bind(endpoint());
+    application_.run();
+  } catch(...) {
+    LOG(FATAL) << "Fatal exception in MasterComponent::ServiceEndpoint::ThreadFunction() function";
+    return;
+  }
 }
 
 }  // namespace core

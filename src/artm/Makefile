@@ -128,7 +128,7 @@ clean:
 -include $(DEPS_LIB)
 -include $(DEPS_TEST)
 
-#ToDo(alfrey): add '.\protoc.exe --cpp_out=. --rpcz_plugin_out=. .\memcached_service.proto'
+#ToDo(alfrey): add '.\protoc.exe --cpp_out=. --rpcz_plugin_out=. .\internals.proto'
 proto : 
 	protoc --cpp_out=. messages.proto; \
 	protoc --python_out=. messages.proto; \

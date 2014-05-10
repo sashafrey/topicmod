@@ -34,12 +34,14 @@ message Batch {
 
 // Configuration of DataLoader component.
 message DataLoaderConfig {
-  optional int32 instance_id = 1;
-  optional string disk_path = 2;
-  optional int32 queue_size = 3 [default = 10];
-  repeated Stream stream = 4;
-  optional bool compact_batches = 5 [default = true];
-  optional bool cache_processor_output = 6 [default = false];
+  optional int32 data_loader_id = 1 [default = -1];
+  optional int32 instance_id = 2;
+  optional string disk_path = 3;
+  optional int32 queue_size = 4 [default = 10];
+  repeated Stream stream = 5;
+  optional bool compact_batches = 6 [default = true];
+  optional bool cache_processor_output = 7 [default = false];
+  optional string master_component_endpoint = 8;
 }
 
 // Defines a stream in DataLoader.
@@ -58,9 +60,15 @@ message Stream {
 
 // Configuration of Instance component.
 message InstanceConfig {
-  optional int32 processors_count = 1 [default = 1];
-  optional string memcached_endpoint = 2;
-  optional int32 merger_queue_max_size = 3 [default = 10];
+  optional int32 instance_id = 1 [default = -1];
+  optional int32 processors_count = 2 [default = 1];
+  optional string master_component_endpoint = 3;
+  optional int32 merger_queue_max_size = 4 [default = 10];
+}
+
+message NodeControllerConfig {
+  optional string node_controller_endpoint = 1;
+  optional string master_component_endpoint = 2;
 }
 
 // Configuration of the Master component
@@ -74,6 +82,7 @@ message MasterComponentConfig {
   optional ModusOperandi modus_operandi = 1 [default = Local];
   optional DataLoaderConfig data_loader_config = 2;
   optional InstanceConfig instance_config = 3;
+  optional string service_endpoint = 4;
 }
 
 // Configuration of a model.

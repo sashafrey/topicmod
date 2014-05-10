@@ -17,9 +17,6 @@ using namespace std;
 using namespace artm;
 
 double proc(int argc, char * argv[], int processors_count, int instance_size) {
-  // Create memcached server
-  MemcachedServer memcached_server("tcp://*:5555");
-
   std::string batches_folder = "batches";
   std::string vocab_file = "";
   std::string docword_file = "";
@@ -29,7 +26,6 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
   InstanceConfig* instance_config = master_config.mutable_instance_config();
   instance_config->set_processors_count(processors_count);
-  // instance_config->set_memcached_endpoint("tcp://localhost:5555");
   DataLoaderConfig* data_loader_config = master_config.mutable_data_loader_config();
   std::string batches_disk_path(batches_folder);
   data_loader_config->set_disk_path(batches_disk_path);

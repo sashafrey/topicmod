@@ -16,7 +16,8 @@ MasterComponent::MasterComponent(int id, const MasterComponentConfig& config)
       config_(lock_, std::make_shared<MasterComponentConfig>(MasterComponentConfig(config))),
       local_instance_(nullptr),
       local_data_loader_(nullptr),
-      service_endpoint_(nullptr) {
+      service_endpoint_(nullptr),
+      clients_(lock_) {
   Reconfigure(config);
 }
 
@@ -140,7 +141,7 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
   }
 
   if (isInNetworkModusOperandi()) {
-   if (local_instance_ != nullptr) {
+    if (local_instance_ != nullptr) {
       artm::core::InstanceManager::singleton().Erase(local_instance_->id());
       local_instance_.reset();
     }
@@ -151,10 +152,10 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
     }
 
     if (service_endpoint_ == nullptr) {
-      service_endpoint_.reset(new ServiceEndpoint(config_.get()->service_endpoint()));
+      service_endpoint_.reset(new ServiceEndpoint(config_.get()->service_endpoint(), &clients_));
     }
 
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
+    return;
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
@@ -213,8 +214,11 @@ MasterComponent::ServiceEndpoint::~ServiceEndpoint() {
   thread_.join();
 }
 
-MasterComponent::ServiceEndpoint::ServiceEndpoint(const std::string& endpoint)
-    : endpoint_(endpoint), application_(rpcz::application::options(1)), thread_() {
+MasterComponent::ServiceEndpoint::ServiceEndpoint(
+    const std::string& endpoint,
+    ThreadSafeCollectionHolder<std::string, NodeControllerService_Stub>* clients)
+    : endpoint_(endpoint), clients_(clients),
+      application_(rpcz::application::options(1)), thread_() {
   boost::thread t(&MasterComponent::ServiceEndpoint::ThreadFunction, this);
   thread_.swap(t);
 }
@@ -222,11 +226,13 @@ MasterComponent::ServiceEndpoint::ServiceEndpoint(const std::string& endpoint)
 void MasterComponent::ServiceEndpoint::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "MasterComponent");
+    LOG(INFO) << "Establishing MasterComponentService on " << endpoint();
     rpcz::server server(application_);
-    ::artm::core::MasterComponentServiceImpl master_component_service_impl;
+    ::artm::core::MasterComponentServiceImpl master_component_service_impl(clients_);
     server.register_service(&master_component_service_impl);
     server.bind(endpoint());
     application_.run();
+    LOG(INFO) << "MasterComponentService on " << endpoint() << " is stopped.";
   } catch(...) {
     LOG(FATAL) << "Fatal exception in MasterComponent::ServiceEndpoint::ThreadFunction() function";
     return;

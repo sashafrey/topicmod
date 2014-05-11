@@ -6,6 +6,7 @@
 #include <queue>
 #include <map>
 #include <memory>
+#include <vector>
 #include <utility>
 
 #include "boost/thread/locks.hpp"
@@ -104,6 +105,21 @@ class ThreadSafeCollectionHolder : boost::noncopyable {
     } else {
       object_.insert(std::pair<K, std::shared_ptr<T> >(key, object));
     }
+  }
+
+  std::vector<K> keys() const {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    std::vector<K> retval;
+    for (auto iter = object_.begin(); iter != object_.end(); ++iter) {
+      retval.push_back(iter->first);
+    }
+
+    return retval;
+  }
+
+  int size() const {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    return object_.size();
   }
 
  private:

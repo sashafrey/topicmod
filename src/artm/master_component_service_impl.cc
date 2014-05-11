@@ -3,6 +3,7 @@
 #include "artm/master_component_service_impl.h"
 
 #include "boost/thread.hpp"
+#include "glog/logging.h"
 
 namespace artm {
 namespace core {
@@ -47,10 +48,31 @@ void MasterComponentServiceImpl::ReportBatches(const ::artm::core::BatchIds& req
 
 void MasterComponentServiceImpl::ConnectClient(const ::artm::core::String& request,
                       ::rpcz::reply< ::artm::core::Void> response) {
+  LOG(INFO) << "Receive connect request from client " << request.value();
+  if (clients_->has_key(request.value())) {
+    response.Error(-1, "client with the same endpoint is already connected");
+    return;
+  }
+
+  std::shared_ptr<NodeControllerService_Stub> client(
+    new artm::core::NodeControllerService_Stub(
+      application_.create_rpc_channel(request.value()), true));
+  clients_->set(request.value(), client);
+  response.send(artm::core::Void());
 }
 
 void MasterComponentServiceImpl::DisconnectClient(const ::artm::core::String& request,
                       ::rpcz::reply< ::artm::core::Void> response) {
+  LOG(INFO) << "Receive disconnect request from client " << request.value();
+
+  if (!clients_->has_key(request.value())) {
+    response.Error(-1, "client with this endpoint is not connected");
+    return;
+  }
+
+  std::string client_name = request.value();
+  response.send(artm::core::Void());
+  clients_->erase(client_name);
 }
 
 }  // namespace core

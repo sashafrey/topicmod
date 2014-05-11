@@ -58,7 +58,7 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   std::string config_blob = config.config();
 
   std::shared_ptr<artm::core::RegularizerInterface> regularizer;
-  
+
   // add here new case if adding new regularizer
   switch (regularizer_type) {
     case artm::RegularizerConfig_Type_DirichletRegularizerTheta: {

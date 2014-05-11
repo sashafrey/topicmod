@@ -11,14 +11,14 @@ call cpplint.bat ../src/artm/instance.cc
 call cpplint.bat ../src/artm/instance_manager_test.cc
 call cpplint.bat ../src/artm/instance_schema.cc
 call cpplint.bat ../src/artm/instance_test.cc
+call cpplint.bat ../src/artm/nodes_connectivity_test.cc
 call cpplint.bat ../src/artm/master_component.cc
-call cpplint.bat ../src/artm/memcached_server.cc
-call cpplint.bat ../src/artm/memcached_service_impl.cc
-call cpplint.bat ../src/artm/memcached_service_test.cc
 call cpplint.bat ../src/artm/merger.cc
 call cpplint.bat ../src/artm/processor.cc
+call cpplint.bat ../src/artm/thread_safe_holder_test.cc
 call cpplint.bat ../src/artm/topic_model.cc
 call cpplint.bat ../src/artm/topic_model_test.cc
+
 
 call cpplint.bat ../src/artm/call_on_destruction.h
 call cpplint.bat ../src/artm/common.h
@@ -33,8 +33,6 @@ call cpplint.bat ../src/artm/helpers.h
 call cpplint.bat ../src/artm/instance.h
 call cpplint.bat ../src/artm/instance_schema.h
 call cpplint.bat ../src/artm/master_component.h
-call cpplint.bat ../src/artm/memcached_server.h
-call cpplint.bat ../src/artm/memcached_service_impl.h
 call cpplint.bat ../src/artm/merger.h
 call cpplint.bat ../src/artm/processor.h
 call cpplint.bat ../src/artm/protobuf_helpers.h

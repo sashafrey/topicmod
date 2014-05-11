@@ -8,19 +8,24 @@
 
 #include "boost/thread/mutex.hpp"
 
+#include "rpcz/application.hpp"
+#include "rpcz/service.hpp"
+
 #include "artm/common.h"
 #include "artm/internals.pb.h"
 #include "artm/internals.rpcz.h"
 #include "artm/topic_model.h"
-
-#include "rpcz/service.hpp"
+#include "artm/thread_safe_holder.h"
 
 namespace artm {
 namespace core {
 
 class MasterComponentServiceImpl : public MasterComponentService {
  public:
-  MasterComponentServiceImpl() : topic_model_(), lock_() { ; }
+  MasterComponentServiceImpl(
+      ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients) 
+      : lock_(), topic_model_(), application_(), clients_(clients) { ; }
+
   ~MasterComponentServiceImpl() { ; }
 
   virtual void UpdateModel(const ::artm::core::ModelIncrement& request,
@@ -40,8 +45,10 @@ class MasterComponentServiceImpl : public MasterComponentService {
 
 
  private:
-  std::map<::artm::core::ModelId, std::shared_ptr<::artm::core::TopicModel>> topic_model_;
   mutable boost::mutex lock_;
+  std::map<::artm::core::ModelId, std::shared_ptr<::artm::core::TopicModel>> topic_model_;
+  rpcz::application application_;
+  ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients_;
 };
 
 }  // namespace core

@@ -33,6 +33,7 @@ class MasterComponent : boost::noncopyable {
   int id() const;
   bool isInLocalModusOperandi() const;
   bool isInNetworkModusOperandi() const;
+  int clients_size() const { return clients_.size(); }
 
   // Retrieves topic model.
   // Returns true if succeeded, and false if model_id hasn't been found.
@@ -55,12 +56,16 @@ class MasterComponent : boost::noncopyable {
  private:
   class ServiceEndpoint : boost::noncopyable {
    public:
-    ServiceEndpoint(const std::string& endpoint);
+    ServiceEndpoint(
+        const std::string& endpoint,
+        ThreadSafeCollectionHolder<std::string, NodeControllerService_Stub>* clients);
+
     ~ServiceEndpoint();
     std::string endpoint() const { return endpoint_; }
 
    private:
     std::string endpoint_;
+    ThreadSafeCollectionHolder<std::string, NodeControllerService_Stub>* clients_;
     rpcz::application application_;
 
     // Keep all threads at the end of class members
@@ -83,6 +88,7 @@ class MasterComponent : boost::noncopyable {
   std::shared_ptr<Instance> local_instance_;
   std::shared_ptr<DataLoader> local_data_loader_;
   std::shared_ptr<ServiceEndpoint> service_endpoint_;
+  ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub> clients_;
 };
 
 typedef TemplateManager<MasterComponent, MasterComponentConfig> MasterComponentManager;

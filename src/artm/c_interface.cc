@@ -205,9 +205,10 @@ int ArtmReconfigureRegularizer(int master_id, int length,
     if (!config.ParseFromArray(regularizer_config_blob, length)) {
       return ARTM_INVALID_MESSAGE;
     }
-    
+
     auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
     master_component->CreateOrReconfigureRegularizer(config);
+    return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
@@ -223,5 +224,7 @@ int ArtmInvokePhiRegularizers(int master_id) {
     if (master_component != nullptr) {
       master_component->InvokePhiRegularizers();
     }
+
+    return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }

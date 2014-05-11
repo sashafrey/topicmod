@@ -19,22 +19,29 @@ NodeController::NodeController(int id, const NodeControllerConfig& config)
       application_(),
       master_component_service_proxy_(nullptr)
 {
-  service_endpoint_.reset(new ServiceEndpoint(config.node_controller_endpoint()));
+  service_endpoint_.reset(new ServiceEndpoint(config.node_controller_create_endpoint()));
+
+  LOG(INFO) << "Connecting node " << config.node_controller_connect_endpoint()
+            << " to master " << config.master_component_connect_endpoint();
 
   master_component_service_proxy_.reset(
       new artm::core::MasterComponentService_Stub(
-      application_.create_rpc_channel(config.master_component_endpoint()), true));
+      application_.create_rpc_channel(config.master_component_connect_endpoint()), true));
 
   ::artm::core::String request;
   ::artm::core::Void response;
-  request.set_value(config.node_controller_endpoint());
+  request.set_value(config.node_controller_connect_endpoint());
   master_component_service_proxy_->ConnectClient(request, &response);
 }
 
 NodeController::~NodeController() {
+  auto config = config_.get();
+  LOG(INFO) << "Disconnecting node " << config->node_controller_connect_endpoint()
+            << " from master " << config->master_component_connect_endpoint();
+
   ::artm::core::String request;
   ::artm::core::Void response;
-  request.set_value(config_.get()->node_controller_endpoint());
+  request.set_value(config->node_controller_connect_endpoint());
   master_component_service_proxy_->DisconnectClient(request, &response);
 
   if (service_endpoint_ != nullptr) {
@@ -60,11 +67,13 @@ NodeController::ServiceEndpoint::ServiceEndpoint(const std::string& endpoint)
 void NodeController::ServiceEndpoint::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "NodeController");
+    LOG(INFO) << "Establishing NodeControllerService on " << endpoint();
     rpcz::server server(application_);
     ::artm::core::NodeControllerServiceImpl node_controller_service_impl;
     server.register_service(&node_controller_service_impl);
     server.bind(endpoint());
     application_.run();
+    LOG(INFO) << "NodeControllerService on " << endpoint() << " is stopped.";
   } catch(...) {
     LOG(FATAL) << "Fatal exception in NodeController::ServiceEndpoint::ThreadFunction() function";
     return;

@@ -76,7 +76,7 @@ with library.CreateInstance(instance_config) as instance:
         ################################################################################
         # include in model one Dirihlet Theta regularizer
 
-        regularizer_config_theta = messages_pb2.DirichletRegularizerThetaConfig()
+        regularizer_config_theta = messages_pb2.DirichletThetaConfig()
         for i in range(0, inner_iterations_count):
           # make case for different iterations here if need
           regularizer_config_theta.alpha_0.append(-1)
@@ -96,7 +96,7 @@ with library.CreateInstance(instance_config) as instance:
         ################################################################################
         # include in model one Dirihlet Phi regularizer
 
-        regularizer_config_phi = messages_pb2.DirichletRegularizerPhiConfig()
+        regularizer_config_phi = messages_pb2.DirichletPhiConfig()
         regularizer_config_phi.beta_0 = -0.01
         for j in range(0, 2):
           regularizer_config_phi.tilde_beta.value.append(0.1)
@@ -121,7 +121,7 @@ with library.CreateInstance(instance_config) as instance:
                 ################################################################################
                 # include in model one Dirihlet Phi regularizer
 
-                regularizer_config_phi = messages_pb2.DirichletRegularizerPhiConfig()
+                regularizer_config_phi = messages_pb2.DirichletPhiConfig()
                 regularizer_config_phi.beta_0 = -0.01
                 token_size = len(topic_model.token)
                 for j in range(0, token_size):

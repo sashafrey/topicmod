@@ -4,46 +4,36 @@
 #define SRC_ARTM_MEMCACHED_SERVICE_IMPL_H_
 
 #include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
-#include "boost/thread.hpp"
 #include "boost/thread/mutex.hpp"
 
+#include "artm/common.h"
 #include "artm/memcached_service.pb.h"
 #include "artm/memcached_service.rpcz.h"
+#include "artm/thread_safe_holder.h"
+#include "artm/topic_model.h"
 
 #include "rpcz/service.hpp"
 
 namespace artm {
 namespace memcached {
 
-// A draft implementatino of memcached service.
-// ToDo(alfrey): replace this with real memcached (http://memcached.org/)
+// A draft implementation of memcached service.
 class MemcachedServiceImpl : public MemcachedService {
  public:
-  MemcachedServiceImpl() : lock_() { ; }
+  MemcachedServiceImpl() : topic_model_(), lock_() { ; }
   ~MemcachedServiceImpl() { ; }
 
-  virtual void UpdateKey(const UpdateKeyArgs& request,
-                         ::rpcz::reply<UpdateKeyResult> response);
-
-  virtual void RetrieveKey(const RetrieveKeyArgs& request,
-                           ::rpcz::reply<RetrieveKeyResult> response);
-
-  virtual void RetrieveGroup(const RetrieveGroupArgs& request,
-                             ::rpcz::reply<RetrieveGroupResult> response);
+  virtual void UpdateModel(const ::artm::core::ModelIncrement& request,
+                       ::rpcz::reply< ::artm::TopicModel> response);
+  virtual void RetrieveModel(const ::artm::memcached::ModelId& request,
+                       ::rpcz::reply< ::artm::TopicModel> response);
 
  private:
-  typedef float ValueType;
-  typedef std::string KeyType;
-  typedef std::string KeyGroupType;
-
-  typedef std::vector<ValueType> ValueStore;
-  typedef std::map<KeyType, ValueStore> KeyStore;
-  typedef std::map<KeyGroupType, KeyStore> GroupStore;
-
-  GroupStore data_;
+  std::map<::artm::core::ModelId, std::shared_ptr<::artm::core::TopicModel>> topic_model_;
   mutable boost::mutex lock_;
 };
 

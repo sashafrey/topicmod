@@ -43,28 +43,16 @@ void rpcz_protobuf_AddDesc_memcached_5fservice_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  ::artm::protobuf_AddDesc_messages_2eproto();
+  ::artm::core::protobuf_AddDesc_internals_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027memcached_service.proto\022\016artm.memcache"
-    "d\"B\n\rUpdateKeyArgs\022\021\n\tkey_group\030\001 \002(\t\022\013\n"
-    "\003key\030\002 \002(\t\022\021\n\005value\030\003 \003(\002B\002\020\001\"S\n\017UpdateK"
-    "eyResult\022-\n\nerror_code\030\001 \002(\0162\031.artm.memc"
-    "ached.ErrorCode\022\021\n\005value\030\002 \003(\002B\002\020\001\"1\n\017Re"
-    "trieveKeyArgs\022\021\n\tkey_group\030\001 \002(\t\022\013\n\003key\030"
-    "\002 \002(\t\"U\n\021RetrieveKeyResult\022-\n\nerror_code"
-    "\030\001 \002(\0162\031.artm.memcached.ErrorCode\022\021\n\005val"
-    "ue\030\002 \003(\002B\002\020\001\"&\n\021RetrieveGroupArgs\022\021\n\tkey"
-    "_group\030\001 \002(\t\"Q\n\023RetrieveGroupResult\022-\n\ne"
-    "rror_code\030\001 \002(\0162\031.artm.memcached.ErrorCo"
-    "de\022\013\n\003key\030\002 \003(\t*X\n\tErrorCode\022\014\n\010kSuccess"
-    "\020\000\022\020\n\014kKeyNotFound\020\001\022\025\n\021kKeyGroupNotFoun"
-    "d\020\002\022\024\n\020kInvalidArgument\020\0032\213\002\n\020MemcachedS"
-    "ervice\022K\n\tUpdateKey\022\035.artm.memcached.Upd"
-    "ateKeyArgs\032\037.artm.memcached.UpdateKeyRes"
-    "ult\022Q\n\013RetrieveKey\022\037.artm.memcached.Retr"
-    "ieveKeyArgs\032!.artm.memcached.RetrieveKey"
-    "Result\022W\n\rRetrieveGroup\022!.artm.memcached"
-    ".RetrieveGroupArgs\032#.artm.memcached.Retr"
-    "ieveGroupResult", 815);
+    "d\032\016messages.proto\032\017internals.proto\"\033\n\007Mo"
+    "delId\022\020\n\010model_id\030\001 \002(\t2\212\001\n\020MemcachedSer"
+    "vice\022:\n\013UpdateModel\022\031.artm.core.ModelInc"
+    "rement\032\020.artm.TopicModel\022:\n\rRetrieveMode"
+    "l\022\027.artm.memcached.ModelId\032\020.artm.TopicM"
+    "odel", 244);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "memcached_service.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_memcached_5fservice_2eproto);
@@ -84,22 +72,16 @@ const ::google::protobuf::ServiceDescriptor* MemcachedService::GetDescriptor() {
   return MemcachedService_descriptor_;
 }
 
-void MemcachedService::UpdateKey(const ::artm::memcached::UpdateKeyArgs&,
-                         ::rpcz::reply< ::artm::memcached::UpdateKeyResult> reply) {
+void MemcachedService::UpdateModel(const ::artm::core::ModelIncrement&,
+                         ::rpcz::reply< ::artm::TopicModel> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
-              "Method UpdateKey() not implemented.");
+              "Method UpdateModel() not implemented.");
 }
 
-void MemcachedService::RetrieveKey(const ::artm::memcached::RetrieveKeyArgs&,
-                         ::rpcz::reply< ::artm::memcached::RetrieveKeyResult> reply) {
+void MemcachedService::RetrieveModel(const ::artm::memcached::ModelId&,
+                         ::rpcz::reply< ::artm::TopicModel> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
-              "Method RetrieveKey() not implemented.");
-}
-
-void MemcachedService::RetrieveGroup(const ::artm::memcached::RetrieveGroupArgs&,
-                         ::rpcz::reply< ::artm::memcached::RetrieveGroupResult> reply) {
-  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
-              "Method RetrieveGroup() not implemented.");
+              "Method RetrieveModel() not implemented.");
 }
 
 void MemcachedService::call_method(const ::google::protobuf::MethodDescriptor* method,
@@ -108,19 +90,14 @@ void MemcachedService::call_method(const ::google::protobuf::MethodDescriptor* m
   GOOGLE_DCHECK_EQ(method->service(), MemcachedService_descriptor_);
   switch(method->index()) {
     case 0:
-      UpdateKey(
-          *::google::protobuf::down_cast<const ::artm::memcached::UpdateKeyArgs*>(&request),
-          ::rpcz::reply< ::artm::memcached::UpdateKeyResult>(channel));
+      UpdateModel(
+          *::google::protobuf::down_cast<const ::artm::core::ModelIncrement*>(&request),
+          ::rpcz::reply< ::artm::TopicModel>(channel));
       break;
     case 1:
-      RetrieveKey(
-          *::google::protobuf::down_cast<const ::artm::memcached::RetrieveKeyArgs*>(&request),
-          ::rpcz::reply< ::artm::memcached::RetrieveKeyResult>(channel));
-      break;
-    case 2:
-      RetrieveGroup(
-          *::google::protobuf::down_cast<const ::artm::memcached::RetrieveGroupArgs*>(&request),
-          ::rpcz::reply< ::artm::memcached::RetrieveGroupResult>(channel));
+      RetrieveModel(
+          *::google::protobuf::down_cast<const ::artm::memcached::ModelId*>(&request),
+          ::rpcz::reply< ::artm::TopicModel>(channel));
       break;
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -133,11 +110,9 @@ const ::google::protobuf::Message& MemcachedService::GetRequestPrototype(
   GOOGLE_DCHECK_EQ(method->service(), descriptor());
   switch(method->index()) {
     case 0:
-      return ::artm::memcached::UpdateKeyArgs::default_instance();
+      return ::artm::core::ModelIncrement::default_instance();
     case 1:
-      return ::artm::memcached::RetrieveKeyArgs::default_instance();
-    case 2:
-      return ::artm::memcached::RetrieveGroupArgs::default_instance();
+      return ::artm::memcached::ModelId::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *reinterpret_cast< ::google::protobuf::Message*>(NULL);
@@ -149,11 +124,9 @@ const ::google::protobuf::Message& MemcachedService::GetResponsePrototype(
   GOOGLE_DCHECK_EQ(method->service(), descriptor());
   switch(method->index()) {
     case 0:
-      return ::artm::memcached::UpdateKeyResult::default_instance();
+      return ::artm::TopicModel::default_instance();
     case 1:
-      return ::artm::memcached::RetrieveKeyResult::default_instance();
-    case 2:
-      return ::artm::memcached::RetrieveGroupResult::default_instance();
+      return ::artm::TopicModel::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *reinterpret_cast< ::google::protobuf::Message*>(NULL);
@@ -173,16 +146,16 @@ MemcachedService_Stub::~MemcachedService_Stub() {
   if (owns_channel_) delete channel_;
 }
 
-void MemcachedService_Stub::UpdateKey(const ::artm::memcached::UpdateKeyArgs& request,
-                              ::artm::memcached::UpdateKeyResult* response,
+void MemcachedService_Stub::UpdateModel(const ::artm::core::ModelIncrement& request,
+                              ::artm::TopicModel* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
                         MemcachedService::descriptor()->method(0),
                         request, response, rpc, done);
 }
-void MemcachedService_Stub::UpdateKey(const ::artm::memcached::UpdateKeyArgs& request,
-                              ::artm::memcached::UpdateKeyResult* response,
+void MemcachedService_Stub::UpdateModel(const ::artm::core::ModelIncrement& request,
+                              ::artm::TopicModel* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
@@ -194,42 +167,21 @@ void MemcachedService_Stub::UpdateKey(const ::artm::memcached::UpdateKeyArgs& re
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void MemcachedService_Stub::RetrieveKey(const ::artm::memcached::RetrieveKeyArgs& request,
-                              ::artm::memcached::RetrieveKeyResult* response,
+void MemcachedService_Stub::RetrieveModel(const ::artm::memcached::ModelId& request,
+                              ::artm::TopicModel* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
                         MemcachedService::descriptor()->method(1),
                         request, response, rpc, done);
 }
-void MemcachedService_Stub::RetrieveKey(const ::artm::memcached::RetrieveKeyArgs& request,
-                              ::artm::memcached::RetrieveKeyResult* response,
+void MemcachedService_Stub::RetrieveModel(const ::artm::memcached::ModelId& request,
+                              ::artm::TopicModel* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
                         MemcachedService::descriptor()->method(1),
-                        request, response, &rpc, NULL);
-  rpc.wait();
-  if (!rpc.ok()) {
-    throw ::rpcz::rpc_error(rpc);
-  }
-}
-void MemcachedService_Stub::RetrieveGroup(const ::artm::memcached::RetrieveGroupArgs& request,
-                              ::artm::memcached::RetrieveGroupResult* response,
-                              ::rpcz::rpc* rpc,
-                              ::rpcz::closure* done) {
-  channel_->call_method(service_name_,
-                        MemcachedService::descriptor()->method(2),
-                        request, response, rpc, done);
-}
-void MemcachedService_Stub::RetrieveGroup(const ::artm::memcached::RetrieveGroupArgs& request,
-                              ::artm::memcached::RetrieveGroupResult* response,
-                              long deadline_ms) {
-  ::rpcz::rpc rpc;
-  rpc.set_deadline_ms(deadline_ms);
-  channel_->call_method(service_name_,
-                        MemcachedService::descriptor()->method(2),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {

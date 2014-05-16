@@ -44,23 +44,21 @@ class Instance : boost::noncopyable {
 
   int processor_queue_size() const;
 
-  // Creates a model and returns model_id
-  int CreateModel(const ModelConfig& config);
-
   // Retrieves topic model.
   // Returns true if succeeded, and false if model_id hasn't been found.
-  bool RequestModelTopics(int model_id, ModelTopics* model_topics);
+  bool RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model);
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
-  void ReconfigureModel(int model_id, const ModelConfig& config);
+  void ReconfigureModel(const ModelConfig& config);
 
-  void DisposeModel(int model_id);
+  void DisposeModel(ModelId model_id);
   void Reconfigure(const InstanceConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
 
   void CreateOrReconfigureRegularizer(const std::string& name,
                                       std::shared_ptr<regularizer::RegularizerInterface> regularizer);
   void DisposeRegularizer(const std::string& name);
+  void ForceSyncWithMemcached(ModelId model_id);
   void InvokePhiRegularizers();
 
  private:
@@ -72,8 +70,6 @@ class Instance : boost::noncopyable {
   mutable boost::mutex lock_;
   int instance_id_;
   ThreadSafeHolder<InstanceSchema> schema_;
-
-  int next_model_id_;
 
   rpcz::application application_;
   ThreadSafeHolder<artm::memcached::MemcachedService_Stub> memcached_service_proxy_;

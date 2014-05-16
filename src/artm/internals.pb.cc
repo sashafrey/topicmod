@@ -195,7 +195,7 @@ void protobuf_AddDesc_internals_2eproto() {
     "\017ProcessorOutput\022\022\n\nbatch_uuid\030\001 \002(\t\022\026\n\016"
     "data_loader_id\030\002 \002(\005\0222\n\017model_increment\030"
     "\003 \003(\0132\031.artm.core.ModelIncrement\"\204\002\n\016Mod"
-    "elIncrement\022\020\n\010model_id\030\001 \002(\005\022\024\n\014topics_"
+    "elIncrement\022\020\n\010model_id\030\001 \002(\t\022\024\n\014topics_"
     "count\030\002 \002(\005\022\027\n\017items_processed\030\003 \001(\005\022\030\n\020"
     "discovered_token\030\004 \003(\t\022\r\n\005token\030\005 \003(\t\022.\n"
     "\017token_increment\030\006 \003(\0132\025.artm.core.Float"
@@ -1461,7 +1461,7 @@ ModelIncrement::ModelIncrement(const ModelIncrement& from)
 
 void ModelIncrement::SharedCtor() {
   _cached_size_ = 0;
-  model_id_ = 0;
+  model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   topics_count_ = 0;
   items_processed_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1472,6 +1472,9 @@ ModelIncrement::~ModelIncrement() {
 }
 
 void ModelIncrement::SharedDtor() {
+  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_id_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -1499,7 +1502,11 @@ ModelIncrement* ModelIncrement::New() const {
 
 void ModelIncrement::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    model_id_ = 0;
+    if (has_model_id()) {
+      if (model_id_ != &::google::protobuf::internal::kEmptyString) {
+        model_id_->clear();
+      }
+    }
     topics_count_ = 0;
     items_processed_ = 0;
   }
@@ -1520,14 +1527,15 @@ bool ModelIncrement::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required int32 model_id = 1;
+      // required string model_id = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &model_id_)));
-          set_has_model_id();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_model_id()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->model_id().data(), this->model_id().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -1719,9 +1727,13 @@ bool ModelIncrement::MergePartialFromCodedStream(
 
 void ModelIncrement::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required int32 model_id = 1;
+  // required string model_id = 1;
   if (has_model_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->model_id(), output);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->model_id().data(), this->model_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->model_id(), output);
   }
 
   // required int32 topics_count = 2;
@@ -1790,9 +1802,14 @@ void ModelIncrement::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ModelIncrement::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required int32 model_id = 1;
+  // required string model_id = 1;
   if (has_model_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->model_id(), target);
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->model_id().data(), this->model_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->model_id(), target);
   }
 
   // required int32 topics_count = 2;
@@ -1866,10 +1883,10 @@ int ModelIncrement::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required int32 model_id = 1;
+    // required string model_id = 1;
     if (has_model_id()) {
       total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
+        ::google::protobuf::internal::WireFormatLite::StringSize(
           this->model_id());
     }
 

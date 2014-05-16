@@ -32,10 +32,9 @@ int repeated_field_index_of(const T& field, V value) {
   return -1;
 }
 
-inline bool model_has_token(const ModelTopics& model_topics, std::string token) {
-  for (int i = 0; i < model_topics.token_topic_size(); ++i) {
-    std::string cur_token = model_topics.token_topic(i).token();
-    if (cur_token == token) return true;
+inline bool model_has_token(const ::artm::TopicModel& topic_model, std::string token) {
+  for (int i = 0; i < topic_model.token_size(); ++i) {
+    if (topic_model.token(i) == token) return true;
   }
 
   return false;

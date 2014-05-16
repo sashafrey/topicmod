@@ -54,6 +54,7 @@ src/Win32/*
 *.log.INFO.*
 *.log.WARNING.*
 *.log.ERROR.*
+*.batch
 
 # Binaries
 /src/artm/unittests/

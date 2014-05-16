@@ -39,7 +39,7 @@ class Instance {
   ~Instance();
 
   int id() const { return id_; }
-  std::shared_ptr<ModelTopics> GetTopics(const Model& model);
+  std::shared_ptr<TopicModel> GetTopicModel(const Model& model);
   void Reconfigure(const InstanceConfig& config);
 
   const InstanceConfig& config() const { return config_; }
@@ -61,13 +61,12 @@ class Model {
   void InvokePhiRegularizers();
 
   int instance_id() const { return instance_id_; }
-  int model_id() const { return model_id_; }
+  const std::string& model_id() const { return config_.model_id(); }
 
   const ModelConfig& config() const { return config_; }
 
  private:
   int instance_id_;
-  int model_id_;
   ModelConfig config_;
   DISALLOW_COPY_AND_ASSIGN(Model);
 };

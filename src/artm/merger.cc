@@ -8,6 +8,7 @@
 
 #include "glog/logging.h"
 
+#include "artm/common.h"
 #include "artm/call_on_destruction.h"
 #include "artm/data_loader.h"
 #include "artm/exceptions.h"
@@ -26,6 +27,7 @@ Merger::Merger(boost::mutex* merger_queue_lock,
                ThreadSafeHolder<artm::memcached::MemcachedService_Stub>* memcached_service)
     : lock_(),
       topic_model_(lock_),
+      new_topic_model_(),
       schema_(schema),
       memcached_service_(memcached_service),
       merger_queue_lock_(merger_queue_lock),
@@ -44,35 +46,59 @@ Merger::~Merger() {
   }
 }
 
-void Merger::DisposeModel(int model_id) {
+void Merger::DisposeModel(ModelId model_id) {
   topic_model_.erase(model_id);
+
+  MergerTask task;
+  task.task_type = kDisposeModel;
+  task.model_id = model_id;
+  task.sync_event = nullptr;
+  internal_task_queue_.push(task);
 }
 
-void Merger::UpdateModel(int model_id, const ModelConfig& model) {
-  if (!topic_model_.has_key(model_id)) {
+void Merger::UpdateModel(const ModelConfig& model) {
+  if (!topic_model_.has_key(model.model_id())) {
     // Handle more type of reconfigs - for example, changing the number of topics;
-    auto ttm = std::make_shared<TopicModel>(model.topics_count(), model.score_size());
-    topic_model_.set(model_id, ttm);
+    auto ttm = std::make_shared<TopicModel>(model.model_id(), model.topics_count(),
+                                            model.score_size());
+    topic_model_.set(model.model_id(), ttm);
   }
 
-  auto ttm = topic_model_.get(model_id);
+  auto ttm = topic_model_.get(model.model_id());
   if (ttm->topic_size() != model.topics_count()) {
     std::string message("Unable to change the number of topics in topic model");
     BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(message));
   }
 }
 
+void Merger::ForceSyncWithMemcached(ModelId model_id) {
+  rpcz::sync_event sync_event;
+
+  MergerTask task;
+  task.task_type = kForceSyncWithMemcached;
+  task.model_id = model_id;
+  task.sync_event = &sync_event;
+  internal_task_queue_.push(task);
+
+  sync_event.wait();
+}
+
+std::shared_ptr<const ::artm::core::TopicModel>
+Merger::GetLatestTopicModel(ModelId model_id) const {
+  return topic_model_.get(model_id);
+}
+
 void Merger::InvokePhiRegularizers() {
   auto schema = schema_->get();
-  std::vector<int> model_ids = schema->GetModelIds();
+  std::vector<ModelId> model_ids = schema->GetModelIds();
 
-  std::for_each(model_ids.begin(), model_ids.end(), [&](int model_id) {
+  std::for_each(model_ids.begin(), model_ids.end(), [&](ModelId model_id) {
     const ModelConfig& model = schema->model_config(model_id);
     auto cur_ttm = topic_model_.get(model_id);
 
     if (cur_ttm.get() != nullptr) {
       auto reg_names = model.regularizer_name();
-      auto new_ttm = std::make_shared<TopicModel>(*cur_ttm);
+      auto new_ttm = std::make_shared<::artm::core::TopicModel>(*cur_ttm);
 
       for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
         reg_name_iterator++) {
@@ -94,11 +120,6 @@ void Merger::InvokePhiRegularizers() {
   });
 }
 
-std::shared_ptr<const TopicModel>
-Merger::GetLatestTopicModel(int model_id) const {
-  return topic_model_.get(model_id);
-}
-
 void Merger::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "Merger thread");
@@ -110,13 +131,32 @@ void Merger::ThreadFunction() {
       // which also throws boost::thread_interrupted
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-      // Merge everything from the queue and update topic model.
-      for (;;) {
+      for (;;) {  // MAIN FOR LOOP
+        // First, handle priority tasks in the internal_task_queue.
+        MergerTask merger_task;
+        if (internal_task_queue_.try_pop(&merger_task)) {
+          switch (merger_task.task_type) {
+            case kDisposeModel:
+              new_topic_model_.erase(merger_task.model_id);
+              break;
+            case kForceSyncWithMemcached:
+              SyncWithMemcached(merger_task.model_id);
+              break;
+          }
+
+          if (merger_task.sync_event != nullptr) {
+            merger_task.sync_event->signal();
+          }
+
+          continue;  // MAIN FOR LOOP
+        }
+
+        // Second, merge everything from the queue and update topic model.
         std::shared_ptr<const ProcessorOutput> processor_output;
         {
           boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
           if (merger_queue_->empty()) {
-            break;
+            break;  // MAIN FOR LOOP
           }
 
           processor_output = merger_queue_->front();
@@ -137,50 +177,23 @@ void Merger::ThreadFunction() {
              modex_index < processor_output->model_increment_size();
              modex_index++) {
           auto model_increment = processor_output->model_increment(modex_index);
-          int model_id = model_increment.model_id();
+          ModelId model_id = model_increment.model_id();
           auto cur_ttm = topic_model_.get(model_id);
           if (cur_ttm.get() == nullptr) {
-            // a model had been disposed during ongoing processing;
-            continue;
+            // model had been disposed during ongoing processing;
+            continue;  // for (int modex_index = 0; ...
           }
 
-          auto new_ttm = std::make_shared<TopicModel>(*cur_ttm);
-          new_ttm->IncreaseItemsProcessed(model_increment.items_processed());
-          for (int score_index = 0; score_index < model_increment.score_size(); ++score_index) {
-            new_ttm->IncreaseScores(score_index, model_increment.score(score_index),
-                                    model_increment.score_norm(score_index));
+          auto iter = new_topic_model_.find(model_id);
+          if (iter == new_topic_model_.end()) {
+            new_topic_model_.insert(std::make_pair(
+              model_id, std::make_shared<::artm::core::TopicModel>(*cur_ttm)));
+            iter = new_topic_model_.find(model_id);
           }
 
-          // Add new tokens discovered by processor
-          for (int token_index = 0;
-               token_index < model_increment.discovered_token_size();
-               ++token_index) {
-            std::string new_token = model_increment.discovered_token(token_index);
-            if (!new_ttm->has_token(new_token)) {
-              new_ttm->AddToken(new_token);
-            }
-          }
-
-          int topics_count = new_ttm->topic_size();
-
-          for (int token_index = 0;
-               token_index < model_increment.token_increment_size();
-               ++token_index) {
-            const FloatArray& counters = model_increment.token_increment(token_index);
-            const std::string& token = model_increment.token(token_index);
-            for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
-              new_ttm->IncreaseTokenWeight(token, topic_index, counters.value(topic_index));
-            }
-          }
-
-          std::shared_ptr<MemcachedService_Stub> memcached_service = memcached_service_->get();
-          if (memcached_service != nullptr) {
-            SyncWithMemcached(*cur_ttm, new_ttm.get(), memcached_service.get());
-          }
-
-          topic_model_.set(model_id, new_ttm);
+          iter->second->ApplyDiff(model_increment);
         }
-      }
+      }  // MAIN FOR LOOP
     }
   }
   catch(boost::thread_interrupted&) {
@@ -192,116 +205,46 @@ void Merger::ThreadFunction() {
   }
 }
 
-// ToDo(alfrey): do we need some special sync for newly added tokens?
-void Merger::SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
-                               artm::memcached::MemcachedService_Stub* memcached_proxy) {
-  const std::string kPrefixToken = "tk_";
-  const std::string kPrefixScore = "sc_";  // todo(alfrey) scores should also have GUIDs.
-  const std::string kPrefixItemsProcessed = "ip_";
+void Merger::SyncWithMemcached(ModelId model_id) {
+  std::vector<ModelId> model_ids;
+  if (model_id.empty()) {
+    for (auto iter = new_topic_model_.begin(); iter != new_topic_model_.end(); ++iter) {
+      model_ids.push_back(iter->first);
+    }
+  }
 
-  assert(old_ttm.topic_size() == new_ttm->topic_size());
-  int topic_size = new_ttm->topic_size();
+  for (auto &model_id : model_ids) {
+    // This method (SyncWithMemcached) calculates a diff between new_ttm and old_ttm,
+    // and then sends it to MemcachedService as ModelIncrement.
+    auto old_ttm = topic_model_.get(model_id);
+    if (old_ttm.get() == nullptr)
+      return;  // model had been disposed during ongoing processing;
 
-  int timeout = -1;
+    auto new_ttm = new_topic_model_.find(model_id);
+    if (new_ttm == new_topic_model_.end())
+      return;  // model had been disposed during ongoing processing;
 
-  // ToDo(alfrey): model should be identified by a guid, consistent across all instances.
-  std::string key_group = "<model_guid>";
-
-  // 1. Synchronize tokens.
-  for (int token_index = 0; token_index < new_ttm->token_size(); ++token_index) {
-    const std::string& token = new_ttm->token(token_index);
-    auto new_iter = new_ttm->GetTopicWeightIterator(token_index);
-
-    artm::memcached::UpdateKeyArgs update_key_args;
-    update_key_args.set_key_group(key_group);
-    update_key_args.set_key(kPrefixToken + token);
-
-    if (old_ttm.has_token(token)) {
-      auto old_iter = old_ttm.GetTopicWeightIterator(token);
-      while ((old_iter.NextTopic() < topic_size) && (new_iter.NextTopic() < topic_size)) {
-        update_key_args.add_value(new_iter.NotNormalizedWeight() - old_iter.NotNormalizedWeight());
-      }
+    std::shared_ptr<MemcachedService_Stub> memcached_service = memcached_service_->get();
+    if (memcached_service == nullptr) {
+      topic_model_.set(model_id, new_ttm->second);
+      new_topic_model_.erase(model_id);
     } else {
-      while (new_iter.NextTopic() < topic_size) {
-        update_key_args.add_value(new_iter.NotNormalizedWeight());
+      ModelIncrement model_increment;
+      new_ttm->second->CalculateDiff(*old_ttm, &model_increment);
+
+      try {
+        ::artm::TopicModel reply;
+        memcached_service->UpdateModel(model_increment, &reply);
+        std::shared_ptr<::artm::core::TopicModel> new_global_ttm(
+          new ::artm::core::TopicModel(reply));
+
+        topic_model_.set(model_id, new_global_ttm);
+        new_topic_model_.erase(model_id);
+      } catch(const rpcz::rpc_error&) {
+        LOG(ERROR) << "Merger failed to send updates to memcached service.";
+        throw;
       }
     }
-
-    artm::memcached::UpdateKeyResult update_key_result;
-    try {
-      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error&) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    if (update_key_result.value_size() != topic_size) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-      new_ttm->SetTokenWeight(token_index, topic_index, update_key_result.value(topic_index));
-    }
-  }
-
-  // 2. Synchronize scores.
-  for (int score_index = 0; score_index < new_ttm->score_size(); ++score_index) {
-    artm::memcached::UpdateKeyArgs update_key_args;
-    update_key_args.set_key_group(key_group);
-
-    // ToDo(alfrey): score_guid
-    update_key_args.set_key(kPrefixScore + boost::lexical_cast<std::string>(score_index));
-
-    update_key_args.add_value(static_cast<float>(
-        new_ttm->score_not_normalized(score_index) - old_ttm.score_not_normalized(score_index)));
-    update_key_args.add_value(static_cast<float>(
-      new_ttm->score_normalizer(score_index) - old_ttm.score_normalizer(score_index)));
-
-    artm::memcached::UpdateKeyResult update_key_result;
-    try {
-      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error&) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      continue;
-    }
-
-    new_ttm->SetScores(score_index, update_key_result.value(0), update_key_result.value(1));
-  }
-
-  // 3. Synchronize items processed.
-  {
-    artm::memcached::UpdateKeyArgs update_key_args;
-    update_key_args.set_key_group(key_group);
-    update_key_args.set_key(kPrefixItemsProcessed);
-
-    update_key_args.add_value(static_cast<float>(
-      new_ttm->items_processed() - old_ttm.items_processed()));
-
-    artm::memcached::UpdateKeyResult update_key_result;
-    try {
-      memcached_proxy->UpdateKey(update_key_args, &update_key_result, timeout);
-    } catch(const rpcz::rpc_error&) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      return;
-    }
-
-    if (update_key_result.error_code() != artm::memcached::kSuccess) {
-      LOG(ERROR) << "Merger failed to send updates to memcached service.";
-      return;
-    }
-
-    new_ttm->SetItemsProcessed(static_cast<int>(update_key_result.value(0)));
   }
 }
 

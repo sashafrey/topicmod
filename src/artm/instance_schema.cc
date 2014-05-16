@@ -24,7 +24,7 @@ const InstanceConfig& InstanceSchema::instance_config() const {
 }
 
 void InstanceSchema::set_model_config(
-    int id, const std::shared_ptr<const ModelConfig>& model_config) {
+    ModelId id, const std::shared_ptr<const ModelConfig>& model_config) {
   auto iter = models_config_.find(id);
   if (iter != models_config_.end()) {
     iter->second = model_config;
@@ -33,17 +33,17 @@ void InstanceSchema::set_model_config(
   }
 }
 
-const ModelConfig& InstanceSchema::model_config(int id) const {
+const ModelConfig& InstanceSchema::model_config(ModelId id) const {
   auto iter = models_config_.find(id);
   return *(iter->second);
 }
 
-bool InstanceSchema::has_model_config(int id) const {
+bool InstanceSchema::has_model_config(ModelId id) const {
   auto iter = models_config_.find(id);
   return iter != models_config_.end();
 }
 
-void InstanceSchema::clear_model_config(int id) {
+void InstanceSchema::clear_model_config(ModelId id) {
   auto iter = models_config_.find(id);
   if (iter != models_config_.end()) {
     models_config_.erase(iter);
@@ -80,8 +80,8 @@ std::shared_ptr<regularizer::RegularizerInterface> InstanceSchema::regularizer(c
   }
 }
 
-std::vector<int> InstanceSchema::GetModelIds() const {
-  std::vector<int> retval;
+std::vector<ModelId> InstanceSchema::GetModelIds() const {
+  std::vector<ModelId> retval;
   for (auto iter = models_config_.begin(); iter != models_config_.end(); ++iter) {
     retval.push_back(iter->first);
   }

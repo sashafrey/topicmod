@@ -48,7 +48,7 @@ message ProcessorOutput
 
 // All information, gathered by Processor for a particular batch and model.
 message ModelIncrement {
-  required int32 model_id = 1;
+  required string model_id = 1;
   required int32 topics_count = 2;
   optional int32 items_processed = 3;
 

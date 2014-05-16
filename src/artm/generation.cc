@@ -29,6 +29,10 @@ int Generation::id() const {
   return id_;
 }
 
+bool Generation::empty() const {
+  return generation_.empty();
+}
+
 std::shared_ptr<const Batch> Generation::batch(const boost::uuids::uuid& uuid,
                                                const std::string& disk_path) {
   std::shared_ptr<const Batch> batch_ptr = nullptr;

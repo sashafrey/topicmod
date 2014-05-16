@@ -104,12 +104,12 @@ TEST(CppInterface, Basic) {
   model.Disable();
 
   // Request model topics
-  std::shared_ptr<artm::ModelTopics> model_topics = instance.GetTopics(model);
+  std::shared_ptr<artm::TopicModel> topic_model = instance.GetTopicModel(model);
 
   int nUniqueTokens = nTokens;
-  EXPECT_EQ(nUniqueTokens, model_topics->token_topic_size());
-  const artm::TokenTopics& first_token_topics = model_topics->token_topic(0);
-  EXPECT_EQ(first_token_topics.topic_weight_size(), nTopics);
+  EXPECT_EQ(nUniqueTokens, topic_model->token_size());
+  auto first_token_topics = topic_model->token_weights(0);
+  EXPECT_EQ(first_token_topics.value_size(), nTopics);
 }
 
 TEST(CppInterface, Exceptions) {

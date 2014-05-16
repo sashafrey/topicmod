@@ -121,10 +121,11 @@ class Processor : boost::noncopyable {
     void Reset();
 
     const std::string& token() const { return token_; }
-    int id() const { return token_id_; }
+    int id_in_model() const { return id_in_model_; }
+    int id_in_batch() const { return id_in_batch_; }
     int count() const { return count_; }
     TopicWeightIterator GetTopicWeightIterator() const {
-      return std::move(topic_model_.GetTopicWeightIterator(id()));
+      return std::move(topic_model_.GetTopicWeightIterator(id_in_model()));
     }
 
    private:
@@ -138,7 +139,8 @@ class Processor : boost::noncopyable {
     // Current state of the iterator
     int token_index_;
     std::string token_;
-    int token_id_;
+    int id_in_model_;
+    int id_in_batch_;
     int count_;
   };
 };

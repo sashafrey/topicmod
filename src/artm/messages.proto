@@ -38,6 +38,8 @@ message DataLoaderConfig {
   optional string disk_path = 2;
   optional int32 queue_size = 3 [default = 10];
   repeated Stream stream = 4;
+  optional bool compact_batches = 5 [default = true];
+  optional bool cache_processor_output = 6 [default = false];
 }
 
 // Defines a stream in DataLoader.
@@ -58,10 +60,12 @@ message Stream {
 message InstanceConfig {
   optional int32 processors_count = 1 [default = 1];
   optional string memcached_endpoint = 2;
+  optional int32 merger_queue_max_size = 3 [default = 10];
 }
 
 // Configuration of a model.
 message ModelConfig {
+  optional string model_id = 1 [default = ""];  // required; should be unique (guid?);
   optional int32 topics_count = 2 [default = 32];
   optional bool enabled = 3 [default = false];
   optional int32 inner_iterations_count = 4 [default = 10];
@@ -85,6 +89,12 @@ message RegularizerConfig {
   required string name = 1;
   required Type type = 2;
   required bytes config = 3; 
+}
+
+// Configuration of a Dirichlet Phi regularizer
+message DirichletRegularizerPhiConfig {
+  required double beta_0 = 1;
+  required DoubleArray tilde_beta = 2;
 }
 
 // Configuration of a Dirichlet Theta regularizer
@@ -115,7 +125,11 @@ message SmoothSparsePhiConfig {
 }
 
 message DoubleArray {
-  repeated double value = 1;
+  repeated double value = 1 [packed = true];
+}
+
+message FloatArray {
+  repeated float value = 1 [packed = true];
 }
 
 message Score {
@@ -143,33 +157,31 @@ message LoggerConfig {
   optional Level level = 2 [default = INFO];
 }
 
-///////////////////////////////////////////////////////////
-// All messages below are intented to retrieve results
-// from the library. Perhaps they are very missleading and
-// should be redesigned (or at least renamed)
-///////////////////////////////////////////////////////////
+// A topic model, represented by Matrix Phi
+message TopicModel {
+  optional string model_id = 1 [default = ""];
+  optional int32 topics_count = 2;	   // number of topics in the model
+  optional int32 items_processed = 3;
 
-// Topic model, represented by matrix Phi.
-message ModelTopics {
-  repeated TokenTopics token_topic = 1;
-  optional int32 items_processed = 2;
+  repeated string token = 4;              // tokens, included in the model
+  repeated FloatArray token_weights = 5;  // one vector for each token
 
-  // scores, calculated for the model
-  repeated double score = 3;
-}
+  optional DoubleArray scores = 6;        // perplexity and other quality scores
 
-// Represents one row in matrix Phi.
-message TokenTopics {
-  optional string token = 1;
-  optional int32 token_id = 2;
-  repeated float topic_weight = 3;
-}
+  // Data structure to keep all the raw data of the model.
+  // This allows users to send a TopicModel back into BigARTM library.
+  message TopicModelInternals {
+    repeated FloatArray n_wt = 1;
+    repeated FloatArray r_wt = 2;
+    optional FloatArray n_t = 3;
+    optional DoubleArray scores_raw = 4;
+    optional DoubleArray scores_normalizer = 5;
+  }
 
-message ItemTopics {
-  optional int32 id = 1;
-  repeated float topic_weight = 2;
+  optional bytes internals = 7;  // serialized instance of TopicModelInternals
 }
 
 message BatchTopics {
-  repeated ItemTopics item_topics = 1;
+  repeated int32 item_id = 1;
+  repeated FloatArray item_weights = 2;
 }

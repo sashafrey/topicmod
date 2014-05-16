@@ -3,6 +3,14 @@
 #ifndef SRC_ARTM_COMMON_H_
 #define SRC_ARTM_COMMON_H_
 
-const float kTolerance = 1e-5f;
+#include <string>
+
+namespace artm {
+namespace core {
+
+typedef std::string ModelId;
+
+}  // namespace core
+}  // namespace artm
 
 #endif  // SRC_ARTM_COMMON_H_

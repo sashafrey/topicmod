@@ -70,6 +70,7 @@
   <ItemGroup>
     <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />
     <None Include="internals.proto" />
+    <None Include="memcached_service.proto" />
     <None Include="messages.proto" />
   </ItemGroup>
   <ItemDefinitionGroup>

@@ -530,12 +530,17 @@ class ModelIncrement : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 model_id = 1;
+  // required string model_id = 1;
   inline bool has_model_id() const;
   inline void clear_model_id();
   static const int kModelIdFieldNumber = 1;
-  inline ::google::protobuf::int32 model_id() const;
-  inline void set_model_id(::google::protobuf::int32 value);
+  inline const ::std::string& model_id() const;
+  inline void set_model_id(const ::std::string& value);
+  inline void set_model_id(const char* value);
+  inline void set_model_id(const char* value, size_t size);
+  inline ::std::string* mutable_model_id();
+  inline ::std::string* release_model_id();
+  inline void set_allocated_model_id(::std::string* model_id);
 
   // required int32 topics_count = 2;
   inline bool has_topics_count() const;
@@ -654,8 +659,9 @@ class ModelIncrement : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::int32 model_id_;
+  ::std::string* model_id_;
   ::google::protobuf::int32 topics_count_;
+  ::google::protobuf::int32 items_processed_;
   ::google::protobuf::RepeatedPtrField< ::std::string> discovered_token_;
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
   ::google::protobuf::RepeatedPtrField< ::artm::core::FloatArray > token_increment_;
@@ -663,7 +669,6 @@ class ModelIncrement : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< double > score_norm_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > item_id_;
   ::google::protobuf::RepeatedPtrField< ::artm::core::FloatArray > theta_;
-  ::google::protobuf::int32 items_processed_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
@@ -1102,7 +1107,7 @@ ProcessorOutput::mutable_model_increment() {
 
 // ModelIncrement
 
-// required int32 model_id = 1;
+// required string model_id = 1;
 inline bool ModelIncrement::has_model_id() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -1113,15 +1118,63 @@ inline void ModelIncrement::clear_has_model_id() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void ModelIncrement::clear_model_id() {
-  model_id_ = 0;
+  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
+    model_id_->clear();
+  }
   clear_has_model_id();
 }
-inline ::google::protobuf::int32 ModelIncrement::model_id() const {
+inline const ::std::string& ModelIncrement::model_id() const {
+  return *model_id_;
+}
+inline void ModelIncrement::set_model_id(const ::std::string& value) {
+  set_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    model_id_ = new ::std::string;
+  }
+  model_id_->assign(value);
+}
+inline void ModelIncrement::set_model_id(const char* value) {
+  set_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    model_id_ = new ::std::string;
+  }
+  model_id_->assign(value);
+}
+inline void ModelIncrement::set_model_id(const char* value, size_t size) {
+  set_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    model_id_ = new ::std::string;
+  }
+  model_id_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ModelIncrement::mutable_model_id() {
+  set_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    model_id_ = new ::std::string;
+  }
   return model_id_;
 }
-inline void ModelIncrement::set_model_id(::google::protobuf::int32 value) {
-  set_has_model_id();
-  model_id_ = value;
+inline ::std::string* ModelIncrement::release_model_id() {
+  clear_has_model_id();
+  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = model_id_;
+    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ModelIncrement::set_allocated_model_id(::std::string* model_id) {
+  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_id_;
+  }
+  if (model_id) {
+    set_has_model_id();
+    model_id_ = model_id;
+  } else {
+    clear_has_model_id();
+    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // required int32 topics_count = 2;

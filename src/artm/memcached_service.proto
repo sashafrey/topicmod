@@ -1,44 +1,13 @@
 package artm.memcached;
 
-enum ErrorCode {
-  kSuccess = 0;
-  kKeyNotFound = 1;
-  kKeyGroupNotFound = 2;
-  kInvalidArgument = 3;
-}
+import "messages.proto";
+import "internals.proto";
 
-message UpdateKeyArgs {
-  required string key_group = 1;
-  required string key = 2;
-  repeated float value = 3 [packed = true]; 
-}
-
-message UpdateKeyResult {
-  required ErrorCode error_code = 1;
-  repeated float value = 2 [packed = true];
-}
-
-message RetrieveKeyArgs {
-  required string key_group = 1;
-  required string key = 2;
-}
-
-message RetrieveKeyResult {
-  required ErrorCode error_code = 1;
-  repeated float value = 2 [packed = true];
-}
-
-message RetrieveGroupArgs {
-  required string key_group = 1;
-}
-
-message RetrieveGroupResult {
-  required ErrorCode error_code = 1;
-  repeated string key = 2;
+message ModelId {
+  required string model_id = 1;
 }
 
 service MemcachedService {
-  rpc UpdateKey(UpdateKeyArgs) returns (UpdateKeyResult);
-  rpc RetrieveKey(RetrieveKeyArgs) returns (RetrieveKeyResult);
-  rpc RetrieveGroup(RetrieveGroupArgs) returns (RetrieveGroupResult);
+  rpc UpdateModel(artm.core.ModelIncrement) returns (TopicModel);
+  rpc RetrieveModel(ModelId) returns (TopicModel);
 }

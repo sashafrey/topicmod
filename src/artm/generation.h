@@ -24,6 +24,7 @@ class Generation {
       : id_(generation.id_ + 1), generation_(generation.generation_) {}
 
   int id() const;
+  bool empty() const;
   int GetTotalItemsCount() const;
 
   std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid,

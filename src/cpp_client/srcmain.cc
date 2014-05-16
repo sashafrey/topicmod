@@ -20,12 +20,16 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   // Create memcached server
   MemcachedServer memcached_server("tcp://*:5555");
 
+  std::string batches_folder = "batches";
+  std::string vocab_file = "";
+  std::string docword_file = "";
+
   // Create instance and data_loader configs
   InstanceConfig instance_config;
   instance_config.set_processors_count(processors_count);
   // instance_config.set_memcached_endpoint("tcp://localhost:5555");
   DataLoaderConfig data_loader_config;
-  std::string batches_disk_path("batches");
+  std::string batches_disk_path(batches_folder);
   data_loader_config.set_disk_path(batches_disk_path);
 
   std::vector<std::shared_ptr<Instance>> instance;
@@ -61,6 +65,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_inner_iterations_count(10);
   model_config.set_stream_name("train_stream");
   model_config.set_reuse_theta(true);
+  model_config.set_model_id("15081980-90a7-4767-ab85-7cb551c39339");
 
   Score* score = model_config.add_score();
   score->set_type(Score_Type_Perplexity);
@@ -72,16 +77,15 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     model.push_back(std::make_shared<Model>(*instance[i], model_config));
   }
 
-  if (countFilesInDirectory(batches_disk_path, ".batch") == 0) {
+  int batch_files_count = countFilesInDirectory(batches_disk_path, ".batch");
+  if (batch_files_count == 0) {
+    std::cout << "No batches found, parsing collection from text files... ";
     // Load doc-word matrix
-    DocWordMatrix::Ptr doc_word_ptr = loadMatrixFileUCI(argv[1]);
-    VocabPtr vocab_ptr = loadVocab(argv[2]); //, doc_word_ptr->getW());
-    int no_words = vocab_ptr->size(); //doc_word_ptr->getW();
+    auto doc_word_ptr = loadMatrixFileUCI(docword_file.empty() ? argv[1] : docword_file);
+    VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
+    int no_words = vocab_ptr->size();
     int no_docs = doc_word_ptr->getD();
 
-    //int no_parts = 16;
-    //int doc_index = 0;
-    //int no_docs_per_part = no_docs / no_parts + 1;
     int no_docs_per_part = 1000;
     int no_parts = no_docs / no_docs_per_part + 1;
     int doc_index = 0;
@@ -107,26 +111,30 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
       // Index doc-word matrix
       data_loader[part_index % instance_size]->AddBatch(batch);
     }
-  }
 
+    std::cout << "OK.\n";
+  } else {
+    std::cout << "Found " << batch_files_count << " batches in folder '"
+              << batches_disk_path << "', will use them.\n";
+  }
 
   clock_t begin = clock();
 
   // Enable model and wait while each document pass through processor about 10 times.
   for (int i = 0; i < instance_size; ++i) model[i]->Enable();
-  std::shared_ptr<ModelTopics> model_topics;
+  std::shared_ptr<TopicModel> topic_model;
 
   for (int iter = 0; iter < 10; ++iter) {
     for (int i = 0; i < instance_size; ++i) data_loader[i]->InvokeIteration(1);
     for (int i = 0; i < instance_size; ++i) data_loader[i]->WaitIdle();
 
     for (int inst = 0; inst < instance_size; ++inst) {
-      model_topics = instance[inst]->GetTopics(*model[inst]);
+      topic_model = instance[inst]->GetTopicModel(*model[inst]);
       std::cout << "Iter #" << (iter + 1) << ": "
                 << "Inst #" << (inst + 1) << ": "
-                << "#Tokens = "  << model_topics->token_topic_size() << ", "
-                << "#Items = " << model_topics->items_processed() << ", "
-                << "Perplexity = " << model_topics->score(0) << endl;
+                << "#Tokens = "  << topic_model->token_size() << ", "
+                << "#Items = " << topic_model->items_processed() << ", "
+                << "Perplexity = " << topic_model->scores().value(0) << endl;
     }
   }
 
@@ -139,17 +147,16 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   // Log top 7 words per each topic
   {
     int wordsToSort = 7;
-    int no_tokens = model_topics->token_topic_size();
-    int nTopics = model_topics->token_topic(0).topic_weight_size();
+    int no_tokens = topic_model->token_size();
+    int nTopics = topic_model->topics_count();
 
     for (int topic_index = 0; topic_index < nTopics; topic_index++) {
       std::cout << "#" << (topic_index+1) << ": ";
 
       std::vector<std::pair<float, std::string> > p_w;
       for (int token_index = 0; token_index < no_tokens; ++token_index) {
-        const TokenTopics& token_topic = model_topics->token_topic(token_index);
-        string token = token_topic.token();
-        float weight = token_topic.topic_weight(topic_index);
+        string token = topic_model->token(token_index);
+        float weight = topic_model->token_weights(token_index).value(topic_index);
           p_w.push_back(std::pair<float, std::string>(weight, token));
       }
 
@@ -180,7 +187,7 @@ int main(int argc, char * argv[]) {
   ::google::InitGoogleLogging(argv[0]);
 
   int instance_size = 1;
-  int processors_size = 4;
+  int processors_size = 2;
   cout << proc(argc, argv, processors_size, instance_size)
        << " sec. ================= " << endl << endl;
 

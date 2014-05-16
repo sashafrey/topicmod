@@ -6,11 +6,13 @@
 #include "artm/messages.pb.h"
 
 TEST(TopicModelTest, Basic) {
+  const float kTolerance = 1e-5f;
+
   int no_topics = 3;
   int scores_count = 4;
   int no_tokens = 5;
 
-  artm::core::TopicModel topic_model(no_topics, scores_count);
+  artm::core::TopicModel topic_model(::artm::core::ModelId(), no_topics, scores_count);
   topic_model.AddToken("token_1");
   topic_model.AddToken("token_2");
   topic_model.AddToken("token_3");
@@ -118,7 +120,7 @@ TEST(TopicModelTest, Basic) {
   //  test 8
   no_topics = 1;
   for (int i = 1; i < 10; ++i) {
-    artm::core::TopicModel topic_model_1(no_topics, scores_count);
+    artm::core::TopicModel topic_model_1(::artm::core::ModelId(), no_topics, scores_count);
     topic_model_1.AddToken("token_1");
     topic_model_1.AddToken("token_2");
     topic_model_1.AddToken("token_3");

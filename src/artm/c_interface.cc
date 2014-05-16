@@ -170,18 +170,7 @@ int ArtmCreateInstance(int instance_id, int length, const char* config_blob) {
 }
 
 int ArtmCreateModel(int instance_id, int length, const char* config_blob) {
-  try {
-    artm::ModelConfig config;
-    if (!config.ParseFromArray(config_blob, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
-    auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
-    if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    int retval = instance->CreateModel(config);
-    assert(retval > 0);
-    return retval;
-  } CATCH_EXCEPTIONS;
+  return ArtmReconfigureModel(instance_id, length, config_blob);
 }
 
 int ArtmReconfigureInstance(int instance_id, int length, const char* config_blob) {
@@ -198,7 +187,7 @@ int ArtmReconfigureInstance(int instance_id, int length, const char* config_blob
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmReconfigureModel(int instance_id, int model_id, int length, const char* config_blob) {
+int ArtmReconfigureModel(int instance_id, int length, const char* config_blob) {
   try {
     artm::ModelConfig config;
     if (!config.ParseFromArray(config_blob, length)) {
@@ -207,26 +196,26 @@ int ArtmReconfigureModel(int instance_id, int model_id, int length, const char* 
 
     auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
     if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    instance->ReconfigureModel(model_id, config);
+    instance->ReconfigureModel(config);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmRequestBatchTopics(int instance_id, int model_id, int batch_length,
+int ArtmRequestBatchTopics(int instance_id, const char* model_id, int batch_length,
                            const char* batch_blob) {
   try {
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmRequestModelTopics(int instance_id, int model_id) {
+int ArtmRequestTopicModel(int instance_id, const char* model_id) {
   try {
-    artm::ModelTopics model_topics;
+    artm::TopicModel topic_model;
     auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
     if (instance == nullptr) return ARTM_OBJECT_NOT_FOUND;
 
-    instance->RequestModelTopics(model_id, &model_topics);
-    model_topics.SerializeToString(&message);
+    instance->RequestTopicModel(model_id, &topic_model);
+    topic_model.SerializeToString(&message);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
@@ -235,7 +224,7 @@ void ArtmDisposeInstance(int instance_id) {
   artm::core::InstanceManager::singleton().Erase(instance_id);
 }
 
-void ArtmDisposeModel(int instance_id, int model_id) {
+void ArtmDisposeModel(int instance_id, const char* model_id) {
   auto instance = artm::core::InstanceManager::singleton().Get(instance_id);
   if (instance == nullptr) return;
   instance->DisposeModel(model_id);

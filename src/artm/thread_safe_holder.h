@@ -3,6 +3,7 @@
 #ifndef SRC_ARTM_THREAD_SAFE_HOLDER_H_
 #define SRC_ARTM_THREAD_SAFE_HOLDER_H_
 
+#include <queue>
 #include <map>
 #include <memory>
 #include <utility>
@@ -108,6 +109,29 @@ class ThreadSafeCollectionHolder : boost::noncopyable {
  private:
   boost::mutex& lock_;
   std::map<K, std::shared_ptr<T> > object_;
+};
+
+template<typename T>
+class ThreadSafeQueue : boost::noncopyable {
+ public:
+  bool try_pop(T* elem) {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    if (queue_.empty())
+      return false;
+
+    T tmp_elem = queue_.front();
+    queue_.pop();
+    *elem = tmp_elem;
+    return true;
+  }
+
+  void push(const T& elem) {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    queue_.push(elem);
+  }
+ private:
+  boost::mutex lock_;
+  std::queue<T> queue_;
 };
 
 }  // namespace core

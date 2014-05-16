@@ -23,6 +23,8 @@
 #include "artm/topic_model.h"
 #include "artm/memcached_service.rpcz.h"
 
+#include "rpcz/sync_event.hpp"
+
 namespace artm {
 namespace core {
 
@@ -35,27 +37,40 @@ class Merger : boost::noncopyable {
 
   ~Merger();
 
-  void DisposeModel(int model_id);
-  void UpdateModel(int model_id, const ModelConfig& model);
-
+  void DisposeModel(ModelId model_id);
+  void UpdateModel(const ModelConfig& model);
+  void ForceSyncWithMemcached(ModelId model_id);
   void InvokePhiRegularizers();
 
-  std::shared_ptr<const TopicModel> GetLatestTopicModel(int model_id) const;
+  std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelId model_id) const;
 
  private:
+  enum MergerTaskType {
+    kDisposeModel,
+    kForceSyncWithMemcached,
+  };
+
+  struct MergerTask {
+    MergerTaskType task_type;
+    ModelId model_id;
+    rpcz::sync_event* sync_event;
+  };
+
   mutable boost::mutex lock_;
-  ThreadSafeCollectionHolder<int, TopicModel> topic_model_;
+  ThreadSafeCollectionHolder<ModelId, TopicModel> topic_model_;
+  std::map<ModelId, std::shared_ptr<TopicModel>> new_topic_model_;
   ThreadSafeHolder<InstanceSchema>* schema_;
   ThreadSafeHolder<artm::memcached::MemcachedService_Stub>* memcached_service_;
 
   boost::mutex* merger_queue_lock_;
   std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue_;
 
+  ThreadSafeQueue<MergerTask> internal_task_queue_;
+
   boost::thread thread_;
   void ThreadFunction();
 
-  static void SyncWithMemcached(const TopicModel& old_ttm, TopicModel* new_ttm,
-                                artm::memcached::MemcachedService_Stub* memcached_proxy);
+  void SyncWithMemcached(ModelId model_id);
 };
 
 }  // namespace core

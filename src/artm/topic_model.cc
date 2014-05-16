@@ -1,20 +1,22 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
-#include <glog/logging.h>
-
 #include <artm/topic_model.h>
 
 #include <assert.h>
-#include <string.h>
 
 #include <algorithm>
 #include <string>
 
+#include "glog/logging.h"
+
+#include "artm/exceptions.h"
+
 namespace artm {
 namespace core {
 
-TopicModel::TopicModel(int topics_count, int scores_count)
-    : token_to_token_id_(),
+TopicModel::TopicModel(ModelId model_id, int topics_count, int scores_count)
+    : model_id_(model_id),
+      token_to_token_id_(),
       token_id_to_token_(),
       topics_count_(topics_count),
       items_processed_(0),
@@ -32,7 +34,8 @@ TopicModel::TopicModel(int topics_count, int scores_count)
 }
 
 TopicModel::TopicModel(const TopicModel& rhs)
-    : token_to_token_id_(rhs.token_to_token_id_),
+    : model_id_(rhs.model_id_),
+      token_to_token_id_(rhs.token_to_token_id_),
       token_id_to_token_(rhs.token_id_to_token_),
       topics_count_(rhs.topics_count_),
       items_processed_(rhs.items_processed_),
@@ -54,7 +57,28 @@ TopicModel::TopicModel(const TopicModel& rhs)
   }
 }
 
+TopicModel::TopicModel(const ::artm::TopicModel& external_topic_model) {
+  CopyFromExternalTopicModel(external_topic_model);
+}
+
+TopicModel::TopicModel(const ::artm::core::ModelIncrement& model_increment) {
+  model_id_ = model_increment.model_id();
+  topics_count_ = model_increment.topics_count();
+  items_processed_ = 0;
+
+  scores_.resize(model_increment.score_size());
+  scores_norm_.resize(model_increment.score_size());
+
+  n_t_.resize(topics_count_);
+
+  ApplyDiff(model_increment);
+}
+
 TopicModel::~TopicModel() {
+  Clear(model_id(), topic_size(), score_size());
+}
+
+void TopicModel::Clear(ModelId model_id, int topics_count, int scores_count) {
   std::for_each(n_wt_.begin(), n_wt_.end(), [&](float* value) {
     delete [] value;
   });
@@ -62,35 +86,208 @@ TopicModel::~TopicModel() {
   std::for_each(r_wt_.begin(), r_wt_.end(), [&](float* value) {
     delete [] value;
   });
+
+  model_id_ = model_id;
+  topics_count_ = topics_count;
+  items_processed_ = 0;
+
+  token_to_token_id_.clear();
+  token_id_to_token_.clear();
+  n_wt_.clear();
+  r_wt_.clear();
+
+  scores_.clear();
+  scores_.resize(scores_count);
+
+  scores_norm_.clear();
+  scores_norm_.resize(scores_count);
+
+  n_t_.clear();
+  n_t_.resize(topics_count);
 }
 
-void TopicModel::AddToken(const std::string& token) {
-  if (token_to_token_id_.find(token) != token_to_token_id_.end()) {
-    return;
+void TopicModel::CalculateDiff(const ::artm::core::TopicModel& rhs, ::artm::core::ModelIncrement* diff) const {
+  if (rhs.topic_size() != topic_size()) {
+    std::stringstream message;
+    message << "TopicModel::CalculateDiff fails due to mismatch: ";
+    message << "rhs.topic_size() == "  << rhs.topic_size() << ", ";
+    message << "this->topic_size() == " << topic_size();
+    BOOST_THROW_EXCEPTION(std::invalid_argument(message.str()));
   }
 
+  diff->set_model_id(model_id_);
+  diff->set_topics_count(topic_size());
+  diff->set_items_processed(items_processed() - rhs.items_processed());
+
+  for (int token_index = 0; token_index < token_size(); ++token_index) {
+    if (rhs.has_token(token(token_index))) {
+      diff->add_token(token(token_index));
+      ::artm::core::FloatArray* token_increment = diff->add_token_increment();
+      for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
+        token_increment->add_value(n_wt_[token_index][topic_index] - rhs.n_wt_[token_index][topic_index]);
+      }
+    } else {
+      diff->add_discovered_token(token(token_index));
+    }
+  }
+
+  if (score_size() == rhs.score_size()) {
+    for (int score_index = 0; score_index < score_size(); ++score_index) {
+      diff->add_score(scores_[score_index] - rhs.scores_[score_index]);
+      diff->add_score_norm(scores_norm_[score_index] - rhs.scores_norm_[score_index]);
+    }
+  } else {
+    LOG(WARNING) << "TopicModel::CalculateDiff failed to diff scores.";
+  }
+}
+
+void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
+  this->IncreaseItemsProcessed(diff.items_processed());
+  for (int score_index = 0; score_index < diff.score_size(); ++score_index) {
+    this->IncreaseScores(score_index, diff.score(score_index),
+                         diff.score_norm(score_index));
+  }
+
+  // Add new tokens discovered by processor
+  for (int token_index = 0;
+       token_index < diff.discovered_token_size();
+       ++token_index) {
+    std::string new_token = diff.discovered_token(token_index);
+    if (!this->has_token(new_token)) {
+      this->AddToken(new_token);
+    }
+  }
+
+  int topics_count = this->topic_size();
+
+  for (int token_index = 0;
+       token_index < diff.token_increment_size();
+       ++token_index) {
+    const FloatArray& counters = diff.token_increment(token_index);
+    const std::string& token = diff.token(token_index);
+    if (!has_token(token)) {
+      this->AddToken(token, false);
+    }
+
+    for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
+      this->IncreaseTokenWeight(token, topic_index, counters.value(topic_index));
+    }
+  }
+}
+
+void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) const {
+  // 1. Fill in non-internal part of ::artm::TopicModel
+  topic_model->set_model_id(model_id_);
+  topic_model->set_topics_count(topic_size());
+  topic_model->set_items_processed(items_processed());
+
+  for (int token_index = 0; token_index < token_size(); ++token_index) {
+    topic_model->add_token(token_id_to_token_[token_index]);
+    ::artm::FloatArray* weights = topic_model->add_token_weights();
+    TopicWeightIterator iter = GetTopicWeightIterator(token_index);
+    while (iter.NextTopic() < topic_size()) {
+      weights->add_value(iter.Weight());
+    }
+  }
+
+  for (int score_index = 0; score_index < score_size(); ++score_index) {
+    topic_model->mutable_scores()->add_value(score(score_index));
+  }
+
+  // 2. Fill in internal part of ::artm::TopicModel
+  ::artm::TopicModel_TopicModelInternals topic_model_internals;
+  for (int token_index = 0; token_index < token_size(); ++token_index) {
+    ::artm::FloatArray* n_wt = topic_model_internals.add_n_wt();
+    ::artm::FloatArray* r_wt = topic_model_internals.add_r_wt();
+    for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
+      n_wt->add_value(n_wt_[token_index][topic_index]);
+      r_wt->add_value(r_wt_[token_index][topic_index]);
+    }
+  }
+
+  for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
+    topic_model_internals.mutable_n_t()->add_value(n_t_[topic_index]);
+  }
+
+  for (int score_index = 0; score_index < score_size(); ++score_index) {
+    topic_model_internals.mutable_scores_raw()->add_value(scores_[score_index]);
+    topic_model_internals.mutable_scores_normalizer()->add_value(scores_norm_[score_index]);
+  }
+
+  topic_model->set_internals(topic_model_internals.SerializeAsString());
+}
+
+void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_topic_model) {
+  int scores_size = external_topic_model.scores().value_size();
+  Clear(external_topic_model.model_id(), external_topic_model.topics_count(), scores_size);
+
+  items_processed_ = external_topic_model.items_processed();
+
+  ::artm::TopicModel_TopicModelInternals topic_model_internals;
+  if (!topic_model_internals.ParseFromString(external_topic_model.internals())) {
+    std::stringstream error_message;
+    error_message << "Unable to deserialize internals of topic model, model_id="
+                  << external_topic_model.model_id();
+    BOOST_THROW_EXCEPTION(SerializationError(error_message.str()));
+  }
+
+  for (int token_index = 0; token_index < external_topic_model.token_size(); ++token_index) {
+    const std::string& token = external_topic_model.token(token_index);
+    auto n_wt = topic_model_internals.n_wt(token_index);
+    auto r_wt = topic_model_internals.r_wt(token_index);
+
+    int token_id = AddToken(token, false);
+    for (int topic_index = 0; topic_index < topics_count_; ++topic_index) {
+      SetTokenWeight(token_id, topic_index, n_wt.value(topic_index));
+      SetRegularizerWeight(token_id, topic_index, r_wt.value(topic_index));
+    }
+  }
+
+  for (int score_index = 0; score_index < scores_size; ++score_index) {
+    SetScores(score_index,
+              topic_model_internals.scores_raw().value(score_index),
+              topic_model_internals.scores_normalizer().value(score_index));
+  }
+}
+
+int TopicModel::AddToken(const std::string& token, bool random_init) {
+  auto iter = token_to_token_id_.find(token);
+  if (iter != token_to_token_id_.end()) {
+    return iter->second;
+  }
+
+  int token_id = token_size();
   token_to_token_id_.insert(
-      std::make_pair(token, token_size()));
+      std::make_pair(token, token_id));
   token_id_to_token_.push_back(token);
   float* values = new float[topic_size()];
   n_wt_.push_back(values);
-  float sum = 0.0f;
-  for (int i = 0; i < topic_size(); ++i) {
-    float val = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-    values[i] = val;
-    sum += val;
-  }
 
-  for (int i = 0; i < topic_size(); ++i) {
-    values[i] /= sum;
-    n_t_[i] += values[i];
+  if (random_init) {
+    float sum = 0.0f;
+
+    for (int i = 0; i < topic_size(); ++i) {
+      float val = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+      values[i] = val;
+      sum += val;
+    }
+
+    for (int i = 0; i < topic_size(); ++i) {
+      values[i] /= sum;
+      n_t_[i] += values[i];
+    }
+  } else {
+    memset(values, 0, sizeof(float) * topic_size());
   }
 
   float* regularizer_values = new float[topic_size()];
   for (int i = 0; i < topic_size(); ++i) {
     regularizer_values[i] = 0.0f;
   }
+
   r_wt_.push_back(regularizer_values);
+
+  return token_id;
 }
 
 void TopicModel::IncreaseItemsProcessed(int value) {
@@ -130,7 +327,10 @@ double TopicModel::score_normalizer(int score_index) const {
 
 void TopicModel::IncreaseTokenWeight(const std::string& token, int topic_id, float value) {
   if (!has_token(token)) {
-    LOG(ERROR) << "Token '" << token << "' not found in the model";
+    if (value != 0.0f) {
+      LOG(ERROR) << "Token '" << token << "' not found in the model";
+    }
+
     return;
   }
 
@@ -188,6 +388,7 @@ void TopicModel::SetRegularizerWeight(const std::string& token, int topic_id, fl
 
   SetRegularizerWeight(token_id(token), topic_id, value);
 }
+
 void TopicModel::SetRegularizerWeight(int token_id, int topic_id, float value) {
   float old_regularizer_value = r_wt_[token_id][topic_id];
   r_wt_[token_id][topic_id] = value;
@@ -213,6 +414,10 @@ int TopicModel::topic_size() const {
   return topics_count_;
 }
 
+ModelId TopicModel::model_id() const {
+  return model_id_;
+}
+
 int TopicModel::items_processed() const {
   return items_processed_;
 }
@@ -221,7 +426,7 @@ int TopicModel::score_size() const {
   return scores_.size();
 }
 
-int TopicModel::has_token(const std::string& token) const {
+bool TopicModel::has_token(const std::string& token) const {
   return token_to_token_id_.find(token) != token_to_token_id_.end();
 }
 

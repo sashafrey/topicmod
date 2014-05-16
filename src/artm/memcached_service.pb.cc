@@ -21,25 +21,9 @@ namespace memcached {
 
 namespace {
 
-const ::google::protobuf::Descriptor* UpdateKeyArgs_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* ModelId_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  UpdateKeyArgs_reflection_ = NULL;
-const ::google::protobuf::Descriptor* UpdateKeyResult_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  UpdateKeyResult_reflection_ = NULL;
-const ::google::protobuf::Descriptor* RetrieveKeyArgs_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  RetrieveKeyArgs_reflection_ = NULL;
-const ::google::protobuf::Descriptor* RetrieveKeyResult_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  RetrieveKeyResult_reflection_ = NULL;
-const ::google::protobuf::Descriptor* RetrieveGroupArgs_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  RetrieveGroupArgs_reflection_ = NULL;
-const ::google::protobuf::Descriptor* RetrieveGroupResult_descriptor_ = NULL;
-const ::google::protobuf::internal::GeneratedMessageReflection*
-  RetrieveGroupResult_reflection_ = NULL;
-const ::google::protobuf::EnumDescriptor* ErrorCode_descriptor_ = NULL;
+  ModelId_reflection_ = NULL;
 
 }  // namespace
 
@@ -50,103 +34,21 @@ void protobuf_AssignDesc_memcached_5fservice_2eproto() {
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
       "memcached_service.proto");
   GOOGLE_CHECK(file != NULL);
-  UpdateKeyArgs_descriptor_ = file->message_type(0);
-  static const int UpdateKeyArgs_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyArgs, key_group_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyArgs, key_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyArgs, value_),
+  ModelId_descriptor_ = file->message_type(0);
+  static const int ModelId_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelId, model_id_),
   };
-  UpdateKeyArgs_reflection_ =
+  ModelId_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
-      UpdateKeyArgs_descriptor_,
-      UpdateKeyArgs::default_instance_,
-      UpdateKeyArgs_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyArgs, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyArgs, _unknown_fields_),
+      ModelId_descriptor_,
+      ModelId::default_instance_,
+      ModelId_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelId, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelId, _unknown_fields_),
       -1,
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(UpdateKeyArgs));
-  UpdateKeyResult_descriptor_ = file->message_type(1);
-  static const int UpdateKeyResult_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyResult, error_code_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyResult, value_),
-  };
-  UpdateKeyResult_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      UpdateKeyResult_descriptor_,
-      UpdateKeyResult::default_instance_,
-      UpdateKeyResult_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyResult, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UpdateKeyResult, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(UpdateKeyResult));
-  RetrieveKeyArgs_descriptor_ = file->message_type(2);
-  static const int RetrieveKeyArgs_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveKeyArgs, key_group_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveKeyArgs, key_),
-  };
-  RetrieveKeyArgs_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      RetrieveKeyArgs_descriptor_,
-      RetrieveKeyArgs::default_instance_,
-      RetrieveKeyArgs_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveKeyArgs, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveKeyArgs, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(RetrieveKeyArgs));
-  RetrieveKeyResult_descriptor_ = file->message_type(3);
-  static const int RetrieveKeyResult_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveKeyResult, error_code_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveKeyResult, value_),
-  };
-  RetrieveKeyResult_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      RetrieveKeyResult_descriptor_,
-      RetrieveKeyResult::default_instance_,
-      RetrieveKeyResult_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveKeyResult, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveKeyResult, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(RetrieveKeyResult));
-  RetrieveGroupArgs_descriptor_ = file->message_type(4);
-  static const int RetrieveGroupArgs_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveGroupArgs, key_group_),
-  };
-  RetrieveGroupArgs_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      RetrieveGroupArgs_descriptor_,
-      RetrieveGroupArgs::default_instance_,
-      RetrieveGroupArgs_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveGroupArgs, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveGroupArgs, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(RetrieveGroupArgs));
-  RetrieveGroupResult_descriptor_ = file->message_type(5);
-  static const int RetrieveGroupResult_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveGroupResult, error_code_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveGroupResult, key_),
-  };
-  RetrieveGroupResult_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
-      RetrieveGroupResult_descriptor_,
-      RetrieveGroupResult::default_instance_,
-      RetrieveGroupResult_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveGroupResult, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RetrieveGroupResult, _unknown_fields_),
-      -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(RetrieveGroupResult));
-  ErrorCode_descriptor_ = file->enum_type(0);
+      sizeof(ModelId));
 }
 
 namespace {
@@ -160,34 +62,14 @@ inline void protobuf_AssignDescriptorsOnce() {
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    UpdateKeyArgs_descriptor_, &UpdateKeyArgs::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    UpdateKeyResult_descriptor_, &UpdateKeyResult::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    RetrieveKeyArgs_descriptor_, &RetrieveKeyArgs::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    RetrieveKeyResult_descriptor_, &RetrieveKeyResult::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    RetrieveGroupArgs_descriptor_, &RetrieveGroupArgs::default_instance());
-  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    RetrieveGroupResult_descriptor_, &RetrieveGroupResult::default_instance());
+    ModelId_descriptor_, &ModelId::default_instance());
 }
 
 }  // namespace
 
 void protobuf_ShutdownFile_memcached_5fservice_2eproto() {
-  delete UpdateKeyArgs::default_instance_;
-  delete UpdateKeyArgs_reflection_;
-  delete UpdateKeyResult::default_instance_;
-  delete UpdateKeyResult_reflection_;
-  delete RetrieveKeyArgs::default_instance_;
-  delete RetrieveKeyArgs_reflection_;
-  delete RetrieveKeyResult::default_instance_;
-  delete RetrieveKeyResult_reflection_;
-  delete RetrieveGroupArgs::default_instance_;
-  delete RetrieveGroupArgs_reflection_;
-  delete RetrieveGroupResult::default_instance_;
-  delete RetrieveGroupResult_reflection_;
+  delete ModelId::default_instance_;
+  delete ModelId_reflection_;
 }
 
 void protobuf_AddDesc_memcached_5fservice_2eproto() {
@@ -196,42 +78,20 @@ void protobuf_AddDesc_memcached_5fservice_2eproto() {
   already_here = true;
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  ::artm::protobuf_AddDesc_messages_2eproto();
+  ::artm::core::protobuf_AddDesc_internals_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027memcached_service.proto\022\016artm.memcache"
-    "d\"B\n\rUpdateKeyArgs\022\021\n\tkey_group\030\001 \002(\t\022\013\n"
-    "\003key\030\002 \002(\t\022\021\n\005value\030\003 \003(\002B\002\020\001\"S\n\017UpdateK"
-    "eyResult\022-\n\nerror_code\030\001 \002(\0162\031.artm.memc"
-    "ached.ErrorCode\022\021\n\005value\030\002 \003(\002B\002\020\001\"1\n\017Re"
-    "trieveKeyArgs\022\021\n\tkey_group\030\001 \002(\t\022\013\n\003key\030"
-    "\002 \002(\t\"U\n\021RetrieveKeyResult\022-\n\nerror_code"
-    "\030\001 \002(\0162\031.artm.memcached.ErrorCode\022\021\n\005val"
-    "ue\030\002 \003(\002B\002\020\001\"&\n\021RetrieveGroupArgs\022\021\n\tkey"
-    "_group\030\001 \002(\t\"Q\n\023RetrieveGroupResult\022-\n\ne"
-    "rror_code\030\001 \002(\0162\031.artm.memcached.ErrorCo"
-    "de\022\013\n\003key\030\002 \003(\t*X\n\tErrorCode\022\014\n\010kSuccess"
-    "\020\000\022\020\n\014kKeyNotFound\020\001\022\025\n\021kKeyGroupNotFoun"
-    "d\020\002\022\024\n\020kInvalidArgument\020\0032\213\002\n\020MemcachedS"
-    "ervice\022K\n\tUpdateKey\022\035.artm.memcached.Upd"
-    "ateKeyArgs\032\037.artm.memcached.UpdateKeyRes"
-    "ult\022Q\n\013RetrieveKey\022\037.artm.memcached.Retr"
-    "ieveKeyArgs\032!.artm.memcached.RetrieveKey"
-    "Result\022W\n\rRetrieveGroup\022!.artm.memcached"
-    ".RetrieveGroupArgs\032#.artm.memcached.Retr"
-    "ieveGroupResult", 815);
+    "d\032\016messages.proto\032\017internals.proto\"\033\n\007Mo"
+    "delId\022\020\n\010model_id\030\001 \002(\t2\212\001\n\020MemcachedSer"
+    "vice\022:\n\013UpdateModel\022\031.artm.core.ModelInc"
+    "rement\032\020.artm.TopicModel\022:\n\rRetrieveMode"
+    "l\022\027.artm.memcached.ModelId\032\020.artm.TopicM"
+    "odel", 244);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "memcached_service.proto", &protobuf_RegisterTypes);
-  UpdateKeyArgs::default_instance_ = new UpdateKeyArgs();
-  UpdateKeyResult::default_instance_ = new UpdateKeyResult();
-  RetrieveKeyArgs::default_instance_ = new RetrieveKeyArgs();
-  RetrieveKeyResult::default_instance_ = new RetrieveKeyResult();
-  RetrieveGroupArgs::default_instance_ = new RetrieveGroupArgs();
-  RetrieveGroupResult::default_instance_ = new RetrieveGroupResult();
-  UpdateKeyArgs::default_instance_->InitAsDefaultInstance();
-  UpdateKeyResult::default_instance_->InitAsDefaultInstance();
-  RetrieveKeyArgs::default_instance_->InitAsDefaultInstance();
-  RetrieveKeyResult::default_instance_->InitAsDefaultInstance();
-  RetrieveGroupArgs::default_instance_->InitAsDefaultInstance();
-  RetrieveGroupResult::default_instance_->InitAsDefaultInstance();
+  ModelId::default_instance_ = new ModelId();
+  ModelId::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_memcached_5fservice_2eproto);
 }
 
@@ -241,159 +101,93 @@ struct StaticDescriptorInitializer_memcached_5fservice_2eproto {
     protobuf_AddDesc_memcached_5fservice_2eproto();
   }
 } static_descriptor_initializer_memcached_5fservice_2eproto_;
-const ::google::protobuf::EnumDescriptor* ErrorCode_descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return ErrorCode_descriptor_;
-}
-bool ErrorCode_IsValid(int value) {
-  switch(value) {
-    case 0:
-    case 1:
-    case 2:
-    case 3:
-      return true;
-    default:
-      return false;
-  }
-}
-
 
 // ===================================================================
 
 #ifndef _MSC_VER
-const int UpdateKeyArgs::kKeyGroupFieldNumber;
-const int UpdateKeyArgs::kKeyFieldNumber;
-const int UpdateKeyArgs::kValueFieldNumber;
+const int ModelId::kModelIdFieldNumber;
 #endif  // !_MSC_VER
 
-UpdateKeyArgs::UpdateKeyArgs()
+ModelId::ModelId()
   : ::google::protobuf::Message() {
   SharedCtor();
 }
 
-void UpdateKeyArgs::InitAsDefaultInstance() {
+void ModelId::InitAsDefaultInstance() {
 }
 
-UpdateKeyArgs::UpdateKeyArgs(const UpdateKeyArgs& from)
+ModelId::ModelId(const ModelId& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
 }
 
-void UpdateKeyArgs::SharedCtor() {
+void ModelId::SharedCtor() {
   _cached_size_ = 0;
-  key_group_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
-UpdateKeyArgs::~UpdateKeyArgs() {
+ModelId::~ModelId() {
   SharedDtor();
 }
 
-void UpdateKeyArgs::SharedDtor() {
-  if (key_group_ != &::google::protobuf::internal::kEmptyString) {
-    delete key_group_;
-  }
-  if (key_ != &::google::protobuf::internal::kEmptyString) {
-    delete key_;
+void ModelId::SharedDtor() {
+  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_id_;
   }
   if (this != default_instance_) {
   }
 }
 
-void UpdateKeyArgs::SetCachedSize(int size) const {
+void ModelId::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* UpdateKeyArgs::descriptor() {
+const ::google::protobuf::Descriptor* ModelId::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return UpdateKeyArgs_descriptor_;
+  return ModelId_descriptor_;
 }
 
-const UpdateKeyArgs& UpdateKeyArgs::default_instance() {
+const ModelId& ModelId::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_memcached_5fservice_2eproto();
   return *default_instance_;
 }
 
-UpdateKeyArgs* UpdateKeyArgs::default_instance_ = NULL;
+ModelId* ModelId::default_instance_ = NULL;
 
-UpdateKeyArgs* UpdateKeyArgs::New() const {
-  return new UpdateKeyArgs;
+ModelId* ModelId::New() const {
+  return new ModelId;
 }
 
-void UpdateKeyArgs::Clear() {
+void ModelId::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_key_group()) {
-      if (key_group_ != &::google::protobuf::internal::kEmptyString) {
-        key_group_->clear();
-      }
-    }
-    if (has_key()) {
-      if (key_ != &::google::protobuf::internal::kEmptyString) {
-        key_->clear();
+    if (has_model_id()) {
+      if (model_id_ != &::google::protobuf::internal::kEmptyString) {
+        model_id_->clear();
       }
     }
   }
-  value_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
-bool UpdateKeyArgs::MergePartialFromCodedStream(
+bool ModelId::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string key_group = 1;
+      // required string model_id = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_key_group()));
+                input, this->mutable_model_id()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->key_group().data(), this->key_group().length(),
+            this->model_id().data(), this->model_id().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_key;
-        break;
-      }
-
-      // required string key = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_key:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_key()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->key().data(), this->key().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_value;
-        break;
-      }
-
-      // repeated float value = 3 [packed = true];
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_value:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, this->mutable_value())));
-        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
-                   == ::google::protobuf::internal::WireFormatLite::
-                      WIRETYPE_FIXED32) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 1, 26, input, this->mutable_value())));
         } else {
           goto handle_uninterpreted;
         }
@@ -417,34 +211,15 @@ bool UpdateKeyArgs::MergePartialFromCodedStream(
 #undef DO_
 }
 
-void UpdateKeyArgs::SerializeWithCachedSizes(
+void ModelId::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string key_group = 1;
-  if (has_key_group()) {
+  // required string model_id = 1;
+  if (has_model_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key_group().data(), this->key_group().length(),
+      this->model_id().data(), this->model_id().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->key_group(), output);
-  }
-
-  // required string key = 2;
-  if (has_key()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key().data(), this->key().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->key(), output);
-  }
-
-  // repeated float value = 3 [packed = true];
-  if (this->value_size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteTag(3, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
-    output->WriteVarint32(_value_cached_byte_size_);
-  }
-  for (int i = 0; i < this->value_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloatNoTag(
-      this->value(i), output);
+      1, this->model_id(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -453,40 +228,16 @@ void UpdateKeyArgs::SerializeWithCachedSizes(
   }
 }
 
-::google::protobuf::uint8* UpdateKeyArgs::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* ModelId::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string key_group = 1;
-  if (has_key_group()) {
+  // required string model_id = 1;
+  if (has_model_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key_group().data(), this->key_group().length(),
+      this->model_id().data(), this->model_id().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->key_group(), target);
-  }
-
-  // required string key = 2;
-  if (has_key()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key().data(), this->key().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->key(), target);
-  }
-
-  // repeated float value = 3 [packed = true];
-  if (this->value_size() > 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
-      3,
-      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
-      target);
-    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
-      _value_cached_byte_size_, target);
-  }
-  for (int i = 0; i < this->value_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteFloatNoTagToArray(this->value(i), target);
+        1, this->model_id(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -496,39 +247,18 @@ void UpdateKeyArgs::SerializeWithCachedSizes(
   return target;
 }
 
-int UpdateKeyArgs::ByteSize() const {
+int ModelId::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string key_group = 1;
-    if (has_key_group()) {
+    // required string model_id = 1;
+    if (has_model_id()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->key_group());
-    }
-
-    // required string key = 2;
-    if (has_key()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->key());
+          this->model_id());
     }
 
   }
-  // repeated float value = 3 [packed = true];
-  {
-    int data_size = 0;
-    data_size = 4 * this->value_size();
-    if (data_size > 0) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
-    }
-    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-    _value_cached_byte_size_ = data_size;
-    GOOGLE_SAFE_CONCURRENT_WRITES_END();
-    total_size += data_size;
-  }
-
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -540,10 +270,10 @@ int UpdateKeyArgs::ByteSize() const {
   return total_size;
 }
 
-void UpdateKeyArgs::MergeFrom(const ::google::protobuf::Message& from) {
+void ModelId::MergeFrom(const ::google::protobuf::Message& from) {
   GOOGLE_CHECK_NE(&from, this);
-  const UpdateKeyArgs* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UpdateKeyArgs*>(
+  const ModelId* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const ModelId*>(
       &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -552,1382 +282,48 @@ void UpdateKeyArgs::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void UpdateKeyArgs::MergeFrom(const UpdateKeyArgs& from) {
+void ModelId::MergeFrom(const ModelId& from) {
   GOOGLE_CHECK_NE(&from, this);
-  value_.MergeFrom(from.value_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_key_group()) {
-      set_key_group(from.key_group());
-    }
-    if (from.has_key()) {
-      set_key(from.key());
+    if (from.has_model_id()) {
+      set_model_id(from.model_id());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
-void UpdateKeyArgs::CopyFrom(const ::google::protobuf::Message& from) {
+void ModelId::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void UpdateKeyArgs::CopyFrom(const UpdateKeyArgs& from) {
+void ModelId::CopyFrom(const ModelId& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool UpdateKeyArgs::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
-
-  return true;
-}
-
-void UpdateKeyArgs::Swap(UpdateKeyArgs* other) {
-  if (other != this) {
-    std::swap(key_group_, other->key_group_);
-    std::swap(key_, other->key_);
-    value_.Swap(&other->value_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata UpdateKeyArgs::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = UpdateKeyArgs_descriptor_;
-  metadata.reflection = UpdateKeyArgs_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int UpdateKeyResult::kErrorCodeFieldNumber;
-const int UpdateKeyResult::kValueFieldNumber;
-#endif  // !_MSC_VER
-
-UpdateKeyResult::UpdateKeyResult()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void UpdateKeyResult::InitAsDefaultInstance() {
-}
-
-UpdateKeyResult::UpdateKeyResult(const UpdateKeyResult& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void UpdateKeyResult::SharedCtor() {
-  _cached_size_ = 0;
-  error_code_ = 0;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-UpdateKeyResult::~UpdateKeyResult() {
-  SharedDtor();
-}
-
-void UpdateKeyResult::SharedDtor() {
-  if (this != default_instance_) {
-  }
-}
-
-void UpdateKeyResult::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* UpdateKeyResult::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return UpdateKeyResult_descriptor_;
-}
-
-const UpdateKeyResult& UpdateKeyResult::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_memcached_5fservice_2eproto();
-  return *default_instance_;
-}
-
-UpdateKeyResult* UpdateKeyResult::default_instance_ = NULL;
-
-UpdateKeyResult* UpdateKeyResult::New() const {
-  return new UpdateKeyResult;
-}
-
-void UpdateKeyResult::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    error_code_ = 0;
-  }
-  value_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool UpdateKeyResult::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .artm.memcached.ErrorCode error_code = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::artm::memcached::ErrorCode_IsValid(value)) {
-            set_error_code(static_cast< ::artm::memcached::ErrorCode >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(1, value);
-          }
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_value;
-        break;
-      }
-
-      // repeated float value = 2 [packed = true];
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_value:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, this->mutable_value())));
-        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
-                   == ::google::protobuf::internal::WireFormatLite::
-                      WIRETYPE_FIXED32) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 1, 18, input, this->mutable_value())));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void UpdateKeyResult::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .artm.memcached.ErrorCode error_code = 1;
-  if (has_error_code()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      1, this->error_code(), output);
-  }
-
-  // repeated float value = 2 [packed = true];
-  if (this->value_size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteTag(2, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
-    output->WriteVarint32(_value_cached_byte_size_);
-  }
-  for (int i = 0; i < this->value_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloatNoTag(
-      this->value(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* UpdateKeyResult::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required .artm.memcached.ErrorCode error_code = 1;
-  if (has_error_code()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      1, this->error_code(), target);
-  }
-
-  // repeated float value = 2 [packed = true];
-  if (this->value_size() > 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
-      2,
-      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
-      target);
-    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
-      _value_cached_byte_size_, target);
-  }
-  for (int i = 0; i < this->value_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteFloatNoTagToArray(this->value(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int UpdateKeyResult::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .artm.memcached.ErrorCode error_code = 1;
-    if (has_error_code()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->error_code());
-    }
-
-  }
-  // repeated float value = 2 [packed = true];
-  {
-    int data_size = 0;
-    data_size = 4 * this->value_size();
-    if (data_size > 0) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
-    }
-    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-    _value_cached_byte_size_ = data_size;
-    GOOGLE_SAFE_CONCURRENT_WRITES_END();
-    total_size += data_size;
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void UpdateKeyResult::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const UpdateKeyResult* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const UpdateKeyResult*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void UpdateKeyResult::MergeFrom(const UpdateKeyResult& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  value_.MergeFrom(from.value_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_error_code()) {
-      set_error_code(from.error_code());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void UpdateKeyResult::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void UpdateKeyResult::CopyFrom(const UpdateKeyResult& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool UpdateKeyResult::IsInitialized() const {
+bool ModelId::IsInitialized() const {
   if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
-void UpdateKeyResult::Swap(UpdateKeyResult* other) {
+void ModelId::Swap(ModelId* other) {
   if (other != this) {
-    std::swap(error_code_, other->error_code_);
-    value_.Swap(&other->value_);
+    std::swap(model_id_, other->model_id_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }
 }
 
-::google::protobuf::Metadata UpdateKeyResult::GetMetadata() const {
+::google::protobuf::Metadata ModelId::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = UpdateKeyResult_descriptor_;
-  metadata.reflection = UpdateKeyResult_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int RetrieveKeyArgs::kKeyGroupFieldNumber;
-const int RetrieveKeyArgs::kKeyFieldNumber;
-#endif  // !_MSC_VER
-
-RetrieveKeyArgs::RetrieveKeyArgs()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void RetrieveKeyArgs::InitAsDefaultInstance() {
-}
-
-RetrieveKeyArgs::RetrieveKeyArgs(const RetrieveKeyArgs& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void RetrieveKeyArgs::SharedCtor() {
-  _cached_size_ = 0;
-  key_group_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  key_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-RetrieveKeyArgs::~RetrieveKeyArgs() {
-  SharedDtor();
-}
-
-void RetrieveKeyArgs::SharedDtor() {
-  if (key_group_ != &::google::protobuf::internal::kEmptyString) {
-    delete key_group_;
-  }
-  if (key_ != &::google::protobuf::internal::kEmptyString) {
-    delete key_;
-  }
-  if (this != default_instance_) {
-  }
-}
-
-void RetrieveKeyArgs::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* RetrieveKeyArgs::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return RetrieveKeyArgs_descriptor_;
-}
-
-const RetrieveKeyArgs& RetrieveKeyArgs::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_memcached_5fservice_2eproto();
-  return *default_instance_;
-}
-
-RetrieveKeyArgs* RetrieveKeyArgs::default_instance_ = NULL;
-
-RetrieveKeyArgs* RetrieveKeyArgs::New() const {
-  return new RetrieveKeyArgs;
-}
-
-void RetrieveKeyArgs::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_key_group()) {
-      if (key_group_ != &::google::protobuf::internal::kEmptyString) {
-        key_group_->clear();
-      }
-    }
-    if (has_key()) {
-      if (key_ != &::google::protobuf::internal::kEmptyString) {
-        key_->clear();
-      }
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool RetrieveKeyArgs::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string key_group = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_key_group()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->key_group().data(), this->key_group().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_key;
-        break;
-      }
-
-      // required string key = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_key:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_key()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->key().data(), this->key().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void RetrieveKeyArgs::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string key_group = 1;
-  if (has_key_group()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key_group().data(), this->key_group().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->key_group(), output);
-  }
-
-  // required string key = 2;
-  if (has_key()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key().data(), this->key().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->key(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* RetrieveKeyArgs::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required string key_group = 1;
-  if (has_key_group()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key_group().data(), this->key_group().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->key_group(), target);
-  }
-
-  // required string key = 2;
-  if (has_key()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key().data(), this->key().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->key(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int RetrieveKeyArgs::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string key_group = 1;
-    if (has_key_group()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->key_group());
-    }
-
-    // required string key = 2;
-    if (has_key()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->key());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RetrieveKeyArgs::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RetrieveKeyArgs* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RetrieveKeyArgs*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RetrieveKeyArgs::MergeFrom(const RetrieveKeyArgs& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_key_group()) {
-      set_key_group(from.key_group());
-    }
-    if (from.has_key()) {
-      set_key(from.key());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void RetrieveKeyArgs::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RetrieveKeyArgs::CopyFrom(const RetrieveKeyArgs& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RetrieveKeyArgs::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
-
-  return true;
-}
-
-void RetrieveKeyArgs::Swap(RetrieveKeyArgs* other) {
-  if (other != this) {
-    std::swap(key_group_, other->key_group_);
-    std::swap(key_, other->key_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata RetrieveKeyArgs::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = RetrieveKeyArgs_descriptor_;
-  metadata.reflection = RetrieveKeyArgs_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int RetrieveKeyResult::kErrorCodeFieldNumber;
-const int RetrieveKeyResult::kValueFieldNumber;
-#endif  // !_MSC_VER
-
-RetrieveKeyResult::RetrieveKeyResult()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void RetrieveKeyResult::InitAsDefaultInstance() {
-}
-
-RetrieveKeyResult::RetrieveKeyResult(const RetrieveKeyResult& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void RetrieveKeyResult::SharedCtor() {
-  _cached_size_ = 0;
-  error_code_ = 0;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-RetrieveKeyResult::~RetrieveKeyResult() {
-  SharedDtor();
-}
-
-void RetrieveKeyResult::SharedDtor() {
-  if (this != default_instance_) {
-  }
-}
-
-void RetrieveKeyResult::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* RetrieveKeyResult::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return RetrieveKeyResult_descriptor_;
-}
-
-const RetrieveKeyResult& RetrieveKeyResult::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_memcached_5fservice_2eproto();
-  return *default_instance_;
-}
-
-RetrieveKeyResult* RetrieveKeyResult::default_instance_ = NULL;
-
-RetrieveKeyResult* RetrieveKeyResult::New() const {
-  return new RetrieveKeyResult;
-}
-
-void RetrieveKeyResult::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    error_code_ = 0;
-  }
-  value_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool RetrieveKeyResult::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .artm.memcached.ErrorCode error_code = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::artm::memcached::ErrorCode_IsValid(value)) {
-            set_error_code(static_cast< ::artm::memcached::ErrorCode >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(1, value);
-          }
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_value;
-        break;
-      }
-
-      // repeated float value = 2 [packed = true];
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_value:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 input, this->mutable_value())));
-        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
-                   == ::google::protobuf::internal::WireFormatLite::
-                      WIRETYPE_FIXED32) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
-                 1, 18, input, this->mutable_value())));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void RetrieveKeyResult::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .artm.memcached.ErrorCode error_code = 1;
-  if (has_error_code()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      1, this->error_code(), output);
-  }
-
-  // repeated float value = 2 [packed = true];
-  if (this->value_size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteTag(2, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
-    output->WriteVarint32(_value_cached_byte_size_);
-  }
-  for (int i = 0; i < this->value_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloatNoTag(
-      this->value(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* RetrieveKeyResult::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required .artm.memcached.ErrorCode error_code = 1;
-  if (has_error_code()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      1, this->error_code(), target);
-  }
-
-  // repeated float value = 2 [packed = true];
-  if (this->value_size() > 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
-      2,
-      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
-      target);
-    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
-      _value_cached_byte_size_, target);
-  }
-  for (int i = 0; i < this->value_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteFloatNoTagToArray(this->value(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int RetrieveKeyResult::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .artm.memcached.ErrorCode error_code = 1;
-    if (has_error_code()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->error_code());
-    }
-
-  }
-  // repeated float value = 2 [packed = true];
-  {
-    int data_size = 0;
-    data_size = 4 * this->value_size();
-    if (data_size > 0) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
-    }
-    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-    _value_cached_byte_size_ = data_size;
-    GOOGLE_SAFE_CONCURRENT_WRITES_END();
-    total_size += data_size;
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RetrieveKeyResult::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RetrieveKeyResult* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RetrieveKeyResult*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RetrieveKeyResult::MergeFrom(const RetrieveKeyResult& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  value_.MergeFrom(from.value_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_error_code()) {
-      set_error_code(from.error_code());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void RetrieveKeyResult::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RetrieveKeyResult::CopyFrom(const RetrieveKeyResult& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RetrieveKeyResult::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
-
-  return true;
-}
-
-void RetrieveKeyResult::Swap(RetrieveKeyResult* other) {
-  if (other != this) {
-    std::swap(error_code_, other->error_code_);
-    value_.Swap(&other->value_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata RetrieveKeyResult::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = RetrieveKeyResult_descriptor_;
-  metadata.reflection = RetrieveKeyResult_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int RetrieveGroupArgs::kKeyGroupFieldNumber;
-#endif  // !_MSC_VER
-
-RetrieveGroupArgs::RetrieveGroupArgs()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void RetrieveGroupArgs::InitAsDefaultInstance() {
-}
-
-RetrieveGroupArgs::RetrieveGroupArgs(const RetrieveGroupArgs& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void RetrieveGroupArgs::SharedCtor() {
-  _cached_size_ = 0;
-  key_group_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-RetrieveGroupArgs::~RetrieveGroupArgs() {
-  SharedDtor();
-}
-
-void RetrieveGroupArgs::SharedDtor() {
-  if (key_group_ != &::google::protobuf::internal::kEmptyString) {
-    delete key_group_;
-  }
-  if (this != default_instance_) {
-  }
-}
-
-void RetrieveGroupArgs::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* RetrieveGroupArgs::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return RetrieveGroupArgs_descriptor_;
-}
-
-const RetrieveGroupArgs& RetrieveGroupArgs::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_memcached_5fservice_2eproto();
-  return *default_instance_;
-}
-
-RetrieveGroupArgs* RetrieveGroupArgs::default_instance_ = NULL;
-
-RetrieveGroupArgs* RetrieveGroupArgs::New() const {
-  return new RetrieveGroupArgs;
-}
-
-void RetrieveGroupArgs::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_key_group()) {
-      if (key_group_ != &::google::protobuf::internal::kEmptyString) {
-        key_group_->clear();
-      }
-    }
-  }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool RetrieveGroupArgs::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string key_group = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_key_group()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->key_group().data(), this->key_group().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void RetrieveGroupArgs::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string key_group = 1;
-  if (has_key_group()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key_group().data(), this->key_group().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->key_group(), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* RetrieveGroupArgs::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required string key_group = 1;
-  if (has_key_group()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key_group().data(), this->key_group().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->key_group(), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int RetrieveGroupArgs::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string key_group = 1;
-    if (has_key_group()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->key_group());
-    }
-
-  }
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RetrieveGroupArgs::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RetrieveGroupArgs* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RetrieveGroupArgs*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RetrieveGroupArgs::MergeFrom(const RetrieveGroupArgs& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_key_group()) {
-      set_key_group(from.key_group());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void RetrieveGroupArgs::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RetrieveGroupArgs::CopyFrom(const RetrieveGroupArgs& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RetrieveGroupArgs::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
-
-  return true;
-}
-
-void RetrieveGroupArgs::Swap(RetrieveGroupArgs* other) {
-  if (other != this) {
-    std::swap(key_group_, other->key_group_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata RetrieveGroupArgs::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = RetrieveGroupArgs_descriptor_;
-  metadata.reflection = RetrieveGroupArgs_reflection_;
-  return metadata;
-}
-
-
-// ===================================================================
-
-#ifndef _MSC_VER
-const int RetrieveGroupResult::kErrorCodeFieldNumber;
-const int RetrieveGroupResult::kKeyFieldNumber;
-#endif  // !_MSC_VER
-
-RetrieveGroupResult::RetrieveGroupResult()
-  : ::google::protobuf::Message() {
-  SharedCtor();
-}
-
-void RetrieveGroupResult::InitAsDefaultInstance() {
-}
-
-RetrieveGroupResult::RetrieveGroupResult(const RetrieveGroupResult& from)
-  : ::google::protobuf::Message() {
-  SharedCtor();
-  MergeFrom(from);
-}
-
-void RetrieveGroupResult::SharedCtor() {
-  _cached_size_ = 0;
-  error_code_ = 0;
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-}
-
-RetrieveGroupResult::~RetrieveGroupResult() {
-  SharedDtor();
-}
-
-void RetrieveGroupResult::SharedDtor() {
-  if (this != default_instance_) {
-  }
-}
-
-void RetrieveGroupResult::SetCachedSize(int size) const {
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-}
-const ::google::protobuf::Descriptor* RetrieveGroupResult::descriptor() {
-  protobuf_AssignDescriptorsOnce();
-  return RetrieveGroupResult_descriptor_;
-}
-
-const RetrieveGroupResult& RetrieveGroupResult::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_memcached_5fservice_2eproto();
-  return *default_instance_;
-}
-
-RetrieveGroupResult* RetrieveGroupResult::default_instance_ = NULL;
-
-RetrieveGroupResult* RetrieveGroupResult::New() const {
-  return new RetrieveGroupResult;
-}
-
-void RetrieveGroupResult::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    error_code_ = 0;
-  }
-  key_.Clear();
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
-}
-
-bool RetrieveGroupResult::MergePartialFromCodedStream(
-    ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
-  ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
-    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required .artm.memcached.ErrorCode error_code = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          int value;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          if (::artm::memcached::ErrorCode_IsValid(value)) {
-            set_error_code(static_cast< ::artm::memcached::ErrorCode >(value));
-          } else {
-            mutable_unknown_fields()->AddVarint(1, value);
-          }
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_key;
-        break;
-      }
-
-      // repeated string key = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_key:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->add_key()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->key(this->key_size() - 1).data(),
-            this->key(this->key_size() - 1).length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_key;
-        if (input->ExpectAtEnd()) return true;
-        break;
-      }
-
-      default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
-        }
-        DO_(::google::protobuf::internal::WireFormat::SkipField(
-              input, tag, mutable_unknown_fields()));
-        break;
-      }
-    }
-  }
-  return true;
-#undef DO_
-}
-
-void RetrieveGroupResult::SerializeWithCachedSizes(
-    ::google::protobuf::io::CodedOutputStream* output) const {
-  // required .artm.memcached.ErrorCode error_code = 1;
-  if (has_error_code()) {
-    ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      1, this->error_code(), output);
-  }
-
-  // repeated string key = 2;
-  for (int i = 0; i < this->key_size(); i++) {
-  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-    this->key(i).data(), this->key(i).length(),
-    ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->key(i), output);
-  }
-
-  if (!unknown_fields().empty()) {
-    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        unknown_fields(), output);
-  }
-}
-
-::google::protobuf::uint8* RetrieveGroupResult::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
-  // required .artm.memcached.ErrorCode error_code = 1;
-  if (has_error_code()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      1, this->error_code(), target);
-  }
-
-  // repeated string key = 2;
-  for (int i = 0; i < this->key_size(); i++) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->key(i).data(), this->key(i).length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteStringToArray(2, this->key(i), target);
-  }
-
-  if (!unknown_fields().empty()) {
-    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        unknown_fields(), target);
-  }
-  return target;
-}
-
-int RetrieveGroupResult::ByteSize() const {
-  int total_size = 0;
-
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required .artm.memcached.ErrorCode error_code = 1;
-    if (has_error_code()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::EnumSize(this->error_code());
-    }
-
-  }
-  // repeated string key = 2;
-  total_size += 1 * this->key_size();
-  for (int i = 0; i < this->key_size(); i++) {
-    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
-      this->key(i));
-  }
-
-  if (!unknown_fields().empty()) {
-    total_size +=
-      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        unknown_fields());
-  }
-  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
-  GOOGLE_SAFE_CONCURRENT_WRITES_END();
-  return total_size;
-}
-
-void RetrieveGroupResult::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  const RetrieveGroupResult* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const RetrieveGroupResult*>(
-      &from);
-  if (source == NULL) {
-    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
-  } else {
-    MergeFrom(*source);
-  }
-}
-
-void RetrieveGroupResult::MergeFrom(const RetrieveGroupResult& from) {
-  GOOGLE_CHECK_NE(&from, this);
-  key_.MergeFrom(from.key_);
-  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_error_code()) {
-      set_error_code(from.error_code());
-    }
-  }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
-}
-
-void RetrieveGroupResult::CopyFrom(const ::google::protobuf::Message& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-void RetrieveGroupResult::CopyFrom(const RetrieveGroupResult& from) {
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool RetrieveGroupResult::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
-
-  return true;
-}
-
-void RetrieveGroupResult::Swap(RetrieveGroupResult* other) {
-  if (other != this) {
-    std::swap(error_code_, other->error_code_);
-    key_.Swap(&other->key_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
-}
-
-::google::protobuf::Metadata RetrieveGroupResult::GetMetadata() const {
-  protobuf_AssignDescriptorsOnce();
-  ::google::protobuf::Metadata metadata;
-  metadata.descriptor = RetrieveGroupResult_descriptor_;
-  metadata.reflection = RetrieveGroupResult_reflection_;
+  metadata.descriptor = ModelId_descriptor_;
+  metadata.reflection = ModelId_reflection_;
   return metadata;
 }
 

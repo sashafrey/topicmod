@@ -8,6 +8,15 @@
 namespace artm {
 namespace core {
 
+MasterComponentServiceImpl::MasterComponentServiceImpl(
+    ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients,
+    zmq::context_t* zeromq_context)
+    : lock_(), topic_model_(), application_(), clients_(clients) {
+  rpcz::application::options options(1);
+  options.zeromq_context = zeromq_context;
+  application_.reset(new rpcz::application(options));
+}
+
 void MasterComponentServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& request,
                                        ::rpcz::reply< ::artm::TopicModel> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
@@ -56,7 +65,7 @@ void MasterComponentServiceImpl::ConnectClient(const ::artm::core::String& reque
 
   std::shared_ptr<NodeControllerService_Stub> client(
     new artm::core::NodeControllerService_Stub(
-      application_.create_rpc_channel(request.value()), true));
+      application_->create_rpc_channel(request.value()), true));
   clients_->set(request.value(), client);
   response.send(artm::core::Void());
 }

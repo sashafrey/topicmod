@@ -23,6 +23,10 @@
 #include "artm/template_manager.h"
 #include "artm/topic_model.h"
 
+namespace zmq {
+class context_t;
+}  // namespace zmq
+
 namespace artm {
 namespace core {
 
@@ -66,7 +70,8 @@ class MasterComponent : boost::noncopyable {
    private:
     std::string endpoint_;
     ThreadSafeCollectionHolder<std::string, NodeControllerService_Stub>* clients_;
-    rpcz::application application_;
+    std::unique_ptr<zmq::context_t> zeromq_context_;
+    std::unique_ptr<rpcz::application> application_;
 
     // Keep all threads at the end of class members
     // (because the order of class members defines initialization order;

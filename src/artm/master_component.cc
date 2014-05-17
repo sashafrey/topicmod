@@ -3,6 +3,7 @@
 #include "artm/master_component.h"
 
 #include "glog/logging.h"
+#include "zmq.hpp"
 
 #include "artm/exceptions.h"
 #include "artm/helpers.h"
@@ -210,15 +211,20 @@ void MasterComponent::AddBatch(const Batch& batch) {
 }
 
 MasterComponent::ServiceEndpoint::~ServiceEndpoint() {
-  application_.terminate();
+  application_->terminate();
+  application_.reset();
   thread_.join();
 }
 
 MasterComponent::ServiceEndpoint::ServiceEndpoint(
     const std::string& endpoint,
     ThreadSafeCollectionHolder<std::string, NodeControllerService_Stub>* clients)
-    : endpoint_(endpoint), clients_(clients),
-      application_(rpcz::application::options(1)), thread_() {
+    : endpoint_(endpoint), clients_(clients), zeromq_context_(nullptr),
+      application_(nullptr), thread_() {
+  zeromq_context_.reset(new zmq::context_t(1));
+  rpcz::application::options options(1);
+  options.zeromq_context = zeromq_context_.get();
+  application_.reset(new rpcz::application(options));
   boost::thread t(&MasterComponent::ServiceEndpoint::ThreadFunction, this);
   thread_.swap(t);
 }
@@ -227,11 +233,11 @@ void MasterComponent::ServiceEndpoint::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "MasterComponent");
     LOG(INFO) << "Establishing MasterComponentService on " << endpoint();
-    rpcz::server server(application_);
-    ::artm::core::MasterComponentServiceImpl master_component_service_impl(clients_);
+    rpcz::server server(*application_);
+    ::artm::core::MasterComponentServiceImpl master_component_service_impl(clients_, zeromq_context_.get());
     server.register_service(&master_component_service_impl);
     server.bind(endpoint());
-    application_.run();
+    application_->run();
     LOG(INFO) << "MasterComponentService on " << endpoint() << " is stopped.";
   } catch(...) {
     LOG(FATAL) << "Fatal exception in MasterComponent::ServiceEndpoint::ThreadFunction() function";

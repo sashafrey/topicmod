@@ -17,14 +17,18 @@
 #include "artm/topic_model.h"
 #include "artm/thread_safe_holder.h"
 
+namespace zmq {
+class context_t;
+}  // namespace zmq
+
 namespace artm {
 namespace core {
 
 class MasterComponentServiceImpl : public MasterComponentService {
  public:
   MasterComponentServiceImpl(
-      ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients) 
-      : lock_(), topic_model_(), application_(), clients_(clients) { ; }
+      ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients,
+      zmq::context_t* zeromq_context);
 
   ~MasterComponentServiceImpl() { ; }
 
@@ -47,7 +51,7 @@ class MasterComponentServiceImpl : public MasterComponentService {
  private:
   mutable boost::mutex lock_;
   std::map<::artm::core::ModelId, std::shared_ptr<::artm::core::TopicModel>> topic_model_;
-  rpcz::application application_;
+  std::unique_ptr<rpcz::application> application_;
   ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients_;
 };
 

@@ -48,12 +48,7 @@ Merger::~Merger() {
 
 void Merger::DisposeModel(ModelId model_id) {
   topic_model_.erase(model_id);
-
-  MergerTask task;
-  task.task_type = kDisposeModel;
-  task.model_id = model_id;
-  task.sync_event = nullptr;
-  internal_task_queue_.push(task);
+  internal_task_queue_.push(MergerTask(kDisposeModel, model_id));
 }
 
 void Merger::UpdateModel(const ModelConfig& model) {
@@ -71,15 +66,15 @@ void Merger::UpdateModel(const ModelConfig& model) {
   }
 }
 
+void Merger::ForceResetScores(ModelId model_id) {
+  rpcz::sync_event sync_event;
+  internal_task_queue_.push(MergerTask(kForceResetScores, model_id, &sync_event));
+  sync_event.wait();
+}
+
 void Merger::ForceSyncWithMemcached(ModelId model_id) {
   rpcz::sync_event sync_event;
-
-  MergerTask task;
-  task.task_type = kForceSyncWithMemcached;
-  task.model_id = model_id;
-  task.sync_event = &sync_event;
-  internal_task_queue_.push(task);
-
+  internal_task_queue_.push(MergerTask(kForceSyncWithMemcached, model_id, &sync_event));
   sync_event.wait();
 }
 
@@ -142,6 +137,8 @@ void Merger::ThreadFunction() {
             case kForceSyncWithMemcached:
               SyncWithMemcached(merger_task.model_id);
               break;
+            case kForceResetScores:
+              ResetScores(merger_task.model_id);
           }
 
           if (merger_task.sync_event != nullptr) {
@@ -244,6 +241,33 @@ void Merger::SyncWithMemcached(ModelId model_id) {
         LOG(ERROR) << "Merger failed to send updates to memcached service.";
         throw;
       }
+    }
+  }
+}
+
+void Merger::ResetScores(ModelId model_id) {
+  std::vector<ModelId> model_ids;
+  if (model_id.empty()) {
+    model_ids = topic_model_.keys();
+  }
+
+  std::shared_ptr<MemcachedService_Stub> memcached_service = memcached_service_->get();
+  for (auto &model_id : model_ids) {
+    if (memcached_service == nullptr) {
+      auto old_ttm = GetLatestTopicModel(model_id);
+      if (old_ttm == nullptr)
+        return;  // model had been disposed during ongoing processing;
+
+      auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
+      for (int score_index = 0; score_index < new_ttm->score_size(); ++score_index) {
+        new_ttm->SetScores(score_index, 0.0, 0.0);
+      }
+
+      topic_model_.set(model_id, new_ttm);
+    } else {
+      std::string message("ResetScores is not implemented in network mode.");
+      LOG(FATAL) << message;
+      BOOST_THROW_EXCEPTION(NotImplementedException(message));
     }
   }
 }

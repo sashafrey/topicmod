@@ -550,6 +550,13 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   inline bool cache_processor_output() const;
   inline void set_cache_processor_output(bool value);
 
+  // optional bool reset_scores = 7 [default = true];
+  inline bool has_reset_scores() const;
+  inline void clear_reset_scores();
+  static const int kResetScoresFieldNumber = 7;
+  inline bool reset_scores() const;
+  inline void set_reset_scores(bool value);
+
   // @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
  private:
   inline void set_has_instance_id();
@@ -562,6 +569,8 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   inline void clear_has_compact_batches();
   inline void set_has_cache_processor_output();
   inline void clear_has_cache_processor_output();
+  inline void set_has_reset_scores();
+  inline void clear_has_reset_scores();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -571,9 +580,10 @@ class DataLoaderConfig : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedPtrField< ::artm::Stream > stream_;
   bool compact_batches_;
   bool cache_processor_output_;
+  bool reset_scores_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2629,6 +2639,28 @@ inline bool DataLoaderConfig::cache_processor_output() const {
 inline void DataLoaderConfig::set_cache_processor_output(bool value) {
   set_has_cache_processor_output();
   cache_processor_output_ = value;
+}
+
+// optional bool reset_scores = 7 [default = true];
+inline bool DataLoaderConfig::has_reset_scores() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void DataLoaderConfig::set_has_reset_scores() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void DataLoaderConfig::clear_has_reset_scores() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void DataLoaderConfig::clear_reset_scores() {
+  reset_scores_ = true;
+  clear_has_reset_scores();
+}
+inline bool DataLoaderConfig::reset_scores() const {
+  return reset_scores_;
+}
+inline void DataLoaderConfig::set_reset_scores(bool value) {
+  set_has_reset_scores();
+  reset_scores_ = value;
 }
 
 // -------------------------------------------------------------------

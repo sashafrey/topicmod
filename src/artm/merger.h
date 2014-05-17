@@ -39,6 +39,7 @@ class Merger : boost::noncopyable {
 
   void DisposeModel(ModelId model_id);
   void UpdateModel(const ModelConfig& model);
+  void ForceResetScores(ModelId model_id);
   void ForceSyncWithMemcached(ModelId model_id);
   void InvokePhiRegularizers();
 
@@ -48,9 +49,17 @@ class Merger : boost::noncopyable {
   enum MergerTaskType {
     kDisposeModel,
     kForceSyncWithMemcached,
+    kForceResetScores,
   };
 
   struct MergerTask {
+    MergerTask() {}
+    MergerTask(MergerTaskType _task_type, ModelId _model_id)
+        : task_type(_task_type), model_id(_model_id), sync_event(nullptr) {}
+
+    MergerTask(MergerTaskType _task_type, ModelId _model_id, rpcz::sync_event* _sync_event)
+        : task_type(_task_type), model_id(_model_id), sync_event(_sync_event) {}
+
     MergerTaskType task_type;
     ModelId model_id;
     rpcz::sync_event* sync_event;
@@ -71,6 +80,7 @@ class Merger : boost::noncopyable {
   void ThreadFunction();
 
   void SyncWithMemcached(ModelId model_id);
+  void ResetScores(ModelId model_id);
 };
 
 }  // namespace core

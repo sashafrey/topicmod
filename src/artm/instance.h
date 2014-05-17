@@ -58,6 +58,7 @@ class Instance : boost::noncopyable {
   void CreateOrReconfigureRegularizer(const std::string& name,
                                       std::shared_ptr<RegularizerInterface> regularizer);
   void DisposeRegularizer(const std::string& name);
+  void ForceResetScores(ModelId model_id);
   void ForceSyncWithMemcached(ModelId model_id);
   void InvokePhiRegularizers();
 

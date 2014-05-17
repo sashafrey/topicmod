@@ -40,6 +40,7 @@ message DataLoaderConfig {
   repeated Stream stream = 4;
   optional bool compact_batches = 5 [default = true];
   optional bool cache_processor_output = 6 [default = false];
+  optional bool reset_scores = 7 [default = true];
 }
 
 // Defines a stream in DataLoader.

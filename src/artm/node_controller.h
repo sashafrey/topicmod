@@ -31,13 +31,13 @@ class NodeController : boost::noncopyable {
  private:
   class ServiceEndpoint : boost::noncopyable {
    public:
-    ServiceEndpoint(const std::string& endpoint);
+    explicit ServiceEndpoint(const std::string& endpoint);
     ~ServiceEndpoint();
     std::string endpoint() const { return endpoint_; }
 
    private:
     std::string endpoint_;
-    rpcz::application application_;
+    std::unique_ptr<rpcz::application> application_;
 
     // Keep all threads at the end of class members
     // (because the order of class members defines initialization order;
@@ -58,7 +58,7 @@ class NodeController : boost::noncopyable {
 
   std::shared_ptr<ServiceEndpoint> service_endpoint_;
 
-  rpcz::application application_;
+  std::unique_ptr<rpcz::application> application_;
   std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
 };
 

@@ -7,6 +7,7 @@
 
 #include "artm/exceptions.h"
 #include "artm/helpers.h"
+#include "artm/zmq_context.h"
 
 namespace artm {
 namespace core {
@@ -16,9 +17,12 @@ NodeController::NodeController(int id, const NodeControllerConfig& config)
       node_controller_id_(id),
       config_(lock_, std::make_shared<NodeControllerConfig>(NodeControllerConfig(config))),
       service_endpoint_(nullptr),
-      application_(),
-      master_component_service_proxy_(nullptr)
-{
+      application_(nullptr),
+      master_component_service_proxy_(nullptr) {
+  rpcz::application::options options(3);
+  options.zeromq_context = ZmqContext::singleton().get();
+  application_.reset(new rpcz::application(options));
+
   service_endpoint_.reset(new ServiceEndpoint(config.node_controller_create_endpoint()));
 
   LOG(INFO) << "Connecting node " << config.node_controller_connect_endpoint()
@@ -26,7 +30,7 @@ NodeController::NodeController(int id, const NodeControllerConfig& config)
 
   master_component_service_proxy_.reset(
       new artm::core::MasterComponentService_Stub(
-      application_.create_rpc_channel(config.master_component_connect_endpoint()), true));
+      application_->create_rpc_channel(config.master_component_connect_endpoint()), true));
 
   ::artm::core::String request;
   ::artm::core::Void response;
@@ -42,7 +46,11 @@ NodeController::~NodeController() {
   ::artm::core::String request;
   ::artm::core::Void response;
   request.set_value(config->node_controller_connect_endpoint());
-  master_component_service_proxy_->DisconnectClient(request, &response);
+  try {
+    master_component_service_proxy_->DisconnectClient(request, &response);
+  } catch(...) {
+    LOG(ERROR) << "Unable to send disconnect message to master node.";
+  }
 
   if (service_endpoint_ != nullptr) {
     service_endpoint_.reset();
@@ -54,12 +62,15 @@ int NodeController::id() const {
 }
 
 NodeController::ServiceEndpoint::~ServiceEndpoint() {
-  application_.terminate();
+  application_->terminate();
   thread_.join();
 }
 
 NodeController::ServiceEndpoint::ServiceEndpoint(const std::string& endpoint)
-    : endpoint_(endpoint), application_(rpcz::application::options(1)), thread_() {
+    : endpoint_(endpoint), application_(nullptr), thread_() {
+  rpcz::application::options options(3);
+  options.zeromq_context = ZmqContext::singleton().get();
+  application_.reset(new rpcz::application(options));
   boost::thread t(&NodeController::ServiceEndpoint::ThreadFunction, this);
   thread_.swap(t);
 }
@@ -68,11 +79,11 @@ void NodeController::ServiceEndpoint::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "NodeController");
     LOG(INFO) << "Establishing NodeControllerService on " << endpoint();
-    rpcz::server server(application_);
+    rpcz::server server(*application_);
     ::artm::core::NodeControllerServiceImpl node_controller_service_impl;
     server.register_service(&node_controller_service_impl);
     server.bind(endpoint());
-    application_.run();
+    application_->run();
     LOG(INFO) << "NodeControllerService on " << endpoint() << " is stopped.";
   } catch(...) {
     LOG(FATAL) << "Fatal exception in NodeController::ServiceEndpoint::ThreadFunction() function";

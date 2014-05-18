@@ -69,7 +69,7 @@ class Instance : boost::noncopyable {
   int instance_id_;
   ThreadSafeHolder<InstanceSchema> schema_;
 
-  rpcz::application application_;
+  std::unique_ptr<rpcz::application> application_;
   ThreadSafeHolder<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
 
   mutable boost::mutex processor_queue_lock_;

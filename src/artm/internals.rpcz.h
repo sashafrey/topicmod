@@ -136,19 +136,19 @@ class NodeControllerService : public rpcz::service {
   static const ::google::protobuf::ServiceDescriptor* descriptor();
 
   virtual void CreateOrReconfigureInstance(const ::artm::InstanceConfig& request,
-                       ::rpcz::reply< ::artm::core::Int> response);
-  virtual void DisposeInstance(const ::artm::core::Int& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeInstance(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void CreateOrReconfigureDataLoader(const ::artm::DataLoaderConfig& request,
-                       ::rpcz::reply< ::artm::core::Int> response);
-  virtual void DisposeDataLoader(const ::artm::core::Int& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeDataLoader(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
-                       ::rpcz::reply< ::artm::core::Int> response);
+                       ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeModel(const ::artm::core::DisposeModelArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void CreateOrReconfigureRegularizer(const ::artm::core::CreateOrReconfigureRegularizerArgs& request,
-                       ::rpcz::reply< ::artm::core::Int> response);
+                       ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
@@ -180,34 +180,34 @@ class NodeControllerService_Stub {
 
 
   void CreateOrReconfigureInstance(const ::artm::InstanceConfig& request,
-                       ::artm::core::Int* response,
+                       ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void CreateOrReconfigureInstance(const ::artm::InstanceConfig& request,
-                       ::artm::core::Int* response,
+                       ::artm::core::Void* response,
                        long deadline_ms = -1);
-  void DisposeInstance(const ::artm::core::Int& request,
+  void DisposeInstance(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void DisposeInstance(const ::artm::core::Int& request,
+  void DisposeInstance(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void CreateOrReconfigureDataLoader(const ::artm::DataLoaderConfig& request,
-                       ::artm::core::Int* response,
+                       ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void CreateOrReconfigureDataLoader(const ::artm::DataLoaderConfig& request,
-                       ::artm::core::Int* response,
+                       ::artm::core::Void* response,
                        long deadline_ms = -1);
-  void DisposeDataLoader(const ::artm::core::Int& request,
+  void DisposeDataLoader(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void DisposeDataLoader(const ::artm::core::Int& request,
+  void DisposeDataLoader(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
-                       ::artm::core::Int* response,
+                       ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
-                       ::artm::core::Int* response,
+                       ::artm::core::Void* response,
                        long deadline_ms = -1);
   void DisposeModel(const ::artm::core::DisposeModelArgs& request,
                        ::artm::core::Void* response,
@@ -216,10 +216,10 @@ class NodeControllerService_Stub {
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void CreateOrReconfigureRegularizer(const ::artm::core::CreateOrReconfigureRegularizerArgs& request,
-                       ::artm::core::Int* response,
+                       ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void CreateOrReconfigureRegularizer(const ::artm::core::CreateOrReconfigureRegularizerArgs& request,
-                       ::artm::core::Int* response,
+                       ::artm::core::Void* response,
                        long deadline_ms = -1);
   void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::artm::core::Void* response,

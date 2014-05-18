@@ -11,6 +11,7 @@
 #include "artm/processor.h"
 #include "artm/template_manager.h"
 #include "artm/topic_model.h"
+#include "artm/zmq_context.h"
 
 #include "artm/dirichlet_regularizer_theta.h"
 #include "artm/dirichlet_regularizer_phi.h"
@@ -23,7 +24,7 @@ Instance::Instance(int id, const InstanceConfig& config)
     : lock_(),
       instance_id_(id),
       schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
-      application_(),
+      application_(nullptr),
       master_component_service_proxy_(lock_, nullptr),
       processor_queue_lock_(),
       processor_queue_(),
@@ -31,6 +32,9 @@ Instance::Instance(int id, const InstanceConfig& config)
       merger_queue_(),
       merger_(&merger_queue_lock_, &merger_queue_, &schema_, &master_component_service_proxy_),
       processors_() {
+  rpcz::application::options options(3);
+  options.zeromq_context = ZmqContext::singleton().get();
+  application_.reset(new rpcz::application(options));
   Reconfigure(config);
 }
 
@@ -126,7 +130,7 @@ void Instance::Reconfigure(const InstanceConfig& config) {
   if (config.has_master_component_endpoint()) {
     std::shared_ptr<artm::core::MasterComponentService_Stub> new_ptr(
       new artm::core::MasterComponentService_Stub(
-        application_.create_rpc_channel(config.master_component_endpoint()), true));
+        application_->create_rpc_channel(config.master_component_endpoint()), true));
     master_component_service_proxy_.set(new_ptr);
   } else {
     master_component_service_proxy_.set(nullptr);

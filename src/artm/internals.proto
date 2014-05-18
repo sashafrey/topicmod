@@ -111,37 +111,33 @@ service MasterComponentService {
 // ===== NodeControllerService ======
 
 message CreateOrReconfigureModelArgs {
-  optional int32 instance_id = 1;
   optional string model_id = 2;
   optional ModelConfig config = 3;
 }
 
 message DisposeModelArgs {
-  optional int32 instance_id = 1;
   optional string model_id = 2;
 }
 
 message CreateOrReconfigureRegularizerArgs {
-  optional int32 instance_id = 1;
   optional string regularizer_name = 2;
   optional RegularizerConfig config = 3;
 }
 
 message DisposeRegularizerArgs {
-  optional int32 instance_id = 1;
   optional string regularizer_name = 2;
 }
 
 service NodeControllerService {
-  rpc CreateOrReconfigureInstance(InstanceConfig) returns (Int);
-  rpc DisposeInstance(Int) returns (Void);
+  rpc CreateOrReconfigureInstance(InstanceConfig) returns (Void);
+  rpc DisposeInstance(Void) returns (Void);
 
-  rpc CreateOrReconfigureDataLoader(DataLoaderConfig) returns (Int);
-  rpc DisposeDataLoader(Int) returns (Void);
+  rpc CreateOrReconfigureDataLoader(DataLoaderConfig) returns (Void);
+  rpc DisposeDataLoader(Void) returns (Void);
 
-  rpc CreateOrReconfigureModel(CreateOrReconfigureModelArgs) returns (Int);
+  rpc CreateOrReconfigureModel(CreateOrReconfigureModelArgs) returns (Void);
   rpc DisposeModel(DisposeModelArgs) returns (Void);
 
-  rpc CreateOrReconfigureRegularizer(CreateOrReconfigureRegularizerArgs) returns (Int);
+  rpc CreateOrReconfigureRegularizer(CreateOrReconfigureRegularizerArgs) returns (Void);
   rpc DisposeRegularizer(DisposeRegularizerArgs) returns (Void);
 }

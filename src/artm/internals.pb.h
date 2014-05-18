@@ -1157,13 +1157,6 @@ class CreateOrReconfigureModelArgs : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 instance_id = 1;
-  inline bool has_instance_id() const;
-  inline void clear_instance_id();
-  static const int kInstanceIdFieldNumber = 1;
-  inline ::google::protobuf::int32 instance_id() const;
-  inline void set_instance_id(::google::protobuf::int32 value);
-
   // optional string model_id = 2;
   inline bool has_model_id() const;
   inline void clear_model_id();
@@ -1187,8 +1180,6 @@ class CreateOrReconfigureModelArgs : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.core.CreateOrReconfigureModelArgs)
  private:
-  inline void set_has_instance_id();
-  inline void clear_has_instance_id();
   inline void set_has_model_id();
   inline void clear_has_model_id();
   inline void set_has_config();
@@ -1198,10 +1189,9 @@ class CreateOrReconfigureModelArgs : public ::google::protobuf::Message {
 
   ::std::string* model_id_;
   ::artm::ModelConfig* config_;
-  ::google::protobuf::int32 instance_id_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_internals_2eproto();
   friend void protobuf_AssignDesc_internals_2eproto();
@@ -1266,13 +1256,6 @@ class DisposeModelArgs : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 instance_id = 1;
-  inline bool has_instance_id() const;
-  inline void clear_instance_id();
-  static const int kInstanceIdFieldNumber = 1;
-  inline ::google::protobuf::int32 instance_id() const;
-  inline void set_instance_id(::google::protobuf::int32 value);
-
   // optional string model_id = 2;
   inline bool has_model_id() const;
   inline void clear_model_id();
@@ -1287,18 +1270,15 @@ class DisposeModelArgs : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.core.DisposeModelArgs)
  private:
-  inline void set_has_instance_id();
-  inline void clear_has_instance_id();
   inline void set_has_model_id();
   inline void clear_has_model_id();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* model_id_;
-  ::google::protobuf::int32 instance_id_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_internals_2eproto();
   friend void protobuf_AssignDesc_internals_2eproto();
@@ -1363,13 +1343,6 @@ class CreateOrReconfigureRegularizerArgs : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 instance_id = 1;
-  inline bool has_instance_id() const;
-  inline void clear_instance_id();
-  static const int kInstanceIdFieldNumber = 1;
-  inline ::google::protobuf::int32 instance_id() const;
-  inline void set_instance_id(::google::protobuf::int32 value);
-
   // optional string regularizer_name = 2;
   inline bool has_regularizer_name() const;
   inline void clear_regularizer_name();
@@ -1393,8 +1366,6 @@ class CreateOrReconfigureRegularizerArgs : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.core.CreateOrReconfigureRegularizerArgs)
  private:
-  inline void set_has_instance_id();
-  inline void clear_has_instance_id();
   inline void set_has_regularizer_name();
   inline void clear_has_regularizer_name();
   inline void set_has_config();
@@ -1404,10 +1375,9 @@ class CreateOrReconfigureRegularizerArgs : public ::google::protobuf::Message {
 
   ::std::string* regularizer_name_;
   ::artm::RegularizerConfig* config_;
-  ::google::protobuf::int32 instance_id_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_internals_2eproto();
   friend void protobuf_AssignDesc_internals_2eproto();
@@ -1472,13 +1442,6 @@ class DisposeRegularizerArgs : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 instance_id = 1;
-  inline bool has_instance_id() const;
-  inline void clear_instance_id();
-  static const int kInstanceIdFieldNumber = 1;
-  inline ::google::protobuf::int32 instance_id() const;
-  inline void set_instance_id(::google::protobuf::int32 value);
-
   // optional string regularizer_name = 2;
   inline bool has_regularizer_name() const;
   inline void clear_regularizer_name();
@@ -1493,18 +1456,15 @@ class DisposeRegularizerArgs : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.core.DisposeRegularizerArgs)
  private:
-  inline void set_has_instance_id();
-  inline void clear_has_instance_id();
   inline void set_has_regularizer_name();
   inline void clear_has_regularizer_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* regularizer_name_;
-  ::google::protobuf::int32 instance_id_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_internals_2eproto();
   friend void protobuf_AssignDesc_internals_2eproto();
@@ -2449,37 +2409,15 @@ BatchIds::mutable_batch_id() {
 
 // CreateOrReconfigureModelArgs
 
-// optional int32 instance_id = 1;
-inline bool CreateOrReconfigureModelArgs::has_instance_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void CreateOrReconfigureModelArgs::set_has_instance_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void CreateOrReconfigureModelArgs::clear_has_instance_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void CreateOrReconfigureModelArgs::clear_instance_id() {
-  instance_id_ = 0;
-  clear_has_instance_id();
-}
-inline ::google::protobuf::int32 CreateOrReconfigureModelArgs::instance_id() const {
-  return instance_id_;
-}
-inline void CreateOrReconfigureModelArgs::set_instance_id(::google::protobuf::int32 value) {
-  set_has_instance_id();
-  instance_id_ = value;
-}
-
 // optional string model_id = 2;
 inline bool CreateOrReconfigureModelArgs::has_model_id() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void CreateOrReconfigureModelArgs::set_has_model_id() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void CreateOrReconfigureModelArgs::clear_has_model_id() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void CreateOrReconfigureModelArgs::clear_model_id() {
   if (model_id_ != &::google::protobuf::internal::kEmptyString) {
@@ -2543,13 +2481,13 @@ inline void CreateOrReconfigureModelArgs::set_allocated_model_id(::std::string* 
 
 // optional .artm.ModelConfig config = 3;
 inline bool CreateOrReconfigureModelArgs::has_config() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void CreateOrReconfigureModelArgs::set_has_config() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void CreateOrReconfigureModelArgs::clear_has_config() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void CreateOrReconfigureModelArgs::clear_config() {
   if (config_ != NULL) config_->::artm::ModelConfig::Clear();
@@ -2583,37 +2521,15 @@ inline void CreateOrReconfigureModelArgs::set_allocated_config(::artm::ModelConf
 
 // DisposeModelArgs
 
-// optional int32 instance_id = 1;
-inline bool DisposeModelArgs::has_instance_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void DisposeModelArgs::set_has_instance_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void DisposeModelArgs::clear_has_instance_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void DisposeModelArgs::clear_instance_id() {
-  instance_id_ = 0;
-  clear_has_instance_id();
-}
-inline ::google::protobuf::int32 DisposeModelArgs::instance_id() const {
-  return instance_id_;
-}
-inline void DisposeModelArgs::set_instance_id(::google::protobuf::int32 value) {
-  set_has_instance_id();
-  instance_id_ = value;
-}
-
 // optional string model_id = 2;
 inline bool DisposeModelArgs::has_model_id() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void DisposeModelArgs::set_has_model_id() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void DisposeModelArgs::clear_has_model_id() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void DisposeModelArgs::clear_model_id() {
   if (model_id_ != &::google::protobuf::internal::kEmptyString) {
@@ -2679,37 +2595,15 @@ inline void DisposeModelArgs::set_allocated_model_id(::std::string* model_id) {
 
 // CreateOrReconfigureRegularizerArgs
 
-// optional int32 instance_id = 1;
-inline bool CreateOrReconfigureRegularizerArgs::has_instance_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void CreateOrReconfigureRegularizerArgs::set_has_instance_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void CreateOrReconfigureRegularizerArgs::clear_has_instance_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void CreateOrReconfigureRegularizerArgs::clear_instance_id() {
-  instance_id_ = 0;
-  clear_has_instance_id();
-}
-inline ::google::protobuf::int32 CreateOrReconfigureRegularizerArgs::instance_id() const {
-  return instance_id_;
-}
-inline void CreateOrReconfigureRegularizerArgs::set_instance_id(::google::protobuf::int32 value) {
-  set_has_instance_id();
-  instance_id_ = value;
-}
-
 // optional string regularizer_name = 2;
 inline bool CreateOrReconfigureRegularizerArgs::has_regularizer_name() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void CreateOrReconfigureRegularizerArgs::set_has_regularizer_name() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void CreateOrReconfigureRegularizerArgs::clear_has_regularizer_name() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void CreateOrReconfigureRegularizerArgs::clear_regularizer_name() {
   if (regularizer_name_ != &::google::protobuf::internal::kEmptyString) {
@@ -2773,13 +2667,13 @@ inline void CreateOrReconfigureRegularizerArgs::set_allocated_regularizer_name(:
 
 // optional .artm.RegularizerConfig config = 3;
 inline bool CreateOrReconfigureRegularizerArgs::has_config() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void CreateOrReconfigureRegularizerArgs::set_has_config() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void CreateOrReconfigureRegularizerArgs::clear_has_config() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void CreateOrReconfigureRegularizerArgs::clear_config() {
   if (config_ != NULL) config_->::artm::RegularizerConfig::Clear();
@@ -2813,37 +2707,15 @@ inline void CreateOrReconfigureRegularizerArgs::set_allocated_config(::artm::Reg
 
 // DisposeRegularizerArgs
 
-// optional int32 instance_id = 1;
-inline bool DisposeRegularizerArgs::has_instance_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void DisposeRegularizerArgs::set_has_instance_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void DisposeRegularizerArgs::clear_has_instance_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void DisposeRegularizerArgs::clear_instance_id() {
-  instance_id_ = 0;
-  clear_has_instance_id();
-}
-inline ::google::protobuf::int32 DisposeRegularizerArgs::instance_id() const {
-  return instance_id_;
-}
-inline void DisposeRegularizerArgs::set_instance_id(::google::protobuf::int32 value) {
-  set_has_instance_id();
-  instance_id_ = value;
-}
-
 // optional string regularizer_name = 2;
 inline bool DisposeRegularizerArgs::has_regularizer_name() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
 inline void DisposeRegularizerArgs::set_has_regularizer_name() {
-  _has_bits_[0] |= 0x00000002u;
+  _has_bits_[0] |= 0x00000001u;
 }
 inline void DisposeRegularizerArgs::clear_has_regularizer_name() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void DisposeRegularizerArgs::clear_regularizer_name() {
   if (regularizer_name_ != &::google::protobuf::internal::kEmptyString) {

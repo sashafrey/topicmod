@@ -24,11 +24,11 @@ class context_t;
 namespace artm {
 namespace core {
 
+class NetworkClientCollection;
+
 class MasterComponentServiceImpl : public MasterComponentService {
  public:
-  MasterComponentServiceImpl(
-      ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients,
-      zmq::context_t* zeromq_context);
+  explicit MasterComponentServiceImpl(NetworkClientCollection* clients);
 
   ~MasterComponentServiceImpl() { ; }
 
@@ -52,7 +52,7 @@ class MasterComponentServiceImpl : public MasterComponentService {
   mutable boost::mutex lock_;
   std::map<::artm::core::ModelId, std::shared_ptr<::artm::core::TopicModel>> topic_model_;
   std::unique_ptr<rpcz::application> application_;
-  ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients_;
+  NetworkClientCollection* clients_;
 };
 
 }  // namespace core

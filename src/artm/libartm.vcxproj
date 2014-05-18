@@ -66,6 +66,7 @@
     <ClInclude Include="template_manager.h" />
     <ClInclude Include="thread_safe_holder.h" />
     <ClInclude Include="topic_model.h" />
+    <ClInclude Include="zmq_context.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />

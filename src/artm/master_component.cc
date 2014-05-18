@@ -2,11 +2,14 @@
 
 #include "artm/master_component.h"
 
+#include <vector>
+
 #include "glog/logging.h"
 #include "zmq.hpp"
 
 #include "artm/exceptions.h"
 #include "artm/helpers.h"
+#include "artm/zmq_context.h"
 
 namespace artm {
 namespace core {
@@ -15,31 +18,20 @@ MasterComponent::MasterComponent(int id, const MasterComponentConfig& config)
     : lock_(),
       master_id_(id),
       config_(lock_, std::make_shared<MasterComponentConfig>(MasterComponentConfig(config))),
-      local_instance_(nullptr),
-      local_data_loader_(nullptr),
       service_endpoint_(nullptr),
-      clients_(lock_) {
+      client_interface_(nullptr) {
   Reconfigure(config);
 }
 
 MasterComponent::~MasterComponent() {
-  if (local_instance_ != nullptr) {
-    artm::core::InstanceManager::singleton().Erase(local_instance_->id());
-    local_instance_.reset();
-  }
-
-  if (local_data_loader_ != nullptr) {
-    artm::core::DataLoaderManager::singleton().Erase(local_data_loader_->id());
-    local_data_loader_.reset();
-  }
-
-  if (service_endpoint_ != nullptr) {
-    service_endpoint_.reset();
-  }
 }
 
 int MasterComponent::id() const {
   return master_id_;
+}
+
+int MasterComponent::clients_size() const {
+  return dynamic_cast<NetworkClientCollection*>(client_interface_.get())->clients_size();
 }
 
 bool MasterComponent::isInLocalModusOperandi() const {
@@ -51,111 +43,48 @@ bool MasterComponent::isInNetworkModusOperandi() const {
 }
 
 void MasterComponent::ReconfigureModel(const ModelConfig& config) {
-  if (isInLocalModusOperandi()) {
-    local_instance_->ReconfigureModel(config);
-    return;
-  }
-
-  if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
-  }
-
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  client_interface_->ReconfigureModel(config);
 }
 
 void MasterComponent::DisposeModel(ModelId model_id) {
-  if (isInLocalModusOperandi()) {
-    local_instance_->DisposeModel(model_id);
-    return;
-  }
-
-  if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
-  }
-
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  client_interface_->DisposeModel(model_id);
 }
 
 void MasterComponent::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
-  if (isInLocalModusOperandi()) {
-    local_instance_->CreateOrReconfigureRegularizer(config);
-    return;
-  }
-
-  if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
-  }
-
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  client_interface_->CreateOrReconfigureRegularizer(config);
 }
 
 void MasterComponent::DisposeRegularizer(const std::string& name) {
-  if (isInLocalModusOperandi()) {
-    local_instance_->DisposeRegularizer(name);
-    return;
-  }
-
-  if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
-  }
-
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  client_interface_->DisposeRegularizer(name);
 }
 
 void MasterComponent::InvokePhiRegularizers() {
-  if (isInLocalModusOperandi()) {
-    local_instance_->InvokePhiRegularizers();
-    return;
-  }
-
-  if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
-  }
-
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  client_interface_->InvokePhiRegularizers();
 }
 
 void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
+  auto previous_modus_operandi = config_.get()->modus_operandi();
+  auto new_modus_operandi = config.modus_operandi();
   config_.set(std::make_shared<MasterComponentConfig>(config));
-  if (isInLocalModusOperandi()) {
-    if (service_endpoint_ != nullptr) {
-      service_endpoint_.reset();
-    }
 
-    if (local_instance_ == nullptr) {
-      int instance_id = artm::core::InstanceManager::singleton().Create(config.instance_config());
-      local_instance_ = artm::core::InstanceManager::singleton().Get(instance_id);
-    } else {
-      local_instance_->Reconfigure(config.instance_config());
-    }
-
-    DataLoaderConfig data_loader_config(config.data_loader_config());
-    data_loader_config.set_instance_id(local_instance_->id());
-    if (local_data_loader_ == nullptr) {
-      int data_loader_id = artm::core::DataLoaderManager::singleton().Create(data_loader_config);
-      local_data_loader_ = artm::core::DataLoaderManager::singleton().Get(data_loader_id);
-    } else {
-      local_data_loader_->Reconfigure(data_loader_config);
-    }
-
+  if ((new_modus_operandi == previous_modus_operandi) && (client_interface_ != nullptr)) {
+    client_interface_->Reconfigure(config);
     return;
   }
 
-  if (isInNetworkModusOperandi()) {
-    if (local_instance_ != nullptr) {
-      artm::core::InstanceManager::singleton().Erase(local_instance_->id());
-      local_instance_.reset();
-    }
+  if (new_modus_operandi == MasterComponentConfig_ModusOperandi_Local) {
+    service_endpoint_.reset();
+    client_interface_.reset(new LocalClient());
+    client_interface_->Reconfigure(config);
+    return;
+  }
 
-    if (local_data_loader_ != nullptr) {
-      artm::core::DataLoaderManager::singleton().Erase(local_data_loader_->id());
-      local_data_loader_.reset();
-    }
-
-    if (service_endpoint_ == nullptr) {
-      service_endpoint_.reset(new ServiceEndpoint(config_.get()->service_endpoint(), &clients_));
-    }
-
+  if (new_modus_operandi == MasterComponentConfig_ModusOperandi_Network) {
+    client_interface_.reset(new NetworkClientCollection(lock_));
+    service_endpoint_.reset(
+      new ServiceEndpoint(config_.get()->service_endpoint(),
+                          dynamic_cast<NetworkClientCollection*>(client_interface_.get())));
+    client_interface_->Reconfigure(config);
     return;
   }
 
@@ -164,7 +93,8 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
 
 bool MasterComponent::RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model) {
   if (isInLocalModusOperandi()) {
-    return local_instance_->RequestTopicModel(model_id, topic_model);
+    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
+    return local_client->RequestTopicModel(model_id, topic_model);
   }
 
   if (isInNetworkModusOperandi()) {
@@ -176,7 +106,9 @@ bool MasterComponent::RequestTopicModel(ModelId model_id, ::artm::TopicModel* to
 
 void MasterComponent::WaitIdle() {
   if (isInLocalModusOperandi()) {
-    return local_data_loader_->WaitIdle();
+    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
+    local_client->WaitIdle();
+    return;
   }
 
   if (isInNetworkModusOperandi()) {
@@ -188,7 +120,9 @@ void MasterComponent::WaitIdle() {
 
 void MasterComponent::InvokeIteration(int iterations_count) {
   if (isInLocalModusOperandi()) {
-    return local_data_loader_->InvokeIteration(iterations_count);
+    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
+    local_client->InvokeIteration(iterations_count);
+    return;
   }
 
   if (isInNetworkModusOperandi()) {
@@ -200,7 +134,8 @@ void MasterComponent::InvokeIteration(int iterations_count) {
 
 void MasterComponent::AddBatch(const Batch& batch) {
   if (isInLocalModusOperandi()) {
-    return local_data_loader_->AddBatch(batch);
+    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
+    return local_client->AddBatch(batch);
   }
 
   if (isInNetworkModusOperandi()) {
@@ -212,18 +147,14 @@ void MasterComponent::AddBatch(const Batch& batch) {
 
 MasterComponent::ServiceEndpoint::~ServiceEndpoint() {
   application_->terminate();
-  application_.reset();
   thread_.join();
 }
 
 MasterComponent::ServiceEndpoint::ServiceEndpoint(
-    const std::string& endpoint,
-    ThreadSafeCollectionHolder<std::string, NodeControllerService_Stub>* clients)
-    : endpoint_(endpoint), clients_(clients), zeromq_context_(nullptr),
-      application_(nullptr), thread_() {
-  zeromq_context_.reset(new zmq::context_t(1));
-  rpcz::application::options options(1);
-  options.zeromq_context = zeromq_context_.get();
+    const std::string& endpoint, NetworkClientCollection* clients)
+    : endpoint_(endpoint), clients_(clients), application_(nullptr), thread_() {
+  rpcz::application::options options(3);
+  options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
   boost::thread t(&MasterComponent::ServiceEndpoint::ThreadFunction, this);
   thread_.swap(t);
@@ -234,7 +165,7 @@ void MasterComponent::ServiceEndpoint::ThreadFunction() {
     Helpers::SetThreadName(-1, "MasterComponent");
     LOG(INFO) << "Establishing MasterComponentService on " << endpoint();
     rpcz::server server(*application_);
-    ::artm::core::MasterComponentServiceImpl master_component_service_impl(clients_, zeromq_context_.get());
+    ::artm::core::MasterComponentServiceImpl master_component_service_impl(clients_);
     server.register_service(&master_component_service_impl);
     server.bind(endpoint());
     application_->run();
@@ -242,6 +173,166 @@ void MasterComponent::ServiceEndpoint::ThreadFunction() {
   } catch(...) {
     LOG(FATAL) << "Fatal exception in MasterComponent::ServiceEndpoint::ThreadFunction() function";
     return;
+  }
+}
+
+void LocalClient::ReconfigureModel(const ModelConfig& config) {
+  local_instance_->ReconfigureModel(config);
+}
+
+void LocalClient::DisposeModel(ModelId model_id) {
+  local_instance_->DisposeModel(model_id);
+}
+
+void LocalClient::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
+  local_instance_->CreateOrReconfigureRegularizer(config);
+}
+
+void LocalClient::DisposeRegularizer(const std::string& name) {
+  local_instance_->DisposeRegularizer(name);
+}
+
+void LocalClient::InvokePhiRegularizers() {
+  local_instance_->InvokePhiRegularizers();
+}
+
+void LocalClient::Reconfigure(const MasterComponentConfig& config) {
+  if (local_instance_ == nullptr) {
+    int instance_id = artm::core::InstanceManager::singleton().Create(config.instance_config());
+    local_instance_ = artm::core::InstanceManager::singleton().Get(instance_id);
+  } else {
+    local_instance_->Reconfigure(config.instance_config());
+  }
+
+  DataLoaderConfig data_loader_config(config.data_loader_config());
+  data_loader_config.set_instance_id(local_instance_->id());
+  if (local_data_loader_ == nullptr) {
+    int data_loader_id = artm::core::DataLoaderManager::singleton().Create(data_loader_config);
+    local_data_loader_ = artm::core::DataLoaderManager::singleton().Get(data_loader_id);
+  } else {
+    local_data_loader_->Reconfigure(data_loader_config);
+  }
+}
+
+LocalClient::~LocalClient() {
+  if (local_instance_ != nullptr) {
+    artm::core::InstanceManager::singleton().Erase(local_instance_->id());
+    local_instance_.reset();
+  }
+
+  if (local_data_loader_ != nullptr) {
+    artm::core::DataLoaderManager::singleton().Erase(local_data_loader_->id());
+    local_data_loader_.reset();
+  }
+}
+
+bool LocalClient::RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model) {
+  return local_instance_->RequestTopicModel(model_id, topic_model);
+}
+
+void LocalClient::WaitIdle() {
+  local_data_loader_->WaitIdle();
+}
+
+void LocalClient::InvokeIteration(int iterations_count) {
+  local_data_loader_->InvokeIteration(iterations_count);
+}
+
+void LocalClient::AddBatch(const Batch& batch) {
+  local_data_loader_->AddBatch(batch);
+}
+
+void NetworkClientCollection::ReconfigureModel(const ModelConfig& config) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    CreateOrReconfigureModelArgs args;
+    args.mutable_config()->CopyFrom(config);
+    Void response;
+    client.CreateOrReconfigureModel(args, &response);
+  });
+}
+
+
+void NetworkClientCollection::DisposeModel(ModelId model_id) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    DisposeModelArgs args;
+    args.set_model_id(model_id);
+    Void response;
+    client.DisposeModel(args, &response);
+  });
+}
+
+void NetworkClientCollection::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    CreateOrReconfigureRegularizerArgs args;
+    args.mutable_config()->CopyFrom(config);
+    Void response;
+    client.CreateOrReconfigureRegularizer(args, &response);
+  });
+}
+
+void NetworkClientCollection::DisposeRegularizer(const std::string& name) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    DisposeRegularizerArgs args;
+    args.set_regularizer_name(name);
+    Void response;
+    client.DisposeRegularizer(args, &response);
+  });
+}
+
+void NetworkClientCollection::InvokePhiRegularizers() {
+  BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
+}
+
+void NetworkClientCollection::Reconfigure(const MasterComponentConfig& config) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    Void response;
+    client.CreateOrReconfigureDataLoader(config.data_loader_config(), &response);
+    client.CreateOrReconfigureInstance(config.instance_config(), &response);
+  });
+}
+
+NetworkClientCollection::~NetworkClientCollection() {
+  for_each_endpoint([&](std::string endpoint) {
+    DisconnectClient(endpoint);
+  });
+}
+
+bool NetworkClientCollection::ConnectClient(std::string endpoint, rpcz::application* application) {
+  if (clients_.has_key(endpoint)) {
+    LOG(ERROR) << "Unable to connect client " << endpoint << ", client already exists.";
+    return false;
+  }
+
+  std::shared_ptr<NodeControllerService_Stub> client(
+    new artm::core::NodeControllerService_Stub(
+      application->create_rpc_channel(endpoint), true));
+  clients_.set(endpoint, client);
+  return true;
+}
+
+bool NetworkClientCollection::DisconnectClient(std::string endpoint) {
+  if (!clients_.has_key(endpoint)) {
+    LOG(ERROR) << "Unable to disconnect client " << endpoint << ", client is not connected.";
+    return false;
+  }
+
+  clients_.erase(endpoint);
+  return true;
+}
+
+void NetworkClientCollection::for_each_client(
+    std::function<void(artm::core::NodeControllerService_Stub&)> f) {
+  std::vector<std::string> client_ids(clients_.keys());
+  for (auto &client_id : client_ids) {
+    f(*clients_.get(client_id));
+  }
+}
+
+void NetworkClientCollection::for_each_endpoint(
+    std::function<void(std::string)> f) {
+  std::vector<std::string> client_ids(clients_.keys());
+  for (auto &client_id : client_ids) {
+    f(client_id);
   }
 }
 

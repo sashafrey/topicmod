@@ -67,6 +67,16 @@ class TemplateManager : boost::noncopyable {
     return (iter == map_.end()) ? nullptr : iter->second;
   }
 
+  std::shared_ptr<Type> First() {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto iter = map_.begin();
+    if (iter != map_.end()) {
+      return iter->second;
+    } else {
+      return std::shared_ptr<Type>();
+    }
+  }
+
   void Erase(int id) {
     boost::lock_guard<boost::mutex> guard(lock_);
     map_.erase(id);

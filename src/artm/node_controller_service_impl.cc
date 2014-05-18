@@ -4,6 +4,8 @@
 
 #include "boost/thread.hpp"
 
+#include "glog/logging.h"
+
 #include "artm/instance.h"
 #include "artm/data_loader.h"
 #include "artm/exceptions.h"
@@ -11,70 +13,83 @@
 namespace artm {
 namespace core {
 
+NodeControllerServiceImpl::~NodeControllerServiceImpl() {
+  if (instance_id_ != kUndefinedId) {
+    artm::core::InstanceManager::singleton().Erase(instance_id_);
+  }
+
+  if (data_loader_id_ != kUndefinedId) {
+    artm::core::DataLoaderManager::singleton().Erase(data_loader_id_);
+  }
+}
+
 void NodeControllerServiceImpl::CreateOrReconfigureInstance(
     const ::artm::InstanceConfig& request,
-    ::rpcz::reply< ::artm::core::Int> response) {
+    ::rpcz::reply< ::artm::core::Void> response) {
   try {
-    auto instance = artm::core::InstanceManager::singleton().Get(request.instance_id());
-    int instance_id;
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
     if (instance != nullptr) {
         instance->Reconfigure(request);
-        instance_id = instance->id();
     } else {
-      instance_id = artm::core::InstanceManager::singleton().Create(request);
+      instance_id_ = artm::core::InstanceManager::singleton().Create(request);
     }
 
-    Int reply;
-    reply.set_value(instance_id);
-    response.send(reply);
+    response.send(Void());
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services
   }
 }
 
 void NodeControllerServiceImpl::DisposeInstance(
-    const ::artm::core::Int& request,
+    const ::artm::core::Void& request,
     ::rpcz::reply< ::artm::core::Void> response) {
-  artm::core::InstanceManager::singleton().Erase(request.value());
+  boost::lock_guard<boost::mutex> guard(lock_);
+  artm::core::InstanceManager::singleton().Erase(instance_id_);
+  instance_id_ = kUndefinedId;
+  response.send(Void());
 }
 
 void NodeControllerServiceImpl::CreateOrReconfigureDataLoader(
     const ::artm::DataLoaderConfig& request,
-    ::rpcz::reply< ::artm::core::Int> response) {
+    ::rpcz::reply< ::artm::core::Void> response) {
   try {
-    auto data_loader = artm::core::DataLoaderManager::singleton().Get(request.instance_id());
-    int data_loader_id;
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto data_loader = artm::core::DataLoaderManager::singleton().Get(data_loader_id_);
     if (data_loader != nullptr) {
-        data_loader->Reconfigure(request);
-        data_loader_id = data_loader->id();
+      data_loader->Reconfigure(request);
     } else {
-      data_loader_id = artm::core::DataLoaderManager::singleton().Create(request);
+      data_loader_id_ = artm::core::DataLoaderManager::singleton().Create(request);
     }
 
-    Int reply;
-    reply.set_value(data_loader_id);
-    response.send(reply);
+    response.send(Void());
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services
   }
 }
 
 void NodeControllerServiceImpl::DisposeDataLoader(
-    const ::artm::core::Int& request,
+    const ::artm::core::Void& request,
     ::rpcz::reply< ::artm::core::Void> response) {
-  artm::core::DataLoaderManager::singleton().Erase(request.value());
+  boost::lock_guard<boost::mutex> guard(lock_);
+  artm::core::DataLoaderManager::singleton().Erase(data_loader_id_);
+  data_loader_id_ = kUndefinedId;
+  response.send(Void());
 }
 
 void NodeControllerServiceImpl::CreateOrReconfigureModel(
     const ::artm::core::CreateOrReconfigureModelArgs& request,
-    ::rpcz::reply< ::artm::core::Int> response) {
+    ::rpcz::reply< ::artm::core::Void> response) {
   try {
-    auto instance = artm::core::InstanceManager::singleton().Get(request.instance_id());
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
     if (instance == nullptr) {
+      LOG(ERROR) << "Instance not found";
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("Instance not found"));
     }
 
     instance->ReconfigureModel(request.config());
+    response.send(Void());
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services
   }
@@ -83,22 +98,28 @@ void NodeControllerServiceImpl::CreateOrReconfigureModel(
 void NodeControllerServiceImpl::DisposeModel(
     const ::artm::core::DisposeModelArgs& request,
     ::rpcz::reply< ::artm::core::Void> response) {
-  auto instance = artm::core::InstanceManager::singleton().Get(request.instance_id());
+  boost::lock_guard<boost::mutex> guard(lock_);
+  auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
   if (instance != nullptr) {
     instance->DisposeModel(request.model_id());
   }
+
+  response.send(Void());
 }
 
 void NodeControllerServiceImpl::CreateOrReconfigureRegularizer(
     const ::artm::core::CreateOrReconfigureRegularizerArgs& request,
-    ::rpcz::reply< ::artm::core::Int> response) {
+    ::rpcz::reply< ::artm::core::Void> response) {
   try {
-    auto instance = artm::core::InstanceManager::singleton().Get(request.instance_id());
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
     if (instance == nullptr) {
+      LOG(ERROR) << "Instance not found";
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("Instance not found"));
     }
 
     instance->CreateOrReconfigureRegularizer(request.config());
+    response.send(Void());
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services
   }
@@ -107,10 +128,13 @@ void NodeControllerServiceImpl::CreateOrReconfigureRegularizer(
 void NodeControllerServiceImpl::DisposeRegularizer(
     const ::artm::core::DisposeRegularizerArgs& request,
     ::rpcz::reply< ::artm::core::Void> response) {
-  auto instance = artm::core::InstanceManager::singleton().Get(request.instance_id());
+  boost::lock_guard<boost::mutex> guard(lock_);
+  auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
   if (instance != nullptr) {
     instance->DisposeRegularizer(request.regularizer_name());
   }
+
+  response.send(Void());
 }
 
 }  // namespace core

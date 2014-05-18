@@ -239,8 +239,7 @@ void protobuf_AssignDesc_internals_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(BatchIds));
   CreateOrReconfigureModelArgs_descriptor_ = file->message_type(10);
-  static const int CreateOrReconfigureModelArgs_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureModelArgs, instance_id_),
+  static const int CreateOrReconfigureModelArgs_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureModelArgs, model_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureModelArgs, config_),
   };
@@ -256,8 +255,7 @@ void protobuf_AssignDesc_internals_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateOrReconfigureModelArgs));
   DisposeModelArgs_descriptor_ = file->message_type(11);
-  static const int DisposeModelArgs_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeModelArgs, instance_id_),
+  static const int DisposeModelArgs_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeModelArgs, model_id_),
   };
   DisposeModelArgs_reflection_ =
@@ -272,8 +270,7 @@ void protobuf_AssignDesc_internals_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DisposeModelArgs));
   CreateOrReconfigureRegularizerArgs_descriptor_ = file->message_type(12);
-  static const int CreateOrReconfigureRegularizerArgs_offsets_[3] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureRegularizerArgs, instance_id_),
+  static const int CreateOrReconfigureRegularizerArgs_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureRegularizerArgs, regularizer_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureRegularizerArgs, config_),
   };
@@ -289,8 +286,7 @@ void protobuf_AssignDesc_internals_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CreateOrReconfigureRegularizerArgs));
   DisposeRegularizerArgs_descriptor_ = file->message_type(13);
-  static const int DisposeRegularizerArgs_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeRegularizerArgs, instance_id_),
+  static const int DisposeRegularizerArgs_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeRegularizerArgs, regularizer_name_),
   };
   DisposeRegularizerArgs_reflection_ =
@@ -407,39 +403,38 @@ void protobuf_AddDesc_internals_2eproto() {
     "ray\022\r\n\005score\030\007 \003(\001\022\022\n\nscore_norm\030\010 \003(\001\022\017"
     "\n\007item_id\030\t \003(\005\022$\n\005theta\030\n \003(\0132\025.artm.co"
     "re.FloatArray\"\034\n\010BatchIds\022\020\n\010batch_id\030\001 "
-    "\003(\t\"h\n\034CreateOrReconfigureModelArgs\022\023\n\013i"
-    "nstance_id\030\001 \001(\005\022\020\n\010model_id\030\002 \001(\t\022!\n\006co"
-    "nfig\030\003 \001(\0132\021.artm.ModelConfig\"9\n\020Dispose"
-    "ModelArgs\022\023\n\013instance_id\030\001 \001(\005\022\020\n\010model_"
-    "id\030\002 \001(\t\"|\n\"CreateOrReconfigureRegulariz"
-    "erArgs\022\023\n\013instance_id\030\001 \001(\005\022\030\n\020regulariz"
-    "er_name\030\002 \001(\t\022\'\n\006config\030\003 \001(\0132\027.artm.Reg"
-    "ularizerConfig\"G\n\026DisposeRegularizerArgs"
-    "\022\023\n\013instance_id\030\001 \001(\005\022\030\n\020regularizer_nam"
-    "e\030\002 \001(\t2\345\002\n\026MasterComponentService\022:\n\013Up"
-    "dateModel\022\031.artm.core.ModelIncrement\032\020.a"
-    "rtm.TopicModel\0224\n\rRetrieveModel\022\021.artm.c"
-    "ore.String\032\020.artm.TopicModel\0225\n\016RequestB"
-    "atches\022\016.artm.core.Int\032\023.artm.core.Batch"
-    "Ids\0225\n\rReportBatches\022\023.artm.core.BatchId"
-    "s\032\017.artm.core.Void\0223\n\rConnectClient\022\021.ar"
-    "tm.core.String\032\017.artm.core.Void\0226\n\020Disco"
-    "nnectClient\022\021.artm.core.String\032\017.artm.co"
-    "re.Void2\315\004\n\025NodeControllerService\022C\n\033Cre"
-    "ateOrReconfigureInstance\022\024.artm.Instance"
-    "Config\032\016.artm.core.Int\0222\n\017DisposeInstanc"
-    "e\022\016.artm.core.Int\032\017.artm.core.Void\022G\n\035Cr"
-    "eateOrReconfigureDataLoader\022\026.artm.DataL"
-    "oaderConfig\032\016.artm.core.Int\0224\n\021DisposeDa"
-    "taLoader\022\016.artm.core.Int\032\017.artm.core.Voi"
-    "d\022S\n\030CreateOrReconfigureModel\022\'.artm.cor"
-    "e.CreateOrReconfigureModelArgs\032\016.artm.co"
-    "re.Int\022<\n\014DisposeModel\022\033.artm.core.Dispo"
-    "seModelArgs\032\017.artm.core.Void\022_\n\036CreateOr"
-    "ReconfigureRegularizer\022-.artm.core.Creat"
-    "eOrReconfigureRegularizerArgs\032\016.artm.cor"
-    "e.Int\022H\n\022DisposeRegularizer\022!.artm.core."
-    "DisposeRegularizerArgs\032\017.artm.core.Void", 2119);
+    "\003(\t\"S\n\034CreateOrReconfigureModelArgs\022\020\n\010m"
+    "odel_id\030\002 \001(\t\022!\n\006config\030\003 \001(\0132\021.artm.Mod"
+    "elConfig\"$\n\020DisposeModelArgs\022\020\n\010model_id"
+    "\030\002 \001(\t\"g\n\"CreateOrReconfigureRegularizer"
+    "Args\022\030\n\020regularizer_name\030\002 \001(\t\022\'\n\006config"
+    "\030\003 \001(\0132\027.artm.RegularizerConfig\"2\n\026Dispo"
+    "seRegularizerArgs\022\030\n\020regularizer_name\030\002 "
+    "\001(\t2\345\002\n\026MasterComponentService\022:\n\013Update"
+    "Model\022\031.artm.core.ModelIncrement\032\020.artm."
+    "TopicModel\0224\n\rRetrieveModel\022\021.artm.core."
+    "String\032\020.artm.TopicModel\0225\n\016RequestBatch"
+    "es\022\016.artm.core.Int\032\023.artm.core.BatchIds\022"
+    "5\n\rReportBatches\022\023.artm.core.BatchIds\032\017."
+    "artm.core.Void\0223\n\rConnectClient\022\021.artm.c"
+    "ore.String\032\017.artm.core.Void\0226\n\020Disconnec"
+    "tClient\022\021.artm.core.String\032\017.artm.core.V"
+    "oid2\323\004\n\025NodeControllerService\022D\n\033CreateO"
+    "rReconfigureInstance\022\024.artm.InstanceConf"
+    "ig\032\017.artm.core.Void\0223\n\017DisposeInstance\022\017"
+    ".artm.core.Void\032\017.artm.core.Void\022H\n\035Crea"
+    "teOrReconfigureDataLoader\022\026.artm.DataLoa"
+    "derConfig\032\017.artm.core.Void\0225\n\021DisposeDat"
+    "aLoader\022\017.artm.core.Void\032\017.artm.core.Voi"
+    "d\022T\n\030CreateOrReconfigureModel\022\'.artm.cor"
+    "e.CreateOrReconfigureModelArgs\032\017.artm.co"
+    "re.Void\022<\n\014DisposeModel\022\033.artm.core.Disp"
+    "oseModelArgs\032\017.artm.core.Void\022`\n\036CreateO"
+    "rReconfigureRegularizer\022-.artm.core.Crea"
+    "teOrReconfigureRegularizerArgs\032\017.artm.co"
+    "re.Void\022H\n\022DisposeRegularizer\022!.artm.cor"
+    "e.DisposeRegularizerArgs\032\017.artm.core.Voi"
+    "d", 2041);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "internals.proto", &protobuf_RegisterTypes);
   FloatArray::default_instance_ = new FloatArray();
@@ -3315,7 +3310,6 @@ void BatchIds::Swap(BatchIds* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int CreateOrReconfigureModelArgs::kInstanceIdFieldNumber;
 const int CreateOrReconfigureModelArgs::kModelIdFieldNumber;
 const int CreateOrReconfigureModelArgs::kConfigFieldNumber;
 #endif  // !_MSC_VER
@@ -3337,7 +3331,6 @@ CreateOrReconfigureModelArgs::CreateOrReconfigureModelArgs(const CreateOrReconfi
 
 void CreateOrReconfigureModelArgs::SharedCtor() {
   _cached_size_ = 0;
-  instance_id_ = 0;
   model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   config_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3379,7 +3372,6 @@ CreateOrReconfigureModelArgs* CreateOrReconfigureModelArgs::New() const {
 
 void CreateOrReconfigureModelArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    instance_id_ = 0;
     if (has_model_id()) {
       if (model_id_ != &::google::protobuf::internal::kEmptyString) {
         model_id_->clear();
@@ -3399,26 +3391,10 @@ bool CreateOrReconfigureModelArgs::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 instance_id = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &instance_id_)));
-          set_has_instance_id();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_model_id;
-        break;
-      }
-
       // optional string model_id = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_model_id:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_model_id()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -3463,11 +3439,6 @@ bool CreateOrReconfigureModelArgs::MergePartialFromCodedStream(
 
 void CreateOrReconfigureModelArgs::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional int32 instance_id = 1;
-  if (has_instance_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->instance_id(), output);
-  }
-
   // optional string model_id = 2;
   if (has_model_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -3491,11 +3462,6 @@ void CreateOrReconfigureModelArgs::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* CreateOrReconfigureModelArgs::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional int32 instance_id = 1;
-  if (has_instance_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->instance_id(), target);
-  }
-
   // optional string model_id = 2;
   if (has_model_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -3524,13 +3490,6 @@ int CreateOrReconfigureModelArgs::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional int32 instance_id = 1;
-    if (has_instance_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->instance_id());
-    }
-
     // optional string model_id = 2;
     if (has_model_id()) {
       total_size += 1 +
@@ -3572,9 +3531,6 @@ void CreateOrReconfigureModelArgs::MergeFrom(const ::google::protobuf::Message& 
 void CreateOrReconfigureModelArgs::MergeFrom(const CreateOrReconfigureModelArgs& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_instance_id()) {
-      set_instance_id(from.instance_id());
-    }
     if (from.has_model_id()) {
       set_model_id(from.model_id());
     }
@@ -3604,7 +3560,6 @@ bool CreateOrReconfigureModelArgs::IsInitialized() const {
 
 void CreateOrReconfigureModelArgs::Swap(CreateOrReconfigureModelArgs* other) {
   if (other != this) {
-    std::swap(instance_id_, other->instance_id_);
     std::swap(model_id_, other->model_id_);
     std::swap(config_, other->config_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -3625,7 +3580,6 @@ void CreateOrReconfigureModelArgs::Swap(CreateOrReconfigureModelArgs* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DisposeModelArgs::kInstanceIdFieldNumber;
 const int DisposeModelArgs::kModelIdFieldNumber;
 #endif  // !_MSC_VER
 
@@ -3645,7 +3599,6 @@ DisposeModelArgs::DisposeModelArgs(const DisposeModelArgs& from)
 
 void DisposeModelArgs::SharedCtor() {
   _cached_size_ = 0;
-  instance_id_ = 0;
   model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -3685,7 +3638,6 @@ DisposeModelArgs* DisposeModelArgs::New() const {
 
 void DisposeModelArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    instance_id_ = 0;
     if (has_model_id()) {
       if (model_id_ != &::google::protobuf::internal::kEmptyString) {
         model_id_->clear();
@@ -3702,26 +3654,10 @@ bool DisposeModelArgs::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 instance_id = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &instance_id_)));
-          set_has_instance_id();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_model_id;
-        break;
-      }
-
       // optional string model_id = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_model_id:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_model_id()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -3752,11 +3688,6 @@ bool DisposeModelArgs::MergePartialFromCodedStream(
 
 void DisposeModelArgs::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional int32 instance_id = 1;
-  if (has_instance_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->instance_id(), output);
-  }
-
   // optional string model_id = 2;
   if (has_model_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -3774,11 +3705,6 @@ void DisposeModelArgs::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DisposeModelArgs::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional int32 instance_id = 1;
-  if (has_instance_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->instance_id(), target);
-  }
-
   // optional string model_id = 2;
   if (has_model_id()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -3800,13 +3726,6 @@ int DisposeModelArgs::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional int32 instance_id = 1;
-    if (has_instance_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->instance_id());
-    }
-
     // optional string model_id = 2;
     if (has_model_id()) {
       total_size += 1 +
@@ -3841,9 +3760,6 @@ void DisposeModelArgs::MergeFrom(const ::google::protobuf::Message& from) {
 void DisposeModelArgs::MergeFrom(const DisposeModelArgs& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_instance_id()) {
-      set_instance_id(from.instance_id());
-    }
     if (from.has_model_id()) {
       set_model_id(from.model_id());
     }
@@ -3870,7 +3786,6 @@ bool DisposeModelArgs::IsInitialized() const {
 
 void DisposeModelArgs::Swap(DisposeModelArgs* other) {
   if (other != this) {
-    std::swap(instance_id_, other->instance_id_);
     std::swap(model_id_, other->model_id_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -3890,7 +3805,6 @@ void DisposeModelArgs::Swap(DisposeModelArgs* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int CreateOrReconfigureRegularizerArgs::kInstanceIdFieldNumber;
 const int CreateOrReconfigureRegularizerArgs::kRegularizerNameFieldNumber;
 const int CreateOrReconfigureRegularizerArgs::kConfigFieldNumber;
 #endif  // !_MSC_VER
@@ -3912,7 +3826,6 @@ CreateOrReconfigureRegularizerArgs::CreateOrReconfigureRegularizerArgs(const Cre
 
 void CreateOrReconfigureRegularizerArgs::SharedCtor() {
   _cached_size_ = 0;
-  instance_id_ = 0;
   regularizer_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   config_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3954,7 +3867,6 @@ CreateOrReconfigureRegularizerArgs* CreateOrReconfigureRegularizerArgs::New() co
 
 void CreateOrReconfigureRegularizerArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    instance_id_ = 0;
     if (has_regularizer_name()) {
       if (regularizer_name_ != &::google::protobuf::internal::kEmptyString) {
         regularizer_name_->clear();
@@ -3974,26 +3886,10 @@ bool CreateOrReconfigureRegularizerArgs::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 instance_id = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &instance_id_)));
-          set_has_instance_id();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_regularizer_name;
-        break;
-      }
-
       // optional string regularizer_name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_regularizer_name:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_regularizer_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -4038,11 +3934,6 @@ bool CreateOrReconfigureRegularizerArgs::MergePartialFromCodedStream(
 
 void CreateOrReconfigureRegularizerArgs::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional int32 instance_id = 1;
-  if (has_instance_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->instance_id(), output);
-  }
-
   // optional string regularizer_name = 2;
   if (has_regularizer_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -4066,11 +3957,6 @@ void CreateOrReconfigureRegularizerArgs::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* CreateOrReconfigureRegularizerArgs::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional int32 instance_id = 1;
-  if (has_instance_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->instance_id(), target);
-  }
-
   // optional string regularizer_name = 2;
   if (has_regularizer_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -4099,13 +3985,6 @@ int CreateOrReconfigureRegularizerArgs::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional int32 instance_id = 1;
-    if (has_instance_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->instance_id());
-    }
-
     // optional string regularizer_name = 2;
     if (has_regularizer_name()) {
       total_size += 1 +
@@ -4147,9 +4026,6 @@ void CreateOrReconfigureRegularizerArgs::MergeFrom(const ::google::protobuf::Mes
 void CreateOrReconfigureRegularizerArgs::MergeFrom(const CreateOrReconfigureRegularizerArgs& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_instance_id()) {
-      set_instance_id(from.instance_id());
-    }
     if (from.has_regularizer_name()) {
       set_regularizer_name(from.regularizer_name());
     }
@@ -4179,7 +4055,6 @@ bool CreateOrReconfigureRegularizerArgs::IsInitialized() const {
 
 void CreateOrReconfigureRegularizerArgs::Swap(CreateOrReconfigureRegularizerArgs* other) {
   if (other != this) {
-    std::swap(instance_id_, other->instance_id_);
     std::swap(regularizer_name_, other->regularizer_name_);
     std::swap(config_, other->config_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -4200,7 +4075,6 @@ void CreateOrReconfigureRegularizerArgs::Swap(CreateOrReconfigureRegularizerArgs
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DisposeRegularizerArgs::kInstanceIdFieldNumber;
 const int DisposeRegularizerArgs::kRegularizerNameFieldNumber;
 #endif  // !_MSC_VER
 
@@ -4220,7 +4094,6 @@ DisposeRegularizerArgs::DisposeRegularizerArgs(const DisposeRegularizerArgs& fro
 
 void DisposeRegularizerArgs::SharedCtor() {
   _cached_size_ = 0;
-  instance_id_ = 0;
   regularizer_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -4260,7 +4133,6 @@ DisposeRegularizerArgs* DisposeRegularizerArgs::New() const {
 
 void DisposeRegularizerArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    instance_id_ = 0;
     if (has_regularizer_name()) {
       if (regularizer_name_ != &::google::protobuf::internal::kEmptyString) {
         regularizer_name_->clear();
@@ -4277,26 +4149,10 @@ bool DisposeRegularizerArgs::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 instance_id = 1;
-      case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &instance_id_)));
-          set_has_instance_id();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_regularizer_name;
-        break;
-      }
-
       // optional string regularizer_name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_regularizer_name:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_regularizer_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -4327,11 +4183,6 @@ bool DisposeRegularizerArgs::MergePartialFromCodedStream(
 
 void DisposeRegularizerArgs::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional int32 instance_id = 1;
-  if (has_instance_id()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->instance_id(), output);
-  }
-
   // optional string regularizer_name = 2;
   if (has_regularizer_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -4349,11 +4200,6 @@ void DisposeRegularizerArgs::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DisposeRegularizerArgs::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional int32 instance_id = 1;
-  if (has_instance_id()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->instance_id(), target);
-  }
-
   // optional string regularizer_name = 2;
   if (has_regularizer_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -4375,13 +4221,6 @@ int DisposeRegularizerArgs::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional int32 instance_id = 1;
-    if (has_instance_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->instance_id());
-    }
-
     // optional string regularizer_name = 2;
     if (has_regularizer_name()) {
       total_size += 1 +
@@ -4416,9 +4255,6 @@ void DisposeRegularizerArgs::MergeFrom(const ::google::protobuf::Message& from) 
 void DisposeRegularizerArgs::MergeFrom(const DisposeRegularizerArgs& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_instance_id()) {
-      set_instance_id(from.instance_id());
-    }
     if (from.has_regularizer_name()) {
       set_regularizer_name(from.regularizer_name());
     }
@@ -4445,7 +4281,6 @@ bool DisposeRegularizerArgs::IsInitialized() const {
 
 void DisposeRegularizerArgs::Swap(DisposeRegularizerArgs* other) {
   if (other != this) {
-    std::swap(instance_id_, other->instance_id_);
     std::swap(regularizer_name_, other->regularizer_name_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

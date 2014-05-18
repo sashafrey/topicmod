@@ -5,15 +5,17 @@
 #include "boost/thread.hpp"
 #include "glog/logging.h"
 
+#include "artm/master_component.h"
+#include "artm/zmq_context.h"
+
 namespace artm {
 namespace core {
 
 MasterComponentServiceImpl::MasterComponentServiceImpl(
-    ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub>* clients,
-    zmq::context_t* zeromq_context)
+    NetworkClientCollection* clients)
     : lock_(), topic_model_(), application_(), clients_(clients) {
-  rpcz::application::options options(1);
-  options.zeromq_context = zeromq_context;
+  rpcz::application::options options(3);
+  options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
 }
 
@@ -58,30 +60,24 @@ void MasterComponentServiceImpl::ReportBatches(const ::artm::core::BatchIds& req
 void MasterComponentServiceImpl::ConnectClient(const ::artm::core::String& request,
                       ::rpcz::reply< ::artm::core::Void> response) {
   LOG(INFO) << "Receive connect request from client " << request.value();
-  if (clients_->has_key(request.value())) {
+  bool success = clients_->ConnectClient(request.value(), application_.get());
+  if (success) {
+    response.send(artm::core::Void());
+  } else {
     response.Error(-1, "client with the same endpoint is already connected");
-    return;
   }
-
-  std::shared_ptr<NodeControllerService_Stub> client(
-    new artm::core::NodeControllerService_Stub(
-      application_->create_rpc_channel(request.value()), true));
-  clients_->set(request.value(), client);
-  response.send(artm::core::Void());
 }
 
 void MasterComponentServiceImpl::DisconnectClient(const ::artm::core::String& request,
                       ::rpcz::reply< ::artm::core::Void> response) {
   LOG(INFO) << "Receive disconnect request from client " << request.value();
+  bool success = clients_->DisconnectClient(request.value());
 
-  if (!clients_->has_key(request.value())) {
+  if (success) {
+    response.send(artm::core::Void());
+  } else {
     response.Error(-1, "client with this endpoint is not connected");
-    return;
   }
-
-  std::string client_name = request.value();
-  response.send(artm::core::Void());
-  clients_->erase(client_name);
 }
 
 }  // namespace core

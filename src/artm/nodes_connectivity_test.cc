@@ -7,9 +7,13 @@
 #include "artm/node_controller.h"
 #include "artm/master_component.h"
 #include "artm/messages.pb.h"
+#include "artm/instance.h"
+#include "artm/data_loader.h"
+#include "artm/test_mother.h"
 
 // artm_tests.exe --gtest_filter=NodesConnectivityTest.*
 TEST(NodesConnectivityTest, Basic) {
+  ::artm::test::TestMother test_mother;
   ::artm::MasterComponentConfig master_config;
   master_config.set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi_Network);
   master_config.set_service_endpoint("tcp://*:5555");
@@ -22,10 +26,31 @@ TEST(NodesConnectivityTest, Basic) {
   node_config.set_node_controller_create_endpoint("tcp://*:5556");
   node_config.set_node_controller_connect_endpoint("tcp://localhost:5556");
   int node_id = artm::core::NodeControllerManager::singleton().Create(node_config);
-  ASSERT_EQ(master->clients_size(), 1);
+  EXPECT_EQ(master->clients_size(), 1);
+
+  EXPECT_TRUE(::artm::core::InstanceManager::singleton().First() == nullptr);
+  EXPECT_TRUE(::artm::core::DataLoaderManager::singleton().First() == nullptr);
+
+  // Push configuration to all clients
+  master->Reconfigure(master_config);
+
+  EXPECT_FALSE(::artm::core::InstanceManager::singleton().First() == nullptr);
+  EXPECT_FALSE(::artm::core::DataLoaderManager::singleton().First() == nullptr);
+
+  auto regularizer_config = test_mother.GenerateRegularizerConfig();
+  auto model_config = test_mother.GenerateModelConfig();
+  master->CreateOrReconfigureRegularizer(regularizer_config);
+  master->ReconfigureModel(model_config);
+  auto schema = ::artm::core::InstanceManager::singleton().First()->schema();
+  EXPECT_TRUE(schema->has_model_config(model_config.model_id()));
+  EXPECT_TRUE(schema->has_regularizer(regularizer_config.name()));
+  master->DisposeModel(model_config.model_id());
+  master->DisposeRegularizer(regularizer_config.name());
 
   artm::core::NodeControllerManager::singleton().Erase(node_id);
-  ASSERT_EQ(master->clients_size(), 0);
+  EXPECT_EQ(master->clients_size(), 0);
+  EXPECT_TRUE(::artm::core::InstanceManager::singleton().First() == nullptr);
+  EXPECT_TRUE(::artm::core::DataLoaderManager::singleton().First() == nullptr);
 
   master.reset();
   artm::core::MasterComponentManager::singleton().Erase(master_id);

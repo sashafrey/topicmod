@@ -23,8 +23,8 @@ os.environ['PATH'] = ';'.join([address + '\\Win32\\Release', os.environ['PATH']]
 library = ArtmLibrary(address + '\\Win32\\Release\\artm.dll')
 
 master_config = messages_pb2.MasterComponentConfig()
-master_config.instance_config.processors_count = processors_count
-master_config.data_loader_config.disk_path = '.'
+master_config.processors_count = processors_count
+master_config.disk_path = '.'
 with library.CreateMasterComponent(master_config) as master_component:
     batch = messages_pb2.Batch()
     batch_tokens = {}

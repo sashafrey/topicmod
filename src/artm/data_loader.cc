@@ -212,7 +212,6 @@ void DataLoader::ThreadFunction() {
               break;  // Stream_Type_ItemIdModulus
             }
 
-            case Stream_Type_ItemHashModulus:
             default:
               BOOST_THROW_EXCEPTION(NotImplementedException("Stream_Type_ItemHashModulus"));
           }

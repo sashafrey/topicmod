@@ -17,19 +17,14 @@ using namespace std;
 using namespace artm;
 
 double proc(int argc, char * argv[], int processors_count, int instance_size) {
-  std::string batches_folder = "batches";
+  std::string batches_disk_path = "batches";
   std::string vocab_file = "";
   std::string docword_file = "";
 
-  // Create instance and data_loader configs
   MasterComponentConfig master_config;
   master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
-  InstanceConfig* instance_config = master_config.mutable_instance_config();
-  instance_config->set_processors_count(processors_count);
-  DataLoaderConfig* data_loader_config = master_config.mutable_data_loader_config();
-  std::string batches_disk_path(batches_folder);
-  data_loader_config->set_disk_path(batches_disk_path);
-
+  master_config.set_processors_count(processors_count);
+  master_config.set_disk_path(batches_disk_path);
   MasterComponent master_component(master_config);
 
   // Configure train and test streams

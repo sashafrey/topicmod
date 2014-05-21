@@ -20,6 +20,7 @@
 #include "artm/instance.h"
 #include "artm/master_component_service_impl.h"
 #include "artm/messages.pb.h"
+#include "artm/internals.pb.h"
 #include "artm/regularizer_interface.h"
 #include "artm/template_manager.h"
 #include "artm/topic_model.h"
@@ -61,6 +62,10 @@ class MasterComponent : boost::noncopyable {
   void WaitIdle();
   void InvokeIteration(int iterations_count);
   void AddBatch(const Batch& batch);
+
+  static DataLoaderConfig ExtractdDataLoaderConfig(const MasterComponentConfig& config,
+                                                   int instance_id);
+  static InstanceConfig ExtractInstanceConfig(const MasterComponentConfig& config);
 
  private:
   class ServiceEndpoint : boost::noncopyable {

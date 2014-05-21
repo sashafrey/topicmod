@@ -5,6 +5,7 @@
 
 #include "artm/cpp_interface.h"
 #include "artm/messages.pb.h"
+#include "artm/internals.pb.h"
 
 TEST(CppInterface, Canary) {
 }
@@ -16,8 +17,6 @@ TEST(CppInterface, Basic) {
 
   // Create instance
   artm::MasterComponentConfig master_config;
-  artm::InstanceConfig* instance_config = master_config.mutable_instance_config();
-  artm::DataLoaderConfig* config = master_config.mutable_data_loader_config();
   artm::MasterComponent master_component(master_config);
 
   artm::DirichletRegularizerThetaConfig regularizer_1_config;
@@ -113,7 +112,6 @@ TEST(CppInterface, Basic) {
 TEST(CppInterface, Exceptions) {
   // Create instance
   artm::MasterComponentConfig master_config;
-  artm::InstanceConfig* instance_config = master_config.mutable_instance_config();
   artm::MasterComponent master_component(master_config);
 
   // Create model

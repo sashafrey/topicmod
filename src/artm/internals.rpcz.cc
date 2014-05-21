@@ -51,54 +51,62 @@ void rpcz_protobuf_AddDesc_internals_2eproto() {
     "roto\"\037\n\nFloatArray\022\021\n\005value\030\001 \003(\002B\002\020\001\"\031\n"
     "\004Mask\022\021\n\005value\030\001 \003(\010B\002\020\001\"\025\n\004Bool\022\r\n\005valu"
     "e\030\001 \001(\010\"\024\n\003Int\022\r\n\005value\030\001 \001(\005\"\027\n\006String\022"
-    "\r\n\005value\030\001 \001(\t\"\006\n\004Void\"\322\001\n\016ProcessorInpu"
-    "t\022\032\n\005batch\030\001 \002(\0132\013.artm.Batch\022\022\n\nbatch_u"
-    "uid\030\002 \002(\t\022\026\n\016data_loader_id\030\003 \002(\005\022$\n\013str"
-    "eam_mask\030\004 \003(\0132\017.artm.core.Mask\022\023\n\013strea"
-    "m_name\030\005 \003(\t\022=\n\031previous_processor_outpu"
-    "t\030\006 \001(\0132\032.artm.core.ProcessorOutput\"q\n\017P"
-    "rocessorOutput\022\022\n\nbatch_uuid\030\001 \002(\t\022\026\n\016da"
-    "ta_loader_id\030\002 \002(\005\0222\n\017model_increment\030\003 "
-    "\003(\0132\031.artm.core.ModelIncrement\"\204\002\n\016Model"
-    "Increment\022\020\n\010model_id\030\001 \002(\t\022\024\n\014topics_co"
-    "unt\030\002 \002(\005\022\027\n\017items_processed\030\003 \001(\005\022\030\n\020di"
-    "scovered_token\030\004 \003(\t\022\r\n\005token\030\005 \003(\t\022.\n\017t"
-    "oken_increment\030\006 \003(\0132\025.artm.core.FloatAr"
-    "ray\022\r\n\005score\030\007 \003(\001\022\022\n\nscore_norm\030\010 \003(\001\022\017"
-    "\n\007item_id\030\t \003(\005\022$\n\005theta\030\n \003(\0132\025.artm.co"
-    "re.FloatArray\"\034\n\010BatchIds\022\020\n\010batch_id\030\001 "
-    "\003(\t\"S\n\034CreateOrReconfigureModelArgs\022\020\n\010m"
-    "odel_id\030\002 \001(\t\022!\n\006config\030\003 \001(\0132\021.artm.Mod"
-    "elConfig\"$\n\020DisposeModelArgs\022\020\n\010model_id"
-    "\030\002 \001(\t\"g\n\"CreateOrReconfigureRegularizer"
-    "Args\022\030\n\020regularizer_name\030\002 \001(\t\022\'\n\006config"
-    "\030\003 \001(\0132\027.artm.RegularizerConfig\"2\n\026Dispo"
-    "seRegularizerArgs\022\030\n\020regularizer_name\030\002 "
-    "\001(\t2\345\002\n\026MasterComponentService\022:\n\013Update"
-    "Model\022\031.artm.core.ModelIncrement\032\020.artm."
-    "TopicModel\0224\n\rRetrieveModel\022\021.artm.core."
-    "String\032\020.artm.TopicModel\0225\n\016RequestBatch"
-    "es\022\016.artm.core.Int\032\023.artm.core.BatchIds\022"
-    "5\n\rReportBatches\022\023.artm.core.BatchIds\032\017."
-    "artm.core.Void\0223\n\rConnectClient\022\021.artm.c"
-    "ore.String\032\017.artm.core.Void\0226\n\020Disconnec"
-    "tClient\022\021.artm.core.String\032\017.artm.core.V"
-    "oid2\323\004\n\025NodeControllerService\022D\n\033CreateO"
-    "rReconfigureInstance\022\024.artm.InstanceConf"
-    "ig\032\017.artm.core.Void\0223\n\017DisposeInstance\022\017"
-    ".artm.core.Void\032\017.artm.core.Void\022H\n\035Crea"
-    "teOrReconfigureDataLoader\022\026.artm.DataLoa"
-    "derConfig\032\017.artm.core.Void\0225\n\021DisposeDat"
-    "aLoader\022\017.artm.core.Void\032\017.artm.core.Voi"
-    "d\022T\n\030CreateOrReconfigureModel\022\'.artm.cor"
-    "e.CreateOrReconfigureModelArgs\032\017.artm.co"
-    "re.Void\022<\n\014DisposeModel\022\033.artm.core.Disp"
-    "oseModelArgs\032\017.artm.core.Void\022`\n\036CreateO"
-    "rReconfigureRegularizer\022-.artm.core.Crea"
-    "teOrReconfigureRegularizerArgs\032\017.artm.co"
-    "re.Void\022H\n\022DisposeRegularizer\022!.artm.cor"
-    "e.DisposeRegularizerArgs\032\017.artm.core.Voi"
-    "d", 2041);
+    "\r\n\005value\030\001 \001(\t\"\006\n\004Void\"\331\001\n\020DataLoaderCon"
+    "fig\022\023\n\013instance_id\030\002 \001(\005\022\021\n\tdisk_path\030\003 "
+    "\001(\t\022\026\n\nqueue_size\030\004 \001(\005:\00210\022\034\n\006stream\030\005 "
+    "\003(\0132\014.artm.Stream\022\035\n\017compact_batches\030\006 \001"
+    "(\010:\004true\022%\n\026cache_processor_output\030\007 \001(\010"
+    ":\005false\022!\n\031master_component_endpoint\030\010 \001"
+    "(\t\"s\n\016InstanceConfig\022\033\n\020processors_count"
+    "\030\002 \001(\005:\0011\022!\n\031master_component_endpoint\030\003"
+    " \001(\t\022!\n\025merger_queue_max_size\030\004 \001(\005:\00210\""
+    "\322\001\n\016ProcessorInput\022\032\n\005batch\030\001 \002(\0132\013.artm"
+    ".Batch\022\022\n\nbatch_uuid\030\002 \002(\t\022\026\n\016data_loade"
+    "r_id\030\003 \002(\005\022$\n\013stream_mask\030\004 \003(\0132\017.artm.c"
+    "ore.Mask\022\023\n\013stream_name\030\005 \003(\t\022=\n\031previou"
+    "s_processor_output\030\006 \001(\0132\032.artm.core.Pro"
+    "cessorOutput\"q\n\017ProcessorOutput\022\022\n\nbatch"
+    "_uuid\030\001 \002(\t\022\026\n\016data_loader_id\030\002 \002(\005\0222\n\017m"
+    "odel_increment\030\003 \003(\0132\031.artm.core.ModelIn"
+    "crement\"\204\002\n\016ModelIncrement\022\020\n\010model_id\030\001"
+    " \002(\t\022\024\n\014topics_count\030\002 \002(\005\022\027\n\017items_proc"
+    "essed\030\003 \001(\005\022\030\n\020discovered_token\030\004 \003(\t\022\r\n"
+    "\005token\030\005 \003(\t\022.\n\017token_increment\030\006 \003(\0132\025."
+    "artm.core.FloatArray\022\r\n\005score\030\007 \003(\001\022\022\n\ns"
+    "core_norm\030\010 \003(\001\022\017\n\007item_id\030\t \003(\005\022$\n\005thet"
+    "a\030\n \003(\0132\025.artm.core.FloatArray\"\034\n\010BatchI"
+    "ds\022\020\n\010batch_id\030\001 \003(\t\"S\n\034CreateOrReconfig"
+    "ureModelArgs\022\020\n\010model_id\030\002 \001(\t\022!\n\006config"
+    "\030\003 \001(\0132\021.artm.ModelConfig\"$\n\020DisposeMode"
+    "lArgs\022\020\n\010model_id\030\002 \001(\t\"g\n\"CreateOrRecon"
+    "figureRegularizerArgs\022\030\n\020regularizer_nam"
+    "e\030\002 \001(\t\022\'\n\006config\030\003 \001(\0132\027.artm.Regulariz"
+    "erConfig\"2\n\026DisposeRegularizerArgs\022\030\n\020re"
+    "gularizer_name\030\002 \001(\t2\345\002\n\026MasterComponent"
+    "Service\022:\n\013UpdateModel\022\031.artm.core.Model"
+    "Increment\032\020.artm.TopicModel\0224\n\rRetrieveM"
+    "odel\022\021.artm.core.String\032\020.artm.TopicMode"
+    "l\0225\n\016RequestBatches\022\016.artm.core.Int\032\023.ar"
+    "tm.core.BatchIds\0225\n\rReportBatches\022\023.artm"
+    ".core.BatchIds\032\017.artm.core.Void\0223\n\rConne"
+    "ctClient\022\021.artm.core.String\032\017.artm.core."
+    "Void\0226\n\020DisconnectClient\022\021.artm.core.Str"
+    "ing\032\017.artm.core.Void2\335\004\n\025NodeControllerS"
+    "ervice\022I\n\033CreateOrReconfigureInstance\022\031."
+    "artm.core.InstanceConfig\032\017.artm.core.Voi"
+    "d\0223\n\017DisposeInstance\022\017.artm.core.Void\032\017."
+    "artm.core.Void\022M\n\035CreateOrReconfigureDat"
+    "aLoader\022\033.artm.core.DataLoaderConfig\032\017.a"
+    "rtm.core.Void\0225\n\021DisposeDataLoader\022\017.art"
+    "m.core.Void\032\017.artm.core.Void\022T\n\030CreateOr"
+    "ReconfigureModel\022\'.artm.core.CreateOrRec"
+    "onfigureModelArgs\032\017.artm.core.Void\022<\n\014Di"
+    "sposeModel\022\033.artm.core.DisposeModelArgs\032"
+    "\017.artm.core.Void\022`\n\036CreateOrReconfigureR"
+    "egularizer\022-.artm.core.CreateOrReconfigu"
+    "reRegularizerArgs\032\017.artm.core.Void\022H\n\022Di"
+    "sposeRegularizer\022!.artm.core.DisposeRegu"
+    "larizerArgs\032\017.artm.core.Void", 2388);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "internals.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_internals_2eproto);
@@ -392,7 +400,7 @@ const ::google::protobuf::ServiceDescriptor* NodeControllerService::GetDescripto
   return NodeControllerService_descriptor_;
 }
 
-void NodeControllerService::CreateOrReconfigureInstance(const ::artm::InstanceConfig&,
+void NodeControllerService::CreateOrReconfigureInstance(const ::artm::core::InstanceConfig&,
                          ::rpcz::reply< ::artm::core::Void> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
               "Method CreateOrReconfigureInstance() not implemented.");
@@ -404,7 +412,7 @@ void NodeControllerService::DisposeInstance(const ::artm::core::Void&,
               "Method DisposeInstance() not implemented.");
 }
 
-void NodeControllerService::CreateOrReconfigureDataLoader(const ::artm::DataLoaderConfig&,
+void NodeControllerService::CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig&,
                          ::rpcz::reply< ::artm::core::Void> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
               "Method CreateOrReconfigureDataLoader() not implemented.");
@@ -447,7 +455,7 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
   switch(method->index()) {
     case 0:
       CreateOrReconfigureInstance(
-          *::google::protobuf::down_cast<const ::artm::InstanceConfig*>(&request),
+          *::google::protobuf::down_cast<const ::artm::core::InstanceConfig*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
     case 1:
@@ -457,7 +465,7 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
       break;
     case 2:
       CreateOrReconfigureDataLoader(
-          *::google::protobuf::down_cast<const ::artm::DataLoaderConfig*>(&request),
+          *::google::protobuf::down_cast<const ::artm::core::DataLoaderConfig*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
     case 3:
@@ -496,11 +504,11 @@ const ::google::protobuf::Message& NodeControllerService::GetRequestPrototype(
   GOOGLE_DCHECK_EQ(method->service(), descriptor());
   switch(method->index()) {
     case 0:
-      return ::artm::InstanceConfig::default_instance();
+      return ::artm::core::InstanceConfig::default_instance();
     case 1:
       return ::artm::core::Void::default_instance();
     case 2:
-      return ::artm::DataLoaderConfig::default_instance();
+      return ::artm::core::DataLoaderConfig::default_instance();
     case 3:
       return ::artm::core::Void::default_instance();
     case 4:
@@ -556,7 +564,7 @@ NodeControllerService_Stub::~NodeControllerService_Stub() {
   if (owns_channel_) delete channel_;
 }
 
-void NodeControllerService_Stub::CreateOrReconfigureInstance(const ::artm::InstanceConfig& request,
+void NodeControllerService_Stub::CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
@@ -564,7 +572,7 @@ void NodeControllerService_Stub::CreateOrReconfigureInstance(const ::artm::Insta
                         NodeControllerService::descriptor()->method(0),
                         request, response, rpc, done);
 }
-void NodeControllerService_Stub::CreateOrReconfigureInstance(const ::artm::InstanceConfig& request,
+void NodeControllerService_Stub::CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
                               ::artm::core::Void* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
@@ -598,7 +606,7 @@ void NodeControllerService_Stub::DisposeInstance(const ::artm::core::Void& reque
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::CreateOrReconfigureDataLoader(const ::artm::DataLoaderConfig& request,
+void NodeControllerService_Stub::CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
@@ -606,7 +614,7 @@ void NodeControllerService_Stub::CreateOrReconfigureDataLoader(const ::artm::Dat
                         NodeControllerService::descriptor()->method(2),
                         request, response, rpc, done);
 }
-void NodeControllerService_Stub::CreateOrReconfigureDataLoader(const ::artm::DataLoaderConfig& request,
+void NodeControllerService_Stub::CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
                               ::artm::core::Void* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;

@@ -87,19 +87,19 @@ class MasterComponent:
     HandleErrorCode(self.lib_.ArtmWaitIdle(self.id_))
 
   def AddStream(self, stream):
-    s = self.config_.data_loader_config.stream.add()
+    s = self.config_.stream.add()
     s.CopyFrom(stream)
     self.Reconfigure(self.config_)
 
   def RemoveStream(self, stream_name):
     new_config_ = messages_pb2.MasterComponentConfig()
     new_config_.CopyFrom(self.config_)
-    new_config_.data_loader_config.ClearField('stream')
+    new_config_.ClearField('stream')
 
-    for stream_index in range(0, len(self.config_.data_loader_config.stream)):
-      if (self.config_.data_loader_config.stream[stream_index].name != stream_name):
-        s = new_config_.data_loader_config.stream.add()
-        s.CopyFrom(self.config_.data_loader_config.stream[stream_index])
+    for stream_index in range(0, len(self.config_.stream)):
+      if (self.config_.stream[stream_index].name != stream_name):
+        s = new_config_.stream.add()
+        s.CopyFrom(self.config_.stream[stream_index])
     self.Reconfigure(new_config_)
 
   def GetTopicModel(self, model):

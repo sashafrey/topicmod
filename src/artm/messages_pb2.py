@@ -13,7 +13,7 @@ from google.protobuf import descriptor_pb2
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='messages.proto',
   package='artm',
-  serialized_pb='\n\x0emessages.proto\x12\x04\x61rtm\".\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x1a\n\x05\x66ield\x18\x02 \x03(\x0b\x32\x0b.artm.Field\"I\n\x05\x46ield\x12\x19\n\nfield_name\x18\x01 \x01(\t:\x05@body\x12\x10\n\x08token_id\x18\x02 \x03(\x05\x12\x13\n\x0btoken_count\x18\x03 \x03(\x05\"0\n\x05\x42\x61tch\x12\r\n\x05token\x18\x01 \x03(\t\x12\x18\n\x04item\x18\x02 \x03(\x0b\x32\n.artm.Item\"\xf5\x01\n\x10\x44\x61taLoaderConfig\x12\x1a\n\x0e\x64\x61ta_loader_id\x18\x01 \x01(\x05:\x02-1\x12\x13\n\x0binstance_id\x18\x02 \x01(\x05\x12\x11\n\tdisk_path\x18\x03 \x01(\t\x12\x16\n\nqueue_size\x18\x04 \x01(\x05:\x02\x31\x30\x12\x1c\n\x06stream\x18\x05 \x03(\x0b\x32\x0c.artm.Stream\x12\x1d\n\x0f\x63ompact_batches\x18\x06 \x01(\x08:\x04true\x12%\n\x16\x63\x61\x63he_processor_output\x18\x07 \x01(\x08:\x05\x66\x61lse\x12!\n\x19master_component_endpoint\x18\x08 \x01(\t\"\xa8\x01\n\x06Stream\x12\'\n\x04type\x18\x01 \x01(\x0e\x32\x11.artm.Stream.Type:\x06Global\x12\x15\n\x04name\x18\x02 \x01(\t:\x07@global\x12\x0f\n\x07modulus\x18\x03 \x01(\x05\x12\x11\n\tresiduals\x18\x04 \x03(\x05\":\n\x04Type\x12\n\n\x06Global\x10\x00\x12\x11\n\rItemIdModulus\x10\x01\x12\x13\n\x0fItemHashModulus\x10\x03\"\x8c\x01\n\x0eInstanceConfig\x12\x17\n\x0binstance_id\x18\x01 \x01(\x05:\x02-1\x12\x1b\n\x10processors_count\x18\x02 \x01(\x05:\x01\x31\x12!\n\x19master_component_endpoint\x18\x03 \x01(\t\x12!\n\x15merger_queue_max_size\x18\x04 \x01(\x05:\x02\x31\x30\"\x94\x01\n\x14NodeControllerConfig\x12\'\n\x1fnode_controller_create_endpoint\x18\x01 \x01(\t\x12(\n node_controller_connect_endpoint\x18\x02 \x01(\t\x12)\n!master_component_connect_endpoint\x18\x03 \x01(\t\"\x95\x02\n\x15MasterComponentConfig\x12H\n\x0emodus_operandi\x18\x01 \x01(\x0e\x32).artm.MasterComponentConfig.ModusOperandi:\x05Local\x12\x32\n\x12\x64\x61ta_loader_config\x18\x02 \x01(\x0b\x32\x16.artm.DataLoaderConfig\x12-\n\x0finstance_config\x18\x03 \x01(\x0b\x32\x14.artm.InstanceConfig\x12\x18\n\x10service_endpoint\x18\x04 \x01(\t\"5\n\rModusOperandi\x12\t\n\x05Local\x10\x00\x12\x0b\n\x07Network\x10\x01\x12\x0c\n\x08Indexing\x10\x02\"\xa7\x02\n\x0bModelConfig\x12\x12\n\x08model_id\x18\x01 \x01(\t:\x00\x12\x18\n\x0ctopics_count\x18\x02 \x01(\x05:\x02\x33\x32\x12\x16\n\x07\x65nabled\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\"\n\x16inner_iterations_count\x18\x04 \x01(\x05:\x02\x31\x30\x12\x19\n\nfield_name\x18\x05 \x01(\t:\x05@body\x12\x1c\n\x0bstream_name\x18\x06 \x01(\t:\x07@global\x12\x1a\n\x05score\x18\x07 \x03(\x0b\x32\x0b.artm.Score\x12\x1a\n\x0breuse_theta\x18\x08 \x01(\x08:\x05\x66\x61lse\x12#\n\x14\x63\x61\x63he_token_counters\x18\t \x01(\x08:\x05\x66\x61lse\x12\x18\n\x10regularizer_name\x18\n \x03(\t\"\xa1\x01\n\x11RegularizerConfig\x12\x0c\n\x04name\x18\x01 \x01(\t\x12*\n\x04type\x18\x02 \x01(\x0e\x32\x1c.artm.RegularizerConfig.Type\x12\x0e\n\x06\x63onfig\x18\x03 \x01(\x0c\"B\n\x04Type\x12\x1d\n\x19\x44irichletRegularizerTheta\x10\x00\x12\x1b\n\x17\x44irichletRegularizerPhi\x10\x01\"V\n\x1d\x44irichletRegularizerPhiConfig\x12\x0e\n\x06\x62\x65ta_0\x18\x01 \x01(\x01\x12%\n\ntilde_beta\x18\x02 \x01(\x0b\x32\x11.artm.DoubleArray\"Z\n\x1f\x44irichletRegularizerThetaConfig\x12\x0f\n\x07\x61lpha_0\x18\x01 \x03(\x01\x12&\n\x0btilde_alpha\x18\x02 \x03(\x0b\x32\x11.artm.DoubleArray\" \n\x0b\x44oubleArray\x12\x11\n\x05value\x18\x01 \x03(\x01\x42\x02\x10\x01\"\x1f\n\nFloatArray\x12\x11\n\x05value\x18\x01 \x03(\x02\x42\x02\x10\x01\"x\n\x05Score\x12\x1e\n\x04type\x18\x01 \x01(\x0e\x32\x10.artm.Score.Type\x12\x19\n\nfield_name\x18\x02 \x01(\t:\x05@body\x12\x1c\n\x0bstream_name\x18\x03 \x01(\t:\x07@global\"\x16\n\x04Type\x12\x0e\n\nPerplexity\x10\x00\"\x99\x01\n\x0cLoggerConfig\x12\x14\n\x0clog_location\x18\x01 \x01(\t\x12-\n\x05level\x18\x02 \x01(\x0e\x32\x18.artm.LoggerConfig.Level:\x04INFO\"D\n\x05Level\x12\x0c\n\x08\x44ISABLED\x10\x00\x12\t\n\x05\x45RROR\x10\x01\x12\x0b\n\x07WARNING\x10\x02\x12\x08\n\x04INFO\x10\x03\x12\x0b\n\x07VERBOSE\x10\x04\"\x89\x03\n\nTopicModel\x12\x12\n\x08model_id\x18\x01 \x01(\t:\x00\x12\x14\n\x0ctopics_count\x18\x02 \x01(\x05\x12\x17\n\x0fitems_processed\x18\x03 \x01(\x05\x12\r\n\x05token\x18\x04 \x03(\t\x12\'\n\rtoken_weights\x18\x05 \x03(\x0b\x32\x10.artm.FloatArray\x12!\n\x06scores\x18\x06 \x01(\x0b\x32\x11.artm.DoubleArray\x12\x11\n\tinternals\x18\x07 \x01(\x0c\x1a\xc9\x01\n\x13TopicModelInternals\x12\x1e\n\x04n_wt\x18\x01 \x03(\x0b\x32\x10.artm.FloatArray\x12\x1e\n\x04r_wt\x18\x02 \x03(\x0b\x32\x10.artm.FloatArray\x12\x1d\n\x03n_t\x18\x03 \x01(\x0b\x32\x10.artm.FloatArray\x12%\n\nscores_raw\x18\x04 \x01(\x0b\x32\x11.artm.DoubleArray\x12,\n\x11scores_normalizer\x18\x05 \x01(\x0b\x32\x11.artm.DoubleArray\"F\n\x0b\x42\x61tchTopics\x12\x0f\n\x07item_id\x18\x01 \x03(\x05\x12&\n\x0citem_weights\x18\x02 \x03(\x0b\x32\x10.artm.FloatArray')
+  serialized_pb='\n\x0emessages.proto\x12\x04\x61rtm\".\n\x04Item\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x1a\n\x05\x66ield\x18\x02 \x03(\x0b\x32\x0b.artm.Field\"I\n\x05\x46ield\x12\x19\n\nfield_name\x18\x01 \x01(\t:\x05@body\x12\x10\n\x08token_id\x18\x02 \x03(\x05\x12\x13\n\x0btoken_count\x18\x03 \x03(\x05\"0\n\x05\x42\x61tch\x12\r\n\x05token\x18\x01 \x03(\t\x12\x18\n\x04item\x18\x02 \x03(\x0b\x32\n.artm.Item\"\x93\x01\n\x06Stream\x12\'\n\x04type\x18\x01 \x01(\x0e\x32\x11.artm.Stream.Type:\x06Global\x12\x15\n\x04name\x18\x02 \x01(\t:\x07@global\x12\x0f\n\x07modulus\x18\x03 \x01(\x05\x12\x11\n\tresiduals\x18\x04 \x03(\x05\"%\n\x04Type\x12\n\n\x06Global\x10\x00\x12\x11\n\rItemIdModulus\x10\x01\"\xbc\x03\n\x15MasterComponentConfig\x12\x11\n\tdisk_path\x18\x01 \x01(\t\x12\x1c\n\x06stream\x18\x02 \x03(\x0b\x32\x0c.artm.Stream\x12\x1d\n\x0f\x63ompact_batches\x18\x03 \x01(\x08:\x04true\x12%\n\x16\x63\x61\x63he_processor_output\x18\x04 \x01(\x08:\x05\x66\x61lse\x12\x1b\n\x10processors_count\x18\x05 \x01(\x05:\x01\x31\x12$\n\x18processor_queue_max_size\x18\x06 \x01(\x05:\x02\x31\x30\x12!\n\x15merger_queue_max_size\x18\x07 \x01(\x05:\x02\x31\x30\x12H\n\x0emodus_operandi\x18\x64 \x01(\x0e\x32).artm.MasterComponentConfig.ModusOperandi:\x05Local\x12(\n master_component_create_endpoint\x18\x65 \x01(\t\x12)\n!master_component_connect_endpoint\x18\x66 \x01(\t\"\'\n\rModusOperandi\x12\t\n\x05Local\x10\x00\x12\x0b\n\x07Network\x10\x01\"\xa7\x02\n\x0bModelConfig\x12\x12\n\x08model_id\x18\x01 \x01(\t:\x00\x12\x18\n\x0ctopics_count\x18\x02 \x01(\x05:\x02\x33\x32\x12\x16\n\x07\x65nabled\x18\x03 \x01(\x08:\x05\x66\x61lse\x12\"\n\x16inner_iterations_count\x18\x04 \x01(\x05:\x02\x31\x30\x12\x19\n\nfield_name\x18\x05 \x01(\t:\x05@body\x12\x1c\n\x0bstream_name\x18\x06 \x01(\t:\x07@global\x12\x1a\n\x05score\x18\x07 \x03(\x0b\x32\x0b.artm.Score\x12\x1a\n\x0breuse_theta\x18\x08 \x01(\x08:\x05\x66\x61lse\x12#\n\x14\x63\x61\x63he_token_counters\x18\t \x01(\x08:\x05\x66\x61lse\x12\x18\n\x10regularizer_name\x18\n \x03(\t\"\xa1\x01\n\x11RegularizerConfig\x12\x0c\n\x04name\x18\x01 \x01(\t\x12*\n\x04type\x18\x02 \x01(\x0e\x32\x1c.artm.RegularizerConfig.Type\x12\x0e\n\x06\x63onfig\x18\x03 \x01(\x0c\"B\n\x04Type\x12\x1d\n\x19\x44irichletRegularizerTheta\x10\x00\x12\x1b\n\x17\x44irichletRegularizerPhi\x10\x01\"V\n\x1d\x44irichletRegularizerPhiConfig\x12\x0e\n\x06\x62\x65ta_0\x18\x01 \x01(\x01\x12%\n\ntilde_beta\x18\x02 \x01(\x0b\x32\x11.artm.DoubleArray\"Z\n\x1f\x44irichletRegularizerThetaConfig\x12\x0f\n\x07\x61lpha_0\x18\x01 \x03(\x01\x12&\n\x0btilde_alpha\x18\x02 \x03(\x0b\x32\x11.artm.DoubleArray\" \n\x0b\x44oubleArray\x12\x11\n\x05value\x18\x01 \x03(\x01\x42\x02\x10\x01\"\x1f\n\nFloatArray\x12\x11\n\x05value\x18\x01 \x03(\x02\x42\x02\x10\x01\"x\n\x05Score\x12\x1e\n\x04type\x18\x01 \x01(\x0e\x32\x10.artm.Score.Type\x12\x19\n\nfield_name\x18\x02 \x01(\t:\x05@body\x12\x1c\n\x0bstream_name\x18\x03 \x01(\t:\x07@global\"\x16\n\x04Type\x12\x0e\n\nPerplexity\x10\x00\"\x89\x03\n\nTopicModel\x12\x12\n\x08model_id\x18\x01 \x01(\t:\x00\x12\x14\n\x0ctopics_count\x18\x02 \x01(\x05\x12\x17\n\x0fitems_processed\x18\x03 \x01(\x05\x12\r\n\x05token\x18\x04 \x03(\t\x12\'\n\rtoken_weights\x18\x05 \x03(\x0b\x32\x10.artm.FloatArray\x12!\n\x06scores\x18\x06 \x01(\x0b\x32\x11.artm.DoubleArray\x12\x11\n\tinternals\x18\x07 \x01(\x0c\x1a\xc9\x01\n\x13TopicModelInternals\x12\x1e\n\x04n_wt\x18\x01 \x03(\x0b\x32\x10.artm.FloatArray\x12\x1e\n\x04r_wt\x18\x02 \x03(\x0b\x32\x10.artm.FloatArray\x12\x1d\n\x03n_t\x18\x03 \x01(\x0b\x32\x10.artm.FloatArray\x12%\n\nscores_raw\x18\x04 \x01(\x0b\x32\x11.artm.DoubleArray\x12,\n\x11scores_normalizer\x18\x05 \x01(\x0b\x32\x11.artm.DoubleArray\"\x94\x01\n\x14NodeControllerConfig\x12\'\n\x1fnode_controller_create_endpoint\x18\x01 \x01(\t\x12(\n node_controller_connect_endpoint\x18\x02 \x01(\t\x12)\n!master_component_connect_endpoint\x18\x03 \x01(\t\"F\n\x0b\x42\x61tchTopics\x12\x0f\n\x07item_id\x18\x01 \x03(\x05\x12&\n\x0citem_weights\x18\x02 \x03(\x0b\x32\x10.artm.FloatArray')
 
 
 
@@ -31,15 +31,11 @@ _STREAM_TYPE = _descriptor.EnumDescriptor(
       name='ItemIdModulus', index=1, number=1,
       options=None,
       type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ItemHashModulus', index=2, number=3,
-      options=None,
-      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=556,
-  serialized_end=614,
+  serialized_start=308,
+  serialized_end=345,
 )
 
 _MASTERCOMPONENTCONFIG_MODUSOPERANDI = _descriptor.EnumDescriptor(
@@ -56,15 +52,11 @@ _MASTERCOMPONENTCONFIG_MODUSOPERANDI = _descriptor.EnumDescriptor(
       name='Network', index=1, number=1,
       options=None,
       type=None),
-    _descriptor.EnumValueDescriptor(
-      name='Indexing', index=2, number=2,
-      options=None,
-      type=None),
   ],
   containing_type=None,
   options=None,
-  serialized_start=1135,
-  serialized_end=1188,
+  serialized_start=753,
+  serialized_end=792,
 )
 
 _REGULARIZERCONFIG_TYPE = _descriptor.EnumDescriptor(
@@ -84,8 +76,8 @@ _REGULARIZERCONFIG_TYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1584,
-  serialized_end=1650,
+  serialized_start=1188,
+  serialized_end=1254,
 )
 
 _SCORE_TYPE = _descriptor.EnumDescriptor(
@@ -101,41 +93,8 @@ _SCORE_TYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1997,
-  serialized_end=2019,
-)
-
-_LOGGERCONFIG_LEVEL = _descriptor.EnumDescriptor(
-  name='Level',
-  full_name='artm.LoggerConfig.Level',
-  filename=None,
-  file=DESCRIPTOR,
-  values=[
-    _descriptor.EnumValueDescriptor(
-      name='DISABLED', index=0, number=0,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='ERROR', index=1, number=1,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='WARNING', index=2, number=2,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='INFO', index=3, number=3,
-      options=None,
-      type=None),
-    _descriptor.EnumValueDescriptor(
-      name='VERBOSE', index=4, number=4,
-      options=None,
-      type=None),
-  ],
-  containing_type=None,
-  options=None,
-  serialized_start=2107,
-  serialized_end=2175,
+  serialized_start=1601,
+  serialized_end=1623,
 )
 
 
@@ -251,83 +210,6 @@ _BATCH = _descriptor.Descriptor(
 )
 
 
-_DATALOADERCONFIG = _descriptor.Descriptor(
-  name='DataLoaderConfig',
-  full_name='artm.DataLoaderConfig',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='data_loader_id', full_name='artm.DataLoaderConfig.data_loader_id', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=True, default_value=-1,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='instance_id', full_name='artm.DataLoaderConfig.instance_id', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='disk_path', full_name='artm.DataLoaderConfig.disk_path', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='queue_size', full_name='artm.DataLoaderConfig.queue_size', index=3,
-      number=4, type=5, cpp_type=1, label=1,
-      has_default_value=True, default_value=10,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='stream', full_name='artm.DataLoaderConfig.stream', index=4,
-      number=5, type=11, cpp_type=10, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='compact_batches', full_name='artm.DataLoaderConfig.compact_batches', index=5,
-      number=6, type=8, cpp_type=7, label=1,
-      has_default_value=True, default_value=True,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='cache_processor_output', full_name='artm.DataLoaderConfig.cache_processor_output', index=6,
-      number=7, type=8, cpp_type=7, label=1,
-      has_default_value=True, default_value=False,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='master_component_endpoint', full_name='artm.DataLoaderConfig.master_component_endpoint', index=7,
-      number=8, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=198,
-  serialized_end=443,
-)
-
-
 _STREAM = _descriptor.Descriptor(
   name='Stream',
   full_name='artm.Stream',
@@ -373,99 +255,8 @@ _STREAM = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=446,
-  serialized_end=614,
-)
-
-
-_INSTANCECONFIG = _descriptor.Descriptor(
-  name='InstanceConfig',
-  full_name='artm.InstanceConfig',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='instance_id', full_name='artm.InstanceConfig.instance_id', index=0,
-      number=1, type=5, cpp_type=1, label=1,
-      has_default_value=True, default_value=-1,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='processors_count', full_name='artm.InstanceConfig.processors_count', index=1,
-      number=2, type=5, cpp_type=1, label=1,
-      has_default_value=True, default_value=1,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='master_component_endpoint', full_name='artm.InstanceConfig.master_component_endpoint', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='merger_queue_max_size', full_name='artm.InstanceConfig.merger_queue_max_size', index=3,
-      number=4, type=5, cpp_type=1, label=1,
-      has_default_value=True, default_value=10,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=617,
-  serialized_end=757,
-)
-
-
-_NODECONTROLLERCONFIG = _descriptor.Descriptor(
-  name='NodeControllerConfig',
-  full_name='artm.NodeControllerConfig',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='node_controller_create_endpoint', full_name='artm.NodeControllerConfig.node_controller_create_endpoint', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='node_controller_connect_endpoint', full_name='artm.NodeControllerConfig.node_controller_connect_endpoint', index=1,
-      number=2, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='master_component_connect_endpoint', full_name='artm.NodeControllerConfig.master_component_connect_endpoint', index=2,
-      number=3, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=760,
-  serialized_end=908,
+  serialized_start=198,
+  serialized_end=345,
 )
 
 
@@ -477,29 +268,71 @@ _MASTERCOMPONENTCONFIG = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='modus_operandi', full_name='artm.MasterComponentConfig.modus_operandi', index=0,
-      number=1, type=14, cpp_type=8, label=1,
+      name='disk_path', full_name='artm.MasterComponentConfig.disk_path', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='stream', full_name='artm.MasterComponentConfig.stream', index=1,
+      number=2, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='compact_batches', full_name='artm.MasterComponentConfig.compact_batches', index=2,
+      number=3, type=8, cpp_type=7, label=1,
+      has_default_value=True, default_value=True,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='cache_processor_output', full_name='artm.MasterComponentConfig.cache_processor_output', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=True, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='processors_count', full_name='artm.MasterComponentConfig.processors_count', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=True, default_value=1,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='processor_queue_max_size', full_name='artm.MasterComponentConfig.processor_queue_max_size', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=True, default_value=10,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='merger_queue_max_size', full_name='artm.MasterComponentConfig.merger_queue_max_size', index=6,
+      number=7, type=5, cpp_type=1, label=1,
+      has_default_value=True, default_value=10,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='modus_operandi', full_name='artm.MasterComponentConfig.modus_operandi', index=7,
+      number=100, type=14, cpp_type=8, label=1,
       has_default_value=True, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='data_loader_config', full_name='artm.MasterComponentConfig.data_loader_config', index=1,
-      number=2, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
+      name='master_component_create_endpoint', full_name='artm.MasterComponentConfig.master_component_create_endpoint', index=8,
+      number=101, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
     _descriptor.FieldDescriptor(
-      name='instance_config', full_name='artm.MasterComponentConfig.instance_config', index=2,
-      number=3, type=11, cpp_type=10, label=1,
-      has_default_value=False, default_value=None,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='service_endpoint', full_name='artm.MasterComponentConfig.service_endpoint', index=3,
-      number=4, type=9, cpp_type=9, label=1,
+      name='master_component_connect_endpoint', full_name='artm.MasterComponentConfig.master_component_connect_endpoint', index=9,
+      number=102, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=unicode("", "utf-8"),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -514,8 +347,8 @@ _MASTERCOMPONENTCONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=911,
-  serialized_end=1188,
+  serialized_start=348,
+  serialized_end=792,
 )
 
 
@@ -605,8 +438,8 @@ _MODELCONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1191,
-  serialized_end=1486,
+  serialized_start=795,
+  serialized_end=1090,
 )
 
 
@@ -648,8 +481,8 @@ _REGULARIZERCONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1489,
-  serialized_end=1650,
+  serialized_start=1093,
+  serialized_end=1254,
 )
 
 
@@ -683,8 +516,8 @@ _DIRICHLETREGULARIZERPHICONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1652,
-  serialized_end=1738,
+  serialized_start=1256,
+  serialized_end=1342,
 )
 
 
@@ -718,8 +551,8 @@ _DIRICHLETREGULARIZERTHETACONFIG = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1740,
-  serialized_end=1830,
+  serialized_start=1344,
+  serialized_end=1434,
 )
 
 
@@ -746,8 +579,8 @@ _DOUBLEARRAY = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1832,
-  serialized_end=1864,
+  serialized_start=1436,
+  serialized_end=1468,
 )
 
 
@@ -774,8 +607,8 @@ _FLOATARRAY = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1866,
-  serialized_end=1897,
+  serialized_start=1470,
+  serialized_end=1501,
 )
 
 
@@ -817,44 +650,8 @@ _SCORE = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=1899,
-  serialized_end=2019,
-)
-
-
-_LOGGERCONFIG = _descriptor.Descriptor(
-  name='LoggerConfig',
-  full_name='artm.LoggerConfig',
-  filename=None,
-  file=DESCRIPTOR,
-  containing_type=None,
-  fields=[
-    _descriptor.FieldDescriptor(
-      name='log_location', full_name='artm.LoggerConfig.log_location', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=unicode("", "utf-8"),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-    _descriptor.FieldDescriptor(
-      name='level', full_name='artm.LoggerConfig.level', index=1,
-      number=2, type=14, cpp_type=8, label=1,
-      has_default_value=True, default_value=3,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      options=None),
-  ],
-  extensions=[
-  ],
-  nested_types=[],
-  enum_types=[
-    _LOGGERCONFIG_LEVEL,
-  ],
-  options=None,
-  is_extendable=False,
-  extension_ranges=[],
-  serialized_start=2022,
-  serialized_end=2175,
+  serialized_start=1503,
+  serialized_end=1623,
 )
 
 
@@ -909,8 +706,8 @@ _TOPICMODEL_TOPICMODELINTERNALS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2370,
-  serialized_end=2571,
+  serialized_start=1818,
+  serialized_end=2019,
 )
 
 _TOPICMODEL = _descriptor.Descriptor(
@@ -978,8 +775,50 @@ _TOPICMODEL = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2178,
-  serialized_end=2571,
+  serialized_start=1626,
+  serialized_end=2019,
+)
+
+
+_NODECONTROLLERCONFIG = _descriptor.Descriptor(
+  name='NodeControllerConfig',
+  full_name='artm.NodeControllerConfig',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='node_controller_create_endpoint', full_name='artm.NodeControllerConfig.node_controller_create_endpoint', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='node_controller_connect_endpoint', full_name='artm.NodeControllerConfig.node_controller_connect_endpoint', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='master_component_connect_endpoint', full_name='artm.NodeControllerConfig.master_component_connect_endpoint', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=unicode("", "utf-8"),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  serialized_start=2022,
+  serialized_end=2170,
 )
 
 
@@ -1013,18 +852,16 @@ _BATCHTOPICS = _descriptor.Descriptor(
   options=None,
   is_extendable=False,
   extension_ranges=[],
-  serialized_start=2573,
-  serialized_end=2643,
+  serialized_start=2172,
+  serialized_end=2242,
 )
 
 _ITEM.fields_by_name['field'].message_type = _FIELD
 _BATCH.fields_by_name['item'].message_type = _ITEM
-_DATALOADERCONFIG.fields_by_name['stream'].message_type = _STREAM
 _STREAM.fields_by_name['type'].enum_type = _STREAM_TYPE
 _STREAM_TYPE.containing_type = _STREAM;
+_MASTERCOMPONENTCONFIG.fields_by_name['stream'].message_type = _STREAM
 _MASTERCOMPONENTCONFIG.fields_by_name['modus_operandi'].enum_type = _MASTERCOMPONENTCONFIG_MODUSOPERANDI
-_MASTERCOMPONENTCONFIG.fields_by_name['data_loader_config'].message_type = _DATALOADERCONFIG
-_MASTERCOMPONENTCONFIG.fields_by_name['instance_config'].message_type = _INSTANCECONFIG
 _MASTERCOMPONENTCONFIG_MODUSOPERANDI.containing_type = _MASTERCOMPONENTCONFIG;
 _MODELCONFIG.fields_by_name['score'].message_type = _SCORE
 _REGULARIZERCONFIG.fields_by_name['type'].enum_type = _REGULARIZERCONFIG_TYPE
@@ -1033,8 +870,6 @@ _DIRICHLETREGULARIZERPHICONFIG.fields_by_name['tilde_beta'].message_type = _DOUB
 _DIRICHLETREGULARIZERTHETACONFIG.fields_by_name['tilde_alpha'].message_type = _DOUBLEARRAY
 _SCORE.fields_by_name['type'].enum_type = _SCORE_TYPE
 _SCORE_TYPE.containing_type = _SCORE;
-_LOGGERCONFIG.fields_by_name['level'].enum_type = _LOGGERCONFIG_LEVEL
-_LOGGERCONFIG_LEVEL.containing_type = _LOGGERCONFIG;
 _TOPICMODEL_TOPICMODELINTERNALS.fields_by_name['n_wt'].message_type = _FLOATARRAY
 _TOPICMODEL_TOPICMODELINTERNALS.fields_by_name['r_wt'].message_type = _FLOATARRAY
 _TOPICMODEL_TOPICMODELINTERNALS.fields_by_name['n_t'].message_type = _FLOATARRAY
@@ -1047,10 +882,7 @@ _BATCHTOPICS.fields_by_name['item_weights'].message_type = _FLOATARRAY
 DESCRIPTOR.message_types_by_name['Item'] = _ITEM
 DESCRIPTOR.message_types_by_name['Field'] = _FIELD
 DESCRIPTOR.message_types_by_name['Batch'] = _BATCH
-DESCRIPTOR.message_types_by_name['DataLoaderConfig'] = _DATALOADERCONFIG
 DESCRIPTOR.message_types_by_name['Stream'] = _STREAM
-DESCRIPTOR.message_types_by_name['InstanceConfig'] = _INSTANCECONFIG
-DESCRIPTOR.message_types_by_name['NodeControllerConfig'] = _NODECONTROLLERCONFIG
 DESCRIPTOR.message_types_by_name['MasterComponentConfig'] = _MASTERCOMPONENTCONFIG
 DESCRIPTOR.message_types_by_name['ModelConfig'] = _MODELCONFIG
 DESCRIPTOR.message_types_by_name['RegularizerConfig'] = _REGULARIZERCONFIG
@@ -1059,8 +891,8 @@ DESCRIPTOR.message_types_by_name['DirichletRegularizerThetaConfig'] = _DIRICHLET
 DESCRIPTOR.message_types_by_name['DoubleArray'] = _DOUBLEARRAY
 DESCRIPTOR.message_types_by_name['FloatArray'] = _FLOATARRAY
 DESCRIPTOR.message_types_by_name['Score'] = _SCORE
-DESCRIPTOR.message_types_by_name['LoggerConfig'] = _LOGGERCONFIG
 DESCRIPTOR.message_types_by_name['TopicModel'] = _TOPICMODEL
+DESCRIPTOR.message_types_by_name['NodeControllerConfig'] = _NODECONTROLLERCONFIG
 DESCRIPTOR.message_types_by_name['BatchTopics'] = _BATCHTOPICS
 
 class Item(_message.Message):
@@ -1081,29 +913,11 @@ class Batch(_message.Message):
 
   # @@protoc_insertion_point(class_scope:artm.Batch)
 
-class DataLoaderConfig(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _DATALOADERCONFIG
-
-  # @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
-
 class Stream(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
   DESCRIPTOR = _STREAM
 
   # @@protoc_insertion_point(class_scope:artm.Stream)
-
-class InstanceConfig(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _INSTANCECONFIG
-
-  # @@protoc_insertion_point(class_scope:artm.InstanceConfig)
-
-class NodeControllerConfig(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _NODECONTROLLERCONFIG
-
-  # @@protoc_insertion_point(class_scope:artm.NodeControllerConfig)
 
 class MasterComponentConfig(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
@@ -1153,12 +967,6 @@ class Score(_message.Message):
 
   # @@protoc_insertion_point(class_scope:artm.Score)
 
-class LoggerConfig(_message.Message):
-  __metaclass__ = _reflection.GeneratedProtocolMessageType
-  DESCRIPTOR = _LOGGERCONFIG
-
-  # @@protoc_insertion_point(class_scope:artm.LoggerConfig)
-
 class TopicModel(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType
 
@@ -1170,6 +978,12 @@ class TopicModel(_message.Message):
   DESCRIPTOR = _TOPICMODEL
 
   # @@protoc_insertion_point(class_scope:artm.TopicModel)
+
+class NodeControllerConfig(_message.Message):
+  __metaclass__ = _reflection.GeneratedProtocolMessageType
+  DESCRIPTOR = _NODECONTROLLERCONFIG
+
+  # @@protoc_insertion_point(class_scope:artm.NodeControllerConfig)
 
 class BatchTopics(_message.Message):
   __metaclass__ = _reflection.GeneratedProtocolMessageType

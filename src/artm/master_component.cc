@@ -82,7 +82,7 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
   if (new_modus_operandi == MasterComponentConfig_ModusOperandi_Network) {
     client_interface_.reset(new NetworkClientCollection(lock_));
     service_endpoint_.reset(
-      new ServiceEndpoint(config_.get()->service_endpoint(),
+      new ServiceEndpoint(config_.get()->master_component_create_endpoint(),
                           dynamic_cast<NetworkClientCollection*>(client_interface_.get())));
     client_interface_->Reconfigure(config);
     return;
@@ -176,6 +176,55 @@ void MasterComponent::ServiceEndpoint::ThreadFunction() {
   }
 }
 
+DataLoaderConfig MasterComponent::ExtractdDataLoaderConfig(
+    const MasterComponentConfig& config, int instance_id) {
+  DataLoaderConfig retval;
+  retval.set_instance_id(instance_id);
+
+  if (config.has_disk_path()) {
+    retval.set_disk_path(config.disk_path());
+  }
+
+  if (config.has_processor_queue_max_size()) {
+    retval.set_queue_size(config.processor_queue_max_size());
+  }
+
+  retval.mutable_stream()->CopyFrom(config.stream());
+
+  if (config.has_compact_batches()) {
+    retval.set_compact_batches(config.compact_batches());
+  }
+
+  if (config.has_cache_processor_output()) {
+    retval.set_cache_processor_output(config.cache_processor_output());
+  }
+
+  if (config.has_master_component_connect_endpoint()) {
+    retval.set_master_component_endpoint(config.master_component_connect_endpoint());
+  }
+
+  return retval;
+}
+
+InstanceConfig MasterComponent::ExtractInstanceConfig(
+    const MasterComponentConfig& config) {
+  InstanceConfig retval;
+
+  if (config.has_processors_count()) {
+    retval.set_processors_count(config.processors_count());
+  }
+
+  if (config.has_master_component_connect_endpoint()) {
+    retval.set_master_component_endpoint(config.master_component_connect_endpoint());
+  }
+
+  if (config.has_merger_queue_max_size()) {
+    retval.set_merger_queue_max_size(config.merger_queue_max_size());
+  }
+
+  return retval;
+}
+
 void LocalClient::ReconfigureModel(const ModelConfig& config) {
   local_instance_->ReconfigureModel(config);
 }
@@ -198,14 +247,15 @@ void LocalClient::InvokePhiRegularizers() {
 
 void LocalClient::Reconfigure(const MasterComponentConfig& config) {
   if (local_instance_ == nullptr) {
-    int instance_id = artm::core::InstanceManager::singleton().Create(config.instance_config());
+    int instance_id = artm::core::InstanceManager::singleton().Create(
+      MasterComponent::ExtractInstanceConfig(config));
     local_instance_ = artm::core::InstanceManager::singleton().Get(instance_id);
   } else {
-    local_instance_->Reconfigure(config.instance_config());
+    local_instance_->Reconfigure(MasterComponent::ExtractInstanceConfig(config));
   }
 
-  DataLoaderConfig data_loader_config(config.data_loader_config());
-  data_loader_config.set_instance_id(local_instance_->id());
+  DataLoaderConfig data_loader_config(
+    MasterComponent::ExtractdDataLoaderConfig(config, local_instance_->id()));
   if (local_data_loader_ == nullptr) {
     int data_loader_id = artm::core::DataLoaderManager::singleton().Create(data_loader_config);
     local_data_loader_ = artm::core::DataLoaderManager::singleton().Get(data_loader_id);
@@ -286,8 +336,10 @@ void NetworkClientCollection::InvokePhiRegularizers() {
 void NetworkClientCollection::Reconfigure(const MasterComponentConfig& config) {
   for_each_client([&](NodeControllerService_Stub& client) {
     Void response;
-    client.CreateOrReconfigureDataLoader(config.data_loader_config(), &response);
-    client.CreateOrReconfigureInstance(config.instance_config(), &response);
+    client.CreateOrReconfigureDataLoader(
+      MasterComponent::ExtractdDataLoaderConfig(config, UnknownId), &response);
+
+    client.CreateOrReconfigureInstance(MasterComponent::ExtractInstanceConfig(config), &response);
   });
 }
 

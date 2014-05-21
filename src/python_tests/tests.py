@@ -11,9 +11,9 @@ from python_interface import *
 
 # Create master_config
 master_config = messages_pb2.MasterComponentConfig()
-master_config.instance_config.processors_count = 2
-master_config.data_loader_config.queue_size = 5
-stream_ = master_config.data_loader_config.stream.add()
+master_config.processors_count = 2
+master_config.processor_queue_max_size = 5
+stream_ = master_config.stream.add()
 stream_.name = ('stream_0')
 stream_.type = 0
 stream_.modulus = 3
@@ -56,8 +56,8 @@ model_config.regularizer_name.append(regularizer_config.name)
 # New configs to reconfigure stuff
 master_config_new = messages_pb2.MasterComponentConfig()
 master_config_new.CopyFrom(master_config);
-master_config_new.instance_config.processors_count = 1
-master_config_new.data_loader_config.queue_size = 2
+master_config_new.processors_count = 1
+master_config_new.processor_queue_max_size = 2
 
 model_config_new = messages_pb2.ModelConfig()
 model_config_new.CopyFrom(model_config)

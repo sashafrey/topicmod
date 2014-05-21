@@ -23,11 +23,11 @@ class NodeControllerServiceImpl : public NodeControllerService {
   NodeControllerServiceImpl() : lock_(), instance_id_(kUndefinedId), data_loader_id_(kUndefinedId) { ; }
   ~NodeControllerServiceImpl();
 
-  virtual void CreateOrReconfigureInstance(const ::artm::InstanceConfig& request,
+  virtual void CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeInstance(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void CreateOrReconfigureDataLoader(const ::artm::DataLoaderConfig& request,
+  virtual void CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeDataLoader(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);

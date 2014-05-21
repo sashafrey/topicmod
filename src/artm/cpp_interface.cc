@@ -148,22 +148,21 @@ void MasterComponent::WaitIdle() {
 }
 
 void MasterComponent::AddStream(const Stream& stream) {
-  Stream* s = config_.mutable_data_loader_config()->add_stream();
+  Stream* s = config_.add_stream();
   s->CopyFrom(stream);
   Reconfigure(config_);
 }
 
 void MasterComponent::RemoveStream(std::string stream_name) {
   MasterComponentConfig new_config(config_);
-  DataLoaderConfig* data_loader_config = new_config.mutable_data_loader_config();
-  data_loader_config->mutable_stream()->Clear();
+  new_config.mutable_stream()->Clear();
 
   for (int stream_index = 0;
-       stream_index < config_.data_loader_config().stream_size();
+       stream_index < config_.stream_size();
        ++stream_index) {
-    if (config_.data_loader_config().stream(stream_index).name() != stream_name) {
-      Stream* s = data_loader_config->add_stream();
-      s->CopyFrom(config_.data_loader_config().stream(stream_index));
+    if (config_.stream(stream_index).name() != stream_name) {
+      Stream* s = new_config.add_stream();
+      s->CopyFrom(config_.stream(stream_index));
     }
   }
 

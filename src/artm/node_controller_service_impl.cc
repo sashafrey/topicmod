@@ -24,7 +24,7 @@ NodeControllerServiceImpl::~NodeControllerServiceImpl() {
 }
 
 void NodeControllerServiceImpl::CreateOrReconfigureInstance(
-    const ::artm::InstanceConfig& request,
+    const ::artm::core::InstanceConfig& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
@@ -51,7 +51,7 @@ void NodeControllerServiceImpl::DisposeInstance(
 }
 
 void NodeControllerServiceImpl::CreateOrReconfigureDataLoader(
-    const ::artm::DataLoaderConfig& request,
+    const ::artm::core::DataLoaderConfig& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);

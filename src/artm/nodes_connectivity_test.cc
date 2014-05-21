@@ -16,7 +16,7 @@ TEST(NodesConnectivityTest, Basic) {
   ::artm::test::TestMother test_mother;
   ::artm::MasterComponentConfig master_config;
   master_config.set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi_Network);
-  master_config.set_service_endpoint("tcp://*:5555");
+  master_config.set_master_component_create_endpoint("tcp://*:5555");
   int master_id = artm::core::MasterComponentManager::singleton().Create(master_config);
   auto master = artm::core::MasterComponentManager::singleton().Get(master_id);
   ASSERT_EQ(master->clients_size(), 0);

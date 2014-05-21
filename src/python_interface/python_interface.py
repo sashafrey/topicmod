@@ -46,18 +46,14 @@ class ArtmLibrary:
   def CreateMasterComponent(self, config):
     return MasterComponent(config, self.lib_)
 
-  def CreateModel(self, master_component, config):
-    return Model(master_component, config, self.lib_)
-
-  def CreateRegularizer(self, master_component, config):
-    return Regularizer(master_component, config, self.lib_)
-
 #################################################################################
 
 class MasterComponent:
   def __init__(self, config, lib):
     self.lib_ = lib
     self.config_ = config
+    self.models = {}
+    self.regularizers = {}
     master_config_blob = config.SerializeToString()
     master_config_blob_p = ctypes.create_string_buffer(master_config_blob)
     self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
@@ -67,7 +63,42 @@ class MasterComponent:
     return self
 
   def __exit__(self, type, value, traceback):
+    self.Dispose()
+
+  def Dispose(self):
+    for key in self.models:
+      self.models[key].Dispose()
+    for key in self.regularizers:
+      self.regularizers[key].Dispose()
+
+    self.models.clear()
+    self.regularizers.clear()
+
     self.lib_.ArtmDisposeMasterComponent(self.id_)
+    self.id_ = -1
+
+  def CreateModel(self, config):
+    model = Model(self, config, self.lib_)
+    self.models[config.model_id] = model;
+    return model
+
+  def RemoveModel(self, model):
+    if (self.models.has_key(model.model_id())):
+      del self.models[model.model_id()]
+    model.Dispose()
+
+  def CreateRegularizer(self, config):
+    if (self.regularizers.has_key(config.name)):
+      raise UnsupportedReconfiguration()
+
+    regularizer = Regularizer(self, config, self.lib_)
+    self.regularizers[config.name] = regularizer;
+    return regularizer
+
+  def RemoveRegularizer(self, regularizer):
+    if (self.regularizers.has_key(regularizer.name())):
+      del self.regularizers[regularizer.name()]
+    regularizer.Dispose()
 
   def Reconfigure(self, config):
     config_blob = config.SerializeToString()
@@ -131,7 +162,12 @@ class Model:
     return self
 
   def __exit__(self, type, value, traceback):
+    Dispose(self)
+
+  def Dispose(self):
     self.lib_.ArtmDisposeModel(self.master_id_, self.config_.model_id)
+    self.config_.model_id = ''
+    self.master_id_ = -1
 
   def model_id(self):
     return self.config_.model_id
@@ -165,7 +201,6 @@ class Regularizer:
     self.lib_ = lib
     self.master_id_ = master_component.id_
     self.config_ = config
-    self.name_ = config.name
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
     HandleErrorCode(self.lib_.ArtmCreateRegularizer(self.master_id_,
@@ -175,7 +210,15 @@ class Regularizer:
     return self
 
   def __exit__(self, type, value, traceback):
-    self.lib_.ArtmDisposeRegularizer(self.master_id_, self.name_)
+    Dispose(self)
+
+  def Dispose(self):
+    self.lib_.ArtmDisposeRegularizer(self.master_id_, self.config_.name)
+    self.config_.name = ''
+    self.master_id_ = -1
+
+  def name(self):
+    return self.config_.name
 
   def Reconfigure(self, config):
     regularizer_config_blob = config.SerializeToString()

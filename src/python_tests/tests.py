@@ -80,17 +80,23 @@ library = ArtmLibrary(address + '\\Win32\\Debug\\artm.dll')
 with library.CreateMasterComponent(master_config) as master_component:
   master_component.AddStream(stream)
   master_component.RemoveStream(stream)
-  with library.CreateModel(master_component, model_config) as model:
-    with library.CreateRegularizer(master_component, regularizer_config) as regularizer:
-      master_component.AddBatch(batch)
-      model.Enable()
-      master_component.InvokeIteration(10)
-      model.Disable()
-      topic_model = master_component.GetTopicModel(model)
+  model = master_component.CreateModel(model_config)
+  master_component.RemoveModel(model)
+  model = master_component.CreateModel(model_config)
 
-      # Test all 'reconfigure' methods
-      regularizer.Reconfigure(regularizer_config_new)
-      model.Reconfigure(model_config_new)
-      master_component.Reconfigure(master_config_new)
+  regularizer = master_component.CreateRegularizer(regularizer_config)
+  master_component.RemoveRegularizer(regularizer)
+  regularizer = master_component.CreateRegularizer(regularizer_config)
+
+  master_component.AddBatch(batch)
+  model.Enable()
+  master_component.InvokeIteration(10)
+  model.Disable()
+  topic_model = master_component.GetTopicModel(model)
+
+  # Test all 'reconfigure' methods
+  regularizer.Reconfigure(regularizer_config_new)
+  model.Reconfigure(model_config_new)
+  master_component.Reconfigure(master_config_new)
 
 print 'All tests have been successfully passed!'

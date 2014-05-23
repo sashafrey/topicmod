@@ -1,0 +1,18 @@
+This package includes the following files:
+
+BigARTM/
+  artm.dll
+  libglog.dll
+  libzmq-v110-mt-4_0_3.dll
+  messages.proto
+  messages_pb2.py
+  python_interface.py
+
+about.txt
+analyzer.py
+artm_example.py
+artm_example.pyproj
+artm_example.sln
+collection.py
+docword.kos.txt
+vocab.kos.txt

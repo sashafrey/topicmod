@@ -1,0 +1,194 @@
+package artm;
+
+// Item is an object that represents some textual information.
+// You may think of Item just as about one document from some collection of texts.
+message Item
+{
+  optional int32 id = 1;
+  repeated Field field = 2;
+}
+
+// Items consist of multiple fields.
+// The idea behind fields is that each item might have its
+// title, author, body, abstract, actual text, links, year of publication, etc.
+// Each of this entities should be represented as a Field.
+// The Model should define how those fields should be taken into account
+// when we infer a topic model.
+// Currently each field is represented as "bag-of-words" ---
+// Each token is listed together with the number of its occurences.
+// Note that each Field is always part of an Item,
+// Item is part of a Batch, and a batch always contains a list of tokens.
+// Therefore, each Field just lists the indexes of tokens in the Batch.
+message Field
+{
+  optional string name = 1 [default = "@body"];
+  repeated int32 token_id = 2;
+  repeated int32 token_count = 3;
+}
+
+// A batch represents a set of Items.
+message Batch {
+  repeated string token = 1;
+  repeated Item item = 2;
+}
+
+// Defines a stream in DataLoader.
+message Stream {
+  enum Type {
+    Global = 0;
+    ItemIdModulus = 1;
+  }
+
+  optional Type type = 1 [default = Global];
+  optional string name = 2 [default = "@global"];
+  optional int32 modulus = 3;
+  repeated int32 residuals = 4;
+}
+
+// Configuration of the Master component
+message MasterComponentConfig {
+  // Disk location to store and load batches
+  optional string disk_path = 1;
+
+  // Set of data streams
+  repeated Stream stream = 2;
+
+  // A flag indicating whether to compact batches in AddBatch() operation
+  optional bool compact_batches = 3 [default = true];
+
+  // A flag indicating whether to cache processor output
+  optional bool cache_processor_output = 4 [default = false];
+
+  // Number of concurrent processors
+  optional int32 processors_count = 5 [default = 1];
+
+  // Max size of processor queue
+  optional int32 processor_queue_max_size = 6 [default = 10];
+
+  // Max size of merger queue
+  optional int32 merger_queue_max_size = 7 [default = 10];
+
+  // ====== [Under Development fields - excluded from public API] ======
+  enum ModusOperandi {
+    Local = 0;
+    Network = 1;
+  }
+
+  // Modus operandi of the master component
+  optional ModusOperandi modus_operandi = 100 [default = Local];
+
+  // Service endpoints
+  optional string master_component_create_endpoint = 101;
+  optional string master_component_connect_endpoint = 102;
+}
+
+// Configuration of a model.
+message ModelConfig {
+  optional string name = 1 [default = "@model"];
+  optional int32 topics_count = 2 [default = 32];
+  optional bool enabled = 3 [default = true];
+  optional int32 inner_iterations_count = 4 [default = 10];
+  optional string field_name = 5 [default = "@body"];
+  optional string stream_name = 6 [default = "@global"];
+  repeated Score score = 7;
+  optional bool reuse_theta = 8 [default = false];
+  optional bool cache_token_counters  = 9 [default = false];
+  repeated string regularizer_name = 10;
+}
+
+// Configuration of a regularizer
+message RegularizerConfig {
+  enum Type {
+    DirichletTheta = 0;
+    DirichletPhi = 1;
+	SmoothSparseTheta = 2;
+	SmoothSparsePhi = 3;
+  }
+
+  optional string name = 1;
+  optional Type type = 2;
+  optional bytes config = 3;
+}
+
+// Configuration of a Dirichlet Theta regularizer
+message DirichletThetaConfig {
+  repeated double alpha_0 = 1;
+  repeated DoubleArray tilde_alpha = 2;
+}
+
+// Configuration of a Dirichlet Phi regularizer
+message DirichletPhiConfig {
+  required double beta_0 = 1;
+  required DoubleArray tilde_beta = 2;
+}
+
+// Configuration of a SmoothSparse Theta regularizer
+message SmoothSparseThetaConfig {
+  repeated double alpha_0 = 1;
+  repeated DoubleArray tilde_alpha = 2;
+}
+
+// Configuration of a SmoothSparse Phi regularizer
+message SmoothSparsePhiConfig {
+  required int32 background_topics_count = 1;
+  required double beta_0 = 2;
+  required DoubleArray tilde_beta = 3;
+  repeated double background_beta_0 = 4;
+  repeated DoubleArray background_tilde_beta = 5;
+}
+
+message DoubleArray {
+  repeated double value = 1 [packed = true];
+}
+
+message FloatArray {
+  repeated float value = 1 [packed = true];
+}
+
+message Score {
+  enum Type {
+    Perplexity = 0;
+  }
+
+  optional Type type = 1;
+  optional string field_name = 2 [default = "@body"];
+  optional string stream_name = 3 [default = "@global"];
+}
+
+// A topic model, represented by Matrix Phi
+message TopicModel {
+  optional string name = 1 [default = "@model"];
+  optional int32 topics_count = 2;	   // number of topics in the model
+  optional int32 items_processed = 3;
+
+  repeated string token = 4;              // tokens, included in the model
+  repeated FloatArray token_weights = 5;  // one vector for each token
+
+  optional DoubleArray scores = 6;        // perplexity and other quality scores
+
+  // Data structure to keep all the raw data of the model.
+  // This allows users to send a TopicModel back into BigARTM library.
+  message TopicModelInternals {
+    repeated FloatArray n_wt = 1;
+    repeated FloatArray r_wt = 2;
+    optional FloatArray n_t = 3;
+    optional DoubleArray scores_raw = 4;
+    optional DoubleArray scores_normalizer = 5;
+  }
+
+  optional bytes internals = 7;  // serialized instance of TopicModelInternals
+}
+
+// ====== [Under Development messages - excluded from public API] ======
+
+// Configuration of the Node Controller
+message NodeControllerConfig {
+  optional string node_controller_create_endpoint = 1;
+  optional string node_controller_connect_endpoint = 2;
+  optional string master_component_connect_endpoint = 3;
+}
+
+message BatchTopics {
+  repeated int32 item_id = 1;
+  repeated FloatArray item_weights = 2;
+}

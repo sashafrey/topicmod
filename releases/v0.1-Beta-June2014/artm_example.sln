@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "artm_example", "artm_example.pyproj", "{8CBE34F8-5D46-4832-B615-DB183812F81F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8CBE34F8-5D46-4832-B615-DB183812F81F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CBE34F8-5D46-4832-B615-DB183812F81F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CBE34F8-5D46-4832-B615-DB183812F81F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CBE34F8-5D46-4832-B615-DB183812F81F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

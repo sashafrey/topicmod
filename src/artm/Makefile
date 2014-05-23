@@ -35,8 +35,7 @@ LDFLAGS += -lboost_filesystem -lboost_system -lboost_thread
 
 # First target - shared library
 TARGET_LIB    = $(OUT_DIR)libartm.so
-SRCS_LIB      = dirichlet_regularizer_phi.cc \
-		dirichlet_regularizer_theta.cc \
+SRCS_LIB      = batch_manager.cc \
 		cpp_interface.cc \
 		c_interface.cc \
 		data_loader.cc \
@@ -45,15 +44,19 @@ SRCS_LIB      = dirichlet_regularizer_phi.cc \
 		instance.cc \
 		instance_schema.cc \
 		internals.pb.cc \
+		internals.rpcz.cc \
 		master_component.cc \
-		memcached_server.cc \
-		memcached_service.pb.cc \
-		memcached_service.rpcz.cc \
-		memcached_service_impl.cc \
+		master_component_service_impl.cc \
 		merger.cc \
 		messages.pb.cc \
+		node_controller.cc \
+		node_controller_service_impl.cc \
 		processor.cc \
-		topic_model.cc
+		topic_model.cc \
+		regularizers_sandbox/dirichlet_phi.cc \
+		regularizers_sandbox/dirichlet_theta.cc \
+		regularizers_sandbox/smooth_sparse_phi.cc \
+		regularizers_sandbox/smooth_sparse_theta.cc \
 
 OBJS_LIB      = $(SRCS_LIB:.cc=.o)
 DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
@@ -64,7 +67,8 @@ SRCS_TEST     = boost_thread_test.cc \
 		cpp_interface_unittest.cc \
 		instance_manager_test.cc \
 		instance_test.cc \
-		memcached_service_test.cc \
+		nodes_connectivity_test.cc \
+		test_mother.cc \
 		topic_model_test.cc \
 		thread_safe_holder_test.cc
 

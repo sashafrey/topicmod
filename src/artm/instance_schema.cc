@@ -5,15 +5,16 @@
 namespace artm {
 namespace core {
 
-InstanceSchema::InstanceSchema() : instance_config_(), models_config_(), regularizers_() {}
+InstanceSchema::InstanceSchema() : instance_config_(),  regularizers_(), models_config_() {}
 
 InstanceSchema::InstanceSchema(const InstanceSchema& schema)
     : instance_config_(schema.instance_config_),
-      models_config_(schema.models_config_),
-      regularizers_(schema.regularizers_) {}
+      regularizers_(schema.regularizers_),
+      models_config_(schema.models_config_) {}
+
 
 InstanceSchema::InstanceSchema(const InstanceConfig& config)
-    : instance_config_(config), models_config_(), regularizers_() {}
+    : instance_config_(config), regularizers_(), models_config_() {}
 
 void InstanceSchema::set_instance_config(const InstanceConfig& instance_config) {
   instance_config_.CopyFrom(instance_config);

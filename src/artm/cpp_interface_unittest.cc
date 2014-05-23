@@ -97,7 +97,7 @@ void BasicTest(std::string endpoint) {
 
   // Index doc-token matrix
   master_component.AddBatch(batch);
-  
+
   model.Enable();
   std::shared_ptr<artm::TopicModel> topic_model;
   double expected_normalizer = 0;

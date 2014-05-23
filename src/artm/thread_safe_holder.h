@@ -8,7 +8,6 @@
 #include <memory>
 #include <vector>
 #include <utility>
-#include <vector>
 
 #include "boost/thread/locks.hpp"
 #include "boost/thread/mutex.hpp"

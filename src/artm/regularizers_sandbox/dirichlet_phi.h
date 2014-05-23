@@ -2,8 +2,8 @@
 
 // Author: Murat Apishev (great-mel@yandex.ru)
 
-#ifndef SRC_ARTM_DIRICHLET_PHI_H_
-#define SRC_ARTM_DIRICHLET_PHI_H_
+#ifndef SRC_ARTM_REGULARIZERS_SANDBOX_DIRICHLET_PHI_H_
+#define SRC_ARTM_REGULARIZERS_SANDBOX_DIRICHLET_PHI_H_
 
 #include <vector>
 
@@ -29,4 +29,4 @@ class DirichletPhi : public RegularizerInterface {
 }  // namespace core
 }  // namespace artm
 
-#endif  // SRC_ARTM_DIRICHLET_PHI_H_
+#endif  // SRC_ARTM_REGULARIZERS_SANDBOX_DIRICHLET_PHI_H_

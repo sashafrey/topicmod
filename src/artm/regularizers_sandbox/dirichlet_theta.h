@@ -2,8 +2,8 @@
 
 // Author: Murat Apishev (great-mel@yandex.ru)
 
-#ifndef SRC_ARTM_DIRICHLET_THETA_H_
-#define SRC_ARTM_DIRICHLET_THETA_H_
+#ifndef SRC_ARTM_REGULARIZERS_SANDBOX_DIRICHLET_THETA_H_
+#define SRC_ARTM_REGULARIZERS_SANDBOX_DIRICHLET_THETA_H_
 
 #include <vector>
 
@@ -32,4 +32,4 @@ class DirichletTheta : public RegularizerInterface {
 }  // namespace core
 }  // namespace artm
 
-#endif  // SRC_ARTM_DIRICHLET_THETA_H_
+#endif  // SRC_ARTM_REGULARIZERS_SANDBOX_DIRICHLET_THETA_H_

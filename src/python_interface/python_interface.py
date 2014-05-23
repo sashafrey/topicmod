@@ -43,7 +43,7 @@ class ArtmLibrary:
   def __init__(self, location):
     self.lib_ = ctypes.CDLL(location)
 
-  def CreateMasterComponent(self, config):
+  def CreateMasterComponent(self, config=messages_pb2.MasterComponentConfig()):
     return MasterComponent(config, self.lib_)
 
 #################################################################################
@@ -87,12 +87,17 @@ class MasterComponent:
       del self.models[model.name()]
     model.Dispose()
 
-  def CreateRegularizer(self, config):
-    if (self.regularizers.has_key(config.name)):
+  def CreateRegularizer(self, name, type, config):
+    if (self.regularizers.has_key(name)):
       raise UnsupportedReconfiguration()
 
-    regularizer = Regularizer(self, config, self.lib_)
-    self.regularizers[config.name] = regularizer;
+    general_config = messages_pb2.RegularizerConfig()
+    general_config.name = name
+    general_config.type = type
+    general_config.config = config.SerializeToString()
+
+    regularizer = Regularizer(self, general_config, self.lib_)
+    self.regularizers[name] = regularizer;
     return regularizer
 
   def RemoveRegularizer(self, regularizer):
@@ -220,9 +225,14 @@ class Regularizer:
   def name(self):
     return self.config_.name
 
-  def Reconfigure(self, config):
-    regularizer_config_blob = config.SerializeToString()
+  def Reconfigure(self, type, config):
+    general_config = messages_pb2.RegularizerConfig()
+    general_config.name = self.name()
+    general_config.type = type
+    general_config.config = config.SerializeToString()
+
+    regularizer_config_blob = general_config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
     HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.master_id_,
                     len(regularizer_config_blob), regularizer_config_blob_p))
-    self.config_.CopyFrom(config)
+    self.config_.CopyFrom(general_config)

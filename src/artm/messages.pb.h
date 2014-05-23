@@ -875,7 +875,7 @@ class ModelConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 topics_count() const;
   inline void set_topics_count(::google::protobuf::int32 value);
 
-  // optional bool enabled = 3 [default = false];
+  // optional bool enabled = 3 [default = true];
   inline bool has_enabled() const;
   inline void clear_enabled();
   static const int kEnabledFieldNumber = 3;
@@ -3246,7 +3246,7 @@ inline void ModelConfig::set_topics_count(::google::protobuf::int32 value) {
   topics_count_ = value;
 }
 
-// optional bool enabled = 3 [default = false];
+// optional bool enabled = 3 [default = true];
 inline bool ModelConfig::has_enabled() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -3257,7 +3257,7 @@ inline void ModelConfig::clear_has_enabled() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void ModelConfig::clear_enabled() {
-  enabled_ = false;
+  enabled_ = true;
   clear_has_enabled();
 }
 inline bool ModelConfig::enabled() const {

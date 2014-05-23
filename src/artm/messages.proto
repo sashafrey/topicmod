@@ -86,7 +86,7 @@ message MasterComponentConfig {
 message ModelConfig {
   optional string name = 1 [default = "@model"];
   optional int32 topics_count = 2 [default = 32];
-  optional bool enabled = 3 [default = false];
+  optional bool enabled = 3 [default = true];
   optional int32 inner_iterations_count = 4 [default = 10];
   optional string field_name = 5 [default = "@body"];
   optional string stream_name = 6 [default = "@global"];

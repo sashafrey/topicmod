@@ -40,18 +40,13 @@ dirichlet_regularizer_config = messages_pb2.DirichletThetaConfig()
 tilde_alpha = dirichlet_regularizer_config.tilde_alpha.add()
 tilde_alpha.value.append(0.1)
 
-regularizer_config = messages_pb2.RegularizerConfig()
-regularizer_config.name = 'regularizer_1'
-regularizer_config.type = 0
-regularizer_config.config = dirichlet_regularizer_config.SerializeToString()
-
 # Create model_config
 model_config = messages_pb2.ModelConfig()
 model_config.stream_name = ('stream_0')
 score_ = model_config.score.add()
 score_.type = 0
 score_.stream_name = ('stream_0')
-model_config.regularizer_name.append(regularizer_config.name)
+model_config.regularizer_name.append('regularizer1')
 
 # New configs to reconfigure stuff
 master_config_new = messages_pb2.MasterComponentConfig()
@@ -66,9 +61,6 @@ model_config_new.inner_iterations_count = 20
 dirichlet_regularizer_config_new = messages_pb2.DirichletThetaConfig()
 tilde_alpha = dirichlet_regularizer_config_new.tilde_alpha.add()
 tilde_alpha.value.append(0.2)
-regularizer_config_new = messages_pb2.RegularizerConfig()
-regularizer_config_new.CopyFrom(regularizer_config)
-regularizer_config_new.config = dirichlet_regularizer_config_new.SerializeToString()
 
 #################################################################################
 # TEST SECTION
@@ -77,16 +69,17 @@ address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 os.environ['PATH'] = ';'.join([address + '\\Win32\\Debug', os.environ['PATH']])
 library = ArtmLibrary(address + '\\Win32\\Debug\\artm.dll')
 
-with library.CreateMasterComponent(master_config) as master_component:
+with library.CreateMasterComponent() as master_component:
+  master_component.Reconfigure(master_config)
   master_component.AddStream(stream)
   master_component.RemoveStream(stream)
   model = master_component.CreateModel(model_config)
   master_component.RemoveModel(model)
   model = master_component.CreateModel(model_config)
 
-  regularizer = master_component.CreateRegularizer(regularizer_config)
+  regularizer = master_component.CreateRegularizer('regularizer1', 0, dirichlet_regularizer_config)
   master_component.RemoveRegularizer(regularizer)
-  regularizer = master_component.CreateRegularizer(regularizer_config)
+  regularizer = master_component.CreateRegularizer('regularizer1', 0, dirichlet_regularizer_config)
 
   master_component.AddBatch(batch)
   model.Enable()
@@ -95,7 +88,7 @@ with library.CreateMasterComponent(master_config) as master_component:
   topic_model = master_component.GetTopicModel(model)
 
   # Test all 'reconfigure' methods
-  regularizer.Reconfigure(regularizer_config_new)
+  regularizer.Reconfigure(0, dirichlet_regularizer_config_new)
   model.Reconfigure(model_config_new)
   master_component.Reconfigure(master_config_new)
 

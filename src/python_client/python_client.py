@@ -82,13 +82,8 @@ with library.CreateMasterComponent(master_config) as master_component:
             tilde_alpha_ref.value.append(0.1)
 
     regularizer_name_theta = 'regularizer_theta'
-    general_regularizer_config_theta = messages_pb2.RegularizerConfig()
-    general_regularizer_config_theta.name = regularizer_name_theta
-    general_regularizer_config_theta.type = 0
-    general_regularizer_config_theta.config = regularizer_config_theta.SerializeToString()
-
     model_config.regularizer_name.append(regularizer_name_theta)
-    regularizer_theta = master_component.CreateRegularizer(general_regularizer_config_theta)
+    regularizer_theta = master_component.CreateRegularizer(regularizer_name_theta, 0, regularizer_config_theta)
 
     ################################################################################
     # include in model one Dirihlet Phi regularizer
@@ -99,13 +94,8 @@ with library.CreateMasterComponent(master_config) as master_component:
         regularizer_config_phi.tilde_beta.value.append(0.1)
 
     regularizer_name_phi = 'regularizer_phi'
-    general_regularizer_config_phi = messages_pb2.RegularizerConfig()
-    general_regularizer_config_phi.name = regularizer_name_phi
-    general_regularizer_config_phi.type = 1
-    general_regularizer_config_phi.config = regularizer_config_phi.SerializeToString()
-
     model_config.regularizer_name.append(regularizer_name_phi)
-    regularizer_phi = master_component.CreateRegularizer(general_regularizer_config_phi)
+    regularizer_phi = master_component.CreateRegularizer(regularizer_name_phi, 1, regularizer_config_phi)
     ################################################################################
 
     model = master_component.CreateModel(model_config)
@@ -124,13 +114,7 @@ with library.CreateMasterComponent(master_config) as master_component:
         for j in range(0, token_size):
             regularizer_config_phi.tilde_beta.value.append(0.1)
 
-        regularizer_name_phi = 'regularizer_phi'
-        general_regularizer_config_phi = messages_pb2.RegularizerConfig()
-        general_regularizer_config_phi.name = regularizer_name_phi
-        general_regularizer_config_phi.type = 1
-        general_regularizer_config_phi.config = regularizer_config_phi.SerializeToString()
-
-        regularizer_phi.Reconfigure(general_regularizer_config_phi)
+        regularizer_phi.Reconfigure(1, regularizer_config_phi)
         ################################################################################
         model.InvokePhiRegularizers();
 

@@ -36,9 +36,5 @@ GTEST_API_ int main(int argc, char **argv) {
   printf("Running main() from gtest_main.cc\n");
   testing::InitGoogleTest(&argc, argv);
 
-  FLAGS_log_dir = ".";
-  FLAGS_logbufsecs = 0;
-  ::google::InitGoogleLogging(argv[0]);
-
   return RUN_ALL_TESTS();
 }

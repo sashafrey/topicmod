@@ -536,50 +536,50 @@ void protobuf_AddDesc_messages_2eproto() {
     "ModusOperandi:\005Local\022(\n master_component"
     "_create_endpoint\030e \001(\t\022)\n!master_compone"
     "nt_connect_endpoint\030f \001(\t\"\'\n\rModusOperan"
-    "di\022\t\n\005Local\020\000\022\013\n\007Network\020\001\"\251\002\n\013ModelConf"
+    "di\022\t\n\005Local\020\000\022\013\n\007Network\020\001\"\250\002\n\013ModelConf"
     "ig\022\024\n\004name\030\001 \001(\t:\006@model\022\030\n\014topics_count"
-    "\030\002 \001(\005:\00232\022\026\n\007enabled\030\003 \001(\010:\005false\022\"\n\026in"
-    "ner_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_"
-    "name\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007"
-    "@global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013r"
-    "euse_theta\030\010 \001(\010:\005false\022#\n\024cache_token_c"
-    "ounters\030\t \001(\010:\005false\022\030\n\020regularizer_name"
-    "\030\n \003(\t\"\267\001\n\021RegularizerConfig\022\014\n\004name\030\001 \001"
-    "(\t\022*\n\004type\030\002 \001(\0162\034.artm.RegularizerConfi"
-    "g.Type\022\016\n\006config\030\003 \001(\014\"X\n\004Type\022\022\n\016Dirich"
-    "letTheta\020\000\022\020\n\014DirichletPhi\020\001\022\025\n\021SmoothSp"
-    "arseTheta\020\002\022\023\n\017SmoothSparsePhi\020\003\"O\n\024Diri"
-    "chletThetaConfig\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013til"
-    "de_alpha\030\002 \003(\0132\021.artm.DoubleArray\"K\n\022Dir"
-    "ichletPhiConfig\022\016\n\006beta_0\030\001 \002(\001\022%\n\ntilde"
-    "_beta\030\002 \002(\0132\021.artm.DoubleArray\"R\n\027Smooth"
-    "SparseThetaConfig\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013ti"
-    "lde_alpha\030\002 \003(\0132\021.artm.DoubleArray\"\274\001\n\025S"
-    "moothSparsePhiConfig\022\037\n\027background_topic"
-    "s_count\030\001 \002(\005\022\016\n\006beta_0\030\002 \002(\001\022%\n\ntilde_b"
-    "eta\030\003 \002(\0132\021.artm.DoubleArray\022\031\n\021backgrou"
-    "nd_beta_0\030\004 \003(\001\0220\n\025background_tilde_beta"
-    "\030\005 \003(\0132\021.artm.DoubleArray\" \n\013DoubleArray"
-    "\022\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFloatArray\022\021\n\005val"
-    "ue\030\001 \003(\002B\002\020\001\"x\n\005Score\022\036\n\004type\030\001 \001(\0162\020.ar"
-    "tm.Score.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body"
-    "\022\034\n\013stream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016"
-    "\n\nPerplexity\020\000\"\213\003\n\nTopicModel\022\024\n\004name\030\001 "
-    "\001(\t:\006@model\022\024\n\014topics_count\030\002 \001(\005\022\027\n\017ite"
-    "ms_processed\030\003 \001(\005\022\r\n\005token\030\004 \003(\t\022\'\n\rtok"
-    "en_weights\030\005 \003(\0132\020.artm.FloatArray\022!\n\006sc"
-    "ores\030\006 \001(\0132\021.artm.DoubleArray\022\021\n\tinterna"
-    "ls\030\007 \001(\014\032\311\001\n\023TopicModelInternals\022\036\n\004n_wt"
-    "\030\001 \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020"
-    ".artm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.Flo"
-    "atArray\022%\n\nscores_raw\030\004 \001(\0132\021.artm.Doubl"
-    "eArray\022,\n\021scores_normalizer\030\005 \001(\0132\021.artm"
-    ".DoubleArray\"\224\001\n\024NodeControllerConfig\022\'\n"
-    "\037node_controller_create_endpoint\030\001 \001(\t\022("
-    "\n node_controller_connect_endpoint\030\002 \001(\t"
-    "\022)\n!master_component_connect_endpoint\030\003 "
-    "\001(\t\"F\n\013BatchTopics\022\017\n\007item_id\030\001 \003(\005\022&\n\014i"
-    "tem_weights\030\002 \003(\0132\020.artm.FloatArray", 2515);
+    "\030\002 \001(\005:\00232\022\025\n\007enabled\030\003 \001(\010:\004true\022\"\n\026inn"
+    "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n"
+    "ame\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t:\007@"
+    "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013re"
+    "use_theta\030\010 \001(\010:\005false\022#\n\024cache_token_co"
+    "unters\030\t \001(\010:\005false\022\030\n\020regularizer_name\030"
+    "\n \003(\t\"\267\001\n\021RegularizerConfig\022\014\n\004name\030\001 \001("
+    "\t\022*\n\004type\030\002 \001(\0162\034.artm.RegularizerConfig"
+    ".Type\022\016\n\006config\030\003 \001(\014\"X\n\004Type\022\022\n\016Dirichl"
+    "etTheta\020\000\022\020\n\014DirichletPhi\020\001\022\025\n\021SmoothSpa"
+    "rseTheta\020\002\022\023\n\017SmoothSparsePhi\020\003\"O\n\024Diric"
+    "hletThetaConfig\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013tild"
+    "e_alpha\030\002 \003(\0132\021.artm.DoubleArray\"K\n\022Diri"
+    "chletPhiConfig\022\016\n\006beta_0\030\001 \002(\001\022%\n\ntilde_"
+    "beta\030\002 \002(\0132\021.artm.DoubleArray\"R\n\027SmoothS"
+    "parseThetaConfig\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013til"
+    "de_alpha\030\002 \003(\0132\021.artm.DoubleArray\"\274\001\n\025Sm"
+    "oothSparsePhiConfig\022\037\n\027background_topics"
+    "_count\030\001 \002(\005\022\016\n\006beta_0\030\002 \002(\001\022%\n\ntilde_be"
+    "ta\030\003 \002(\0132\021.artm.DoubleArray\022\031\n\021backgroun"
+    "d_beta_0\030\004 \003(\001\0220\n\025background_tilde_beta\030"
+    "\005 \003(\0132\021.artm.DoubleArray\" \n\013DoubleArray\022"
+    "\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFloatArray\022\021\n\005valu"
+    "e\030\001 \003(\002B\002\020\001\"x\n\005Score\022\036\n\004type\030\001 \001(\0162\020.art"
+    "m.Score.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body\022"
+    "\034\n\013stream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n"
+    "\nPerplexity\020\000\"\213\003\n\nTopicModel\022\024\n\004name\030\001 \001"
+    "(\t:\006@model\022\024\n\014topics_count\030\002 \001(\005\022\027\n\017item"
+    "s_processed\030\003 \001(\005\022\r\n\005token\030\004 \003(\t\022\'\n\rtoke"
+    "n_weights\030\005 \003(\0132\020.artm.FloatArray\022!\n\006sco"
+    "res\030\006 \001(\0132\021.artm.DoubleArray\022\021\n\tinternal"
+    "s\030\007 \001(\014\032\311\001\n\023TopicModelInternals\022\036\n\004n_wt\030"
+    "\001 \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020."
+    "artm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.Floa"
+    "tArray\022%\n\nscores_raw\030\004 \001(\0132\021.artm.Double"
+    "Array\022,\n\021scores_normalizer\030\005 \001(\0132\021.artm."
+    "DoubleArray\"\224\001\n\024NodeControllerConfig\022\'\n\037"
+    "node_controller_create_endpoint\030\001 \001(\t\022(\n"
+    " node_controller_connect_endpoint\030\002 \001(\t\022"
+    ")\n!master_component_connect_endpoint\030\003 \001"
+    "(\t\"F\n\013BatchTopics\022\017\n\007item_id\030\001 \003(\005\022&\n\014it"
+    "em_weights\030\002 \003(\0132\020.artm.FloatArray", 2514);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -2530,7 +2530,7 @@ void ModelConfig::SharedCtor() {
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(_default_name_);
   topics_count_ = 32;
-  enabled_ = false;
+  enabled_ = true;
   inner_iterations_count_ = 10;
   field_name_ = const_cast< ::std::string*>(_default_field_name_);
   stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
@@ -2586,7 +2586,7 @@ void ModelConfig::Clear() {
       }
     }
     topics_count_ = 32;
-    enabled_ = false;
+    enabled_ = true;
     inner_iterations_count_ = 10;
     if (has_field_name()) {
       if (field_name_ != _default_field_name_) {
@@ -2647,7 +2647,7 @@ bool ModelConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // optional bool enabled = 3 [default = false];
+      // optional bool enabled = 3 [default = true];
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
@@ -2811,7 +2811,7 @@ void ModelConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->topics_count(), output);
   }
 
-  // optional bool enabled = 3 [default = false];
+  // optional bool enabled = 3 [default = true];
   if (has_enabled()) {
     ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->enabled(), output);
   }
@@ -2887,7 +2887,7 @@ void ModelConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->topics_count(), target);
   }
 
-  // optional bool enabled = 3 [default = false];
+  // optional bool enabled = 3 [default = true];
   if (has_enabled()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->enabled(), target);
   }
@@ -2968,7 +2968,7 @@ int ModelConfig::ByteSize() const {
           this->topics_count());
     }
 
-    // optional bool enabled = 3 [default = false];
+    // optional bool enabled = 3 [default = true];
     if (has_enabled()) {
       total_size += 1 + 1;
     }

@@ -79,12 +79,12 @@ class MasterComponent:
 
   def CreateModel(self, config):
     model = Model(self, config, self.lib_)
-    self.models[config.model_id] = model;
+    self.models[config.name] = model;
     return model
 
   def RemoveModel(self, model):
-    if (self.models.has_key(model.model_id())):
-      del self.models[model.model_id()]
+    if (self.models.has_key(model.name())):
+      del self.models[model.name()]
     model.Dispose()
 
   def CreateRegularizer(self, config):
@@ -134,7 +134,7 @@ class MasterComponent:
     self.Reconfigure(new_config_)
 
   def GetTopicModel(self, model):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestTopicModel(self.id_, model.model_id()))
+    request_id = HandleErrorCode(self.lib_.ArtmRequestTopicModel(self.id_, model.name()))
     length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
 
     topic_model_blob = ctypes.create_string_buffer(length)
@@ -152,7 +152,7 @@ class Model:
     self.lib_ = lib
     self.master_id_ = master_component.id_
     self.config_ = config
-    self.config_.model_id = uuid.uuid1().urn
+    self.config_.name = uuid.uuid1().urn
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
     HandleErrorCode(self.lib_.ArtmCreateModel(self.master_id_,
@@ -165,12 +165,12 @@ class Model:
     Dispose(self)
 
   def Dispose(self):
-    self.lib_.ArtmDisposeModel(self.master_id_, self.config_.model_id)
-    self.config_.model_id = ''
+    self.lib_.ArtmDisposeModel(self.master_id_, self.config_.name)
+    self.config_.name = ''
     self.master_id_ = -1
 
-  def model_id(self):
-    return self.config_.model_id
+  def name(self):
+    return self.config_.name
 
   def Reconfigure(self, config):
     model_config_blob = config.SerializeToString()

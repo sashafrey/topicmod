@@ -47,7 +47,7 @@ extern "C" {
 
   DLL_PUBLIC int ArtmCreateModel(int master_id, int length, const char* model_config_blob);
   DLL_PUBLIC int ArtmReconfigureModel(int master_id, int length, const char* config);
-  DLL_PUBLIC void ArtmDisposeModel(int master_id, const char* model_id);
+  DLL_PUBLIC void ArtmDisposeModel(int master_id, const char* model_name);
 
   DLL_PUBLIC int ArtmCreateRegularizer(int master_id, int length,
                                        const char* regularizer_config_blob);
@@ -60,9 +60,9 @@ extern "C" {
   DLL_PUBLIC int ArtmInvokePhiRegularizers(int master_id);
   DLL_PUBLIC int ArtmWaitIdle(int master_id);
 
-  DLL_PUBLIC int ArtmRequestBatchTopics(int master_id, const char* model_id, int batch_length,
+  DLL_PUBLIC int ArtmRequestBatchTopics(int master_id, const char* model_name, int batch_length,
                                         const char* batch_blob);
-  DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_id);
+  DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_name);
 }
 
 #endif  // SRC_ARTM_C_INTERFACE_H_

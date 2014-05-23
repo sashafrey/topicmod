@@ -245,7 +245,7 @@ void protobuf_AssignDesc_internals_2eproto() {
       sizeof(ProcessorOutput));
   ModelIncrement_descriptor_ = file->message_type(10);
   static const int ModelIncrement_offsets_[10] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelIncrement, model_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelIncrement, model_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelIncrement, topics_count_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelIncrement, items_processed_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelIncrement, discovered_token_),
@@ -284,7 +284,7 @@ void protobuf_AssignDesc_internals_2eproto() {
       sizeof(BatchIds));
   CreateOrReconfigureModelArgs_descriptor_ = file->message_type(12);
   static const int CreateOrReconfigureModelArgs_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureModelArgs, model_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureModelArgs, model_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureModelArgs, config_),
   };
   CreateOrReconfigureModelArgs_reflection_ =
@@ -300,7 +300,7 @@ void protobuf_AssignDesc_internals_2eproto() {
       sizeof(CreateOrReconfigureModelArgs));
   DisposeModelArgs_descriptor_ = file->message_type(13);
   static const int DisposeModelArgs_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeModelArgs, model_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeModelArgs, model_name_),
   };
   DisposeModelArgs_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -456,45 +456,45 @@ void protobuf_AddDesc_internals_2eproto() {
     "cessorOutput\"q\n\017ProcessorOutput\022\022\n\nbatch"
     "_uuid\030\001 \002(\t\022\026\n\016data_loader_id\030\002 \002(\005\0222\n\017m"
     "odel_increment\030\003 \003(\0132\031.artm.core.ModelIn"
-    "crement\"\204\002\n\016ModelIncrement\022\020\n\010model_id\030\001"
-    " \002(\t\022\024\n\014topics_count\030\002 \002(\005\022\027\n\017items_proc"
-    "essed\030\003 \001(\005\022\030\n\020discovered_token\030\004 \003(\t\022\r\n"
-    "\005token\030\005 \003(\t\022.\n\017token_increment\030\006 \003(\0132\025."
-    "artm.core.FloatArray\022\r\n\005score\030\007 \003(\001\022\022\n\ns"
-    "core_norm\030\010 \003(\001\022\017\n\007item_id\030\t \003(\005\022$\n\005thet"
-    "a\030\n \003(\0132\025.artm.core.FloatArray\"\034\n\010BatchI"
-    "ds\022\020\n\010batch_id\030\001 \003(\t\"S\n\034CreateOrReconfig"
-    "ureModelArgs\022\020\n\010model_id\030\002 \001(\t\022!\n\006config"
-    "\030\003 \001(\0132\021.artm.ModelConfig\"$\n\020DisposeMode"
-    "lArgs\022\020\n\010model_id\030\002 \001(\t\"g\n\"CreateOrRecon"
-    "figureRegularizerArgs\022\030\n\020regularizer_nam"
-    "e\030\002 \001(\t\022\'\n\006config\030\003 \001(\0132\027.artm.Regulariz"
-    "erConfig\"2\n\026DisposeRegularizerArgs\022\030\n\020re"
-    "gularizer_name\030\002 \001(\t2\345\002\n\026MasterComponent"
-    "Service\022:\n\013UpdateModel\022\031.artm.core.Model"
-    "Increment\032\020.artm.TopicModel\0224\n\rRetrieveM"
-    "odel\022\021.artm.core.String\032\020.artm.TopicMode"
-    "l\0225\n\016RequestBatches\022\016.artm.core.Int\032\023.ar"
-    "tm.core.BatchIds\0225\n\rReportBatches\022\023.artm"
-    ".core.BatchIds\032\017.artm.core.Void\0223\n\rConne"
-    "ctClient\022\021.artm.core.String\032\017.artm.core."
-    "Void\0226\n\020DisconnectClient\022\021.artm.core.Str"
-    "ing\032\017.artm.core.Void2\335\004\n\025NodeControllerS"
-    "ervice\022I\n\033CreateOrReconfigureInstance\022\031."
-    "artm.core.InstanceConfig\032\017.artm.core.Voi"
-    "d\0223\n\017DisposeInstance\022\017.artm.core.Void\032\017."
-    "artm.core.Void\022M\n\035CreateOrReconfigureDat"
-    "aLoader\022\033.artm.core.DataLoaderConfig\032\017.a"
-    "rtm.core.Void\0225\n\021DisposeDataLoader\022\017.art"
-    "m.core.Void\032\017.artm.core.Void\022T\n\030CreateOr"
-    "ReconfigureModel\022\'.artm.core.CreateOrRec"
-    "onfigureModelArgs\032\017.artm.core.Void\022<\n\014Di"
-    "sposeModel\022\033.artm.core.DisposeModelArgs\032"
-    "\017.artm.core.Void\022`\n\036CreateOrReconfigureR"
-    "egularizer\022-.artm.core.CreateOrReconfigu"
-    "reRegularizerArgs\032\017.artm.core.Void\022H\n\022Di"
-    "sposeRegularizer\022!.artm.core.DisposeRegu"
-    "larizerArgs\032\017.artm.core.Void", 2388);
+    "crement\"\206\002\n\016ModelIncrement\022\022\n\nmodel_name"
+    "\030\001 \002(\t\022\024\n\014topics_count\030\002 \002(\005\022\027\n\017items_pr"
+    "ocessed\030\003 \001(\005\022\030\n\020discovered_token\030\004 \003(\t\022"
+    "\r\n\005token\030\005 \003(\t\022.\n\017token_increment\030\006 \003(\0132"
+    "\025.artm.core.FloatArray\022\r\n\005score\030\007 \003(\001\022\022\n"
+    "\nscore_norm\030\010 \003(\001\022\017\n\007item_id\030\t \003(\005\022$\n\005th"
+    "eta\030\n \003(\0132\025.artm.core.FloatArray\"\034\n\010Batc"
+    "hIds\022\020\n\010batch_id\030\001 \003(\t\"U\n\034CreateOrReconf"
+    "igureModelArgs\022\022\n\nmodel_name\030\002 \001(\t\022!\n\006co"
+    "nfig\030\003 \001(\0132\021.artm.ModelConfig\"&\n\020Dispose"
+    "ModelArgs\022\022\n\nmodel_name\030\002 \001(\t\"g\n\"CreateO"
+    "rReconfigureRegularizerArgs\022\030\n\020regulariz"
+    "er_name\030\002 \001(\t\022\'\n\006config\030\003 \001(\0132\027.artm.Reg"
+    "ularizerConfig\"2\n\026DisposeRegularizerArgs"
+    "\022\030\n\020regularizer_name\030\002 \001(\t2\345\002\n\026MasterCom"
+    "ponentService\022:\n\013UpdateModel\022\031.artm.core"
+    ".ModelIncrement\032\020.artm.TopicModel\0224\n\rRet"
+    "rieveModel\022\021.artm.core.String\032\020.artm.Top"
+    "icModel\0225\n\016RequestBatches\022\016.artm.core.In"
+    "t\032\023.artm.core.BatchIds\0225\n\rReportBatches\022"
+    "\023.artm.core.BatchIds\032\017.artm.core.Void\0223\n"
+    "\rConnectClient\022\021.artm.core.String\032\017.artm"
+    ".core.Void\0226\n\020DisconnectClient\022\021.artm.co"
+    "re.String\032\017.artm.core.Void2\335\004\n\025NodeContr"
+    "ollerService\022I\n\033CreateOrReconfigureInsta"
+    "nce\022\031.artm.core.InstanceConfig\032\017.artm.co"
+    "re.Void\0223\n\017DisposeInstance\022\017.artm.core.V"
+    "oid\032\017.artm.core.Void\022M\n\035CreateOrReconfig"
+    "ureDataLoader\022\033.artm.core.DataLoaderConf"
+    "ig\032\017.artm.core.Void\0225\n\021DisposeDataLoader"
+    "\022\017.artm.core.Void\032\017.artm.core.Void\022T\n\030Cr"
+    "eateOrReconfigureModel\022\'.artm.core.Creat"
+    "eOrReconfigureModelArgs\032\017.artm.core.Void"
+    "\022<\n\014DisposeModel\022\033.artm.core.DisposeMode"
+    "lArgs\032\017.artm.core.Void\022`\n\036CreateOrReconf"
+    "igureRegularizer\022-.artm.core.CreateOrRec"
+    "onfigureRegularizerArgs\032\017.artm.core.Void"
+    "\022H\n\022DisposeRegularizer\022!.artm.core.Dispo"
+    "seRegularizerArgs\032\017.artm.core.Void", 2394);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "internals.proto", &protobuf_RegisterTypes);
   FloatArray::default_instance_ = new FloatArray();
@@ -3326,7 +3326,7 @@ void ProcessorOutput::Swap(ProcessorOutput* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int ModelIncrement::kModelIdFieldNumber;
+const int ModelIncrement::kModelNameFieldNumber;
 const int ModelIncrement::kTopicsCountFieldNumber;
 const int ModelIncrement::kItemsProcessedFieldNumber;
 const int ModelIncrement::kDiscoveredTokenFieldNumber;
@@ -3354,7 +3354,7 @@ ModelIncrement::ModelIncrement(const ModelIncrement& from)
 
 void ModelIncrement::SharedCtor() {
   _cached_size_ = 0;
-  model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   topics_count_ = 0;
   items_processed_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3365,8 +3365,8 @@ ModelIncrement::~ModelIncrement() {
 }
 
 void ModelIncrement::SharedDtor() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_name_;
   }
   if (this != default_instance_) {
   }
@@ -3395,9 +3395,9 @@ ModelIncrement* ModelIncrement::New() const {
 
 void ModelIncrement::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_model_id()) {
-      if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-        model_id_->clear();
+    if (has_model_name()) {
+      if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+        model_name_->clear();
       }
     }
     topics_count_ = 0;
@@ -3420,14 +3420,14 @@ bool ModelIncrement::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required string model_id = 1;
+      // required string model_name = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_model_id()));
+                input, this->mutable_model_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->model_id().data(), this->model_id().length(),
+            this->model_name().data(), this->model_name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -3620,13 +3620,13 @@ bool ModelIncrement::MergePartialFromCodedStream(
 
 void ModelIncrement::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required string model_id = 1;
-  if (has_model_id()) {
+  // required string model_name = 1;
+  if (has_model_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->model_id().data(), this->model_id().length(),
+      this->model_name().data(), this->model_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->model_id(), output);
+      1, this->model_name(), output);
   }
 
   // required int32 topics_count = 2;
@@ -3695,14 +3695,14 @@ void ModelIncrement::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* ModelIncrement::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required string model_id = 1;
-  if (has_model_id()) {
+  // required string model_name = 1;
+  if (has_model_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->model_id().data(), this->model_id().length(),
+      this->model_name().data(), this->model_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->model_id(), target);
+        1, this->model_name(), target);
   }
 
   // required int32 topics_count = 2;
@@ -3776,11 +3776,11 @@ int ModelIncrement::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required string model_id = 1;
-    if (has_model_id()) {
+    // required string model_name = 1;
+    if (has_model_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->model_id());
+          this->model_name());
     }
 
     // required int32 topics_count = 2;
@@ -3885,8 +3885,8 @@ void ModelIncrement::MergeFrom(const ModelIncrement& from) {
   item_id_.MergeFrom(from.item_id_);
   theta_.MergeFrom(from.theta_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_model_id()) {
-      set_model_id(from.model_id());
+    if (from.has_model_name()) {
+      set_model_name(from.model_name());
     }
     if (from.has_topics_count()) {
       set_topics_count(from.topics_count());
@@ -3918,7 +3918,7 @@ bool ModelIncrement::IsInitialized() const {
 
 void ModelIncrement::Swap(ModelIncrement* other) {
   if (other != this) {
-    std::swap(model_id_, other->model_id_);
+    std::swap(model_name_, other->model_name_);
     std::swap(topics_count_, other->topics_count_);
     std::swap(items_processed_, other->items_processed_);
     discovered_token_.Swap(&other->discovered_token_);
@@ -4157,7 +4157,7 @@ void BatchIds::Swap(BatchIds* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int CreateOrReconfigureModelArgs::kModelIdFieldNumber;
+const int CreateOrReconfigureModelArgs::kModelNameFieldNumber;
 const int CreateOrReconfigureModelArgs::kConfigFieldNumber;
 #endif  // !_MSC_VER
 
@@ -4178,7 +4178,7 @@ CreateOrReconfigureModelArgs::CreateOrReconfigureModelArgs(const CreateOrReconfi
 
 void CreateOrReconfigureModelArgs::SharedCtor() {
   _cached_size_ = 0;
-  model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   config_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -4188,8 +4188,8 @@ CreateOrReconfigureModelArgs::~CreateOrReconfigureModelArgs() {
 }
 
 void CreateOrReconfigureModelArgs::SharedDtor() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_name_;
   }
   if (this != default_instance_) {
     delete config_;
@@ -4219,9 +4219,9 @@ CreateOrReconfigureModelArgs* CreateOrReconfigureModelArgs::New() const {
 
 void CreateOrReconfigureModelArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_model_id()) {
-      if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-        model_id_->clear();
+    if (has_model_name()) {
+      if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+        model_name_->clear();
       }
     }
     if (has_config()) {
@@ -4238,14 +4238,14 @@ bool CreateOrReconfigureModelArgs::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string model_id = 2;
+      // optional string model_name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_model_id()));
+                input, this->mutable_model_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->model_id().data(), this->model_id().length(),
+            this->model_name().data(), this->model_name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -4286,13 +4286,13 @@ bool CreateOrReconfigureModelArgs::MergePartialFromCodedStream(
 
 void CreateOrReconfigureModelArgs::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string model_id = 2;
-  if (has_model_id()) {
+  // optional string model_name = 2;
+  if (has_model_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->model_id().data(), this->model_id().length(),
+      this->model_name().data(), this->model_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->model_id(), output);
+      2, this->model_name(), output);
   }
 
   // optional .artm.ModelConfig config = 3;
@@ -4309,14 +4309,14 @@ void CreateOrReconfigureModelArgs::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* CreateOrReconfigureModelArgs::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string model_id = 2;
-  if (has_model_id()) {
+  // optional string model_name = 2;
+  if (has_model_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->model_id().data(), this->model_id().length(),
+      this->model_name().data(), this->model_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->model_id(), target);
+        2, this->model_name(), target);
   }
 
   // optional .artm.ModelConfig config = 3;
@@ -4337,11 +4337,11 @@ int CreateOrReconfigureModelArgs::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string model_id = 2;
-    if (has_model_id()) {
+    // optional string model_name = 2;
+    if (has_model_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->model_id());
+          this->model_name());
     }
 
     // optional .artm.ModelConfig config = 3;
@@ -4378,8 +4378,8 @@ void CreateOrReconfigureModelArgs::MergeFrom(const ::google::protobuf::Message& 
 void CreateOrReconfigureModelArgs::MergeFrom(const CreateOrReconfigureModelArgs& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_model_id()) {
-      set_model_id(from.model_id());
+    if (from.has_model_name()) {
+      set_model_name(from.model_name());
     }
     if (from.has_config()) {
       mutable_config()->::artm::ModelConfig::MergeFrom(from.config());
@@ -4407,7 +4407,7 @@ bool CreateOrReconfigureModelArgs::IsInitialized() const {
 
 void CreateOrReconfigureModelArgs::Swap(CreateOrReconfigureModelArgs* other) {
   if (other != this) {
-    std::swap(model_id_, other->model_id_);
+    std::swap(model_name_, other->model_name_);
     std::swap(config_, other->config_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -4427,7 +4427,7 @@ void CreateOrReconfigureModelArgs::Swap(CreateOrReconfigureModelArgs* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DisposeModelArgs::kModelIdFieldNumber;
+const int DisposeModelArgs::kModelNameFieldNumber;
 #endif  // !_MSC_VER
 
 DisposeModelArgs::DisposeModelArgs()
@@ -4446,7 +4446,7 @@ DisposeModelArgs::DisposeModelArgs(const DisposeModelArgs& from)
 
 void DisposeModelArgs::SharedCtor() {
   _cached_size_ = 0;
-  model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4455,8 +4455,8 @@ DisposeModelArgs::~DisposeModelArgs() {
 }
 
 void DisposeModelArgs::SharedDtor() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_name_;
   }
   if (this != default_instance_) {
   }
@@ -4485,9 +4485,9 @@ DisposeModelArgs* DisposeModelArgs::New() const {
 
 void DisposeModelArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_model_id()) {
-      if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-        model_id_->clear();
+    if (has_model_name()) {
+      if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+        model_name_->clear();
       }
     }
   }
@@ -4501,14 +4501,14 @@ bool DisposeModelArgs::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string model_id = 2;
+      // optional string model_name = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_model_id()));
+                input, this->mutable_model_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->model_id().data(), this->model_id().length(),
+            this->model_name().data(), this->model_name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -4535,13 +4535,13 @@ bool DisposeModelArgs::MergePartialFromCodedStream(
 
 void DisposeModelArgs::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string model_id = 2;
-  if (has_model_id()) {
+  // optional string model_name = 2;
+  if (has_model_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->model_id().data(), this->model_id().length(),
+      this->model_name().data(), this->model_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->model_id(), output);
+      2, this->model_name(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -4552,14 +4552,14 @@ void DisposeModelArgs::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DisposeModelArgs::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string model_id = 2;
-  if (has_model_id()) {
+  // optional string model_name = 2;
+  if (has_model_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->model_id().data(), this->model_id().length(),
+      this->model_name().data(), this->model_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->model_id(), target);
+        2, this->model_name(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4573,11 +4573,11 @@ int DisposeModelArgs::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string model_id = 2;
-    if (has_model_id()) {
+    // optional string model_name = 2;
+    if (has_model_name()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->model_id());
+          this->model_name());
     }
 
   }
@@ -4607,8 +4607,8 @@ void DisposeModelArgs::MergeFrom(const ::google::protobuf::Message& from) {
 void DisposeModelArgs::MergeFrom(const DisposeModelArgs& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_model_id()) {
-      set_model_id(from.model_id());
+    if (from.has_model_name()) {
+      set_model_name(from.model_name());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -4633,7 +4633,7 @@ bool DisposeModelArgs::IsInitialized() const {
 
 void DisposeModelArgs::Swap(DisposeModelArgs* other) {
   if (other != this) {
-    std::swap(model_id_, other->model_id_);
+    std::swap(model_name_, other->model_name_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

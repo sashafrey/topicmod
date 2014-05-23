@@ -51,7 +51,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_inner_iterations_count(10);
   model_config.set_stream_name("train_stream");
   model_config.set_reuse_theta(true);
-  model_config.set_model_id("15081980-90a7-4767-ab85-7cb551c39339");
+  model_config.set_name("15081980-90a7-4767-ab85-7cb551c39339");
 
   Score* score = model_config.add_score();
   score->set_type(Score_Type_Perplexity);

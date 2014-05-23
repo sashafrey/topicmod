@@ -65,7 +65,7 @@ class Model {
   void InvokePhiRegularizers();
 
   int master_id() const { return master_id_; }
-  const std::string& model_id() const { return config_.model_id(); }
+  const std::string& name() const { return config_.name(); }
 
   const ModelConfig& config() const { return config_; }
 

@@ -46,8 +46,8 @@ void MasterComponent::ReconfigureModel(const ModelConfig& config) {
   client_interface_->ReconfigureModel(config);
 }
 
-void MasterComponent::DisposeModel(ModelId model_id) {
-  client_interface_->DisposeModel(model_id);
+void MasterComponent::DisposeModel(ModelName model_name) {
+  client_interface_->DisposeModel(model_name);
 }
 
 void MasterComponent::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
@@ -91,10 +91,10 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
 }
 
-bool MasterComponent::RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model) {
+bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
   if (isInLocalModusOperandi()) {
     LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
-    return local_client->RequestTopicModel(model_id, topic_model);
+    return local_client->RequestTopicModel(model_name, topic_model);
   }
 
   if (isInNetworkModusOperandi()) {
@@ -229,8 +229,8 @@ void LocalClient::ReconfigureModel(const ModelConfig& config) {
   local_instance_->ReconfigureModel(config);
 }
 
-void LocalClient::DisposeModel(ModelId model_id) {
-  local_instance_->DisposeModel(model_id);
+void LocalClient::DisposeModel(ModelName model_name) {
+  local_instance_->DisposeModel(model_name);
 }
 
 void LocalClient::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
@@ -276,8 +276,8 @@ LocalClient::~LocalClient() {
   }
 }
 
-bool LocalClient::RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model) {
-  return local_instance_->RequestTopicModel(model_id, topic_model);
+bool LocalClient::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
+  return local_instance_->RequestTopicModel(model_name, topic_model);
 }
 
 void LocalClient::WaitIdle() {
@@ -302,10 +302,10 @@ void NetworkClientCollection::ReconfigureModel(const ModelConfig& config) {
 }
 
 
-void NetworkClientCollection::DisposeModel(ModelId model_id) {
+void NetworkClientCollection::DisposeModel(ModelName model_name) {
   for_each_client([&](NodeControllerService_Stub& client) {
     DisposeModelArgs args;
-    args.set_model_id(model_id);
+    args.set_model_name(model_name);
     Void response;
     client.DisposeModel(args, &response);
   });

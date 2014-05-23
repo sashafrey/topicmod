@@ -50,7 +50,7 @@ class MasterComponentServiceImpl : public MasterComponentService {
 
  private:
   mutable boost::mutex lock_;
-  std::map<::artm::core::ModelId, std::shared_ptr<::artm::core::TopicModel>> topic_model_;
+  std::map<::artm::core::ModelName, std::shared_ptr<::artm::core::TopicModel>> topic_model_;
   std::unique_ptr<rpcz::application> application_;
   NetworkClientCollection* clients_;
 };

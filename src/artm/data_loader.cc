@@ -114,7 +114,7 @@ void DataLoader::InvokeIteration(int iterations_count) {
   // Reset scores
   auto instance = InstanceManager::singleton().Get(config_.get()->instance_id());
   if (instance != nullptr) {
-    instance->ForceResetScores(ModelId());
+    instance->ForceResetScores(ModelName());
   }
 
   auto latest_generation = generation_.get();
@@ -144,7 +144,7 @@ void DataLoader::WaitIdle() {
   if (instance == nullptr)
     return;
 
-  instance->ForceSyncWithMemcached(ModelId());
+  instance->ForceSyncWithMemcached(ModelName());
 }
 
 void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {

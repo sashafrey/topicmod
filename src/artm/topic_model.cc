@@ -14,8 +14,8 @@
 namespace artm {
 namespace core {
 
-TopicModel::TopicModel(ModelId model_id, int topics_count, int scores_count)
-    : model_id_(model_id),
+TopicModel::TopicModel(ModelName model_name, int topics_count, int scores_count)
+    : model_name_(model_name),
       token_to_token_id_(),
       token_id_to_token_(),
       topics_count_(topics_count),
@@ -34,7 +34,7 @@ TopicModel::TopicModel(ModelId model_id, int topics_count, int scores_count)
 }
 
 TopicModel::TopicModel(const TopicModel& rhs)
-    : model_id_(rhs.model_id_),
+    : model_name_(rhs.model_name_),
       token_to_token_id_(rhs.token_to_token_id_),
       token_id_to_token_(rhs.token_id_to_token_),
       topics_count_(rhs.topics_count_),
@@ -62,7 +62,7 @@ TopicModel::TopicModel(const ::artm::TopicModel& external_topic_model) {
 }
 
 TopicModel::TopicModel(const ::artm::core::ModelIncrement& model_increment) {
-  model_id_ = model_increment.model_id();
+  model_name_ = model_increment.model_name();
   topics_count_ = model_increment.topics_count();
   items_processed_ = 0;
 
@@ -75,10 +75,10 @@ TopicModel::TopicModel(const ::artm::core::ModelIncrement& model_increment) {
 }
 
 TopicModel::~TopicModel() {
-  Clear(model_id(), topic_size(), score_size());
+  Clear(model_name(), topic_size(), score_size());
 }
 
-void TopicModel::Clear(ModelId model_id, int topics_count, int scores_count) {
+void TopicModel::Clear(ModelName model_name, int topics_count, int scores_count) {
   std::for_each(n_wt_.begin(), n_wt_.end(), [&](float* value) {
     delete [] value;
   });
@@ -87,7 +87,7 @@ void TopicModel::Clear(ModelId model_id, int topics_count, int scores_count) {
     delete [] value;
   });
 
-  model_id_ = model_id;
+  model_name_ = model_name;
   topics_count_ = topics_count;
   items_processed_ = 0;
 
@@ -115,7 +115,7 @@ void TopicModel::CalculateDiff(const ::artm::core::TopicModel& rhs, ::artm::core
     BOOST_THROW_EXCEPTION(std::invalid_argument(message.str()));
   }
 
-  diff->set_model_id(model_id_);
+  diff->set_model_name(model_name_);
   diff->set_topics_count(topic_size());
   diff->set_items_processed(items_processed() - rhs.items_processed());
 
@@ -177,7 +177,7 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
 
 void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) const {
   // 1. Fill in non-internal part of ::artm::TopicModel
-  topic_model->set_model_id(model_id_);
+  topic_model->set_name(model_name_);
   topic_model->set_topics_count(topic_size());
   topic_model->set_items_processed(items_processed());
 
@@ -219,15 +219,15 @@ void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) con
 
 void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_topic_model) {
   int scores_size = external_topic_model.scores().value_size();
-  Clear(external_topic_model.model_id(), external_topic_model.topics_count(), scores_size);
+  Clear(external_topic_model.name(), external_topic_model.topics_count(), scores_size);
 
   items_processed_ = external_topic_model.items_processed();
 
   ::artm::TopicModel_TopicModelInternals topic_model_internals;
   if (!topic_model_internals.ParseFromString(external_topic_model.internals())) {
     std::stringstream error_message;
-    error_message << "Unable to deserialize internals of topic model, model_id="
-                  << external_topic_model.model_id();
+    error_message << "Unable to deserialize internals of topic model, model_name="
+                  << external_topic_model.name();
     BOOST_THROW_EXCEPTION(SerializationException(error_message.str()));
   }
 
@@ -414,8 +414,8 @@ int TopicModel::topic_size() const {
   return topics_count_;
 }
 
-ModelId TopicModel::model_id() const {
-  return model_id_;
+ModelName TopicModel::model_name() const {
+  return model_name_;
 }
 
 int TopicModel::items_processed() const {

@@ -46,50 +46,50 @@ Merger::~Merger() {
   }
 }
 
-void Merger::DisposeModel(ModelId model_id) {
-  topic_model_.erase(model_id);
-  internal_task_queue_.push(MergerTask(kDisposeModel, model_id));
+void Merger::DisposeModel(ModelName model_name) {
+  topic_model_.erase(model_name);
+  internal_task_queue_.push(MergerTask(kDisposeModel, model_name));
 }
 
 void Merger::UpdateModel(const ModelConfig& model) {
-  if (!topic_model_.has_key(model.model_id())) {
+  if (!topic_model_.has_key(model.name())) {
     // Handle more type of reconfigs - for example, changing the number of topics;
-    auto ttm = std::make_shared<TopicModel>(model.model_id(), model.topics_count(),
+    auto ttm = std::make_shared<TopicModel>(model.name(), model.topics_count(),
                                             model.score_size());
-    topic_model_.set(model.model_id(), ttm);
+    topic_model_.set(model.name(), ttm);
   }
 
-  auto ttm = topic_model_.get(model.model_id());
+  auto ttm = topic_model_.get(model.name());
   if (ttm->topic_size() != model.topics_count()) {
     std::string message("Unable to change the number of topics in topic model");
     BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(message));
   }
 }
 
-void Merger::ForceResetScores(ModelId model_id) {
+void Merger::ForceResetScores(ModelName model_name) {
   rpcz::sync_event sync_event;
-  internal_task_queue_.push(MergerTask(kForceResetScores, model_id, &sync_event));
+  internal_task_queue_.push(MergerTask(kForceResetScores, model_name, &sync_event));
   sync_event.wait();
 }
 
-void Merger::ForceSyncWithMemcached(ModelId model_id) {
+void Merger::ForceSyncWithMemcached(ModelName model_name) {
   rpcz::sync_event sync_event;
-  internal_task_queue_.push(MergerTask(kForceSyncWithMemcached, model_id, &sync_event));
+  internal_task_queue_.push(MergerTask(kForceSyncWithMemcached, model_name, &sync_event));
   sync_event.wait();
 }
 
 std::shared_ptr<const ::artm::core::TopicModel>
-Merger::GetLatestTopicModel(ModelId model_id) const {
-  return topic_model_.get(model_id);
+Merger::GetLatestTopicModel(ModelName model_name) const {
+  return topic_model_.get(model_name);
 }
 
 void Merger::InvokePhiRegularizers() {
   auto schema = schema_->get();
-  std::vector<ModelId> model_ids = schema->GetModelIds();
+  std::vector<ModelName> model_names = schema->GetModelNames();
 
-  std::for_each(model_ids.begin(), model_ids.end(), [&](ModelId model_id) {
-    const ModelConfig& model = schema->model_config(model_id);
-    auto cur_ttm = topic_model_.get(model_id);
+  std::for_each(model_names.begin(), model_names.end(), [&](ModelName model_name) {
+    const ModelConfig& model = schema->model_config(model_name);
+    auto cur_ttm = topic_model_.get(model_name);
 
     if (cur_ttm.get() != nullptr) {
       auto reg_names = model.regularizer_name();
@@ -110,7 +110,7 @@ void Merger::InvokePhiRegularizers() {
             reg_name_iterator->c_str() << "> does not exist.";
         }
       }
-      topic_model_.set(model_id, new_ttm);
+      topic_model_.set(model_name, new_ttm);
     }
   });
 }
@@ -132,13 +132,13 @@ void Merger::ThreadFunction() {
         if (internal_task_queue_.try_pop(&merger_task)) {
           switch (merger_task.task_type) {
             case kDisposeModel:
-              new_topic_model_.erase(merger_task.model_id);
+              new_topic_model_.erase(merger_task.model_name);
               break;
             case kForceSyncWithMemcached:
-              SyncWithMemcached(merger_task.model_id);
+              SyncWithMemcached(merger_task.model_name);
               break;
             case kForceResetScores:
-              ResetScores(merger_task.model_id);
+              ResetScores(merger_task.model_name);
           }
 
           if (merger_task.sync_event != nullptr) {
@@ -174,18 +174,18 @@ void Merger::ThreadFunction() {
              modex_index < processor_output->model_increment_size();
              modex_index++) {
           auto model_increment = processor_output->model_increment(modex_index);
-          ModelId model_id = model_increment.model_id();
-          auto cur_ttm = topic_model_.get(model_id);
+          ModelName model_name = model_increment.model_name();
+          auto cur_ttm = topic_model_.get(model_name);
           if (cur_ttm.get() == nullptr) {
             // model had been disposed during ongoing processing;
             continue;  // for (int modex_index = 0; ...
           }
 
-          auto iter = new_topic_model_.find(model_id);
+          auto iter = new_topic_model_.find(model_name);
           if (iter == new_topic_model_.end()) {
             new_topic_model_.insert(std::make_pair(
-              model_id, std::make_shared<::artm::core::TopicModel>(*cur_ttm)));
-            iter = new_topic_model_.find(model_id);
+              model_name, std::make_shared<::artm::core::TopicModel>(*cur_ttm)));
+            iter = new_topic_model_.find(model_name);
           }
 
           iter->second->ApplyDiff(model_increment);
@@ -202,29 +202,29 @@ void Merger::ThreadFunction() {
   }
 }
 
-void Merger::SyncWithMemcached(ModelId model_id) {
-  std::vector<ModelId> model_ids;
-  if (model_id.empty()) {
+void Merger::SyncWithMemcached(ModelName model_name) {
+  std::vector<ModelName> model_names;
+  if (model_name.empty()) {
     for (auto iter = new_topic_model_.begin(); iter != new_topic_model_.end(); ++iter) {
-      model_ids.push_back(iter->first);
+      model_names.push_back(iter->first);
     }
   }
 
-  for (auto &model_id : model_ids) {
+  for (auto &model_name : model_names) {
     // This method (SyncWithMemcached) calculates a diff between new_ttm and old_ttm,
     // and then sends it to MemcachedService as ModelIncrement.
-    auto old_ttm = topic_model_.get(model_id);
+    auto old_ttm = topic_model_.get(model_name);
     if (old_ttm.get() == nullptr)
       return;  // model had been disposed during ongoing processing;
 
-    auto new_ttm = new_topic_model_.find(model_id);
+    auto new_ttm = new_topic_model_.find(model_name);
     if (new_ttm == new_topic_model_.end())
       return;  // model had been disposed during ongoing processing;
 
     std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
     if (master_component_service == nullptr) {
-      topic_model_.set(model_id, new_ttm->second);
-      new_topic_model_.erase(model_id);
+      topic_model_.set(model_name, new_ttm->second);
+      new_topic_model_.erase(model_name);
     } else {
       ModelIncrement model_increment;
       new_ttm->second->CalculateDiff(*old_ttm, &model_increment);
@@ -235,8 +235,8 @@ void Merger::SyncWithMemcached(ModelId model_id) {
         std::shared_ptr<::artm::core::TopicModel> new_global_ttm(
           new ::artm::core::TopicModel(reply));
 
-        topic_model_.set(model_id, new_global_ttm);
-        new_topic_model_.erase(model_id);
+        topic_model_.set(model_name, new_global_ttm);
+        new_topic_model_.erase(model_name);
       } catch(const rpcz::rpc_error&) {
         LOG(ERROR) << "Merger failed to send updates to master component service.";
         throw;
@@ -245,16 +245,16 @@ void Merger::SyncWithMemcached(ModelId model_id) {
   }
 }
 
-void Merger::ResetScores(ModelId model_id) {
-  std::vector<ModelId> model_ids;
-  if (model_id.empty()) {
-    model_ids = topic_model_.keys();
+void Merger::ResetScores(ModelName model_name) {
+  std::vector<ModelName> model_names;
+  if (model_name.empty()) {
+    model_names = topic_model_.keys();
   }
 
   std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
-  for (auto &model_id : model_ids) {
+  for (auto &model_name : model_names) {
     if (master_component_service == nullptr) {
-      auto old_ttm = GetLatestTopicModel(model_id);
+      auto old_ttm = GetLatestTopicModel(model_name);
       if (old_ttm == nullptr)
         return;  // model had been disposed during ongoing processing;
 
@@ -263,7 +263,7 @@ void Merger::ResetScores(ModelId model_id) {
         new_ttm->SetScores(score_index, 0.0, 0.0);
       }
 
-      topic_model_.set(model_id, new_ttm);
+      topic_model_.set(model_name, new_ttm);
     } else {
       // TODO(alfrey) to this on master
       std::string message("In Network mode ResetScores should happen on Master.");

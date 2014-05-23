@@ -57,7 +57,7 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
 std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
   // Request model topics
   int request_id = HandleErrorCode(ArtmRequestTopicModel(
-    id(), model.model_id().c_str()));
+    id(), model.name().c_str()));
 
   int length = HandleErrorCode(ArtmGetRequestLength(request_id));
   std::string topic_model_blob;
@@ -74,8 +74,8 @@ std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
 Model::Model(const MasterComponent& master_component, const ModelConfig& config)
     : master_id_(master_component.id()),
       config_(config) {
-  if (!config_.has_model_id()) {
-    config_.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
+  if (!config_.has_name()) {
+    config_.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
   }
 
   std::string model_config_blob;
@@ -85,7 +85,7 @@ Model::Model(const MasterComponent& master_component, const ModelConfig& config)
 }
 
 Model::~Model() {
-  ArtmDisposeModel(master_id(), model_id().c_str());
+  ArtmDisposeModel(master_id(), name().c_str());
 }
 
 void Model::Reconfigure(const ModelConfig& config) {

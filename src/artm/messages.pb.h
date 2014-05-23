@@ -281,17 +281,17 @@ class Field : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string field_name = 1 [default = "@body"];
-  inline bool has_field_name() const;
-  inline void clear_field_name();
-  static const int kFieldNameFieldNumber = 1;
-  inline const ::std::string& field_name() const;
-  inline void set_field_name(const ::std::string& value);
-  inline void set_field_name(const char* value);
-  inline void set_field_name(const char* value, size_t size);
-  inline ::std::string* mutable_field_name();
-  inline ::std::string* release_field_name();
-  inline void set_allocated_field_name(::std::string* field_name);
+  // optional string name = 1 [default = "@body"];
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // repeated int32 token_id = 2;
   inline int token_id_size() const;
@@ -319,13 +319,13 @@ class Field : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.Field)
  private:
-  inline void set_has_field_name();
-  inline void clear_has_field_name();
+  inline void set_has_name();
+  inline void clear_has_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* field_name_;
-  static ::std::string* _default_field_name_;
+  ::std::string* name_;
+  static ::std::string* _default_name_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > token_id_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > token_count_;
 
@@ -856,17 +856,17 @@ class ModelConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string model_id = 1 [default = ""];
-  inline bool has_model_id() const;
-  inline void clear_model_id();
-  static const int kModelIdFieldNumber = 1;
-  inline const ::std::string& model_id() const;
-  inline void set_model_id(const ::std::string& value);
-  inline void set_model_id(const char* value);
-  inline void set_model_id(const char* value, size_t size);
-  inline ::std::string* mutable_model_id();
-  inline ::std::string* release_model_id();
-  inline void set_allocated_model_id(::std::string* model_id);
+  // optional string name = 1 [default = "@model"];
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // optional int32 topics_count = 2 [default = 32];
   inline bool has_topics_count() const;
@@ -957,8 +957,8 @@ class ModelConfig : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
-  inline void set_has_model_id();
-  inline void clear_has_model_id();
+  inline void set_has_name();
+  inline void clear_has_name();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
   inline void set_has_enabled();
@@ -976,7 +976,8 @@ class ModelConfig : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* model_id_;
+  ::std::string* name_;
+  static ::std::string* _default_name_;
   ::google::protobuf::int32 topics_count_;
   ::google::protobuf::int32 inner_iterations_count_;
   ::std::string* field_name_;
@@ -2058,17 +2059,17 @@ class TopicModel : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string model_id = 1 [default = ""];
-  inline bool has_model_id() const;
-  inline void clear_model_id();
-  static const int kModelIdFieldNumber = 1;
-  inline const ::std::string& model_id() const;
-  inline void set_model_id(const ::std::string& value);
-  inline void set_model_id(const char* value);
-  inline void set_model_id(const char* value, size_t size);
-  inline ::std::string* mutable_model_id();
-  inline ::std::string* release_model_id();
-  inline void set_allocated_model_id(::std::string* model_id);
+  // optional string name = 1 [default = "@model"];
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // optional int32 topics_count = 2;
   inline bool has_topics_count() const;
@@ -2135,8 +2136,8 @@ class TopicModel : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.TopicModel)
  private:
-  inline void set_has_model_id();
-  inline void clear_has_model_id();
+  inline void set_has_name();
+  inline void clear_has_name();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
   inline void set_has_items_processed();
@@ -2148,7 +2149,8 @@ class TopicModel : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* model_id_;
+  ::std::string* name_;
+  static ::std::string* _default_name_;
   ::google::protobuf::int32 topics_count_;
   ::google::protobuf::int32 items_processed_;
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
@@ -2439,73 +2441,73 @@ Item::mutable_field() {
 
 // Field
 
-// optional string field_name = 1 [default = "@body"];
-inline bool Field::has_field_name() const {
+// optional string name = 1 [default = "@body"];
+inline bool Field::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Field::set_has_field_name() {
+inline void Field::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Field::clear_has_field_name() {
+inline void Field::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Field::clear_field_name() {
-  if (field_name_ != _default_field_name_) {
-    field_name_->assign(*_default_field_name_);
+inline void Field::clear_name() {
+  if (name_ != _default_name_) {
+    name_->assign(*_default_name_);
   }
-  clear_has_field_name();
+  clear_has_name();
 }
-inline const ::std::string& Field::field_name() const {
-  return *field_name_;
+inline const ::std::string& Field::name() const {
+  return *name_;
 }
-inline void Field::set_field_name(const ::std::string& value) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
+inline void Field::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  field_name_->assign(value);
+  name_->assign(value);
 }
-inline void Field::set_field_name(const char* value) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
+inline void Field::set_name(const char* value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  field_name_->assign(value);
+  name_->assign(value);
 }
-inline void Field::set_field_name(const char* value, size_t size) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
+inline void Field::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  field_name_->assign(reinterpret_cast<const char*>(value), size);
+  name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Field::mutable_field_name() {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string(*_default_field_name_);
+inline ::std::string* Field::mutable_name() {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string(*_default_name_);
   }
-  return field_name_;
+  return name_;
 }
-inline ::std::string* Field::release_field_name() {
-  clear_has_field_name();
-  if (field_name_ == _default_field_name_) {
+inline ::std::string* Field::release_name() {
+  clear_has_name();
+  if (name_ == _default_name_) {
     return NULL;
   } else {
-    ::std::string* temp = field_name_;
-    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(_default_name_);
     return temp;
   }
 }
-inline void Field::set_allocated_field_name(::std::string* field_name) {
-  if (field_name_ != _default_field_name_) {
-    delete field_name_;
+inline void Field::set_allocated_name(::std::string* name) {
+  if (name_ != _default_name_) {
+    delete name_;
   }
-  if (field_name) {
-    set_has_field_name();
-    field_name_ = field_name;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_field_name();
-    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(_default_name_);
   }
 }
 
@@ -3152,73 +3154,73 @@ inline void MasterComponentConfig::set_allocated_master_component_connect_endpoi
 
 // ModelConfig
 
-// optional string model_id = 1 [default = ""];
-inline bool ModelConfig::has_model_id() const {
+// optional string name = 1 [default = "@model"];
+inline bool ModelConfig::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ModelConfig::set_has_model_id() {
+inline void ModelConfig::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ModelConfig::clear_has_model_id() {
+inline void ModelConfig::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ModelConfig::clear_model_id() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    model_id_->clear();
+inline void ModelConfig::clear_name() {
+  if (name_ != _default_name_) {
+    name_->assign(*_default_name_);
   }
-  clear_has_model_id();
+  clear_has_name();
 }
-inline const ::std::string& ModelConfig::model_id() const {
-  return *model_id_;
+inline const ::std::string& ModelConfig::name() const {
+  return *name_;
 }
-inline void ModelConfig::set_model_id(const ::std::string& value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelConfig::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  name_->assign(value);
 }
-inline void ModelConfig::set_model_id(const char* value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelConfig::set_name(const char* value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  name_->assign(value);
 }
-inline void ModelConfig::set_model_id(const char* value, size_t size) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelConfig::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(reinterpret_cast<const char*>(value), size);
+  name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* ModelConfig::mutable_model_id() {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline ::std::string* ModelConfig::mutable_name() {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string(*_default_name_);
   }
-  return model_id_;
+  return name_;
 }
-inline ::std::string* ModelConfig::release_model_id() {
-  clear_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* ModelConfig::release_name() {
+  clear_has_name();
+  if (name_ == _default_name_) {
     return NULL;
   } else {
-    ::std::string* temp = model_id_;
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(_default_name_);
     return temp;
   }
 }
-inline void ModelConfig::set_allocated_model_id(::std::string* model_id) {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+inline void ModelConfig::set_allocated_name(::std::string* name) {
+  if (name_ != _default_name_) {
+    delete name_;
   }
-  if (model_id) {
-    set_has_model_id();
-    model_id_ = model_id;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_model_id();
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(_default_name_);
   }
 }
 
@@ -4413,73 +4415,73 @@ inline void TopicModel_TopicModelInternals::set_allocated_scores_normalizer(::ar
 
 // TopicModel
 
-// optional string model_id = 1 [default = ""];
-inline bool TopicModel::has_model_id() const {
+// optional string name = 1 [default = "@model"];
+inline bool TopicModel::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void TopicModel::set_has_model_id() {
+inline void TopicModel::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void TopicModel::clear_has_model_id() {
+inline void TopicModel::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void TopicModel::clear_model_id() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    model_id_->clear();
+inline void TopicModel::clear_name() {
+  if (name_ != _default_name_) {
+    name_->assign(*_default_name_);
   }
-  clear_has_model_id();
+  clear_has_name();
 }
-inline const ::std::string& TopicModel::model_id() const {
-  return *model_id_;
+inline const ::std::string& TopicModel::name() const {
+  return *name_;
 }
-inline void TopicModel::set_model_id(const ::std::string& value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void TopicModel::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  name_->assign(value);
 }
-inline void TopicModel::set_model_id(const char* value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void TopicModel::set_name(const char* value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  name_->assign(value);
 }
-inline void TopicModel::set_model_id(const char* value, size_t size) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void TopicModel::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(reinterpret_cast<const char*>(value), size);
+  name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* TopicModel::mutable_model_id() {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline ::std::string* TopicModel::mutable_name() {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string(*_default_name_);
   }
-  return model_id_;
+  return name_;
 }
-inline ::std::string* TopicModel::release_model_id() {
-  clear_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* TopicModel::release_name() {
+  clear_has_name();
+  if (name_ == _default_name_) {
     return NULL;
   } else {
-    ::std::string* temp = model_id_;
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(_default_name_);
     return temp;
   }
 }
-inline void TopicModel::set_allocated_model_id(::std::string* model_id) {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+inline void TopicModel::set_allocated_name(::std::string* name) {
+  if (name_ != _default_name_) {
+    delete name_;
   }
-  if (model_id) {
-    set_has_model_id();
-    model_id_ = model_id;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_model_id();
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(_default_name_);
   }
 }
 

@@ -42,9 +42,9 @@ TEST(NodesConnectivityTest, Basic) {
   master->CreateOrReconfigureRegularizer(regularizer_config);
   master->ReconfigureModel(model_config);
   auto schema = ::artm::core::InstanceManager::singleton().First()->schema();
-  EXPECT_TRUE(schema->has_model_config(model_config.model_id()));
+  EXPECT_TRUE(schema->has_model_config(model_config.name()));
   EXPECT_TRUE(schema->has_regularizer(regularizer_config.name()));
-  master->DisposeModel(model_config.model_id());
+  master->DisposeModel(model_config.name());
   master->DisposeRegularizer(regularizer_config.name());
 
   artm::core::NodeControllerManager::singleton().Erase(node_id);

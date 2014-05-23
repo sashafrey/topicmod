@@ -10,9 +10,9 @@ ModelConfig TestMother::GenerateModelConfig() const {
   config.set_enabled(true);
   config.set_topics_count(nTopics);
   config.add_regularizer_name(regularizer_name);
-  ::artm::core::ModelId model_id =
+  ::artm::core::ModelName model_name =
     boost::lexical_cast<std::string>(boost::uuids::random_generator()());
-  config.set_model_id(boost::lexical_cast<std::string>(model_id));
+  config.set_name(boost::lexical_cast<std::string>(model_name));
   return config;
 }
 

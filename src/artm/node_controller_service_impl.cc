@@ -101,7 +101,7 @@ void NodeControllerServiceImpl::DisposeModel(
   boost::lock_guard<boost::mutex> guard(lock_);
   auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
   if (instance != nullptr) {
-    instance->DisposeModel(request.model_id());
+    instance->DisposeModel(request.model_name());
   }
 
   response.send(Void());

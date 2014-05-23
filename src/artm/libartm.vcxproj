@@ -21,18 +21,20 @@
   </PropertyGroup>
   <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
   <ItemGroup>
+    <ClCompile Include="batch_manager.cc" />
     <ClCompile Include="data_loader.cc" />
     <ClCompile Include="generation.cc" />
     <ClCompile Include="helpers.cc" />
     <ClCompile Include="instance.cc" />
     <ClCompile Include="instance_schema.cc" />
     <ClCompile Include="internals.pb.cc" />
-    <ClCompile Include="memcached_server.cc" />
-    <ClCompile Include="memcached_service.pb.cc" />
-    <ClCompile Include="memcached_service.rpcz.cc" />
-    <ClCompile Include="memcached_service_impl.cc" />
+    <ClCompile Include="internals.rpcz.cc" />
+    <ClCompile Include="master_component.cc" />
+    <ClCompile Include="master_component_service_impl.cc" />
     <ClCompile Include="merger.cc" />
     <ClCompile Include="messages.pb.cc" />
+    <ClCompile Include="node_controller.cc" />
+    <ClCompile Include="node_controller_service_impl.cc" />
     <ClCompile Include="processor.cc" />
     <ClCompile Include="regularizers_sandbox\dirichlet_phi.cc" />
     <ClCompile Include="regularizers_sandbox\dirichlet_theta.cc" />
@@ -41,6 +43,7 @@
     <ClCompile Include="topic_model.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="batch_manager.h" />
     <ClInclude Include="call_on_destruction.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="data_loader.h" />
@@ -50,12 +53,13 @@
     <ClInclude Include="instance.h" />
     <ClInclude Include="instance_schema.h" />
     <ClInclude Include="internals.pb.h" />
-    <ClInclude Include="memcached_server.h" />
-    <ClInclude Include="memcached_service.pb.h" />
-    <ClInclude Include="memcached_service.rpcz.h" />
-    <ClInclude Include="memcached_service_impl.h" />
+    <ClInclude Include="internals.rpcz.h" />
+    <ClInclude Include="master_component.h" />
+    <ClInclude Include="master_component_service_impl.h" />
     <ClInclude Include="merger.h" />
     <ClInclude Include="messages.pb.h" />
+    <ClInclude Include="node_controller.h" />
+    <ClInclude Include="node_controller_service_impl.h" />
     <ClInclude Include="processor.h" />
     <ClInclude Include="protobuf_helpers.h" />
     <ClInclude Include="regularizers_sandbox\dirichlet_phi.h" />
@@ -66,11 +70,11 @@
     <ClInclude Include="template_manager.h" />
     <ClInclude Include="thread_safe_holder.h" />
     <ClInclude Include="topic_model.h" />
+    <ClInclude Include="zmq_context.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />
     <None Include="internals.proto" />
-    <None Include="memcached_service.proto" />
     <None Include="messages.proto" />
   </ItemGroup>
   <ItemDefinitionGroup>

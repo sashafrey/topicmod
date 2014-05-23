@@ -19,10 +19,10 @@ class InstanceTest : boost::noncopyable {
   std::shared_ptr<artm::core::Instance> instance() { return instance_; }
 
   InstanceTest() {
-    int instance_id = artm::core::InstanceManager::singleton().Create(artm::InstanceConfig());
+    int instance_id = artm::core::InstanceManager::singleton().Create(::artm::core::InstanceConfig());
     instance_ = artm::core::InstanceManager::singleton().Get(instance_id);
 
-    artm::DataLoaderConfig data_loader_config;
+    ::artm::core::DataLoaderConfig data_loader_config;
     data_loader_config.set_instance_id(instance_id);
     int data_loader_id = artm::core::DataLoaderManager::singleton().Create(data_loader_config);
     data_loader_ = artm::core::DataLoaderManager::singleton().Get(data_loader_id);
@@ -76,11 +76,11 @@ class InstanceTest : boost::noncopyable {
 
 // artm_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
-  int instance_id = artm::core::InstanceManager::singleton().Create(artm::InstanceConfig());
+  int instance_id = artm::core::InstanceManager::singleton().Create(::artm::core::InstanceConfig());
   std::shared_ptr<artm::core::Instance> instance =
     artm::core::InstanceManager::singleton().Get(instance_id);
 
-  artm::DataLoaderConfig data_loader_config;
+  ::artm::core::DataLoaderConfig data_loader_config;
   data_loader_config.set_instance_id(instance_id);
   int data_loader_id = artm::core::DataLoaderManager::singleton().Create(data_loader_config);
   std::shared_ptr<artm::core::DataLoader> data_loader =
@@ -156,7 +156,7 @@ TEST(Instance, MultipleStreamsAndModels) {
   auto batch = test.GenerateBatch(6, 6, 0, 1, 1);
   test.data_loader()->AddBatch(*batch);
 
-  artm::DataLoaderConfig config;
+  ::artm::core::DataLoaderConfig config;
   config.set_instance_id(test.instance()->id());
   artm::Stream* s1 = config.add_stream();
   s1->set_type(artm::Stream_Type_ItemIdModulus);

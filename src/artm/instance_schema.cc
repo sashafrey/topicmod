@@ -51,7 +51,7 @@ void InstanceSchema::clear_model_config(ModelId id) {
 }
 
 void InstanceSchema::set_regularizer(const std::string& name,
-                                     const std::shared_ptr<regularizer::RegularizerInterface>& regularizer) {
+                                     const std::shared_ptr<RegularizerInterface>& regularizer) {
   auto iter = regularizers_.find(name);
   if (iter != regularizers_.end()) {
     iter->second = regularizer;
@@ -71,7 +71,7 @@ void InstanceSchema::clear_regularizer(const std::string name) {
   }
 }
 
-std::shared_ptr<regularizer::RegularizerInterface> InstanceSchema::regularizer(const std::string& name) {
+std::shared_ptr<RegularizerInterface> InstanceSchema::regularizer(const std::string& name) {
   auto iter = regularizers_.find(name);
   if (iter != regularizers_.end()) {
     return iter->second;

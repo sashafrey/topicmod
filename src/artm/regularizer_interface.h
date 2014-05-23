@@ -12,7 +12,6 @@
 
 namespace artm {
 namespace core {
-namespace regularizer {
 
 class RegularizerInterface {
  public:
@@ -25,7 +24,6 @@ class RegularizerInterface {
   virtual bool RegularizePhi(TopicModel* topic_model) { return true; }
 };
 
-}  // namespace regularizer
 }  // namespace core
 }  // namespace artm
 

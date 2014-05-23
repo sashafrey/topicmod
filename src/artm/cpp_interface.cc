@@ -36,25 +36,25 @@ inline int HandleErrorCode(int artm_error_code) {
   }
 }
 
-Instance::Instance(const InstanceConfig& config) : id_(0), config_(config) {
-  std::string instance_config_blob;
-  config.SerializeToString(&instance_config_blob);
-  id_ = HandleErrorCode(ArtmCreateInstance(0, instance_config_blob.size(),
-    StringAsArray(&instance_config_blob)));
-}
-
-Instance::~Instance() {
-  ArtmDisposeInstance(id());
-}
-
-void Instance::Reconfigure(const InstanceConfig& config) {
+MasterComponent::MasterComponent(const MasterComponentConfig& config) : id_(0), config_(config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  HandleErrorCode(ArtmReconfigureInstance(id(), config_blob.size(), StringAsArray(&config_blob)));
+  id_ = HandleErrorCode(ArtmCreateMasterComponent(0, config_blob.size(),
+    StringAsArray(&config_blob)));
+}
+
+MasterComponent::~MasterComponent() {
+  ArtmDisposeMasterComponent(id());
+}
+
+void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
+  std::string config_blob;
+  config.SerializeToString(&config_blob);
+  HandleErrorCode(ArtmReconfigureMasterComponent(id(), config_blob.size(), StringAsArray(&config_blob)));
   config_.CopyFrom(config);
 }
 
-std::shared_ptr<TopicModel> Instance::GetTopicModel(const Model& model) {
+std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
   // Request model topics
   int request_id = HandleErrorCode(ArtmRequestTopicModel(
     id(), model.model_id().c_str()));
@@ -71,8 +71,8 @@ std::shared_ptr<TopicModel> Instance::GetTopicModel(const Model& model) {
   return topic_model;
 }
 
-Model::Model(const Instance& instance, const ModelConfig& config)
-    : instance_id_(instance.id()),
+Model::Model(const MasterComponent& master_component, const ModelConfig& config)
+    : master_id_(master_component.id()),
       config_(config) {
   if (!config_.has_model_id()) {
     config_.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
@@ -80,18 +80,18 @@ Model::Model(const Instance& instance, const ModelConfig& config)
 
   std::string model_config_blob;
   config.SerializeToString(&model_config_blob);
-  HandleErrorCode(ArtmCreateModel(instance_id_, model_config_blob.size(),
+  HandleErrorCode(ArtmCreateModel(master_id_, model_config_blob.size(),
     StringAsArray(&model_config_blob)));
 }
 
 Model::~Model() {
-  ArtmDisposeModel(instance_id(), model_id().c_str());
+  ArtmDisposeModel(master_id(), model_id().c_str());
 }
 
 void Model::Reconfigure(const ModelConfig& config) {
   std::string model_config_blob;
   config.SerializeToString(&model_config_blob);
-  HandleErrorCode(ArtmReconfigureModel(instance_id(), model_config_blob.size(),
+  HandleErrorCode(ArtmReconfigureModel(master_id(), model_config_blob.size(),
     StringAsArray(&model_config_blob)));
   config_.CopyFrom(config);
 }
@@ -109,75 +109,57 @@ void Model::Disable() {
 }
 
 void Model::InvokePhiRegularizers() {
-  ArtmInvokePhiRegularizers(instance_id());
+  HandleErrorCode(ArtmInvokePhiRegularizers(master_id()));
 }
 
-Regularizer::Regularizer(const Instance& instance, const RegularizerConfig& config)
-    : instance_id_(instance.id()),
+Regularizer::Regularizer(const MasterComponent& master_component, const RegularizerConfig& config)
+    : master_id_(master_component.id()),
       config_(config) {
   std::string regularizer_config_blob;
   config.SerializeToString(&regularizer_config_blob);
-  HandleErrorCode(ArtmCreateRegularizer(instance_id_, regularizer_config_blob.size(),
+  HandleErrorCode(ArtmCreateRegularizer(master_id_, regularizer_config_blob.size(),
     StringAsArray(&regularizer_config_blob)));
 }
 
 Regularizer::~Regularizer() {
-  ArtmDisposeRegularizer(instance_id(), config_.name().c_str());
+  ArtmDisposeRegularizer(master_id(), config_.name().c_str());
 }
 
 void Regularizer::Reconfigure(const RegularizerConfig& config) {
   std::string regularizer_config_blob;
   config.SerializeToString(&regularizer_config_blob);
-  HandleErrorCode(ArtmReconfigureRegularizer(instance_id(), regularizer_config_blob.size(),
+  HandleErrorCode(ArtmReconfigureRegularizer(master_id(), regularizer_config_blob.size(),
     StringAsArray(&regularizer_config_blob)));
   config_.CopyFrom(config);
 }
 
-DataLoader::DataLoader(const Instance& instance, const DataLoaderConfig& config)
-    : id_(0), config_(config) {
-  config_.set_instance_id(instance.id());
-  std::string data_loader_config_blob;
-  config_.SerializeToString(&data_loader_config_blob);
-  id_ = HandleErrorCode(ArtmCreateDataLoader(0, data_loader_config_blob.size(),
-    StringAsArray(&data_loader_config_blob)));
-}
-
-DataLoader::~DataLoader() {
-  ArtmDisposeDataLoader(id());
-}
-
-void DataLoader::AddBatch(const Batch& batch) {
+void MasterComponent::AddBatch(const Batch& batch) {
   std::string batch_blob;
   batch.SerializeToString(&batch_blob);
   HandleErrorCode(ArtmAddBatch(id(), batch_blob.size(), StringAsArray(&batch_blob)));
 }
 
-void DataLoader::Reconfigure(const DataLoaderConfig& config) {
-  std::string config_blob;
-  config.SerializeToString(&config_blob);
-  HandleErrorCode(ArtmReconfigureDataLoader(id(), config_blob.size(), StringAsArray(&config_blob)));
-  config_.CopyFrom(config);
-}
-
-void DataLoader::InvokeIteration(int iterations_count) {
+void MasterComponent::InvokeIteration(int iterations_count) {
   HandleErrorCode(ArtmInvokeIteration(id(), iterations_count));
 }
 
-void DataLoader::WaitIdle() {
-  HandleErrorCode(ArtmWaitIdleDataLoader(id()));
+void MasterComponent::WaitIdle() {
+  HandleErrorCode(ArtmWaitIdle(id()));
 }
 
-void DataLoader::AddStream(const Stream& stream) {
+void MasterComponent::AddStream(const Stream& stream) {
   Stream* s = config_.add_stream();
   s->CopyFrom(stream);
   Reconfigure(config_);
 }
 
-void DataLoader::RemoveStream(std::string stream_name) {
-  DataLoaderConfig new_config(config_);
+void MasterComponent::RemoveStream(std::string stream_name) {
+  MasterComponentConfig new_config(config_);
   new_config.mutable_stream()->Clear();
 
-  for (int stream_index = 0; stream_index < config_.stream_size(); ++stream_index) {
+  for (int stream_index = 0;
+       stream_index < config_.stream_size();
+       ++stream_index) {
     if (config_.stream(stream_index).name() != stream_name) {
       Stream* s = new_config.add_stream();
       s->CopyFrom(config_.stream(stream_index));
@@ -185,14 +167,6 @@ void DataLoader::RemoveStream(std::string stream_name) {
   }
 
   Reconfigure(new_config);
-}
-
-MemcachedServer::MemcachedServer(const std::string& endpoint) {
-  id_ = HandleErrorCode(ArtmCreateMemcachedServer(endpoint.c_str()));
-}
-
-MemcachedServer::~MemcachedServer() {
-  ArtmDisposeMemcachedServer(id_);
 }
 
 }  // namespace artm

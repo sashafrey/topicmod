@@ -10,6 +10,8 @@ namespace core {
 
 typedef std::string ModelId;
 
+const int UnknownId = -1;
+
 }  // namespace core
 }  // namespace artm
 

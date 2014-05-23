@@ -15,10 +15,9 @@
 
 namespace artm {
 
-class Instance;
+class MasterComponent;
 class Model;
 class Regularizer;
-class DataLoader;
 
 // Exception handling in cpp_interface
 #define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
@@ -33,26 +32,31 @@ DEFINE_EXCEPTION_TYPE(UnsupportedReconfiguration, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 
-class Instance {
+class MasterComponent {
  public:
-  explicit Instance(const InstanceConfig& config);
-  ~Instance();
+  explicit MasterComponent(const MasterComponentConfig& config);
+  ~MasterComponent();
 
   int id() const { return id_; }
   std::shared_ptr<TopicModel> GetTopicModel(const Model& model);
-  void Reconfigure(const InstanceConfig& config);
+  void Reconfigure(const MasterComponentConfig& config);
+  void AddBatch(const Batch& batch);
+  void AddStream(const Stream& stream);
+  void RemoveStream(std::string stream_name);
+  void InvokeIteration(int iterations_count);
+  void WaitIdle();
 
-  const InstanceConfig& config() const { return config_; }
+  const MasterComponentConfig& config() const { return config_; }
 
  private:
   int id_;
-  InstanceConfig config_;
-  DISALLOW_COPY_AND_ASSIGN(Instance);
+  MasterComponentConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(MasterComponent);
 };
 
 class Model {
  public:
-  Model(const Instance& instance, const ModelConfig& config);
+  Model(const MasterComponent& master_component, const ModelConfig& config);
   ~Model();
 
   void Reconfigure(const ModelConfig& config);
@@ -60,60 +64,31 @@ class Model {
   void Disable();
   void InvokePhiRegularizers();
 
-  int instance_id() const { return instance_id_; }
+  int master_id() const { return master_id_; }
   const std::string& model_id() const { return config_.model_id(); }
 
   const ModelConfig& config() const { return config_; }
 
  private:
-  int instance_id_;
+  int master_id_;
   ModelConfig config_;
   DISALLOW_COPY_AND_ASSIGN(Model);
 };
 
 class Regularizer {
  public:
-  Regularizer(const Instance& instance, const RegularizerConfig& config);
+  Regularizer(const MasterComponent& master_component, const RegularizerConfig& config);
   ~Regularizer();
 
   void Reconfigure(const RegularizerConfig& config);
 
-  int instance_id() const { return instance_id_; }
+  int master_id() const { return master_id_; }
   const RegularizerConfig& config() const { return config_; }
 
  private:
-  int instance_id_;
+  int master_id_;
   RegularizerConfig config_;
   DISALLOW_COPY_AND_ASSIGN(Regularizer);
-};
-
-class DataLoader {
- public:
-  DataLoader(const Instance& instance, const DataLoaderConfig& config);
-  ~DataLoader();
-
-  int id() const { return id_; }
-  void AddBatch(const Batch& batch);
-  void AddStream(const Stream& stream);
-  void RemoveStream(std::string stream_name);
-  void Reconfigure(const DataLoaderConfig& config);
-  void InvokeIteration(int iterations_count);
-  void WaitIdle();
-  const DataLoaderConfig& config() const { return config_; }
-
- private:
-  int id_;
-  DataLoaderConfig config_;
-  DISALLOW_COPY_AND_ASSIGN(DataLoader);
-};
-
-class MemcachedServer {
- public:
-  explicit MemcachedServer(const std::string& endpoint);
-  ~MemcachedServer();
-
- private:
-  int id_;
 };
 
 }  // namespace artm

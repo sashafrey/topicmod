@@ -37,12 +37,10 @@ void protobuf_ShutdownFile_messages_2eproto();
 class Item;
 class Field;
 class Batch;
-class DataLoaderConfig;
 class Stream;
-class InstanceConfig;
+class MasterComponentConfig;
 class ModelConfig;
 class RegularizerConfig;
-class DirichletRegularizerPhiConfig;
 class DirichletThetaConfig;
 class DirichletPhiConfig;
 class SmoothSparseThetaConfig;
@@ -50,19 +48,18 @@ class SmoothSparsePhiConfig;
 class DoubleArray;
 class FloatArray;
 class Score;
-class LoggerConfig;
 class TopicModel;
 class TopicModel_TopicModelInternals;
+class NodeControllerConfig;
 class BatchTopics;
 
 enum Stream_Type {
   Stream_Type_Global = 0,
-  Stream_Type_ItemIdModulus = 1,
-  Stream_Type_ItemHashModulus = 3
+  Stream_Type_ItemIdModulus = 1
 };
 bool Stream_Type_IsValid(int value);
 const Stream_Type Stream_Type_Type_MIN = Stream_Type_Global;
-const Stream_Type Stream_Type_Type_MAX = Stream_Type_ItemHashModulus;
+const Stream_Type Stream_Type_Type_MAX = Stream_Type_ItemIdModulus;
 const int Stream_Type_Type_ARRAYSIZE = Stream_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* Stream_Type_descriptor();
@@ -74,6 +71,25 @@ inline bool Stream_Type_Parse(
     const ::std::string& name, Stream_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<Stream_Type>(
     Stream_Type_descriptor(), name, value);
+}
+enum MasterComponentConfig_ModusOperandi {
+  MasterComponentConfig_ModusOperandi_Local = 0,
+  MasterComponentConfig_ModusOperandi_Network = 1
+};
+bool MasterComponentConfig_ModusOperandi_IsValid(int value);
+const MasterComponentConfig_ModusOperandi MasterComponentConfig_ModusOperandi_ModusOperandi_MIN = MasterComponentConfig_ModusOperandi_Local;
+const MasterComponentConfig_ModusOperandi MasterComponentConfig_ModusOperandi_ModusOperandi_MAX = MasterComponentConfig_ModusOperandi_Network;
+const int MasterComponentConfig_ModusOperandi_ModusOperandi_ARRAYSIZE = MasterComponentConfig_ModusOperandi_ModusOperandi_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* MasterComponentConfig_ModusOperandi_descriptor();
+inline const ::std::string& MasterComponentConfig_ModusOperandi_Name(MasterComponentConfig_ModusOperandi value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    MasterComponentConfig_ModusOperandi_descriptor(), value);
+}
+inline bool MasterComponentConfig_ModusOperandi_Parse(
+    const ::std::string& name, MasterComponentConfig_ModusOperandi* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<MasterComponentConfig_ModusOperandi>(
+    MasterComponentConfig_ModusOperandi_descriptor(), name, value);
 }
 enum RegularizerConfig_Type {
   RegularizerConfig_Type_DirichletTheta = 0,
@@ -113,28 +129,6 @@ inline bool Score_Type_Parse(
     const ::std::string& name, Score_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<Score_Type>(
     Score_Type_descriptor(), name, value);
-}
-enum LoggerConfig_Level {
-  LoggerConfig_Level_DISABLED = 0,
-  LoggerConfig_Level_ERROR = 1,
-  LoggerConfig_Level_WARNING = 2,
-  LoggerConfig_Level_INFO = 3,
-  LoggerConfig_Level_VERBOSE = 4
-};
-bool LoggerConfig_Level_IsValid(int value);
-const LoggerConfig_Level LoggerConfig_Level_Level_MIN = LoggerConfig_Level_DISABLED;
-const LoggerConfig_Level LoggerConfig_Level_Level_MAX = LoggerConfig_Level_VERBOSE;
-const int LoggerConfig_Level_Level_ARRAYSIZE = LoggerConfig_Level_Level_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* LoggerConfig_Level_descriptor();
-inline const ::std::string& LoggerConfig_Level_Name(LoggerConfig_Level value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    LoggerConfig_Level_descriptor(), value);
-}
-inline bool LoggerConfig_Level_Parse(
-    const ::std::string& name, LoggerConfig_Level* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<LoggerConfig_Level>(
-    LoggerConfig_Level_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -449,156 +443,6 @@ class Batch : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class DataLoaderConfig : public ::google::protobuf::Message {
- public:
-  DataLoaderConfig();
-  virtual ~DataLoaderConfig();
-
-  DataLoaderConfig(const DataLoaderConfig& from);
-
-  inline DataLoaderConfig& operator=(const DataLoaderConfig& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const DataLoaderConfig& default_instance();
-
-  void Swap(DataLoaderConfig* other);
-
-  // implements Message ----------------------------------------------
-
-  DataLoaderConfig* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const DataLoaderConfig& from);
-  void MergeFrom(const DataLoaderConfig& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required int32 instance_id = 1;
-  inline bool has_instance_id() const;
-  inline void clear_instance_id();
-  static const int kInstanceIdFieldNumber = 1;
-  inline ::google::protobuf::int32 instance_id() const;
-  inline void set_instance_id(::google::protobuf::int32 value);
-
-  // optional string disk_path = 2;
-  inline bool has_disk_path() const;
-  inline void clear_disk_path();
-  static const int kDiskPathFieldNumber = 2;
-  inline const ::std::string& disk_path() const;
-  inline void set_disk_path(const ::std::string& value);
-  inline void set_disk_path(const char* value);
-  inline void set_disk_path(const char* value, size_t size);
-  inline ::std::string* mutable_disk_path();
-  inline ::std::string* release_disk_path();
-  inline void set_allocated_disk_path(::std::string* disk_path);
-
-  // optional int32 queue_size = 3 [default = 10];
-  inline bool has_queue_size() const;
-  inline void clear_queue_size();
-  static const int kQueueSizeFieldNumber = 3;
-  inline ::google::protobuf::int32 queue_size() const;
-  inline void set_queue_size(::google::protobuf::int32 value);
-
-  // repeated .artm.Stream stream = 4;
-  inline int stream_size() const;
-  inline void clear_stream();
-  static const int kStreamFieldNumber = 4;
-  inline const ::artm::Stream& stream(int index) const;
-  inline ::artm::Stream* mutable_stream(int index);
-  inline ::artm::Stream* add_stream();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::Stream >&
-      stream() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::Stream >*
-      mutable_stream();
-
-  // optional bool compact_batches = 5 [default = true];
-  inline bool has_compact_batches() const;
-  inline void clear_compact_batches();
-  static const int kCompactBatchesFieldNumber = 5;
-  inline bool compact_batches() const;
-  inline void set_compact_batches(bool value);
-
-  // optional bool cache_processor_output = 6 [default = false];
-  inline bool has_cache_processor_output() const;
-  inline void clear_cache_processor_output();
-  static const int kCacheProcessorOutputFieldNumber = 6;
-  inline bool cache_processor_output() const;
-  inline void set_cache_processor_output(bool value);
-
-  // optional bool reset_scores = 7 [default = true];
-  inline bool has_reset_scores() const;
-  inline void clear_reset_scores();
-  static const int kResetScoresFieldNumber = 7;
-  inline bool reset_scores() const;
-  inline void set_reset_scores(bool value);
-
-  // @@protoc_insertion_point(class_scope:artm.DataLoaderConfig)
- private:
-  inline void set_has_instance_id();
-  inline void clear_has_instance_id();
-  inline void set_has_disk_path();
-  inline void clear_has_disk_path();
-  inline void set_has_queue_size();
-  inline void clear_has_queue_size();
-  inline void set_has_compact_batches();
-  inline void clear_has_compact_batches();
-  inline void set_has_cache_processor_output();
-  inline void clear_has_cache_processor_output();
-  inline void set_has_reset_scores();
-  inline void clear_has_reset_scores();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* disk_path_;
-  ::google::protobuf::int32 instance_id_;
-  ::google::protobuf::int32 queue_size_;
-  ::google::protobuf::RepeatedPtrField< ::artm::Stream > stream_;
-  bool compact_batches_;
-  bool cache_processor_output_;
-  bool reset_scores_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
-
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static DataLoaderConfig* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class Stream : public ::google::protobuf::Message {
  public:
   Stream();
@@ -654,7 +498,6 @@ class Stream : public ::google::protobuf::Message {
   typedef Stream_Type Type;
   static const Type Global = Stream_Type_Global;
   static const Type ItemIdModulus = Stream_Type_ItemIdModulus;
-  static const Type ItemHashModulus = Stream_Type_ItemHashModulus;
   static inline bool Type_IsValid(int value) {
     return Stream_Type_IsValid(value);
   }
@@ -678,7 +521,7 @@ class Stream : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required .artm.Stream.Type type = 1 [default = Global];
+  // optional .artm.Stream.Type type = 1 [default = Global];
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
@@ -745,14 +588,14 @@ class Stream : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class InstanceConfig : public ::google::protobuf::Message {
+class MasterComponentConfig : public ::google::protobuf::Message {
  public:
-  InstanceConfig();
-  virtual ~InstanceConfig();
+  MasterComponentConfig();
+  virtual ~MasterComponentConfig();
 
-  InstanceConfig(const InstanceConfig& from);
+  MasterComponentConfig(const MasterComponentConfig& from);
 
-  inline InstanceConfig& operator=(const InstanceConfig& from) {
+  inline MasterComponentConfig& operator=(const MasterComponentConfig& from) {
     CopyFrom(from);
     return *this;
   }
@@ -766,17 +609,17 @@ class InstanceConfig : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const InstanceConfig& default_instance();
+  static const MasterComponentConfig& default_instance();
 
-  void Swap(InstanceConfig* other);
+  void Swap(MasterComponentConfig* other);
 
   // implements Message ----------------------------------------------
 
-  InstanceConfig* New() const;
+  MasterComponentConfig* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const InstanceConfig& from);
-  void MergeFrom(const InstanceConfig& from);
+  void CopyFrom(const MasterComponentConfig& from);
+  void MergeFrom(const MasterComponentConfig& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -797,58 +640,165 @@ class InstanceConfig : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef MasterComponentConfig_ModusOperandi ModusOperandi;
+  static const ModusOperandi Local = MasterComponentConfig_ModusOperandi_Local;
+  static const ModusOperandi Network = MasterComponentConfig_ModusOperandi_Network;
+  static inline bool ModusOperandi_IsValid(int value) {
+    return MasterComponentConfig_ModusOperandi_IsValid(value);
+  }
+  static const ModusOperandi ModusOperandi_MIN =
+    MasterComponentConfig_ModusOperandi_ModusOperandi_MIN;
+  static const ModusOperandi ModusOperandi_MAX =
+    MasterComponentConfig_ModusOperandi_ModusOperandi_MAX;
+  static const int ModusOperandi_ARRAYSIZE =
+    MasterComponentConfig_ModusOperandi_ModusOperandi_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  ModusOperandi_descriptor() {
+    return MasterComponentConfig_ModusOperandi_descriptor();
+  }
+  static inline const ::std::string& ModusOperandi_Name(ModusOperandi value) {
+    return MasterComponentConfig_ModusOperandi_Name(value);
+  }
+  static inline bool ModusOperandi_Parse(const ::std::string& name,
+      ModusOperandi* value) {
+    return MasterComponentConfig_ModusOperandi_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
-  // optional int32 processors_count = 1 [default = 1];
+  // optional string disk_path = 1;
+  inline bool has_disk_path() const;
+  inline void clear_disk_path();
+  static const int kDiskPathFieldNumber = 1;
+  inline const ::std::string& disk_path() const;
+  inline void set_disk_path(const ::std::string& value);
+  inline void set_disk_path(const char* value);
+  inline void set_disk_path(const char* value, size_t size);
+  inline ::std::string* mutable_disk_path();
+  inline ::std::string* release_disk_path();
+  inline void set_allocated_disk_path(::std::string* disk_path);
+
+  // repeated .artm.Stream stream = 2;
+  inline int stream_size() const;
+  inline void clear_stream();
+  static const int kStreamFieldNumber = 2;
+  inline const ::artm::Stream& stream(int index) const;
+  inline ::artm::Stream* mutable_stream(int index);
+  inline ::artm::Stream* add_stream();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::Stream >&
+      stream() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::Stream >*
+      mutable_stream();
+
+  // optional bool compact_batches = 3 [default = true];
+  inline bool has_compact_batches() const;
+  inline void clear_compact_batches();
+  static const int kCompactBatchesFieldNumber = 3;
+  inline bool compact_batches() const;
+  inline void set_compact_batches(bool value);
+
+  // optional bool cache_processor_output = 4 [default = false];
+  inline bool has_cache_processor_output() const;
+  inline void clear_cache_processor_output();
+  static const int kCacheProcessorOutputFieldNumber = 4;
+  inline bool cache_processor_output() const;
+  inline void set_cache_processor_output(bool value);
+
+  // optional int32 processors_count = 5 [default = 1];
   inline bool has_processors_count() const;
   inline void clear_processors_count();
-  static const int kProcessorsCountFieldNumber = 1;
+  static const int kProcessorsCountFieldNumber = 5;
   inline ::google::protobuf::int32 processors_count() const;
   inline void set_processors_count(::google::protobuf::int32 value);
 
-  // optional string memcached_endpoint = 2;
-  inline bool has_memcached_endpoint() const;
-  inline void clear_memcached_endpoint();
-  static const int kMemcachedEndpointFieldNumber = 2;
-  inline const ::std::string& memcached_endpoint() const;
-  inline void set_memcached_endpoint(const ::std::string& value);
-  inline void set_memcached_endpoint(const char* value);
-  inline void set_memcached_endpoint(const char* value, size_t size);
-  inline ::std::string* mutable_memcached_endpoint();
-  inline ::std::string* release_memcached_endpoint();
-  inline void set_allocated_memcached_endpoint(::std::string* memcached_endpoint);
+  // optional int32 processor_queue_max_size = 6 [default = 10];
+  inline bool has_processor_queue_max_size() const;
+  inline void clear_processor_queue_max_size();
+  static const int kProcessorQueueMaxSizeFieldNumber = 6;
+  inline ::google::protobuf::int32 processor_queue_max_size() const;
+  inline void set_processor_queue_max_size(::google::protobuf::int32 value);
 
-  // optional int32 merger_queue_max_size = 3 [default = 10];
+  // optional int32 merger_queue_max_size = 7 [default = 10];
   inline bool has_merger_queue_max_size() const;
   inline void clear_merger_queue_max_size();
-  static const int kMergerQueueMaxSizeFieldNumber = 3;
+  static const int kMergerQueueMaxSizeFieldNumber = 7;
   inline ::google::protobuf::int32 merger_queue_max_size() const;
   inline void set_merger_queue_max_size(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:artm.InstanceConfig)
+  // optional .artm.MasterComponentConfig.ModusOperandi modus_operandi = 100 [default = Local];
+  inline bool has_modus_operandi() const;
+  inline void clear_modus_operandi();
+  static const int kModusOperandiFieldNumber = 100;
+  inline ::artm::MasterComponentConfig_ModusOperandi modus_operandi() const;
+  inline void set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi value);
+
+  // optional string master_component_create_endpoint = 101;
+  inline bool has_master_component_create_endpoint() const;
+  inline void clear_master_component_create_endpoint();
+  static const int kMasterComponentCreateEndpointFieldNumber = 101;
+  inline const ::std::string& master_component_create_endpoint() const;
+  inline void set_master_component_create_endpoint(const ::std::string& value);
+  inline void set_master_component_create_endpoint(const char* value);
+  inline void set_master_component_create_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_master_component_create_endpoint();
+  inline ::std::string* release_master_component_create_endpoint();
+  inline void set_allocated_master_component_create_endpoint(::std::string* master_component_create_endpoint);
+
+  // optional string master_component_connect_endpoint = 102;
+  inline bool has_master_component_connect_endpoint() const;
+  inline void clear_master_component_connect_endpoint();
+  static const int kMasterComponentConnectEndpointFieldNumber = 102;
+  inline const ::std::string& master_component_connect_endpoint() const;
+  inline void set_master_component_connect_endpoint(const ::std::string& value);
+  inline void set_master_component_connect_endpoint(const char* value);
+  inline void set_master_component_connect_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_master_component_connect_endpoint();
+  inline ::std::string* release_master_component_connect_endpoint();
+  inline void set_allocated_master_component_connect_endpoint(::std::string* master_component_connect_endpoint);
+
+  // @@protoc_insertion_point(class_scope:artm.MasterComponentConfig)
  private:
+  inline void set_has_disk_path();
+  inline void clear_has_disk_path();
+  inline void set_has_compact_batches();
+  inline void clear_has_compact_batches();
+  inline void set_has_cache_processor_output();
+  inline void clear_has_cache_processor_output();
   inline void set_has_processors_count();
   inline void clear_has_processors_count();
-  inline void set_has_memcached_endpoint();
-  inline void clear_has_memcached_endpoint();
+  inline void set_has_processor_queue_max_size();
+  inline void clear_has_processor_queue_max_size();
   inline void set_has_merger_queue_max_size();
   inline void clear_has_merger_queue_max_size();
+  inline void set_has_modus_operandi();
+  inline void clear_has_modus_operandi();
+  inline void set_has_master_component_create_endpoint();
+  inline void clear_has_master_component_create_endpoint();
+  inline void set_has_master_component_connect_endpoint();
+  inline void clear_has_master_component_connect_endpoint();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* memcached_endpoint_;
+  ::std::string* disk_path_;
+  ::google::protobuf::RepeatedPtrField< ::artm::Stream > stream_;
+  bool compact_batches_;
+  bool cache_processor_output_;
   ::google::protobuf::int32 processors_count_;
+  ::google::protobuf::int32 processor_queue_max_size_;
   ::google::protobuf::int32 merger_queue_max_size_;
+  ::std::string* master_component_create_endpoint_;
+  ::std::string* master_component_connect_endpoint_;
+  int modus_operandi_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
   friend void protobuf_ShutdownFile_messages_2eproto();
 
   void InitAsDefaultInstance();
-  static InstanceConfig* default_instance_;
+  static MasterComponentConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1131,7 +1081,7 @@ class RegularizerConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string name = 1;
+  // optional string name = 1;
   inline bool has_name() const;
   inline void clear_name();
   static const int kNameFieldNumber = 1;
@@ -1143,14 +1093,14 @@ class RegularizerConfig : public ::google::protobuf::Message {
   inline ::std::string* release_name();
   inline void set_allocated_name(::std::string* name);
 
-  // required .artm.RegularizerConfig.Type type = 2;
+  // optional .artm.RegularizerConfig.Type type = 2;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 2;
   inline ::artm::RegularizerConfig_Type type() const;
   inline void set_type(::artm::RegularizerConfig_Type value);
 
-  // required bytes config = 3;
+  // optional bytes config = 3;
   inline bool has_config() const;
   inline void clear_config();
   static const int kConfigFieldNumber = 3;
@@ -1186,100 +1136,6 @@ class RegularizerConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static RegularizerConfig* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class DirichletRegularizerPhiConfig : public ::google::protobuf::Message {
- public:
-  DirichletRegularizerPhiConfig();
-  virtual ~DirichletRegularizerPhiConfig();
-
-  DirichletRegularizerPhiConfig(const DirichletRegularizerPhiConfig& from);
-
-  inline DirichletRegularizerPhiConfig& operator=(const DirichletRegularizerPhiConfig& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const DirichletRegularizerPhiConfig& default_instance();
-
-  void Swap(DirichletRegularizerPhiConfig* other);
-
-  // implements Message ----------------------------------------------
-
-  DirichletRegularizerPhiConfig* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const DirichletRegularizerPhiConfig& from);
-  void MergeFrom(const DirichletRegularizerPhiConfig& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // required double beta_0 = 1;
-  inline bool has_beta_0() const;
-  inline void clear_beta_0();
-  static const int kBeta0FieldNumber = 1;
-  inline double beta_0() const;
-  inline void set_beta_0(double value);
-
-  // required .artm.DoubleArray tilde_beta = 2;
-  inline bool has_tilde_beta() const;
-  inline void clear_tilde_beta();
-  static const int kTildeBetaFieldNumber = 2;
-  inline const ::artm::DoubleArray& tilde_beta() const;
-  inline ::artm::DoubleArray* mutable_tilde_beta();
-  inline ::artm::DoubleArray* release_tilde_beta();
-  inline void set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta);
-
-  // @@protoc_insertion_point(class_scope:artm.DirichletRegularizerPhiConfig)
- private:
-  inline void set_has_beta_0();
-  inline void clear_has_beta_0();
-  inline void set_has_tilde_beta();
-  inline void clear_has_tilde_beta();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  double beta_0_;
-  ::artm::DoubleArray* tilde_beta_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static DirichletRegularizerPhiConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1952,7 +1808,7 @@ class Score : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required .artm.Score.Type type = 1;
+  // optional .artm.Score.Type type = 1;
   inline bool has_type() const;
   inline void clear_type();
   static const int kTypeFieldNumber = 1;
@@ -2009,130 +1865,6 @@ class Score : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Score* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class LoggerConfig : public ::google::protobuf::Message {
- public:
-  LoggerConfig();
-  virtual ~LoggerConfig();
-
-  LoggerConfig(const LoggerConfig& from);
-
-  inline LoggerConfig& operator=(const LoggerConfig& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const LoggerConfig& default_instance();
-
-  void Swap(LoggerConfig* other);
-
-  // implements Message ----------------------------------------------
-
-  LoggerConfig* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const LoggerConfig& from);
-  void MergeFrom(const LoggerConfig& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  typedef LoggerConfig_Level Level;
-  static const Level DISABLED = LoggerConfig_Level_DISABLED;
-  static const Level ERROR = LoggerConfig_Level_ERROR;
-  static const Level WARNING = LoggerConfig_Level_WARNING;
-  static const Level INFO = LoggerConfig_Level_INFO;
-  static const Level VERBOSE = LoggerConfig_Level_VERBOSE;
-  static inline bool Level_IsValid(int value) {
-    return LoggerConfig_Level_IsValid(value);
-  }
-  static const Level Level_MIN =
-    LoggerConfig_Level_Level_MIN;
-  static const Level Level_MAX =
-    LoggerConfig_Level_Level_MAX;
-  static const int Level_ARRAYSIZE =
-    LoggerConfig_Level_Level_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  Level_descriptor() {
-    return LoggerConfig_Level_descriptor();
-  }
-  static inline const ::std::string& Level_Name(Level value) {
-    return LoggerConfig_Level_Name(value);
-  }
-  static inline bool Level_Parse(const ::std::string& name,
-      Level* value) {
-    return LoggerConfig_Level_Parse(name, value);
-  }
-
-  // accessors -------------------------------------------------------
-
-  // optional string log_location = 1;
-  inline bool has_log_location() const;
-  inline void clear_log_location();
-  static const int kLogLocationFieldNumber = 1;
-  inline const ::std::string& log_location() const;
-  inline void set_log_location(const ::std::string& value);
-  inline void set_log_location(const char* value);
-  inline void set_log_location(const char* value, size_t size);
-  inline ::std::string* mutable_log_location();
-  inline ::std::string* release_log_location();
-  inline void set_allocated_log_location(::std::string* log_location);
-
-  // optional .artm.LoggerConfig.Level level = 2 [default = INFO];
-  inline bool has_level() const;
-  inline void clear_level();
-  static const int kLevelFieldNumber = 2;
-  inline ::artm::LoggerConfig_Level level() const;
-  inline void set_level(::artm::LoggerConfig_Level value);
-
-  // @@protoc_insertion_point(class_scope:artm.LoggerConfig)
- private:
-  inline void set_has_log_location();
-  inline void clear_has_log_location();
-  inline void set_has_level();
-  inline void clear_has_level();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::std::string* log_location_;
-  int level_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static LoggerConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2433,6 +2165,123 @@ class TopicModel : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static TopicModel* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class NodeControllerConfig : public ::google::protobuf::Message {
+ public:
+  NodeControllerConfig();
+  virtual ~NodeControllerConfig();
+
+  NodeControllerConfig(const NodeControllerConfig& from);
+
+  inline NodeControllerConfig& operator=(const NodeControllerConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const NodeControllerConfig& default_instance();
+
+  void Swap(NodeControllerConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  NodeControllerConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const NodeControllerConfig& from);
+  void MergeFrom(const NodeControllerConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string node_controller_create_endpoint = 1;
+  inline bool has_node_controller_create_endpoint() const;
+  inline void clear_node_controller_create_endpoint();
+  static const int kNodeControllerCreateEndpointFieldNumber = 1;
+  inline const ::std::string& node_controller_create_endpoint() const;
+  inline void set_node_controller_create_endpoint(const ::std::string& value);
+  inline void set_node_controller_create_endpoint(const char* value);
+  inline void set_node_controller_create_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_node_controller_create_endpoint();
+  inline ::std::string* release_node_controller_create_endpoint();
+  inline void set_allocated_node_controller_create_endpoint(::std::string* node_controller_create_endpoint);
+
+  // optional string node_controller_connect_endpoint = 2;
+  inline bool has_node_controller_connect_endpoint() const;
+  inline void clear_node_controller_connect_endpoint();
+  static const int kNodeControllerConnectEndpointFieldNumber = 2;
+  inline const ::std::string& node_controller_connect_endpoint() const;
+  inline void set_node_controller_connect_endpoint(const ::std::string& value);
+  inline void set_node_controller_connect_endpoint(const char* value);
+  inline void set_node_controller_connect_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_node_controller_connect_endpoint();
+  inline ::std::string* release_node_controller_connect_endpoint();
+  inline void set_allocated_node_controller_connect_endpoint(::std::string* node_controller_connect_endpoint);
+
+  // optional string master_component_connect_endpoint = 3;
+  inline bool has_master_component_connect_endpoint() const;
+  inline void clear_master_component_connect_endpoint();
+  static const int kMasterComponentConnectEndpointFieldNumber = 3;
+  inline const ::std::string& master_component_connect_endpoint() const;
+  inline void set_master_component_connect_endpoint(const ::std::string& value);
+  inline void set_master_component_connect_endpoint(const char* value);
+  inline void set_master_component_connect_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_master_component_connect_endpoint();
+  inline ::std::string* release_master_component_connect_endpoint();
+  inline void set_allocated_master_component_connect_endpoint(::std::string* master_component_connect_endpoint);
+
+  // @@protoc_insertion_point(class_scope:artm.NodeControllerConfig)
+ private:
+  inline void set_has_node_controller_create_endpoint();
+  inline void clear_has_node_controller_create_endpoint();
+  inline void set_has_node_controller_connect_endpoint();
+  inline void clear_has_node_controller_connect_endpoint();
+  inline void set_has_master_component_connect_endpoint();
+  inline void clear_has_master_component_connect_endpoint();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* node_controller_create_endpoint_;
+  ::std::string* node_controller_connect_endpoint_;
+  ::std::string* master_component_connect_endpoint_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static NodeControllerConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2785,218 +2634,9 @@ Batch::mutable_item() {
 
 // -------------------------------------------------------------------
 
-// DataLoaderConfig
-
-// required int32 instance_id = 1;
-inline bool DataLoaderConfig::has_instance_id() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void DataLoaderConfig::set_has_instance_id() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void DataLoaderConfig::clear_has_instance_id() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void DataLoaderConfig::clear_instance_id() {
-  instance_id_ = 0;
-  clear_has_instance_id();
-}
-inline ::google::protobuf::int32 DataLoaderConfig::instance_id() const {
-  return instance_id_;
-}
-inline void DataLoaderConfig::set_instance_id(::google::protobuf::int32 value) {
-  set_has_instance_id();
-  instance_id_ = value;
-}
-
-// optional string disk_path = 2;
-inline bool DataLoaderConfig::has_disk_path() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void DataLoaderConfig::set_has_disk_path() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void DataLoaderConfig::clear_has_disk_path() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void DataLoaderConfig::clear_disk_path() {
-  if (disk_path_ != &::google::protobuf::internal::kEmptyString) {
-    disk_path_->clear();
-  }
-  clear_has_disk_path();
-}
-inline const ::std::string& DataLoaderConfig::disk_path() const {
-  return *disk_path_;
-}
-inline void DataLoaderConfig::set_disk_path(const ::std::string& value) {
-  set_has_disk_path();
-  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
-    disk_path_ = new ::std::string;
-  }
-  disk_path_->assign(value);
-}
-inline void DataLoaderConfig::set_disk_path(const char* value) {
-  set_has_disk_path();
-  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
-    disk_path_ = new ::std::string;
-  }
-  disk_path_->assign(value);
-}
-inline void DataLoaderConfig::set_disk_path(const char* value, size_t size) {
-  set_has_disk_path();
-  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
-    disk_path_ = new ::std::string;
-  }
-  disk_path_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* DataLoaderConfig::mutable_disk_path() {
-  set_has_disk_path();
-  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
-    disk_path_ = new ::std::string;
-  }
-  return disk_path_;
-}
-inline ::std::string* DataLoaderConfig::release_disk_path() {
-  clear_has_disk_path();
-  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = disk_path_;
-    disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void DataLoaderConfig::set_allocated_disk_path(::std::string* disk_path) {
-  if (disk_path_ != &::google::protobuf::internal::kEmptyString) {
-    delete disk_path_;
-  }
-  if (disk_path) {
-    set_has_disk_path();
-    disk_path_ = disk_path;
-  } else {
-    clear_has_disk_path();
-    disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional int32 queue_size = 3 [default = 10];
-inline bool DataLoaderConfig::has_queue_size() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void DataLoaderConfig::set_has_queue_size() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void DataLoaderConfig::clear_has_queue_size() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void DataLoaderConfig::clear_queue_size() {
-  queue_size_ = 10;
-  clear_has_queue_size();
-}
-inline ::google::protobuf::int32 DataLoaderConfig::queue_size() const {
-  return queue_size_;
-}
-inline void DataLoaderConfig::set_queue_size(::google::protobuf::int32 value) {
-  set_has_queue_size();
-  queue_size_ = value;
-}
-
-// repeated .artm.Stream stream = 4;
-inline int DataLoaderConfig::stream_size() const {
-  return stream_.size();
-}
-inline void DataLoaderConfig::clear_stream() {
-  stream_.Clear();
-}
-inline const ::artm::Stream& DataLoaderConfig::stream(int index) const {
-  return stream_.Get(index);
-}
-inline ::artm::Stream* DataLoaderConfig::mutable_stream(int index) {
-  return stream_.Mutable(index);
-}
-inline ::artm::Stream* DataLoaderConfig::add_stream() {
-  return stream_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::artm::Stream >&
-DataLoaderConfig::stream() const {
-  return stream_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::Stream >*
-DataLoaderConfig::mutable_stream() {
-  return &stream_;
-}
-
-// optional bool compact_batches = 5 [default = true];
-inline bool DataLoaderConfig::has_compact_batches() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void DataLoaderConfig::set_has_compact_batches() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void DataLoaderConfig::clear_has_compact_batches() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void DataLoaderConfig::clear_compact_batches() {
-  compact_batches_ = true;
-  clear_has_compact_batches();
-}
-inline bool DataLoaderConfig::compact_batches() const {
-  return compact_batches_;
-}
-inline void DataLoaderConfig::set_compact_batches(bool value) {
-  set_has_compact_batches();
-  compact_batches_ = value;
-}
-
-// optional bool cache_processor_output = 6 [default = false];
-inline bool DataLoaderConfig::has_cache_processor_output() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void DataLoaderConfig::set_has_cache_processor_output() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void DataLoaderConfig::clear_has_cache_processor_output() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void DataLoaderConfig::clear_cache_processor_output() {
-  cache_processor_output_ = false;
-  clear_has_cache_processor_output();
-}
-inline bool DataLoaderConfig::cache_processor_output() const {
-  return cache_processor_output_;
-}
-inline void DataLoaderConfig::set_cache_processor_output(bool value) {
-  set_has_cache_processor_output();
-  cache_processor_output_ = value;
-}
-
-// optional bool reset_scores = 7 [default = true];
-inline bool DataLoaderConfig::has_reset_scores() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
-}
-inline void DataLoaderConfig::set_has_reset_scores() {
-  _has_bits_[0] |= 0x00000040u;
-}
-inline void DataLoaderConfig::clear_has_reset_scores() {
-  _has_bits_[0] &= ~0x00000040u;
-}
-inline void DataLoaderConfig::clear_reset_scores() {
-  reset_scores_ = true;
-  clear_has_reset_scores();
-}
-inline bool DataLoaderConfig::reset_scores() const {
-  return reset_scores_;
-}
-inline void DataLoaderConfig::set_reset_scores(bool value) {
-  set_has_reset_scores();
-  reset_scores_ = value;
-}
-
-// -------------------------------------------------------------------
-
 // Stream
 
-// required .artm.Stream.Type type = 1 [default = Global];
+// optional .artm.Stream.Type type = 1 [default = Global];
 inline bool Stream::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -3138,120 +2778,374 @@ Stream::mutable_residuals() {
 
 // -------------------------------------------------------------------
 
-// InstanceConfig
+// MasterComponentConfig
 
-// optional int32 processors_count = 1 [default = 1];
-inline bool InstanceConfig::has_processors_count() const {
+// optional string disk_path = 1;
+inline bool MasterComponentConfig::has_disk_path() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void InstanceConfig::set_has_processors_count() {
+inline void MasterComponentConfig::set_has_disk_path() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void InstanceConfig::clear_has_processors_count() {
+inline void MasterComponentConfig::clear_has_disk_path() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void InstanceConfig::clear_processors_count() {
+inline void MasterComponentConfig::clear_disk_path() {
+  if (disk_path_ != &::google::protobuf::internal::kEmptyString) {
+    disk_path_->clear();
+  }
+  clear_has_disk_path();
+}
+inline const ::std::string& MasterComponentConfig::disk_path() const {
+  return *disk_path_;
+}
+inline void MasterComponentConfig::set_disk_path(const ::std::string& value) {
+  set_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    disk_path_ = new ::std::string;
+  }
+  disk_path_->assign(value);
+}
+inline void MasterComponentConfig::set_disk_path(const char* value) {
+  set_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    disk_path_ = new ::std::string;
+  }
+  disk_path_->assign(value);
+}
+inline void MasterComponentConfig::set_disk_path(const char* value, size_t size) {
+  set_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    disk_path_ = new ::std::string;
+  }
+  disk_path_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* MasterComponentConfig::mutable_disk_path() {
+  set_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    disk_path_ = new ::std::string;
+  }
+  return disk_path_;
+}
+inline ::std::string* MasterComponentConfig::release_disk_path() {
+  clear_has_disk_path();
+  if (disk_path_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = disk_path_;
+    disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void MasterComponentConfig::set_allocated_disk_path(::std::string* disk_path) {
+  if (disk_path_ != &::google::protobuf::internal::kEmptyString) {
+    delete disk_path_;
+  }
+  if (disk_path) {
+    set_has_disk_path();
+    disk_path_ = disk_path;
+  } else {
+    clear_has_disk_path();
+    disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .artm.Stream stream = 2;
+inline int MasterComponentConfig::stream_size() const {
+  return stream_.size();
+}
+inline void MasterComponentConfig::clear_stream() {
+  stream_.Clear();
+}
+inline const ::artm::Stream& MasterComponentConfig::stream(int index) const {
+  return stream_.Get(index);
+}
+inline ::artm::Stream* MasterComponentConfig::mutable_stream(int index) {
+  return stream_.Mutable(index);
+}
+inline ::artm::Stream* MasterComponentConfig::add_stream() {
+  return stream_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::Stream >&
+MasterComponentConfig::stream() const {
+  return stream_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::Stream >*
+MasterComponentConfig::mutable_stream() {
+  return &stream_;
+}
+
+// optional bool compact_batches = 3 [default = true];
+inline bool MasterComponentConfig::has_compact_batches() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void MasterComponentConfig::set_has_compact_batches() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void MasterComponentConfig::clear_has_compact_batches() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void MasterComponentConfig::clear_compact_batches() {
+  compact_batches_ = true;
+  clear_has_compact_batches();
+}
+inline bool MasterComponentConfig::compact_batches() const {
+  return compact_batches_;
+}
+inline void MasterComponentConfig::set_compact_batches(bool value) {
+  set_has_compact_batches();
+  compact_batches_ = value;
+}
+
+// optional bool cache_processor_output = 4 [default = false];
+inline bool MasterComponentConfig::has_cache_processor_output() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void MasterComponentConfig::set_has_cache_processor_output() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void MasterComponentConfig::clear_has_cache_processor_output() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void MasterComponentConfig::clear_cache_processor_output() {
+  cache_processor_output_ = false;
+  clear_has_cache_processor_output();
+}
+inline bool MasterComponentConfig::cache_processor_output() const {
+  return cache_processor_output_;
+}
+inline void MasterComponentConfig::set_cache_processor_output(bool value) {
+  set_has_cache_processor_output();
+  cache_processor_output_ = value;
+}
+
+// optional int32 processors_count = 5 [default = 1];
+inline bool MasterComponentConfig::has_processors_count() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void MasterComponentConfig::set_has_processors_count() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void MasterComponentConfig::clear_has_processors_count() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void MasterComponentConfig::clear_processors_count() {
   processors_count_ = 1;
   clear_has_processors_count();
 }
-inline ::google::protobuf::int32 InstanceConfig::processors_count() const {
+inline ::google::protobuf::int32 MasterComponentConfig::processors_count() const {
   return processors_count_;
 }
-inline void InstanceConfig::set_processors_count(::google::protobuf::int32 value) {
+inline void MasterComponentConfig::set_processors_count(::google::protobuf::int32 value) {
   set_has_processors_count();
   processors_count_ = value;
 }
 
-// optional string memcached_endpoint = 2;
-inline bool InstanceConfig::has_memcached_endpoint() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
+// optional int32 processor_queue_max_size = 6 [default = 10];
+inline bool MasterComponentConfig::has_processor_queue_max_size() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void InstanceConfig::set_has_memcached_endpoint() {
-  _has_bits_[0] |= 0x00000002u;
+inline void MasterComponentConfig::set_has_processor_queue_max_size() {
+  _has_bits_[0] |= 0x00000020u;
 }
-inline void InstanceConfig::clear_has_memcached_endpoint() {
-  _has_bits_[0] &= ~0x00000002u;
+inline void MasterComponentConfig::clear_has_processor_queue_max_size() {
+  _has_bits_[0] &= ~0x00000020u;
 }
-inline void InstanceConfig::clear_memcached_endpoint() {
-  if (memcached_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    memcached_endpoint_->clear();
-  }
-  clear_has_memcached_endpoint();
+inline void MasterComponentConfig::clear_processor_queue_max_size() {
+  processor_queue_max_size_ = 10;
+  clear_has_processor_queue_max_size();
 }
-inline const ::std::string& InstanceConfig::memcached_endpoint() const {
-  return *memcached_endpoint_;
+inline ::google::protobuf::int32 MasterComponentConfig::processor_queue_max_size() const {
+  return processor_queue_max_size_;
 }
-inline void InstanceConfig::set_memcached_endpoint(const ::std::string& value) {
-  set_has_memcached_endpoint();
-  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    memcached_endpoint_ = new ::std::string;
-  }
-  memcached_endpoint_->assign(value);
-}
-inline void InstanceConfig::set_memcached_endpoint(const char* value) {
-  set_has_memcached_endpoint();
-  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    memcached_endpoint_ = new ::std::string;
-  }
-  memcached_endpoint_->assign(value);
-}
-inline void InstanceConfig::set_memcached_endpoint(const char* value, size_t size) {
-  set_has_memcached_endpoint();
-  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    memcached_endpoint_ = new ::std::string;
-  }
-  memcached_endpoint_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* InstanceConfig::mutable_memcached_endpoint() {
-  set_has_memcached_endpoint();
-  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    memcached_endpoint_ = new ::std::string;
-  }
-  return memcached_endpoint_;
-}
-inline ::std::string* InstanceConfig::release_memcached_endpoint() {
-  clear_has_memcached_endpoint();
-  if (memcached_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = memcached_endpoint_;
-    memcached_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void InstanceConfig::set_allocated_memcached_endpoint(::std::string* memcached_endpoint) {
-  if (memcached_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    delete memcached_endpoint_;
-  }
-  if (memcached_endpoint) {
-    set_has_memcached_endpoint();
-    memcached_endpoint_ = memcached_endpoint;
-  } else {
-    clear_has_memcached_endpoint();
-    memcached_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
+inline void MasterComponentConfig::set_processor_queue_max_size(::google::protobuf::int32 value) {
+  set_has_processor_queue_max_size();
+  processor_queue_max_size_ = value;
 }
 
-// optional int32 merger_queue_max_size = 3 [default = 10];
-inline bool InstanceConfig::has_merger_queue_max_size() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+// optional int32 merger_queue_max_size = 7 [default = 10];
+inline bool MasterComponentConfig::has_merger_queue_max_size() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void InstanceConfig::set_has_merger_queue_max_size() {
-  _has_bits_[0] |= 0x00000004u;
+inline void MasterComponentConfig::set_has_merger_queue_max_size() {
+  _has_bits_[0] |= 0x00000040u;
 }
-inline void InstanceConfig::clear_has_merger_queue_max_size() {
-  _has_bits_[0] &= ~0x00000004u;
+inline void MasterComponentConfig::clear_has_merger_queue_max_size() {
+  _has_bits_[0] &= ~0x00000040u;
 }
-inline void InstanceConfig::clear_merger_queue_max_size() {
+inline void MasterComponentConfig::clear_merger_queue_max_size() {
   merger_queue_max_size_ = 10;
   clear_has_merger_queue_max_size();
 }
-inline ::google::protobuf::int32 InstanceConfig::merger_queue_max_size() const {
+inline ::google::protobuf::int32 MasterComponentConfig::merger_queue_max_size() const {
   return merger_queue_max_size_;
 }
-inline void InstanceConfig::set_merger_queue_max_size(::google::protobuf::int32 value) {
+inline void MasterComponentConfig::set_merger_queue_max_size(::google::protobuf::int32 value) {
   set_has_merger_queue_max_size();
   merger_queue_max_size_ = value;
+}
+
+// optional .artm.MasterComponentConfig.ModusOperandi modus_operandi = 100 [default = Local];
+inline bool MasterComponentConfig::has_modus_operandi() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void MasterComponentConfig::set_has_modus_operandi() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void MasterComponentConfig::clear_has_modus_operandi() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void MasterComponentConfig::clear_modus_operandi() {
+  modus_operandi_ = 0;
+  clear_has_modus_operandi();
+}
+inline ::artm::MasterComponentConfig_ModusOperandi MasterComponentConfig::modus_operandi() const {
+  return static_cast< ::artm::MasterComponentConfig_ModusOperandi >(modus_operandi_);
+}
+inline void MasterComponentConfig::set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi value) {
+  assert(::artm::MasterComponentConfig_ModusOperandi_IsValid(value));
+  set_has_modus_operandi();
+  modus_operandi_ = value;
+}
+
+// optional string master_component_create_endpoint = 101;
+inline bool MasterComponentConfig::has_master_component_create_endpoint() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void MasterComponentConfig::set_has_master_component_create_endpoint() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void MasterComponentConfig::clear_has_master_component_create_endpoint() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void MasterComponentConfig::clear_master_component_create_endpoint() {
+  if (master_component_create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    master_component_create_endpoint_->clear();
+  }
+  clear_has_master_component_create_endpoint();
+}
+inline const ::std::string& MasterComponentConfig::master_component_create_endpoint() const {
+  return *master_component_create_endpoint_;
+}
+inline void MasterComponentConfig::set_master_component_create_endpoint(const ::std::string& value) {
+  set_has_master_component_create_endpoint();
+  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_create_endpoint_ = new ::std::string;
+  }
+  master_component_create_endpoint_->assign(value);
+}
+inline void MasterComponentConfig::set_master_component_create_endpoint(const char* value) {
+  set_has_master_component_create_endpoint();
+  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_create_endpoint_ = new ::std::string;
+  }
+  master_component_create_endpoint_->assign(value);
+}
+inline void MasterComponentConfig::set_master_component_create_endpoint(const char* value, size_t size) {
+  set_has_master_component_create_endpoint();
+  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_create_endpoint_ = new ::std::string;
+  }
+  master_component_create_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* MasterComponentConfig::mutable_master_component_create_endpoint() {
+  set_has_master_component_create_endpoint();
+  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_create_endpoint_ = new ::std::string;
+  }
+  return master_component_create_endpoint_;
+}
+inline ::std::string* MasterComponentConfig::release_master_component_create_endpoint() {
+  clear_has_master_component_create_endpoint();
+  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = master_component_create_endpoint_;
+    master_component_create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void MasterComponentConfig::set_allocated_master_component_create_endpoint(::std::string* master_component_create_endpoint) {
+  if (master_component_create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete master_component_create_endpoint_;
+  }
+  if (master_component_create_endpoint) {
+    set_has_master_component_create_endpoint();
+    master_component_create_endpoint_ = master_component_create_endpoint;
+  } else {
+    clear_has_master_component_create_endpoint();
+    master_component_create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string master_component_connect_endpoint = 102;
+inline bool MasterComponentConfig::has_master_component_connect_endpoint() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void MasterComponentConfig::set_has_master_component_connect_endpoint() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void MasterComponentConfig::clear_has_master_component_connect_endpoint() {
+  _has_bits_[0] &= ~0x00000200u;
+}
+inline void MasterComponentConfig::clear_master_component_connect_endpoint() {
+  if (master_component_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_->clear();
+  }
+  clear_has_master_component_connect_endpoint();
+}
+inline const ::std::string& MasterComponentConfig::master_component_connect_endpoint() const {
+  return *master_component_connect_endpoint_;
+}
+inline void MasterComponentConfig::set_master_component_connect_endpoint(const ::std::string& value) {
+  set_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_ = new ::std::string;
+  }
+  master_component_connect_endpoint_->assign(value);
+}
+inline void MasterComponentConfig::set_master_component_connect_endpoint(const char* value) {
+  set_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_ = new ::std::string;
+  }
+  master_component_connect_endpoint_->assign(value);
+}
+inline void MasterComponentConfig::set_master_component_connect_endpoint(const char* value, size_t size) {
+  set_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_ = new ::std::string;
+  }
+  master_component_connect_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* MasterComponentConfig::mutable_master_component_connect_endpoint() {
+  set_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_ = new ::std::string;
+  }
+  return master_component_connect_endpoint_;
+}
+inline ::std::string* MasterComponentConfig::release_master_component_connect_endpoint() {
+  clear_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = master_component_connect_endpoint_;
+    master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void MasterComponentConfig::set_allocated_master_component_connect_endpoint(::std::string* master_component_connect_endpoint) {
+  if (master_component_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete master_component_connect_endpoint_;
+  }
+  if (master_component_connect_endpoint) {
+    set_has_master_component_connect_endpoint();
+    master_component_connect_endpoint_ = master_component_connect_endpoint;
+  } else {
+    clear_has_master_component_connect_endpoint();
+    master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------
@@ -3651,7 +3545,7 @@ ModelConfig::mutable_regularizer_name() {
 
 // RegularizerConfig
 
-// required string name = 1;
+// optional string name = 1;
 inline bool RegularizerConfig::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -3721,7 +3615,7 @@ inline void RegularizerConfig::set_allocated_name(::std::string* name) {
   }
 }
 
-// required .artm.RegularizerConfig.Type type = 2;
+// optional .artm.RegularizerConfig.Type type = 2;
 inline bool RegularizerConfig::has_type() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
@@ -3744,7 +3638,7 @@ inline void RegularizerConfig::set_type(::artm::RegularizerConfig_Type value) {
   type_ = value;
 }
 
-// required bytes config = 3;
+// optional bytes config = 3;
 inline bool RegularizerConfig::has_config() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -3811,70 +3705,6 @@ inline void RegularizerConfig::set_allocated_config(::std::string* config) {
   } else {
     clear_has_config();
     config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// -------------------------------------------------------------------
-
-// DirichletRegularizerPhiConfig
-
-// required double beta_0 = 1;
-inline bool DirichletRegularizerPhiConfig::has_beta_0() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void DirichletRegularizerPhiConfig::set_has_beta_0() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void DirichletRegularizerPhiConfig::clear_has_beta_0() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void DirichletRegularizerPhiConfig::clear_beta_0() {
-  beta_0_ = 0;
-  clear_has_beta_0();
-}
-inline double DirichletRegularizerPhiConfig::beta_0() const {
-  return beta_0_;
-}
-inline void DirichletRegularizerPhiConfig::set_beta_0(double value) {
-  set_has_beta_0();
-  beta_0_ = value;
-}
-
-// required .artm.DoubleArray tilde_beta = 2;
-inline bool DirichletRegularizerPhiConfig::has_tilde_beta() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void DirichletRegularizerPhiConfig::set_has_tilde_beta() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void DirichletRegularizerPhiConfig::clear_has_tilde_beta() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void DirichletRegularizerPhiConfig::clear_tilde_beta() {
-  if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
-  clear_has_tilde_beta();
-}
-inline const ::artm::DoubleArray& DirichletRegularizerPhiConfig::tilde_beta() const {
-  return tilde_beta_ != NULL ? *tilde_beta_ : *default_instance_->tilde_beta_;
-}
-inline ::artm::DoubleArray* DirichletRegularizerPhiConfig::mutable_tilde_beta() {
-  set_has_tilde_beta();
-  if (tilde_beta_ == NULL) tilde_beta_ = new ::artm::DoubleArray;
-  return tilde_beta_;
-}
-inline ::artm::DoubleArray* DirichletRegularizerPhiConfig::release_tilde_beta() {
-  clear_has_tilde_beta();
-  ::artm::DoubleArray* temp = tilde_beta_;
-  tilde_beta_ = NULL;
-  return temp;
-}
-inline void DirichletRegularizerPhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta) {
-  delete tilde_beta_;
-  tilde_beta_ = tilde_beta;
-  if (tilde_beta) {
-    set_has_tilde_beta();
-  } else {
-    clear_has_tilde_beta();
   }
 }
 
@@ -4248,7 +4078,7 @@ FloatArray::mutable_value() {
 
 // Score
 
-// required .artm.Score.Type type = 1;
+// optional .artm.Score.Type type = 1;
 inline bool Score::has_type() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -4409,103 +4239,6 @@ inline void Score::set_allocated_stream_name(::std::string* stream_name) {
     clear_has_stream_name();
     stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
   }
-}
-
-// -------------------------------------------------------------------
-
-// LoggerConfig
-
-// optional string log_location = 1;
-inline bool LoggerConfig::has_log_location() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void LoggerConfig::set_has_log_location() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void LoggerConfig::clear_has_log_location() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void LoggerConfig::clear_log_location() {
-  if (log_location_ != &::google::protobuf::internal::kEmptyString) {
-    log_location_->clear();
-  }
-  clear_has_log_location();
-}
-inline const ::std::string& LoggerConfig::log_location() const {
-  return *log_location_;
-}
-inline void LoggerConfig::set_log_location(const ::std::string& value) {
-  set_has_log_location();
-  if (log_location_ == &::google::protobuf::internal::kEmptyString) {
-    log_location_ = new ::std::string;
-  }
-  log_location_->assign(value);
-}
-inline void LoggerConfig::set_log_location(const char* value) {
-  set_has_log_location();
-  if (log_location_ == &::google::protobuf::internal::kEmptyString) {
-    log_location_ = new ::std::string;
-  }
-  log_location_->assign(value);
-}
-inline void LoggerConfig::set_log_location(const char* value, size_t size) {
-  set_has_log_location();
-  if (log_location_ == &::google::protobuf::internal::kEmptyString) {
-    log_location_ = new ::std::string;
-  }
-  log_location_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* LoggerConfig::mutable_log_location() {
-  set_has_log_location();
-  if (log_location_ == &::google::protobuf::internal::kEmptyString) {
-    log_location_ = new ::std::string;
-  }
-  return log_location_;
-}
-inline ::std::string* LoggerConfig::release_log_location() {
-  clear_has_log_location();
-  if (log_location_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = log_location_;
-    log_location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void LoggerConfig::set_allocated_log_location(::std::string* log_location) {
-  if (log_location_ != &::google::protobuf::internal::kEmptyString) {
-    delete log_location_;
-  }
-  if (log_location) {
-    set_has_log_location();
-    log_location_ = log_location;
-  } else {
-    clear_has_log_location();
-    log_location_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional .artm.LoggerConfig.Level level = 2 [default = INFO];
-inline bool LoggerConfig::has_level() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void LoggerConfig::set_has_level() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void LoggerConfig::clear_has_level() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void LoggerConfig::clear_level() {
-  level_ = 3;
-  clear_has_level();
-}
-inline ::artm::LoggerConfig_Level LoggerConfig::level() const {
-  return static_cast< ::artm::LoggerConfig_Level >(level_);
-}
-inline void LoggerConfig::set_level(::artm::LoggerConfig_Level value) {
-  assert(::artm::LoggerConfig_Level_IsValid(value));
-  set_has_level();
-  level_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -4973,6 +4706,220 @@ inline void TopicModel::set_allocated_internals(::std::string* internals) {
 
 // -------------------------------------------------------------------
 
+// NodeControllerConfig
+
+// optional string node_controller_create_endpoint = 1;
+inline bool NodeControllerConfig::has_node_controller_create_endpoint() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void NodeControllerConfig::set_has_node_controller_create_endpoint() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void NodeControllerConfig::clear_has_node_controller_create_endpoint() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void NodeControllerConfig::clear_node_controller_create_endpoint() {
+  if (node_controller_create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    node_controller_create_endpoint_->clear();
+  }
+  clear_has_node_controller_create_endpoint();
+}
+inline const ::std::string& NodeControllerConfig::node_controller_create_endpoint() const {
+  return *node_controller_create_endpoint_;
+}
+inline void NodeControllerConfig::set_node_controller_create_endpoint(const ::std::string& value) {
+  set_has_node_controller_create_endpoint();
+  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    node_controller_create_endpoint_ = new ::std::string;
+  }
+  node_controller_create_endpoint_->assign(value);
+}
+inline void NodeControllerConfig::set_node_controller_create_endpoint(const char* value) {
+  set_has_node_controller_create_endpoint();
+  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    node_controller_create_endpoint_ = new ::std::string;
+  }
+  node_controller_create_endpoint_->assign(value);
+}
+inline void NodeControllerConfig::set_node_controller_create_endpoint(const char* value, size_t size) {
+  set_has_node_controller_create_endpoint();
+  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    node_controller_create_endpoint_ = new ::std::string;
+  }
+  node_controller_create_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NodeControllerConfig::mutable_node_controller_create_endpoint() {
+  set_has_node_controller_create_endpoint();
+  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    node_controller_create_endpoint_ = new ::std::string;
+  }
+  return node_controller_create_endpoint_;
+}
+inline ::std::string* NodeControllerConfig::release_node_controller_create_endpoint() {
+  clear_has_node_controller_create_endpoint();
+  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = node_controller_create_endpoint_;
+    node_controller_create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NodeControllerConfig::set_allocated_node_controller_create_endpoint(::std::string* node_controller_create_endpoint) {
+  if (node_controller_create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete node_controller_create_endpoint_;
+  }
+  if (node_controller_create_endpoint) {
+    set_has_node_controller_create_endpoint();
+    node_controller_create_endpoint_ = node_controller_create_endpoint;
+  } else {
+    clear_has_node_controller_create_endpoint();
+    node_controller_create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string node_controller_connect_endpoint = 2;
+inline bool NodeControllerConfig::has_node_controller_connect_endpoint() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void NodeControllerConfig::set_has_node_controller_connect_endpoint() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void NodeControllerConfig::clear_has_node_controller_connect_endpoint() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void NodeControllerConfig::clear_node_controller_connect_endpoint() {
+  if (node_controller_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    node_controller_connect_endpoint_->clear();
+  }
+  clear_has_node_controller_connect_endpoint();
+}
+inline const ::std::string& NodeControllerConfig::node_controller_connect_endpoint() const {
+  return *node_controller_connect_endpoint_;
+}
+inline void NodeControllerConfig::set_node_controller_connect_endpoint(const ::std::string& value) {
+  set_has_node_controller_connect_endpoint();
+  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    node_controller_connect_endpoint_ = new ::std::string;
+  }
+  node_controller_connect_endpoint_->assign(value);
+}
+inline void NodeControllerConfig::set_node_controller_connect_endpoint(const char* value) {
+  set_has_node_controller_connect_endpoint();
+  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    node_controller_connect_endpoint_ = new ::std::string;
+  }
+  node_controller_connect_endpoint_->assign(value);
+}
+inline void NodeControllerConfig::set_node_controller_connect_endpoint(const char* value, size_t size) {
+  set_has_node_controller_connect_endpoint();
+  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    node_controller_connect_endpoint_ = new ::std::string;
+  }
+  node_controller_connect_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NodeControllerConfig::mutable_node_controller_connect_endpoint() {
+  set_has_node_controller_connect_endpoint();
+  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    node_controller_connect_endpoint_ = new ::std::string;
+  }
+  return node_controller_connect_endpoint_;
+}
+inline ::std::string* NodeControllerConfig::release_node_controller_connect_endpoint() {
+  clear_has_node_controller_connect_endpoint();
+  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = node_controller_connect_endpoint_;
+    node_controller_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NodeControllerConfig::set_allocated_node_controller_connect_endpoint(::std::string* node_controller_connect_endpoint) {
+  if (node_controller_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete node_controller_connect_endpoint_;
+  }
+  if (node_controller_connect_endpoint) {
+    set_has_node_controller_connect_endpoint();
+    node_controller_connect_endpoint_ = node_controller_connect_endpoint;
+  } else {
+    clear_has_node_controller_connect_endpoint();
+    node_controller_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string master_component_connect_endpoint = 3;
+inline bool NodeControllerConfig::has_master_component_connect_endpoint() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void NodeControllerConfig::set_has_master_component_connect_endpoint() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void NodeControllerConfig::clear_has_master_component_connect_endpoint() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void NodeControllerConfig::clear_master_component_connect_endpoint() {
+  if (master_component_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_->clear();
+  }
+  clear_has_master_component_connect_endpoint();
+}
+inline const ::std::string& NodeControllerConfig::master_component_connect_endpoint() const {
+  return *master_component_connect_endpoint_;
+}
+inline void NodeControllerConfig::set_master_component_connect_endpoint(const ::std::string& value) {
+  set_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_ = new ::std::string;
+  }
+  master_component_connect_endpoint_->assign(value);
+}
+inline void NodeControllerConfig::set_master_component_connect_endpoint(const char* value) {
+  set_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_ = new ::std::string;
+  }
+  master_component_connect_endpoint_->assign(value);
+}
+inline void NodeControllerConfig::set_master_component_connect_endpoint(const char* value, size_t size) {
+  set_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_ = new ::std::string;
+  }
+  master_component_connect_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* NodeControllerConfig::mutable_master_component_connect_endpoint() {
+  set_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    master_component_connect_endpoint_ = new ::std::string;
+  }
+  return master_component_connect_endpoint_;
+}
+inline ::std::string* NodeControllerConfig::release_master_component_connect_endpoint() {
+  clear_has_master_component_connect_endpoint();
+  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = master_component_connect_endpoint_;
+    master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void NodeControllerConfig::set_allocated_master_component_connect_endpoint(::std::string* master_component_connect_endpoint) {
+  if (master_component_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete master_component_connect_endpoint_;
+  }
+  if (master_component_connect_endpoint) {
+    set_has_master_component_connect_endpoint();
+    master_component_connect_endpoint_ = master_component_connect_endpoint;
+  } else {
+    clear_has_master_component_connect_endpoint();
+    master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
 // BatchTopics
 
 // repeated int32 item_id = 1;
@@ -5039,16 +4986,16 @@ inline const EnumDescriptor* GetEnumDescriptor< ::artm::Stream_Type>() {
   return ::artm::Stream_Type_descriptor();
 }
 template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::MasterComponentConfig_ModusOperandi>() {
+  return ::artm::MasterComponentConfig_ModusOperandi_descriptor();
+}
+template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::RegularizerConfig_Type>() {
   return ::artm::RegularizerConfig_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::Score_Type>() {
   return ::artm::Score_Type_descriptor();
-}
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::artm::LoggerConfig_Level>() {
-  return ::artm::LoggerConfig_Level_descriptor();
 }
 
 }  // namespace google

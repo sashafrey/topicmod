@@ -30,17 +30,17 @@ class InstanceSchema {
   void clear_model_config(ModelId id);
 
   void set_regularizer(const std::string& name,
-                       const std::shared_ptr<regularizer::RegularizerInterface>& regularizer);
+                       const std::shared_ptr<RegularizerInterface>& regularizer);
   bool has_regularizer(const std::string& name) const;
   void clear_regularizer(const std::string name);
 
-  std::shared_ptr<regularizer::RegularizerInterface> regularizer(const std::string& name);
+  std::shared_ptr<RegularizerInterface> regularizer(const std::string& name);
 
   std::vector<ModelId> GetModelIds() const;
 
  private:
   InstanceConfig instance_config_;
-  std::map<std::string, std::shared_ptr<regularizer::RegularizerInterface> > regularizers_;
+  std::map<std::string, std::shared_ptr<RegularizerInterface> > regularizers_;
   std::map<ModelId, std::shared_ptr<const ModelConfig> > models_config_;
 };
 

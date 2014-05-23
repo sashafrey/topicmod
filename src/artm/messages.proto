@@ -32,36 +32,54 @@ message Batch {
   repeated Item item = 2;
 }
 
-// Configuration of DataLoader component.
-message DataLoaderConfig {
-  required int32 instance_id = 1;
-  optional string disk_path = 2;
-  optional int32 queue_size = 3 [default = 10];
-  repeated Stream stream = 4;
-  optional bool compact_batches = 5 [default = true];
-  optional bool cache_processor_output = 6 [default = false];
-  optional bool reset_scores = 7 [default = true];
-}
-
 // Defines a stream in DataLoader.
 message Stream {
   enum Type {
     Global = 0;
     ItemIdModulus = 1;
-    ItemHashModulus = 3;
   }
 
-  required Type type = 1 [default = Global];
+  optional Type type = 1 [default = Global];
   optional string name = 2 [default = "@global"];
   optional int32 modulus = 3;
   repeated int32 residuals = 4;
 }
 
-// Configuration of Instance component.
-message InstanceConfig {
-  optional int32 processors_count = 1 [default = 1];
-  optional string memcached_endpoint = 2;
-  optional int32 merger_queue_max_size = 3 [default = 10];
+// Configuration of the Master component
+message MasterComponentConfig {
+  // Disk location to store and load batches
+  optional string disk_path = 1;
+
+  // Set of data streams
+  repeated Stream stream = 2;
+
+  // A flag indicating whether to compact batches in AddBatch() operation
+  optional bool compact_batches = 3 [default = true];
+
+  // A flag indicating whether to cache processor output
+  optional bool cache_processor_output = 4 [default = false];
+
+  // Number of concurrent processors
+  optional int32 processors_count = 5 [default = 1];
+
+  // Max size of processor queue
+  optional int32 processor_queue_max_size = 6 [default = 10];
+
+  // Max size of merger queue
+  optional int32 merger_queue_max_size = 7 [default = 10];
+
+  // ====== [Under Development fields - excluded from public API] ======
+  enum ModusOperandi {
+    Local = 0;
+    Network = 1;
+  }
+
+  // Modus operandi of the master component
+  optional ModusOperandi modus_operandi = 100 [default = Local];
+
+  // Service endpoints
+  optional string master_component_create_endpoint = 101;
+  optional string master_component_connect_endpoint = 102;
 }
 
 // Configuration of a model.
@@ -87,15 +105,9 @@ message RegularizerConfig {
 	SmoothSparsePhi = 3;
   }
 
-  required string name = 1;
-  required Type type = 2;
-  required bytes config = 3; 
-}
-
-// Configuration of a Dirichlet Phi regularizer
-message DirichletRegularizerPhiConfig {
-  required double beta_0 = 1;
-  required DoubleArray tilde_beta = 2;
+  optional string name = 1;
+  optional Type type = 2;
+  optional bytes config = 3;
 }
 
 // Configuration of a Dirichlet Theta regularizer
@@ -138,24 +150,9 @@ message Score {
     Perplexity = 0;
   }
 
-  required Type type = 1;
+  optional Type type = 1;
   optional string field_name = 2 [default = "@body"];
   optional string stream_name = 3 [default = "@global"];
-}
-
-// Configuration of the logger (not implemented yet).
-message LoggerConfig {
-  optional string log_location = 1;
-
-  enum Level {
-    DISABLED = 0;
-    ERROR = 1;
-    WARNING = 2;
-    INFO = 3;
-    VERBOSE = 4;
-  }
-
-  optional Level level = 2 [default = INFO];
 }
 
 // A topic model, represented by Matrix Phi
@@ -180,6 +177,15 @@ message TopicModel {
   }
 
   optional bytes internals = 7;  // serialized instance of TopicModelInternals
+}
+
+// ====== [Under Development messages - excluded from public API] ======
+
+// Configuration of the Node Controller
+message NodeControllerConfig {
+  optional string node_controller_create_endpoint = 1;
+  optional string node_controller_connect_endpoint = 2;
+  optional string master_component_connect_endpoint = 3;
 }
 
 message BatchTopics {

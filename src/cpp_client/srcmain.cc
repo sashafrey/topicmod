@@ -17,27 +17,15 @@ using namespace std;
 using namespace artm;
 
 double proc(int argc, char * argv[], int processors_count, int instance_size) {
-  // Create memcached server
-  MemcachedServer memcached_server("tcp://*:5555");
-
-  std::string batches_folder = "batches";
+  std::string batches_disk_path = "batches";
   std::string vocab_file = "";
   std::string docword_file = "";
 
-  // Create instance and data_loader configs
-  InstanceConfig instance_config;
-  instance_config.set_processors_count(processors_count);
-  // instance_config.set_memcached_endpoint("tcp://localhost:5555");
-  DataLoaderConfig data_loader_config;
-  std::string batches_disk_path(batches_folder);
-  data_loader_config.set_disk_path(batches_disk_path);
-
-  std::vector<std::shared_ptr<Instance>> instance;
-  std::vector<std::shared_ptr<DataLoader>> data_loader;
-  for (int i = 0; i < instance_size; ++i) {
-    instance.push_back(std::make_shared<Instance>(instance_config));
-    data_loader.push_back(std::make_shared<DataLoader>(*instance[i], data_loader_config));
-  }
+  MasterComponentConfig master_config;
+  master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
+  master_config.set_processors_count(processors_count);
+  master_config.set_disk_path(batches_disk_path);
+  MasterComponent master_component(master_config);
 
   // Configure train and test streams
   Stream train_stream, test_stream;
@@ -53,10 +41,8 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   test_stream.set_modulus(10);
   test_stream.add_residuals(9);
 
-  for (int i = 0; i < instance_size; ++i) {
-    data_loader[i]->AddStream(train_stream);
-    data_loader[i]->AddStream(test_stream);
-  }
+  master_component.AddStream(train_stream);
+  master_component.AddStream(test_stream);
 
   // Create model
   int nTopics = atoi(argv[3]);
@@ -70,12 +56,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   Score* score = model_config.add_score();
   score->set_type(Score_Type_Perplexity);
   score->set_stream_name("test_stream");
-
-  // todo(alfrey): model should be decoupled from instance
-  std::vector<std::shared_ptr<Model>> model;
-  for (int i = 0; i < instance_size; ++i) {
-    model.push_back(std::make_shared<Model>(*instance[i], model_config));
-  }
+  Model model(master_component, model_config);
 
   int batch_files_count = countFilesInDirectory(batches_disk_path, ".batch");
   if (batch_files_count == 0) {
@@ -108,8 +89,9 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
           field->add_token_count((google::protobuf::int32) term_counts[word_index]);
         }
       }
+
       // Index doc-word matrix
-      data_loader[part_index % instance_size]->AddBatch(batch);
+      master_component.AddBatch(batch);
     }
 
     std::cout << "OK.\n";
@@ -121,15 +103,15 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   clock_t begin = clock();
 
   // Enable model and wait while each document pass through processor about 10 times.
-  for (int i = 0; i < instance_size; ++i) model[i]->Enable();
+  model.Enable();
   std::shared_ptr<TopicModel> topic_model;
 
   for (int iter = 0; iter < 10; ++iter) {
-    for (int i = 0; i < instance_size; ++i) data_loader[i]->InvokeIteration(1);
-    for (int i = 0; i < instance_size; ++i) data_loader[i]->WaitIdle();
+    master_component.InvokeIteration(1);
+    master_component.WaitIdle();
 
     for (int inst = 0; inst < instance_size; ++inst) {
-      topic_model = instance[inst]->GetTopicModel(*model[inst]);
+      topic_model = master_component.GetTopicModel(model);
       std::cout << "Iter #" << (iter + 1) << ": "
                 << "Inst #" << (inst + 1) << ": "
                 << "#Tokens = "  << topic_model->token_size() << ", "
@@ -138,7 +120,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     }
   }
 
-  for (int i = 0; i < instance_size; ++i) model[i]->Disable();
+  model.Disable();
 
   std::cout << endl;
 

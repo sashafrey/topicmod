@@ -45,6 +45,7 @@ SRCS_LIB      = dirichlet_regularizer_phi.cc \
 		instance.cc \
 		instance_schema.cc \
 		internals.pb.cc \
+		master_component.cc \
 		memcached_server.cc \
 		memcached_service.pb.cc \
 		memcached_service.rpcz.cc \
@@ -127,7 +128,7 @@ clean:
 -include $(DEPS_LIB)
 -include $(DEPS_TEST)
 
-#ToDo(alfrey): add '.\protoc.exe --cpp_out=. --rpcz_plugin_out=. .\memcached_service.proto'
+#ToDo(alfrey): add '.\protoc.exe --cpp_out=. --rpcz_plugin_out=. .\internals.proto'
 proto : 
 	protoc --cpp_out=. messages.proto; \
 	protoc --python_out=. messages.proto; \

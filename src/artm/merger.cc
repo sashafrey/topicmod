@@ -16,7 +16,7 @@
 
 #include "rpcz/rpc.hpp"
 
-using ::artm::memcached::MemcachedService_Stub;
+using ::artm::core::MasterComponentService_Stub;
 
 namespace artm {
 namespace core {
@@ -24,12 +24,12 @@ namespace core {
 Merger::Merger(boost::mutex* merger_queue_lock,
                std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
                ThreadSafeHolder<InstanceSchema>* schema,
-               ThreadSafeHolder<artm::memcached::MemcachedService_Stub>* memcached_service)
+               ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service)
     : lock_(),
       topic_model_(lock_),
       new_topic_model_(),
       schema_(schema),
-      memcached_service_(memcached_service),
+      master_component_service_(master_component_service),
       merger_queue_lock_(merger_queue_lock),
       merger_queue_(merger_queue),
       thread_() {
@@ -221,8 +221,8 @@ void Merger::SyncWithMemcached(ModelId model_id) {
     if (new_ttm == new_topic_model_.end())
       return;  // model had been disposed during ongoing processing;
 
-    std::shared_ptr<MemcachedService_Stub> memcached_service = memcached_service_->get();
-    if (memcached_service == nullptr) {
+    std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
+    if (master_component_service == nullptr) {
       topic_model_.set(model_id, new_ttm->second);
       new_topic_model_.erase(model_id);
     } else {
@@ -231,14 +231,14 @@ void Merger::SyncWithMemcached(ModelId model_id) {
 
       try {
         ::artm::TopicModel reply;
-        memcached_service->UpdateModel(model_increment, &reply);
+        master_component_service->UpdateModel(model_increment, &reply);
         std::shared_ptr<::artm::core::TopicModel> new_global_ttm(
           new ::artm::core::TopicModel(reply));
 
         topic_model_.set(model_id, new_global_ttm);
         new_topic_model_.erase(model_id);
       } catch(const rpcz::rpc_error&) {
-        LOG(ERROR) << "Merger failed to send updates to memcached service.";
+        LOG(ERROR) << "Merger failed to send updates to master component service.";
         throw;
       }
     }
@@ -251,9 +251,9 @@ void Merger::ResetScores(ModelId model_id) {
     model_ids = topic_model_.keys();
   }
 
-  std::shared_ptr<MemcachedService_Stub> memcached_service = memcached_service_->get();
+  std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
   for (auto &model_id : model_ids) {
-    if (memcached_service == nullptr) {
+    if (master_component_service == nullptr) {
       auto old_ttm = GetLatestTopicModel(model_id);
       if (old_ttm == nullptr)
         return;  // model had been disposed during ongoing processing;
@@ -265,9 +265,9 @@ void Merger::ResetScores(ModelId model_id) {
 
       topic_model_.set(model_id, new_ttm);
     } else {
-      std::string message("ResetScores is not implemented in network mode.");
-      LOG(FATAL) << message;
-      BOOST_THROW_EXCEPTION(NotImplementedException(message));
+      // TODO(alfrey) to this on master
+      std::string message("In Network mode ResetScores should happen on Master.");
+      LOG(WARNING) << message;
     }
   }
 }

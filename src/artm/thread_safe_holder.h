@@ -6,6 +6,7 @@
 #include <queue>
 #include <map>
 #include <memory>
+#include <vector>
 #include <utility>
 #include <vector>
 

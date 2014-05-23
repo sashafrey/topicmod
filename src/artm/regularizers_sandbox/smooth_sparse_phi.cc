@@ -44,7 +44,7 @@ bool SmoothSparsePhi::RegularizePhi(TopicModel* topic_model) {
         topic_model->SetRegularizerWeight(token_id, topic_id, value);
       }
     } else { // background topics
-      float temp_beta_0 = background_beta_0_vector.Get(topic_id);
+      float temp_beta_0 = static_cast<float>(background_beta_0_vector.Get(topic_id));
       const DoubleArray temp_tilde_beta = 
         background_tilde_beta_vector.Get(topic_id - usual_topics_count);
 

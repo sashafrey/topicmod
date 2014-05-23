@@ -9,15 +9,13 @@
 TEST(CppInterface, Canary) {
 }
 
-// To run this particular test:
-// artm_tests.exe --gtest_filter=CppInterface.*
-TEST(CppInterface, Basic) {
+void BasicTest(std::string endpoint) {
   const int nTopics = 5;
+  bool is_network_mode = !endpoint.empty();
 
   // Create instance
-  artm::MemcachedServer memcached_server("tcp://*:5555");
   artm::InstanceConfig instance_config;
-  instance_config.set_memcached_endpoint("tcp://localhost:5555");
+  if (is_network_mode) instance_config.set_memcached_endpoint(endpoint);
   artm::Instance instance(instance_config);
 
   artm::DirichletThetaConfig regularizer_1_config;
@@ -65,6 +63,9 @@ TEST(CppInterface, Basic) {
   model_config.set_topics_count(nTopics);
   model_config.add_regularizer_name(general_regularizer_1_config.name());
   model_config.add_regularizer_name(general_regularizer_2_config.name());
+
+  artm::Score* score = model_config.add_score();
+  score->set_type(artm::Score_Type_Perplexity);
   artm::Model model(instance, model_config);
 
   // Load doc-token matrix
@@ -94,22 +95,49 @@ TEST(CppInterface, Basic) {
   }
 
   artm::DataLoaderConfig config;
+  if (is_network_mode) config.set_reset_scores(false);
   artm::DataLoader data_loader(instance, config);
   // Index doc-token matrix
   data_loader.AddBatch(batch);
 
   model.Enable();
-  data_loader.InvokeIteration(3);
-  data_loader.WaitIdle();
-  model.Disable();
+  std::shared_ptr<artm::TopicModel> topic_model;
+  double expected_normalizer = 0;
+  for (int iter = 0; iter < 5; ++iter) {
+    data_loader.InvokeIteration(1);
+    data_loader.WaitIdle();
+    topic_model = instance.GetTopicModel(model);
 
-  // Request model topics
-  std::shared_ptr<artm::TopicModel> topic_model = instance.GetTopicModel(model);
+    ::artm::TopicModel_TopicModelInternals internals;
+    internals.ParseFromString(topic_model->internals());
+    if (iter == 1) {
+      expected_normalizer = internals.scores_normalizer().value(0);
+      EXPECT_GT(expected_normalizer, 0);
+    } else if (iter >= 2) {
+      if (!is_network_mode) {
+        // Verify that normalizer does not grow starting from second iteration.
+        // This confirms that the Instance::ForceResetScores() function works as expected.
+        EXPECT_EQ(internals.scores_normalizer().value(0), expected_normalizer);
+      }
+    }
+  }
+  model.Disable();
 
   int nUniqueTokens = nTokens;
   EXPECT_EQ(nUniqueTokens, topic_model->token_size());
   auto first_token_topics = topic_model->token_weights(0);
   EXPECT_EQ(first_token_topics.value_size(), nTopics);
+}
+
+// To run this particular test:
+// artm_tests.exe --gtest_filter=CppInterface.*
+TEST(CppInterface, BasicTest_NetworkMode) {
+  artm::MemcachedServer memcached_server("tcp://*:5555");
+  BasicTest("tcp://localhost:5555");
+}
+
+TEST(CppInterface, BasicTest_StandaloneMode) {
+  BasicTest("");
 }
 
 TEST(CppInterface, Exceptions) {

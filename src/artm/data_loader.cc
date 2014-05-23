@@ -143,6 +143,13 @@ void DataLoader::InvokeIteration(int iterations_count) {
     return;
   }
 
+  if (config_.get()->reset_scores()) {
+    auto instance = InstanceManager::singleton().Get(config_.get()->instance_id());
+    if (instance != nullptr) {
+      instance->ForceResetScores(ModelId());
+    }
+  }
+
   auto latest_generation = generation_.get();
   if (latest_generation->empty()) {
     LOG(WARNING) << "DataLoader::InvokeIteration() - current generation is empty, "

@@ -61,6 +61,10 @@ void Instance::DisposeRegularizer(const std::string& name) {
   schema_.set(new_schema);
 }
 
+void Instance::ForceResetScores(ModelId model_id) {
+  merger_.ForceResetScores(model_id);
+}
+
 void Instance::ForceSyncWithMemcached(ModelId model_id) {
   merger_.ForceSyncWithMemcached(model_id);
 }

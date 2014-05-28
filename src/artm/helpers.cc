@@ -16,6 +16,10 @@ typedef struct tagTHREADNAME_INFO {
 } THREADNAME_INFO;
 #pragma pack(pop)
 
+#elif defined(__linux__)
+
+#include <sys/prctl.h>
+
 #endif
 
 namespace artm {
@@ -39,10 +43,17 @@ void Helpers::SetThreadName(int thread_id, const char* thread_name) {
   }
 }
 
+#elif defined(__linux__)
+
+// Based on http://stackoverflow.com/questions/778085/how-to-name-a-thread-in-linux
+void Helpers::SetThreadName(int thread_id, const char* thread_name) {
+  prctl(PR_SET_NAME, thread_name, 0, 0);
+}
+
 #else
 
 void Helpers::SetThreadName(int thread_id, const char* thread_name) {
-  // Currently not implemented for Linux.
+  // Currently not implemented for other systems
 }
 
 #endif

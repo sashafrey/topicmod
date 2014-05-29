@@ -6,7 +6,8 @@
     <ProjectGuid>8cbe34f8-5d46-4832-b615-db183812f81f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
     <StartupFile>artm_example.py</StartupFile>
-    <SearchPath>BigARTM</SearchPath>
+    <SearchPath>
+    </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <Name>python_client</Name>

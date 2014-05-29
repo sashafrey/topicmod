@@ -1,3 +1,6 @@
+import sys
+sys.path.append('BigARTM')
+
 from analyzer import *
 from collection import *
 from python_interface import *

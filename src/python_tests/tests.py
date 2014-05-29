@@ -2,6 +2,8 @@
 
 # Author: Murat Apishev (great-mel@yandex.ru)
 
+import sys
+sys.path.append('../python_interface/')
 import messages_pb2
 import python_interface
 from python_interface import *

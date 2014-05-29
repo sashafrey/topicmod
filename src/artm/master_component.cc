@@ -104,6 +104,19 @@ bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
 }
 
+bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
+  if (isInLocalModusOperandi()) {
+    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
+    return local_client->RequestThetaMatrix(model_name, theta_matrix);
+  }
+
+  if (isInNetworkModusOperandi()) {
+    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
+  }
+
+  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+}
+
 void MasterComponent::WaitIdle() {
   if (isInLocalModusOperandi()) {
     LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
@@ -231,6 +244,7 @@ void LocalClient::ReconfigureModel(const ModelConfig& config) {
 
 void LocalClient::DisposeModel(ModelName model_name) {
   local_instance_->DisposeModel(model_name);
+  local_data_loader_->DisposeModel(model_name);
 }
 
 void LocalClient::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
@@ -278,6 +292,10 @@ LocalClient::~LocalClient() {
 
 bool LocalClient::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
   return local_instance_->RequestTopicModel(model_name, topic_model);
+}
+
+bool LocalClient::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
+  return local_data_loader_->RequestThetaMatrix(model_name, theta_matrix);
 }
 
 void LocalClient::WaitIdle() {

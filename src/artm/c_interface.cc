@@ -140,9 +140,14 @@ int ArtmReconfigureModel(int master_id, int length, const char* config_blob) {
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmRequestBatchTopics(int master_id, const char* model_name, int batch_length,
-                           const char* batch_blob) {
+int ArtmRequestThetaMatrix(int master_id, const char* model_name) {
   try {
+    artm::ThetaMatrix theta_matrix;
+    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
+
+    master_component->RequestThetaMatrix(model_name, &theta_matrix);
+    theta_matrix.SerializeToString(&message);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }

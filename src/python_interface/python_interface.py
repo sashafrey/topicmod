@@ -134,6 +134,18 @@ class MasterComponent:
     topic_model.ParseFromString(topic_model_blob)
     return topic_model
 
+  def GetThetaMatrix(self, model):
+    request_id = HandleErrorCode(self.lib_.ArtmRequestThetaMatrix(self.id_, model.name()))
+    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+
+    blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, blob))
+    self.lib_.ArtmDisposeRequest(request_id)
+
+    theta_matrix = messages_pb2.ThetaMatrix()
+    theta_matrix.ParseFromString(blob)
+    return theta_matrix
+
 #################################################################################
 
 class Model:

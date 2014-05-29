@@ -56,6 +56,15 @@ std::shared_ptr<const Batch> Generation::batch(const boost::uuids::uuid& uuid,
   return batch_ptr;
 }
 
+std::vector<boost::uuids::uuid> Generation::batch_uuids() const {
+  std::vector<boost::uuids::uuid> retval;
+  for (auto iter = generation_.begin(); iter != generation_.end(); ++iter) {
+    retval.push_back(iter->first);
+  }
+
+  return std::move(retval);
+}
+
 void Generation::AddBatch(const std::shared_ptr<const Batch>& batch,
                           const std::string& disk_path) {
   if (disk_path.empty()) {

@@ -15,6 +15,7 @@ from python_interface import *
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = 2
 master_config.processor_queue_max_size = 5
+master_config.cache_processor_output = 1
 stream_ = master_config.stream.add()
 stream_.name = ('stream_0')
 stream_.type = Stream_Type_Global
@@ -88,6 +89,7 @@ with library.CreateMasterComponent() as master_component:
   master_component.InvokeIteration(10)
   model.Disable()
   topic_model = master_component.GetTopicModel(model)
+  theta_matrix = master_component.GetThetaMatrix(model)
 
   # Test all 'reconfigure' methods
   regularizer.Reconfigure(0, dirichlet_regularizer_config_new)

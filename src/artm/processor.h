@@ -88,6 +88,8 @@ class Processor : boost::noncopyable {
     void InferTheta(const ModelConfig& model,
                     const Item& item,
                     ModelIncrement* model_increment,
+                    bool update_token_counters,
+                    bool update_theta_cache,
                     float* theta);
 
     void CalculateScore(const Score& score,

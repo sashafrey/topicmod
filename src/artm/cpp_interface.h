@@ -39,6 +39,7 @@ class MasterComponent {
 
   int id() const { return id_; }
   std::shared_ptr<TopicModel> GetTopicModel(const Model& model);
+  std::shared_ptr<ThetaMatrix> GetThetaMatrix(const Model& model);
   void Reconfigure(const MasterComponentConfig& config);
   void AddBatch(const Batch& batch);
   void AddStream(const Stream& stream);

@@ -11,8 +11,9 @@ library = ArtmLibrary(os.path.abspath(os.curdir) + '\\BigARTM\\artm.dll')
 
 # Setup basic configuration
 master_config = messages_pb2.MasterComponentConfig()
-master_config.processors_count = 2     # Use two concurrent workers
-master_config.disk_path = '.'          # Disk location to store/load batches
+master_config.processors_count = 2        # Use two concurrent workers
+master_config.cache_processor_output = 1  # Set this option if later you want to GetThetaMatrix()
+master_config.disk_path = '.'             # Disk location to store/load batches
 with library.CreateMasterComponent(master_config) as master:
   # On the first run parse batches and pass them to master.AddBatch().
   # The library serializes all batches to disk as '.batch' files.
@@ -90,4 +91,5 @@ with library.CreateMasterComponent(master_config) as master:
           ", Items# = " + str(topic_model.items_processed) + \
           ", Perplexity = " + str(topic_model.scores.value[0])
 
-Analyzer.PrintTopTokensPerTopic(topic_model)
+  Analyzer.PrintTopTokensPerTopic(topic_model)
+  Analyzer.PrintThetaMatrix(master.GetThetaMatrix(model), model_config.topics_count)

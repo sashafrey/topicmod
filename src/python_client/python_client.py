@@ -27,6 +27,7 @@ library = ArtmLibrary(address + '\\Win32\\Release\\artm.dll')
 
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
+master_config.cache_processor_output = 1
 master_config.disk_path = '.'
 with library.CreateMasterComponent(master_config) as master_component:
     batch = messages_pb2.Batch()
@@ -121,10 +122,14 @@ with library.CreateMasterComponent(master_config) as master_component:
         regularizer_config_phi = messages_pb2.DirichletPhiConfig()
         regularizer_config_phi.beta_0 = -0.01
         token_size = len(topic_model.token)
+        if (token_size == 0):
+          print 'error, no tokens after first iteration'
+          exit(1)
+
         for j in range(0, token_size):
             regularizer_config_phi.tilde_beta.value.append(0.1)
 
-        regularizer_phi.Reconfigure(1, regularizer_config_phi)
+        regularizer_phi.Reconfigure(RegularizerConfig_Type_DirichletPhi, regularizer_config_phi)
         ################################################################################
         model.InvokePhiRegularizers();
 
@@ -148,5 +153,15 @@ with library.CreateMasterComponent(master_config) as master_component:
         for best_token in range(0, top_tokens_count_to_visualize):
             best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '
         print best_tokens
+
+    docs_to_show = 7
+    print "\nThetaMatrix (first " + str(docs_to_show) + " documents):"
+    theta_matrix = master_component.GetThetaMatrix(model)
+    for j in range(0, topics_size):
+      print "Topic" + str(j) + ": ",
+      for i in range(0, min(docs_to_show, len(theta_matrix.item_id))):
+        weight = theta_matrix.item_weights[i].value[j]
+        print "%.3f\t" % weight,
+      print "\n",
 
     print 'Done with regularization!'

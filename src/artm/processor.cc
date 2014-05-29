@@ -112,10 +112,12 @@ Processor::ItemProcessor::ItemProcessor(
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
                                           ModelIncrement* model_increment,
+                                          bool update_token_counters,
+                                          bool update_theta_cache,
                                           float* theta) {
   int topic_size = topic_model_.topic_size();
 
-  if (model_increment != nullptr) {
+  if ((model_increment != nullptr) && update_token_counters) {
     model_increment->set_items_processed(model_increment->items_processed() + 1);
   }
 
@@ -139,6 +141,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
   if (known_tokens_count == 0) {
     return;
   }
+
   int inner_iters_count = model.inner_iterations_count();
   for (int inner_iter = 0; inner_iter <= inner_iters_count; inner_iter++) {
     // 1. Find Z
@@ -173,7 +176,9 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
             n_dw * topic_iter.Weight() * theta[topic_iter.TopicIndex()] / curZ;
         }
 
-        if ((inner_iter == inner_iters_count) && (model_increment != nullptr)) {
+        if ((inner_iter == inner_iters_count) &&
+            (model_increment != nullptr) &&
+             update_token_counters) {
           // Last iteration, updating final counters
           FloatArray* hat_n_wt_cur = model_increment->mutable_token_increment(
             token_id[token_index]);
@@ -190,6 +195,15 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     }
 
     if (inner_iter == inner_iters_count) {
+      if ((model_increment != nullptr) && update_theta_cache) {
+        // Cache theta for the next iteration
+        model_increment->add_item_id(item.id());
+        FloatArray* cached_theta = model_increment->add_theta();
+        for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
+          cached_theta->add_value(theta[topic_index]);
+        }
+      }
+
       // inner_iter goes from 0 to inner_iters_count inclusively.
       // The goal of this "last iteration" is to update model_increment.
       // As soon as model_increment is updated, we should exit.
@@ -325,9 +339,6 @@ void Processor::ThreadFunction() {
         merger_queue_->push(processor_output);
       });
 
-      const ProcessorOutput* previous_processor_output =
-        part->has_previous_processor_output() ? &part->previous_processor_output() : nullptr;
-
       std::shared_ptr<InstanceSchema> schema = schema_.get();
       std::vector<ModelName> model_names = schema->GetModelNames();
       std::for_each(model_names.begin(), model_names.end(), [&](ModelName model_name) {
@@ -337,12 +348,11 @@ void Processor::ThreadFunction() {
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each
 
         // find cache
-        const ModelIncrement* previous_model_increment = nullptr;
-        if (previous_processor_output != nullptr) {
-          for (int i = 0; i < previous_processor_output->model_increment_size(); ++i) {
-            if (previous_processor_output->model_increment(i).model_name() == model_name) {
-              previous_model_increment = &previous_processor_output->model_increment(i);
-            }
+        const DataLoaderCacheEntry* cache = nullptr;
+        for (int i = 0; i < part->cached_theta_size(); ++i) {
+          if ((part->cached_theta(i).batch_uuid() == part->batch_uuid()) &&
+              (part->cached_theta(i).model_name() == model_name)) {
+            cache = &part->cached_theta(i);
           }
         }
 
@@ -351,8 +361,6 @@ void Processor::ThreadFunction() {
 
         int topic_size = topic_model->topic_size();
         assert(topic_size > 0);
-
-        // TODO(alfrey): if (cache_old != nullptr), deduct old values
 
         // process part and store result in merger queue
         auto model_increment = processor_output->add_model_increment();
@@ -383,19 +391,16 @@ void Processor::ThreadFunction() {
         ItemProcessor item_processor(*topic_model, part->batch().token(), schema_.get());
         StreamIterator iter(*part, model.stream_name());
         while (iter.Next() != nullptr) {
-          // ToDo: add an option to always start with random iteration!
           const Item* item = iter.Current();
 
-          // ToDo: if (cache_old != nullptr), use it as a starting iteration.
           std::vector<float> theta(topic_size);
           int index_of_item = -1;
-          if (previous_model_increment != nullptr) {
-            index_of_item = repeated_field_index_of(
-              previous_model_increment->item_id(), item->id());
+          if ((cache != nullptr) && model.reuse_theta()) {
+            index_of_item = repeated_field_index_of(cache->item_id(), item->id());
           }
 
           if ((index_of_item != -1) && model.reuse_theta()) {
-            const FloatArray& old_thetas = previous_model_increment->theta(index_of_item);
+            const FloatArray& old_thetas = cache->theta(index_of_item);
             for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
               theta[topic_index] = old_thetas.value(topic_index);
             }
@@ -405,14 +410,10 @@ void Processor::ThreadFunction() {
             }
           }
 
-          item_processor.InferTheta(model, *item, model_increment, &theta[0]);
-
-          // Cache theta for the next iteration
-          model_increment->add_item_id(item->id());
-          FloatArray* cached_theta = model_increment->add_theta();
-          for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-            cached_theta->add_value(theta[topic_index]);
-          }
+          bool update_token_counters = true;
+          bool update_theta_cache = true;
+          item_processor.InferTheta(model, *item, model_increment, update_token_counters,
+                                    update_theta_cache, &theta[0]);
         }
 
         // Calculate all requested scores (such as perplexity)
@@ -437,7 +438,12 @@ void Processor::ThreadFunction() {
               theta[topic_index] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
             }
 
-            test_item_processor.InferTheta(model, *item, nullptr, theta);
+            // Calculate theta cache only if score's stream is different from model's stream.
+            // ToDo(alfrey): find a better solution! This may cause duplicates in theta_matrix.
+            bool update_theta_cache = (score.stream_name() != model.stream_name());
+            bool update_token_counters = false;
+            test_item_processor.InferTheta(model, *item, model_increment, update_token_counters,
+                                           update_theta_cache, theta);
             test_item_processor.CalculateScore(
               score, *item, theta, &perplexity_score, &perplexity_norm);
           }

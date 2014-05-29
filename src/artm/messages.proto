@@ -92,8 +92,7 @@ message ModelConfig {
   optional string stream_name = 6 [default = "@global"];
   repeated Score score = 7;
   optional bool reuse_theta = 8 [default = false];
-  optional bool cache_token_counters  = 9 [default = false];
-  repeated string regularizer_name = 10;
+  repeated string regularizer_name = 9;
 }
 
 // Configuration of a regularizer
@@ -179,6 +178,12 @@ message TopicModel {
   optional bytes internals = 7;  // serialized instance of TopicModelInternals
 }
 
+message ThetaMatrix {
+  optional string model_name = 1 [default = "@model"];
+  repeated int32 item_id = 2;
+  repeated FloatArray item_weights = 3;
+}
+
 // ====== [Under Development messages - excluded from public API] ======
 
 // Configuration of the Node Controller
@@ -186,9 +191,4 @@ message NodeControllerConfig {
   optional string node_controller_create_endpoint = 1;
   optional string node_controller_connect_endpoint = 2;
   optional string master_component_connect_endpoint = 3;
-}
-
-message BatchTopics {
-  repeated int32 item_id = 1;
-  repeated FloatArray item_weights = 2;
 }

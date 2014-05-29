@@ -19,7 +19,7 @@ class SmoothSparsePhi : public RegularizerInterface {
   explicit SmoothSparsePhi(const SmoothSparsePhiConfig& config)
     : config_(config) {}
 
-  virtual bool RegularizePhi(TopicModel* topic_model);
+  virtual bool RegularizePhi(TopicModel* topic_model, double tau);
 
  private:
   SmoothSparsePhiConfig config_;

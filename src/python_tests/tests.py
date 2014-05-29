@@ -37,8 +37,8 @@ stream.residuals.append(1)
 
 # Create regularizer_config
 dirichlet_regularizer_config = messages_pb2.DirichletThetaConfig()
-tilde_alpha = dirichlet_regularizer_config.tilde_alpha.add()
-tilde_alpha.value.append(0.1)
+alpha = dirichlet_regularizer_config.alpha.add()
+alpha.value.append(0.1)
 
 # Create model_config
 model_config = messages_pb2.ModelConfig()
@@ -47,6 +47,7 @@ score_ = model_config.score.add()
 score_.type = 0
 score_.stream_name = ('stream_0')
 model_config.regularizer_name.append('regularizer1')
+model_config.regularizer_tau.append(1)
 
 # New configs to reconfigure stuff
 master_config_new = messages_pb2.MasterComponentConfig()
@@ -59,8 +60,8 @@ model_config_new.CopyFrom(model_config)
 model_config_new.inner_iterations_count = 20
 
 dirichlet_regularizer_config_new = messages_pb2.DirichletThetaConfig()
-tilde_alpha = dirichlet_regularizer_config_new.tilde_alpha.add()
-tilde_alpha.value.append(0.2)
+alpha = dirichlet_regularizer_config_new.alpha.add()
+alpha.value.append(0.2)
 
 #################################################################################
 # TEST SECTION

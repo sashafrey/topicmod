@@ -955,6 +955,18 @@ class ModelConfig : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& regularizer_name() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_regularizer_name();
 
+  // repeated double regularizer_tau = 11;
+  inline int regularizer_tau_size() const;
+  inline void clear_regularizer_tau();
+  static const int kRegularizerTauFieldNumber = 11;
+  inline double regularizer_tau(int index) const;
+  inline void set_regularizer_tau(int index, double value);
+  inline void add_regularizer_tau(double value);
+  inline const ::google::protobuf::RepeatedField< double >&
+      regularizer_tau() const;
+  inline ::google::protobuf::RepeatedField< double >*
+      mutable_regularizer_tau();
+
   // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
   inline void set_has_name();
@@ -986,12 +998,13 @@ class ModelConfig : public ::google::protobuf::Message {
   static ::std::string* _default_stream_name_;
   ::google::protobuf::RepeatedPtrField< ::artm::Score > score_;
   ::google::protobuf::RepeatedPtrField< ::std::string> regularizer_name_;
+  ::google::protobuf::RepeatedField< double > regularizer_tau_;
   bool enabled_;
   bool reuse_theta_;
   bool cache_token_counters_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1194,40 +1207,27 @@ class DirichletThetaConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated double alpha_0 = 1;
-  inline int alpha_0_size() const;
-  inline void clear_alpha_0();
-  static const int kAlpha0FieldNumber = 1;
-  inline double alpha_0(int index) const;
-  inline void set_alpha_0(int index, double value);
-  inline void add_alpha_0(double value);
-  inline const ::google::protobuf::RepeatedField< double >&
-      alpha_0() const;
-  inline ::google::protobuf::RepeatedField< double >*
-      mutable_alpha_0();
-
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  inline int tilde_alpha_size() const;
-  inline void clear_tilde_alpha();
-  static const int kTildeAlphaFieldNumber = 2;
-  inline const ::artm::DoubleArray& tilde_alpha(int index) const;
-  inline ::artm::DoubleArray* mutable_tilde_alpha(int index);
-  inline ::artm::DoubleArray* add_tilde_alpha();
+  // repeated .artm.DoubleArray alpha = 1;
+  inline int alpha_size() const;
+  inline void clear_alpha();
+  static const int kAlphaFieldNumber = 1;
+  inline const ::artm::DoubleArray& alpha(int index) const;
+  inline ::artm::DoubleArray* mutable_alpha(int index);
+  inline ::artm::DoubleArray* add_alpha();
   inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      tilde_alpha() const;
+      alpha() const;
   inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_tilde_alpha();
+      mutable_alpha();
 
   // @@protoc_insertion_point(class_scope:artm.DirichletThetaConfig)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedField< double > alpha_0_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > tilde_alpha_;
+  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > alpha_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1292,36 +1292,26 @@ class DirichletPhiConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required double beta_0 = 1;
-  inline bool has_beta_0() const;
-  inline void clear_beta_0();
-  static const int kBeta0FieldNumber = 1;
-  inline double beta_0() const;
-  inline void set_beta_0(double value);
-
-  // required .artm.DoubleArray tilde_beta = 2;
-  inline bool has_tilde_beta() const;
-  inline void clear_tilde_beta();
-  static const int kTildeBetaFieldNumber = 2;
-  inline const ::artm::DoubleArray& tilde_beta() const;
-  inline ::artm::DoubleArray* mutable_tilde_beta();
-  inline ::artm::DoubleArray* release_tilde_beta();
-  inline void set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta);
+  // optional .artm.DoubleArray beta = 1;
+  inline bool has_beta() const;
+  inline void clear_beta();
+  static const int kBetaFieldNumber = 1;
+  inline const ::artm::DoubleArray& beta() const;
+  inline ::artm::DoubleArray* mutable_beta();
+  inline ::artm::DoubleArray* release_beta();
+  inline void set_allocated_beta(::artm::DoubleArray* beta);
 
   // @@protoc_insertion_point(class_scope:artm.DirichletPhiConfig)
  private:
-  inline void set_has_beta_0();
-  inline void clear_has_beta_0();
-  inline void set_has_tilde_beta();
-  inline void clear_has_tilde_beta();
+  inline void set_has_beta();
+  inline void clear_has_beta();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  double beta_0_;
-  ::artm::DoubleArray* tilde_beta_;
+  ::artm::DoubleArray* beta_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1386,37 +1376,34 @@ class SmoothSparseThetaConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated double alpha_0 = 1;
-  inline int alpha_0_size() const;
-  inline void clear_alpha_0();
-  static const int kAlpha0FieldNumber = 1;
-  inline double alpha_0(int index) const;
-  inline void set_alpha_0(int index, double value);
-  inline void add_alpha_0(double value);
-  inline const ::google::protobuf::RepeatedField< double >&
-      alpha_0() const;
-  inline ::google::protobuf::RepeatedField< double >*
-      mutable_alpha_0();
+  // required int32 background_topics_count = 1;
+  inline bool has_background_topics_count() const;
+  inline void clear_background_topics_count();
+  static const int kBackgroundTopicsCountFieldNumber = 1;
+  inline ::google::protobuf::int32 background_topics_count() const;
+  inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  inline int tilde_alpha_size() const;
-  inline void clear_tilde_alpha();
-  static const int kTildeAlphaFieldNumber = 2;
-  inline const ::artm::DoubleArray& tilde_alpha(int index) const;
-  inline ::artm::DoubleArray* mutable_tilde_alpha(int index);
-  inline ::artm::DoubleArray* add_tilde_alpha();
+  // repeated .artm.DoubleArray alpha = 2;
+  inline int alpha_size() const;
+  inline void clear_alpha();
+  static const int kAlphaFieldNumber = 2;
+  inline const ::artm::DoubleArray& alpha(int index) const;
+  inline ::artm::DoubleArray* mutable_alpha(int index);
+  inline ::artm::DoubleArray* add_alpha();
   inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      tilde_alpha() const;
+      alpha() const;
   inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_tilde_alpha();
+      mutable_alpha();
 
   // @@protoc_insertion_point(class_scope:artm.SmoothSparseThetaConfig)
  private:
+  inline void set_has_background_topics_count();
+  inline void clear_has_background_topics_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedField< double > alpha_0_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > tilde_alpha_;
+  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > alpha_;
+  ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -1491,65 +1478,42 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 background_topics_count() const;
   inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // required double beta_0 = 2;
-  inline bool has_beta_0() const;
-  inline void clear_beta_0();
-  static const int kBeta0FieldNumber = 2;
-  inline double beta_0() const;
-  inline void set_beta_0(double value);
+  // optional .artm.DoubleArray beta = 2;
+  inline bool has_beta() const;
+  inline void clear_beta();
+  static const int kBetaFieldNumber = 2;
+  inline const ::artm::DoubleArray& beta() const;
+  inline ::artm::DoubleArray* mutable_beta();
+  inline ::artm::DoubleArray* release_beta();
+  inline void set_allocated_beta(::artm::DoubleArray* beta);
 
-  // required .artm.DoubleArray tilde_beta = 3;
-  inline bool has_tilde_beta() const;
-  inline void clear_tilde_beta();
-  static const int kTildeBetaFieldNumber = 3;
-  inline const ::artm::DoubleArray& tilde_beta() const;
-  inline ::artm::DoubleArray* mutable_tilde_beta();
-  inline ::artm::DoubleArray* release_tilde_beta();
-  inline void set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta);
-
-  // repeated double background_beta_0 = 4;
-  inline int background_beta_0_size() const;
-  inline void clear_background_beta_0();
-  static const int kBackgroundBeta0FieldNumber = 4;
-  inline double background_beta_0(int index) const;
-  inline void set_background_beta_0(int index, double value);
-  inline void add_background_beta_0(double value);
-  inline const ::google::protobuf::RepeatedField< double >&
-      background_beta_0() const;
-  inline ::google::protobuf::RepeatedField< double >*
-      mutable_background_beta_0();
-
-  // repeated .artm.DoubleArray background_tilde_beta = 5;
-  inline int background_tilde_beta_size() const;
-  inline void clear_background_tilde_beta();
-  static const int kBackgroundTildeBetaFieldNumber = 5;
-  inline const ::artm::DoubleArray& background_tilde_beta(int index) const;
-  inline ::artm::DoubleArray* mutable_background_tilde_beta(int index);
-  inline ::artm::DoubleArray* add_background_tilde_beta();
+  // repeated .artm.DoubleArray background_beta = 3;
+  inline int background_beta_size() const;
+  inline void clear_background_beta();
+  static const int kBackgroundBetaFieldNumber = 3;
+  inline const ::artm::DoubleArray& background_beta(int index) const;
+  inline ::artm::DoubleArray* mutable_background_beta(int index);
+  inline ::artm::DoubleArray* add_background_beta();
   inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      background_tilde_beta() const;
+      background_beta() const;
   inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_background_tilde_beta();
+      mutable_background_beta();
 
   // @@protoc_insertion_point(class_scope:artm.SmoothSparsePhiConfig)
  private:
   inline void set_has_background_topics_count();
   inline void clear_has_background_topics_count();
-  inline void set_has_beta_0();
-  inline void clear_has_beta_0();
-  inline void set_has_tilde_beta();
-  inline void clear_has_tilde_beta();
+  inline void set_has_beta();
+  inline void clear_has_beta();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  double beta_0_;
-  ::artm::DoubleArray* tilde_beta_;
-  ::google::protobuf::RepeatedField< double > background_beta_0_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > background_tilde_beta_;
+  ::artm::DoubleArray* beta_;
+  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > background_beta_;
   ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -3543,6 +3507,31 @@ ModelConfig::mutable_regularizer_name() {
   return &regularizer_name_;
 }
 
+// repeated double regularizer_tau = 11;
+inline int ModelConfig::regularizer_tau_size() const {
+  return regularizer_tau_.size();
+}
+inline void ModelConfig::clear_regularizer_tau() {
+  regularizer_tau_.Clear();
+}
+inline double ModelConfig::regularizer_tau(int index) const {
+  return regularizer_tau_.Get(index);
+}
+inline void ModelConfig::set_regularizer_tau(int index, double value) {
+  regularizer_tau_.Set(index, value);
+}
+inline void ModelConfig::add_regularizer_tau(double value) {
+  regularizer_tau_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< double >&
+ModelConfig::regularizer_tau() const {
+  return regularizer_tau_;
+}
+inline ::google::protobuf::RepeatedField< double >*
+ModelConfig::mutable_regularizer_tau() {
+  return &regularizer_tau_;
+}
+
 // -------------------------------------------------------------------
 
 // RegularizerConfig
@@ -3714,117 +3703,70 @@ inline void RegularizerConfig::set_allocated_config(::std::string* config) {
 
 // DirichletThetaConfig
 
-// repeated double alpha_0 = 1;
-inline int DirichletThetaConfig::alpha_0_size() const {
-  return alpha_0_.size();
+// repeated .artm.DoubleArray alpha = 1;
+inline int DirichletThetaConfig::alpha_size() const {
+  return alpha_.size();
 }
-inline void DirichletThetaConfig::clear_alpha_0() {
-  alpha_0_.Clear();
+inline void DirichletThetaConfig::clear_alpha() {
+  alpha_.Clear();
 }
-inline double DirichletThetaConfig::alpha_0(int index) const {
-  return alpha_0_.Get(index);
+inline const ::artm::DoubleArray& DirichletThetaConfig::alpha(int index) const {
+  return alpha_.Get(index);
 }
-inline void DirichletThetaConfig::set_alpha_0(int index, double value) {
-  alpha_0_.Set(index, value);
+inline ::artm::DoubleArray* DirichletThetaConfig::mutable_alpha(int index) {
+  return alpha_.Mutable(index);
 }
-inline void DirichletThetaConfig::add_alpha_0(double value) {
-  alpha_0_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< double >&
-DirichletThetaConfig::alpha_0() const {
-  return alpha_0_;
-}
-inline ::google::protobuf::RepeatedField< double >*
-DirichletThetaConfig::mutable_alpha_0() {
-  return &alpha_0_;
-}
-
-// repeated .artm.DoubleArray tilde_alpha = 2;
-inline int DirichletThetaConfig::tilde_alpha_size() const {
-  return tilde_alpha_.size();
-}
-inline void DirichletThetaConfig::clear_tilde_alpha() {
-  tilde_alpha_.Clear();
-}
-inline const ::artm::DoubleArray& DirichletThetaConfig::tilde_alpha(int index) const {
-  return tilde_alpha_.Get(index);
-}
-inline ::artm::DoubleArray* DirichletThetaConfig::mutable_tilde_alpha(int index) {
-  return tilde_alpha_.Mutable(index);
-}
-inline ::artm::DoubleArray* DirichletThetaConfig::add_tilde_alpha() {
-  return tilde_alpha_.Add();
+inline ::artm::DoubleArray* DirichletThetaConfig::add_alpha() {
+  return alpha_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-DirichletThetaConfig::tilde_alpha() const {
-  return tilde_alpha_;
+DirichletThetaConfig::alpha() const {
+  return alpha_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-DirichletThetaConfig::mutable_tilde_alpha() {
-  return &tilde_alpha_;
+DirichletThetaConfig::mutable_alpha() {
+  return &alpha_;
 }
 
 // -------------------------------------------------------------------
 
 // DirichletPhiConfig
 
-// required double beta_0 = 1;
-inline bool DirichletPhiConfig::has_beta_0() const {
+// optional .artm.DoubleArray beta = 1;
+inline bool DirichletPhiConfig::has_beta() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void DirichletPhiConfig::set_has_beta_0() {
+inline void DirichletPhiConfig::set_has_beta() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void DirichletPhiConfig::clear_has_beta_0() {
+inline void DirichletPhiConfig::clear_has_beta() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void DirichletPhiConfig::clear_beta_0() {
-  beta_0_ = 0;
-  clear_has_beta_0();
+inline void DirichletPhiConfig::clear_beta() {
+  if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
+  clear_has_beta();
 }
-inline double DirichletPhiConfig::beta_0() const {
-  return beta_0_;
+inline const ::artm::DoubleArray& DirichletPhiConfig::beta() const {
+  return beta_ != NULL ? *beta_ : *default_instance_->beta_;
 }
-inline void DirichletPhiConfig::set_beta_0(double value) {
-  set_has_beta_0();
-  beta_0_ = value;
+inline ::artm::DoubleArray* DirichletPhiConfig::mutable_beta() {
+  set_has_beta();
+  if (beta_ == NULL) beta_ = new ::artm::DoubleArray;
+  return beta_;
 }
-
-// required .artm.DoubleArray tilde_beta = 2;
-inline bool DirichletPhiConfig::has_tilde_beta() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void DirichletPhiConfig::set_has_tilde_beta() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void DirichletPhiConfig::clear_has_tilde_beta() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void DirichletPhiConfig::clear_tilde_beta() {
-  if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
-  clear_has_tilde_beta();
-}
-inline const ::artm::DoubleArray& DirichletPhiConfig::tilde_beta() const {
-  return tilde_beta_ != NULL ? *tilde_beta_ : *default_instance_->tilde_beta_;
-}
-inline ::artm::DoubleArray* DirichletPhiConfig::mutable_tilde_beta() {
-  set_has_tilde_beta();
-  if (tilde_beta_ == NULL) tilde_beta_ = new ::artm::DoubleArray;
-  return tilde_beta_;
-}
-inline ::artm::DoubleArray* DirichletPhiConfig::release_tilde_beta() {
-  clear_has_tilde_beta();
-  ::artm::DoubleArray* temp = tilde_beta_;
-  tilde_beta_ = NULL;
+inline ::artm::DoubleArray* DirichletPhiConfig::release_beta() {
+  clear_has_beta();
+  ::artm::DoubleArray* temp = beta_;
+  beta_ = NULL;
   return temp;
 }
-inline void DirichletPhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta) {
-  delete tilde_beta_;
-  tilde_beta_ = tilde_beta;
-  if (tilde_beta) {
-    set_has_tilde_beta();
+inline void DirichletPhiConfig::set_allocated_beta(::artm::DoubleArray* beta) {
+  delete beta_;
+  beta_ = beta;
+  if (beta) {
+    set_has_beta();
   } else {
-    clear_has_tilde_beta();
+    clear_has_beta();
   }
 }
 
@@ -3832,54 +3774,51 @@ inline void DirichletPhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* ti
 
 // SmoothSparseThetaConfig
 
-// repeated double alpha_0 = 1;
-inline int SmoothSparseThetaConfig::alpha_0_size() const {
-  return alpha_0_.size();
+// required int32 background_topics_count = 1;
+inline bool SmoothSparseThetaConfig::has_background_topics_count() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SmoothSparseThetaConfig::clear_alpha_0() {
-  alpha_0_.Clear();
+inline void SmoothSparseThetaConfig::set_has_background_topics_count() {
+  _has_bits_[0] |= 0x00000001u;
 }
-inline double SmoothSparseThetaConfig::alpha_0(int index) const {
-  return alpha_0_.Get(index);
+inline void SmoothSparseThetaConfig::clear_has_background_topics_count() {
+  _has_bits_[0] &= ~0x00000001u;
 }
-inline void SmoothSparseThetaConfig::set_alpha_0(int index, double value) {
-  alpha_0_.Set(index, value);
+inline void SmoothSparseThetaConfig::clear_background_topics_count() {
+  background_topics_count_ = 0;
+  clear_has_background_topics_count();
 }
-inline void SmoothSparseThetaConfig::add_alpha_0(double value) {
-  alpha_0_.Add(value);
+inline ::google::protobuf::int32 SmoothSparseThetaConfig::background_topics_count() const {
+  return background_topics_count_;
 }
-inline const ::google::protobuf::RepeatedField< double >&
-SmoothSparseThetaConfig::alpha_0() const {
-  return alpha_0_;
-}
-inline ::google::protobuf::RepeatedField< double >*
-SmoothSparseThetaConfig::mutable_alpha_0() {
-  return &alpha_0_;
+inline void SmoothSparseThetaConfig::set_background_topics_count(::google::protobuf::int32 value) {
+  set_has_background_topics_count();
+  background_topics_count_ = value;
 }
 
-// repeated .artm.DoubleArray tilde_alpha = 2;
-inline int SmoothSparseThetaConfig::tilde_alpha_size() const {
-  return tilde_alpha_.size();
+// repeated .artm.DoubleArray alpha = 2;
+inline int SmoothSparseThetaConfig::alpha_size() const {
+  return alpha_.size();
 }
-inline void SmoothSparseThetaConfig::clear_tilde_alpha() {
-  tilde_alpha_.Clear();
+inline void SmoothSparseThetaConfig::clear_alpha() {
+  alpha_.Clear();
 }
-inline const ::artm::DoubleArray& SmoothSparseThetaConfig::tilde_alpha(int index) const {
-  return tilde_alpha_.Get(index);
+inline const ::artm::DoubleArray& SmoothSparseThetaConfig::alpha(int index) const {
+  return alpha_.Get(index);
 }
-inline ::artm::DoubleArray* SmoothSparseThetaConfig::mutable_tilde_alpha(int index) {
-  return tilde_alpha_.Mutable(index);
+inline ::artm::DoubleArray* SmoothSparseThetaConfig::mutable_alpha(int index) {
+  return alpha_.Mutable(index);
 }
-inline ::artm::DoubleArray* SmoothSparseThetaConfig::add_tilde_alpha() {
-  return tilde_alpha_.Add();
+inline ::artm::DoubleArray* SmoothSparseThetaConfig::add_alpha() {
+  return alpha_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-SmoothSparseThetaConfig::tilde_alpha() const {
-  return tilde_alpha_;
+SmoothSparseThetaConfig::alpha() const {
+  return alpha_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-SmoothSparseThetaConfig::mutable_tilde_alpha() {
-  return &tilde_alpha_;
+SmoothSparseThetaConfig::mutable_alpha() {
+  return &alpha_;
 }
 
 // -------------------------------------------------------------------
@@ -3908,114 +3847,67 @@ inline void SmoothSparsePhiConfig::set_background_topics_count(::google::protobu
   background_topics_count_ = value;
 }
 
-// required double beta_0 = 2;
-inline bool SmoothSparsePhiConfig::has_beta_0() const {
+// optional .artm.DoubleArray beta = 2;
+inline bool SmoothSparsePhiConfig::has_beta() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SmoothSparsePhiConfig::set_has_beta_0() {
+inline void SmoothSparsePhiConfig::set_has_beta() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_has_beta_0() {
+inline void SmoothSparsePhiConfig::clear_has_beta() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_beta_0() {
-  beta_0_ = 0;
-  clear_has_beta_0();
+inline void SmoothSparsePhiConfig::clear_beta() {
+  if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
+  clear_has_beta();
 }
-inline double SmoothSparsePhiConfig::beta_0() const {
-  return beta_0_;
+inline const ::artm::DoubleArray& SmoothSparsePhiConfig::beta() const {
+  return beta_ != NULL ? *beta_ : *default_instance_->beta_;
 }
-inline void SmoothSparsePhiConfig::set_beta_0(double value) {
-  set_has_beta_0();
-  beta_0_ = value;
+inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_beta() {
+  set_has_beta();
+  if (beta_ == NULL) beta_ = new ::artm::DoubleArray;
+  return beta_;
 }
-
-// required .artm.DoubleArray tilde_beta = 3;
-inline bool SmoothSparsePhiConfig::has_tilde_beta() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SmoothSparsePhiConfig::set_has_tilde_beta() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void SmoothSparsePhiConfig::clear_has_tilde_beta() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void SmoothSparsePhiConfig::clear_tilde_beta() {
-  if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
-  clear_has_tilde_beta();
-}
-inline const ::artm::DoubleArray& SmoothSparsePhiConfig::tilde_beta() const {
-  return tilde_beta_ != NULL ? *tilde_beta_ : *default_instance_->tilde_beta_;
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_tilde_beta() {
-  set_has_tilde_beta();
-  if (tilde_beta_ == NULL) tilde_beta_ = new ::artm::DoubleArray;
-  return tilde_beta_;
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::release_tilde_beta() {
-  clear_has_tilde_beta();
-  ::artm::DoubleArray* temp = tilde_beta_;
-  tilde_beta_ = NULL;
+inline ::artm::DoubleArray* SmoothSparsePhiConfig::release_beta() {
+  clear_has_beta();
+  ::artm::DoubleArray* temp = beta_;
+  beta_ = NULL;
   return temp;
 }
-inline void SmoothSparsePhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta) {
-  delete tilde_beta_;
-  tilde_beta_ = tilde_beta;
-  if (tilde_beta) {
-    set_has_tilde_beta();
+inline void SmoothSparsePhiConfig::set_allocated_beta(::artm::DoubleArray* beta) {
+  delete beta_;
+  beta_ = beta;
+  if (beta) {
+    set_has_beta();
   } else {
-    clear_has_tilde_beta();
+    clear_has_beta();
   }
 }
 
-// repeated double background_beta_0 = 4;
-inline int SmoothSparsePhiConfig::background_beta_0_size() const {
-  return background_beta_0_.size();
+// repeated .artm.DoubleArray background_beta = 3;
+inline int SmoothSparsePhiConfig::background_beta_size() const {
+  return background_beta_.size();
 }
-inline void SmoothSparsePhiConfig::clear_background_beta_0() {
-  background_beta_0_.Clear();
+inline void SmoothSparsePhiConfig::clear_background_beta() {
+  background_beta_.Clear();
 }
-inline double SmoothSparsePhiConfig::background_beta_0(int index) const {
-  return background_beta_0_.Get(index);
+inline const ::artm::DoubleArray& SmoothSparsePhiConfig::background_beta(int index) const {
+  return background_beta_.Get(index);
 }
-inline void SmoothSparsePhiConfig::set_background_beta_0(int index, double value) {
-  background_beta_0_.Set(index, value);
+inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_background_beta(int index) {
+  return background_beta_.Mutable(index);
 }
-inline void SmoothSparsePhiConfig::add_background_beta_0(double value) {
-  background_beta_0_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< double >&
-SmoothSparsePhiConfig::background_beta_0() const {
-  return background_beta_0_;
-}
-inline ::google::protobuf::RepeatedField< double >*
-SmoothSparsePhiConfig::mutable_background_beta_0() {
-  return &background_beta_0_;
-}
-
-// repeated .artm.DoubleArray background_tilde_beta = 5;
-inline int SmoothSparsePhiConfig::background_tilde_beta_size() const {
-  return background_tilde_beta_.size();
-}
-inline void SmoothSparsePhiConfig::clear_background_tilde_beta() {
-  background_tilde_beta_.Clear();
-}
-inline const ::artm::DoubleArray& SmoothSparsePhiConfig::background_tilde_beta(int index) const {
-  return background_tilde_beta_.Get(index);
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_background_tilde_beta(int index) {
-  return background_tilde_beta_.Mutable(index);
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::add_background_tilde_beta() {
-  return background_tilde_beta_.Add();
+inline ::artm::DoubleArray* SmoothSparsePhiConfig::add_background_beta() {
+  return background_beta_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-SmoothSparsePhiConfig::background_tilde_beta() const {
-  return background_tilde_beta_;
+SmoothSparsePhiConfig::background_beta() const {
+  return background_beta_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-SmoothSparsePhiConfig::mutable_background_tilde_beta() {
-  return &background_tilde_beta_;
+SmoothSparsePhiConfig::mutable_background_beta() {
+  return &background_beta_;
 }
 
 // -------------------------------------------------------------------

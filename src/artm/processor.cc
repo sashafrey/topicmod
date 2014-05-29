@@ -200,11 +200,14 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
     // 3. The following block of code makes the regularization of theta_next
     auto reg_names = model.regularizer_name();
+    auto reg_tau = model.regularizer_tau();
     for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
       reg_name_iterator++) {
       auto regularizer = schema_->regularizer(reg_name_iterator->c_str());
-      if (regularizer != nullptr) {
-        bool retval = regularizer->RegularizeTheta(item, &theta_next, topic_size, inner_iter);
+      if (regularizer != nullptr) { 
+        auto tau_index = reg_name_iterator - reg_names.begin();
+        double tau = reg_tau.Get(tau_index);
+        bool retval = regularizer->RegularizeTheta(item, &theta_next, topic_size, inner_iter, tau);
         if (!retval) {
           LOG(ERROR) << "Problems with type or number of parameters in Theta regularizer <" <<
             reg_name_iterator->c_str() <<

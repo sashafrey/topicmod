@@ -182,7 +182,7 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(MasterComponentConfig));
   MasterComponentConfig_ModusOperandi_descriptor_ = MasterComponentConfig_descriptor_->enum_type(0);
   ModelConfig_descriptor_ = file->message_type(5);
-  static const int ModelConfig_offsets_[10] = {
+  static const int ModelConfig_offsets_[11] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, topics_count_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, enabled_),
@@ -193,6 +193,7 @@ void protobuf_AssignDesc_messages_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, reuse_theta_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, cache_token_counters_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, regularizer_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ModelConfig, regularizer_tau_),
   };
   ModelConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -224,9 +225,8 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(RegularizerConfig));
   RegularizerConfig_Type_descriptor_ = RegularizerConfig_descriptor_->enum_type(0);
   DirichletThetaConfig_descriptor_ = file->message_type(7);
-  static const int DirichletThetaConfig_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletThetaConfig, alpha_0_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletThetaConfig, tilde_alpha_),
+  static const int DirichletThetaConfig_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletThetaConfig, alpha_),
   };
   DirichletThetaConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -240,9 +240,8 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DirichletThetaConfig));
   DirichletPhiConfig_descriptor_ = file->message_type(8);
-  static const int DirichletPhiConfig_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletPhiConfig, beta_0_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletPhiConfig, tilde_beta_),
+  static const int DirichletPhiConfig_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DirichletPhiConfig, beta_),
   };
   DirichletPhiConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -257,8 +256,8 @@ void protobuf_AssignDesc_messages_2eproto() {
       sizeof(DirichletPhiConfig));
   SmoothSparseThetaConfig_descriptor_ = file->message_type(9);
   static const int SmoothSparseThetaConfig_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparseThetaConfig, alpha_0_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparseThetaConfig, tilde_alpha_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparseThetaConfig, background_topics_count_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparseThetaConfig, alpha_),
   };
   SmoothSparseThetaConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -272,12 +271,10 @@ void protobuf_AssignDesc_messages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SmoothSparseThetaConfig));
   SmoothSparsePhiConfig_descriptor_ = file->message_type(10);
-  static const int SmoothSparsePhiConfig_offsets_[5] = {
+  static const int SmoothSparsePhiConfig_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, background_topics_count_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, beta_0_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, tilde_beta_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, background_beta_0_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, background_tilde_beta_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, beta_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, background_beta_),
   };
   SmoothSparsePhiConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -536,7 +533,7 @@ void protobuf_AddDesc_messages_2eproto() {
     "ModusOperandi:\005Local\022(\n master_component"
     "_create_endpoint\030e \001(\t\022)\n!master_compone"
     "nt_connect_endpoint\030f \001(\t\"\'\n\rModusOperan"
-    "di\022\t\n\005Local\020\000\022\013\n\007Network\020\001\"\250\002\n\013ModelConf"
+    "di\022\t\n\005Local\020\000\022\013\n\007Network\020\001\"\301\002\n\013ModelConf"
     "ig\022\024\n\004name\030\001 \001(\t:\006@model\022\030\n\014topics_count"
     "\030\002 \001(\005:\00232\022\025\n\007enabled\030\003 \001(\010:\004true\022\"\n\026inn"
     "er_iterations_count\030\004 \001(\005:\00210\022\031\n\nfield_n"
@@ -544,42 +541,41 @@ void protobuf_AddDesc_messages_2eproto() {
     "global\022\032\n\005score\030\007 \003(\0132\013.artm.Score\022\032\n\013re"
     "use_theta\030\010 \001(\010:\005false\022#\n\024cache_token_co"
     "unters\030\t \001(\010:\005false\022\030\n\020regularizer_name\030"
-    "\n \003(\t\"\267\001\n\021RegularizerConfig\022\014\n\004name\030\001 \001("
-    "\t\022*\n\004type\030\002 \001(\0162\034.artm.RegularizerConfig"
-    ".Type\022\016\n\006config\030\003 \001(\014\"X\n\004Type\022\022\n\016Dirichl"
-    "etTheta\020\000\022\020\n\014DirichletPhi\020\001\022\025\n\021SmoothSpa"
-    "rseTheta\020\002\022\023\n\017SmoothSparsePhi\020\003\"O\n\024Diric"
-    "hletThetaConfig\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013tild"
-    "e_alpha\030\002 \003(\0132\021.artm.DoubleArray\"K\n\022Diri"
-    "chletPhiConfig\022\016\n\006beta_0\030\001 \002(\001\022%\n\ntilde_"
-    "beta\030\002 \002(\0132\021.artm.DoubleArray\"R\n\027SmoothS"
-    "parseThetaConfig\022\017\n\007alpha_0\030\001 \003(\001\022&\n\013til"
-    "de_alpha\030\002 \003(\0132\021.artm.DoubleArray\"\274\001\n\025Sm"
-    "oothSparsePhiConfig\022\037\n\027background_topics"
-    "_count\030\001 \002(\005\022\016\n\006beta_0\030\002 \002(\001\022%\n\ntilde_be"
-    "ta\030\003 \002(\0132\021.artm.DoubleArray\022\031\n\021backgroun"
-    "d_beta_0\030\004 \003(\001\0220\n\025background_tilde_beta\030"
-    "\005 \003(\0132\021.artm.DoubleArray\" \n\013DoubleArray\022"
-    "\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFloatArray\022\021\n\005valu"
-    "e\030\001 \003(\002B\002\020\001\"x\n\005Score\022\036\n\004type\030\001 \001(\0162\020.art"
-    "m.Score.Type\022\031\n\nfield_name\030\002 \001(\t:\005@body\022"
-    "\034\n\013stream_name\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n"
-    "\nPerplexity\020\000\"\213\003\n\nTopicModel\022\024\n\004name\030\001 \001"
-    "(\t:\006@model\022\024\n\014topics_count\030\002 \001(\005\022\027\n\017item"
-    "s_processed\030\003 \001(\005\022\r\n\005token\030\004 \003(\t\022\'\n\rtoke"
-    "n_weights\030\005 \003(\0132\020.artm.FloatArray\022!\n\006sco"
-    "res\030\006 \001(\0132\021.artm.DoubleArray\022\021\n\tinternal"
-    "s\030\007 \001(\014\032\311\001\n\023TopicModelInternals\022\036\n\004n_wt\030"
-    "\001 \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020."
-    "artm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.Floa"
-    "tArray\022%\n\nscores_raw\030\004 \001(\0132\021.artm.Double"
-    "Array\022,\n\021scores_normalizer\030\005 \001(\0132\021.artm."
-    "DoubleArray\"\224\001\n\024NodeControllerConfig\022\'\n\037"
-    "node_controller_create_endpoint\030\001 \001(\t\022(\n"
-    " node_controller_connect_endpoint\030\002 \001(\t\022"
-    ")\n!master_component_connect_endpoint\030\003 \001"
-    "(\t\"F\n\013BatchTopics\022\017\n\007item_id\030\001 \003(\005\022&\n\014it"
-    "em_weights\030\002 \003(\0132\020.artm.FloatArray", 2514);
+    "\n \003(\t\022\027\n\017regularizer_tau\030\013 \003(\001\"\267\001\n\021Regul"
+    "arizerConfig\022\014\n\004name\030\001 \001(\t\022*\n\004type\030\002 \001(\016"
+    "2\034.artm.RegularizerConfig.Type\022\016\n\006config"
+    "\030\003 \001(\014\"X\n\004Type\022\022\n\016DirichletTheta\020\000\022\020\n\014Di"
+    "richletPhi\020\001\022\025\n\021SmoothSparseTheta\020\002\022\023\n\017S"
+    "moothSparsePhi\020\003\"8\n\024DirichletThetaConfig"
+    "\022 \n\005alpha\030\001 \003(\0132\021.artm.DoubleArray\"5\n\022Di"
+    "richletPhiConfig\022\037\n\004beta\030\001 \001(\0132\021.artm.Do"
+    "ubleArray\"\\\n\027SmoothSparseThetaConfig\022\037\n\027"
+    "background_topics_count\030\001 \002(\005\022 \n\005alpha\030\002"
+    " \003(\0132\021.artm.DoubleArray\"\205\001\n\025SmoothSparse"
+    "PhiConfig\022\037\n\027background_topics_count\030\001 \002"
+    "(\005\022\037\n\004beta\030\002 \001(\0132\021.artm.DoubleArray\022*\n\017b"
+    "ackground_beta\030\003 \003(\0132\021.artm.DoubleArray\""
+    " \n\013DoubleArray\022\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFlo"
+    "atArray\022\021\n\005value\030\001 \003(\002B\002\020\001\"x\n\005Score\022\036\n\004t"
+    "ype\030\001 \001(\0162\020.artm.Score.Type\022\031\n\nfield_nam"
+    "e\030\002 \001(\t:\005@body\022\034\n\013stream_name\030\003 \001(\t:\007@gl"
+    "obal\"\026\n\004Type\022\016\n\nPerplexity\020\000\"\213\003\n\nTopicMo"
+    "del\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topics_coun"
+    "t\030\002 \001(\005\022\027\n\017items_processed\030\003 \001(\005\022\r\n\005toke"
+    "n\030\004 \003(\t\022\'\n\rtoken_weights\030\005 \003(\0132\020.artm.Fl"
+    "oatArray\022!\n\006scores\030\006 \001(\0132\021.artm.DoubleAr"
+    "ray\022\021\n\tinternals\030\007 \001(\014\032\311\001\n\023TopicModelInt"
+    "ernals\022\036\n\004n_wt\030\001 \003(\0132\020.artm.FloatArray\022\036"
+    "\n\004r_wt\030\002 \003(\0132\020.artm.FloatArray\022\035\n\003n_t\030\003 "
+    "\001(\0132\020.artm.FloatArray\022%\n\nscores_raw\030\004 \001("
+    "\0132\021.artm.DoubleArray\022,\n\021scores_normalize"
+    "r\030\005 \001(\0132\021.artm.DoubleArray\"\224\001\n\024NodeContr"
+    "ollerConfig\022\'\n\037node_controller_create_en"
+    "dpoint\030\001 \001(\t\022(\n node_controller_connect_"
+    "endpoint\030\002 \001(\t\022)\n!master_component_conne"
+    "ct_endpoint\030\003 \001(\t\"F\n\013BatchTopics\022\017\n\007item"
+    "_id\030\001 \003(\005\022&\n\014item_weights\030\002 \003(\0132\020.artm.F"
+    "loatArray", 2449);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -2510,6 +2506,7 @@ const int ModelConfig::kScoreFieldNumber;
 const int ModelConfig::kReuseThetaFieldNumber;
 const int ModelConfig::kCacheTokenCountersFieldNumber;
 const int ModelConfig::kRegularizerNameFieldNumber;
+const int ModelConfig::kRegularizerTauFieldNumber;
 #endif  // !_MSC_VER
 
 ModelConfig::ModelConfig()
@@ -2605,6 +2602,7 @@ void ModelConfig::Clear() {
   }
   score_.Clear();
   regularizer_name_.Clear();
+  regularizer_tau_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2775,6 +2773,28 @@ bool ModelConfig::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(82)) goto parse_regularizer_name;
+        if (input->ExpectTag(89)) goto parse_regularizer_tau;
+        break;
+      }
+
+      // repeated double regularizer_tau = 11;
+      case 11: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_regularizer_tau:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 1, 89, input, this->mutable_regularizer_tau())));
+        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
+                   == ::google::protobuf::internal::WireFormatLite::
+                      WIRETYPE_LENGTH_DELIMITED) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, this->mutable_regularizer_tau())));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(89)) goto parse_regularizer_tau;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2864,6 +2884,12 @@ void ModelConfig::SerializeWithCachedSizes(
       10, this->regularizer_name(i), output);
   }
 
+  // repeated double regularizer_tau = 11;
+  for (int i = 0; i < this->regularizer_tau_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(
+      11, this->regularizer_tau(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2941,6 +2967,12 @@ void ModelConfig::SerializeWithCachedSizes(
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target = ::google::protobuf::internal::WireFormatLite::
       WriteStringToArray(10, this->regularizer_name(i), target);
+  }
+
+  // repeated double regularizer_tau = 11;
+  for (int i = 0; i < this->regularizer_tau_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteDoubleToArray(11, this->regularizer_tau(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3022,6 +3054,13 @@ int ModelConfig::ByteSize() const {
       this->regularizer_name(i));
   }
 
+  // repeated double regularizer_tau = 11;
+  {
+    int data_size = 0;
+    data_size = 8 * this->regularizer_tau_size();
+    total_size += 1 * this->regularizer_tau_size() + data_size;
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -3049,6 +3088,7 @@ void ModelConfig::MergeFrom(const ModelConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
   score_.MergeFrom(from.score_);
   regularizer_name_.MergeFrom(from.regularizer_name_);
+  regularizer_tau_.MergeFrom(from.regularizer_tau_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_name()) {
       set_name(from.name());
@@ -3109,6 +3149,7 @@ void ModelConfig::Swap(ModelConfig* other) {
     std::swap(reuse_theta_, other->reuse_theta_);
     std::swap(cache_token_counters_, other->cache_token_counters_);
     regularizer_name_.Swap(&other->regularizer_name_);
+    regularizer_tau_.Swap(&other->regularizer_tau_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -3471,8 +3512,7 @@ void RegularizerConfig::Swap(RegularizerConfig* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DirichletThetaConfig::kAlpha0FieldNumber;
-const int DirichletThetaConfig::kTildeAlphaFieldNumber;
+const int DirichletThetaConfig::kAlphaFieldNumber;
 #endif  // !_MSC_VER
 
 DirichletThetaConfig::DirichletThetaConfig()
@@ -3525,8 +3565,7 @@ DirichletThetaConfig* DirichletThetaConfig::New() const {
 }
 
 void DirichletThetaConfig::Clear() {
-  alpha_0_.Clear();
-  tilde_alpha_.Clear();
+  alpha_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3537,39 +3576,17 @@ bool DirichletThetaConfig::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated double alpha_0 = 1;
+      // repeated .artm.DoubleArray alpha = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_alpha_0:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 1, 9, input, this->mutable_alpha_0())));
-        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
-                   == ::google::protobuf::internal::WireFormatLite::
-                      WIRETYPE_LENGTH_DELIMITED) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, this->mutable_alpha_0())));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(9)) goto parse_alpha_0;
-        if (input->ExpectTag(18)) goto parse_tilde_alpha;
-        break;
-      }
-
-      // repeated .artm.DoubleArray tilde_alpha = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_tilde_alpha:
+         parse_alpha:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_tilde_alpha()));
+                input, add_alpha()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_tilde_alpha;
+        if (input->ExpectTag(10)) goto parse_alpha;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -3592,16 +3609,10 @@ bool DirichletThetaConfig::MergePartialFromCodedStream(
 
 void DirichletThetaConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated double alpha_0 = 1;
-  for (int i = 0; i < this->alpha_0_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(
-      1, this->alpha_0(i), output);
-  }
-
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  for (int i = 0; i < this->tilde_alpha_size(); i++) {
+  // repeated .artm.DoubleArray alpha = 1;
+  for (int i = 0; i < this->alpha_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->tilde_alpha(i), output);
+      1, this->alpha(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3612,17 +3623,11 @@ void DirichletThetaConfig::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DirichletThetaConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated double alpha_0 = 1;
-  for (int i = 0; i < this->alpha_0_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleToArray(1, this->alpha_0(i), target);
-  }
-
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  for (int i = 0; i < this->tilde_alpha_size(); i++) {
+  // repeated .artm.DoubleArray alpha = 1;
+  for (int i = 0; i < this->alpha_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->tilde_alpha(i), target);
+        1, this->alpha(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3635,19 +3640,12 @@ void DirichletThetaConfig::SerializeWithCachedSizes(
 int DirichletThetaConfig::ByteSize() const {
   int total_size = 0;
 
-  // repeated double alpha_0 = 1;
-  {
-    int data_size = 0;
-    data_size = 8 * this->alpha_0_size();
-    total_size += 1 * this->alpha_0_size() + data_size;
-  }
-
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  total_size += 1 * this->tilde_alpha_size();
-  for (int i = 0; i < this->tilde_alpha_size(); i++) {
+  // repeated .artm.DoubleArray alpha = 1;
+  total_size += 1 * this->alpha_size();
+  for (int i = 0; i < this->alpha_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->tilde_alpha(i));
+        this->alpha(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -3675,8 +3673,7 @@ void DirichletThetaConfig::MergeFrom(const ::google::protobuf::Message& from) {
 
 void DirichletThetaConfig::MergeFrom(const DirichletThetaConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
-  alpha_0_.MergeFrom(from.alpha_0_);
-  tilde_alpha_.MergeFrom(from.tilde_alpha_);
+  alpha_.MergeFrom(from.alpha_);
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -3699,8 +3696,7 @@ bool DirichletThetaConfig::IsInitialized() const {
 
 void DirichletThetaConfig::Swap(DirichletThetaConfig* other) {
   if (other != this) {
-    alpha_0_.Swap(&other->alpha_0_);
-    tilde_alpha_.Swap(&other->tilde_alpha_);
+    alpha_.Swap(&other->alpha_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -3719,8 +3715,7 @@ void DirichletThetaConfig::Swap(DirichletThetaConfig* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int DirichletPhiConfig::kBeta0FieldNumber;
-const int DirichletPhiConfig::kTildeBetaFieldNumber;
+const int DirichletPhiConfig::kBetaFieldNumber;
 #endif  // !_MSC_VER
 
 DirichletPhiConfig::DirichletPhiConfig()
@@ -3729,7 +3724,7 @@ DirichletPhiConfig::DirichletPhiConfig()
 }
 
 void DirichletPhiConfig::InitAsDefaultInstance() {
-  tilde_beta_ = const_cast< ::artm::DoubleArray*>(&::artm::DoubleArray::default_instance());
+  beta_ = const_cast< ::artm::DoubleArray*>(&::artm::DoubleArray::default_instance());
 }
 
 DirichletPhiConfig::DirichletPhiConfig(const DirichletPhiConfig& from)
@@ -3740,8 +3735,7 @@ DirichletPhiConfig::DirichletPhiConfig(const DirichletPhiConfig& from)
 
 void DirichletPhiConfig::SharedCtor() {
   _cached_size_ = 0;
-  beta_0_ = 0;
-  tilde_beta_ = NULL;
+  beta_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3751,7 +3745,7 @@ DirichletPhiConfig::~DirichletPhiConfig() {
 
 void DirichletPhiConfig::SharedDtor() {
   if (this != default_instance_) {
-    delete tilde_beta_;
+    delete beta_;
   }
 }
 
@@ -3778,9 +3772,8 @@ DirichletPhiConfig* DirichletPhiConfig::New() const {
 
 void DirichletPhiConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    beta_0_ = 0;
-    if (has_tilde_beta()) {
-      if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
+    if (has_beta()) {
+      if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
     }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3793,28 +3786,12 @@ bool DirichletPhiConfig::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // required double beta_0 = 1;
+      // optional .artm.DoubleArray beta = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &beta_0_)));
-          set_has_beta_0();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_tilde_beta;
-        break;
-      }
-
-      // required .artm.DoubleArray tilde_beta = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_tilde_beta:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_tilde_beta()));
+               input, mutable_beta()));
         } else {
           goto handle_uninterpreted;
         }
@@ -3840,15 +3817,10 @@ bool DirichletPhiConfig::MergePartialFromCodedStream(
 
 void DirichletPhiConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // required double beta_0 = 1;
-  if (has_beta_0()) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->beta_0(), output);
-  }
-
-  // required .artm.DoubleArray tilde_beta = 2;
-  if (has_tilde_beta()) {
+  // optional .artm.DoubleArray beta = 1;
+  if (has_beta()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->tilde_beta(), output);
+      1, this->beta(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3859,16 +3831,11 @@ void DirichletPhiConfig::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DirichletPhiConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // required double beta_0 = 1;
-  if (has_beta_0()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->beta_0(), target);
-  }
-
-  // required .artm.DoubleArray tilde_beta = 2;
-  if (has_tilde_beta()) {
+  // optional .artm.DoubleArray beta = 1;
+  if (has_beta()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->tilde_beta(), target);
+        1, this->beta(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3882,16 +3849,11 @@ int DirichletPhiConfig::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // required double beta_0 = 1;
-    if (has_beta_0()) {
-      total_size += 1 + 8;
-    }
-
-    // required .artm.DoubleArray tilde_beta = 2;
-    if (has_tilde_beta()) {
+    // optional .artm.DoubleArray beta = 1;
+    if (has_beta()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->tilde_beta());
+          this->beta());
     }
 
   }
@@ -3921,11 +3883,8 @@ void DirichletPhiConfig::MergeFrom(const ::google::protobuf::Message& from) {
 void DirichletPhiConfig::MergeFrom(const DirichletPhiConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_beta_0()) {
-      set_beta_0(from.beta_0());
-    }
-    if (from.has_tilde_beta()) {
-      mutable_tilde_beta()->::artm::DoubleArray::MergeFrom(from.tilde_beta());
+    if (from.has_beta()) {
+      mutable_beta()->::artm::DoubleArray::MergeFrom(from.beta());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3944,15 +3903,13 @@ void DirichletPhiConfig::CopyFrom(const DirichletPhiConfig& from) {
 }
 
 bool DirichletPhiConfig::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000003) != 0x00000003) return false;
 
   return true;
 }
 
 void DirichletPhiConfig::Swap(DirichletPhiConfig* other) {
   if (other != this) {
-    std::swap(beta_0_, other->beta_0_);
-    std::swap(tilde_beta_, other->tilde_beta_);
+    std::swap(beta_, other->beta_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -3971,8 +3928,8 @@ void DirichletPhiConfig::Swap(DirichletPhiConfig* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SmoothSparseThetaConfig::kAlpha0FieldNumber;
-const int SmoothSparseThetaConfig::kTildeAlphaFieldNumber;
+const int SmoothSparseThetaConfig::kBackgroundTopicsCountFieldNumber;
+const int SmoothSparseThetaConfig::kAlphaFieldNumber;
 #endif  // !_MSC_VER
 
 SmoothSparseThetaConfig::SmoothSparseThetaConfig()
@@ -3991,6 +3948,7 @@ SmoothSparseThetaConfig::SmoothSparseThetaConfig(const SmoothSparseThetaConfig& 
 
 void SmoothSparseThetaConfig::SharedCtor() {
   _cached_size_ = 0;
+  background_topics_count_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4025,8 +3983,10 @@ SmoothSparseThetaConfig* SmoothSparseThetaConfig::New() const {
 }
 
 void SmoothSparseThetaConfig::Clear() {
-  alpha_0_.Clear();
-  tilde_alpha_.Clear();
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    background_topics_count_ = 0;
+  }
+  alpha_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -4037,39 +3997,32 @@ bool SmoothSparseThetaConfig::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated double alpha_0 = 1;
+      // required int32 background_topics_count = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_alpha_0:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 1, 9, input, this->mutable_alpha_0())));
-        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
-                   == ::google::protobuf::internal::WireFormatLite::
-                      WIRETYPE_LENGTH_DELIMITED) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, this->mutable_alpha_0())));
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &background_topics_count_)));
+          set_has_background_topics_count();
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(9)) goto parse_alpha_0;
-        if (input->ExpectTag(18)) goto parse_tilde_alpha;
+        if (input->ExpectTag(18)) goto parse_alpha;
         break;
       }
 
-      // repeated .artm.DoubleArray tilde_alpha = 2;
+      // repeated .artm.DoubleArray alpha = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_tilde_alpha:
+         parse_alpha:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_tilde_alpha()));
+                input, add_alpha()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_tilde_alpha;
+        if (input->ExpectTag(18)) goto parse_alpha;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4092,16 +4045,15 @@ bool SmoothSparseThetaConfig::MergePartialFromCodedStream(
 
 void SmoothSparseThetaConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // repeated double alpha_0 = 1;
-  for (int i = 0; i < this->alpha_0_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(
-      1, this->alpha_0(i), output);
+  // required int32 background_topics_count = 1;
+  if (has_background_topics_count()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->background_topics_count(), output);
   }
 
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  for (int i = 0; i < this->tilde_alpha_size(); i++) {
+  // repeated .artm.DoubleArray alpha = 2;
+  for (int i = 0; i < this->alpha_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->tilde_alpha(i), output);
+      2, this->alpha(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -4112,17 +4064,16 @@ void SmoothSparseThetaConfig::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SmoothSparseThetaConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // repeated double alpha_0 = 1;
-  for (int i = 0; i < this->alpha_0_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleToArray(1, this->alpha_0(i), target);
+  // required int32 background_topics_count = 1;
+  if (has_background_topics_count()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->background_topics_count(), target);
   }
 
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  for (int i = 0; i < this->tilde_alpha_size(); i++) {
+  // repeated .artm.DoubleArray alpha = 2;
+  for (int i = 0; i < this->alpha_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->tilde_alpha(i), target);
+        2, this->alpha(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4135,19 +4086,21 @@ void SmoothSparseThetaConfig::SerializeWithCachedSizes(
 int SmoothSparseThetaConfig::ByteSize() const {
   int total_size = 0;
 
-  // repeated double alpha_0 = 1;
-  {
-    int data_size = 0;
-    data_size = 8 * this->alpha_0_size();
-    total_size += 1 * this->alpha_0_size() + data_size;
-  }
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required int32 background_topics_count = 1;
+    if (has_background_topics_count()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->background_topics_count());
+    }
 
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  total_size += 1 * this->tilde_alpha_size();
-  for (int i = 0; i < this->tilde_alpha_size(); i++) {
+  }
+  // repeated .artm.DoubleArray alpha = 2;
+  total_size += 1 * this->alpha_size();
+  for (int i = 0; i < this->alpha_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->tilde_alpha(i));
+        this->alpha(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -4175,8 +4128,12 @@ void SmoothSparseThetaConfig::MergeFrom(const ::google::protobuf::Message& from)
 
 void SmoothSparseThetaConfig::MergeFrom(const SmoothSparseThetaConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
-  alpha_0_.MergeFrom(from.alpha_0_);
-  tilde_alpha_.MergeFrom(from.tilde_alpha_);
+  alpha_.MergeFrom(from.alpha_);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_background_topics_count()) {
+      set_background_topics_count(from.background_topics_count());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -4193,14 +4150,15 @@ void SmoothSparseThetaConfig::CopyFrom(const SmoothSparseThetaConfig& from) {
 }
 
 bool SmoothSparseThetaConfig::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
 void SmoothSparseThetaConfig::Swap(SmoothSparseThetaConfig* other) {
   if (other != this) {
-    alpha_0_.Swap(&other->alpha_0_);
-    tilde_alpha_.Swap(&other->tilde_alpha_);
+    std::swap(background_topics_count_, other->background_topics_count_);
+    alpha_.Swap(&other->alpha_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -4220,10 +4178,8 @@ void SmoothSparseThetaConfig::Swap(SmoothSparseThetaConfig* other) {
 
 #ifndef _MSC_VER
 const int SmoothSparsePhiConfig::kBackgroundTopicsCountFieldNumber;
-const int SmoothSparsePhiConfig::kBeta0FieldNumber;
-const int SmoothSparsePhiConfig::kTildeBetaFieldNumber;
-const int SmoothSparsePhiConfig::kBackgroundBeta0FieldNumber;
-const int SmoothSparsePhiConfig::kBackgroundTildeBetaFieldNumber;
+const int SmoothSparsePhiConfig::kBetaFieldNumber;
+const int SmoothSparsePhiConfig::kBackgroundBetaFieldNumber;
 #endif  // !_MSC_VER
 
 SmoothSparsePhiConfig::SmoothSparsePhiConfig()
@@ -4232,7 +4188,7 @@ SmoothSparsePhiConfig::SmoothSparsePhiConfig()
 }
 
 void SmoothSparsePhiConfig::InitAsDefaultInstance() {
-  tilde_beta_ = const_cast< ::artm::DoubleArray*>(&::artm::DoubleArray::default_instance());
+  beta_ = const_cast< ::artm::DoubleArray*>(&::artm::DoubleArray::default_instance());
 }
 
 SmoothSparsePhiConfig::SmoothSparsePhiConfig(const SmoothSparsePhiConfig& from)
@@ -4244,8 +4200,7 @@ SmoothSparsePhiConfig::SmoothSparsePhiConfig(const SmoothSparsePhiConfig& from)
 void SmoothSparsePhiConfig::SharedCtor() {
   _cached_size_ = 0;
   background_topics_count_ = 0;
-  beta_0_ = 0;
-  tilde_beta_ = NULL;
+  beta_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4255,7 +4210,7 @@ SmoothSparsePhiConfig::~SmoothSparsePhiConfig() {
 
 void SmoothSparsePhiConfig::SharedDtor() {
   if (this != default_instance_) {
-    delete tilde_beta_;
+    delete beta_;
   }
 }
 
@@ -4283,13 +4238,11 @@ SmoothSparsePhiConfig* SmoothSparsePhiConfig::New() const {
 void SmoothSparsePhiConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     background_topics_count_ = 0;
-    beta_0_ = 0;
-    if (has_tilde_beta()) {
-      if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
+    if (has_beta()) {
+      if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
     }
   }
-  background_beta_0_.Clear();
-  background_tilde_beta_.Clear();
+  background_beta_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -4311,73 +4264,35 @@ bool SmoothSparsePhiConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(17)) goto parse_beta_0;
+        if (input->ExpectTag(18)) goto parse_beta;
         break;
       }
 
-      // required double beta_0 = 2;
+      // optional .artm.DoubleArray beta = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_beta_0:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, &beta_0_)));
-          set_has_beta_0();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_beta:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_beta()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(26)) goto parse_tilde_beta;
+        if (input->ExpectTag(26)) goto parse_background_beta;
         break;
       }
 
-      // required .artm.DoubleArray tilde_beta = 3;
+      // repeated .artm.DoubleArray background_beta = 3;
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_tilde_beta:
+         parse_background_beta:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_tilde_beta()));
+                input, add_background_beta()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(33)) goto parse_background_beta_0;
-        break;
-      }
-
-      // repeated double background_beta_0 = 4;
-      case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
-         parse_background_beta_0:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 1, 33, input, this->mutable_background_beta_0())));
-        } else if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag)
-                   == ::google::protobuf::internal::WireFormatLite::
-                      WIRETYPE_LENGTH_DELIMITED) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitiveNoInline<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, this->mutable_background_beta_0())));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(33)) goto parse_background_beta_0;
-        if (input->ExpectTag(42)) goto parse_background_tilde_beta;
-        break;
-      }
-
-      // repeated .artm.DoubleArray background_tilde_beta = 5;
-      case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_background_tilde_beta:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_background_tilde_beta()));
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(42)) goto parse_background_tilde_beta;
+        if (input->ExpectTag(26)) goto parse_background_beta;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4405,27 +4320,16 @@ void SmoothSparsePhiConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->background_topics_count(), output);
   }
 
-  // required double beta_0 = 2;
-  if (has_beta_0()) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(2, this->beta_0(), output);
-  }
-
-  // required .artm.DoubleArray tilde_beta = 3;
-  if (has_tilde_beta()) {
+  // optional .artm.DoubleArray beta = 2;
+  if (has_beta()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->tilde_beta(), output);
+      2, this->beta(), output);
   }
 
-  // repeated double background_beta_0 = 4;
-  for (int i = 0; i < this->background_beta_0_size(); i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteDouble(
-      4, this->background_beta_0(i), output);
-  }
-
-  // repeated .artm.DoubleArray background_tilde_beta = 5;
-  for (int i = 0; i < this->background_tilde_beta_size(); i++) {
+  // repeated .artm.DoubleArray background_beta = 3;
+  for (int i = 0; i < this->background_beta_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      5, this->background_tilde_beta(i), output);
+      3, this->background_beta(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -4441,29 +4345,18 @@ void SmoothSparsePhiConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->background_topics_count(), target);
   }
 
-  // required double beta_0 = 2;
-  if (has_beta_0()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(2, this->beta_0(), target);
-  }
-
-  // required .artm.DoubleArray tilde_beta = 3;
-  if (has_tilde_beta()) {
+  // optional .artm.DoubleArray beta = 2;
+  if (has_beta()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        3, this->tilde_beta(), target);
+        2, this->beta(), target);
   }
 
-  // repeated double background_beta_0 = 4;
-  for (int i = 0; i < this->background_beta_0_size(); i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleToArray(4, this->background_beta_0(i), target);
-  }
-
-  // repeated .artm.DoubleArray background_tilde_beta = 5;
-  for (int i = 0; i < this->background_tilde_beta_size(); i++) {
+  // repeated .artm.DoubleArray background_beta = 3;
+  for (int i = 0; i < this->background_beta_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        5, this->background_tilde_beta(i), target);
+        3, this->background_beta(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4484,32 +4377,20 @@ int SmoothSparsePhiConfig::ByteSize() const {
           this->background_topics_count());
     }
 
-    // required double beta_0 = 2;
-    if (has_beta_0()) {
-      total_size += 1 + 8;
-    }
-
-    // required .artm.DoubleArray tilde_beta = 3;
-    if (has_tilde_beta()) {
+    // optional .artm.DoubleArray beta = 2;
+    if (has_beta()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->tilde_beta());
+          this->beta());
     }
 
   }
-  // repeated double background_beta_0 = 4;
-  {
-    int data_size = 0;
-    data_size = 8 * this->background_beta_0_size();
-    total_size += 1 * this->background_beta_0_size() + data_size;
-  }
-
-  // repeated .artm.DoubleArray background_tilde_beta = 5;
-  total_size += 1 * this->background_tilde_beta_size();
-  for (int i = 0; i < this->background_tilde_beta_size(); i++) {
+  // repeated .artm.DoubleArray background_beta = 3;
+  total_size += 1 * this->background_beta_size();
+  for (int i = 0; i < this->background_beta_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->background_tilde_beta(i));
+        this->background_beta(i));
   }
 
   if (!unknown_fields().empty()) {
@@ -4537,17 +4418,13 @@ void SmoothSparsePhiConfig::MergeFrom(const ::google::protobuf::Message& from) {
 
 void SmoothSparsePhiConfig::MergeFrom(const SmoothSparsePhiConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
-  background_beta_0_.MergeFrom(from.background_beta_0_);
-  background_tilde_beta_.MergeFrom(from.background_tilde_beta_);
+  background_beta_.MergeFrom(from.background_beta_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_background_topics_count()) {
       set_background_topics_count(from.background_topics_count());
     }
-    if (from.has_beta_0()) {
-      set_beta_0(from.beta_0());
-    }
-    if (from.has_tilde_beta()) {
-      mutable_tilde_beta()->::artm::DoubleArray::MergeFrom(from.tilde_beta());
+    if (from.has_beta()) {
+      mutable_beta()->::artm::DoubleArray::MergeFrom(from.beta());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -4566,7 +4443,7 @@ void SmoothSparsePhiConfig::CopyFrom(const SmoothSparsePhiConfig& from) {
 }
 
 bool SmoothSparsePhiConfig::IsInitialized() const {
-  if ((_has_bits_[0] & 0x00000007) != 0x00000007) return false;
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
@@ -4574,10 +4451,8 @@ bool SmoothSparsePhiConfig::IsInitialized() const {
 void SmoothSparsePhiConfig::Swap(SmoothSparsePhiConfig* other) {
   if (other != this) {
     std::swap(background_topics_count_, other->background_topics_count_);
-    std::swap(beta_0_, other->beta_0_);
-    std::swap(tilde_beta_, other->tilde_beta_);
-    background_beta_0_.Swap(&other->background_beta_0_);
-    background_tilde_beta_.Swap(&other->background_tilde_beta_);
+    std::swap(beta_, other->beta_);
+    background_beta_.Swap(&other->background_beta_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

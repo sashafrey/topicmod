@@ -20,8 +20,10 @@ class RegularizerInterface {
   virtual bool RegularizeTheta(const Item& item,
                                 std::vector<float>* n_dt,
                                 int topic_size,
-                                int inner_iter) { return true; }
-  virtual bool RegularizePhi(TopicModel* topic_model) { return true; }
+                                int inner_iter,
+                                double tau) { return true; }
+
+  virtual bool RegularizePhi(TopicModel* topic_model, double tau) { return true; }
 };
 
 }  // namespace core

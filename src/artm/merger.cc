@@ -93,13 +93,18 @@ void Merger::InvokePhiRegularizers() {
 
     if (cur_ttm.get() != nullptr) {
       auto reg_names = model.regularizer_name();
+      auto reg_tau = model.regularizer_tau();
       auto new_ttm = std::make_shared<::artm::core::TopicModel>(*cur_ttm);
 
       for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
         reg_name_iterator++) {
         auto regularizer = schema->regularizer(reg_name_iterator->c_str());
+
         if (regularizer != nullptr) {
-          bool retval = regularizer->RegularizePhi(new_ttm.get());
+          auto tau_index = reg_name_iterator - reg_names.begin();
+          double tau = reg_tau.Get(tau_index);
+
+          bool retval = regularizer->RegularizePhi(new_ttm.get(), tau);
           if (!retval) {
             LOG(ERROR) << "Problems with type or number of parameters in Phi regularizer <" <<
               reg_name_iterator->c_str() <<

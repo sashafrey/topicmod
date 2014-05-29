@@ -14,6 +14,14 @@ ARTM_OBJECT_NOT_FOUND = -2
 ARTM_INVALID_MESSAGE = -3
 ARTM_UNSUPPORTED_RECONFIGURATION = -4
 
+Stream_Type_Global = 0
+Stream_Type_ItemIdModulus = 1
+RegularizerConfig_Type_DirichletTheta = 0
+RegularizerConfig_Type_DirichletPhi = 1
+RegularizerConfig_Type_SmoothSparseTheta = 2
+RegularizerConfig_Type_SmoothSparsePhi = 3
+Score_Type_Perplexity = 0
+
 #################################################################################
 
 class GeneralError(BaseException) : pass

@@ -71,7 +71,7 @@ with library.CreateMasterComponent(master_config) as master_component:
     model_config.topics_count = topics_count
     model_config.inner_iterations_count = inner_iterations_count
     score_ = model_config.score.add()
-    score_.type = 0
+    score_.type = Score_Type_Perplexity
 
     ################################################################################
     # include in model one Dirihlet Theta regularizer
@@ -86,7 +86,10 @@ with library.CreateMasterComponent(master_config) as master_component:
 
     regularizer_name_theta = 'regularizer_theta'
     model_config.regularizer_name.append(regularizer_name_theta)
-    regularizer_theta = master_component.CreateRegularizer(regularizer_name_theta, 0, regularizer_config_theta)
+    regularizer_theta = master_component.CreateRegularizer(
+      regularizer_name_theta,
+      RegularizerConfig_Type_DirichletTheta,
+      regularizer_config_theta)
 
     ################################################################################
     # include in model one Dirihlet Phi regularizer
@@ -98,7 +101,11 @@ with library.CreateMasterComponent(master_config) as master_component:
 
     regularizer_name_phi = 'regularizer_phi'
     model_config.regularizer_name.append(regularizer_name_phi)
-    regularizer_phi = master_component.CreateRegularizer(regularizer_name_phi, 1, regularizer_config_phi)
+    regularizer_phi = master_component.CreateRegularizer(
+      regularizer_name_phi,
+      RegularizerConfig_Type_DirichletPhi,
+      regularizer_config_phi)
+
     ################################################################################
 
     model = master_component.CreateModel(model_config)

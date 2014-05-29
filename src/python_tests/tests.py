@@ -17,7 +17,7 @@ master_config.processors_count = 2
 master_config.processor_queue_max_size = 5
 stream_ = master_config.stream.add()
 stream_.name = ('stream_0')
-stream_.type = 0
+stream_.type = Stream_Type_Global
 stream_.modulus = 3
 stream_.residuals.append(9)
 
@@ -33,7 +33,7 @@ field_.token_count.append(2)
 # Create stream
 stream = messages_pb2.Stream()
 stream.name = ('stream_8')
-stream.type = 0
+stream.type = Stream_Type_Global
 stream.modulus = 3
 stream.residuals.append(1)
 
@@ -46,7 +46,7 @@ tilde_alpha.value.append(0.1)
 model_config = messages_pb2.ModelConfig()
 model_config.stream_name = ('stream_0')
 score_ = model_config.score.add()
-score_.type = 0
+score_.type = Score_Type_Perplexity
 score_.stream_name = ('stream_0')
 model_config.regularizer_name.append('regularizer1')
 

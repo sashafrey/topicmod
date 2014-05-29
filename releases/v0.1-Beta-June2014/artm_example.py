@@ -27,13 +27,13 @@ with library.CreateMasterComponent(master_config) as master:
   train_stream = messages_pb2.Stream()
   test_stream = messages_pb2.Stream()
   train_stream.name = "train_stream"
-  train_stream.type = 1
+  train_stream.type = Stream_Type_ItemIdModulus
   train_stream.modulus = 10
   for i in range(0, 8):
     train_stream.residuals.append(i)
 
   test_stream.name = "test_stream"
-  test_stream.type = 1
+  test_stream.type = Stream_Type_ItemIdModulus
   test_stream.modulus = 10
   test_stream.residuals.append(9)
 
@@ -46,7 +46,7 @@ with library.CreateMasterComponent(master_config) as master:
   model_config.inner_iterations_count = 10     # Perform 10 iterations on inner loop (BatchPLSA algorithm)
   model_config.stream_name = "train_stream"    # Only use training data to tune the model
   score = model_config.score.add()             # Calculate one score (perplexity)
-  score.type = 0
+  score.type = Score_Type_Perplexity
   score.stream_name = "test_stream"            # Use testing data to calculate perplexity
 
   model = master.CreateModel(model_config)
@@ -72,8 +72,16 @@ with library.CreateMasterComponent(master_config) as master:
       for j in range(0, token_size):
           regularizer_config_phi.tilde_beta.value.append(0.1)
 
-      master_component.CreateRegularizer('regularizer_theta', 0, regularizer_config_theta)
-      master_component.CreateRegularizer('regularizer_phi',   1, regularizer_config_phi)
+      master_component.CreateRegularizer(
+        'regularizer_theta',
+        RegularizerConfig_Type_DirichletTheta,
+        regularizer_config_theta)
+
+      master_component.CreateRegularizer(
+        'regularizer_phi',
+        RegularizerConfig_Type_DirichletPhi,
+        regularizer_config_phi)
+
       model_config.regularizer_name.append('regularizer_theta')
       model_config.regularizer_name.append('regularizer_phi')
       model.Reconfigure(model_config)

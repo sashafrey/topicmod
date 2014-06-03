@@ -2,6 +2,13 @@
 
 # Author: Murat Apishev (great-mel@yandex.ru)
 
+import os
+import sys
+
+if sys.platform.count('linux') == 1:
+  interface_address = os.path.abspath(os.path.join(os.curdir, os.pardir, 'python_interface'))
+  sys.path.append(interface_address)
+
 import messages_pb2
 import python_interface
 from python_interface import *
@@ -73,9 +80,17 @@ regularizer_config_new.config = dirichlet_regularizer_config_new.SerializeToStri
 #################################################################################
 # TEST SECTION
 
+import sys
+
+#if sys.platform.count('linux') == 1:
+#  interface_address
+
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
-os.environ['PATH'] = ';'.join([address + '\\Win32\\Debug', os.environ['PATH']])
-library = ArtmLibrary(address + '\\Win32\\Debug\\artm.dll')
+if sys.platform.count('linux') == 1:
+  library = ArtmLibrary(address + '/bin/libartm.so')
+else:
+  os.environ['PATH'] = ';'.join([address + '\\Win32\\Debug', os.environ['PATH']])
+  library = ArtmLibrary(address + '\\Win32\\Debug\\artm.dll')
 
 with library.CreateMasterComponent(master_config) as master_component:
   master_component.AddStream(stream)

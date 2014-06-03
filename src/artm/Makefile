@@ -31,7 +31,7 @@ CXXFLAGS += -g -Wall -pthread -fPIC -std=c++11
 OUT_DIR = ../bin/
 
 # Linker flags
-LDFLAGS += -lboost_filesystem -lboost_system -lboost_thread
+LDFLAGS += -lboost_filesystem -lboost_system -lboost_thread -lprotobuf -lglog -lrpcz -lzmq -Wl,--no-undefined
 
 # First target - shared library
 TARGET_LIB    = $(OUT_DIR)libartm.so

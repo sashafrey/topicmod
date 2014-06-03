@@ -1,9 +1,15 @@
+import sys
+import os
+
+if sys.platform.count('linux') == 1:
+    interface_address = os.path.abspath(os.path.join(os.curdir, os.pardir, 'python_interface'))
+    sys.path.append(interface_address)
+
 import messages_pb2
-import python_interface
 from python_interface import *
 import operator
 
-with open('..\\..\\datasets\\vocab.kos.txt', 'r') as content_file:
+with open('../../datasets/vocab.kos.txt', 'r') as content_file:
     content = content_file.read()
 
 tokens = content.split('\n')
@@ -11,16 +17,20 @@ tokens = content.split('\n')
 # Some configuration numbers
 batch_size = 500
 processors_count = 4
-limit_collection_size = 50000  # don't load more that this docs
+limit_collection_size = 50000 # don't load more that this docs
 topics_count = 16
 outer_iteration_count = 10
 inner_iterations_count = 10
 top_tokens_count_to_visualize = 4
-parse_collection_from_text = 0
+parse_collection_from_text = 1
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
-os.environ['PATH'] = ';'.join([address + '\\Win32\\Release', os.environ['PATH']])
-library = ArtmLibrary(address + '\\Win32\\Release\\artm.dll')
+
+if sys.platform.count('linux') == 1:
+    library = ArtmLibrary(address + '/bin/libartm.so')
+else:
+    os.environ['PATH'] = ';'.join([address + '\\Win32\\Release', os.environ['PATH']])
+    library = ArtmLibrary(address + '\\Win32\\Release\\artm.dll')
 
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
@@ -31,7 +41,7 @@ with library.CreateMasterComponent(master_config) as master_component:
     prev_item_id = -1
 
     if (parse_collection_from_text):
-        with open('..\\..\\datasets\\docword.kos.txt', 'r') as docword:
+        with open('../../datasets/docword.kos.txt', 'r') as docword:
             items_count = int(docword.readline())
             words_count = int(docword.readline())
             num_non_zero = int(docword.readline())
@@ -153,6 +163,6 @@ with library.CreateMasterComponent(master_config) as master_component:
         sorted_token_map = sorted(token_map.iteritems(), key=operator.itemgetter(1), reverse=True)
         for best_token in range(0, top_tokens_count_to_visualize):
             best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '
-        print best_tokens
+        print best_tokens.rstrip(', ')
 
     print 'Done with regularization!'

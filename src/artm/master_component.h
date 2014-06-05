@@ -46,13 +46,13 @@ class MasterComponent : boost::noncopyable {
   int clients_size() const;
 
   // Retrieves topic model.
-  // Returns true if succeeded, and false if model_id hasn't been found.
-  bool RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model);
+  // Returns true if succeeded, and false if model_name hasn't been found.
+  bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
   void ReconfigureModel(const ModelConfig& config);
 
-  void DisposeModel(ModelId model_id);
+  void DisposeModel(ModelName model_name);
   void Reconfigure(const MasterComponentConfig& config);
 
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
@@ -111,7 +111,7 @@ class ClientInterface {
   virtual ~ClientInterface() {}
 
   virtual void ReconfigureModel(const ModelConfig& config) = 0;
-  virtual void DisposeModel(ModelId model_id) = 0;
+  virtual void DisposeModel(ModelName model_name) = 0;
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config) = 0;
   virtual void DisposeRegularizer(const std::string& name) = 0;
@@ -126,7 +126,7 @@ class LocalClient : public ClientInterface {
   virtual ~LocalClient();
 
   virtual void ReconfigureModel(const ModelConfig& config);
-  virtual void DisposeModel(ModelId model_id);
+  virtual void DisposeModel(ModelName model_name);
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   virtual void DisposeRegularizer(const std::string& name);
@@ -134,7 +134,7 @@ class LocalClient : public ClientInterface {
 
   virtual void Reconfigure(const MasterComponentConfig& config);
 
-  bool RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model);
+  bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
   void WaitIdle();
   void InvokeIteration(int iterations_count);
   void AddBatch(const Batch& batch);
@@ -150,7 +150,7 @@ class NetworkClientCollection : public ClientInterface {
   virtual ~NetworkClientCollection();
 
   virtual void ReconfigureModel(const ModelConfig& config);
-  virtual void DisposeModel(ModelId model_id);
+  virtual void DisposeModel(ModelName model_name);
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   virtual void DisposeRegularizer(const std::string& name);

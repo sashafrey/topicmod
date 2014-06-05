@@ -19,7 +19,7 @@ class DirichletPhi : public RegularizerInterface {
   explicit DirichletPhi(const DirichletPhiConfig& config)
     : config_(config) {}
 
-  virtual bool RegularizePhi(TopicModel* topic_model);
+  virtual bool RegularizePhi(TopicModel* topic_model, double tau);
 
  private:
   DirichletPhiConfig config_;

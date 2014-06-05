@@ -19,51 +19,9 @@ void BasicTest(std::string endpoint) {
   if (is_network_mode) master_config.set_master_component_create_endpoint(endpoint);
   artm::MasterComponent master_component(master_config);
 
-  artm::DirichletThetaConfig regularizer_1_config;
-  artm::DoubleArray tilde_alpha;
-  for (int i = 0; i < nTopics; ++i) {
-    tilde_alpha.add_value(0);
-  }
-  for (int i = 0; i < 12; ++i) {
-    regularizer_1_config.add_alpha_0(0.01 * (i + 1));
-    for (int j = 0; j < nTopics; ++j) {
-      tilde_alpha.set_value(j, 0.05 + j * 0.01);
-    }
-    artm::DoubleArray* tilde_alpha_ptr = regularizer_1_config.add_tilde_alpha();
-    *tilde_alpha_ptr = tilde_alpha;
-  }
-
-  artm::DirichletThetaConfig regularizer_2_config;
-  for (int i = 0; i < 10; ++i) {
-    regularizer_2_config.add_alpha_0(0.03 * (i + 1));
-    for (int j = 0; j < nTopics; ++j) {
-      tilde_alpha.set_value(j, 0.08 + j * 0.01);
-    }
-    artm::DoubleArray* tilde_alpha_ptr = regularizer_2_config.add_tilde_alpha();
-    *tilde_alpha_ptr = tilde_alpha;
-  }
-
-  std::string regularizer_1_name = "regularizer_1";
-  std::string regularizer_2_name = "regularizer_2";
-
-  artm::RegularizerConfig general_regularizer_1_config;
-  general_regularizer_1_config.set_name(regularizer_1_name);
-  general_regularizer_1_config.set_type(artm::RegularizerConfig_Type_DirichletTheta);
-  general_regularizer_1_config.set_config(regularizer_1_config.SerializeAsString());
-
-  artm::RegularizerConfig general_regularizer_2_config;
-  general_regularizer_2_config.set_name(regularizer_2_name);
-  general_regularizer_2_config.set_type(artm::RegularizerConfig_Type_DirichletTheta);
-  general_regularizer_2_config.set_config(regularizer_2_config.SerializeAsString());
-
-  artm::Regularizer regularizer_1(master_component, general_regularizer_1_config);
-  artm::Regularizer regularizer_2(master_component, general_regularizer_2_config);
-
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-  model_config.add_regularizer_name(general_regularizer_1_config.name());
-  model_config.add_regularizer_name(general_regularizer_2_config.name());
 
   artm::Score* score = model_config.add_score();
   score->set_type(artm::Score_Type_Perplexity);

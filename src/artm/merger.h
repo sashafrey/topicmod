@@ -37,13 +37,13 @@ class Merger : boost::noncopyable {
 
   ~Merger();
 
-  void DisposeModel(ModelId model_id);
+  void DisposeModel(ModelName model_name);
   void UpdateModel(const ModelConfig& model);
-  void ForceResetScores(ModelId model_id);
-  void ForceSyncWithMemcached(ModelId model_id);
+  void ForceResetScores(ModelName model_name);
+  void ForceSyncWithMemcached(ModelName model_name);
   void InvokePhiRegularizers();
 
-  std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelId model_id) const;
+  std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelName model_name) const;
 
  private:
   enum MergerTaskType {
@@ -54,20 +54,20 @@ class Merger : boost::noncopyable {
 
   struct MergerTask {
     MergerTask() {}
-    MergerTask(MergerTaskType _task_type, ModelId _model_id)
-        : task_type(_task_type), model_id(_model_id), sync_event(nullptr) {}
+    MergerTask(MergerTaskType _task_type, ModelName _model_name)
+        : task_type(_task_type), model_name(_model_name), sync_event(nullptr) {}
 
-    MergerTask(MergerTaskType _task_type, ModelId _model_id, rpcz::sync_event* _sync_event)
-        : task_type(_task_type), model_id(_model_id), sync_event(_sync_event) {}
+    MergerTask(MergerTaskType _task_type, ModelName _model_name, rpcz::sync_event* _sync_event)
+        : task_type(_task_type), model_name(_model_name), sync_event(_sync_event) {}
 
     MergerTaskType task_type;
-    ModelId model_id;
+    ModelName model_name;
     rpcz::sync_event* sync_event;
   };
 
   mutable boost::mutex lock_;
-  ThreadSafeCollectionHolder<ModelId, TopicModel> topic_model_;
-  std::map<ModelId, std::shared_ptr<TopicModel>> new_topic_model_;
+  ThreadSafeCollectionHolder<ModelName, TopicModel> topic_model_;
+  std::map<ModelName, std::shared_ptr<TopicModel>> new_topic_model_;
   ThreadSafeHolder<InstanceSchema>* schema_;
   ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service_;
 
@@ -79,8 +79,8 @@ class Merger : boost::noncopyable {
   boost::thread thread_;
   void ThreadFunction();
 
-  void SyncWithMemcached(ModelId model_id);
-  void ResetScores(ModelId model_id);
+  void SyncWithMemcached(ModelName model_name);
+  void ResetScores(ModelName model_name);
 };
 
 }  // namespace core

@@ -51,7 +51,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_inner_iterations_count(10);
   model_config.set_stream_name("train_stream");
   model_config.set_reuse_theta(true);
-  model_config.set_model_id("15081980-90a7-4767-ab85-7cb551c39339");
+  model_config.set_name("15081980-90a7-4767-ab85-7cb551c39339");
 
   Score* score = model_config.add_score();
   score->set_type(Score_Type_Perplexity);
@@ -102,8 +102,6 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   clock_t begin = clock();
 
-  // Enable model and wait while each document pass through processor about 10 times.
-  model.Enable();
   std::shared_ptr<TopicModel> topic_model;
 
   for (int iter = 0; iter < 10; ++iter) {
@@ -119,8 +117,6 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
                 << "Perplexity = " << topic_model->scores().value(0) << endl;
     }
   }
-
-  model.Disable();
 
   std::cout << endl;
 
@@ -163,10 +159,6 @@ int main(int argc, char * argv[]) {
     cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
     return 0;
   }
-
-  FLAGS_log_dir = ".";
-  FLAGS_logbufsecs = 0;
-  ::google::InitGoogleLogging(argv[0]);
 
   int instance_size = 1;
   int processors_size = 2;

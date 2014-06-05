@@ -47,7 +47,7 @@ Processor::TokenIterator::TokenIterator(
       id_in_batch_(-1),
       count_(0) {
   for (int field_index = 0; field_index < item.field_size(); field_index++) {
-    if (item.field(field_index).field_name() == field_name) {
+    if (item.field(field_index).name() == field_name) {
       field_ = &item.field(field_index);
     }
   }
@@ -200,11 +200,14 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
     // 3. The following block of code makes the regularization of theta_next
     auto reg_names = model.regularizer_name();
+    auto reg_tau = model.regularizer_tau();
     for (auto reg_name_iterator = reg_names.begin(); reg_name_iterator != reg_names.end();
       reg_name_iterator++) {
       auto regularizer = schema_->regularizer(reg_name_iterator->c_str());
-      if (regularizer != nullptr) {
-        bool retval = regularizer->RegularizeTheta(item, &theta_next, topic_size, inner_iter);
+      if (regularizer != nullptr) { 
+        auto tau_index = reg_name_iterator - reg_names.begin();
+        double tau = reg_tau.Get(tau_index);
+        bool retval = regularizer->RegularizeTheta(item, &theta_next, topic_size, inner_iter, tau);
         if (!retval) {
           LOG(ERROR) << "Problems with type or number of parameters in Theta regularizer <" <<
             reg_name_iterator->c_str() <<
@@ -329,9 +332,9 @@ void Processor::ThreadFunction() {
         part->has_previous_processor_output() ? &part->previous_processor_output() : nullptr;
 
       std::shared_ptr<InstanceSchema> schema = schema_.get();
-      std::vector<ModelId> model_ids = schema->GetModelIds();
-      std::for_each(model_ids.begin(), model_ids.end(), [&](ModelId model_id) {
-        const ModelConfig& model = schema->model_config(model_id);
+      std::vector<ModelName> model_names = schema->GetModelNames();
+      std::for_each(model_names.begin(), model_names.end(), [&](ModelName model_name) {
+        const ModelConfig& model = schema->model_config(model_name);
 
         // do not process disabled models.
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each
@@ -340,13 +343,13 @@ void Processor::ThreadFunction() {
         const ModelIncrement* previous_model_increment = nullptr;
         if (previous_processor_output != nullptr) {
           for (int i = 0; i < previous_processor_output->model_increment_size(); ++i) {
-            if (previous_processor_output->model_increment(i).model_id() == model_id) {
+            if (previous_processor_output->model_increment(i).model_name() == model_name) {
               previous_model_increment = &previous_processor_output->model_increment(i);
             }
           }
         }
 
-        std::shared_ptr<const TopicModel> topic_model = merger_.GetLatestTopicModel(model_id);
+        std::shared_ptr<const TopicModel> topic_model = merger_.GetLatestTopicModel(model_name);
         assert(topic_model.get() != nullptr);
 
         int topic_size = topic_model->topic_size();
@@ -356,7 +359,7 @@ void Processor::ThreadFunction() {
 
         // process part and store result in merger queue
         auto model_increment = processor_output->add_model_increment();
-        model_increment->set_model_id(model_id);
+        model_increment->set_model_name(model_name);
         model_increment->set_items_processed(0);
 
         // Prepare score vector

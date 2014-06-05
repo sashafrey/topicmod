@@ -140,20 +140,20 @@ int ArtmReconfigureModel(int master_id, int length, const char* config_blob) {
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmRequestBatchTopics(int master_id, const char* model_id, int batch_length,
+int ArtmRequestBatchTopics(int master_id, const char* model_name, int batch_length,
                            const char* batch_blob) {
   try {
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmRequestTopicModel(int master_id, const char* model_id) {
+int ArtmRequestTopicModel(int master_id, const char* model_name) {
   try {
     artm::TopicModel topic_model;
     auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
 
-    master_component->RequestTopicModel(model_id, &topic_model);
+    master_component->RequestTopicModel(model_name, &topic_model);
     topic_model.SerializeToString(&message);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
@@ -185,10 +185,10 @@ void ArtmDisposeNodeController(int node_controller_id) {
   artm::core::NodeControllerManager::singleton().Erase(node_controller_id);
 }
 
-void ArtmDisposeModel(int master_id, const char* model_id) {
+void ArtmDisposeModel(int master_id, const char* model_name) {
   auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
   if (master_component == nullptr) return;
-  master_component->DisposeModel(model_id);
+  master_component->DisposeModel(model_name);
 }
 
 void ArtmDisposeRequest(int request_id) {}

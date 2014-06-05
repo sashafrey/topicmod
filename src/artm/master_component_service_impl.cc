@@ -22,11 +22,11 @@ MasterComponentServiceImpl::MasterComponentServiceImpl(
 void MasterComponentServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& request,
                                        ::rpcz::reply< ::artm::TopicModel> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
-  auto iter = topic_model_.find(request.model_id());
+  auto iter = topic_model_.find(request.model_name());
   if (iter == topic_model_.end()) {
     topic_model_.insert(std::make_pair(
-      request.model_id(), std::make_shared<::artm::core::TopicModel>(request)));
-    iter = topic_model_.find(request.model_id());
+      request.model_name(), std::make_shared<::artm::core::TopicModel>(request)));
+    iter = topic_model_.find(request.model_name());
   } else {
     iter->second->ApplyDiff(request);
   }

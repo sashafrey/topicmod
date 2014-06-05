@@ -44,19 +44,19 @@ class Instance : boost::noncopyable {
   int processor_queue_size() const;
 
   // Retrieves topic model.
-  // Returns true if succeeded, and false if model_id hasn't been found.
-  bool RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model);
+  // Returns true if succeeded, and false if model_name hasn't been found.
+  bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
   void ReconfigureModel(const ModelConfig& config);
 
-  void DisposeModel(ModelId model_id);
+  void DisposeModel(ModelName model_name);
   void Reconfigure(const InstanceConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
-  void ForceResetScores(ModelId model_id);
-  void ForceSyncWithMemcached(ModelId model_id);
+  void ForceResetScores(ModelName model_name);
+  void ForceSyncWithMemcached(ModelName model_name);
   void InvokePhiRegularizers();
 
  private:

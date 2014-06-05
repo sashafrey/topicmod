@@ -124,9 +124,9 @@ TEST(Instance, Basic) {
   artm::ModelConfig config;
   config.set_enabled(true);
   config.set_topics_count(3);
-  artm::core::ModelId model_id =
+  artm::core::ModelName model_name =
     boost::lexical_cast<std::string>(boost::uuids::random_generator()());
-  config.set_model_id(boost::lexical_cast<std::string>(model_id));
+  config.set_name(boost::lexical_cast<std::string>(model_name));
   instance->ReconfigureModel(config);
 
   data_loader->InvokeIteration(20);
@@ -136,7 +136,7 @@ TEST(Instance, Basic) {
   instance->ReconfigureModel(config);
 
   artm::TopicModel topic_model;
-  instance->RequestTopicModel(model_id, &topic_model);
+  instance->RequestTopicModel(model_name, &topic_model);
   EXPECT_EQ(topic_model.token_size(), 3);
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "first token"));
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "second"));
@@ -173,7 +173,7 @@ TEST(Instance, MultipleStreamsAndModels) {
   artm::ModelConfig m1;
   m1.set_stream_name("train");
   m1.set_enabled(true);
-  m1.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
+  m1.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
   artm::Score* score = m1.add_score();
   score->set_type(artm::Score_Type_Perplexity);
 
@@ -189,7 +189,7 @@ TEST(Instance, MultipleStreamsAndModels) {
   artm::ModelConfig m2;
   m2.set_stream_name("test");
   m2.set_enabled(true);
-  m2.set_model_id(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
+  m2.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
   test.instance()->ReconfigureModel(m2);
 
   for (int iter = 0; iter < 100; ++iter) {
@@ -199,10 +199,10 @@ TEST(Instance, MultipleStreamsAndModels) {
 
 
   artm::TopicModel m1t;
-  test.instance()->RequestTopicModel(m1.model_id(), &m1t);
+  test.instance()->RequestTopicModel(m1.name(), &m1t);
 
   artm::TopicModel m2t;
-  test.instance()->RequestTopicModel(m2.model_id(), &m2t);
+  test.instance()->RequestTopicModel(m2.name(), &m2t);
 
   // Verification for m1t (the first model)
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token0"));

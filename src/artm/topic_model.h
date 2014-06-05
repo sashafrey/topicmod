@@ -103,12 +103,12 @@ class TopicWeightIterator {
 //   processor to Merger, and from Merger to MemcachedService.
 class TopicModel {
  public:
-  explicit TopicModel(ModelId model_id, int topics_count, int scores_count);
+  explicit TopicModel(ModelName model_name, int topics_count, int scores_count);
   explicit TopicModel(const TopicModel& rhs);
   explicit TopicModel(const ::artm::TopicModel& external_topic_model);
   explicit TopicModel(const ::artm::core::ModelIncrement& model_increment);
 
-  void Clear(ModelId model_id, int topics_count, int scores_count);
+  void Clear(ModelName model_name, int topics_count, int scores_count);
   ~TopicModel();
 
   void RetrieveExternalTopicModel(::artm::TopicModel* topic_model) const;
@@ -140,7 +140,7 @@ class TopicModel {
   TopicWeightIterator GetTopicWeightIterator(const std::string& token) const;
   TopicWeightIterator GetTopicWeightIterator(int token_id) const;
 
-  ModelId model_id() const;
+  ModelName model_name() const;
 
   int items_processed() const;
   int score_size() const;
@@ -156,7 +156,7 @@ class TopicModel {
   std::string token(int index) const;
 
  private:
-  ModelId model_id_;
+  ModelName model_name_;
 
   std::map<std::string, int> token_to_token_id_;
   std::vector<std::string> token_id_to_token_;

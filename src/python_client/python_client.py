@@ -17,10 +17,11 @@ tokens = content.split('\n')
 # Some configuration numbers
 batch_size = 500
 processors_count = 4
+eps = 0.00001
 limit_collection_size = 50000 # don't load more that this docs
 topics_count = 16
-outer_iteration_count = 10
-inner_iterations_count = 10
+outer_iteration_count = 13
+inner_iterations_count = 5
 top_tokens_count_to_visualize = 4
 parse_collection_from_text = 1
 
@@ -81,68 +82,72 @@ with library.CreateMasterComponent(master_config) as master_component:
     score_.type = 0
 
     ################################################################################
-    # include in model one Dirihlet Theta regularizer
-
-    regularizer_config_theta = messages_pb2.DirichletThetaConfig()
-    for i in range(0, inner_iterations_count):
-        # make case for different iterations here if need
-        regularizer_config_theta.alpha_0.append(-1)
-        tilde_alpha_ref = regularizer_config_theta.tilde_alpha.add()
-        for j in range(0, topics_count):
-            tilde_alpha_ref.value.append(0.1)
-
-    regularizer_name_theta = 'regularizer_theta'
-    general_regularizer_config_theta = messages_pb2.RegularizerConfig()
-    general_regularizer_config_theta.name = regularizer_name_theta
-    general_regularizer_config_theta.type = 0
-    general_regularizer_config_theta.config = regularizer_config_theta.SerializeToString()
-
-    model_config.regularizer_name.append(regularizer_name_theta)
-    regularizer_theta = master_component.CreateRegularizer(general_regularizer_config_theta)
-
-    ################################################################################
-    # include in model one Dirihlet Phi regularizer
-
-    regularizer_config_phi = messages_pb2.DirichletPhiConfig()
-    regularizer_config_phi.beta_0 = -0.01
-    for j in range(0, 2):
-        regularizer_config_phi.tilde_beta.value.append(0.1)
-
-    regularizer_name_phi = 'regularizer_phi'
-    general_regularizer_config_phi = messages_pb2.RegularizerConfig()
-    general_regularizer_config_phi.name = regularizer_name_phi
-    general_regularizer_config_phi.type = 1
-    general_regularizer_config_phi.config = regularizer_config_phi.SerializeToString()
-
-    model_config.regularizer_name.append(regularizer_name_phi)
-    regularizer_phi = master_component.CreateRegularizer(general_regularizer_config_phi)
+    
+    #regularizer_config_phi = messages_pb2.SmoothSparsePhiConfig()
+    #regularizer_config_phi.background_topics_count = 0;
+    #regularizer_name_phi = 'regularizer_phi'
+    #phi_tau = -15.0
+    #model_config.regularizer_name.append(regularizer_name_phi)
+    #model_config.regularizer_tau.append(phi_tau)
+    #regularizer_phi = master_component.CreateRegularizer(regularizer_name_phi, 3, regularizer_config_phi)
     ################################################################################
 
     model = master_component.CreateModel(model_config)
-    model.Enable()
     for iter in range(0, outer_iteration_count):
+        #if (iter == 3):
+        #  regularizer_config_theta = messages_pb2.SmoothSparseThetaConfig()
+        #  regularizer_config_theta.background_topics_count = 0;
+        #  regularizer_name_theta = 'regularizer_theta'
+        #  theta_tau = -10.0
+        #  model_config.regularizer_name.append(regularizer_name_theta)
+        #  model_config.regularizer_tau.append(theta_tau)
+        #  regularizer_theta = master_component.CreateRegularizer(regularizer_name_theta, 2, regularizer_config_theta)
+        
+        #if(iter == 5):
+        #  phi_tau = -25.0
+        #  model_config.regularizer_tau[0] = phi_tau
+        #  model.Reconfigure(model_config)
+
+        #if (iter == 7):
+        #  phi_tau = -40.0
+        #  model_config.regularizer_tau[0] = phi_tau
+        #  model.Reconfigure(model_config)
+
+        #if (iter == 9):
+        #  phi_tau = -60.0
+        #  model_config.regularizer_tau[0] = phi_tau
+        #  model.Reconfigure(model_config)
+
+
         master_component.InvokeIteration(1)
         master_component.WaitIdle();
         topic_model = master_component.GetTopicModel(model)
 
         ################################################################################
-        # include in model one Dirihlet Phi regularizer
+        #if (iter >= 2):
+        #  model.InvokePhiRegularizers();
 
-        regularizer_config_phi = messages_pb2.DirichletPhiConfig()
-        regularizer_config_phi.beta_0 = -0.01
-        token_size = len(topic_model.token)
-        for j in range(0, token_size):
-            regularizer_config_phi.tilde_beta.value.append(0.1)
+        zero = 0
+        norm = 0
+        min_value = 2
+        max_value = -1
+        background_topics_count = 0
+        for i in range(0, len(topic_model.token)):
+          for j in range(0, topics_count - background_topics_count):
+            norm = norm + 1
+            value = topic_model.token_weights[i].value[j]
+            if (value < eps):
+              zero = zero + 1
+            if (value < min_value):
+              min_value = value
+            if (value > max_value):
+              max_value = value
 
-        regularizer_name_phi = 'regularizer_phi'
-        general_regularizer_config_phi = messages_pb2.RegularizerConfig()
-        general_regularizer_config_phi.name = regularizer_name_phi
-        general_regularizer_config_phi.type = 1
-        general_regularizer_config_phi.config = regularizer_config_phi.SerializeToString()
-
-        regularizer_phi.Reconfigure(general_regularizer_config_phi)
-        ################################################################################
-        model.InvokePhiRegularizers();
+        print "part = " + str(float(zero) / float(norm))
+        #print "zero = " + str(zero)
+        #print "norm = " + str(norm)
+        #print "min = " + str(min_value)
+        #print "max = " + str(max_value)
 
         print "Iter# = " + str(iter) + \
                 ", Items# = " + str(topic_model.items_processed) + \
@@ -165,4 +170,4 @@ with library.CreateMasterComponent(master_config) as master_component:
             best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '
         print best_tokens.rstrip(', ')
 
-    print 'Done with regularization!'
+    print 'Done!'

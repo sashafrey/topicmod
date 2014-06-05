@@ -54,16 +54,16 @@ void Instance::ReconfigureModel(const ModelConfig& config) {
   merger_.UpdateModel(config);
 
   auto new_schema = schema_.get_copy();
-  new_schema->set_model_config(config.model_id(), std::make_shared<const ModelConfig>(config));
+  new_schema->set_model_config(config.name(), std::make_shared<const ModelConfig>(config));
   schema_.set(new_schema);
 }
 
-void Instance::DisposeModel(ModelId model_id) {
+void Instance::DisposeModel(ModelName model_name) {
   auto new_schema = schema_.get_copy();
-  new_schema->clear_model_config(model_id);
+  new_schema->clear_model_config(model_name);
   schema_.set(new_schema);
 
-  merger_.DisposeModel(model_id);
+  merger_.DisposeModel(model_name);
 }
 
 void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
@@ -114,12 +114,12 @@ void Instance::DisposeRegularizer(const std::string& name) {
   schema_.set(new_schema);
 }
 
-void Instance::ForceResetScores(ModelId model_id) {
-  merger_.ForceResetScores(model_id);
+void Instance::ForceResetScores(ModelName model_name) {
+  merger_.ForceResetScores(model_name);
 }
 
-void Instance::ForceSyncWithMemcached(ModelId model_id) {
-  merger_.ForceSyncWithMemcached(model_id);
+void Instance::ForceSyncWithMemcached(ModelName model_name) {
+  merger_.ForceSyncWithMemcached(model_name);
 }
 
 void Instance::InvokePhiRegularizers() {
@@ -155,8 +155,8 @@ void Instance::Reconfigure(const InstanceConfig& config) {
   }
 }
 
-bool Instance::RequestTopicModel(ModelId model_id, ::artm::TopicModel* topic_model) {
-  std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_.GetLatestTopicModel(model_id);
+bool Instance::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
+  std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_.GetLatestTopicModel(model_name);
   if (ttm == nullptr) return false;
   ttm->RetrieveExternalTopicModel(topic_model);
   return true;

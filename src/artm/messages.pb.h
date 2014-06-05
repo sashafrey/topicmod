@@ -281,17 +281,17 @@ class Field : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string field_name = 1 [default = "@body"];
-  inline bool has_field_name() const;
-  inline void clear_field_name();
-  static const int kFieldNameFieldNumber = 1;
-  inline const ::std::string& field_name() const;
-  inline void set_field_name(const ::std::string& value);
-  inline void set_field_name(const char* value);
-  inline void set_field_name(const char* value, size_t size);
-  inline ::std::string* mutable_field_name();
-  inline ::std::string* release_field_name();
-  inline void set_allocated_field_name(::std::string* field_name);
+  // optional string name = 1 [default = "@body"];
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // repeated int32 token_id = 2;
   inline int token_id_size() const;
@@ -319,13 +319,13 @@ class Field : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.Field)
  private:
-  inline void set_has_field_name();
-  inline void clear_has_field_name();
+  inline void set_has_name();
+  inline void clear_has_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* field_name_;
-  static ::std::string* _default_field_name_;
+  ::std::string* name_;
+  static ::std::string* _default_name_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > token_id_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > token_count_;
 
@@ -856,17 +856,17 @@ class ModelConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string model_id = 1 [default = ""];
-  inline bool has_model_id() const;
-  inline void clear_model_id();
-  static const int kModelIdFieldNumber = 1;
-  inline const ::std::string& model_id() const;
-  inline void set_model_id(const ::std::string& value);
-  inline void set_model_id(const char* value);
-  inline void set_model_id(const char* value, size_t size);
-  inline ::std::string* mutable_model_id();
-  inline ::std::string* release_model_id();
-  inline void set_allocated_model_id(::std::string* model_id);
+  // optional string name = 1 [default = "@model"];
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // optional int32 topics_count = 2 [default = 32];
   inline bool has_topics_count() const;
@@ -875,7 +875,7 @@ class ModelConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 topics_count() const;
   inline void set_topics_count(::google::protobuf::int32 value);
 
-  // optional bool enabled = 3 [default = false];
+  // optional bool enabled = 3 [default = true];
   inline bool has_enabled() const;
   inline void clear_enabled();
   static const int kEnabledFieldNumber = 3;
@@ -955,10 +955,22 @@ class ModelConfig : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& regularizer_name() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_regularizer_name();
 
+  // repeated double regularizer_tau = 11;
+  inline int regularizer_tau_size() const;
+  inline void clear_regularizer_tau();
+  static const int kRegularizerTauFieldNumber = 11;
+  inline double regularizer_tau(int index) const;
+  inline void set_regularizer_tau(int index, double value);
+  inline void add_regularizer_tau(double value);
+  inline const ::google::protobuf::RepeatedField< double >&
+      regularizer_tau() const;
+  inline ::google::protobuf::RepeatedField< double >*
+      mutable_regularizer_tau();
+
   // @@protoc_insertion_point(class_scope:artm.ModelConfig)
  private:
-  inline void set_has_model_id();
-  inline void clear_has_model_id();
+  inline void set_has_name();
+  inline void clear_has_name();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
   inline void set_has_enabled();
@@ -976,7 +988,8 @@ class ModelConfig : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* model_id_;
+  ::std::string* name_;
+  static ::std::string* _default_name_;
   ::google::protobuf::int32 topics_count_;
   ::google::protobuf::int32 inner_iterations_count_;
   ::std::string* field_name_;
@@ -985,12 +998,13 @@ class ModelConfig : public ::google::protobuf::Message {
   static ::std::string* _default_stream_name_;
   ::google::protobuf::RepeatedPtrField< ::artm::Score > score_;
   ::google::protobuf::RepeatedPtrField< ::std::string> regularizer_name_;
+  ::google::protobuf::RepeatedField< double > regularizer_tau_;
   bool enabled_;
   bool reuse_theta_;
   bool cache_token_counters_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1193,40 +1207,27 @@ class DirichletThetaConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated double alpha_0 = 1;
-  inline int alpha_0_size() const;
-  inline void clear_alpha_0();
-  static const int kAlpha0FieldNumber = 1;
-  inline double alpha_0(int index) const;
-  inline void set_alpha_0(int index, double value);
-  inline void add_alpha_0(double value);
-  inline const ::google::protobuf::RepeatedField< double >&
-      alpha_0() const;
-  inline ::google::protobuf::RepeatedField< double >*
-      mutable_alpha_0();
-
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  inline int tilde_alpha_size() const;
-  inline void clear_tilde_alpha();
-  static const int kTildeAlphaFieldNumber = 2;
-  inline const ::artm::DoubleArray& tilde_alpha(int index) const;
-  inline ::artm::DoubleArray* mutable_tilde_alpha(int index);
-  inline ::artm::DoubleArray* add_tilde_alpha();
+  // repeated .artm.DoubleArray alpha = 1;
+  inline int alpha_size() const;
+  inline void clear_alpha();
+  static const int kAlphaFieldNumber = 1;
+  inline const ::artm::DoubleArray& alpha(int index) const;
+  inline ::artm::DoubleArray* mutable_alpha(int index);
+  inline ::artm::DoubleArray* add_alpha();
   inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      tilde_alpha() const;
+      alpha() const;
   inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_tilde_alpha();
+      mutable_alpha();
 
   // @@protoc_insertion_point(class_scope:artm.DirichletThetaConfig)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedField< double > alpha_0_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > tilde_alpha_;
+  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > alpha_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1291,36 +1292,26 @@ class DirichletPhiConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required double beta_0 = 1;
-  inline bool has_beta_0() const;
-  inline void clear_beta_0();
-  static const int kBeta0FieldNumber = 1;
-  inline double beta_0() const;
-  inline void set_beta_0(double value);
-
-  // required .artm.DoubleArray tilde_beta = 2;
-  inline bool has_tilde_beta() const;
-  inline void clear_tilde_beta();
-  static const int kTildeBetaFieldNumber = 2;
-  inline const ::artm::DoubleArray& tilde_beta() const;
-  inline ::artm::DoubleArray* mutable_tilde_beta();
-  inline ::artm::DoubleArray* release_tilde_beta();
-  inline void set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta);
+  // optional .artm.DoubleArray beta = 1;
+  inline bool has_beta() const;
+  inline void clear_beta();
+  static const int kBetaFieldNumber = 1;
+  inline const ::artm::DoubleArray& beta() const;
+  inline ::artm::DoubleArray* mutable_beta();
+  inline ::artm::DoubleArray* release_beta();
+  inline void set_allocated_beta(::artm::DoubleArray* beta);
 
   // @@protoc_insertion_point(class_scope:artm.DirichletPhiConfig)
  private:
-  inline void set_has_beta_0();
-  inline void clear_has_beta_0();
-  inline void set_has_tilde_beta();
-  inline void clear_has_tilde_beta();
+  inline void set_has_beta();
+  inline void clear_has_beta();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  double beta_0_;
-  ::artm::DoubleArray* tilde_beta_;
+  ::artm::DoubleArray* beta_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -1385,37 +1376,34 @@ class SmoothSparseThetaConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated double alpha_0 = 1;
-  inline int alpha_0_size() const;
-  inline void clear_alpha_0();
-  static const int kAlpha0FieldNumber = 1;
-  inline double alpha_0(int index) const;
-  inline void set_alpha_0(int index, double value);
-  inline void add_alpha_0(double value);
-  inline const ::google::protobuf::RepeatedField< double >&
-      alpha_0() const;
-  inline ::google::protobuf::RepeatedField< double >*
-      mutable_alpha_0();
+  // required int32 background_topics_count = 1;
+  inline bool has_background_topics_count() const;
+  inline void clear_background_topics_count();
+  static const int kBackgroundTopicsCountFieldNumber = 1;
+  inline ::google::protobuf::int32 background_topics_count() const;
+  inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // repeated .artm.DoubleArray tilde_alpha = 2;
-  inline int tilde_alpha_size() const;
-  inline void clear_tilde_alpha();
-  static const int kTildeAlphaFieldNumber = 2;
-  inline const ::artm::DoubleArray& tilde_alpha(int index) const;
-  inline ::artm::DoubleArray* mutable_tilde_alpha(int index);
-  inline ::artm::DoubleArray* add_tilde_alpha();
+  // repeated .artm.DoubleArray alpha = 2;
+  inline int alpha_size() const;
+  inline void clear_alpha();
+  static const int kAlphaFieldNumber = 2;
+  inline const ::artm::DoubleArray& alpha(int index) const;
+  inline ::artm::DoubleArray* mutable_alpha(int index);
+  inline ::artm::DoubleArray* add_alpha();
   inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      tilde_alpha() const;
+      alpha() const;
   inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_tilde_alpha();
+      mutable_alpha();
 
   // @@protoc_insertion_point(class_scope:artm.SmoothSparseThetaConfig)
  private:
+  inline void set_has_background_topics_count();
+  inline void clear_has_background_topics_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedField< double > alpha_0_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > tilde_alpha_;
+  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > alpha_;
+  ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
@@ -1490,65 +1478,42 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 background_topics_count() const;
   inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // required double beta_0 = 2;
-  inline bool has_beta_0() const;
-  inline void clear_beta_0();
-  static const int kBeta0FieldNumber = 2;
-  inline double beta_0() const;
-  inline void set_beta_0(double value);
+  // optional .artm.DoubleArray beta = 2;
+  inline bool has_beta() const;
+  inline void clear_beta();
+  static const int kBetaFieldNumber = 2;
+  inline const ::artm::DoubleArray& beta() const;
+  inline ::artm::DoubleArray* mutable_beta();
+  inline ::artm::DoubleArray* release_beta();
+  inline void set_allocated_beta(::artm::DoubleArray* beta);
 
-  // required .artm.DoubleArray tilde_beta = 3;
-  inline bool has_tilde_beta() const;
-  inline void clear_tilde_beta();
-  static const int kTildeBetaFieldNumber = 3;
-  inline const ::artm::DoubleArray& tilde_beta() const;
-  inline ::artm::DoubleArray* mutable_tilde_beta();
-  inline ::artm::DoubleArray* release_tilde_beta();
-  inline void set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta);
-
-  // repeated double background_beta_0 = 4;
-  inline int background_beta_0_size() const;
-  inline void clear_background_beta_0();
-  static const int kBackgroundBeta0FieldNumber = 4;
-  inline double background_beta_0(int index) const;
-  inline void set_background_beta_0(int index, double value);
-  inline void add_background_beta_0(double value);
-  inline const ::google::protobuf::RepeatedField< double >&
-      background_beta_0() const;
-  inline ::google::protobuf::RepeatedField< double >*
-      mutable_background_beta_0();
-
-  // repeated .artm.DoubleArray background_tilde_beta = 5;
-  inline int background_tilde_beta_size() const;
-  inline void clear_background_tilde_beta();
-  static const int kBackgroundTildeBetaFieldNumber = 5;
-  inline const ::artm::DoubleArray& background_tilde_beta(int index) const;
-  inline ::artm::DoubleArray* mutable_background_tilde_beta(int index);
-  inline ::artm::DoubleArray* add_background_tilde_beta();
+  // repeated .artm.DoubleArray background_beta = 3;
+  inline int background_beta_size() const;
+  inline void clear_background_beta();
+  static const int kBackgroundBetaFieldNumber = 3;
+  inline const ::artm::DoubleArray& background_beta(int index) const;
+  inline ::artm::DoubleArray* mutable_background_beta(int index);
+  inline ::artm::DoubleArray* add_background_beta();
   inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      background_tilde_beta() const;
+      background_beta() const;
   inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_background_tilde_beta();
+      mutable_background_beta();
 
   // @@protoc_insertion_point(class_scope:artm.SmoothSparsePhiConfig)
  private:
   inline void set_has_background_topics_count();
   inline void clear_has_background_topics_count();
-  inline void set_has_beta_0();
-  inline void clear_has_beta_0();
-  inline void set_has_tilde_beta();
-  inline void clear_has_tilde_beta();
+  inline void set_has_beta();
+  inline void clear_has_beta();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  double beta_0_;
-  ::artm::DoubleArray* tilde_beta_;
-  ::google::protobuf::RepeatedField< double > background_beta_0_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > background_tilde_beta_;
+  ::artm::DoubleArray* beta_;
+  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > background_beta_;
   ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2058,17 +2023,17 @@ class TopicModel : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string model_id = 1 [default = ""];
-  inline bool has_model_id() const;
-  inline void clear_model_id();
-  static const int kModelIdFieldNumber = 1;
-  inline const ::std::string& model_id() const;
-  inline void set_model_id(const ::std::string& value);
-  inline void set_model_id(const char* value);
-  inline void set_model_id(const char* value, size_t size);
-  inline ::std::string* mutable_model_id();
-  inline ::std::string* release_model_id();
-  inline void set_allocated_model_id(::std::string* model_id);
+  // optional string name = 1 [default = "@model"];
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
 
   // optional int32 topics_count = 2;
   inline bool has_topics_count() const;
@@ -2135,8 +2100,8 @@ class TopicModel : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.TopicModel)
  private:
-  inline void set_has_model_id();
-  inline void clear_has_model_id();
+  inline void set_has_name();
+  inline void clear_has_name();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
   inline void set_has_items_processed();
@@ -2148,7 +2113,8 @@ class TopicModel : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* model_id_;
+  ::std::string* name_;
+  static ::std::string* _default_name_;
   ::google::protobuf::int32 topics_count_;
   ::google::protobuf::int32 items_processed_;
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
@@ -2439,73 +2405,73 @@ Item::mutable_field() {
 
 // Field
 
-// optional string field_name = 1 [default = "@body"];
-inline bool Field::has_field_name() const {
+// optional string name = 1 [default = "@body"];
+inline bool Field::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Field::set_has_field_name() {
+inline void Field::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Field::clear_has_field_name() {
+inline void Field::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Field::clear_field_name() {
-  if (field_name_ != _default_field_name_) {
-    field_name_->assign(*_default_field_name_);
+inline void Field::clear_name() {
+  if (name_ != _default_name_) {
+    name_->assign(*_default_name_);
   }
-  clear_has_field_name();
+  clear_has_name();
 }
-inline const ::std::string& Field::field_name() const {
-  return *field_name_;
+inline const ::std::string& Field::name() const {
+  return *name_;
 }
-inline void Field::set_field_name(const ::std::string& value) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
+inline void Field::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  field_name_->assign(value);
+  name_->assign(value);
 }
-inline void Field::set_field_name(const char* value) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
+inline void Field::set_name(const char* value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  field_name_->assign(value);
+  name_->assign(value);
 }
-inline void Field::set_field_name(const char* value, size_t size) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
+inline void Field::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  field_name_->assign(reinterpret_cast<const char*>(value), size);
+  name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Field::mutable_field_name() {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string(*_default_field_name_);
+inline ::std::string* Field::mutable_name() {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string(*_default_name_);
   }
-  return field_name_;
+  return name_;
 }
-inline ::std::string* Field::release_field_name() {
-  clear_has_field_name();
-  if (field_name_ == _default_field_name_) {
+inline ::std::string* Field::release_name() {
+  clear_has_name();
+  if (name_ == _default_name_) {
     return NULL;
   } else {
-    ::std::string* temp = field_name_;
-    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(_default_name_);
     return temp;
   }
 }
-inline void Field::set_allocated_field_name(::std::string* field_name) {
-  if (field_name_ != _default_field_name_) {
-    delete field_name_;
+inline void Field::set_allocated_name(::std::string* name) {
+  if (name_ != _default_name_) {
+    delete name_;
   }
-  if (field_name) {
-    set_has_field_name();
-    field_name_ = field_name;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_field_name();
-    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(_default_name_);
   }
 }
 
@@ -3152,73 +3118,73 @@ inline void MasterComponentConfig::set_allocated_master_component_connect_endpoi
 
 // ModelConfig
 
-// optional string model_id = 1 [default = ""];
-inline bool ModelConfig::has_model_id() const {
+// optional string name = 1 [default = "@model"];
+inline bool ModelConfig::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ModelConfig::set_has_model_id() {
+inline void ModelConfig::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ModelConfig::clear_has_model_id() {
+inline void ModelConfig::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ModelConfig::clear_model_id() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    model_id_->clear();
+inline void ModelConfig::clear_name() {
+  if (name_ != _default_name_) {
+    name_->assign(*_default_name_);
   }
-  clear_has_model_id();
+  clear_has_name();
 }
-inline const ::std::string& ModelConfig::model_id() const {
-  return *model_id_;
+inline const ::std::string& ModelConfig::name() const {
+  return *name_;
 }
-inline void ModelConfig::set_model_id(const ::std::string& value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelConfig::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  name_->assign(value);
 }
-inline void ModelConfig::set_model_id(const char* value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelConfig::set_name(const char* value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  name_->assign(value);
 }
-inline void ModelConfig::set_model_id(const char* value, size_t size) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelConfig::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(reinterpret_cast<const char*>(value), size);
+  name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* ModelConfig::mutable_model_id() {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline ::std::string* ModelConfig::mutable_name() {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string(*_default_name_);
   }
-  return model_id_;
+  return name_;
 }
-inline ::std::string* ModelConfig::release_model_id() {
-  clear_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* ModelConfig::release_name() {
+  clear_has_name();
+  if (name_ == _default_name_) {
     return NULL;
   } else {
-    ::std::string* temp = model_id_;
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(_default_name_);
     return temp;
   }
 }
-inline void ModelConfig::set_allocated_model_id(::std::string* model_id) {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+inline void ModelConfig::set_allocated_name(::std::string* name) {
+  if (name_ != _default_name_) {
+    delete name_;
   }
-  if (model_id) {
-    set_has_model_id();
-    model_id_ = model_id;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_model_id();
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(_default_name_);
   }
 }
 
@@ -3244,7 +3210,7 @@ inline void ModelConfig::set_topics_count(::google::protobuf::int32 value) {
   topics_count_ = value;
 }
 
-// optional bool enabled = 3 [default = false];
+// optional bool enabled = 3 [default = true];
 inline bool ModelConfig::has_enabled() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -3255,7 +3221,7 @@ inline void ModelConfig::clear_has_enabled() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void ModelConfig::clear_enabled() {
-  enabled_ = false;
+  enabled_ = true;
   clear_has_enabled();
 }
 inline bool ModelConfig::enabled() const {
@@ -3541,6 +3507,31 @@ ModelConfig::mutable_regularizer_name() {
   return &regularizer_name_;
 }
 
+// repeated double regularizer_tau = 11;
+inline int ModelConfig::regularizer_tau_size() const {
+  return regularizer_tau_.size();
+}
+inline void ModelConfig::clear_regularizer_tau() {
+  regularizer_tau_.Clear();
+}
+inline double ModelConfig::regularizer_tau(int index) const {
+  return regularizer_tau_.Get(index);
+}
+inline void ModelConfig::set_regularizer_tau(int index, double value) {
+  regularizer_tau_.Set(index, value);
+}
+inline void ModelConfig::add_regularizer_tau(double value) {
+  regularizer_tau_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< double >&
+ModelConfig::regularizer_tau() const {
+  return regularizer_tau_;
+}
+inline ::google::protobuf::RepeatedField< double >*
+ModelConfig::mutable_regularizer_tau() {
+  return &regularizer_tau_;
+}
+
 // -------------------------------------------------------------------
 
 // RegularizerConfig
@@ -3712,117 +3703,70 @@ inline void RegularizerConfig::set_allocated_config(::std::string* config) {
 
 // DirichletThetaConfig
 
-// repeated double alpha_0 = 1;
-inline int DirichletThetaConfig::alpha_0_size() const {
-  return alpha_0_.size();
+// repeated .artm.DoubleArray alpha = 1;
+inline int DirichletThetaConfig::alpha_size() const {
+  return alpha_.size();
 }
-inline void DirichletThetaConfig::clear_alpha_0() {
-  alpha_0_.Clear();
+inline void DirichletThetaConfig::clear_alpha() {
+  alpha_.Clear();
 }
-inline double DirichletThetaConfig::alpha_0(int index) const {
-  return alpha_0_.Get(index);
+inline const ::artm::DoubleArray& DirichletThetaConfig::alpha(int index) const {
+  return alpha_.Get(index);
 }
-inline void DirichletThetaConfig::set_alpha_0(int index, double value) {
-  alpha_0_.Set(index, value);
+inline ::artm::DoubleArray* DirichletThetaConfig::mutable_alpha(int index) {
+  return alpha_.Mutable(index);
 }
-inline void DirichletThetaConfig::add_alpha_0(double value) {
-  alpha_0_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< double >&
-DirichletThetaConfig::alpha_0() const {
-  return alpha_0_;
-}
-inline ::google::protobuf::RepeatedField< double >*
-DirichletThetaConfig::mutable_alpha_0() {
-  return &alpha_0_;
-}
-
-// repeated .artm.DoubleArray tilde_alpha = 2;
-inline int DirichletThetaConfig::tilde_alpha_size() const {
-  return tilde_alpha_.size();
-}
-inline void DirichletThetaConfig::clear_tilde_alpha() {
-  tilde_alpha_.Clear();
-}
-inline const ::artm::DoubleArray& DirichletThetaConfig::tilde_alpha(int index) const {
-  return tilde_alpha_.Get(index);
-}
-inline ::artm::DoubleArray* DirichletThetaConfig::mutable_tilde_alpha(int index) {
-  return tilde_alpha_.Mutable(index);
-}
-inline ::artm::DoubleArray* DirichletThetaConfig::add_tilde_alpha() {
-  return tilde_alpha_.Add();
+inline ::artm::DoubleArray* DirichletThetaConfig::add_alpha() {
+  return alpha_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-DirichletThetaConfig::tilde_alpha() const {
-  return tilde_alpha_;
+DirichletThetaConfig::alpha() const {
+  return alpha_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-DirichletThetaConfig::mutable_tilde_alpha() {
-  return &tilde_alpha_;
+DirichletThetaConfig::mutable_alpha() {
+  return &alpha_;
 }
 
 // -------------------------------------------------------------------
 
 // DirichletPhiConfig
 
-// required double beta_0 = 1;
-inline bool DirichletPhiConfig::has_beta_0() const {
+// optional .artm.DoubleArray beta = 1;
+inline bool DirichletPhiConfig::has_beta() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void DirichletPhiConfig::set_has_beta_0() {
+inline void DirichletPhiConfig::set_has_beta() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void DirichletPhiConfig::clear_has_beta_0() {
+inline void DirichletPhiConfig::clear_has_beta() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void DirichletPhiConfig::clear_beta_0() {
-  beta_0_ = 0;
-  clear_has_beta_0();
+inline void DirichletPhiConfig::clear_beta() {
+  if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
+  clear_has_beta();
 }
-inline double DirichletPhiConfig::beta_0() const {
-  return beta_0_;
+inline const ::artm::DoubleArray& DirichletPhiConfig::beta() const {
+  return beta_ != NULL ? *beta_ : *default_instance_->beta_;
 }
-inline void DirichletPhiConfig::set_beta_0(double value) {
-  set_has_beta_0();
-  beta_0_ = value;
+inline ::artm::DoubleArray* DirichletPhiConfig::mutable_beta() {
+  set_has_beta();
+  if (beta_ == NULL) beta_ = new ::artm::DoubleArray;
+  return beta_;
 }
-
-// required .artm.DoubleArray tilde_beta = 2;
-inline bool DirichletPhiConfig::has_tilde_beta() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void DirichletPhiConfig::set_has_tilde_beta() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void DirichletPhiConfig::clear_has_tilde_beta() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void DirichletPhiConfig::clear_tilde_beta() {
-  if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
-  clear_has_tilde_beta();
-}
-inline const ::artm::DoubleArray& DirichletPhiConfig::tilde_beta() const {
-  return tilde_beta_ != NULL ? *tilde_beta_ : *default_instance_->tilde_beta_;
-}
-inline ::artm::DoubleArray* DirichletPhiConfig::mutable_tilde_beta() {
-  set_has_tilde_beta();
-  if (tilde_beta_ == NULL) tilde_beta_ = new ::artm::DoubleArray;
-  return tilde_beta_;
-}
-inline ::artm::DoubleArray* DirichletPhiConfig::release_tilde_beta() {
-  clear_has_tilde_beta();
-  ::artm::DoubleArray* temp = tilde_beta_;
-  tilde_beta_ = NULL;
+inline ::artm::DoubleArray* DirichletPhiConfig::release_beta() {
+  clear_has_beta();
+  ::artm::DoubleArray* temp = beta_;
+  beta_ = NULL;
   return temp;
 }
-inline void DirichletPhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta) {
-  delete tilde_beta_;
-  tilde_beta_ = tilde_beta;
-  if (tilde_beta) {
-    set_has_tilde_beta();
+inline void DirichletPhiConfig::set_allocated_beta(::artm::DoubleArray* beta) {
+  delete beta_;
+  beta_ = beta;
+  if (beta) {
+    set_has_beta();
   } else {
-    clear_has_tilde_beta();
+    clear_has_beta();
   }
 }
 
@@ -3830,54 +3774,51 @@ inline void DirichletPhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* ti
 
 // SmoothSparseThetaConfig
 
-// repeated double alpha_0 = 1;
-inline int SmoothSparseThetaConfig::alpha_0_size() const {
-  return alpha_0_.size();
+// required int32 background_topics_count = 1;
+inline bool SmoothSparseThetaConfig::has_background_topics_count() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SmoothSparseThetaConfig::clear_alpha_0() {
-  alpha_0_.Clear();
+inline void SmoothSparseThetaConfig::set_has_background_topics_count() {
+  _has_bits_[0] |= 0x00000001u;
 }
-inline double SmoothSparseThetaConfig::alpha_0(int index) const {
-  return alpha_0_.Get(index);
+inline void SmoothSparseThetaConfig::clear_has_background_topics_count() {
+  _has_bits_[0] &= ~0x00000001u;
 }
-inline void SmoothSparseThetaConfig::set_alpha_0(int index, double value) {
-  alpha_0_.Set(index, value);
+inline void SmoothSparseThetaConfig::clear_background_topics_count() {
+  background_topics_count_ = 0;
+  clear_has_background_topics_count();
 }
-inline void SmoothSparseThetaConfig::add_alpha_0(double value) {
-  alpha_0_.Add(value);
+inline ::google::protobuf::int32 SmoothSparseThetaConfig::background_topics_count() const {
+  return background_topics_count_;
 }
-inline const ::google::protobuf::RepeatedField< double >&
-SmoothSparseThetaConfig::alpha_0() const {
-  return alpha_0_;
-}
-inline ::google::protobuf::RepeatedField< double >*
-SmoothSparseThetaConfig::mutable_alpha_0() {
-  return &alpha_0_;
+inline void SmoothSparseThetaConfig::set_background_topics_count(::google::protobuf::int32 value) {
+  set_has_background_topics_count();
+  background_topics_count_ = value;
 }
 
-// repeated .artm.DoubleArray tilde_alpha = 2;
-inline int SmoothSparseThetaConfig::tilde_alpha_size() const {
-  return tilde_alpha_.size();
+// repeated .artm.DoubleArray alpha = 2;
+inline int SmoothSparseThetaConfig::alpha_size() const {
+  return alpha_.size();
 }
-inline void SmoothSparseThetaConfig::clear_tilde_alpha() {
-  tilde_alpha_.Clear();
+inline void SmoothSparseThetaConfig::clear_alpha() {
+  alpha_.Clear();
 }
-inline const ::artm::DoubleArray& SmoothSparseThetaConfig::tilde_alpha(int index) const {
-  return tilde_alpha_.Get(index);
+inline const ::artm::DoubleArray& SmoothSparseThetaConfig::alpha(int index) const {
+  return alpha_.Get(index);
 }
-inline ::artm::DoubleArray* SmoothSparseThetaConfig::mutable_tilde_alpha(int index) {
-  return tilde_alpha_.Mutable(index);
+inline ::artm::DoubleArray* SmoothSparseThetaConfig::mutable_alpha(int index) {
+  return alpha_.Mutable(index);
 }
-inline ::artm::DoubleArray* SmoothSparseThetaConfig::add_tilde_alpha() {
-  return tilde_alpha_.Add();
+inline ::artm::DoubleArray* SmoothSparseThetaConfig::add_alpha() {
+  return alpha_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-SmoothSparseThetaConfig::tilde_alpha() const {
-  return tilde_alpha_;
+SmoothSparseThetaConfig::alpha() const {
+  return alpha_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-SmoothSparseThetaConfig::mutable_tilde_alpha() {
-  return &tilde_alpha_;
+SmoothSparseThetaConfig::mutable_alpha() {
+  return &alpha_;
 }
 
 // -------------------------------------------------------------------
@@ -3906,114 +3847,67 @@ inline void SmoothSparsePhiConfig::set_background_topics_count(::google::protobu
   background_topics_count_ = value;
 }
 
-// required double beta_0 = 2;
-inline bool SmoothSparsePhiConfig::has_beta_0() const {
+// optional .artm.DoubleArray beta = 2;
+inline bool SmoothSparsePhiConfig::has_beta() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SmoothSparsePhiConfig::set_has_beta_0() {
+inline void SmoothSparsePhiConfig::set_has_beta() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_has_beta_0() {
+inline void SmoothSparsePhiConfig::clear_has_beta() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_beta_0() {
-  beta_0_ = 0;
-  clear_has_beta_0();
+inline void SmoothSparsePhiConfig::clear_beta() {
+  if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
+  clear_has_beta();
 }
-inline double SmoothSparsePhiConfig::beta_0() const {
-  return beta_0_;
+inline const ::artm::DoubleArray& SmoothSparsePhiConfig::beta() const {
+  return beta_ != NULL ? *beta_ : *default_instance_->beta_;
 }
-inline void SmoothSparsePhiConfig::set_beta_0(double value) {
-  set_has_beta_0();
-  beta_0_ = value;
+inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_beta() {
+  set_has_beta();
+  if (beta_ == NULL) beta_ = new ::artm::DoubleArray;
+  return beta_;
 }
-
-// required .artm.DoubleArray tilde_beta = 3;
-inline bool SmoothSparsePhiConfig::has_tilde_beta() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SmoothSparsePhiConfig::set_has_tilde_beta() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void SmoothSparsePhiConfig::clear_has_tilde_beta() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void SmoothSparsePhiConfig::clear_tilde_beta() {
-  if (tilde_beta_ != NULL) tilde_beta_->::artm::DoubleArray::Clear();
-  clear_has_tilde_beta();
-}
-inline const ::artm::DoubleArray& SmoothSparsePhiConfig::tilde_beta() const {
-  return tilde_beta_ != NULL ? *tilde_beta_ : *default_instance_->tilde_beta_;
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_tilde_beta() {
-  set_has_tilde_beta();
-  if (tilde_beta_ == NULL) tilde_beta_ = new ::artm::DoubleArray;
-  return tilde_beta_;
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::release_tilde_beta() {
-  clear_has_tilde_beta();
-  ::artm::DoubleArray* temp = tilde_beta_;
-  tilde_beta_ = NULL;
+inline ::artm::DoubleArray* SmoothSparsePhiConfig::release_beta() {
+  clear_has_beta();
+  ::artm::DoubleArray* temp = beta_;
+  beta_ = NULL;
   return temp;
 }
-inline void SmoothSparsePhiConfig::set_allocated_tilde_beta(::artm::DoubleArray* tilde_beta) {
-  delete tilde_beta_;
-  tilde_beta_ = tilde_beta;
-  if (tilde_beta) {
-    set_has_tilde_beta();
+inline void SmoothSparsePhiConfig::set_allocated_beta(::artm::DoubleArray* beta) {
+  delete beta_;
+  beta_ = beta;
+  if (beta) {
+    set_has_beta();
   } else {
-    clear_has_tilde_beta();
+    clear_has_beta();
   }
 }
 
-// repeated double background_beta_0 = 4;
-inline int SmoothSparsePhiConfig::background_beta_0_size() const {
-  return background_beta_0_.size();
+// repeated .artm.DoubleArray background_beta = 3;
+inline int SmoothSparsePhiConfig::background_beta_size() const {
+  return background_beta_.size();
 }
-inline void SmoothSparsePhiConfig::clear_background_beta_0() {
-  background_beta_0_.Clear();
+inline void SmoothSparsePhiConfig::clear_background_beta() {
+  background_beta_.Clear();
 }
-inline double SmoothSparsePhiConfig::background_beta_0(int index) const {
-  return background_beta_0_.Get(index);
+inline const ::artm::DoubleArray& SmoothSparsePhiConfig::background_beta(int index) const {
+  return background_beta_.Get(index);
 }
-inline void SmoothSparsePhiConfig::set_background_beta_0(int index, double value) {
-  background_beta_0_.Set(index, value);
+inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_background_beta(int index) {
+  return background_beta_.Mutable(index);
 }
-inline void SmoothSparsePhiConfig::add_background_beta_0(double value) {
-  background_beta_0_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< double >&
-SmoothSparsePhiConfig::background_beta_0() const {
-  return background_beta_0_;
-}
-inline ::google::protobuf::RepeatedField< double >*
-SmoothSparsePhiConfig::mutable_background_beta_0() {
-  return &background_beta_0_;
-}
-
-// repeated .artm.DoubleArray background_tilde_beta = 5;
-inline int SmoothSparsePhiConfig::background_tilde_beta_size() const {
-  return background_tilde_beta_.size();
-}
-inline void SmoothSparsePhiConfig::clear_background_tilde_beta() {
-  background_tilde_beta_.Clear();
-}
-inline const ::artm::DoubleArray& SmoothSparsePhiConfig::background_tilde_beta(int index) const {
-  return background_tilde_beta_.Get(index);
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_background_tilde_beta(int index) {
-  return background_tilde_beta_.Mutable(index);
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::add_background_tilde_beta() {
-  return background_tilde_beta_.Add();
+inline ::artm::DoubleArray* SmoothSparsePhiConfig::add_background_beta() {
+  return background_beta_.Add();
 }
 inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-SmoothSparsePhiConfig::background_tilde_beta() const {
-  return background_tilde_beta_;
+SmoothSparsePhiConfig::background_beta() const {
+  return background_beta_;
 }
 inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-SmoothSparsePhiConfig::mutable_background_tilde_beta() {
-  return &background_tilde_beta_;
+SmoothSparsePhiConfig::mutable_background_beta() {
+  return &background_beta_;
 }
 
 // -------------------------------------------------------------------
@@ -4413,73 +4307,73 @@ inline void TopicModel_TopicModelInternals::set_allocated_scores_normalizer(::ar
 
 // TopicModel
 
-// optional string model_id = 1 [default = ""];
-inline bool TopicModel::has_model_id() const {
+// optional string name = 1 [default = "@model"];
+inline bool TopicModel::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void TopicModel::set_has_model_id() {
+inline void TopicModel::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void TopicModel::clear_has_model_id() {
+inline void TopicModel::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void TopicModel::clear_model_id() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    model_id_->clear();
+inline void TopicModel::clear_name() {
+  if (name_ != _default_name_) {
+    name_->assign(*_default_name_);
   }
-  clear_has_model_id();
+  clear_has_name();
 }
-inline const ::std::string& TopicModel::model_id() const {
-  return *model_id_;
+inline const ::std::string& TopicModel::name() const {
+  return *name_;
 }
-inline void TopicModel::set_model_id(const ::std::string& value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void TopicModel::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  name_->assign(value);
 }
-inline void TopicModel::set_model_id(const char* value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void TopicModel::set_name(const char* value) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  name_->assign(value);
 }
-inline void TopicModel::set_model_id(const char* value, size_t size) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void TopicModel::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string;
   }
-  model_id_->assign(reinterpret_cast<const char*>(value), size);
+  name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* TopicModel::mutable_model_id() {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline ::std::string* TopicModel::mutable_name() {
+  set_has_name();
+  if (name_ == _default_name_) {
+    name_ = new ::std::string(*_default_name_);
   }
-  return model_id_;
+  return name_;
 }
-inline ::std::string* TopicModel::release_model_id() {
-  clear_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* TopicModel::release_name() {
+  clear_has_name();
+  if (name_ == _default_name_) {
     return NULL;
   } else {
-    ::std::string* temp = model_id_;
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(_default_name_);
     return temp;
   }
 }
-inline void TopicModel::set_allocated_model_id(::std::string* model_id) {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+inline void TopicModel::set_allocated_name(::std::string* name) {
+  if (name_ != _default_name_) {
+    delete name_;
   }
-  if (model_id) {
-    set_has_model_id();
-    model_id_ = model_id;
+  if (name) {
+    set_has_name();
+    name_ = name;
   } else {
-    clear_has_model_id();
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(_default_name_);
   }
 }
 

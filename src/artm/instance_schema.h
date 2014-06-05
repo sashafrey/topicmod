@@ -24,10 +24,10 @@ class InstanceSchema {
   const InstanceConfig& instance_config() const;
   void set_instance_config(const InstanceConfig& instance_config);
 
-  const ModelConfig& model_config(ModelId id) const;
-  void set_model_config(ModelId id, const std::shared_ptr<const ModelConfig>& model_config);
-  bool has_model_config(ModelId id) const;
-  void clear_model_config(ModelId id);
+  const ModelConfig& model_config(ModelName id) const;
+  void set_model_config(ModelName id, const std::shared_ptr<const ModelConfig>& model_config);
+  bool has_model_config(ModelName id) const;
+  void clear_model_config(ModelName id);
 
   void set_regularizer(const std::string& name,
                        const std::shared_ptr<RegularizerInterface>& regularizer);
@@ -36,12 +36,12 @@ class InstanceSchema {
 
   std::shared_ptr<RegularizerInterface> regularizer(const std::string& name);
 
-  std::vector<ModelId> GetModelIds() const;
+  std::vector<ModelName> GetModelNames() const;
 
  private:
   InstanceConfig instance_config_;
   std::map<std::string, std::shared_ptr<RegularizerInterface> > regularizers_;
-  std::map<ModelId, std::shared_ptr<const ModelConfig> > models_config_;
+  std::map<ModelName, std::shared_ptr<const ModelConfig> > models_config_;
 };
 
 }  // namespace core

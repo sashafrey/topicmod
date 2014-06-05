@@ -3,20 +3,20 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>2adc9dc7-a191-4800-867b-a25ee6cb8838</ProjectGuid>
+    <ProjectGuid>8cbe34f8-5d46-4832-b615-db183812f81f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>
-    </StartupFile>
-    <SearchPath>..\python_interface</SearchPath>
+    <StartupFile>artm_example.py</StartupFile>
+    <SearchPath>BigARTM</SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
-    <Name>python_interface</Name>
-    <RootNamespace>python_interface</RootNamespace>
+    <Name>python_client</Name>
+    <RootNamespace>python_client</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
     <CommandLineArguments />
     <InterpreterPath />
     <InterpreterArguments />
-    <EnableNativeCodeDebugging>True</EnableNativeCodeDebugging>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,13 +27,9 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="python_interface.py" />
+    <Compile Include="analyzer.py" />
+    <Compile Include="artm_example.py" />
+    <Compile Include="collection.py" />
   </ItemGroup>
-  <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <PtvsTargetsFile>$(VSToolsPath)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
-  </PropertyGroup>
-  <Import Condition="Exists($(PtvsTargetsFile))" Project="$(PtvsTargetsFile)" />
-  <Import Condition="!Exists($(PtvsTargetsFile))" Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>

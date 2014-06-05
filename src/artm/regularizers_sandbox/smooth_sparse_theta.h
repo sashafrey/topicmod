@@ -22,7 +22,8 @@ class SmoothSparseTheta : public RegularizerInterface {
   virtual bool RegularizeTheta(const Item& item,
                                std::vector<float>* n_dt,
                                int topic_size,
-                               int inner_iter);
+                               int inner_iter,
+                               double tau);
 
  private:
   SmoothSparseThetaConfig config_;

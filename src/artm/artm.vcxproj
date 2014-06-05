@@ -24,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="c_interface.cc" />
+    <ClCompile Include="dll_main.cpp" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <ClCompile>

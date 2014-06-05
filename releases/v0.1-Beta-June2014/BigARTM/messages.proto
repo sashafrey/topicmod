@@ -67,19 +67,6 @@ message MasterComponentConfig {
 
   // Max size of merger queue
   optional int32 merger_queue_max_size = 7 [default = 10];
-
-  // ====== [Under Development fields - excluded from public API] ======
-  enum ModusOperandi {
-    Local = 0;
-    Network = 1;
-  }
-
-  // Modus operandi of the master component
-  optional ModusOperandi modus_operandi = 100 [default = Local];
-
-  // Service endpoints
-  optional string master_component_create_endpoint = 101;
-  optional string master_component_connect_endpoint = 102;
 }
 
 // Configuration of a model.
@@ -94,7 +81,6 @@ message ModelConfig {
   optional bool reuse_theta = 8 [default = false];
   optional bool cache_token_counters  = 9 [default = false];
   repeated string regularizer_name = 10;
-  repeated double regularizer_tau = 11;
 }
 
 // Configuration of a regularizer
@@ -102,8 +88,8 @@ message RegularizerConfig {
   enum Type {
     DirichletTheta = 0;
     DirichletPhi = 1;
-	  SmoothSparseTheta = 2;
-	  SmoothSparsePhi = 3;
+	SmoothSparseTheta = 2;
+	SmoothSparsePhi = 3;
   }
 
   optional string name = 1;
@@ -113,25 +99,29 @@ message RegularizerConfig {
 
 // Configuration of a Dirichlet Theta regularizer
 message DirichletThetaConfig {
-  repeated DoubleArray alpha = 1;
+  repeated double alpha_0 = 1;
+  repeated DoubleArray tilde_alpha = 2;
 }
 
 // Configuration of a Dirichlet Phi regularizer
 message DirichletPhiConfig {
-  optional DoubleArray beta = 1;
+  required double beta_0 = 1;
+  required DoubleArray tilde_beta = 2;
 }
 
 // Configuration of a SmoothSparse Theta regularizer
 message SmoothSparseThetaConfig {
-  required int32 background_topics_count = 1;
-  repeated DoubleArray alpha = 2;
+  repeated double alpha_0 = 1;
+  repeated DoubleArray tilde_alpha = 2;
 }
 
 // Configuration of a SmoothSparse Phi regularizer
 message SmoothSparsePhiConfig {
   required int32 background_topics_count = 1;
-  optional DoubleArray beta = 2;
-  repeated DoubleArray background_beta = 3;
+  required double beta_0 = 2;
+  required DoubleArray tilde_beta = 3;
+  repeated double background_beta_0 = 4;
+  repeated DoubleArray background_tilde_beta = 5;
 }
 
 message DoubleArray {
@@ -163,29 +153,5 @@ message TopicModel {
 
   optional DoubleArray scores = 6;        // perplexity and other quality scores
 
-  // Data structure to keep all the raw data of the model.
-  // This allows users to send a TopicModel back into BigARTM library.
-  message TopicModelInternals {
-    repeated FloatArray n_wt = 1;
-    repeated FloatArray r_wt = 2;
-    optional FloatArray n_t = 3;
-    optional DoubleArray scores_raw = 4;
-    optional DoubleArray scores_normalizer = 5;
-  }
-
-  optional bytes internals = 7;  // serialized instance of TopicModelInternals
-}
-
-// ====== [Under Development messages - excluded from public API] ======
-
-// Configuration of the Node Controller
-message NodeControllerConfig {
-  optional string node_controller_create_endpoint = 1;
-  optional string node_controller_connect_endpoint = 2;
-  optional string master_component_connect_endpoint = 3;
-}
-
-message BatchTopics {
-  repeated int32 item_id = 1;
-  repeated FloatArray item_weights = 2;
+  optional bytes internals = 7;
 }

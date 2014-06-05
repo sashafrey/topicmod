@@ -8,7 +8,7 @@
 namespace artm {
 namespace core {
 
-typedef std::string ModelId;
+typedef std::string ModelName;
 
 const int UnknownId = -1;
 

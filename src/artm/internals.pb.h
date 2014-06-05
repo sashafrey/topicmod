@@ -1126,17 +1126,17 @@ class ModelIncrement : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required string model_id = 1;
-  inline bool has_model_id() const;
-  inline void clear_model_id();
-  static const int kModelIdFieldNumber = 1;
-  inline const ::std::string& model_id() const;
-  inline void set_model_id(const ::std::string& value);
-  inline void set_model_id(const char* value);
-  inline void set_model_id(const char* value, size_t size);
-  inline ::std::string* mutable_model_id();
-  inline ::std::string* release_model_id();
-  inline void set_allocated_model_id(::std::string* model_id);
+  // required string model_name = 1;
+  inline bool has_model_name() const;
+  inline void clear_model_name();
+  static const int kModelNameFieldNumber = 1;
+  inline const ::std::string& model_name() const;
+  inline void set_model_name(const ::std::string& value);
+  inline void set_model_name(const char* value);
+  inline void set_model_name(const char* value, size_t size);
+  inline ::std::string* mutable_model_name();
+  inline ::std::string* release_model_name();
+  inline void set_allocated_model_name(::std::string* model_name);
 
   // required int32 topics_count = 2;
   inline bool has_topics_count() const;
@@ -1246,8 +1246,8 @@ class ModelIncrement : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.core.ModelIncrement)
  private:
-  inline void set_has_model_id();
-  inline void clear_has_model_id();
+  inline void set_has_model_name();
+  inline void clear_has_model_name();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
   inline void set_has_items_processed();
@@ -1255,7 +1255,7 @@ class ModelIncrement : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* model_id_;
+  ::std::string* model_name_;
   ::google::protobuf::int32 topics_count_;
   ::google::protobuf::int32 items_processed_;
   ::google::protobuf::RepeatedPtrField< ::std::string> discovered_token_;
@@ -1421,17 +1421,17 @@ class CreateOrReconfigureModelArgs : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string model_id = 2;
-  inline bool has_model_id() const;
-  inline void clear_model_id();
-  static const int kModelIdFieldNumber = 2;
-  inline const ::std::string& model_id() const;
-  inline void set_model_id(const ::std::string& value);
-  inline void set_model_id(const char* value);
-  inline void set_model_id(const char* value, size_t size);
-  inline ::std::string* mutable_model_id();
-  inline ::std::string* release_model_id();
-  inline void set_allocated_model_id(::std::string* model_id);
+  // optional string model_name = 2;
+  inline bool has_model_name() const;
+  inline void clear_model_name();
+  static const int kModelNameFieldNumber = 2;
+  inline const ::std::string& model_name() const;
+  inline void set_model_name(const ::std::string& value);
+  inline void set_model_name(const char* value);
+  inline void set_model_name(const char* value, size_t size);
+  inline ::std::string* mutable_model_name();
+  inline ::std::string* release_model_name();
+  inline void set_allocated_model_name(::std::string* model_name);
 
   // optional .artm.ModelConfig config = 3;
   inline bool has_config() const;
@@ -1444,14 +1444,14 @@ class CreateOrReconfigureModelArgs : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.core.CreateOrReconfigureModelArgs)
  private:
-  inline void set_has_model_id();
-  inline void clear_has_model_id();
+  inline void set_has_model_name();
+  inline void clear_has_model_name();
   inline void set_has_config();
   inline void clear_has_config();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* model_id_;
+  ::std::string* model_name_;
   ::artm::ModelConfig* config_;
 
   mutable int _cached_size_;
@@ -1520,26 +1520,26 @@ class DisposeModelArgs : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string model_id = 2;
-  inline bool has_model_id() const;
-  inline void clear_model_id();
-  static const int kModelIdFieldNumber = 2;
-  inline const ::std::string& model_id() const;
-  inline void set_model_id(const ::std::string& value);
-  inline void set_model_id(const char* value);
-  inline void set_model_id(const char* value, size_t size);
-  inline ::std::string* mutable_model_id();
-  inline ::std::string* release_model_id();
-  inline void set_allocated_model_id(::std::string* model_id);
+  // optional string model_name = 2;
+  inline bool has_model_name() const;
+  inline void clear_model_name();
+  static const int kModelNameFieldNumber = 2;
+  inline const ::std::string& model_name() const;
+  inline void set_model_name(const ::std::string& value);
+  inline void set_model_name(const char* value);
+  inline void set_model_name(const char* value, size_t size);
+  inline ::std::string* mutable_model_name();
+  inline ::std::string* release_model_name();
+  inline void set_allocated_model_name(::std::string* model_name);
 
   // @@protoc_insertion_point(class_scope:artm.core.DisposeModelArgs)
  private:
-  inline void set_has_model_id();
-  inline void clear_has_model_id();
+  inline void set_has_model_name();
+  inline void clear_has_model_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* model_id_;
+  ::std::string* model_name_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -2669,73 +2669,73 @@ ProcessorOutput::mutable_model_increment() {
 
 // ModelIncrement
 
-// required string model_id = 1;
-inline bool ModelIncrement::has_model_id() const {
+// required string model_name = 1;
+inline bool ModelIncrement::has_model_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void ModelIncrement::set_has_model_id() {
+inline void ModelIncrement::set_has_model_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void ModelIncrement::clear_has_model_id() {
+inline void ModelIncrement::clear_has_model_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void ModelIncrement::clear_model_id() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    model_id_->clear();
+inline void ModelIncrement::clear_model_name() {
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    model_name_->clear();
   }
-  clear_has_model_id();
+  clear_has_model_name();
 }
-inline const ::std::string& ModelIncrement::model_id() const {
-  return *model_id_;
+inline const ::std::string& ModelIncrement::model_name() const {
+  return *model_name_;
 }
-inline void ModelIncrement::set_model_id(const ::std::string& value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelIncrement::set_model_name(const ::std::string& value) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  model_name_->assign(value);
 }
-inline void ModelIncrement::set_model_id(const char* value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelIncrement::set_model_name(const char* value) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  model_name_->assign(value);
 }
-inline void ModelIncrement::set_model_id(const char* value, size_t size) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void ModelIncrement::set_model_name(const char* value, size_t size) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(reinterpret_cast<const char*>(value), size);
+  model_name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* ModelIncrement::mutable_model_id() {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline ::std::string* ModelIncrement::mutable_model_name() {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  return model_id_;
+  return model_name_;
 }
-inline ::std::string* ModelIncrement::release_model_id() {
-  clear_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* ModelIncrement::release_model_name() {
+  clear_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = model_id_;
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = model_name_;
+    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void ModelIncrement::set_allocated_model_id(::std::string* model_id) {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+inline void ModelIncrement::set_allocated_model_name(::std::string* model_name) {
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_name_;
   }
-  if (model_id) {
-    set_has_model_id();
-    model_id_ = model_id;
+  if (model_name) {
+    set_has_model_name();
+    model_name_ = model_name;
   } else {
-    clear_has_model_id();
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_model_name();
+    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -3048,73 +3048,73 @@ BatchIds::mutable_batch_id() {
 
 // CreateOrReconfigureModelArgs
 
-// optional string model_id = 2;
-inline bool CreateOrReconfigureModelArgs::has_model_id() const {
+// optional string model_name = 2;
+inline bool CreateOrReconfigureModelArgs::has_model_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void CreateOrReconfigureModelArgs::set_has_model_id() {
+inline void CreateOrReconfigureModelArgs::set_has_model_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void CreateOrReconfigureModelArgs::clear_has_model_id() {
+inline void CreateOrReconfigureModelArgs::clear_has_model_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void CreateOrReconfigureModelArgs::clear_model_id() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    model_id_->clear();
+inline void CreateOrReconfigureModelArgs::clear_model_name() {
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    model_name_->clear();
   }
-  clear_has_model_id();
+  clear_has_model_name();
 }
-inline const ::std::string& CreateOrReconfigureModelArgs::model_id() const {
-  return *model_id_;
+inline const ::std::string& CreateOrReconfigureModelArgs::model_name() const {
+  return *model_name_;
 }
-inline void CreateOrReconfigureModelArgs::set_model_id(const ::std::string& value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void CreateOrReconfigureModelArgs::set_model_name(const ::std::string& value) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  model_name_->assign(value);
 }
-inline void CreateOrReconfigureModelArgs::set_model_id(const char* value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void CreateOrReconfigureModelArgs::set_model_name(const char* value) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  model_name_->assign(value);
 }
-inline void CreateOrReconfigureModelArgs::set_model_id(const char* value, size_t size) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void CreateOrReconfigureModelArgs::set_model_name(const char* value, size_t size) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(reinterpret_cast<const char*>(value), size);
+  model_name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* CreateOrReconfigureModelArgs::mutable_model_id() {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline ::std::string* CreateOrReconfigureModelArgs::mutable_model_name() {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  return model_id_;
+  return model_name_;
 }
-inline ::std::string* CreateOrReconfigureModelArgs::release_model_id() {
-  clear_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* CreateOrReconfigureModelArgs::release_model_name() {
+  clear_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = model_id_;
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = model_name_;
+    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void CreateOrReconfigureModelArgs::set_allocated_model_id(::std::string* model_id) {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+inline void CreateOrReconfigureModelArgs::set_allocated_model_name(::std::string* model_name) {
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_name_;
   }
-  if (model_id) {
-    set_has_model_id();
-    model_id_ = model_id;
+  if (model_name) {
+    set_has_model_name();
+    model_name_ = model_name;
   } else {
-    clear_has_model_id();
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_model_name();
+    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -3160,73 +3160,73 @@ inline void CreateOrReconfigureModelArgs::set_allocated_config(::artm::ModelConf
 
 // DisposeModelArgs
 
-// optional string model_id = 2;
-inline bool DisposeModelArgs::has_model_id() const {
+// optional string model_name = 2;
+inline bool DisposeModelArgs::has_model_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void DisposeModelArgs::set_has_model_id() {
+inline void DisposeModelArgs::set_has_model_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void DisposeModelArgs::clear_has_model_id() {
+inline void DisposeModelArgs::clear_has_model_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void DisposeModelArgs::clear_model_id() {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    model_id_->clear();
+inline void DisposeModelArgs::clear_model_name() {
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    model_name_->clear();
   }
-  clear_has_model_id();
+  clear_has_model_name();
 }
-inline const ::std::string& DisposeModelArgs::model_id() const {
-  return *model_id_;
+inline const ::std::string& DisposeModelArgs::model_name() const {
+  return *model_name_;
 }
-inline void DisposeModelArgs::set_model_id(const ::std::string& value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void DisposeModelArgs::set_model_name(const ::std::string& value) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  model_name_->assign(value);
 }
-inline void DisposeModelArgs::set_model_id(const char* value) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void DisposeModelArgs::set_model_name(const char* value) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(value);
+  model_name_->assign(value);
 }
-inline void DisposeModelArgs::set_model_id(const char* value, size_t size) {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline void DisposeModelArgs::set_model_name(const char* value, size_t size) {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  model_id_->assign(reinterpret_cast<const char*>(value), size);
+  model_name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* DisposeModelArgs::mutable_model_id() {
-  set_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
-    model_id_ = new ::std::string;
+inline ::std::string* DisposeModelArgs::mutable_model_name() {
+  set_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
+    model_name_ = new ::std::string;
   }
-  return model_id_;
+  return model_name_;
 }
-inline ::std::string* DisposeModelArgs::release_model_id() {
-  clear_has_model_id();
-  if (model_id_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* DisposeModelArgs::release_model_name() {
+  clear_has_model_name();
+  if (model_name_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = model_id_;
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = model_name_;
+    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void DisposeModelArgs::set_allocated_model_id(::std::string* model_id) {
-  if (model_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete model_id_;
+inline void DisposeModelArgs::set_allocated_model_name(::std::string* model_name) {
+  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete model_name_;
   }
-  if (model_id) {
-    set_has_model_id();
-    model_id_ = model_id;
+  if (model_name) {
+    set_has_model_name();
+    model_name_ = model_name;
   } else {
-    clear_has_model_id();
-    model_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_model_name();
+    model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

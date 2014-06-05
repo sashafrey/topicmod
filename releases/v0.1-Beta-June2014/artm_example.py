@@ -50,44 +50,27 @@ with library.CreateMasterComponent(master_config) as master:
   score.type = Score_Type_Perplexity
   score.stream_name = "test_stream"            # Use testing data to calculate perplexity
 
+  master.CreateRegularizer(
+    'regularizer_theta',
+    RegularizerConfig_Type_DirichletTheta,
+    messages_pb2.DirichletThetaConfig())
+
+  master.CreateRegularizer(
+    'regularizer_phi',
+    RegularizerConfig_Type_DirichletPhi,
+    messages_pb2.DirichletPhiConfig())
+
+  model_config.regularizer_name.append('regularizer_theta')
+  model_config.regularizer_tau.append(0.1)
+  model_config.regularizer_name.append('regularizer_phi')
+  model_config.regularizer_tau.append(-0.1)
+
   model = master.CreateModel(model_config)
   for iter in range(1, 10):
     master.InvokeIteration(1)        # Invoke one scan of the entire collection...
     master.WaitIdle();               # and wait until it completes.
+    model.InvokePhiRegularizers();
     topic_model = master.GetTopicModel(model)  # Retrieve topic model
-
-    if (i == 2):                     # Starting from the second iteration create and use regularizers
-
-      # ToDo: minimum configuration of both regularizers should be simpler.
-      # It should be possible to create all configs without 'for i in range...' loops.
-      reg_theta = messages_pb2.DirichletThetaConfig()
-      alpha_ref = reg_theta.alpha.add()
-      for j in range(0, topics_count):
-        alpha_ref.value.append(0.1)
-      for i in range(0, inner_iterations_count):
-        reg_theta.alpha_0.append(-1)
-
-      regularizer_config_phi = messages_pb2.DirichletPhiConfig()
-      regularizer_config_phi.beta_0 = -0.01
-      token_size = len(topic_model.token)
-      for j in range(0, token_size):
-          regularizer_config_phi.beta.value.append(0.1)
-
-      master_component.CreateRegularizer(
-        'regularizer_theta',
-        RegularizerConfig_Type_DirichletTheta,
-        regularizer_config_theta)
-
-      master_component.CreateRegularizer(
-        'regularizer_phi',
-        RegularizerConfig_Type_DirichletPhi,
-        regularizer_config_phi)
-
-      model_config.regularizer_name.append('regularizer_theta')
-      model_config.regularizer_tau.append(0.1)
-      model_config.regularizer_name.append('regularizer_phi')
-      model_config.regularizer_tau.append(0.1)
-      model.Reconfigure(model_config)
 
     print "Iter# = " + str(iter) + \
           ", Items# = " + str(topic_model.items_processed) + \

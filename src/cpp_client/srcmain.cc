@@ -46,6 +46,12 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   master_component.AddStream(train_stream);
   master_component.AddStream(test_stream);
 
+  RegularizerConfig regularizer_config;
+  regularizer_config.set_name("regularizer_phi");
+  regularizer_config.set_type(::artm::RegularizerConfig_Type_DirichletPhi);
+  regularizer_config.set_config(::artm::DirichletPhiConfig().SerializeAsString());
+  Regularizer dirichlet_phi_regularizer(master_component, regularizer_config);
+
   // Create model
   int nTopics = atoi(argv[3]);
   ModelConfig model_config;
@@ -54,6 +60,8 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_stream_name("train_stream");
   model_config.set_reuse_theta(true);
   model_config.set_name("15081980-90a7-4767-ab85-7cb551c39339");
+  model_config.add_regularizer_name("regularizer_phi");
+  model_config.add_regularizer_tau(0.1);
 
   Score* score = model_config.add_score();
   score->set_type(Score_Type_Perplexity);
@@ -108,6 +116,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
+    model.InvokePhiRegularizers();
 
     for (int inst = 0; inst < instance_size; ++inst) {
       topic_model = master_component.GetTopicModel(model);

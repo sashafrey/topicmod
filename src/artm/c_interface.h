@@ -60,8 +60,7 @@ extern "C" {
   DLL_PUBLIC int ArtmInvokePhiRegularizers(int master_id);
   DLL_PUBLIC int ArtmWaitIdle(int master_id);
 
-  DLL_PUBLIC int ArtmRequestBatchTopics(int master_id, const char* model_name, int batch_length,
-                                        const char* batch_blob);
+  DLL_PUBLIC int ArtmRequestThetaMatrix(int master_id, const char* model_name);
   DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_name);
 }
 

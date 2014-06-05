@@ -1,4 +1,4 @@
-	
+// Copyright 2014, Additive Regularization of Topic Models.
 #if defined(_WIN32) || defined(_WIN64)
 #include "glog/logging.h"
 

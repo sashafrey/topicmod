@@ -4,11 +4,6 @@ import "messages.proto";
 
 // ======= General messages =========
 
-// FloatArray message is similar to std::vector<float>
-message FloatArray {
-  repeated float value = 1 [packed = true];
-}
-
 // Mask message is similar to std::vector<bool>
 message Mask {
   repeated bool value = 1 [packed = true];
@@ -49,6 +44,13 @@ message InstanceConfig {
   optional int32 merger_queue_max_size = 4 [default = 10];
 }
 
+message DataLoaderCacheEntry {
+  optional string model_name = 1;
+  optional string batch_uuid = 2;
+  repeated int32 item_id = 3;
+  repeated FloatArray theta = 4;
+}
+
 // A message containing all data to transfer from DataLoader to Processor
 message ProcessorInput
 {
@@ -66,8 +68,8 @@ message ProcessorInput
   repeated Mask stream_mask = 4;
   repeated string stream_name = 5;
 
-  // Contains processor output from previous iteration.
-  optional ProcessorOutput previous_processor_output = 6;
+  // Contains information about theta matrix on previous iteration.
+  repeated DataLoaderCacheEntry cached_theta = 6;
 }
 
 // A massage to pass from Processor to Merger

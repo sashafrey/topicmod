@@ -48,9 +48,11 @@ class MasterComponent : boost::noncopyable {
   // Retrieves topic model.
   // Returns true if succeeded, and false if model_name hasn't been found.
   bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
+  bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
   void ReconfigureModel(const ModelConfig& config);
+
 
   void DisposeModel(ModelName model_name);
   void Reconfigure(const MasterComponentConfig& config);
@@ -135,6 +137,7 @@ class LocalClient : public ClientInterface {
   virtual void Reconfigure(const MasterComponentConfig& config);
 
   bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
+  bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
   void WaitIdle();
   void InvokeIteration(int iterations_count);
   void AddBatch(const Batch& batch);

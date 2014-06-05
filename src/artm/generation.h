@@ -30,6 +30,8 @@ class Generation {
   std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid,
                                      const std::string& disk_path);
 
+  std::vector<boost::uuids::uuid> batch_uuids() const;
+
   void AddBatch(const std::shared_ptr<const Batch>& batch,
                 const std::string& disk_path);
 

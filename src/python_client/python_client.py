@@ -4,6 +4,8 @@ import os
 if sys.platform.count('linux') == 1:
     interface_address = os.path.abspath(os.path.join(os.curdir, os.pardir, 'python_interface'))
     sys.path.append(interface_address)
+else:
+    sys.path.append('../python_interface/')
 
 import messages_pb2
 from python_interface import *
@@ -35,6 +37,7 @@ else:
 
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
+master_config.cache_processor_output = 1
 master_config.disk_path = '.'
 with library.CreateMasterComponent(master_config) as master_component:
     batch = messages_pb2.Batch()
@@ -79,80 +82,28 @@ with library.CreateMasterComponent(master_config) as master_component:
     model_config.topics_count = topics_count
     model_config.inner_iterations_count = inner_iterations_count
     score_ = model_config.score.add()
-    score_.type = 0
+    score_.type = Score_Type_Perplexity
 
     ################################################################################
+    regularizer_config_theta = messages_pb2.DirichletThetaConfig()
+    regularizer_name_theta = 'regularizer_theta'
+    model_config.regularizer_name.append(regularizer_name_theta)
+    model_config.regularizer_tau.append(0.1)
+    regularizer_theta = master_component.CreateRegularizer(
+      regularizer_name_theta,
+      RegularizerConfig_Type_DirichletTheta,
+      regularizer_config_theta)
     
-    #regularizer_config_phi = messages_pb2.SmoothSparsePhiConfig()
-    #regularizer_config_phi.background_topics_count = 0;
-    #regularizer_name_phi = 'regularizer_phi'
-    #phi_tau = -15.0
-    #model_config.regularizer_name.append(regularizer_name_phi)
-    #model_config.regularizer_tau.append(phi_tau)
-    #regularizer_phi = master_component.CreateRegularizer(regularizer_name_phi, 3, regularizer_config_phi)
-    ################################################################################
-
     model = master_component.CreateModel(model_config)
     for iter in range(0, outer_iteration_count):
-        #if (iter == 3):
-        #  regularizer_config_theta = messages_pb2.SmoothSparseThetaConfig()
-        #  regularizer_config_theta.background_topics_count = 0;
-        #  regularizer_name_theta = 'regularizer_theta'
-        #  theta_tau = -10.0
-        #  model_config.regularizer_name.append(regularizer_name_theta)
-        #  model_config.regularizer_tau.append(theta_tau)
-        #  regularizer_theta = master_component.CreateRegularizer(regularizer_name_theta, 2, regularizer_config_theta)
-        
-        #if(iter == 5):
-        #  phi_tau = -25.0
-        #  model_config.regularizer_tau[0] = phi_tau
-        #  model.Reconfigure(model_config)
-
-        #if (iter == 7):
-        #  phi_tau = -40.0
-        #  model_config.regularizer_tau[0] = phi_tau
-        #  model.Reconfigure(model_config)
-
-        #if (iter == 9):
-        #  phi_tau = -60.0
-        #  model_config.regularizer_tau[0] = phi_tau
-        #  model.Reconfigure(model_config)
-
-
         master_component.InvokeIteration(1)
         master_component.WaitIdle();
         topic_model = master_component.GetTopicModel(model)
-
-        ################################################################################
-        #if (iter >= 2):
-        #  model.InvokePhiRegularizers();
-
-        zero = 0
-        norm = 0
-        min_value = 2
-        max_value = -1
-        background_topics_count = 0
-        for i in range(0, len(topic_model.token)):
-          for j in range(0, topics_count - background_topics_count):
-            norm = norm + 1
-            value = topic_model.token_weights[i].value[j]
-            if (value < eps):
-              zero = zero + 1
-            if (value < min_value):
-              min_value = value
-            if (value > max_value):
-              max_value = value
-
-        print "part = " + str(float(zero) / float(norm))
-        #print "zero = " + str(zero)
-        #print "norm = " + str(norm)
-        #print "min = " + str(min_value)
-        #print "max = " + str(max_value)
+        model.InvokePhiRegularizers();
 
         print "Iter# = " + str(iter) + \
                 ", Items# = " + str(topic_model.items_processed) + \
                 ", Perplexity = " + str(topic_model.scores.value[0])
-    model.Disable();
 
     # Log to 7 words in each topic
     tokens_size = len(topic_model.token)
@@ -170,4 +121,14 @@ with library.CreateMasterComponent(master_config) as master_component:
             best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '
         print best_tokens.rstrip(', ')
 
-    print 'Done!'
+    docs_to_show = 7
+    print "\nThetaMatrix (first " + str(docs_to_show) + " documents):"
+    theta_matrix = master_component.GetThetaMatrix(model)
+    for j in range(0, topics_size):
+      print "Topic" + str(j) + ": ",
+      for i in range(0, min(docs_to_show, len(theta_matrix.item_id))):
+        weight = theta_matrix.item_weights[i].value[j]
+        print "%.3f\t" % weight,
+      print "\n",
+
+    print 'Done with regularization!'

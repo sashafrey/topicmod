@@ -50,8 +50,8 @@ class FloatArray;
 class Score;
 class TopicModel;
 class TopicModel_TopicModelInternals;
+class ThetaMatrix;
 class NodeControllerConfig;
-class BatchTopics;
 
 enum Stream_Type {
   Stream_Type_Global = 0,
@@ -932,17 +932,10 @@ class ModelConfig : public ::google::protobuf::Message {
   inline bool reuse_theta() const;
   inline void set_reuse_theta(bool value);
 
-  // optional bool cache_token_counters = 9 [default = false];
-  inline bool has_cache_token_counters() const;
-  inline void clear_cache_token_counters();
-  static const int kCacheTokenCountersFieldNumber = 9;
-  inline bool cache_token_counters() const;
-  inline void set_cache_token_counters(bool value);
-
-  // repeated string regularizer_name = 10;
+  // repeated string regularizer_name = 9;
   inline int regularizer_name_size() const;
   inline void clear_regularizer_name();
-  static const int kRegularizerNameFieldNumber = 10;
+  static const int kRegularizerNameFieldNumber = 9;
   inline const ::std::string& regularizer_name(int index) const;
   inline ::std::string* mutable_regularizer_name(int index);
   inline void set_regularizer_name(int index, const ::std::string& value);
@@ -955,10 +948,10 @@ class ModelConfig : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& regularizer_name() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_regularizer_name();
 
-  // repeated double regularizer_tau = 11;
+  // repeated double regularizer_tau = 10;
   inline int regularizer_tau_size() const;
   inline void clear_regularizer_tau();
-  static const int kRegularizerTauFieldNumber = 11;
+  static const int kRegularizerTauFieldNumber = 10;
   inline double regularizer_tau(int index) const;
   inline void set_regularizer_tau(int index, double value);
   inline void add_regularizer_tau(double value);
@@ -983,8 +976,6 @@ class ModelConfig : public ::google::protobuf::Message {
   inline void clear_has_stream_name();
   inline void set_has_reuse_theta();
   inline void clear_has_reuse_theta();
-  inline void set_has_cache_token_counters();
-  inline void clear_has_cache_token_counters();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1001,10 +992,9 @@ class ModelConfig : public ::google::protobuf::Message {
   ::google::protobuf::RepeatedField< double > regularizer_tau_;
   bool enabled_;
   bool reuse_theta_;
-  bool cache_token_counters_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -2134,6 +2124,120 @@ class TopicModel : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class ThetaMatrix : public ::google::protobuf::Message {
+ public:
+  ThetaMatrix();
+  virtual ~ThetaMatrix();
+
+  ThetaMatrix(const ThetaMatrix& from);
+
+  inline ThetaMatrix& operator=(const ThetaMatrix& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ThetaMatrix& default_instance();
+
+  void Swap(ThetaMatrix* other);
+
+  // implements Message ----------------------------------------------
+
+  ThetaMatrix* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ThetaMatrix& from);
+  void MergeFrom(const ThetaMatrix& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string model_name = 1 [default = "@model"];
+  inline bool has_model_name() const;
+  inline void clear_model_name();
+  static const int kModelNameFieldNumber = 1;
+  inline const ::std::string& model_name() const;
+  inline void set_model_name(const ::std::string& value);
+  inline void set_model_name(const char* value);
+  inline void set_model_name(const char* value, size_t size);
+  inline ::std::string* mutable_model_name();
+  inline ::std::string* release_model_name();
+  inline void set_allocated_model_name(::std::string* model_name);
+
+  // repeated int32 item_id = 2;
+  inline int item_id_size() const;
+  inline void clear_item_id();
+  static const int kItemIdFieldNumber = 2;
+  inline ::google::protobuf::int32 item_id(int index) const;
+  inline void set_item_id(int index, ::google::protobuf::int32 value);
+  inline void add_item_id(::google::protobuf::int32 value);
+  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      item_id() const;
+  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_item_id();
+
+  // repeated .artm.FloatArray item_weights = 3;
+  inline int item_weights_size() const;
+  inline void clear_item_weights();
+  static const int kItemWeightsFieldNumber = 3;
+  inline const ::artm::FloatArray& item_weights(int index) const;
+  inline ::artm::FloatArray* mutable_item_weights(int index);
+  inline ::artm::FloatArray* add_item_weights();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >&
+      item_weights() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
+      mutable_item_weights();
+
+  // @@protoc_insertion_point(class_scope:artm.ThetaMatrix)
+ private:
+  inline void set_has_model_name();
+  inline void clear_has_model_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* model_name_;
+  static ::std::string* _default_model_name_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > item_id_;
+  ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > item_weights_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static ThetaMatrix* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class NodeControllerConfig : public ::google::protobuf::Message {
  public:
   NodeControllerConfig();
@@ -2248,104 +2352,6 @@ class NodeControllerConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static NodeControllerConfig* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class BatchTopics : public ::google::protobuf::Message {
- public:
-  BatchTopics();
-  virtual ~BatchTopics();
-
-  BatchTopics(const BatchTopics& from);
-
-  inline BatchTopics& operator=(const BatchTopics& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const BatchTopics& default_instance();
-
-  void Swap(BatchTopics* other);
-
-  // implements Message ----------------------------------------------
-
-  BatchTopics* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const BatchTopics& from);
-  void MergeFrom(const BatchTopics& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // repeated int32 item_id = 1;
-  inline int item_id_size() const;
-  inline void clear_item_id();
-  static const int kItemIdFieldNumber = 1;
-  inline ::google::protobuf::int32 item_id(int index) const;
-  inline void set_item_id(int index, ::google::protobuf::int32 value);
-  inline void add_item_id(::google::protobuf::int32 value);
-  inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
-      item_id() const;
-  inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
-      mutable_item_id();
-
-  // repeated .artm.FloatArray item_weights = 2;
-  inline int item_weights_size() const;
-  inline void clear_item_weights();
-  static const int kItemWeightsFieldNumber = 2;
-  inline const ::artm::FloatArray& item_weights(int index) const;
-  inline ::artm::FloatArray* mutable_item_weights(int index);
-  inline ::artm::FloatArray* add_item_weights();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >&
-      item_weights() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
-      mutable_item_weights();
-
-  // @@protoc_insertion_point(class_scope:artm.BatchTopics)
- private:
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > item_id_;
-  ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > item_weights_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static BatchTopics* default_instance_;
 };
 // ===================================================================
 
@@ -3441,29 +3447,7 @@ inline void ModelConfig::set_reuse_theta(bool value) {
   reuse_theta_ = value;
 }
 
-// optional bool cache_token_counters = 9 [default = false];
-inline bool ModelConfig::has_cache_token_counters() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
-}
-inline void ModelConfig::set_has_cache_token_counters() {
-  _has_bits_[0] |= 0x00000100u;
-}
-inline void ModelConfig::clear_has_cache_token_counters() {
-  _has_bits_[0] &= ~0x00000100u;
-}
-inline void ModelConfig::clear_cache_token_counters() {
-  cache_token_counters_ = false;
-  clear_has_cache_token_counters();
-}
-inline bool ModelConfig::cache_token_counters() const {
-  return cache_token_counters_;
-}
-inline void ModelConfig::set_cache_token_counters(bool value) {
-  set_has_cache_token_counters();
-  cache_token_counters_ = value;
-}
-
-// repeated string regularizer_name = 10;
+// repeated string regularizer_name = 9;
 inline int ModelConfig::regularizer_name_size() const {
   return regularizer_name_.size();
 }
@@ -3507,7 +3491,7 @@ ModelConfig::mutable_regularizer_name() {
   return &regularizer_name_;
 }
 
-// repeated double regularizer_tau = 11;
+// repeated double regularizer_tau = 10;
 inline int ModelConfig::regularizer_tau_size() const {
   return regularizer_tau_.size();
 }
@@ -4600,6 +4584,130 @@ inline void TopicModel::set_allocated_internals(::std::string* internals) {
 
 // -------------------------------------------------------------------
 
+// ThetaMatrix
+
+// optional string model_name = 1 [default = "@model"];
+inline bool ThetaMatrix::has_model_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ThetaMatrix::set_has_model_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ThetaMatrix::clear_has_model_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ThetaMatrix::clear_model_name() {
+  if (model_name_ != _default_model_name_) {
+    model_name_->assign(*_default_model_name_);
+  }
+  clear_has_model_name();
+}
+inline const ::std::string& ThetaMatrix::model_name() const {
+  return *model_name_;
+}
+inline void ThetaMatrix::set_model_name(const ::std::string& value) {
+  set_has_model_name();
+  if (model_name_ == _default_model_name_) {
+    model_name_ = new ::std::string;
+  }
+  model_name_->assign(value);
+}
+inline void ThetaMatrix::set_model_name(const char* value) {
+  set_has_model_name();
+  if (model_name_ == _default_model_name_) {
+    model_name_ = new ::std::string;
+  }
+  model_name_->assign(value);
+}
+inline void ThetaMatrix::set_model_name(const char* value, size_t size) {
+  set_has_model_name();
+  if (model_name_ == _default_model_name_) {
+    model_name_ = new ::std::string;
+  }
+  model_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ThetaMatrix::mutable_model_name() {
+  set_has_model_name();
+  if (model_name_ == _default_model_name_) {
+    model_name_ = new ::std::string(*_default_model_name_);
+  }
+  return model_name_;
+}
+inline ::std::string* ThetaMatrix::release_model_name() {
+  clear_has_model_name();
+  if (model_name_ == _default_model_name_) {
+    return NULL;
+  } else {
+    ::std::string* temp = model_name_;
+    model_name_ = const_cast< ::std::string*>(_default_model_name_);
+    return temp;
+  }
+}
+inline void ThetaMatrix::set_allocated_model_name(::std::string* model_name) {
+  if (model_name_ != _default_model_name_) {
+    delete model_name_;
+  }
+  if (model_name) {
+    set_has_model_name();
+    model_name_ = model_name;
+  } else {
+    clear_has_model_name();
+    model_name_ = const_cast< ::std::string*>(_default_model_name_);
+  }
+}
+
+// repeated int32 item_id = 2;
+inline int ThetaMatrix::item_id_size() const {
+  return item_id_.size();
+}
+inline void ThetaMatrix::clear_item_id() {
+  item_id_.Clear();
+}
+inline ::google::protobuf::int32 ThetaMatrix::item_id(int index) const {
+  return item_id_.Get(index);
+}
+inline void ThetaMatrix::set_item_id(int index, ::google::protobuf::int32 value) {
+  item_id_.Set(index, value);
+}
+inline void ThetaMatrix::add_item_id(::google::protobuf::int32 value) {
+  item_id_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+ThetaMatrix::item_id() const {
+  return item_id_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+ThetaMatrix::mutable_item_id() {
+  return &item_id_;
+}
+
+// repeated .artm.FloatArray item_weights = 3;
+inline int ThetaMatrix::item_weights_size() const {
+  return item_weights_.size();
+}
+inline void ThetaMatrix::clear_item_weights() {
+  item_weights_.Clear();
+}
+inline const ::artm::FloatArray& ThetaMatrix::item_weights(int index) const {
+  return item_weights_.Get(index);
+}
+inline ::artm::FloatArray* ThetaMatrix::mutable_item_weights(int index) {
+  return item_weights_.Mutable(index);
+}
+inline ::artm::FloatArray* ThetaMatrix::add_item_weights() {
+  return item_weights_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >&
+ThetaMatrix::item_weights() const {
+  return item_weights_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
+ThetaMatrix::mutable_item_weights() {
+  return &item_weights_;
+}
+
+// -------------------------------------------------------------------
+
 // NodeControllerConfig
 
 // optional string node_controller_create_endpoint = 1;
@@ -4810,60 +4918,6 @@ inline void NodeControllerConfig::set_allocated_master_component_connect_endpoin
     clear_has_master_component_connect_endpoint();
     master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
-}
-
-// -------------------------------------------------------------------
-
-// BatchTopics
-
-// repeated int32 item_id = 1;
-inline int BatchTopics::item_id_size() const {
-  return item_id_.size();
-}
-inline void BatchTopics::clear_item_id() {
-  item_id_.Clear();
-}
-inline ::google::protobuf::int32 BatchTopics::item_id(int index) const {
-  return item_id_.Get(index);
-}
-inline void BatchTopics::set_item_id(int index, ::google::protobuf::int32 value) {
-  item_id_.Set(index, value);
-}
-inline void BatchTopics::add_item_id(::google::protobuf::int32 value) {
-  item_id_.Add(value);
-}
-inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
-BatchTopics::item_id() const {
-  return item_id_;
-}
-inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
-BatchTopics::mutable_item_id() {
-  return &item_id_;
-}
-
-// repeated .artm.FloatArray item_weights = 2;
-inline int BatchTopics::item_weights_size() const {
-  return item_weights_.size();
-}
-inline void BatchTopics::clear_item_weights() {
-  item_weights_.Clear();
-}
-inline const ::artm::FloatArray& BatchTopics::item_weights(int index) const {
-  return item_weights_.Get(index);
-}
-inline ::artm::FloatArray* BatchTopics::mutable_item_weights(int index) {
-  return item_weights_.Mutable(index);
-}
-inline ::artm::FloatArray* BatchTopics::add_item_weights() {
-  return item_weights_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >&
-BatchTopics::item_weights() const {
-  return item_weights_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
-BatchTopics::mutable_item_weights() {
-  return &item_weights_;
 }
 
 

@@ -1,13 +1,13 @@
 # Copyright 2014, Additive Regularization of Topic Models.
 
-# Author: Murat Apishev (great-mel@yandex.ru)
-
 import os
 import sys
 
 if sys.platform.count('linux') == 1:
   interface_address = os.path.abspath(os.path.join(os.curdir, os.pardir, 'python_interface'))
   sys.path.append(interface_address)
+else:
+  sys.path.append('../python_interface/')
 
 import messages_pb2
 import python_interface
@@ -20,9 +20,10 @@ from python_interface import *
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = 2
 master_config.processor_queue_max_size = 5
+master_config.cache_processor_output = 1
 stream_ = master_config.stream.add()
 stream_.name = ('stream_0')
-stream_.type = 0
+stream_.type = Stream_Type_Global
 stream_.modulus = 3
 stream_.residuals.append(9)
 
@@ -38,7 +39,7 @@ field_.token_count.append(2)
 # Create stream
 stream = messages_pb2.Stream()
 stream.name = ('stream_8')
-stream.type = 0
+stream.type = Stream_Type_Global
 stream.modulus = 3
 stream.residuals.append(1)
 
@@ -51,7 +52,7 @@ alpha.value.append(0.1)
 model_config = messages_pb2.ModelConfig()
 model_config.stream_name = ('stream_0')
 score_ = model_config.score.add()
-score_.type = 0
+score_.type = Score_Type_Perplexity
 score_.stream_name = ('stream_0')
 model_config.regularizer_name.append('regularizer1')
 model_config.regularizer_tau.append(1)
@@ -102,6 +103,7 @@ with library.CreateMasterComponent() as master_component:
   master_component.InvokeIteration(10)
   model.Disable()
   topic_model = master_component.GetTopicModel(model)
+  theta_matrix = master_component.GetThetaMatrix(model)
 
   # Test all 'reconfigure' methods
   regularizer.Reconfigure(0, dirichlet_regularizer_config_new)

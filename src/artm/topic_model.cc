@@ -122,7 +122,7 @@ void TopicModel::CalculateDiff(const ::artm::core::TopicModel& rhs, ::artm::core
   for (int token_index = 0; token_index < token_size(); ++token_index) {
     if (rhs.has_token(token(token_index))) {
       diff->add_token(token(token_index));
-      ::artm::core::FloatArray* token_increment = diff->add_token_increment();
+      ::artm::FloatArray* token_increment = diff->add_token_increment();
       for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
         token_increment->add_value(n_wt_[token_index][topic_index] - rhs.n_wt_[token_index][topic_index]);
       }

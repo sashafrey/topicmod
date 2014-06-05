@@ -1,6 +1,7 @@
 #include <ctime>
 #include <cstring>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 
@@ -25,6 +26,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
   master_config.set_processors_count(processors_count);
   master_config.set_disk_path(batches_disk_path);
+  master_config.set_cache_processor_output(true);
   MasterComponent master_component(master_config);
 
   // Configure train and test streams
@@ -103,13 +105,13 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   clock_t begin = clock();
 
   std::shared_ptr<TopicModel> topic_model;
-
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
 
     for (int inst = 0; inst < instance_size; ++inst) {
       topic_model = master_component.GetTopicModel(model);
+
       std::cout << "Iter #" << (iter + 1) << ": "
                 << "Inst #" << (inst + 1) << ": "
                 << "#Tokens = "  << topic_model->token_size() << ", "
@@ -148,6 +150,19 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
       std::cout << std::endl;
     }
+  }
+
+  int docs_to_show = 7;
+  std::cout << "\nThetaMatrix (first " << docs_to_show << " documents):\n";
+  std::shared_ptr<ThetaMatrix> theta_matrix = master_component.GetThetaMatrix(model);
+  for (int j = 0; j < nTopics; ++ j) {
+    std::cout << "Topic" << j << ": ";
+    for (int i = 0; i < min(docs_to_show, theta_matrix->item_id_size()); ++i) {
+      float weight = theta_matrix->item_weights(i).value(j);
+      std::cout << std::fixed << std::setw( 6 ) << std::setprecision( 3 ) << weight << "\t";
+    }
+
+    std::cout << "\n";
   }
 
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;

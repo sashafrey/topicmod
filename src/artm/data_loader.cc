@@ -147,11 +147,59 @@ void DataLoader::WaitIdle() {
   instance->ForceSyncWithMemcached(ModelName());
 }
 
+void DataLoader::DisposeModel(ModelName model_name) {
+  auto keys = cache_.keys();
+  for (auto &key : keys) {
+    auto cache_entry = cache_.get(key);
+    if (cache_entry == nullptr) {
+      continue;
+    }
+
+    if (cache_entry->model_name() == model_name) {
+      cache_.erase(key);
+    }
+  }
+}
+
+bool DataLoader::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
+  std::shared_ptr<Generation> generation = generation_.get();
+  std::vector<boost::uuids::uuid> batch_uuids = generation->batch_uuids();
+
+  theta_matrix->set_model_name(model_name);
+  for (auto &batch_uuid : batch_uuids) {
+    auto cache = cache_.get(CacheKey(batch_uuid, model_name));
+    if (cache == nullptr) {
+      LOG(INFO) << "Unable to find cache entry for model: " << model_name << ", batch: " << batch_uuid;
+      continue;
+    }
+
+    for (int item_index = 0; item_index < cache->item_id_size(); ++item_index) {
+      theta_matrix->add_item_id(cache->item_id(item_index));
+      theta_matrix->add_item_weights()->CopyFrom(cache->theta(item_index));
+    }
+  }
+
+  return true;
+}
+
 void DataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
   boost::uuids::uuid uuid(boost::uuids::string_generator()(cache->batch_uuid().c_str()));
   batch_manager_.Done(uuid);
   if (config_.get()->cache_processor_output()) {
-    cache_.set(uuid, cache);
+    for (int model_index = 0; model_index < cache->model_increment_size(); model_index++) {
+      const ModelIncrement& model_increment = cache->model_increment(model_index);
+      ModelName model_name = model_increment.model_name();
+      CacheKey cache_key(uuid, model_name);
+      std::shared_ptr<DataLoaderCacheEntry> cache_entry(new DataLoaderCacheEntry());
+      cache_entry->set_batch_uuid(cache->batch_uuid());
+      cache_entry->set_model_name(model_name);
+      for (int item_index = 0; item_index < model_increment.item_id_size(); ++item_index) {
+        cache_entry->add_item_id(model_increment.item_id(item_index));
+        cache_entry->add_theta()->CopyFrom(model_increment.theta(item_index));
+      }
+
+      cache_.set(cache_key, cache_entry);
+    }
   }
 }
 
@@ -192,9 +240,16 @@ void DataLoader::ThreadFunction() {
       pi->set_batch_uuid(boost::lexical_cast<std::string>(next_batch_uuid));
       pi->set_data_loader_id(id());
 
-      auto cache_entry = cache_.get(next_batch_uuid);
-      if (cache_entry != nullptr) {
-        pi->mutable_previous_processor_output()->CopyFrom(*cache_entry);
+      auto keys = cache_.keys();
+      for (auto &key : keys) {
+        auto cache_entry = cache_.get(key);
+        if (cache_entry == nullptr) {
+          continue;
+        }
+
+        if (cache_entry->batch_uuid() == pi->batch_uuid()) {
+          pi->add_cached_theta()->CopyFrom(*cache_entry);
+        }
       }
 
       // loop through all streams

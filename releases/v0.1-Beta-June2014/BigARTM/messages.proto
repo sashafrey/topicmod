@@ -79,8 +79,7 @@ message ModelConfig {
   optional string stream_name = 6 [default = "@global"];
   repeated Score score = 7;
   optional bool reuse_theta = 8 [default = false];
-  optional bool cache_token_counters  = 9 [default = false];
-  repeated string regularizer_name = 10;
+  repeated string regularizer_name = 9;
 }
 
 // Configuration of a regularizer
@@ -154,4 +153,10 @@ message TopicModel {
   optional DoubleArray scores = 6;        // perplexity and other quality scores
 
   optional bytes internals = 7;
+}
+
+message ThetaMatrix {
+  optional string model_name = 1 [default = "@model"];
+  repeated int32 item_id = 2;
+  repeated FloatArray item_weights = 3;
 }

@@ -35,6 +35,8 @@ class DataLoader : boost::noncopyable {
   void InvokeIteration(int iterations_count);
   void Join();
   void WaitIdle();
+  void DisposeModel(ModelName model_name);
+  bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
   int id() const;
 
@@ -51,8 +53,9 @@ class DataLoader : boost::noncopyable {
   ThreadSafeHolder<DataLoaderConfig> config_;
   ThreadSafeHolder<Generation> generation_;
 
+  typedef std::pair<boost::uuids::uuid, ModelName> CacheKey;
   boost::mutex cache_lock_;
-  ThreadSafeCollectionHolder<boost::uuids::uuid, const ProcessorOutput> cache_;
+  ThreadSafeCollectionHolder<CacheKey, DataLoaderCacheEntry> cache_;
 
   boost::mutex batch_manager_lock_;
   BatchManager batch_manager_;

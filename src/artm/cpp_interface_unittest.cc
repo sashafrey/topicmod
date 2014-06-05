@@ -17,6 +17,7 @@ void BasicTest(std::string endpoint) {
   // Create instance
   artm::MasterComponentConfig master_config;
   if (is_network_mode) master_config.set_master_component_create_endpoint(endpoint);
+  if (!is_network_mode) master_config.set_cache_processor_output(true);
   artm::MasterComponent master_component(master_config);
 
   // Create model
@@ -87,6 +88,23 @@ void BasicTest(std::string endpoint) {
   EXPECT_EQ(nUniqueTokens, topic_model->token_size());
   auto first_token_topics = topic_model->token_weights(0);
   EXPECT_EQ(first_token_topics.value_size(), nTopics);
+
+  if (!is_network_mode) {
+    std::shared_ptr<::artm::ThetaMatrix> theta_matrix = master_component.GetThetaMatrix(model);
+    EXPECT_TRUE(theta_matrix->item_id_size() == nDocs);
+    for (int item_index = 0; item_index < theta_matrix->item_id_size(); ++item_index) {
+      const ::artm::FloatArray& weights = theta_matrix->item_weights(item_index);
+      EXPECT_EQ(weights.value_size(), nTopics);
+      float sum = 0;
+      for (int topic_index = 0; topic_index < weights.value_size(); ++topic_index) {
+        float weight = weights.value(topic_index);
+        EXPECT_TRUE(weight > 0);
+        sum += weight;
+      }
+
+      EXPECT_LE(abs(sum - 1), 0.001);
+    }
+  }
 }
 
 // To run this particular test:

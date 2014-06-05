@@ -1,9 +1,6 @@
 import operator
 
 class Analyzer:
-  def __init__(self, vocab, docword, max_batch_size = 100):
-    return
-
   @staticmethod
   def PrintTopTokensPerTopic(topic_model, how_many_tokens_to_visualize = 5):
     tokens_size = len(topic_model.token)
@@ -20,3 +17,13 @@ class Analyzer:
       for best_token in range(0, how_many_tokens_to_visualize):
           best_tokens = best_tokens + sorted_token_map[best_token][0] + ', '
       print best_tokens
+
+  @staticmethod
+  def PrintThetaMatrix(theta_matrix, topics_size, how_many_items_to_visualize = 5):
+    print "\nThetaMatrix (first " + str(how_many_items_to_visualize) + " documents):"
+    for j in range(0, topics_size):
+      print "Topic" + str(j) + ": ",
+      for i in range(0, min(how_many_items_to_visualize, len(theta_matrix.item_id))):
+        weight = theta_matrix.item_weights[i].value[j]
+        print "%.3f\t" % weight,
+      print "\n",

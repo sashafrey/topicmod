@@ -71,6 +71,22 @@ std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
   return topic_model;
 }
 
+std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model) {
+  int request_id = HandleErrorCode(ArtmRequestThetaMatrix(
+    id(), model.name().c_str()));
+
+  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  std::string blob;
+  blob.resize(length);
+  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&blob)));
+
+  ArtmDisposeRequest(request_id);
+
+  std::shared_ptr<ThetaMatrix> theta_matrix(new ThetaMatrix());
+  theta_matrix->ParseFromString(blob);
+  return theta_matrix;
+}
+
 Model::Model(const MasterComponent& master_component, const ModelConfig& config)
     : master_id_(master_component.id()),
       config_(config) {

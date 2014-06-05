@@ -80,6 +80,7 @@ message ModelConfig {
   repeated Score score = 7;
   optional bool reuse_theta = 8 [default = false];
   repeated string regularizer_name = 9;
+  repeated double regularizer_tau = 10;
 }
 
 // Configuration of a regularizer
@@ -98,29 +99,25 @@ message RegularizerConfig {
 
 // Configuration of a Dirichlet Theta regularizer
 message DirichletThetaConfig {
-  repeated double alpha_0 = 1;
-  repeated DoubleArray tilde_alpha = 2;
+  repeated DoubleArray alpha = 1;
 }
 
 // Configuration of a Dirichlet Phi regularizer
 message DirichletPhiConfig {
-  required double beta_0 = 1;
-  required DoubleArray tilde_beta = 2;
+  optional DoubleArray beta = 1;
 }
 
 // Configuration of a SmoothSparse Theta regularizer
 message SmoothSparseThetaConfig {
-  repeated double alpha_0 = 1;
-  repeated DoubleArray tilde_alpha = 2;
+  required int32 background_topics_count = 1;
+  repeated DoubleArray alpha = 2;
 }
 
 // Configuration of a SmoothSparse Phi regularizer
 message SmoothSparsePhiConfig {
   required int32 background_topics_count = 1;
-  required double beta_0 = 2;
-  required DoubleArray tilde_beta = 3;
-  repeated double background_beta_0 = 4;
-  repeated DoubleArray background_tilde_beta = 5;
+  optional DoubleArray beta = 2;
+  repeated DoubleArray background_beta = 3;
 }
 
 message DoubleArray {

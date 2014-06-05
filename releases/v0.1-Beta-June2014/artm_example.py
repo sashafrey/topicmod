@@ -61,9 +61,9 @@ with library.CreateMasterComponent(master_config) as master:
       # ToDo: minimum configuration of both regularizers should be simpler.
       # It should be possible to create all configs without 'for i in range...' loops.
       reg_theta = messages_pb2.DirichletThetaConfig()
-      tilde_alpha_ref = reg_theta.tilde_alpha.add()
+      alpha_ref = reg_theta.alpha.add()
       for j in range(0, topics_count):
-        tilde_alpha_ref.value.append(0.1)
+        alpha_ref.value.append(0.1)
       for i in range(0, inner_iterations_count):
         reg_theta.alpha_0.append(-1)
 
@@ -71,7 +71,7 @@ with library.CreateMasterComponent(master_config) as master:
       regularizer_config_phi.beta_0 = -0.01
       token_size = len(topic_model.token)
       for j in range(0, token_size):
-          regularizer_config_phi.tilde_beta.value.append(0.1)
+          regularizer_config_phi.beta.value.append(0.1)
 
       master_component.CreateRegularizer(
         'regularizer_theta',
@@ -84,7 +84,9 @@ with library.CreateMasterComponent(master_config) as master:
         regularizer_config_phi)
 
       model_config.regularizer_name.append('regularizer_theta')
+      model_config.regularizer_tau.append(0.1)
       model_config.regularizer_name.append('regularizer_phi')
+      model_config.regularizer_tau.append(0.1)
       model.Reconfigure(model_config)
 
     print "Iter# = " + str(iter) + \

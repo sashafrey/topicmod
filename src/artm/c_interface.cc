@@ -14,6 +14,15 @@
 #include "glog/logging.h"
 
 std::string message;
+void EnableLogging() {
+  static bool logging_enabled = false;
+  if (!logging_enabled) {
+    logging_enabled = true;
+    FLAGS_log_dir = ".";
+    FLAGS_logbufsecs = 0;
+    ::google::InitGoogleLogging(".");
+  }
+}
 
 inline char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
@@ -92,6 +101,8 @@ int ArtmWaitIdle(int master_id) {
 
 int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob) {
   try {
+    EnableLogging();
+            
     artm::MasterComponentConfig config;
     if (!config.ParseFromArray(config_blob, length)) {
       return ARTM_INVALID_MESSAGE;
@@ -170,6 +181,8 @@ void ArtmDisposeMasterComponent(int master_id) {
 
 int ArtmCreateNodeController(int node_controller_id, int length, const char* config_blob) {
   try {
+    EnableLogging();
+    
     artm::NodeControllerConfig config;
     if (!config.ParseFromArray(config_blob, length)) {
       return ARTM_INVALID_MESSAGE;

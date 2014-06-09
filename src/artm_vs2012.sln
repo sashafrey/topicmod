@@ -7,24 +7,24 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpp_client", "cpp_client\cp
 		{4288A4B1-B51E-4621-AD44-9F2CBA7351BE} = {4288A4B1-B51E-4621-AD44-9F2CBA7351BE}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artm", "artm\artm.vcxproj", "{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artm", "vsprojects\artm.vcxproj", "{4288A4B1-B51E-4621-AD44-9F2CBA7351BE}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5CDF866C-F13C-49A1-81C7-B51F7420AA09} = {5CDF866C-F13C-49A1-81C7-B51F7420AA09}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artm_tests", "artm\artm_tests.vcxproj", "{615DE847-3EEA-4D7D-A4F5-A336733EE213}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "artm_tests", "vsprojects\artm_tests.vcxproj", "{615DE847-3EEA-4D7D-A4F5-A336733EE213}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5CDF866C-F13C-49A1-81C7-B51F7420AA09} = {5CDF866C-F13C-49A1-81C7-B51F7420AA09}
 		{4288A4B1-B51E-4621-AD44-9F2CBA7351BE} = {4288A4B1-B51E-4621-AD44-9F2CBA7351BE}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libartm", "artm\libartm.vcxproj", "{5CDF866C-F13C-49A1-81C7-B51F7420AA09}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libartm", "vsprojects\libartm.vcxproj", "{5CDF866C-F13C-49A1-81C7-B51F7420AA09}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "python_interface", "python_interface\python_interface.pyproj", "{2ADC9DC7-A191-4800-867B-A25EE6CB8838}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "python_interface", "vsprojects\python_interface.pyproj", "{2ADC9DC7-A191-4800-867B-A25EE6CB8838}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "python_tests", "python_tests\python_tests.pyproj", "{B69C8560-AC5D-4D49-97F7-44FA0E68239C}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "python_tests", "vsprojects\python_tests.pyproj", "{B69C8560-AC5D-4D49-97F7-44FA0E68239C}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "python_client", "python_client\python_client.pyproj", "{8CBE34F8-5D46-4832-B615-DB183812F81F}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "python_client", "vsprojects\python_client.pyproj", "{8CBE34F8-5D46-4832-B615-DB183812F81F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

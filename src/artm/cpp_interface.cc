@@ -7,7 +7,7 @@
 #include "boost/uuid/uuid_generators.hpp"
 #include "boost/uuid/uuid_io.hpp"
 
-#include "artm/protobuf_helpers.h"
+#include "artm/core/protobuf_helpers.h"
 
 namespace artm {
 

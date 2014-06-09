@@ -8,10 +8,9 @@
 #include <vector>
 
 #include "artm/messages.pb.h"
-#include "artm/topic_model.h"
+#include "artm/core/topic_model.h"
 
 namespace artm {
-namespace core {
 
 class RegularizerInterface {
  public:
@@ -23,10 +22,9 @@ class RegularizerInterface {
                                 int inner_iter,
                                 double tau) { return true; }
 
-  virtual bool RegularizePhi(TopicModel* topic_model, double tau) { return true; }
+  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau) { return true; }
 };
 
-}  // namespace core
 }  // namespace artm
 
 #endif  // SRC_ARTM_REGULARIZER_INTERFACE_H_

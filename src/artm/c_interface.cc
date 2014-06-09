@@ -4,14 +4,15 @@
 
 #include <string>
 
-#include "artm/common.h"
-#include "artm/master_component.h"
-#include "artm/messages.pb.h"
-#include "artm/node_controller.h"
-#include "artm/exceptions.h"
+#include "glog/logging.h"
 
 #include "rpcz/rpc.hpp"
-#include "glog/logging.h"
+
+#include "artm/messages.pb.h"
+#include "artm/core/common.h"
+#include "artm/core/master_component.h"
+#include "artm/core/node_controller.h"
+#include "artm/core/exceptions.h"
 
 std::string message;
 void EnableLogging() {

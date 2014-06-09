@@ -56,11 +56,11 @@ void NodeControllerServiceImpl::CreateOrReconfigureDataLoader(
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
     auto data_loader = artm::core::DataLoaderManager::singleton().Get(data_loader_id_);
+    DataLoaderConfig data_loader_config(request);
+    data_loader_config.set_instance_id(instance_id_);
     if (data_loader != nullptr) {
-      data_loader->Reconfigure(request);
+      data_loader->Reconfigure(data_loader_config);
     } else {
-      DataLoaderConfig data_loader_config(request);
-      data_loader_config.set_instance_id(instance_id_);
       DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
       data_loader_id_ = dlm.Create<RemoteDataLoader>(data_loader_config);
     }

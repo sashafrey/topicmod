@@ -348,12 +348,16 @@ void RemoteDataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
 }
 
 void RemoteDataLoader::Reconfigure(const DataLoaderConfig& config) {
+  std::string old_endpoint = config_.get()->master_component_endpoint();
+  std::string new_endpoind = config.master_component_endpoint();
   config_.set(std::make_shared<DataLoaderConfig>(config));
 
-  LOG(INFO) << "Connecting to master " << config.master_component_endpoint();
-  master_component_service_proxy_.reset(
-      new artm::core::MasterComponentService_Stub(
-      application_->create_rpc_channel(config.master_component_endpoint()), true));
+  if ((master_component_service_proxy_ == nullptr) || (old_endpoint != new_endpoind)) {
+    LOG(INFO) << "Connecting to master " << config.master_component_endpoint();
+    master_component_service_proxy_.reset(
+        new artm::core::MasterComponentService_Stub(
+        application_->create_rpc_channel(config.master_component_endpoint()), true));
+  }
 }
 
 void RemoteDataLoader::ThreadFunction() {

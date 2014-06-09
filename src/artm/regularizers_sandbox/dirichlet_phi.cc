@@ -11,7 +11,6 @@ namespace core {
 namespace regularizer {
 
 bool DirichletPhi::RegularizePhi(TopicModel* topic_model, double tau) {
-  
   if (config_.has_beta()) {
     const DoubleArray beta = config_.beta();
     if (beta.value_size() != topic_model->token_size()) {

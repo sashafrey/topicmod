@@ -69,18 +69,23 @@ class MasterComponent : boost::noncopyable {
                                                    int instance_id);
   static InstanceConfig ExtractInstanceConfig(const MasterComponentConfig& config);
 
+  // Throws UnsupportedReconfiguration exception if new config is invalid.
+  void ValidateConfig(const MasterComponentConfig& config);
+
  private:
   class ServiceEndpoint : boost::noncopyable {
    public:
     ServiceEndpoint(const std::string& endpoint, NetworkClientCollection* clients);
     ~ServiceEndpoint();
     std::string endpoint() const { return endpoint_; }
+    MasterComponentServiceImpl* impl() { return &master_component_service_impl_; }
 
    private:
     std::string endpoint_;
     NetworkClientCollection* clients_;
     std::unique_ptr<zmq::context_t> zeromq_context_;
     std::unique_ptr<rpcz::application> application_;
+    MasterComponentServiceImpl master_component_service_impl_;
 
     // Keep all threads at the end of class members
     // (because the order of class members defines initialization order;
@@ -144,7 +149,7 @@ class LocalClient : public ClientInterface {
 
  private:
   std::shared_ptr<Instance> local_instance_;
-  std::shared_ptr<DataLoader> local_data_loader_;
+  std::shared_ptr<LocalDataLoader> local_data_loader_;
 };
 
 class NetworkClientCollection : public ClientInterface {
@@ -168,9 +173,10 @@ class NetworkClientCollection : public ClientInterface {
     return clients_.size();
   }
 
- private:
   void for_each_client(std::function<void(artm::core::NodeControllerService_Stub&)> f);
   void for_each_endpoint(std::function<void(std::string)> f);
+
+ private:
   boost::mutex& lock_;
   ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub> clients_;
 };

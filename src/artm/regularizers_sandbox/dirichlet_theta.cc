@@ -22,7 +22,7 @@ bool DirichletTheta::RegularizeTheta(const Item& item,
   if (alpha_vector.size() < inner_iter + 1) {
     for (int i = 0; i < topic_size; ++i) {
       (*n_dt)[i] = (*n_dt)[i] + static_cast<float>(tau * 1);
-    }   
+    }
   } else {
     const artm::DoubleArray& alpha = alpha_vector.Get(inner_iter);
     if (alpha.value_size() == topic_size) {
@@ -33,7 +33,7 @@ bool DirichletTheta::RegularizeTheta(const Item& item,
       return false;
     }
   }
-  return true; 
+  return true;
 }
 
 }  // namespace regularizer

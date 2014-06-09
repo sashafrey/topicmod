@@ -93,7 +93,7 @@ void rpcz_protobuf_AddDesc_internals_2eproto() {
     "Ids\032\017.artm.core.Void\0223\n\rConnectClient\022\021."
     "artm.core.String\032\017.artm.core.Void\0226\n\020Dis"
     "connectClient\022\021.artm.core.String\032\017.artm."
-    "core.Void2\335\004\n\025NodeControllerService\022I\n\033C"
+    "core.Void2\231\005\n\025NodeControllerService\022I\n\033C"
     "reateOrReconfigureInstance\022\031.artm.core.I"
     "nstanceConfig\032\017.artm.core.Void\0223\n\017Dispos"
     "eInstance\022\017.artm.core.Void\032\017.artm.core.V"
@@ -108,7 +108,8 @@ void rpcz_protobuf_AddDesc_internals_2eproto() {
     "-.artm.core.CreateOrReconfigureRegulariz"
     "erArgs\032\017.artm.core.Void\022H\n\022DisposeRegula"
     "rizer\022!.artm.core.DisposeRegularizerArgs"
-    "\032\017.artm.core.Void", 2457);
+    "\032\017.artm.core.Void\022:\n\026ForceSyncWithMemcac"
+    "hed\022\017.artm.core.Void\032\017.artm.core.Void", 2517);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "internals.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_internals_2eproto);
@@ -450,6 +451,12 @@ void NodeControllerService::DisposeRegularizer(const ::artm::core::DisposeRegula
               "Method DisposeRegularizer() not implemented.");
 }
 
+void NodeControllerService::ForceSyncWithMemcached(const ::artm::core::Void&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method ForceSyncWithMemcached() not implemented.");
+}
+
 void NodeControllerService::call_method(const ::google::protobuf::MethodDescriptor* method,
                              const ::google::protobuf::Message& request,
                              ::rpcz::server_channel* channel) {
@@ -495,6 +502,11 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
           *::google::protobuf::down_cast<const ::artm::core::DisposeRegularizerArgs*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
+    case 8:
+      ForceSyncWithMemcached(
+          *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       break;
@@ -521,6 +533,8 @@ const ::google::protobuf::Message& NodeControllerService::GetRequestPrototype(
       return ::artm::core::CreateOrReconfigureRegularizerArgs::default_instance();
     case 7:
       return ::artm::core::DisposeRegularizerArgs::default_instance();
+    case 8:
+      return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *reinterpret_cast< ::google::protobuf::Message*>(NULL);
@@ -546,6 +560,8 @@ const ::google::protobuf::Message& NodeControllerService::GetResponsePrototype(
     case 6:
       return ::artm::core::Void::default_instance();
     case 7:
+      return ::artm::core::Void::default_instance();
+    case 8:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -728,6 +744,27 @@ void NodeControllerService_Stub::DisposeRegularizer(const ::artm::core::DisposeR
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
                         NodeControllerService::descriptor()->method(7),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(8),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(8),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {

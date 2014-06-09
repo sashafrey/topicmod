@@ -102,7 +102,7 @@ int ArtmWaitIdle(int master_id) {
 int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob) {
   try {
     EnableLogging();
-            
+
     artm::MasterComponentConfig config;
     if (!config.ParseFromArray(config_blob, length)) {
       return ARTM_INVALID_MESSAGE;
@@ -182,7 +182,7 @@ void ArtmDisposeMasterComponent(int master_id) {
 int ArtmCreateNodeController(int node_controller_id, int length, const char* config_blob) {
   try {
     EnableLogging();
-    
+
     artm::NodeControllerConfig config;
     if (!config.ParseFromArray(config_blob, length)) {
       return ARTM_INVALID_MESSAGE;

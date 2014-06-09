@@ -15,7 +15,7 @@
 
 class InstanceTest : boost::noncopyable {
  public:
-  std::shared_ptr<artm::core::DataLoader> data_loader() { return data_loader_; }
+  std::shared_ptr<artm::core::LocalDataLoader> data_loader() { return data_loader_; }
   std::shared_ptr<artm::core::Instance> instance() { return instance_; }
 
   InstanceTest() {
@@ -24,8 +24,9 @@ class InstanceTest : boost::noncopyable {
 
     ::artm::core::DataLoaderConfig data_loader_config;
     data_loader_config.set_instance_id(instance_id);
-    int data_loader_id = artm::core::DataLoaderManager::singleton().Create(data_loader_config);
-    data_loader_ = artm::core::DataLoaderManager::singleton().Get(data_loader_id);
+    artm::core::DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
+    int data_loader_id = dlm.Create<artm::core::LocalDataLoader>(data_loader_config);
+    data_loader_ = dlm.Get<artm::core::LocalDataLoader>(data_loader_id);
   }
 
   ~InstanceTest() {
@@ -70,7 +71,7 @@ class InstanceTest : boost::noncopyable {
   }
 
  private:
-  std::shared_ptr<artm::core::DataLoader> data_loader_;
+  std::shared_ptr<artm::core::LocalDataLoader> data_loader_;
   std::shared_ptr<artm::core::Instance> instance_;
 };
 
@@ -82,9 +83,10 @@ TEST(Instance, Basic) {
 
   ::artm::core::DataLoaderConfig data_loader_config;
   data_loader_config.set_instance_id(instance_id);
-  int data_loader_id = artm::core::DataLoaderManager::singleton().Create(data_loader_config);
-  std::shared_ptr<artm::core::DataLoader> data_loader =
-    artm::core::DataLoaderManager::singleton().Get(data_loader_id);
+  artm::core::DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
+  int data_loader_id = dlm.Create<artm::core::LocalDataLoader>(data_loader_config);
+  std::shared_ptr<artm::core::LocalDataLoader> data_loader =
+    artm::core::DataLoaderManager::singleton().Get<artm::core::LocalDataLoader>(data_loader_id);
 
   artm::Batch batch1;
   batch1.add_token("first token");

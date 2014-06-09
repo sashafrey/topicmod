@@ -151,6 +151,8 @@ class NodeControllerService : public rpcz::service {
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
+  virtual void ForceSyncWithMemcached(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
 
   // implements Service ----------------------------------------------
 
@@ -225,6 +227,12 @@ class NodeControllerService_Stub {
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void ForceSyncWithMemcached(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void ForceSyncWithMemcached(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
  private:

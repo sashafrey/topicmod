@@ -160,4 +160,6 @@ service NodeControllerService {
 
   rpc CreateOrReconfigureRegularizer(CreateOrReconfigureRegularizerArgs) returns (Void);
   rpc DisposeRegularizer(DisposeRegularizerArgs) returns (Void);
+
+  rpc ForceSyncWithMemcached(Void) returns (Void);
 }

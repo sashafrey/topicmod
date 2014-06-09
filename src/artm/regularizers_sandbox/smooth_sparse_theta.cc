@@ -22,7 +22,7 @@ bool SmoothSparseTheta::RegularizeTheta(const Item& item,
 
   // control the correctness of parametres
   if (background_topics_count < 0 || background_topics_count > topic_size) return false;
-  
+
   if (alpha_vector.size() < inner_iter + 1) {
     // proceed the regularization
     for (int i = 0; i < topic_size; ++i) {

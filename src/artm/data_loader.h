@@ -5,6 +5,7 @@
 
 #include <list>
 #include <set>
+#include <utility>
 
 #include "boost/thread.hpp"
 #include "boost/thread/mutex.hpp"
@@ -25,12 +26,33 @@ namespace core {
 
 class DataLoader : boost::noncopyable {
  public:
-  ~DataLoader();
+  DataLoader(int id, const DataLoaderConfig& config);
+  virtual ~DataLoader() {}
+
+  int id() const;
+  static void PopulateDataStreams(const DataLoaderConfig& config, const Batch& batch,
+                                  ProcessorInput* pi);
+
+  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache) = 0;
+  virtual void Reconfigure(const DataLoaderConfig& config);
+
+ protected:
+  boost::mutex lock_;
+  ThreadSafeHolder<DataLoaderConfig> config_;
+
+ private:
+  int data_loader_id_;
+};
+
+// DataLoader for local modus operandi
+class LocalDataLoader : public DataLoader {
+ public:
+  virtual ~LocalDataLoader();
 
   int GetTotalItemsCount() const;
   void AddBatch(const Batch& batch);
-  void Callback(std::shared_ptr<const ProcessorOutput> cache);
-  void Reconfigure(const DataLoaderConfig& config);
+  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
+
   void Interrupt();
   void InvokeIteration(int iterations_count);
   void Join();
@@ -38,19 +60,13 @@ class DataLoader : boost::noncopyable {
   void DisposeModel(ModelName model_name);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
-  int id() const;
-
  private:
   friend class TemplateManager<DataLoader, DataLoaderConfig>;
 
   // All instances of DataLoader should be created via DataLoaderManager
-  DataLoader(int id, const DataLoaderConfig& config);
+  LocalDataLoader(int id, const DataLoaderConfig& config);
   static void CompactBatch(const Batch& batch, Batch* compacted_batch);
 
-  int data_loader_id_;
-
-  boost::mutex lock_;
-  ThreadSafeHolder<DataLoaderConfig> config_;
   ThreadSafeHolder<Generation> generation_;
 
   typedef std::pair<boost::uuids::uuid, ModelName> CacheKey;
@@ -59,6 +75,32 @@ class DataLoader : boost::noncopyable {
 
   boost::mutex batch_manager_lock_;
   BatchManager batch_manager_;
+
+  // Keep all threads at the end of class members
+  // (because the order of class members defines initialization order;
+  // everything else should be initialized before creating threads).
+  boost::thread thread_;
+
+  void ThreadFunction();
+};
+
+// DataLoader for network modus operandi
+class RemoteDataLoader : public DataLoader {
+ public:
+  virtual ~RemoteDataLoader();
+  virtual void Reconfigure(const DataLoaderConfig& config);
+  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
+  void Interrupt();
+  void Join();
+
+ private:
+  friend class TemplateManager<DataLoader, DataLoaderConfig>;
+
+  // All instances of DataLoader should be created via NetworkLoaderManager
+  RemoteDataLoader(int id, const DataLoaderConfig& config);
+
+  std::unique_ptr<rpcz::application> application_;
+  std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
 
   // Keep all threads at the end of class members
   // (because the order of class members defines initialization order;

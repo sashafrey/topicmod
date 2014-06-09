@@ -10,6 +10,7 @@
 #include "artm/exceptions.h"
 #include "artm/helpers.h"
 #include "artm/zmq_context.h"
+#include "artm/generation.h"
 
 namespace artm {
 namespace core {
@@ -63,8 +64,11 @@ void MasterComponent::InvokePhiRegularizers() {
 }
 
 void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
+  ValidateConfig(config);
+
   auto previous_modus_operandi = config_.get()->modus_operandi();
   auto new_modus_operandi = config.modus_operandi();
+
   config_.set(std::make_shared<MasterComponentConfig>(config));
 
   if ((new_modus_operandi == previous_modus_operandi) && (client_interface_ != nullptr)) {
@@ -98,7 +102,7 @@ bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel
   }
 
   if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
+    return service_endpoint_->impl()->RequestTopicModel(model_name, topic_model);
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
@@ -125,7 +129,8 @@ void MasterComponent::WaitIdle() {
   }
 
   if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
+    service_endpoint_->impl()->WaitIdle();
+    return;
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
@@ -139,7 +144,8 @@ void MasterComponent::InvokeIteration(int iterations_count) {
   }
 
   if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
+    service_endpoint_->impl()->InvokeIteration(iterations_count, config_.get()->disk_path());
+    return;
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
@@ -152,7 +158,8 @@ void MasterComponent::AddBatch(const Batch& batch) {
   }
 
   if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
+    Generation::SaveBatch(batch, config_.get()->disk_path());
+    return;
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
@@ -165,7 +172,8 @@ MasterComponent::ServiceEndpoint::~ServiceEndpoint() {
 
 MasterComponent::ServiceEndpoint::ServiceEndpoint(
     const std::string& endpoint, NetworkClientCollection* clients)
-    : endpoint_(endpoint), clients_(clients), application_(nullptr), thread_() {
+    : endpoint_(endpoint), clients_(clients), application_(nullptr),
+      master_component_service_impl_(clients_), thread_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
@@ -178,8 +186,7 @@ void MasterComponent::ServiceEndpoint::ThreadFunction() {
     Helpers::SetThreadName(-1, "MasterComponent");
     LOG(INFO) << "Establishing MasterComponentService on " << endpoint();
     rpcz::server server(*application_);
-    ::artm::core::MasterComponentServiceImpl master_component_service_impl(clients_);
-    server.register_service(&master_component_service_impl);
+    server.register_service(&master_component_service_impl_);
     server.bind(endpoint());
     application_->run();
     LOG(INFO) << "MasterComponentService on " << endpoint() << " is stopped.";
@@ -238,6 +245,21 @@ InstanceConfig MasterComponent::ExtractInstanceConfig(
   return retval;
 }
 
+void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
+  if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
+    if (!config.has_master_component_connect_endpoint() ||
+        !config.has_master_component_create_endpoint()) {
+      BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(
+        "Network modus operandi require all endpoints to be set."));
+    }
+
+    if (!config.has_disk_path()) {
+      BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(
+        "Network modus operandi require disk_path to be set."));
+    }
+  }
+}
+
 void LocalClient::ReconfigureModel(const ModelConfig& config) {
   local_instance_->ReconfigureModel(config);
 }
@@ -271,8 +293,9 @@ void LocalClient::Reconfigure(const MasterComponentConfig& config) {
   DataLoaderConfig data_loader_config(
     MasterComponent::ExtractdDataLoaderConfig(config, local_instance_->id()));
   if (local_data_loader_ == nullptr) {
-    int data_loader_id = artm::core::DataLoaderManager::singleton().Create(data_loader_config);
-    local_data_loader_ = artm::core::DataLoaderManager::singleton().Get(data_loader_id);
+    DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
+    int data_loader_id = dlm.Create<LocalDataLoader>(data_loader_config);
+    local_data_loader_ = dlm.Get<LocalDataLoader>(data_loader_id);
   } else {
     local_data_loader_->Reconfigure(data_loader_config);
   }
@@ -354,10 +377,10 @@ void NetworkClientCollection::InvokePhiRegularizers() {
 void NetworkClientCollection::Reconfigure(const MasterComponentConfig& config) {
   for_each_client([&](NodeControllerService_Stub& client) {
     Void response;
+    client.CreateOrReconfigureInstance(MasterComponent::ExtractInstanceConfig(config), &response);
+
     client.CreateOrReconfigureDataLoader(
       MasterComponent::ExtractdDataLoaderConfig(config, UnknownId), &response);
-
-    client.CreateOrReconfigureInstance(MasterComponent::ExtractInstanceConfig(config), &response);
   });
 }
 

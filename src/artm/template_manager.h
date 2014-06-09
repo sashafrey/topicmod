@@ -29,18 +29,24 @@ class TemplateManager : boost::noncopyable {
 
   // Tries to create an object with given id.
   // Return: true if id() was available and object was created successfully, and false otherwise.
+  template<typename Derrived>
   bool TryCreate(int id, const Config& config) {
     boost::lock_guard<boost::mutex> guard(lock_);
     if (map_.find(id) != map_.end()) {
       return false;
     }
 
-    std::shared_ptr<Type> ptr(new Type(id, config));
+    std::shared_ptr<Type> ptr(new Derrived(id, config));
     map_.insert(std::make_pair(id, ptr));
     return true;
   }
 
+  bool TryCreate(int id, const Config& config) {
+    return TryCreate<Type>(id, config);
+  }
+
   // Create an object and returns its ID.
+  template<typename Derrived>
   int Create(const Config& config) {
     boost::lock_guard<boost::mutex> guard(lock_);
 
@@ -50,31 +56,50 @@ class TemplateManager : boost::noncopyable {
     }
 
     int id = next_id_++;
-    std::shared_ptr<Type> ptr(new Type(id, config));
+    std::shared_ptr<Type> ptr(new Derrived(id, config));
     map_.insert(std::make_pair(id, ptr));
     return id;
   }
 
+  int Create(const Config& config) {
+    return Create<Type>(config);
+  }
+
+  template<typename Derrived>
+  const std::shared_ptr<Derrived> Get(int id) const {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto iter = map_.find(id);
+    return (iter == map_.end()) ? nullptr : std::dynamic_pointer_cast<Derrived>(iter->second);
+  }
+
   const std::shared_ptr<Type> Get(int id) const {
-    boost::lock_guard<boost::mutex> guard(lock_);
-    auto iter = map_.find(id);
-    return (iter == map_.end()) ? nullptr : iter->second;
+    return Get<Type>(id);
   }
 
-  std::shared_ptr<Type> Get(int id) {
+  template<typename Derrived>
+  std::shared_ptr<Derrived> Get(int id) {
     boost::lock_guard<boost::mutex> guard(lock_);
     auto iter = map_.find(id);
-    return (iter == map_.end()) ? nullptr : iter->second;
+    return (iter == map_.end()) ? nullptr : std::dynamic_pointer_cast<Derrived>(iter->second);
   }
 
-  std::shared_ptr<Type> First() {
+  const std::shared_ptr<Type> Get(int id) {
+    return Get<Type>(id);
+  }
+
+  template<typename Derrived>
+  std::shared_ptr<Derrived> First() {
     boost::lock_guard<boost::mutex> guard(lock_);
     auto iter = map_.begin();
     if (iter != map_.end()) {
-      return iter->second;
+      return std::dynamic_pointer_cast<Derrived>(iter->second);
     } else {
-      return std::shared_ptr<Type>();
+      return std::shared_ptr<Derrived>();
     }
+  }
+
+  std::shared_ptr<Type> First() {
+    return First<Type>();
   }
 
   void Erase(int id) {

@@ -87,6 +87,17 @@ std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model)
   return theta_matrix;
 }
 
+NodeController::NodeController(const NodeControllerConfig& config) : id_(0), config_(config) {
+  std::string config_blob;
+  config.SerializeToString(&config_blob);
+  id_ = HandleErrorCode(ArtmCreateNodeController(0, config_blob.size(),
+    StringAsArray(&config_blob)));
+}
+
+NodeController::~NodeController() {
+  ArtmDisposeNodeController(id());
+}
+
 Model::Model(const MasterComponent& master_component, const ModelConfig& config)
     : master_id_(master_component.id()),
       config_(config) {
@@ -95,7 +106,7 @@ Model::Model(const MasterComponent& master_component, const ModelConfig& config)
   }
 
   std::string model_config_blob;
-  config.SerializeToString(&model_config_blob);
+  config_.SerializeToString(&model_config_blob);
   HandleErrorCode(ArtmCreateModel(master_id_, model_config_blob.size(),
     StringAsArray(&model_config_blob)));
 }

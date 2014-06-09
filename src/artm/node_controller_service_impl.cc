@@ -59,7 +59,10 @@ void NodeControllerServiceImpl::CreateOrReconfigureDataLoader(
     if (data_loader != nullptr) {
       data_loader->Reconfigure(request);
     } else {
-      data_loader_id_ = artm::core::DataLoaderManager::singleton().Create(request);
+      DataLoaderConfig data_loader_config(request);
+      data_loader_config.set_instance_id(instance_id_);
+      DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
+      data_loader_id_ = dlm.Create<RemoteDataLoader>(data_loader_config);
     }
 
     response.send(Void());
@@ -135,6 +138,24 @@ void NodeControllerServiceImpl::DisposeRegularizer(
   }
 
   response.send(Void());
+}
+
+void NodeControllerServiceImpl::ForceSyncWithMemcached(
+    const ::artm::core::Void& request,
+    ::rpcz::reply< ::artm::core::Void> response) {
+  try {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
+    if (instance != nullptr) {
+      instance->ForceSyncWithMemcached(ModelName());
+    } else {
+      LOG(ERROR) << "No instances exist in node controller";
+    }
+
+    response.send(Void());
+  } catch(...) {
+    response.Error(-1);  // todo(alfrey): fix error handling in services
+  }
 }
 
 }  // namespace core

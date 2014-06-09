@@ -12,6 +12,8 @@ typedef std::string ModelName;
 
 const int UnknownId = -1;
 
+const std::string kBatchExtension = ".batch";
+
 }  // namespace core
 }  // namespace artm
 

@@ -484,7 +484,7 @@ void protobuf_AddDesc_internals_2eproto() {
     "Ids\032\017.artm.core.Void\0223\n\rConnectClient\022\021."
     "artm.core.String\032\017.artm.core.Void\0226\n\020Dis"
     "connectClient\022\021.artm.core.String\032\017.artm."
-    "core.Void2\335\004\n\025NodeControllerService\022I\n\033C"
+    "core.Void2\231\005\n\025NodeControllerService\022I\n\033C"
     "reateOrReconfigureInstance\022\031.artm.core.I"
     "nstanceConfig\032\017.artm.core.Void\0223\n\017Dispos"
     "eInstance\022\017.artm.core.Void\032\017.artm.core.V"
@@ -499,7 +499,8 @@ void protobuf_AddDesc_internals_2eproto() {
     "-.artm.core.CreateOrReconfigureRegulariz"
     "erArgs\032\017.artm.core.Void\022H\n\022DisposeRegula"
     "rizer\022!.artm.core.DisposeRegularizerArgs"
-    "\032\017.artm.core.Void", 2457);
+    "\032\017.artm.core.Void\022:\n\026ForceSyncWithMemcac"
+    "hed\022\017.artm.core.Void\032\017.artm.core.Void", 2517);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "internals.proto", &protobuf_RegisterTypes);
   Mask::default_instance_ = new Mask();

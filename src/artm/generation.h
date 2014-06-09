@@ -27,6 +27,13 @@ class Generation {
   bool empty() const;
   int GetTotalItemsCount() const;
 
+  static std::vector<boost::uuids::uuid> ListAllBatches(const boost::filesystem::path& root);
+
+  static std::shared_ptr<const Batch> LoadBatch(const boost::uuids::uuid& uuid,
+                                                const std::string& disk_path);
+
+  static boost::uuids::uuid SaveBatch(const Batch& batch, const std::string& disk_path);
+
   std::shared_ptr<const Batch> batch(const boost::uuids::uuid& uuid,
                                      const std::string& disk_path);
 
@@ -44,8 +51,6 @@ class Generation {
   }
 
  private:
-  static std::vector<boost::filesystem::path> GetAll(const boost::filesystem::path& root,
-                                                     const std::string& ext);
   static std::string MakeBatchPath(std::string disk_path, boost::uuids::uuid uuid);
 
   int id_;

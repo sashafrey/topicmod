@@ -10,17 +10,16 @@
 
 #include "glog/logging.h"
 
+#include "artm/common.h"
+
 namespace artm {
 namespace core {
 
 Generation::Generation(const std::string& disk_path) : id_(0), generation_() {
   if (!disk_path.empty()) {
-    std::string batchExtension = ".batch";
-    std::vector<boost::filesystem::path> batchFiles = GetAll(disk_path, batchExtension);
-    for (size_t i = 0; i < batchFiles.size(); ++i) {
-      std::string uuid_str = batchFiles[i].stem().string();
-      boost::uuids::string_generator gen_str;
-      generation_.insert(std::make_pair(gen_str(uuid_str), nullptr));
+    std::vector<boost::uuids::uuid> batch_uuids = ListAllBatches(disk_path);
+    for (size_t i = 0; i < batch_uuids.size(); ++i) {
+      generation_.insert(std::make_pair(batch_uuids[i], nullptr));
     }
   }
 }
@@ -33,6 +32,23 @@ bool Generation::empty() const {
   return generation_.empty();
 }
 
+std::shared_ptr<const Batch> Generation::LoadBatch(const boost::uuids::uuid& uuid,
+                                                   const std::string& disk_path) {
+  std::shared_ptr<const Batch> batch_ptr = nullptr;
+  std::string batch_file = MakeBatchPath(disk_path, uuid);
+  std::ifstream fin(batch_file.c_str(), std::ifstream::binary);
+  if (fin.is_open()) {
+    std::shared_ptr<Batch> batch_loaded(new Batch());
+    bool is_parsed = batch_loaded->ParseFromIstream(&fin);
+    if (is_parsed) {
+      batch_ptr = batch_loaded;
+    }
+    fin.close();
+  }
+
+  return batch_ptr;
+}
+
 std::shared_ptr<const Batch> Generation::batch(const boost::uuids::uuid& uuid,
                                                const std::string& disk_path) {
   std::shared_ptr<const Batch> batch_ptr = nullptr;
@@ -41,16 +57,7 @@ std::shared_ptr<const Batch> Generation::batch(const boost::uuids::uuid& uuid,
     if (disk_path.empty()) {
       batch_ptr = retval->second;
     } else {
-      std::string batch_file = MakeBatchPath(disk_path, uuid);
-      std::ifstream fin(batch_file.c_str(), std::ifstream::binary);
-      if (fin.is_open()) {
-        std::shared_ptr<Batch> batch_loaded(new Batch());
-        bool is_parsed = batch_loaded->ParseFromIstream(&fin);
-        if (is_parsed) {
-          batch_ptr = batch_loaded;
-        }
-        fin.close();
-      }
+      return LoadBatch(uuid, disk_path);
     }
   }
   return batch_ptr;
@@ -65,42 +72,56 @@ std::vector<boost::uuids::uuid> Generation::batch_uuids() const {
   return std::move(retval);
 }
 
+boost::uuids::uuid Generation::SaveBatch(const Batch& batch,
+                                         const std::string& disk_path) {
+  boost::uuids::uuid uuid = boost::uuids::random_generator()();
+  std::string batch_file = MakeBatchPath(disk_path, uuid);
+  std::ofstream fout(batch_file.c_str(), std::ofstream::binary);
+  if (fout.is_open()) {
+    bool is_serialized = batch.SerializeToOstream(&fout);
+    if (!is_serialized) {
+      LOG(ERROR) << "Batch has not been serialized on disk.";
+    }
+
+    fout.close();
+  }
+
+  return uuid;
+}
+
 void Generation::AddBatch(const std::shared_ptr<const Batch>& batch,
                           const std::string& disk_path) {
   if (disk_path.empty()) {
     generation_.insert(std::make_pair(boost::uuids::random_generator()(), batch));
   } else {
-    boost::uuids::uuid uuid = boost::uuids::random_generator()();
+    boost::uuids::uuid uuid = SaveBatch(*batch, disk_path);
     generation_.insert(std::make_pair(uuid, nullptr));
-    std::string batch_file = MakeBatchPath(disk_path, uuid);
-    std::ofstream fout(batch_file.c_str(), std::ofstream::binary);
-    if (fout.is_open()) {
-      bool is_serialized = batch->SerializeToOstream(&fout);
-      if (!is_serialized) {
-        LOG(ERROR) << "Batch has not been serialized on disk.";
-      }
-      fout.close();
-    }
   }
 }
 
 // Return the filenames of all files that have the specified extension
 // in the specified directory.
-std::vector<boost::filesystem::path> Generation::GetAll(const boost::filesystem::path& root,
-                                                        const std::string& ext) {
-  std::vector<boost::filesystem::path> filesList;
+std::vector<boost::uuids::uuid> Generation::ListAllBatches(const boost::filesystem::path& root) {
+  std::vector<boost::uuids::uuid> uuids;
 
   if (boost::filesystem::exists(root) && boost::filesystem::is_directory(root)) {
     boost::filesystem::recursive_directory_iterator it(root);
     boost::filesystem::recursive_directory_iterator endit;
     while (it != endit) {
-      if (boost::filesystem::is_regular_file(*it) && it->path().extension() == ext) {
-        filesList.push_back(it->path().filename());
+      if (boost::filesystem::is_regular_file(*it) && it->path().extension() == kBatchExtension) {
+        std::string filename = it->path().filename().stem().string();
+        boost::uuids::uuid uuid = boost::uuids::string_generator()(filename);
+        if (uuid.is_nil()) {
+          LOG(WARNING) << "Unable to convert filename " << filename << " to uuid.";
+          continue;
+        }
+
+        uuids.push_back(uuid);
       }
       ++it;
     }
   }
-  return filesList;
+  return uuids;
 }
 
 // Return the full path of the file where the batch with uuid number will be stored.
@@ -113,8 +134,7 @@ std::string Generation::MakeBatchPath(std::string disk_path, boost::uuids::uuid 
     }
   }
 
-  std::string batch_extension = ".batch";
-  boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + batch_extension);
+  boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + kBatchExtension);
   boost::filesystem::path batch_path = dir / file;
   std::string batch_file = batch_path.string();
   return batch_file;

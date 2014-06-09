@@ -10,11 +10,14 @@
 
 #include "rpcz/rpc.hpp"
 
+#include "artm/regularizer_interface.h"
 #include "artm/core/common.h"
 #include "artm/core/call_on_destruction.h"
 #include "artm/core/data_loader.h"
 #include "artm/core/exceptions.h"
 #include "artm/core/helpers.h"
+#include "artm/core/topic_model.h"
+#include "artm/core/instance_schema.h"
 
 using ::artm::core::MasterComponentService_Stub;
 

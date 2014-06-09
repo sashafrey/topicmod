@@ -11,10 +11,15 @@
 
 #include "glog/logging.h"
 
+#include "rpcz/application.hpp"
+
 #include "artm/core/exceptions.h"
+#include "artm/core/instance.h"
+#include "artm/core/internals.rpcz.h"
 #include "artm/core/protobuf_helpers.h"
 #include "artm/core/helpers.h"
 #include "artm/core/zmq_context.h"
+#include "artm/core/generation.h"
 
 namespace artm {
 namespace core {
@@ -389,7 +394,7 @@ void RemoteDataLoader::ThreadFunction() {
         master_component_service_proxy_->RequestBatches(request, &response);
       } catch(...) {
         LOG(ERROR) << "Unable to request batches from master.";
-        continue;
+        return;
       }
 
       BatchIds failed_batches;

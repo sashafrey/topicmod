@@ -4,12 +4,13 @@
 
 #include "gtest/gtest.h"
 
-#include "artm/node_controller.h"
-#include "artm/master_component.h"
+#include "artm/core/node_controller.h"
+#include "artm/core/master_component.h"
 #include "artm/messages.pb.h"
-#include "artm/instance.h"
-#include "artm/data_loader.h"
-#include "artm/test_mother.h"
+#include "artm/core/instance.h"
+#include "artm/core/data_loader.h"
+#include "artm_tests/test_mother.h"
+#include "artm/core/instance_schema.h"
 
 // artm_tests.exe --gtest_filter=NodesConnectivityTest.*
 TEST(NodesConnectivityTest, Basic) {

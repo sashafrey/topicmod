@@ -9,9 +9,11 @@
 #include "artm/core/common.h"
 #include "artm/core/exceptions.h"
 #include "artm/core/processor.h"
+#include "artm/core/merger.h"
 #include "artm/core/template_manager.h"
 #include "artm/core/topic_model.h"
 #include "artm/core/zmq_context.h"
+#include "artm/core/instance_schema.h"
 
 #include "artm/regularizer_interface.h"
 #include "artm/regularizer_sandbox/dirichlet_theta.h"
@@ -40,8 +42,10 @@ Instance::Instance(int id, const InstanceConfig& config)
       processor_queue_(),
       merger_queue_lock_(),
       merger_queue_(),
-      merger_(&merger_queue_lock_, &merger_queue_, &schema_, &master_component_service_proxy_),
+      merger_(),
       processors_() {
+  merger_.reset(new Merger(
+    &merger_queue_lock_, &merger_queue_, &schema_, &master_component_service_proxy_));
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
@@ -51,7 +55,7 @@ Instance::Instance(int id, const InstanceConfig& config)
 Instance::~Instance() {}
 
 void Instance::ReconfigureModel(const ModelConfig& config) {
-  merger_.UpdateModel(config);
+  merger_->UpdateModel(config);
 
   auto new_schema = schema_.get_copy();
   new_schema->set_model_config(config.name(), std::make_shared<const ModelConfig>(config));
@@ -63,7 +67,7 @@ void Instance::DisposeModel(ModelName model_name) {
   new_schema->clear_model_config(model_name);
   schema_.set(new_schema);
 
-  merger_.DisposeModel(model_name);
+  merger_->DisposeModel(model_name);
 }
 
 void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
@@ -115,15 +119,15 @@ void Instance::DisposeRegularizer(const std::string& name) {
 }
 
 void Instance::ForceResetScores(ModelName model_name) {
-  merger_.ForceResetScores(model_name);
+  merger_->ForceResetScores(model_name);
 }
 
 void Instance::ForceSyncWithMemcached(ModelName model_name) {
-  merger_.ForceSyncWithMemcached(model_name);
+  merger_->ForceSyncWithMemcached(model_name);
 }
 
 void Instance::InvokePhiRegularizers() {
-  merger_.InvokePhiRegularizers();
+  merger_->InvokePhiRegularizers();
 }
 
 void Instance::Reconfigure(const InstanceConfig& config) {
@@ -140,7 +144,7 @@ void Instance::Reconfigure(const InstanceConfig& config) {
         &processor_queue_,
         &merger_queue_lock_,
         &merger_queue_,
-        merger_,
+        *merger_,
         schema_)));
   }
 
@@ -156,7 +160,7 @@ void Instance::Reconfigure(const InstanceConfig& config) {
 }
 
 bool Instance::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
-  std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_.GetLatestTopicModel(model_name);
+  std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_->GetLatestTopicModel(model_name);
   if (ttm == nullptr) return false;
   ttm->RetrieveExternalTopicModel(topic_model);
   return true;

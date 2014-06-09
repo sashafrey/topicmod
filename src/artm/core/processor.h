@@ -13,16 +13,18 @@
 #include "boost/utility.hpp"
 
 #include "artm/messages.pb.h"
-#include "artm/regularizer_interface.h"
 
 #include "artm/core/common.h"
-#include "artm/core/instance_schema.h"
 #include "artm/core/internals.pb.h"
-#include "artm/core/merger.h"
 #include "artm/core/thread_safe_holder.h"
 
 namespace artm {
 namespace core {
+
+class InstanceSchema;
+class Merger;
+class TopicModel;
+class TopicWeightIterator;
 
 class Processor : boost::noncopyable {
  public:
@@ -123,9 +125,7 @@ class Processor : boost::noncopyable {
     int id_in_model() const { return id_in_model_; }
     int id_in_batch() const { return id_in_batch_; }
     int count() const { return count_; }
-    TopicWeightIterator GetTopicWeightIterator() const {
-      return std::move(topic_model_.GetTopicWeightIterator(id_in_model()));
-    }
+    TopicWeightIterator GetTopicWeightIterator() const;
 
    private:
     const google::protobuf::RepeatedPtrField<std::string>& token_dict_;

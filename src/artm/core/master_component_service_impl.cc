@@ -7,10 +7,15 @@
 #include "boost/thread.hpp"
 #include "boost/lexical_cast.hpp"
 #include "boost/uuid/uuid_io.hpp"
+#include "boost/uuid/uuid.hpp"
+#include "boost/utility.hpp"
 #include "glog/logging.h"
+
+#include "rpcz/application.hpp"
 
 #include "artm/core/master_component.h"
 #include "artm/core/zmq_context.h"
+#include "artm/core/generation.h"
 
 namespace artm {
 namespace core {

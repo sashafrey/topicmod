@@ -15,14 +15,19 @@
 #include "artm/messages.pb.h"
 #include "artm/core/batch_manager.h"
 #include "artm/core/common.h"
-#include "artm/core/generation.h"
-#include "artm/core/instance.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/template_manager.h"
 #include "artm/core/thread_safe_holder.h"
 
+namespace rpcz {
+  class application;
+}
+
 namespace artm {
 namespace core {
+
+class MasterComponentService_Stub;
+class Generation;
 
 class DataLoader : boost::noncopyable {
  public:

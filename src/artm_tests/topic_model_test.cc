@@ -2,7 +2,7 @@
 
 #include "gtest/gtest.h"
 
-#include "artm/topic_model.h"
+#include "artm/core/topic_model.h"
 #include "artm/messages.pb.h"
 
 TEST(TopicModelTest, Basic) {

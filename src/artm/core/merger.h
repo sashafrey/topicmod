@@ -19,14 +19,15 @@
 #include "rpcz/sync_event.hpp"
 
 #include "artm/core/common.h"
-#include "artm/core/instance_schema.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
 #include "artm/core/thread_safe_holder.h"
-#include "artm/core/topic_model.h"
 
 namespace artm {
 namespace core {
+
+class TopicModel;
+class InstanceSchema;
 
 class Merger : boost::noncopyable {
  public:

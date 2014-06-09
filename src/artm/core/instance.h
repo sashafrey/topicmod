@@ -15,19 +15,19 @@
 #include "rpcz/application.hpp"
 
 #include "artm/messages.pb.h"
-#include "artm/regularizer_interface.h"
 
 #include "artm/core/common.h"
-#include "artm/core/instance_schema.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
-#include "artm/core/merger.h"
-#include "artm/core/processor.h"
 #include "artm/core/template_manager.h"
 #include "artm/core/thread_safe_holder.h"
 
 namespace artm {
 namespace core {
+
+class Processor;
+class Merger;
+class InstanceSchema;
 
 class Instance : boost::noncopyable {
  public:
@@ -79,7 +79,7 @@ class Instance : boost::noncopyable {
   std::queue<std::shared_ptr<const ProcessorOutput> > merger_queue_;
 
   // creates a background thread that keep merging processor output
-  Merger merger_;
+  std::shared_ptr<Merger> merger_;
 
   // creates background threads for processing
   std::vector<std::shared_ptr<Processor> > processors_;

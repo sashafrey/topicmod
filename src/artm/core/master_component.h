@@ -16,26 +16,30 @@
 #include "rpcz/service.hpp"
 
 #include "artm/messages.pb.h"
-#include "artm/regularizer_interface.h"
 
 #include "artm/core/common.h"
-#include "artm/core/data_loader.h"
-#include "artm/core/instance.h"
 #include "artm/core/master_component_service_impl.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/template_manager.h"
-#include "artm/core/topic_model.h"
 
 namespace zmq {
 class context_t;
 }  // namespace zmq
 
 namespace artm {
+
+class RegularizerInterface;
+
 namespace core {
 
 class ClientInterface;
 class LocalClient;
 class NetworkClientCollection;
+class DataLoader;
+class LocalDataLoader;
+class RemoteDataLoader;
+class Instance;
+class TopicModel;
 
 class MasterComponent : boost::noncopyable {
  public:

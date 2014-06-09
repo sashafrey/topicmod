@@ -7,10 +7,15 @@
 #include "glog/logging.h"
 #include "zmq.hpp"
 
+#include "artm/regularizer_interface.h"
+
 #include "artm/core/exceptions.h"
 #include "artm/core/helpers.h"
 #include "artm/core/zmq_context.h"
 #include "artm/core/generation.h"
+#include "artm/core/data_loader.h"
+#include "artm/core/instance.h"
+#include "artm/core/topic_model.h"
 
 namespace artm {
 namespace core {

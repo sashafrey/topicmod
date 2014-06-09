@@ -8,10 +8,10 @@
 
 #include "gtest/gtest.h"
 
-#include "artm/instance.h"
-#include "artm/data_loader.h"
 #include "artm/messages.pb.h"
-#include "artm/protobuf_helpers.h"
+#include "artm/core/instance.h"
+#include "artm/core/data_loader.h"
+#include "artm/core/protobuf_helpers.h"
 
 class InstanceTest : boost::noncopyable {
  public:

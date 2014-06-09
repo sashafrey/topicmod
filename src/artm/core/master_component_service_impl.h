@@ -9,9 +9,9 @@
 
 #include "boost/thread/mutex.hpp"
 
-#include "rpcz/application.hpp"
 #include "rpcz/service.hpp"
 
+#include "artm/messages.pb.h"
 #include "artm/core/batch_manager.h"
 #include "artm/core/common.h"
 #include "artm/core/internals.pb.h"
@@ -22,6 +22,10 @@
 namespace zmq {
 class context_t;
 }  // namespace zmq
+
+namespace rpcz {
+class application;
+}  // namespace rpcz
 
 namespace artm {
 namespace core {

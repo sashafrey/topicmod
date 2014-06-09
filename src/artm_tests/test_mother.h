@@ -10,7 +10,7 @@
 #include "boost/uuid/uuid_generators.hpp"
 #include "boost/uuid/uuid_io.hpp"
 
-#include "artm/common.h"
+#include "artm/core/common.h"
 #include "artm/messages.pb.h"
 
 namespace artm {

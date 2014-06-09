@@ -2,6 +2,9 @@
 
 #include "artm/core/instance_schema.h"
 
+#include "artm/regularizer_interface.h"
+#include "artm/messages.pb.h"
+
 namespace artm {
 namespace core {
 

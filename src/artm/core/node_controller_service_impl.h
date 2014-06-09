@@ -13,7 +13,6 @@
 #include "artm/core/common.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
-#include "artm/core/topic_model.h"
 
 namespace artm {
 namespace core {

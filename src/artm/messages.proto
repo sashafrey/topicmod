@@ -101,8 +101,8 @@ message RegularizerConfig {
   enum Type {
     DirichletTheta = 0;
     DirichletPhi = 1;
-	  SmoothSparseTheta = 2;
-	  SmoothSparsePhi = 3;
+    SmoothSparseTheta = 2;
+    SmoothSparsePhi = 3;
   }
 
   optional string name = 1;
@@ -131,6 +131,10 @@ message SmoothSparsePhiConfig {
   required int32 background_topics_count = 1;
   optional DoubleArray beta = 2;
   repeated DoubleArray background_beta = 3;
+}
+
+message RegularizerOutput {
+  required bytes output = 1;
 }
 
 message DoubleArray {

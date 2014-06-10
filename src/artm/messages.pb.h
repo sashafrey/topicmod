@@ -45,6 +45,7 @@ class DirichletThetaConfig;
 class DirichletPhiConfig;
 class SmoothSparseThetaConfig;
 class SmoothSparsePhiConfig;
+class RegularizerOutput;
 class DoubleArray;
 class FloatArray;
 class Score;
@@ -1511,6 +1512,93 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SmoothSparsePhiConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class RegularizerOutput : public ::google::protobuf::Message {
+ public:
+  RegularizerOutput();
+  virtual ~RegularizerOutput();
+
+  RegularizerOutput(const RegularizerOutput& from);
+
+  inline RegularizerOutput& operator=(const RegularizerOutput& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RegularizerOutput& default_instance();
+
+  void Swap(RegularizerOutput* other);
+
+  // implements Message ----------------------------------------------
+
+  RegularizerOutput* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const RegularizerOutput& from);
+  void MergeFrom(const RegularizerOutput& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required bytes output = 1;
+  inline bool has_output() const;
+  inline void clear_output();
+  static const int kOutputFieldNumber = 1;
+  inline const ::std::string& output() const;
+  inline void set_output(const ::std::string& value);
+  inline void set_output(const char* value);
+  inline void set_output(const void* value, size_t size);
+  inline ::std::string* mutable_output();
+  inline ::std::string* release_output();
+  inline void set_allocated_output(::std::string* output);
+
+  // @@protoc_insertion_point(class_scope:artm.RegularizerOutput)
+ private:
+  inline void set_has_output();
+  inline void clear_has_output();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* output_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_messages_2eproto();
+  friend void protobuf_AssignDesc_messages_2eproto();
+  friend void protobuf_ShutdownFile_messages_2eproto();
+
+  void InitAsDefaultInstance();
+  static RegularizerOutput* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -3892,6 +3980,80 @@ SmoothSparsePhiConfig::background_beta() const {
 inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
 SmoothSparsePhiConfig::mutable_background_beta() {
   return &background_beta_;
+}
+
+// -------------------------------------------------------------------
+
+// RegularizerOutput
+
+// required bytes output = 1;
+inline bool RegularizerOutput::has_output() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void RegularizerOutput::set_has_output() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void RegularizerOutput::clear_has_output() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void RegularizerOutput::clear_output() {
+  if (output_ != &::google::protobuf::internal::kEmptyString) {
+    output_->clear();
+  }
+  clear_has_output();
+}
+inline const ::std::string& RegularizerOutput::output() const {
+  return *output_;
+}
+inline void RegularizerOutput::set_output(const ::std::string& value) {
+  set_has_output();
+  if (output_ == &::google::protobuf::internal::kEmptyString) {
+    output_ = new ::std::string;
+  }
+  output_->assign(value);
+}
+inline void RegularizerOutput::set_output(const char* value) {
+  set_has_output();
+  if (output_ == &::google::protobuf::internal::kEmptyString) {
+    output_ = new ::std::string;
+  }
+  output_->assign(value);
+}
+inline void RegularizerOutput::set_output(const void* value, size_t size) {
+  set_has_output();
+  if (output_ == &::google::protobuf::internal::kEmptyString) {
+    output_ = new ::std::string;
+  }
+  output_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RegularizerOutput::mutable_output() {
+  set_has_output();
+  if (output_ == &::google::protobuf::internal::kEmptyString) {
+    output_ = new ::std::string;
+  }
+  return output_;
+}
+inline ::std::string* RegularizerOutput::release_output() {
+  clear_has_output();
+  if (output_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = output_;
+    output_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RegularizerOutput::set_allocated_output(::std::string* output) {
+  if (output_ != &::google::protobuf::internal::kEmptyString) {
+    delete output_;
+  }
+  if (output) {
+    set_has_output();
+    output_ = output;
+  } else {
+    clear_has_output();
+    output_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

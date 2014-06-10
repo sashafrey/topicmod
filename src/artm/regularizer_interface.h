@@ -24,6 +24,8 @@ class RegularizerInterface {
                                 double tau) { return true; }
 
   virtual bool RegularizePhi(TopicModel* topic_model, double tau) { return true; }
+
+  virtual RegularizerOutput GetRegularizerOutput() { }
 };
 
 }  // namespace core

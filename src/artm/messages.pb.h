@@ -42,7 +42,6 @@ class MasterComponentConfig;
 class ModelConfig;
 class RegularizerConfig;
 class DirichletThetaConfig;
-class DirichletPhiConfig;
 class SmoothSparseThetaConfig;
 class SmoothSparsePhiConfig;
 class RegularizerInternalState;
@@ -1248,90 +1247,6 @@ class DirichletThetaConfig : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class DirichletPhiConfig : public ::google::protobuf::Message {
- public:
-  DirichletPhiConfig();
-  virtual ~DirichletPhiConfig();
-
-  DirichletPhiConfig(const DirichletPhiConfig& from);
-
-  inline DirichletPhiConfig& operator=(const DirichletPhiConfig& from) {
-    CopyFrom(from);
-    return *this;
-  }
-
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const DirichletPhiConfig& default_instance();
-
-  void Swap(DirichletPhiConfig* other);
-
-  // implements Message ----------------------------------------------
-
-  DirichletPhiConfig* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const DirichletPhiConfig& from);
-  void MergeFrom(const DirichletPhiConfig& from);
-  void Clear();
-  bool IsInitialized() const;
-
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-
-  ::google::protobuf::Metadata GetMetadata() const;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  // optional .artm.DoubleArray beta = 1;
-  inline bool has_beta() const;
-  inline void clear_beta();
-  static const int kBetaFieldNumber = 1;
-  inline const ::artm::DoubleArray& beta() const;
-  inline ::artm::DoubleArray* mutable_beta();
-  inline ::artm::DoubleArray* release_beta();
-  inline void set_allocated_beta(::artm::DoubleArray* beta);
-
-  // @@protoc_insertion_point(class_scope:artm.DirichletPhiConfig)
- private:
-  inline void set_has_beta();
-  inline void clear_has_beta();
-
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-
-  ::artm::DoubleArray* beta_;
-
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
-
-  friend void  protobuf_AddDesc_messages_2eproto();
-  friend void protobuf_AssignDesc_messages_2eproto();
-  friend void protobuf_ShutdownFile_messages_2eproto();
-
-  void InitAsDefaultInstance();
-  static DirichletPhiConfig* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class SmoothSparseThetaConfig : public ::google::protobuf::Message {
  public:
   SmoothSparseThetaConfig();
@@ -1488,42 +1403,17 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 background_topics_count() const;
   inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // optional .artm.DoubleArray beta = 2;
-  inline bool has_beta() const;
-  inline void clear_beta();
-  static const int kBetaFieldNumber = 2;
-  inline const ::artm::DoubleArray& beta() const;
-  inline ::artm::DoubleArray* mutable_beta();
-  inline ::artm::DoubleArray* release_beta();
-  inline void set_allocated_beta(::artm::DoubleArray* beta);
-
-  // repeated .artm.DoubleArray background_beta = 3;
-  inline int background_beta_size() const;
-  inline void clear_background_beta();
-  static const int kBackgroundBetaFieldNumber = 3;
-  inline const ::artm::DoubleArray& background_beta(int index) const;
-  inline ::artm::DoubleArray* mutable_background_beta(int index);
-  inline ::artm::DoubleArray* add_background_beta();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      background_beta() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_background_beta();
-
   // @@protoc_insertion_point(class_scope:artm.SmoothSparsePhiConfig)
  private:
   inline void set_has_background_topics_count();
   inline void clear_has_background_topics_count();
-  inline void set_has_beta();
-  inline void clear_has_beta();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::artm::DoubleArray* beta_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > background_beta_;
   ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_messages_2eproto();
   friend void protobuf_AssignDesc_messages_2eproto();
@@ -4091,48 +3981,6 @@ DirichletThetaConfig::mutable_alpha() {
 
 // -------------------------------------------------------------------
 
-// DirichletPhiConfig
-
-// optional .artm.DoubleArray beta = 1;
-inline bool DirichletPhiConfig::has_beta() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void DirichletPhiConfig::set_has_beta() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void DirichletPhiConfig::clear_has_beta() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void DirichletPhiConfig::clear_beta() {
-  if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
-  clear_has_beta();
-}
-inline const ::artm::DoubleArray& DirichletPhiConfig::beta() const {
-  return beta_ != NULL ? *beta_ : *default_instance_->beta_;
-}
-inline ::artm::DoubleArray* DirichletPhiConfig::mutable_beta() {
-  set_has_beta();
-  if (beta_ == NULL) beta_ = new ::artm::DoubleArray;
-  return beta_;
-}
-inline ::artm::DoubleArray* DirichletPhiConfig::release_beta() {
-  clear_has_beta();
-  ::artm::DoubleArray* temp = beta_;
-  beta_ = NULL;
-  return temp;
-}
-inline void DirichletPhiConfig::set_allocated_beta(::artm::DoubleArray* beta) {
-  delete beta_;
-  beta_ = beta;
-  if (beta) {
-    set_has_beta();
-  } else {
-    clear_has_beta();
-  }
-}
-
-// -------------------------------------------------------------------
-
 // SmoothSparseThetaConfig
 
 // required int32 background_topics_count = 1;
@@ -4206,69 +4054,6 @@ inline ::google::protobuf::int32 SmoothSparsePhiConfig::background_topics_count(
 inline void SmoothSparsePhiConfig::set_background_topics_count(::google::protobuf::int32 value) {
   set_has_background_topics_count();
   background_topics_count_ = value;
-}
-
-// optional .artm.DoubleArray beta = 2;
-inline bool SmoothSparsePhiConfig::has_beta() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void SmoothSparsePhiConfig::set_has_beta() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void SmoothSparsePhiConfig::clear_has_beta() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void SmoothSparsePhiConfig::clear_beta() {
-  if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
-  clear_has_beta();
-}
-inline const ::artm::DoubleArray& SmoothSparsePhiConfig::beta() const {
-  return beta_ != NULL ? *beta_ : *default_instance_->beta_;
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_beta() {
-  set_has_beta();
-  if (beta_ == NULL) beta_ = new ::artm::DoubleArray;
-  return beta_;
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::release_beta() {
-  clear_has_beta();
-  ::artm::DoubleArray* temp = beta_;
-  beta_ = NULL;
-  return temp;
-}
-inline void SmoothSparsePhiConfig::set_allocated_beta(::artm::DoubleArray* beta) {
-  delete beta_;
-  beta_ = beta;
-  if (beta) {
-    set_has_beta();
-  } else {
-    clear_has_beta();
-  }
-}
-
-// repeated .artm.DoubleArray background_beta = 3;
-inline int SmoothSparsePhiConfig::background_beta_size() const {
-  return background_beta_.size();
-}
-inline void SmoothSparsePhiConfig::clear_background_beta() {
-  background_beta_.Clear();
-}
-inline const ::artm::DoubleArray& SmoothSparsePhiConfig::background_beta(int index) const {
-  return background_beta_.Get(index);
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_background_beta(int index) {
-  return background_beta_.Mutable(index);
-}
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::add_background_beta() {
-  return background_beta_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-SmoothSparsePhiConfig::background_beta() const {
-  return background_beta_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-SmoothSparsePhiConfig::mutable_background_beta() {
-  return &background_beta_;
 }
 
 // -------------------------------------------------------------------

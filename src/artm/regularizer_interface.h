@@ -28,7 +28,7 @@ class RegularizerInterface {
   virtual bool RegularizePhi(TopicModel* topic_model, double tau, 
     std::vector<std::pair<std::string, 
     std::shared_ptr<std::map<std::string, DictionaryEntry>> >> 
-    dictionaries_) { return true; }
+    dictionaries) { return true; }
 
   virtual RegularizerInternalState RetrieveInternalState() { 
     RegularizerInternalState temp_state;

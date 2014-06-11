@@ -24,8 +24,8 @@
   if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {    \
     BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));  \
   }                                                                                       \
-  regularizer.reset(new RegularizerType(regularizer_config));                 \
-}
+  regularizer.reset(new RegularizerType(regularizer_config));                             \
+}                                                                                         \
 
 namespace artm {
 namespace core {
@@ -71,22 +71,20 @@ void Instance::DisposeModel(ModelName model_name) {
 void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   std::string regularizer_name = config.name();
   artm::RegularizerConfig_Type regularizer_type = config.type();
-  std::string config_blob = config.config();
+  
+  std::string config_blob;
+  if (config.has_config()) {
+    config_blob = config.config();
+  }
   auto dictionary_name = config.dictionary_name();
   
   std::shared_ptr<artm::core::RegularizerInterface> regularizer;
 
   // add here new case if adding new regularizer
   switch (regularizer_type) {
-  case artm::RegularizerConfig_Type_DirichletTheta: {
+    case artm::RegularizerConfig_Type_DirichletTheta: {
       CREATE_OR_RECONFIGURE_REGULARIZER(::artm::DirichletThetaConfig,
                                         ::artm::core::regularizer::DirichletTheta);
-      break;
-    }
-
-    case artm::RegularizerConfig_Type_DirichletPhi: {
-      CREATE_OR_RECONFIGURE_REGULARIZER(::artm::DirichletPhiConfig,
-                                        ::artm::core::regularizer::DirichletPhi);
       break;
     }
 
@@ -102,13 +100,18 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
       break;
     }
 
+    case artm::RegularizerConfig_Type_DirichletPhi: { 
+      regularizer.reset(new ::artm::core::regularizer::DirichletPhi());
+      break; 
+    }
+
     default:
       BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));
   }
 
   regularizer->set_dictionary_name(dictionary_name);
   auto new_schema = schema_.get_copy();
-  new_schema->set_regularizer(config.name(), regularizer);
+  new_schema->set_regularizer(regularizer_name, regularizer);
   schema_.set(new_schema);
 }
 

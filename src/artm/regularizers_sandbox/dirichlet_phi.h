@@ -16,13 +16,12 @@ namespace regularizer {
 
 class DirichletPhi : public RegularizerInterface {
  public:
-  explicit DirichletPhi(const DirichletPhiConfig& config)
-    : config_(config) {}
 
-  virtual bool RegularizePhi(TopicModel* topic_model, double tau);
+  virtual bool RegularizePhi(TopicModel* topic_model, double tau, 
+    std::vector<std::pair<std::string, 
+    std::shared_ptr<std::map<std::string, DictionaryEntry>> >> 
+    dictionaries);
 
- private:
-  DirichletPhiConfig config_;
 };
 
 }  // namespace regularizer

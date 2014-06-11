@@ -47,6 +47,10 @@ stream.residuals.append(1)
 dirichlet_regularizer_config = messages_pb2.DirichletThetaConfig()
 alpha = dirichlet_regularizer_config.alpha.add()
 alpha.value.append(0.1)
+general_dirichlet_config = messages_pb2.RegularizerConfig()
+general_dirichlet_config.name = 'regularizer_1'
+general_dirichlet_config.config = dirichlet_regularizer_config.SerializeToString()
+general_dirichlet_config.type = 0
 
 # Create model_config
 model_config = messages_pb2.ModelConfig()
@@ -70,6 +74,7 @@ model_config_new.inner_iterations_count = 20
 dirichlet_regularizer_config_new = messages_pb2.DirichletThetaConfig()
 alpha = dirichlet_regularizer_config_new.alpha.add()
 alpha.value.append(0.2)
+general_dirichlet_config.config = dirichlet_regularizer_config_new.SerializeToString()
 
 #################################################################################
 # TEST SECTION
@@ -94,9 +99,9 @@ with library.CreateMasterComponent() as master_component:
   master_component.RemoveModel(model)
   model = master_component.CreateModel(model_config)
 
-  regularizer = master_component.CreateRegularizer('regularizer1', 0, dirichlet_regularizer_config)
+  regularizer = master_component.CreateRegularizer(general_dirichlet_config)
   master_component.RemoveRegularizer(regularizer)
-  regularizer = master_component.CreateRegularizer('regularizer1', 0, dirichlet_regularizer_config)
+  regularizer = master_component.CreateRegularizer(general_dirichlet_config)
 
   master_component.AddBatch(batch)
   model.Enable()
@@ -106,7 +111,7 @@ with library.CreateMasterComponent() as master_component:
   theta_matrix = master_component.GetThetaMatrix(model)
 
   # Test all 'reconfigure' methods
-  regularizer.Reconfigure(0, dirichlet_regularizer_config_new)
+  regularizer.Reconfigure(general_dirichlet_config)
   model.Reconfigure(model_config_new)
   master_component.Reconfigure(master_config_new)
 

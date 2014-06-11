@@ -55,6 +55,8 @@ class Instance : boost::noncopyable {
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
+  void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  void DisposeDictionary(const std::string& name);
   void ForceResetScores(ModelName model_name);
   void ForceSyncWithMemcached(ModelName model_name);
   void InvokePhiRegularizers();
@@ -83,6 +85,9 @@ class Instance : boost::noncopyable {
 
   // creates background threads for processing
   std::vector<std::shared_ptr<Processor> > processors_;
+
+  ThreadSafeCollectionHolder<std::string, std::map<std::string, DictionaryEntry> > 
+    dictionaries_;
 };
 
 typedef TemplateManager<Instance, InstanceConfig> InstanceManager;

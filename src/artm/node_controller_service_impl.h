@@ -39,6 +39,10 @@ class NodeControllerServiceImpl : public NodeControllerService {
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
+  virtual void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
 
  private:
   static const int kUndefinedId = -1;

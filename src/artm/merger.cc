@@ -24,7 +24,9 @@ namespace core {
 Merger::Merger(boost::mutex* merger_queue_lock,
                std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
                ThreadSafeHolder<InstanceSchema>* schema,
-               ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service)
+               ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service,
+               ThreadSafeCollectionHolder<std::string, std::map<std::string, 
+               DictionaryEntry> >* dictionaries)
     : lock_(),
       topic_model_(lock_),
       new_topic_model_(),
@@ -32,7 +34,8 @@ Merger::Merger(boost::mutex* merger_queue_lock,
       master_component_service_(master_component_service),
       merger_queue_lock_(merger_queue_lock),
       merger_queue_(merger_queue),
-      thread_() {
+      thread_(),
+      dictionaries_(dictionaries) {
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
   boost::thread t(&Merger::ThreadFunction, this);
@@ -104,7 +107,26 @@ void Merger::InvokePhiRegularizers() {
           auto tau_index = reg_name_iterator - reg_names.begin();
           double tau = reg_tau.Get(tau_index);
 
-          bool retval = regularizer->RegularizePhi(new_ttm.get(), tau);
+          auto dictionary_name = regularizer->dictionary_name();
+          std::vector<std::pair<std::string, std::shared_ptr<std::map<std::string, 
+            DictionaryEntry>> >> dictionaries;
+
+          for (auto dic_name_iterator = dictionary_name.begin(); 
+            dic_name_iterator != dictionary_name.end(); ++dic_name_iterator) {
+              int index = dic_name_iterator - dictionary_name.begin();
+              auto name = dictionary_name.Get(index);
+
+              if (!dictionaries_->has_key(name)) {
+                LOG(ERROR) << "Dictionary with name <" <<
+                  dic_name_iterator->c_str() << "> does not exist.\n";
+              } else {
+                auto dictionary_ptr = dictionaries_->get(name);
+                dictionaries.push_back(std::pair<std::string, std::shared_ptr<std::map<std::string, 
+                  DictionaryEntry> >>(name, dictionary_ptr));
+              }
+          }
+
+          bool retval = regularizer->RegularizePhi(new_ttm.get(), tau, dictionaries);
           if (!retval) {
             LOG(ERROR) << "Problems with type or number of parameters in Phi regularizer <" <<
               reg_name_iterator->c_str() <<
@@ -112,7 +134,7 @@ void Merger::InvokePhiRegularizers() {
           }
         } else {
           LOG(ERROR) << "Phi Regularizer with name <" <<
-            reg_name_iterator->c_str() << "> does not exist.";
+            reg_name_iterator->c_str() << "> does not exist.\n";
         }
       }
       topic_model_.set(model_name, new_ttm);

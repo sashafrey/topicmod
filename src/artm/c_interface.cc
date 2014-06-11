@@ -246,3 +246,28 @@ int ArtmInvokePhiRegularizers(int master_id) {
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
+
+int ArtmCreateDictionary(int master_id, int length,
+                          const char* dictionary_config_blob) {
+  return ArtmReconfigureDictionary(master_id, length, dictionary_config_blob);
+}
+
+int ArtmReconfigureDictionary(int master_id, int length,
+                               const char* dictionary_config_blob) {
+  try {
+    artm::DictionaryConfig config;
+    if (!config.ParseFromArray(dictionary_config_blob, length)) {
+      return ARTM_INVALID_MESSAGE;
+    }
+
+    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+    master_component->CreateOrReconfigureDictionary(config);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
+}
+
+void ArtmDisposeDictionary(int master_id, const char* dictionary_name) {
+  auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+  if (master_component == nullptr) return;
+  master_component->DisposeDictionary(dictionary_name);
+}

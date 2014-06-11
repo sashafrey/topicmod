@@ -40,7 +40,9 @@ Instance::Instance(int id, const InstanceConfig& config)
       processor_queue_(),
       merger_queue_lock_(),
       merger_queue_(),
-      merger_(&merger_queue_lock_, &merger_queue_, &schema_, &master_component_service_proxy_),
+      dictionaries_(lock_),
+      merger_(&merger_queue_lock_, &merger_queue_, &schema_, &master_component_service_proxy_, 
+        &dictionaries_),
       processors_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
@@ -70,7 +72,8 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   std::string regularizer_name = config.name();
   artm::RegularizerConfig_Type regularizer_type = config.type();
   std::string config_blob = config.config();
-
+  auto dictionary_name = config.dictionary_name();
+  
   std::shared_ptr<artm::core::RegularizerInterface> regularizer;
 
   // add here new case if adding new regularizer
@@ -103,6 +106,7 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
       BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));
   }
 
+  regularizer->set_dictionary_name(dictionary_name);
   auto new_schema = schema_.get_copy();
   new_schema->set_regularizer(config.name(), regularizer);
   schema_.set(new_schema);
@@ -112,6 +116,28 @@ void Instance::DisposeRegularizer(const std::string& name) {
   auto new_schema = schema_.get_copy();
   new_schema->clear_regularizer(name);
   schema_.set(new_schema);
+}
+
+void Instance::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
+  std::string name = config.name();
+  std::map<std::string, DictionaryEntry> map_dictionary;
+  auto entries = config.entry();
+    
+  for (auto entry_iterator = entries.begin(); entry_iterator != entries.end(); ++entry_iterator) {
+    int index = entry_iterator - entries.begin();
+    map_dictionary.insert(std::pair<std::string, DictionaryEntry>(
+      entry_iterator->key_token(), entries.Get(index)));
+  }
+
+  if (dictionaries_.has_key(name)) {
+    DisposeDictionary(name);
+  }
+  dictionaries_.set(name, std::make_shared<std::map<std::string, DictionaryEntry> >(
+    map_dictionary));
+}
+
+void Instance::DisposeDictionary(const std::string& name) {
+  dictionaries_.erase(name);
 }
 
 void Instance::ForceResetScores(ModelName model_name) {

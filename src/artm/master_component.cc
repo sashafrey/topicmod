@@ -58,6 +58,14 @@ void MasterComponent::DisposeRegularizer(const std::string& name) {
   client_interface_->DisposeRegularizer(name);
 }
 
+void MasterComponent::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
+  client_interface_->CreateOrReconfigureDictionary(config);
+}
+
+void MasterComponent::DisposeDictionary(const std::string& name) {
+  client_interface_->DisposeDictionary(name);
+}
+
 void MasterComponent::InvokePhiRegularizers() {
   client_interface_->InvokePhiRegularizers();
 }
@@ -255,6 +263,14 @@ void LocalClient::DisposeRegularizer(const std::string& name) {
   local_instance_->DisposeRegularizer(name);
 }
 
+void LocalClient::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
+  local_instance_->CreateOrReconfigureDictionary(config);
+}
+
+void LocalClient::DisposeDictionary(const std::string& name) {
+  local_instance_->DisposeDictionary(name);
+}
+
 void LocalClient::InvokePhiRegularizers() {
   local_instance_->InvokePhiRegularizers();
 }
@@ -344,6 +360,24 @@ void NetworkClientCollection::DisposeRegularizer(const std::string& name) {
     args.set_regularizer_name(name);
     Void response;
     client.DisposeRegularizer(args, &response);
+  });
+}
+
+void NetworkClientCollection::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    CreateOrReconfigureDictionaryArgs args;
+    args.mutable_dictionary()->CopyFrom(config);
+    Void response;
+    client.CreateOrReconfigureDictionary(args, &response);
+  });
+}
+
+void NetworkClientCollection::DisposeDictionary(const std::string& name) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    DisposeDictionaryArgs args;
+    args.set_dictionary_name(name);
+    Void response;
+    client.DisposeDictionary(args, &response);
   });
 }
 

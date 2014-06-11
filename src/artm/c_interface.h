@@ -42,7 +42,8 @@ extern "C" {
   DLL_PUBLIC int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
   DLL_PUBLIC void ArtmDisposeMasterComponent(int master_id);
 
-  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length, const char* config_blob);
+  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length, 
+                                          const char* config_blob);
   DLL_PUBLIC void ArtmDisposeNodeController(int node_controller_id);
 
   DLL_PUBLIC int ArtmCreateModel(int master_id, int length, const char* model_config_blob);
@@ -54,6 +55,10 @@ extern "C" {
   DLL_PUBLIC int ArtmReconfigureRegularizer(int master_id, int length,
                                             const char* regularizer_config_blob);
   DLL_PUBLIC void ArtmDisposeRegularizer(int master_id, const char* regularizer_name);
+
+  DLL_PUBLIC int ArtmCreateDictionary(int master_id, int length, const char* dictionary_blob);
+  DLL_PUBLIC int ArtmReconfigureDictionary(int master_id, int length, const char* dictionary_blob);
+  DLL_PUBLIC void ArtmDisposeDictionary(int master_id, const char* dictionary_name);
 
   DLL_PUBLIC int ArtmAddBatch(int master_id, int length, const char* batch_blob);
   DLL_PUBLIC int ArtmInvokeIteration(int master_id, int iterations_count);

@@ -33,7 +33,9 @@ class Merger : boost::noncopyable {
   Merger(boost::mutex* merger_queue_lock,
          std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
          ThreadSafeHolder<InstanceSchema>* schema,
-         ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service);
+         ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service,
+         ThreadSafeCollectionHolder<std::string, std::map<std::string, 
+           DictionaryEntry> >* dictionaries);
 
   ~Merger();
 
@@ -75,6 +77,9 @@ class Merger : boost::noncopyable {
   std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue_;
 
   ThreadSafeQueue<MergerTask> internal_task_queue_;
+
+  ThreadSafeCollectionHolder<std::string, std::map<std::string, DictionaryEntry> >* 
+    dictionaries_;
 
   boost::thread thread_;
   void ThreadFunction();

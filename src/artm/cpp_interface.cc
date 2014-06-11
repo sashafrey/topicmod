@@ -149,6 +149,27 @@ void Regularizer::Reconfigure(const RegularizerConfig& config) {
   config_.CopyFrom(config);
 }
 
+Dictionary::Dictionary(const MasterComponent& master_component, const DictionaryConfig& config)
+    : master_id_(master_component.id()),
+      config_(config) {
+  std::string dictionary_config_blob;
+  config.SerializeToString(&dictionary_config_blob);
+  HandleErrorCode(ArtmCreateDictionary(master_id_, dictionary_config_blob.size(),
+    StringAsArray(&dictionary_config_blob)));
+}
+
+Dictionary::~Dictionary() {
+  ArtmDisposeDictionary(master_id(), config_.name().c_str());
+}
+
+void Dictionary::Reconfigure(const DictionaryConfig& config) {
+  std::string dictionary_config_blob;
+  config.SerializeToString(&dictionary_config_blob);
+  HandleErrorCode(ArtmReconfigureDictionary(master_id(), dictionary_config_blob.size(),
+    StringAsArray(&dictionary_config_blob)));
+  config_.CopyFrom(config);
+}
+
 void MasterComponent::AddBatch(const Batch& batch) {
   std::string batch_blob;
   batch.SerializeToString(&batch_blob);

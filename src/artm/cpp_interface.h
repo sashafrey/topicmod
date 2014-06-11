@@ -18,6 +18,7 @@ namespace artm {
 class MasterComponent;
 class Model;
 class Regularizer;
+class Dictionary;
 
 // Exception handling in cpp_interface
 #define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
@@ -90,6 +91,22 @@ class Regularizer {
   int master_id_;
   RegularizerConfig config_;
   DISALLOW_COPY_AND_ASSIGN(Regularizer);
+};
+
+class Dictionary {
+ public:
+  Dictionary(const MasterComponent& master_component, const DictionaryConfig& config);
+  ~Dictionary();
+
+  void Reconfigure(const DictionaryConfig& config);
+
+  int master_id() const { return master_id_; }
+  const DictionaryConfig& config() const { return config_; }
+
+ private:
+  int master_id_;
+  DictionaryConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(Dictionary);
 };
 
 }  // namespace artm

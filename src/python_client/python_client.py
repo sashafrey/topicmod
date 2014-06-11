@@ -83,23 +83,13 @@ with library.CreateMasterComponent(master_config) as master_component:
     model_config.inner_iterations_count = inner_iterations_count
     score_ = model_config.score.add()
     score_.type = Score_Type_Perplexity
-
-    ################################################################################
-    regularizer_config_theta = messages_pb2.DirichletThetaConfig()
-    regularizer_name_theta = 'regularizer_theta'
-    model_config.regularizer_name.append(regularizer_name_theta)
-    model_config.regularizer_tau.append(0.1)
-    regularizer_theta = master_component.CreateRegularizer(
-      regularizer_name_theta,
-      RegularizerConfig_Type_DirichletTheta,
-      regularizer_config_theta)
-    
+ 
     model = master_component.CreateModel(model_config)
     for iter in range(0, outer_iteration_count):
         master_component.InvokeIteration(1)
         master_component.WaitIdle();
         topic_model = master_component.GetTopicModel(model)
-        model.InvokePhiRegularizers();
+        # model.InvokePhiRegularizers();
 
         print "Iter# = " + str(iter) + \
                 ", Items# = " + str(topic_model.items_processed) + \

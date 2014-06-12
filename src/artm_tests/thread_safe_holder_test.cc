@@ -1,6 +1,6 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
-#include "artm/thread_safe_holder.h"
+#include "artm/core/thread_safe_holder.h"
 
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>

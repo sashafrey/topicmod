@@ -25,9 +25,9 @@ namespace artm {
 namespace core {
 
 DataLoader::DataLoader(int id, const DataLoaderConfig& config)
-    : data_loader_id_(id),
-      lock_(),
-      config_(lock_, std::make_shared<DataLoaderConfig>(config)) {
+    : lock_(),
+      config_(lock_, std::make_shared<DataLoaderConfig>(config)),
+      data_loader_id_(id) {
 }
 
 int DataLoader::id() const {

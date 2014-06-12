@@ -1,6 +1,6 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
-#include "artm/test_mother.h"
+#include "artm_tests/test_mother.h"
 
 namespace artm {
 namespace test {

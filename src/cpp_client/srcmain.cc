@@ -2,6 +2,7 @@
 #include <cstring>
 #include <iostream>
 #include <iomanip>
+#include <vector>
 
 using namespace std;
 
@@ -22,12 +23,37 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string vocab_file = "";
   std::string docword_file = "";
 
+  bool is_network_mode = (instance_size > 1);
+
   MasterComponentConfig master_config;
-  master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
   master_config.set_processors_count(processors_count);
   master_config.set_disk_path(batches_disk_path);
-  master_config.set_cache_processor_output(true);
+  if (is_network_mode) {
+    master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Network);
+    master_config.set_master_component_create_endpoint("tcp://*:5555");
+    master_config.set_master_component_connect_endpoint("tcp://localhost:5555");
+  } else {
+    master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
+    master_config.set_cache_processor_output(true);
+  }
+
   MasterComponent master_component(master_config);
+
+  std::vector<std::shared_ptr<::artm::NodeController>> node_controller;
+  if (is_network_mode) {
+    for (int port = 5556; port < 5556 + instance_size; ++port) {
+      ::artm::NodeControllerConfig node_config;
+      node_config.set_master_component_connect_endpoint("tcp://localhost:5555");
+
+      std::stringstream port_str;
+      port_str << port;
+      node_config.set_node_controller_create_endpoint(std::string("tcp://*:") + port_str.str());
+      node_config.set_node_controller_connect_endpoint(std::string("tcp://localhost:") + port_str.str());
+      node_controller.push_back(std::make_shared<::artm::NodeController>(node_config));
+    }
+
+    master_component.Reconfigure(master_config);  // Push configuration to clients
+  }
 
   // Configure train and test streams
   Stream train_stream, test_stream;
@@ -116,17 +142,16 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
-    //model.InvokePhiRegularizers();
 
-    for (int inst = 0; inst < instance_size; ++inst) {
-      topic_model = master_component.GetTopicModel(model);
-
-      std::cout << "Iter #" << (iter + 1) << ": "
-                << "Inst #" << (inst + 1) << ": "
-                << "#Tokens = "  << topic_model->token_size() << ", "
-                << "#Items = " << topic_model->items_processed() << ", "
-                << "Perplexity = " << topic_model->scores().value(0) << endl;
+    if (!is_network_mode) {
+      // model.InvokePhiRegularizers();
     }
+
+    topic_model = master_component.GetTopicModel(model);
+    std::cout << "Iter #" << (iter + 1) << ": "
+              << "#Tokens = "  << topic_model->token_size() << ", "
+              << "#Items = " << topic_model->items_processed() << ", "
+              << "Perplexity = " << topic_model->scores().value(0) << endl;
   }
 
   std::cout << endl;
@@ -161,18 +186,24 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     }
   }
 
-  int docs_to_show = 7;
-  std::cout << "\nThetaMatrix (first " << docs_to_show << " documents):\n";
-  std::shared_ptr<ThetaMatrix> theta_matrix = master_component.GetThetaMatrix(model);
-  for (int j = 0; j < nTopics; ++ j) {
-    std::cout << "Topic" << j << ": ";
-    for (int i = 0; i < min(docs_to_show, theta_matrix->item_id_size()); ++i) {
-      float weight = theta_matrix->item_weights(i).value(j);
-      std::cout << std::fixed << std::setw( 6 ) << std::setprecision( 3 ) << weight << "\t";
-    }
+  if (!is_network_mode) {
+    int docs_to_show = 7;
+    std::cout << "\nThetaMatrix (first " << docs_to_show << " documents):\n";
+    std::shared_ptr<ThetaMatrix> theta_matrix = master_component.GetThetaMatrix(model);
+    for (int j = 0; j < nTopics; ++ j) {
+      std::cout << "Topic" << j << ": ";
+      for (int i = 0; i < min(docs_to_show, theta_matrix->item_id_size()); ++i) {
+        float weight = theta_matrix->item_weights(i).value(j);
+        std::cout << std::fixed << std::setw( 6 ) << std::setprecision( 3 ) << weight << "\t";
+      }
 
-    std::cout << "\n";
+      std::cout << "\n";
+    }
+  } else {
+    // std::cout << "GetThetaMatrix is not implemented in Network modus operandi."; // todo(alfrey)
   }
+
+  node_controller.clear();  // Destroy nodes; todo(alfrey): it should be OK to stop master before nodes.
 
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
   return elapsed_secs;
@@ -184,7 +215,7 @@ int main(int argc, char * argv[]) {
     return 0;
   }
 
-  int instance_size = 1;
+  int instance_size = 2;
   int processors_size = 2;
   cout << proc(argc, argv, processors_size, instance_size)
        << " sec. ================= " << endl << endl;

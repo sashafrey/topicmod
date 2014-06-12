@@ -1,0 +1,29 @@
+// Copyright 2014, Additive Regularization of Topic Models.
+
+// Author: Murat Apishev (great-mel@yandex.ru)
+
+#ifndef SRC_ARTM_REGULARIZER_SANDBOX_DIRICHLET_PHI_H_
+#define SRC_ARTM_REGULARIZER_SANDBOX_DIRICHLET_PHI_H_
+
+#include <vector>
+
+#include "artm/messages.pb.h"
+#include "artm/regularizer_interface.h"
+
+namespace artm {
+namespace regularizer_sandbox {
+
+class DirichletPhi : public RegularizerInterface {
+ public:
+
+  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau, 
+    std::vector<std::pair<std::string, 
+    std::shared_ptr<std::map<std::string, DictionaryEntry>> >> 
+    dictionaries);
+
+};
+
+}  // namespace regularizer_sandbox
+}  // namespace artm
+
+#endif  // SRC_ARTM_REGULARIZER_SANDBOX_DIRICHLET_PHI_H_

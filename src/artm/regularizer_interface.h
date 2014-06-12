@@ -10,10 +10,9 @@
 #include <memory>
 
 #include "artm/messages.pb.h"
-#include "artm/topic_model.h"
+#include "artm/core/topic_model.h"
 
 namespace artm {
-namespace core {
 
 class RegularizerInterface {
  public:
@@ -25,7 +24,7 @@ class RegularizerInterface {
                                int inner_iter,
                                double tau) { return true; }
 
-  virtual bool RegularizePhi(TopicModel* topic_model, double tau, 
+  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau, 
     std::vector<std::pair<std::string, 
     std::shared_ptr<std::map<std::string, DictionaryEntry>> >> 
     dictionaries) { return true; }
@@ -45,7 +44,6 @@ class RegularizerInterface {
   ::google::protobuf::RepeatedPtrField<std::string> dictionary_name_;
 };
 
-}  // namespace core
 }  // namespace artm
 
 #endif  // SRC_ARTM_REGULARIZER_INTERFACE_H_

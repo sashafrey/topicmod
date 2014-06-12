@@ -2,7 +2,7 @@
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6D1B2081-22AE-45C9-9507-9B41FEF0FBFE}</ProjectGuid>
+    <ProjectGuid>{615DE847-3EEA-4D7D-A4F5-A336733EE213}</ProjectGuid>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -19,27 +19,29 @@
   </PropertyGroup>
   <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
   <ItemGroup>
-    <ClCompile Include="$(SolutionDir)artm\cpp_interface.cc" />
-    <ClCompile Include="$(SolutionDir)artm\messages.pb.cc" />
-    <ClCompile Include="helpers.cc" />
-    <ClCompile Include="srcmain.cc" />
+    <ClCompile Include="$(RepositoryRoot)\3rdparty\gtest\src\gtest-all.cc" />
+    <ClCompile Include="$(RepositoryRoot)\3rdparty\gtest\src\gtest_main.cc" />
+    <ClCompile Include="..\artm\cpp_interface.cc" />
+	<ClCompile Include="..\artm_tests\boost_thread_test.cc" />
+    <ClCompile Include="..\artm_tests\cpp_interface_test.cc" />
+    <ClCompile Include="..\artm_tests\instance_manager_test.cc" />
+    <ClCompile Include="..\artm_tests\instance_test.cc" />
+    <ClCompile Include="..\artm_tests\nodes_connectivity_test.cc" />
+    <ClCompile Include="..\artm_tests\test_mother.cc" />
+    <ClCompile Include="..\artm_tests\thread_safe_holder_test.cc" />
+    <ClCompile Include="..\artm_tests\topic_model_test.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="$(SolutionDir)artm\cpp_interface.h" />
-    <ClInclude Include="$(SolutionDir)artm\messages.pb.h" />
-    <ClInclude Include="common.h" />
-    <ClInclude Include="doc_token_matrix.h" />
-    <ClInclude Include="doc_topic_matrix.h" />
-    <ClInclude Include="helpers.h" />
-    <ClInclude Include="token_topic_matrix.h" />
-    <ClInclude Include="vocab.h" />
+    <ClInclude Include="..\artm\cpp_interface.h" />
+    <ClInclude Include="..\artm_tests\test_mother.h" />
   </ItemGroup>
   <ItemDefinitionGroup>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>libprotobuf.lib;libglog.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(LIBZEROMQ);libartm.lib;librpcz.lib;libprotobuf.lib;libglog.lib;;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
+  <Import Project="$(RepositoryRoot)\utils\targets\Artm.CopyDependencies.props" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -51,7 +53,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\vsprojects\artm.vcxproj">
+    <ProjectReference Include="artm.vcxproj">
       <Project>{4288a4b1-b51e-4621-ad44-9f2cba7351be}</Project>
     </ProjectReference>
   </ItemGroup>

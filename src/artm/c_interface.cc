@@ -4,14 +4,15 @@
 
 #include <string>
 
-#include "artm/common.h"
-#include "artm/master_component.h"
-#include "artm/messages.pb.h"
-#include "artm/node_controller.h"
-#include "artm/exceptions.h"
+#include "glog/logging.h"
 
 #include "rpcz/rpc.hpp"
-#include "glog/logging.h"
+
+#include "artm/messages.pb.h"
+#include "artm/core/common.h"
+#include "artm/core/master_component.h"
+#include "artm/core/node_controller.h"
+#include "artm/core/exceptions.h"
 
 std::string message;
 void EnableLogging() {
@@ -102,7 +103,7 @@ int ArtmWaitIdle(int master_id) {
 int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob) {
   try {
     EnableLogging();
-            
+
     artm::MasterComponentConfig config;
     if (!config.ParseFromArray(config_blob, length)) {
       return ARTM_INVALID_MESSAGE;
@@ -182,7 +183,7 @@ void ArtmDisposeMasterComponent(int master_id) {
 int ArtmCreateNodeController(int node_controller_id, int length, const char* config_blob) {
   try {
     EnableLogging();
-    
+
     artm::NodeControllerConfig config;
     if (!config.ParseFromArray(config_blob, length)) {
       return ARTM_INVALID_MESSAGE;

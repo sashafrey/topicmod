@@ -16,6 +16,7 @@
 namespace artm {
 
 class MasterComponent;
+class NodeController;
 class Model;
 class Regularizer;
 class Dictionary;
@@ -49,11 +50,25 @@ class MasterComponent {
   void WaitIdle();
 
   const MasterComponentConfig& config() const { return config_; }
+  MasterComponentConfig* mutable_config() { return &config_; }
 
  private:
   int id_;
   MasterComponentConfig config_;
   DISALLOW_COPY_AND_ASSIGN(MasterComponent);
+};
+
+class NodeController {
+ public:
+  explicit NodeController(const NodeControllerConfig& config);
+  ~NodeController();
+
+  int id() const { return id_; }
+
+ private:
+  int id_;
+  NodeControllerConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(NodeController);
 };
 
 class Model {
@@ -70,7 +85,7 @@ class Model {
   const std::string& name() const { return config_.name(); }
 
   const ModelConfig& config() const { return config_; }
-
+  ModelConfig* mutable_config() { return &config_; }
  private:
   int master_id_;
   ModelConfig config_;
@@ -86,6 +101,7 @@ class Regularizer {
 
   int master_id() const { return master_id_; }
   const RegularizerConfig& config() const { return config_; }
+  RegularizerConfig* mutable_config() { return &config_; }
 
  private:
   int master_id_;

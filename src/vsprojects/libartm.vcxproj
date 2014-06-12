@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{5CDF866C-F13C-49A1-81C7-B51F7420AA09}</ProjectGuid>
+    <ProjectName>libartm</ProjectName>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup>
+    <RepositoryRoot>$(SolutionDir)..</RepositoryRoot>
+  </PropertyGroup>
+  <Import Project="$(RepositoryRoot)\utils\Artm.targets" />
+  <ItemGroup>
+    <ClCompile Include="..\artm\core\batch_manager.cc" />
+    <ClCompile Include="..\artm\core\data_loader.cc" />
+    <ClCompile Include="..\artm\core\generation.cc" />
+    <ClCompile Include="..\artm\core\helpers.cc" />
+    <ClCompile Include="..\artm\core\instance.cc" />
+    <ClCompile Include="..\artm\core\instance_schema.cc" />
+    <ClCompile Include="..\artm\core\internals.pb.cc" />
+    <ClCompile Include="..\artm\core\internals.rpcz.cc" />
+    <ClCompile Include="..\artm\core\master_component.cc" />
+    <ClCompile Include="..\artm\core\master_component_service_impl.cc" />
+    <ClCompile Include="..\artm\core\merger.cc" />
+    <ClCompile Include="..\artm\messages.pb.cc" />
+    <ClCompile Include="..\artm\core\node_controller.cc" />
+    <ClCompile Include="..\artm\core\node_controller_service_impl.cc" />
+    <ClCompile Include="..\artm\core\processor.cc" />
+    <ClCompile Include="..\artm\regularizer_sandbox\dirichlet_phi.cc" />
+    <ClCompile Include="..\artm\regularizer_sandbox\dirichlet_theta.cc" />
+    <ClCompile Include="..\artm\regularizer_sandbox\smooth_sparse_phi.cc" />
+    <ClCompile Include="..\artm\regularizer_sandbox\smooth_sparse_theta.cc" />
+    <ClCompile Include="..\artm\core\topic_model.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\artm\core\batch_manager.h" />
+    <ClInclude Include="..\artm\core\call_on_destruction.h" />
+    <ClInclude Include="..\artm\core\common.h" />
+    <ClInclude Include="..\artm\core\data_loader.h" />
+    <ClInclude Include="..\artm\core\exceptions.h" />
+    <ClInclude Include="..\artm\core\generation.h" />
+    <ClInclude Include="..\artm\core\helpers.h" />
+    <ClInclude Include="..\artm\core\instance.h" />
+    <ClInclude Include="..\artm\core\instance_schema.h" />
+    <ClInclude Include="..\artm\core\internals.pb.h" />
+    <ClInclude Include="..\artm\core\internals.rpcz.h" />
+    <ClInclude Include="..\artm\core\master_component.h" />
+    <ClInclude Include="..\artm\core\master_component_service_impl.h" />
+    <ClInclude Include="..\artm\core\merger.h" />
+    <ClInclude Include="..\artm\core\messages.pb.h" />
+    <ClInclude Include="..\artm\core\node_controller.h" />
+    <ClInclude Include="..\artm\core\node_controller_service_impl.h" />
+    <ClInclude Include="..\artm\core\processor.h" />
+    <ClInclude Include="..\artm\core\protobuf_helpers.h" />
+    <ClInclude Include="..\artm\core\template_manager.h" />
+    <ClInclude Include="..\artm\core\thread_safe_holder.h" />
+    <ClInclude Include="..\artm\core\topic_model.h" />
+    <ClInclude Include="..\artm\core\zmq_context.h" />
+    <ClInclude Include="..\artm\regularizer_interface.h" />
+    <ClInclude Include="..\artm\regularizer_sandbox\dirichlet_phi.h" />
+    <ClInclude Include="..\artm\regularizer_sandbox\dirichlet_theta.h" />
+    <ClInclude Include="..\artm\regularizer_sandbox\smooth_sparse_phi.h" />
+    <ClInclude Include="..\artm\regularizer_sandbox\smooth_sparse_theta.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />
+    <None Include="..\artm\core\internals.proto" />
+    <None Include="..\artm\messages.proto" />
+  </ItemGroup>
+  <ItemDefinitionGroup>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>$(LIBZEROMQ);libprotobuf.lib;libglog.lib;rpcz.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(RepositoryRoot)\utils\targets\Artm.CopyDependencies.props" />
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

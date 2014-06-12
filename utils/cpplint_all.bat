@@ -1,59 +1,64 @@
-REM call cpplint.bat ../src/artm/batch_manager.сс
-call cpplint.bat ../src/artm/boost_thread_test.cc
+REM **************** SOURCES (.cc) ****************
 call cpplint.bat ../src/artm/cpp_interface.cc
-call cpplint.bat ../src/artm/cpp_interface_unittest.cc
 call cpplint.bat ../src/artm/c_interface.cc
-call cpplint.bat ../src/artm/data_loader.cc
-call cpplint.bat ../src/artm/generation.cc
-call cpplint.bat ../src/artm/helpers.cc
-call cpplint.bat ../src/artm/instance.cc
-call cpplint.bat ../src/artm/instance_manager_test.cc
-call cpplint.bat ../src/artm/instance_schema.cc
-call cpplint.bat ../src/artm/instance_test.cc
-call cpplint.bat ../src/artm/master_component.cc
-call cpplint.bat ../src/artm/master_component_service_impl.cc
-call cpplint.bat ../src/artm/merger.cc
-call cpplint.bat ../src/artm/nodes_connectivity_test.cc
-call cpplint.bat ../src/artm/node_controller.cc
-call cpplint.bat ../src/artm/node_controller_service_impl.cc
-call cpplint.bat ../src/artm/processor.cc
-call cpplint.bat ../src/artm/test_mother.cc
-call cpplint.bat ../src/artm/thread_safe_holder_test.cc
-call cpplint.bat ../src/artm/topic_model.cc
-call cpplint.bat ../src/artm/topic_model_test.cc
 
-call cpplint.bat ../src/artm/regularizers_sandbox/dirichlet_phi.cc
-call cpplint.bat ../src/artm/regularizers_sandbox/dirichlet_theta.cc
-call cpplint.bat ../src/artm/regularizers_sandbox/smooth_sparse_phi.cc
-call cpplint.bat ../src/artm/regularizers_sandbox/smooth_sparse_theta.cc
+REM call cpplint.bat ../src/artm/core/batch_manager.сс
+call cpplint.bat ../src/artm/core/data_loader.cc
+call cpplint.bat ../src/artm/core/generation.cc
+call cpplint.bat ../src/artm/core/helpers.cc
+call cpplint.bat ../src/artm/core/instance.cc
+call cpplint.bat ../src/artm/core/instance_schema.cc
+call cpplint.bat ../src/artm/core/master_component.cc
+call cpplint.bat ../src/artm/core/master_component_service_impl.cc
+call cpplint.bat ../src/artm/core/merger.cc
+call cpplint.bat ../src/artm/core/node_controller.cc
+call cpplint.bat ../src/artm/core/node_controller_service_impl.cc
+call cpplint.bat ../src/artm/core/processor.cc
+call cpplint.bat ../src/artm/core/topic_model.cc
 
+call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_phi.cc
+call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_theta.cc
+call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.cc
+call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.cc
 
-REM call cpplint.bat ../src/artm/batch_manager.h
-call cpplint.bat ../src/artm/call_on_destruction.h
-call cpplint.bat ../src/artm/common.h
+call cpplint.bat ../src/artm_tests/boost_thread_test.cc
+call cpplint.bat ../src/artm_tests/cpp_interface_test.cc
+call cpplint.bat ../src/artm_tests/instance_manager_test.cc
+call cpplint.bat ../src/artm_tests/nodes_connectivity_test.cc
+call cpplint.bat ../src/artm_tests/instance_test.cc
+call cpplint.bat ../src/artm_tests/test_mother.cc
+call cpplint.bat ../src/artm_tests/thread_safe_holder_test.cc
+call cpplint.bat ../src/artm_tests/topic_model_test.cc
+
+REM **************** HEADERS (.h) ****************
+call cpplint.bat ../src/artm/regularizer_interface.h
 call cpplint.bat ../src/artm/cpp_interface.h
 call cpplint.bat ../src/artm/c_interface.h
-call cpplint.bat ../src/artm/data_loader.h
-call cpplint.bat ../src/artm/exceptions.h
-call cpplint.bat ../src/artm/generation.h
-call cpplint.bat ../src/artm/helpers.h
-call cpplint.bat ../src/artm/instance.h
-call cpplint.bat ../src/artm/instance_schema.h
-call cpplint.bat ../src/artm/master_component.h
-call cpplint.bat ../src/artm/master_component_service_impl.h
-call cpplint.bat ../src/artm/merger.h
-call cpplint.bat ../src/artm/node_controller.h
-call cpplint.bat ../src/artm/node_controller_service_impl.h
-call cpplint.bat ../src/artm/processor.h
-call cpplint.bat ../src/artm/protobuf_helpers.h
-call cpplint.bat ../src/artm/regularizer_interface.h
-call cpplint.bat ../src/artm/template_manager.h
-call cpplint.bat ../src/artm/test_mother.h
-call cpplint.bat ../src/artm/thread_safe_holder.h
-call cpplint.bat ../src/artm/topic_model.h
-call cpplint.bat ../src/artm/zmq_context.h
 
-call cpplint.bat ../src/artm/regularizers_sandbox/dirichlet_phi.h
-call cpplint.bat ../src/artm/regularizers_sandbox/dirichlet_theta.h
-call cpplint.bat ../src/artm/regularizers_sandbox/smooth_sparse_phi.h
-call cpplint.bat ../src/artm/regularizers_sandbox/smooth_sparse_theta.h
+REM call cpplint.bat ../src/artm/core/batch_manager.h
+call cpplint.bat ../src/artm/core/call_on_destruction.h
+call cpplint.bat ../src/artm/core/common.h
+call cpplint.bat ../src/artm/core/data_loader.h
+call cpplint.bat ../src/artm/core/exceptions.h
+call cpplint.bat ../src/artm/core/generation.h
+call cpplint.bat ../src/artm/core/helpers.h
+call cpplint.bat ../src/artm/core/instance.h
+call cpplint.bat ../src/artm/core/instance_schema.h
+call cpplint.bat ../src/artm/core/master_component.h
+call cpplint.bat ../src/artm/core/master_component_service_impl.h
+call cpplint.bat ../src/artm/core/merger.h
+call cpplint.bat ../src/artm/core/node_controller.h
+call cpplint.bat ../src/artm/core/node_controller_service_impl.h
+call cpplint.bat ../src/artm/core/processor.h
+call cpplint.bat ../src/artm/core/protobuf_helpers.h
+call cpplint.bat ../src/artm/core/template_manager.h
+call cpplint.bat ../src/artm/core/thread_safe_holder.h
+call cpplint.bat ../src/artm/core/topic_model.h
+call cpplint.bat ../src/artm/core/zmq_context.h
+
+call cpplint.bat ../src/artm_tests/test_mother.h
+
+call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_phi.h
+call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_theta.h
+call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.h
+call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.h

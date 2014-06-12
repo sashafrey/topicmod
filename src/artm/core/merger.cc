@@ -35,6 +35,7 @@ Merger::Merger(boost::mutex* merger_queue_lock,
       master_component_service_(master_component_service),
       merger_queue_lock_(merger_queue_lock),
       merger_queue_(merger_queue),
+      is_stopping(false),
       thread_() {
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
@@ -43,8 +44,8 @@ Merger::Merger(boost::mutex* merger_queue_lock,
 }
 
 Merger::~Merger() {
+  is_stopping = true;
   if (thread_.joinable()) {
-    thread_.interrupt();
     thread_.join();
   }
 }
@@ -128,6 +129,10 @@ void Merger::ThreadFunction() {
     Helpers::SetThreadName(-1, "Merger thread");
     LOG(INFO) << "Merger thread started";
     for (;;) {
+      if (is_stopping) {
+        break;
+      }
+
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
       // use boost::this_thread::interruption_point()

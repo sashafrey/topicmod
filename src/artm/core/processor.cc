@@ -20,19 +20,31 @@
 namespace artm {
 namespace core {
 
+Processor::Processor(boost::mutex* processor_queue_lock,
+    std::queue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
+    boost::mutex* merger_queue_lock,
+    std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+    const Merger& merger,
+    const ThreadSafeHolder<InstanceSchema>& schema)
+    : processor_queue_lock_(processor_queue_lock),
+      processor_queue_(processor_queue),
+      merger_queue_lock_(merger_queue_lock),
+      merger_queue_(merger_queue),
+      merger_(merger),
+      schema_(schema),
+      is_stopping(false),
+      thread_() {
+  // Keep this at the last action in constructor.
+  // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
+  boost::thread t(&Processor::ThreadFunction, this);
+  thread_.swap(t);
+}
+
 Processor::~Processor() {
+  is_stopping = true;
   if (thread_.joinable()) {
-    thread_.interrupt();
     thread_.join();
   }
-}
-
-void Processor::Interrupt() {
-  thread_.interrupt();
-}
-
-void Processor::Join() {
-  thread_.join();
 }
 
 Processor::TokenIterator::TokenIterator(
@@ -325,6 +337,10 @@ void Processor::ThreadFunction() {
     Helpers::SetThreadName(-1, "Processor thread");
     LOG(INFO) << "Processor thread started";
     for (;;) {
+      if (is_stopping) {
+        break;
+      }
+
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
       // use boost::this_thread::interruption_point()

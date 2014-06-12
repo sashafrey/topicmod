@@ -6,6 +6,7 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include <atomic>
 #include <map>
 #include <memory>
 #include <queue>
@@ -77,6 +78,7 @@ class Merger : boost::noncopyable {
 
   ThreadSafeQueue<MergerTask> internal_task_queue_;
 
+  mutable std::atomic<bool> is_stopping;
   boost::thread thread_;
   void ThreadFunction();
 

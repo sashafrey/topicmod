@@ -3,6 +3,7 @@
 #ifndef SRC_ARTM_CORE_PROCESSOR_H_
 #define SRC_ARTM_CORE_PROCESSOR_H_
 
+#include <atomic>
 #include <memory>
 #include <queue>
 #include <string>
@@ -33,23 +34,9 @@ class Processor : boost::noncopyable {
       boost::mutex* merger_queue_lock,
       std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
       const Merger& merger,
-      const ThreadSafeHolder<InstanceSchema>& schema) :
-    processor_queue_lock_(processor_queue_lock),
-    processor_queue_(processor_queue),
-    merger_queue_lock_(merger_queue_lock),
-    merger_queue_(merger_queue),
-    merger_(merger),
-    schema_(schema),
-    thread_() {
-    // Keep this at the last action in constructor.
-    // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
-    boost::thread t(&Processor::ThreadFunction, this);
-    thread_.swap(t);
-  }
+      const ThreadSafeHolder<InstanceSchema>& schema);
 
   ~Processor();
-  void Interrupt();
-  void Join();
 
  private:
   boost::mutex* processor_queue_lock_;
@@ -59,6 +46,7 @@ class Processor : boost::noncopyable {
   const Merger& merger_;
   const ThreadSafeHolder<InstanceSchema>& schema_;
 
+  mutable std::atomic<bool> is_stopping;
   boost::thread thread_;
   void ThreadFunction();
 

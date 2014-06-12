@@ -77,6 +77,7 @@ LocalDataLoader::LocalDataLoader(int id, const DataLoaderConfig& config)
       cache_(cache_lock_),
       batch_manager_lock_(),
       batch_manager_(&batch_manager_lock_),
+      is_stopping(false),
       thread_() {
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
@@ -85,18 +86,10 @@ LocalDataLoader::LocalDataLoader(int id, const DataLoaderConfig& config)
 }
 
 LocalDataLoader::~LocalDataLoader() {
+  is_stopping = true;
   if (thread_.joinable()) {
-    thread_.interrupt();
     thread_.join();
   }
-}
-
-void LocalDataLoader::Interrupt() {
-  thread_.interrupt();
-}
-
-void LocalDataLoader::Join() {
-  thread_.join();
 }
 
 void LocalDataLoader::AddBatch(const Batch& batch) {
@@ -250,6 +243,10 @@ void LocalDataLoader::ThreadFunction() {
     Helpers::SetThreadName(-1, "DataLoader thread");
     LOG(INFO) << "DataLoader thread started";
     for (;;) {
+      if (is_stopping) {
+        break;
+      }
+
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
       // use boost::this_thread::interruption_point()
@@ -312,6 +309,7 @@ RemoteDataLoader::RemoteDataLoader(int id, const DataLoaderConfig& config)
     : DataLoader(id, config),
       application_(nullptr),
       master_component_service_proxy_(nullptr),
+      is_stopping(false),
       thread_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
@@ -325,18 +323,10 @@ RemoteDataLoader::RemoteDataLoader(int id, const DataLoaderConfig& config)
 }
 
 RemoteDataLoader::~RemoteDataLoader() {
+  is_stopping = true;
   if (thread_.joinable()) {
-    thread_.interrupt();
     thread_.join();
   }
-}
-
-void RemoteDataLoader::Interrupt() {
-  thread_.interrupt();
-}
-
-void RemoteDataLoader::Join() {
-  thread_.join();
 }
 
 void RemoteDataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
@@ -370,6 +360,10 @@ void RemoteDataLoader::ThreadFunction() {
     Helpers::SetThreadName(-1, "DataLoader thread");
     LOG(INFO) << "DataLoader thread started";
     for (;;) {
+      if (is_stopping) {
+        break;
+      }
+
       // Sleep and check for interrupt.
       // To check for interrupt without sleep,
       // use boost::this_thread::interruption_point()
@@ -392,6 +386,8 @@ void RemoteDataLoader::ThreadFunction() {
       request.set_value(max_queue_size - processor_queue_size);
       try {
         master_component_service_proxy_->RequestBatches(request, &response);
+      } catch(const std::runtime_error& exception) {
+        LOG(ERROR) << exception.what();
       } catch(...) {
         LOG(ERROR) << "Unable to request batches from master.";
         return;

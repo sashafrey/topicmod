@@ -3,6 +3,7 @@
 #ifndef SRC_ARTM_CORE_DATA_LOADER_H_
 #define SRC_ARTM_CORE_DATA_LOADER_H_
 
+#include <atomic>
 #include <list>
 #include <set>
 #include <utility>
@@ -58,9 +59,7 @@ class LocalDataLoader : public DataLoader {
   void AddBatch(const Batch& batch);
   virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
 
-  void Interrupt();
   void InvokeIteration(int iterations_count);
-  void Join();
   void WaitIdle();
   void DisposeModel(ModelName model_name);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
@@ -81,6 +80,8 @@ class LocalDataLoader : public DataLoader {
   boost::mutex batch_manager_lock_;
   BatchManager batch_manager_;
 
+  mutable std::atomic<bool> is_stopping;
+
   // Keep all threads at the end of class members
   // (because the order of class members defines initialization order;
   // everything else should be initialized before creating threads).
@@ -95,8 +96,6 @@ class RemoteDataLoader : public DataLoader {
   virtual ~RemoteDataLoader();
   virtual void Reconfigure(const DataLoaderConfig& config);
   virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
-  void Interrupt();
-  void Join();
 
  private:
   friend class TemplateManager<DataLoader, DataLoaderConfig>;
@@ -106,6 +105,8 @@ class RemoteDataLoader : public DataLoader {
 
   std::unique_ptr<rpcz::application> application_;
   std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
+
+  mutable std::atomic<bool> is_stopping;
 
   // Keep all threads at the end of class members
   // (because the order of class members defines initialization order;

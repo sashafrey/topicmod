@@ -34,7 +34,7 @@ else()
   include_directories(${GLOG_INCLUDE_DIRS})
 endif()
 
-# includes
+# can it be avoided?
 include_directories(${3RD_PARTY_DIR}/rpcz/include)
 include_directories(${3RD_PARTY_DIR}/rpcz/src)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../)

@@ -1,4 +1,4 @@
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake_modules)
 
 if (NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE "Release")
@@ -16,8 +16,8 @@ find_package(ZeroMQ REQUIRED)
 include_directories(${ZeroMQ_INCLUDE_DIRS})
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${PROJECT_SOURCE_DIR}/include)
-include_directories(${PROJECT_BINARY_DIR}/src)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/src)
 
 cmake_minimum_required (VERSION 2.8.0)
 set(CMAKE_CXX_FLAGS

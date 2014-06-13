@@ -43,6 +43,7 @@ else()
   include_directories(${ZeroMQ_INCLUDE_DIRS})
 endif()
 
+# can it be avoided?
 include_directories(${3RD_PARTY_DIR}/rpcz/include)
 include_directories(${3RD_PARTY_DIR}/rpcz/src)
 

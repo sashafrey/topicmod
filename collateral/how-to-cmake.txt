@@ -1,0 +1,4 @@
+How to generate project files with CMake?
+1. mkdir build && cd build
+2. cmake ../
+3. Now all your project files are in build directory.

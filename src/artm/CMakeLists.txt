@@ -3,21 +3,9 @@ cmake_minimum_required(VERSION 2.8)
 set(LIBRARY_NAME ARTM)
 project(${LIBRARY_NAME})
 
-# for debug
-MESSAGE(STATUS "ARTMLib")
-MESSAGE(STATUS ${CMAKE_SOURCE_DIR})
-MESSAGE(STATUS ${LIBS_DIR})
-
-if(LIBS_DIR)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${LIBS_DIR})
-  MESSAGE(STATUS "GOOD")
-else()
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-  MESSAGE(STATUS "BAD")
-endif()
-
 # set compiler flags
-set(CMAKE_CXX_FLAGS "-g -Wall -pthread -fPIC -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -fPIC -std=c++11")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Werror")
 
 # find Boost
 find_package(Boost COMPONENTS thread system REQUIRED)
@@ -31,7 +19,7 @@ endif()
 # find Protobuf
 find_package(Protobuf REQUIRED)
 if(NOT PROTOBUF_FOUND)
-  message(SEND_ERROR "Failed to find protobuf")
+  message(SEND_ERROR "Failed to find protobuf.")
   return()
 else()
   include_directories(${PROTOBUF_INCLUDE_DIRS})
@@ -40,7 +28,7 @@ endif()
 # find Glog
 find_package(Glog REQUIRED)
 if(NOT GLOG_FOUND)
-  message(SEND_ERROR "Failed to find glog")
+  message(SEND_ERROR "Failed to find glog.")
   return()
 else()
   include_directories(${GLOG_INCLUDE_DIRS})
@@ -49,19 +37,17 @@ endif()
 # find ZeroMQ
 find_package(ZeroMQ REQUIRED)
 if(NOT ZeroMQ_FOUND)
-  message(SEND_ERROR "Failed to find zeromq")
+  message(SEND_ERROR "Failed to find zeromq.")
   return()
 else()
   include_directories(${ZeroMQ_INCLUDE_DIRS})
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR}/../)
 include_directories(${3RD_PARTY_DIR}/rpcz/include)
 include_directories(${3RD_PARTY_DIR}/rpcz/src)
-MESSAGE(STATUS ${3RD_PARTY_DIR})
 
 # make source list
-include_directories(${CMAKE_CURRENT_LIST_DIR})
+include_directories(${CMAKE_CURRENT_LIST_DIR}/../)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/core)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/regularizer) # which one?
 include_directories(${CMAKE_CURRENT_LIST_DIR}/regularizer_sandbox) # ??
@@ -75,12 +61,12 @@ set(SRC_LIST ${CUR_LIST}
              ${REG2_SRC_LIST})
 
 # library deps
-set(ARTM_LIB_DEPS  ${Boost_THREAD_LIBRARIES}
+set(ARTM_LIB_DEPS  rpcz
+                   ${Boost_THREAD_LIBRARIES}
                    ${Boost_SYSTEM_LIBRARIES}
                    ${PROTOBUF_LIBRARIES}
                    ${GLOG_LIBRARIES}
-                   ${ZeroMQ_LIBRARIES}
-                   ${LIBS_DIR}/librpcz.so)
+                   ${ZeroMQ_LIBRARIES})
 
 add_library(${LIBRARY_NAME} SHARED ${SRC_LIST})
 target_link_libraries(${LIBRARY_NAME} ${ARTM_LIB_DEPS})

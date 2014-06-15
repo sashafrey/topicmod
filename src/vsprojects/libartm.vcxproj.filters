@@ -61,7 +61,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\artm\core\messages.pb.h" />
     <ClInclude Include="..\artm\regularizer_interface.h" />
     <ClInclude Include="..\artm\regularizer_sandbox\dirichlet_phi.h">
       <Filter>regularizer_sandbox</Filter>
@@ -141,6 +140,10 @@
     <ClInclude Include="..\artm\core\zmq_context.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\artm\core\dictionary.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\messages.pb.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />

@@ -79,7 +79,6 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   if (config.has_config()) {
     config_blob = config.config();
   }
-  auto dictionary_name = config.dictionary_name();
   
   std::shared_ptr<artm::RegularizerInterface> regularizer;
 
@@ -88,6 +87,12 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
     case artm::RegularizerConfig_Type_DirichletTheta: {
       CREATE_OR_RECONFIGURE_REGULARIZER(::artm::DirichletThetaConfig,
                                         ::artm::regularizer_sandbox::DirichletTheta);
+      break;
+    }
+
+    case artm::RegularizerConfig_Type_DirichletPhi: {
+      CREATE_OR_RECONFIGURE_REGULARIZER(::artm::DirichletPhiConfig,
+                                        ::artm::regularizer_sandbox::DirichletPhi);
       break;
     }
 
@@ -103,16 +108,11 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
       break;
     }
 
-    case artm::RegularizerConfig_Type_DirichletPhi: { 
-      regularizer.reset(new ::artm::regularizer_sandbox::DirichletPhi());
-      break; 
-    }
-
     default:
       BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));
   }
 
-  regularizer->set_dictionary_name(dictionary_name);
+  regularizer->set_dictionaries(&dictionaries_);
   auto new_schema = schema_.get_copy();
   new_schema->set_regularizer(regularizer_name, regularizer);
   schema_.set(new_schema);
@@ -126,20 +126,19 @@ void Instance::DisposeRegularizer(const std::string& name) {
 
 void Instance::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
   std::string name = config.name();
-  std::map<std::string, DictionaryEntry> map_dictionary;
+  std::shared_ptr<DictionaryMap> map_dictionary_ptr;
   auto entries = config.entry();
     
   for (auto entry_iterator = entries.begin(); entry_iterator != entries.end(); ++entry_iterator) {
     int index = entry_iterator - entries.begin();
-    map_dictionary.insert(std::pair<std::string, DictionaryEntry>(
+    map_dictionary_ptr->insert(std::pair<std::string, DictionaryEntry>(
       entry_iterator->key_token(), entries.Get(index)));
   }
 
   if (dictionaries_.has_key(name)) {
     DisposeDictionary(name);
   }
-  dictionaries_.set(name, std::make_shared<std::map<std::string, DictionaryEntry> >(
-    map_dictionary));
+  dictionaries_.set(name, map_dictionary_ptr);
 }
 
 void Instance::DisposeDictionary(const std::string& name) {

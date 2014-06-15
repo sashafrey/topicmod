@@ -20,6 +20,7 @@
 #include "rpcz/sync_event.hpp"
 
 #include "artm/core/common.h"
+#include "artm/core/dictionary.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
 #include "artm/core/thread_safe_holder.h"
@@ -79,9 +80,6 @@ class Merger : boost::noncopyable {
   std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue_;
 
   ThreadSafeQueue<MergerTask> internal_task_queue_;
-
-  ThreadSafeCollectionHolder<std::string, std::map<std::string, DictionaryEntry> >* 
-    dictionaries_;
 
   mutable std::atomic<bool> is_stopping;
   boost::thread thread_;

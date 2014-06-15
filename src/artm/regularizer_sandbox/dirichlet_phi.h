@@ -9,18 +9,20 @@
 
 #include "artm/messages.pb.h"
 #include "artm/regularizer_interface.h"
+#include "artm/core/dictionary.h"
 
 namespace artm {
 namespace regularizer_sandbox {
 
 class DirichletPhi : public RegularizerInterface {
  public:
+  explicit DirichletPhi(const DirichletPhiConfig& config)
+    : config_(config) {}
 
-  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau, 
-    std::vector<std::pair<std::string, 
-    std::shared_ptr<std::map<std::string, DictionaryEntry>> >> 
-    dictionaries);
+  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau);
 
+ private:
+  DirichletPhiConfig config_;
 };
 
 }  // namespace regularizer_sandbox

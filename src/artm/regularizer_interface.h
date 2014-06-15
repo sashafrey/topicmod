@@ -10,6 +10,8 @@
 #include <memory>
 
 #include "artm/messages.pb.h"
+#include "artm/core/dictionary.h"
+#include "artm/core/thread_safe_holder.h"
 #include "artm/core/topic_model.h"
 
 namespace artm {
@@ -24,24 +26,24 @@ class RegularizerInterface {
                                int inner_iter,
                                double tau) { return true; }
 
-  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau, 
-    std::vector<std::pair<std::string, 
-    std::shared_ptr<std::map<std::string, DictionaryEntry>> >> 
-    dictionaries) { return true; }
+  virtual bool RegularizePhi(core::TopicModel* topic_model, double tau) { return true; }
 
   virtual RegularizerInternalState RetrieveInternalState() { 
     RegularizerInternalState temp_state;
     return temp_state;
   }
 
-  ::google::protobuf::RepeatedPtrField<std::string> dictionary_name() { return dictionary_name_; }
+  std::shared_ptr<core::DictionaryMap> dictionary(std::string dictionary_name) {
+    return dictionaries_->get(dictionary_name);
+  }
 
-  void set_dictionary_name(::google::protobuf::RepeatedPtrField<std::string>& dictionary_name) {
-    dictionary_name_.CopyFrom(dictionary_name);
+  void set_dictionaries(const core::ThreadSafeCollectionHolder<std::string, core::DictionaryMap>* 
+    dictionaries) {
+    dictionaries_ = dictionaries;
   }
 
  private:
-  ::google::protobuf::RepeatedPtrField<std::string> dictionary_name_;
+  const core::ThreadSafeCollectionHolder<std::string, core::DictionaryMap>* dictionaries_;
 };
 
 }  // namespace artm

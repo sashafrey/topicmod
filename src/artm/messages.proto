@@ -108,12 +108,16 @@ message RegularizerConfig {
   optional string name = 1;
   optional Type type = 2;
   optional bytes config = 3;
-  repeated string dictionary_name = 10;
 }
 
 // Configuration of a Dirichlet Theta regularizer
 message DirichletThetaConfig {
   repeated DoubleArray alpha = 1;
+}
+
+// Configuration of a Dirichlet Phi regularizer
+message DirichletPhiConfig {
+  optional string dictionary_name = 1;
 }
 
 // Configuration of a SmoothSparse Theta regularizer
@@ -125,6 +129,7 @@ message SmoothSparseThetaConfig {
 // Configuration of a SmoothSparse Phi regularizer
 message SmoothSparsePhiConfig {
   required int32 background_topics_count = 1;
+  optional string dictionary_name = 2;
 }
 
 message RegularizerInternalState {

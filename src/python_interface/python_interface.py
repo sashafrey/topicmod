@@ -79,8 +79,12 @@ class MasterComponent:
   def RemoveModel(self, model):
     model.__Dispose__()
 
-  def CreateRegularizer(self, config):
-    return Regularizer(self, config)
+  def CreateRegularizer(self, name, type, config):
+    general_config = messages_pb2.RegularizerConfig()
+    general_config.name = name
+    general_config.type = type
+    general_config.config = config.SerializeToString()
+    return Regularizer(self, general_config)
 
   def RemoveRegularizer(self, regularizer):
     regularizer.__Dispose__()
@@ -223,12 +227,18 @@ class Regularizer:
   def name(self):
     return self.config_.name
 
-  def Reconfigure(self, config):
-    regularizer_config_blob = config.SerializeToString()
+  def Reconfigure(self, type, config, dictionary_name):
+    general_config = messages_pb2.RegularizerConfig()
+    general_config.name = self.name()
+    general_config.type = type
+    general_config.config = config.SerializeToString()
+    general_config.dictionary_name = dictionary_name
+    
+    regularizer_config_blob = general_config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
     HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.master_id_,
                     len(regularizer_config_blob), regularizer_config_blob_p))
-    self.config_.CopyFrom(config)
+    self.config_.CopyFrom(general_config)
 
 #################################################################################
 

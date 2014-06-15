@@ -17,6 +17,7 @@
 #include "artm/messages.pb.h"
 
 #include "artm/core/common.h"
+#include "artm/core/dictionary.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
 #include "artm/core/template_manager.h"
@@ -86,8 +87,7 @@ class Instance : boost::noncopyable {
   // creates background threads for processing
   std::vector<std::shared_ptr<Processor> > processors_;
 
-  ThreadSafeCollectionHolder<std::string, std::map<std::string, DictionaryEntry> > 
-    dictionaries_;
+  ThreadSafeCollectionHolder<std::string, DictionaryMap> dictionaries_;
 };
 
 typedef TemplateManager<Instance, InstanceConfig> InstanceManager;

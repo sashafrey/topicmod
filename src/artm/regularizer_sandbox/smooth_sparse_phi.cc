@@ -9,10 +9,7 @@
 namespace artm {
 namespace regularizer_sandbox {
 
-bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, double tau,
-  std::vector<std::pair<std::string, 
-  std::shared_ptr<std::map<std::string, DictionaryEntry>> >> 
-  dictionaries) {
+bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, double tau) {
   // read the parameters from config
   const int topic_size = topic_model->topic_size();
   const int background_topics_count = config_.background_topics_count();
@@ -20,7 +17,18 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
   // control the correctness of parametres
   if (background_topics_count < 0 || background_topics_count > topic_size) return false;
 
-  if (dictionaries.begin() == dictionaries.end()) {
+  bool has_dictionary = true;
+  if (!config_.has_dictionary_name()) {
+    has_dictionary = false;
+  }
+
+  auto dictionary_ptr = dictionary(config_.dictionary_name());
+  if (has_dictionary && dictionary_ptr == nullptr) {
+    has_dictionary = false;
+  }
+
+
+  if (!has_dictionary) {
   // proceed the regularization
     for (int topic_id = 0; topic_id < topic_size; ++topic_id) {
       int usual_topics_count = topic_size - background_topics_count;
@@ -30,12 +38,9 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
       }
     }
   } else {
-    // NOTE! Only the first dictionary will be used as container for parameters
-
     // proceed the regularization
     for (int topic_id = 0; topic_id < topic_size; ++topic_id) {
       int usual_topics_count = topic_size - background_topics_count;
-      auto dictionary_ptr = dictionaries.begin()->second;
 
       // usual topics
       if (topic_id < usual_topics_count) {

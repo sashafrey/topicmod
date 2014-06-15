@@ -9,6 +9,7 @@
 
 #include "artm/messages.pb.h"
 #include "artm/regularizer_interface.h"
+#include "artm/core/dictionary.h"
 
 namespace artm {
 namespace regularizer_sandbox {
@@ -18,10 +19,7 @@ class SmoothSparsePhi : public RegularizerInterface {
   explicit SmoothSparsePhi(const SmoothSparsePhiConfig& config)
     : config_(config) {}
 
-  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau, 
-    std::vector<std::pair<std::string, 
-    std::shared_ptr<std::map<std::string, DictionaryEntry>> >> 
-    dictionaries);
+  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau);
 
  private:
   SmoothSparsePhiConfig config_;

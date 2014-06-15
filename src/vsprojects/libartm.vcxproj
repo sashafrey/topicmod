@@ -47,6 +47,7 @@
     <ClInclude Include="..\artm\core\call_on_destruction.h" />
     <ClInclude Include="..\artm\core\common.h" />
     <ClInclude Include="..\artm\core\data_loader.h" />
+    <ClInclude Include="..\artm\core\dictionary.h" />
     <ClInclude Include="..\artm\core\exceptions.h" />
     <ClInclude Include="..\artm\core\generation.h" />
     <ClInclude Include="..\artm\core\helpers.h" />
@@ -57,7 +58,6 @@
     <ClInclude Include="..\artm\core\master_component.h" />
     <ClInclude Include="..\artm\core\master_component_service_impl.h" />
     <ClInclude Include="..\artm\core\merger.h" />
-    <ClInclude Include="..\artm\core\messages.pb.h" />
     <ClInclude Include="..\artm\core\node_controller.h" />
     <ClInclude Include="..\artm\core\node_controller_service_impl.h" />
     <ClInclude Include="..\artm\core\processor.h" />
@@ -66,6 +66,7 @@
     <ClInclude Include="..\artm\core\thread_safe_holder.h" />
     <ClInclude Include="..\artm\core\topic_model.h" />
     <ClInclude Include="..\artm\core\zmq_context.h" />
+    <ClInclude Include="..\artm\messages.pb.h" />
     <ClInclude Include="..\artm\regularizer_interface.h" />
     <ClInclude Include="..\artm\regularizer_sandbox\dirichlet_phi.h" />
     <ClInclude Include="..\artm\regularizer_sandbox\dirichlet_theta.h" />

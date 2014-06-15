@@ -126,11 +126,12 @@ void Instance::DisposeRegularizer(const std::string& name) {
 
 void Instance::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
   std::string name = config.name();
-  std::shared_ptr<DictionaryMap> map_dictionary_ptr;
+  std::shared_ptr<DictionaryMap> map_dictionary_ptr(new DictionaryMap);
   auto entries = config.entry();
-    
+
   for (auto entry_iterator = entries.begin(); entry_iterator != entries.end(); ++entry_iterator) {
     int index = entry_iterator - entries.begin();
+
     map_dictionary_ptr->insert(std::pair<std::string, DictionaryEntry>(
       entry_iterator->key_token(), entries.Get(index)));
   }

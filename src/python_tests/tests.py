@@ -72,6 +72,7 @@ model_config_new = messages_pb2.ModelConfig()
 model_config_new.CopyFrom(model_config)
 model_config_new.inner_iterations_count = 20
 
+
 dictionary_config = messages_pb2.DictionaryConfig()
 dictionary_config.name = 'dictionary_1'
 
@@ -120,7 +121,7 @@ with library.CreateMasterComponent() as master_component:
   theta_matrix = master_component.GetThetaMatrix(model)
 
   # Test all 'reconfigure' methods
-  regularizer.Reconfigure('regularizer_1', 0, dirichlet_theta_config)
+  regularizer.Reconfigure(0, dirichlet_theta_config)
   model.Reconfigure(model_config_new)
   master_component.Reconfigure(master_config_new)
 

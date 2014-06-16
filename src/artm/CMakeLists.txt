@@ -4,8 +4,10 @@ set(LIBRARY_NAME ARTM)
 project(${LIBRARY_NAME})
 
 # set compiler flags
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -fPIC -std=c++11")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Werror")
+if(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -fPIC -std=c++11")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Werror")
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # find Boost
 find_package(Boost COMPONENTS thread system filesystem REQUIRED)
@@ -63,9 +65,9 @@ set(SRC_LIST ${CUR_LIST}
 
 # library deps
 set(ARTM_LIB_DEPS  rpcz
-                   ${Boost_THREAD_LIBRARIES}
-                   ${Boost_SYSTEM_LIBRARIES}
-                   ${Boost_FILESYSTEM_LIBRARIES}
+                   #${Boost_THREAD_LIBRARIES}
+                   #${Boost_SYSTEM_LIBRARIES}
+                   #${Boost_FILESYSTEM_LIBRARIES}
                    ${PROTOBUF_LIBRARIES}
                    ${GLOG_LIBRARIES}
                    ${ZeroMQ_LIBRARIES})

@@ -4,8 +4,10 @@ set(EXEC_NAME cpp_client)
 project(${EXEC_NAME})
 
 # compiler oprions
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Werror")
+if(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Werror")
+endif(CMAKE_COMPILER_IS_GNUCXX)
 
 # find Boost
 find_package(Boost COMPONENTS filesystem system REQUIRED)
@@ -46,8 +48,8 @@ aux_source_directory(. SRC_LIST)
 # library deps
 set(CPP_CLIENT_LIB_DEPS  ARTM
                          rpcz
-                         ${Boost_FILESYSTEM_LIBRARIES}
-                         ${Boost_SYSTEM_LIBRARIES}
+                         #${Boost_FILESYSTEM_LIBRARIES}
+                         #${Boost_SYSTEM_LIBRARIES}
                          ${PROTOBUF_LIBRARIES}
                          ${GLOG_LIBRARIES}
                          ${ZeroMQ_LIBRARIES})

@@ -48,8 +48,8 @@ aux_source_directory(. SRC_LIST)
 # library deps
 set(CPP_CLIENT_LIB_DEPS  ARTM
                          rpcz
-                         #${Boost_FILESYSTEM_LIBRARIES}
-                         #${Boost_SYSTEM_LIBRARIES}
+                         ${Boost_FILESYSTEM_LIBRARIES}
+                         ${Boost_SYSTEM_LIBRARIES}
                          ${PROTOBUF_LIBRARIES}
                          ${GLOG_LIBRARIES}
                          ${ZeroMQ_LIBRARIES})

@@ -65,9 +65,9 @@ set(SRC_LIST ${CUR_LIST}
 
 # library deps
 set(ARTM_LIB_DEPS  rpcz
-                   #${Boost_THREAD_LIBRARIES}
-                   #${Boost_SYSTEM_LIBRARIES}
-                   #${Boost_FILESYSTEM_LIBRARIES}
+                   ${Boost_THREAD_LIBRARIES}
+                   ${Boost_SYSTEM_LIBRARIES}
+                   ${Boost_FILESYSTEM_LIBRARIES}
                    ${PROTOBUF_LIBRARIES}
                    ${GLOG_LIBRARIES}
                    ${ZeroMQ_LIBRARIES})

@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <memory>
+#include <string>
 
 #include "artm/messages.pb.h"
 #include "artm/core/dictionary.h"
@@ -33,11 +34,11 @@ class RegularizerInterface {
     return temp_state;
   }
 
-  std::shared_ptr<core::DictionaryMap> dictionary(std::string dictionary_name) {
+  std::shared_ptr<core::DictionaryMap> dictionary(const std::string& dictionary_name) {
     return dictionaries_->get(dictionary_name);
   }
 
-  void set_dictionaries(const core::ThreadSafeCollectionHolder<std::string, core::DictionaryMap>* 
+  void set_dictionaries(const core::ThreadSafeCollectionHolder<std::string, core::DictionaryMap>*
     dictionaries) {
     dictionaries_ = dictionaries;
   }

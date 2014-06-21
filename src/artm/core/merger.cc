@@ -28,7 +28,7 @@ Merger::Merger(boost::mutex* merger_queue_lock,
                std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
                ThreadSafeHolder<InstanceSchema>* schema,
                ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service,
-               ThreadSafeCollectionHolder<std::string, std::map<std::string, 
+               ThreadSafeCollectionHolder<std::string, std::map<std::string,
                DictionaryEntry> >* dictionaries)
     : lock_(),
       topic_model_(lock_),

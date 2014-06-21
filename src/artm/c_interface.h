@@ -42,7 +42,7 @@ extern "C" {
   DLL_PUBLIC int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
   DLL_PUBLIC void ArtmDisposeMasterComponent(int master_id);
 
-  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length, 
+  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length,
                                           const char* config_blob);
   DLL_PUBLIC void ArtmDisposeNodeController(int node_controller_id);
 

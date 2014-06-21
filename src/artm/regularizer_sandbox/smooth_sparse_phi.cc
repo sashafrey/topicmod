@@ -3,6 +3,7 @@
 // Author: Murat Apishev (great-mel@yandex.ru)
 
 #include <vector>
+#include <string>
 
 #include "artm/regularizer_sandbox/smooth_sparse_phi.h"
 
@@ -34,6 +35,8 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
       int usual_topics_count = topic_size - background_topics_count;
       for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
         float value = static_cast<float>(tau * 1);
+        auto topic_iterator = topic_model->GetTopicWeightIterator(token_id);
+        value += static_cast<float>((topic_iterator.GetRegularizer())[topic_id]);
         topic_model->SetRegularizerWeight(token_id, topic_id, value);
       }
     }
@@ -46,19 +49,21 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
       if (topic_id < usual_topics_count) {
         for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
           std::string token = topic_model->token(token_id);
-        
+
           float coef = 0;
           if (dictionary_ptr->find(token) != dictionary_ptr->end()) {
             coef = dictionary_ptr->find(token)->second.value();
           }
 
           float value = static_cast<float>(tau * coef);
+          auto topic_iterator = topic_model->GetTopicWeightIterator(token_id);
+          value += static_cast<float>((topic_iterator.GetRegularizer())[topic_id]);
           topic_model->SetRegularizerWeight(token_id, topic_id, value);
         }
       } else {  // background topics
         for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
           std::string token = topic_model->token(token_id);
-        
+
           float coef = 0;
           if (dictionary_ptr->find(token) != dictionary_ptr->end()) {
             int index = topic_id - usual_topics_count;
@@ -66,6 +71,8 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
           }
 
           float value = static_cast<float>(tau * coef);
+          auto topic_iterator = topic_model->GetTopicWeightIterator(token_id);
+          value += static_cast<float>((topic_iterator.GetRegularizer())[topic_id]);
           topic_model->SetRegularizerWeight(token_id, topic_id, value);
         }
       }

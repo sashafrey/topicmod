@@ -74,12 +74,12 @@ void Instance::DisposeModel(ModelName model_name) {
 void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   std::string regularizer_name = config.name();
   artm::RegularizerConfig_Type regularizer_type = config.type();
-  
+
   std::string config_blob;
   if (config.has_config()) {
     config_blob = config.config();
   }
-  
+
   std::shared_ptr<artm::RegularizerInterface> regularizer;
 
   // add here new case if adding new regularizer
@@ -126,7 +126,7 @@ void Instance::DisposeRegularizer(const std::string& name) {
 
 void Instance::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
   std::string name = config.name();
-  std::shared_ptr<DictionaryMap> map_dictionary_ptr(new DictionaryMap);
+  std::shared_ptr<DictionaryMap> map_dictionary_ptr(new DictionaryMap());
   auto entries = config.entry();
 
   for (auto entry_iterator = entries.begin(); entry_iterator != entries.end(); ++entry_iterator) {

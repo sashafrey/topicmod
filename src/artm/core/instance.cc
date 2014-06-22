@@ -122,8 +122,12 @@ void Instance::ForceResetScores(ModelName model_name) {
   merger_->ForceResetScores(model_name);
 }
 
-void Instance::ForceSyncWithMemcached(ModelName model_name) {
-  merger_->ForceSyncWithMemcached(model_name);
+void Instance::ForcePullTopicModel() {
+  merger_->ForcePullTopicModel();
+}
+
+void Instance::ForcePushTopicModelIncrement() {
+  merger_->ForcePushTopicModelIncrement();
 }
 
 void Instance::InvokePhiRegularizers() {

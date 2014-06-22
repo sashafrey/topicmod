@@ -215,7 +215,7 @@ int main(int argc, char * argv[]) {
     return 0;
   }
 
-  int instance_size = 2;
+  int instance_size = 1;
   int processors_size = 2;
   cout << proc(argc, argv, processors_size, instance_size)
        << " sec. ================= " << endl << endl;

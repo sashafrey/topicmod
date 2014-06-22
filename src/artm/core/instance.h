@@ -56,7 +56,8 @@ class Instance : boost::noncopyable {
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
   void ForceResetScores(ModelName model_name);
-  void ForceSyncWithMemcached(ModelName model_name);
+  void ForcePullTopicModel();
+  void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();
 
  private:

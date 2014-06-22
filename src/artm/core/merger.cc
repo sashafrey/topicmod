@@ -238,7 +238,13 @@ void Merger::PullTopicModel() {
       if (inc_ttm == topic_model_inc_.end())
        return;  // model had been disposed during ongoing processing;
 
-      auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
+      // Old mode: accumulate counters in topic model forever
+      // auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
+
+      // New mode: accumulate counters only accross one iteration, then re-calculate Phi from scratch.
+      auto new_ttm = std::make_shared<::artm::core::TopicModel>(
+        old_ttm->model_name(), old_ttm->topic_size(), old_ttm->score_size());
+
       new_ttm->ApplyDiff(*inc_ttm->second);
       topic_model_.set(model_name, new_ttm);
       topic_model_inc_.erase(model_name);

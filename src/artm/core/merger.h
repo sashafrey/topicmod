@@ -69,7 +69,7 @@ class Merger : boost::noncopyable {
 
   mutable boost::mutex lock_;
   ThreadSafeCollectionHolder<ModelName, TopicModel> topic_model_;
-  std::map<ModelName, std::shared_ptr<TopicModel>> new_topic_model_;
+  std::map<ModelName, std::shared_ptr<TopicModel>> topic_model_inc_;
   ThreadSafeHolder<InstanceSchema>* schema_;
   ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service_;
 

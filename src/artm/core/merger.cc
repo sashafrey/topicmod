@@ -30,7 +30,7 @@ Merger::Merger(boost::mutex* merger_queue_lock,
                ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service)
     : lock_(),
       topic_model_(lock_),
-      new_topic_model_(),
+      topic_model_inc_(),
       schema_(schema),
       master_component_service_(master_component_service),
       merger_queue_lock_(merger_queue_lock),
@@ -145,7 +145,7 @@ void Merger::ThreadFunction() {
         if (internal_task_queue_.try_pop(&merger_task)) {
           switch (merger_task.task_type) {
             case kDisposeModel:
-              new_topic_model_.erase(merger_task.model_name);
+              topic_model_inc_.erase(merger_task.model_name);
               break;
             case kForceSyncWithMemcached:
               SyncWithMemcached(merger_task.model_name);
@@ -191,14 +191,15 @@ void Merger::ThreadFunction() {
           auto cur_ttm = topic_model_.get(model_name);
           if (cur_ttm.get() == nullptr) {
             // model had been disposed during ongoing processing;
-            continue;  // for (int modex_index = 0; ...
+            continue;  // for (int model_index = 0; ...
           }
 
-          auto iter = new_topic_model_.find(model_name);
-          if (iter == new_topic_model_.end()) {
-            new_topic_model_.insert(std::make_pair(
-              model_name, std::make_shared<::artm::core::TopicModel>(*cur_ttm)));
-            iter = new_topic_model_.find(model_name);
+          auto iter = topic_model_inc_.find(model_name);
+          if (iter == topic_model_inc_.end()) {
+            topic_model_inc_.insert(std::make_pair(
+              model_name, std::make_shared<::artm::core::TopicModel>(
+                cur_ttm->model_name(), cur_ttm->topic_size(), cur_ttm->score_size())));
+            iter = topic_model_inc_.find(model_name);
           }
 
           iter->second->ApplyDiff(model_increment);
@@ -218,7 +219,7 @@ void Merger::ThreadFunction() {
 void Merger::SyncWithMemcached(ModelName model_name) {
   std::vector<ModelName> model_names;
   if (model_name.empty()) {
-    for (auto iter = new_topic_model_.begin(); iter != new_topic_model_.end(); ++iter) {
+    for (auto iter = topic_model_inc_.begin(); iter != topic_model_inc_.end(); ++iter) {
       model_names.push_back(iter->first);
     }
   }
@@ -230,17 +231,19 @@ void Merger::SyncWithMemcached(ModelName model_name) {
     if (old_ttm.get() == nullptr)
       return;  // model had been disposed during ongoing processing;
 
-    auto new_ttm = new_topic_model_.find(model_name);
-    if (new_ttm == new_topic_model_.end())
+    auto inc_ttm = topic_model_inc_.find(model_name);
+    if (inc_ttm == topic_model_inc_.end())
       return;  // model had been disposed during ongoing processing;
 
     std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
     if (master_component_service == nullptr) {
-      topic_model_.set(model_name, new_ttm->second);
-      new_topic_model_.erase(model_name);
+      auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
+      new_ttm->ApplyDiff(*inc_ttm->second);
+      topic_model_.set(model_name, new_ttm);
+      topic_model_inc_.erase(model_name);
     } else {
       ModelIncrement model_increment;
-      new_ttm->second->CalculateDiff(*old_ttm, &model_increment);
+      inc_ttm->second->RetrieveModelIncrement(&model_increment);
 
       try {
         ::artm::TopicModel reply;
@@ -249,7 +252,7 @@ void Merger::SyncWithMemcached(ModelName model_name) {
           new ::artm::core::TopicModel(reply));
 
         topic_model_.set(model_name, new_global_ttm);
-        new_topic_model_.erase(model_name);
+        topic_model_inc_.erase(model_name);
       } catch(const rpcz::rpc_error&) {
         LOG(ERROR) << "Merger failed to send updates to master component service.";
         throw;

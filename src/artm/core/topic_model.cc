@@ -106,38 +106,22 @@ void TopicModel::Clear(ModelName model_name, int topics_count, int scores_count)
   n_t_.resize(topics_count);
 }
 
-void TopicModel::CalculateDiff(const ::artm::core::TopicModel& rhs, ::artm::core::ModelIncrement* diff) const {
-  if (rhs.topic_size() != topic_size()) {
-    std::stringstream message;
-    message << "TopicModel::CalculateDiff fails due to mismatch: ";
-    message << "rhs.topic_size() == "  << rhs.topic_size() << ", ";
-    message << "this->topic_size() == " << topic_size();
-    BOOST_THROW_EXCEPTION(std::invalid_argument(message.str()));
-  }
-
+void TopicModel::RetrieveModelIncrement(::artm::core::ModelIncrement* diff) const {
   diff->set_model_name(model_name_);
   diff->set_topics_count(topic_size());
-  diff->set_items_processed(items_processed() - rhs.items_processed());
+  diff->set_items_processed(items_processed());
 
   for (int token_index = 0; token_index < token_size(); ++token_index) {
-    if (rhs.has_token(token(token_index))) {
-      diff->add_token(token(token_index));
-      ::artm::FloatArray* token_increment = diff->add_token_increment();
-      for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
-        token_increment->add_value(n_wt_[token_index][topic_index] - rhs.n_wt_[token_index][topic_index]);
-      }
-    } else {
-      diff->add_discovered_token(token(token_index));
+    diff->add_token(token(token_index));
+    ::artm::FloatArray* token_increment = diff->add_token_increment();
+    for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
+      token_increment->add_value(n_wt_[token_index][topic_index]);
     }
   }
 
-  if (score_size() == rhs.score_size()) {
-    for (int score_index = 0; score_index < score_size(); ++score_index) {
-      diff->add_score(scores_[score_index] - rhs.scores_[score_index]);
-      diff->add_score_norm(scores_norm_[score_index] - rhs.scores_norm_[score_index]);
-    }
-  } else {
-    LOG(WARNING) << "TopicModel::CalculateDiff failed to diff scores.";
+  for (int score_index = 0; score_index < score_size(); ++score_index) {
+    diff->add_score(scores_[score_index]);
+    diff->add_score_norm(scores_norm_[score_index]);
   }
 }
 
@@ -171,6 +155,40 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
 
     for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
       this->IncreaseTokenWeight(token, topic_index, counters.value(topic_index));
+    }
+  }
+}
+
+void TopicModel::ApplyDiff(const ::artm::core::TopicModel& diff) {
+  this->IncreaseItemsProcessed(diff.items_processed());
+  for (int score_index = 0; score_index < diff.score_size(); ++score_index) {
+    this->IncreaseScores(score_index, diff.score_not_normalized(score_index),
+                         diff.score_normalizer(score_index));
+  }
+
+  // Add new tokens discovered by processor
+  for (int token_index = 0;
+       token_index < diff.token_size();
+       ++token_index) {
+    std::string new_token = diff.token(token_index);
+    if (!this->has_token(new_token)) {
+      this->AddToken(new_token);
+    }
+  }
+
+  int topics_count = this->topic_size();
+
+  for (int token_index = 0;
+       token_index < diff.token_size();
+       ++token_index) {
+    const float* counters = diff.n_wt_[token_index];
+    const std::string& token = diff.token(token_index);
+    if (!has_token(token)) {
+      this->AddToken(token, false);
+    }
+
+    for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
+      this->IncreaseTokenWeight(token, topic_index, counters[topic_index]);
     }
   }
 }

@@ -55,10 +55,6 @@ protobuf_generate_cpp(ARTM_PB_SRCS ARTM_PB_HEADERS
 )
 set(ARTM_PROTO_SOURCES ${ARTM_PB_SRCS} ${ARTM_PB_HEADERS})
 
-#protobuf_generate_cpp(ARTM_CORE_PB_SRCS ARTM_CORE_PB_HEADERS
-#)
-#set(ARTM_CORE_PROTO_SOURCES ${ARTM_CORE_PB_SRCS} ${ARTM_CORE_PB_HEADERS})
-
 # make source list
 include_directories(${CMAKE_BINARY_DIR}/src)
 include_directories(${CMAKE_BINARY_DIR}/src/artm)
@@ -77,7 +73,6 @@ set(SRC_LIST ${CUR_LIST}
              ${REG_SRC_LIST} 
              ${REG2_SRC_LIST}
              ${ARTM_PROTO_SOURCES}
-             #${ARTM_CORE_PROTO_SOURCES}
 )
 
 # library deps

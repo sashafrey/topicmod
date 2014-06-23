@@ -14,9 +14,10 @@
 #include "boost/uuid/uuid.hpp"
 
 #include "artm/messages.pb.h"
+#include "artm/internals.pb.h"
 
 #include "artm/core/common.h"
-#include "artm/core/internals.pb.h"
+#include "artm/internals.pb.h"
 #include "artm/core/regularizable.h"
 
 namespace artm {

@@ -14,8 +14,9 @@
 #include "boost/uuid/uuid.hpp"
 
 #include "artm/messages.pb.h"
+#include "artm/internals.pb.h"
+#include "artm/core/batch_manager.h"
 #include "artm/core/common.h"
-#include "artm/core/internals.pb.h"
 #include "artm/core/template_manager.h"
 #include "artm/core/thread_safe_holder.h"
 

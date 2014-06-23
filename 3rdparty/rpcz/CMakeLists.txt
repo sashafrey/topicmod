@@ -1,3 +1,4 @@
+project(RPCZ_GENERIC)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake_modules)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -16,8 +17,8 @@ find_package(ZeroMQ REQUIRED)
 include_directories(${ZeroMQ_INCLUDE_DIRS})
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(${CMAKE_CURRENT_LIST_DIR}/include)
-include_directories(${CMAKE_CURRENT_LIST_DIR}/src)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_BINARY_DIR}/src)
 
 cmake_minimum_required (VERSION 2.8.0)
 if(CMAKE_COMPILER_IS_GNUCXX)

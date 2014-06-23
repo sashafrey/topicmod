@@ -15,10 +15,10 @@
 #include "rpcz/service.hpp"
 
 #include "artm/messages.pb.h"
+#include "artm/internals.pb.h"
 
 #include "artm/core/template_manager.h"
 #include "artm/core/thread_safe_holder.h"
-#include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
 
 namespace artm {

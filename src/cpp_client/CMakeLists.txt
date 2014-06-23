@@ -43,6 +43,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/../)
 
 # make source list
 include_directories(${CMAKE_CURRENT_LIST_DIR})
+include_directories(${CMAKE_BINARY_DIR}/src)
 aux_source_directory(. SRC_LIST)
 
 # library deps

@@ -19,8 +19,9 @@
 
 #include "rpcz/sync_event.hpp"
 
+#include "artm/internals.pb.h"
+
 #include "artm/core/common.h"
-#include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
 #include "artm/core/thread_safe_holder.h"
 

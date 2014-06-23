@@ -47,10 +47,24 @@ endif()
 
 # can it be avoided?
 include_directories(${3RD_PARTY_DIR}/rpcz/include)
-include_directories(${3RD_PARTY_DIR}/rpcz/src)
+include_directories(${CMAKE_BINARY_DIR}/3rdparty/rpcz/src)
+
+protobuf_generate_cpp(ARTM_PB_SRCS ARTM_PB_HEADERS
+    proto/messages.proto
+    proto/internals.proto
+)
+set(ARTM_PROTO_SOURCES ${ARTM_PB_SRCS} ${ARTM_PB_HEADERS})
+
+#protobuf_generate_cpp(ARTM_CORE_PB_SRCS ARTM_CORE_PB_HEADERS
+#)
+#set(ARTM_CORE_PROTO_SOURCES ${ARTM_CORE_PB_SRCS} ${ARTM_CORE_PB_HEADERS})
 
 # make source list
-include_directories(${CMAKE_CURRENT_LIST_DIR}/../)
+include_directories(${CMAKE_BINARY_DIR}/src)
+include_directories(${CMAKE_BINARY_DIR}/src/artm)
+include_directories(${CMAKE_BINARY_DIR}/src/artm/core)
+include_directories(${CMAKE_CURRENT_LIST_DIR})
+include_directories(${CMAKE_CURRENT_LIST_DIR}/..)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/core)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/regularizer) # which one?
 include_directories(${CMAKE_CURRENT_LIST_DIR}/regularizer_sandbox) # ??
@@ -61,7 +75,10 @@ aux_source_directory(./regularizer_sandbox REG2_SRC_LIST)
 set(SRC_LIST ${CUR_LIST} 
              ${CORE_SRC_LIST} 
              ${REG_SRC_LIST} 
-             ${REG2_SRC_LIST})
+             ${REG2_SRC_LIST}
+             ${ARTM_PROTO_SOURCES}
+             #${ARTM_CORE_PROTO_SOURCES}
+)
 
 # library deps
 set(ARTM_LIB_DEPS  rpcz

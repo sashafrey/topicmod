@@ -15,7 +15,7 @@ namespace core {
 void rpcz_protobuf_AssignDesc_artm_2fcore_2finternals_2eproto() {
   const ::google::protobuf::FileDescriptor* file =
     ::google::protobuf::DescriptorPool::generated_pool()->FindFileByName(
-      "artm/proto/internals.proto");
+      "internals.proto");
   GOOGLE_CHECK(file != NULL);
   MasterComponentService_descriptor_ = file->service(0);
   NodeControllerService_descriptor_ = file->service(1);

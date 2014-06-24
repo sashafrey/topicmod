@@ -15,10 +15,11 @@ zeromq-install :
 	tar -xzf zeromq-4.0.4.tar.gz; \
 	cd zeromq-4.0.4/; \
 	export ZEROMQ_ROOT=~/zeromq/zeromq-4.0.4/; \
-	./autoget.sh; \
+	./autogen.sh; \
 	./configure; \
 	make; \
 	sudo make install; \
+	sudo ldconfig; \
 
 rpcz-install :
 	cd rpcz; \

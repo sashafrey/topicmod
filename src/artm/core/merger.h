@@ -45,6 +45,7 @@ class Merger : boost::noncopyable {
   void ForcePullTopicModel();
   void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();
+  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
   std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelName model_name) const;
 

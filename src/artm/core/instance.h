@@ -59,6 +59,7 @@ class Instance : boost::noncopyable {
   void ForcePullTopicModel();
   void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();
+  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

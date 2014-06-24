@@ -28,8 +28,8 @@ inline int HandleErrorCode(int artm_error_code) {
       throw ObjectNotFound();
     case ARTM_INVALID_MESSAGE:
       throw InvalidMessage();
-    case ARTM_UNSUPPORTED_RECONFIGURATION:
-      throw UnsupportedReconfiguration();
+    case ARTM_INVALID_OPERATION:
+      throw InvalidOperation();
     case ARTM_GENERAL_ERROR:
     default:
       throw GeneralError();
@@ -121,6 +121,12 @@ void Model::Reconfigure(const ModelConfig& config) {
   HandleErrorCode(ArtmReconfigureModel(master_id(), model_config_blob.size(),
     StringAsArray(&model_config_blob)));
   config_.CopyFrom(config);
+}
+
+void Model::Overwrite(const TopicModel& topic_model) {
+  std::string blob;
+  topic_model.SerializeToString(&blob);
+  HandleErrorCode(ArtmOverwriteTopicModel(master_id(), blob.size(), StringAsArray(&blob)));
 }
 
 void Model::Enable() {

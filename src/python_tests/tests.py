@@ -104,6 +104,7 @@ with library.CreateMasterComponent() as master_component:
   model.Disable()
   topic_model = master_component.GetTopicModel(model)
   theta_matrix = master_component.GetThetaMatrix(model)
+  model.Overwrite(topic_model);
 
   # Test all 'reconfigure' methods
   regularizer.Reconfigure(0, dirichlet_regularizer_config_new)

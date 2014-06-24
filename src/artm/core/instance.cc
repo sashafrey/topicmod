@@ -134,6 +134,10 @@ void Instance::InvokePhiRegularizers() {
   merger_->InvokePhiRegularizers();
 }
 
+void Instance::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  merger_->OverwriteTopicModel(topic_model);
+}
+
 void Instance::Reconfigure(const InstanceConfig& config) {
   auto new_schema = schema_.get_copy();
   new_schema->set_instance_config(config);

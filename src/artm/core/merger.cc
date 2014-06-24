@@ -66,8 +66,29 @@ void Merger::UpdateModel(const ModelConfig& model) {
   auto ttm = topic_model_.get(model.name());
   if (ttm->topic_size() != model.topics_count()) {
     std::string message("Unable to change the number of topics in topic model");
-    BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(message));
+    BOOST_THROW_EXCEPTION(InvalidOperation(message));
   }
+}
+
+void Merger::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  auto ttm = topic_model_.get(topic_model.name());
+  if (ttm == nullptr) {
+    std::stringstream ss;
+    ss << "Model '" << topic_model.name();
+    ss << "' can not be overwritten because it has no ModelConfig.";
+    BOOST_THROW_EXCEPTION(InvalidOperation(ss.str()));
+  }
+
+  if (ttm->topic_size() != topic_model.topics_count()) {
+    std::stringstream ss;
+    ss << "Unable to overwrite model '" << topic_model.name();
+    ss << "' with " << topic_model.topics_count() << " topics. ";
+    ss << "According to ModelConfig it must have " << ttm->topic_size() << " topics.";
+    BOOST_THROW_EXCEPTION(InvalidOperation(ss.str()));
+  }
+
+  std::shared_ptr<::artm::core::TopicModel> new_ttm(new ::artm::core::TopicModel(topic_model));
+  topic_model_.set(topic_model.name(), new_ttm);
 }
 
 void Merger::ForceResetScores(ModelName model_name) {

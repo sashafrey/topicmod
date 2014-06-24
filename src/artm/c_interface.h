@@ -22,7 +22,7 @@ extern "C" {
     ARTM_GENERAL_ERROR = -1,
     ARTM_OBJECT_NOT_FOUND = -2,
     ARTM_INVALID_MESSAGE = -3,
-    ARTM_UNSUPPORTED_RECONFIGURATION = -4,
+    ARTM_INVALID_OPERATION = -4,
     ARTM_NETWORK_ERROR = -5,
   };
 
@@ -42,7 +42,8 @@ extern "C" {
   DLL_PUBLIC int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
   DLL_PUBLIC void ArtmDisposeMasterComponent(int master_id);
 
-  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length, const char* config_blob);
+  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length,
+                                          const char* config_blob);
   DLL_PUBLIC void ArtmDisposeNodeController(int node_controller_id);
 
   DLL_PUBLIC int ArtmCreateModel(int master_id, int length, const char* model_config_blob);
@@ -62,6 +63,7 @@ extern "C" {
 
   DLL_PUBLIC int ArtmRequestThetaMatrix(int master_id, const char* model_name);
   DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_name);
+  DLL_PUBLIC int ArtmOverwriteTopicModel(int master_id, int length, const char* topic_model_blob);
 }
 
 #endif  // SRC_ARTM_C_INTERFACE_H_

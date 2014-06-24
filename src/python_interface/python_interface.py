@@ -12,7 +12,7 @@ ARTM_SUCCESS = 0
 ARTM_GENERAL_ERROR = -1
 ARTM_OBJECT_NOT_FOUND = -2
 ARTM_INVALID_MESSAGE = -3
-ARTM_UNSUPPORTED_RECONFIGURATION = -4
+ARTM_INVALID_OPERATION = -4
 
 Stream_Type_Global = 0
 Stream_Type_ItemIdModulus = 1
@@ -27,7 +27,7 @@ Score_Type_Perplexity = 0
 class GeneralError(BaseException) : pass
 class ObjectNotFound(BaseException) : pass
 class InvalidMessage(BaseException) : pass
-class UnsupportedReconfiguration(BaseException) : pass
+class InvalidOperation(BaseException) : pass
 
 def HandleErrorCode(artm_error_code):
   if (artm_error_code == ARTM_SUCCESS) | (artm_error_code >= 0):
@@ -36,8 +36,8 @@ def HandleErrorCode(artm_error_code):
     raise ObjectNotFound()
   elif artm_error_code == ARTM_INVALID_MESSAGE:
     raise InvalidMessage()
-  elif artm_error_code == ARTM_UNSUPPORTED_RECONFIGURATION:
-    raise UnsupportedReconfiguration()
+  elif artm_error_code == ARTM_INVALID_OPERATION:
+    raise InvalidOperation()
   elif artm_error_code == ARTM_GENERAL_ERROR:
     raise GeneralError()
   else:
@@ -182,6 +182,11 @@ class Model:
 
   def InvokePhiRegularizers(self):
     HandleErrorCode(self.lib_.ArtmInvokePhiRegularizers(self.master_id_))
+
+  def Overwrite(self, topic_model):
+    blob = topic_model.SerializeToString()
+    blob_p = ctypes.create_string_buffer(blob)
+    HandleErrorCode(self.lib_.ArtmOverwriteTopicModel(self.master_id_, len(blob), blob_p))
 
   def Enable(self):
     config_copy_ = messages_pb2.ModelConfig()

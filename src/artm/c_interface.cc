@@ -36,9 +36,9 @@ catch (const rpcz::rpc_error& e) {                          \
 } catch (const artm::core::NetworkException& e) {           \
   LOG(ERROR) << "NetworkException: " << e.what();           \
   return ARTM_NETWORK_ERROR;                                \
-} catch (const artm::core::UnsupportedReconfiguration& e) { \
-  LOG(ERROR) << "UnsupportedReconfiguration: " << e.what(); \
-  return ARTM_UNSUPPORTED_RECONFIGURATION;                  \
+} catch (const artm::core::InvalidOperation& e) {           \
+  LOG(ERROR) << "InvalidOperation: " << e.what();           \
+  return ARTM_INVALID_OPERATION;                            \
 } catch (const std::runtime_error& e) {                     \
   LOG(ERROR) << "runtime_error: " << e.what();              \
   return ARTM_GENERAL_ERROR;                                \
@@ -172,6 +172,21 @@ int ArtmRequestTopicModel(int master_id, const char* model_name) {
 
     master_component->RequestTopicModel(model_name, &topic_model);
     topic_model.SerializeToString(&message);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
+}
+
+int ArtmOverwriteTopicModel(int master_id, int length, const char* topic_model_blob) {
+  try {
+    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
+
+    artm::TopicModel topic_model;
+    if (!topic_model.ParseFromArray(topic_model_blob, length)) {
+      return ARTM_INVALID_MESSAGE;
+    }
+
+    master_component->OverwriteTopicModel(topic_model);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }

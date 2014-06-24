@@ -29,7 +29,7 @@ class Type : public BaseType { public:  /*NOLINT*/     \
 DEFINE_EXCEPTION_TYPE(GeneralError, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(ObjectNotFound, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidMessage, std::runtime_error);
-DEFINE_EXCEPTION_TYPE(UnsupportedReconfiguration, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 
@@ -76,6 +76,7 @@ class Model {
   ~Model();
 
   void Reconfigure(const ModelConfig& config);
+  void Overwrite(const TopicModel& topic_model);
   void Enable();
   void Disable();
   void InvokePhiRegularizers();

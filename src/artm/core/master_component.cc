@@ -113,6 +113,20 @@ bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
 }
 
+void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  if (isInLocalModusOperandi()) {
+    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
+    local_client->OverwriteTopicModel(topic_model);
+    return;
+  }
+
+  if (isInNetworkModusOperandi()) {
+    BOOST_THROW_EXCEPTION(NotImplementedException("OverwriteTopicModel in network mode"));
+  }
+
+  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+}
+
 bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
   if (isInLocalModusOperandi()) {
     LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
@@ -254,12 +268,12 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
   if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
     if (!config.has_master_component_connect_endpoint() ||
         !config.has_master_component_create_endpoint()) {
-      BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(
+      BOOST_THROW_EXCEPTION(InvalidOperation(
         "Network modus operandi require all endpoints to be set."));
     }
 
     if (!config.has_disk_path()) {
-      BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(
+      BOOST_THROW_EXCEPTION(InvalidOperation(
         "Network modus operandi require disk_path to be set."));
     }
   }
@@ -272,6 +286,10 @@ void LocalClient::ReconfigureModel(const ModelConfig& config) {
 void LocalClient::DisposeModel(ModelName model_name) {
   local_instance_->DisposeModel(model_name);
   local_data_loader_->DisposeModel(model_name);
+}
+
+void LocalClient::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  local_instance_->OverwriteTopicModel(topic_model);
 }
 
 void LocalClient::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {

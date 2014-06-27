@@ -147,7 +147,6 @@ void BasicTest(bool is_network_mode) {
     new_topic_model.add_token("my overwritten token2");
     auto weights = new_topic_model.add_token_weights();
     auto weights2 = new_topic_model.add_token_weights();
-    float sum = 0;
     for (int i = 0; i < nTopics; ++i) {
       weights->add_value((float)i);
       weights2->add_value((float)(nTopics - i));

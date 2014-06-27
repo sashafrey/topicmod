@@ -33,7 +33,6 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
   if (!has_dictionary) {
   // proceed the regularization
     for (int topic_id = 0; topic_id < topic_size; ++topic_id) {
-      int usual_topics_count = topic_size - background_topics_count;
       for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
         float value = static_cast<float>(tau * 1);
         auto topic_iterator = topic_model->GetTopicWeightIterator(token_id);

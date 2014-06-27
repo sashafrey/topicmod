@@ -30,7 +30,7 @@ Merger::Merger(boost::mutex* merger_queue_lock,
                ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service)
     : lock_(),
       topic_model_(lock_),
-      new_topic_model_(),
+      topic_model_inc_(),
       schema_(schema),
       master_component_service_(master_component_service),
       merger_queue_lock_(merger_queue_lock),
@@ -66,8 +66,29 @@ void Merger::UpdateModel(const ModelConfig& model) {
   auto ttm = topic_model_.get(model.name());
   if (ttm->topic_size() != model.topics_count()) {
     std::string message("Unable to change the number of topics in topic model");
-    BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(message));
+    BOOST_THROW_EXCEPTION(InvalidOperation(message));
   }
+}
+
+void Merger::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  auto ttm = topic_model_.get(topic_model.name());
+  if (ttm == nullptr) {
+    std::stringstream ss;
+    ss << "Model '" << topic_model.name();
+    ss << "' can not be overwritten because it has no ModelConfig.";
+    BOOST_THROW_EXCEPTION(InvalidOperation(ss.str()));
+  }
+
+  if (ttm->topic_size() != topic_model.topics_count()) {
+    std::stringstream ss;
+    ss << "Unable to overwrite model '" << topic_model.name();
+    ss << "' with " << topic_model.topics_count() << " topics. ";
+    ss << "According to ModelConfig it must have " << ttm->topic_size() << " topics.";
+    BOOST_THROW_EXCEPTION(InvalidOperation(ss.str()));
+  }
+
+  std::shared_ptr<::artm::core::TopicModel> new_ttm(new ::artm::core::TopicModel(topic_model));
+  topic_model_.set(topic_model.name(), new_ttm);
 }
 
 void Merger::ForceResetScores(ModelName model_name) {
@@ -76,9 +97,15 @@ void Merger::ForceResetScores(ModelName model_name) {
   sync_event.wait();
 }
 
-void Merger::ForceSyncWithMemcached(ModelName model_name) {
+void Merger::ForcePullTopicModel() {
   rpcz::sync_event sync_event;
-  internal_task_queue_.push(MergerTask(kForceSyncWithMemcached, model_name, &sync_event));
+  internal_task_queue_.push(MergerTask(kForcePullTopicModel, ModelName(), &sync_event));
+  sync_event.wait();
+}
+
+void Merger::ForcePushTopicModelIncrement() {
+  rpcz::sync_event sync_event;
+  internal_task_queue_.push(MergerTask(kForcePushTopicModelIncrement, ModelName(), &sync_event));
   sync_event.wait();
 }
 
@@ -116,7 +143,7 @@ void Merger::InvokePhiRegularizers() {
           }
         } else {
           LOG(ERROR) << "Phi Regularizer with name <" <<
-            reg_name_iterator->c_str() << "> does not exist.";
+            reg_name_iterator->c_str() << "> does not exist.\n";
         }
       }
       topic_model_.set(model_name, new_ttm);
@@ -145,10 +172,13 @@ void Merger::ThreadFunction() {
         if (internal_task_queue_.try_pop(&merger_task)) {
           switch (merger_task.task_type) {
             case kDisposeModel:
-              new_topic_model_.erase(merger_task.model_name);
+              topic_model_inc_.erase(merger_task.model_name);
               break;
-            case kForceSyncWithMemcached:
-              SyncWithMemcached(merger_task.model_name);
+            case kForcePullTopicModel:
+              PullTopicModel();
+              break;
+            case kForcePushTopicModelIncrement:
+              PushTopicModelIncrement();
               break;
             case kForceResetScores:
               ResetScores(merger_task.model_name);
@@ -191,14 +221,15 @@ void Merger::ThreadFunction() {
           auto cur_ttm = topic_model_.get(model_name);
           if (cur_ttm.get() == nullptr) {
             // model had been disposed during ongoing processing;
-            continue;  // for (int modex_index = 0; ...
+            continue;  // for (int model_index = 0; ...
           }
 
-          auto iter = new_topic_model_.find(model_name);
-          if (iter == new_topic_model_.end()) {
-            new_topic_model_.insert(std::make_pair(
-              model_name, std::make_shared<::artm::core::TopicModel>(*cur_ttm)));
-            iter = new_topic_model_.find(model_name);
+          auto iter = topic_model_inc_.find(model_name);
+          if (iter == topic_model_inc_.end()) {
+            topic_model_inc_.insert(std::make_pair(
+              model_name, std::make_shared<::artm::core::TopicModel>(
+                cur_ttm->model_name(), cur_ttm->topic_size(), cur_ttm->score_size())));
+            iter = topic_model_inc_.find(model_name);
           }
 
           iter->second->ApplyDiff(model_increment);
@@ -215,45 +246,74 @@ void Merger::ThreadFunction() {
   }
 }
 
-void Merger::SyncWithMemcached(ModelName model_name) {
-  std::vector<ModelName> model_names;
-  if (model_name.empty()) {
-    for (auto iter = new_topic_model_.begin(); iter != new_topic_model_.end(); ++iter) {
-      model_names.push_back(iter->first);
-    }
-  }
-
+void Merger::PullTopicModel() {
+  auto model_names = topic_model_.keys();
   for (auto &model_name : model_names) {
-    // This method (SyncWithMemcached) calculates a diff between new_ttm and old_ttm,
-    // and then sends it to MemcachedService as ModelIncrement.
     auto old_ttm = topic_model_.get(model_name);
     if (old_ttm.get() == nullptr)
       return;  // model had been disposed during ongoing processing;
 
-    auto new_ttm = new_topic_model_.find(model_name);
-    if (new_ttm == new_topic_model_.end())
-      return;  // model had been disposed during ongoing processing;
-
     std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
     if (master_component_service == nullptr) {
-      topic_model_.set(model_name, new_ttm->second);
-      new_topic_model_.erase(model_name);
-    } else {
-      ModelIncrement model_increment;
-      new_ttm->second->CalculateDiff(*old_ttm, &model_increment);
+      auto inc_ttm = topic_model_inc_.find(model_name);
+      if (inc_ttm == topic_model_inc_.end())
+       return;  // model had been disposed during ongoing processing;
 
+      // Old mode: accumulate counters in topic model forever
+      // auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
+
+      // New mode: accumulate counters only accross one iteration, then re-calculate Phi from scratch.
+      auto new_ttm = std::make_shared<::artm::core::TopicModel>(
+        old_ttm->model_name(), old_ttm->topic_size(), old_ttm->score_size());
+
+      new_ttm->ApplyDiff(*inc_ttm->second);
+      topic_model_.set(model_name, new_ttm);
+      topic_model_inc_.erase(model_name);
+    } else {
       try {
+        ::artm::core::String request;
+        request.set_value(model_name);
         ::artm::TopicModel reply;
-        master_component_service->UpdateModel(model_increment, &reply);
+        master_component_service->RetrieveModel(request, &reply);
         std::shared_ptr<::artm::core::TopicModel> new_global_ttm(
           new ::artm::core::TopicModel(reply));
 
         topic_model_.set(model_name, new_global_ttm);
-        new_topic_model_.erase(model_name);
+        topic_model_inc_.erase(model_name);
       } catch(const rpcz::rpc_error&) {
-        LOG(ERROR) << "Merger failed to send updates to master component service.";
+        LOG(ERROR) << "Merger failed to pull topic model from the master component service.";
         throw;
       }
+    }
+  }
+}
+
+void Merger::PushTopicModelIncrement() {
+  std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
+  if (master_component_service == nullptr) {
+    return;  // no-op in local modus operandi
+  }
+
+  std::vector<ModelName> model_names;
+  for (auto iter = topic_model_inc_.begin(); iter != topic_model_inc_.end(); ++iter) {
+    model_names.push_back(iter->first);
+  }
+
+  for (auto &model_name : model_names) {
+    auto inc_ttm = topic_model_inc_.find(model_name);
+    if (inc_ttm == topic_model_inc_.end())
+      return;  // model had been disposed during ongoing processing;
+
+    ModelIncrement model_increment;
+    inc_ttm->second->RetrieveModelIncrement(&model_increment);
+
+    try {
+      ::artm::core::Void reply;
+      master_component_service->UpdateModel(model_increment, &reply);
+      topic_model_inc_.erase(model_name);
+    } catch(const rpcz::rpc_error&) {
+      LOG(ERROR) << "Merger failed to send updates to master component service.";
+      throw;
     }
   }
 }

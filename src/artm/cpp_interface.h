@@ -19,6 +19,7 @@ class MasterComponent;
 class NodeController;
 class Model;
 class Regularizer;
+class Dictionary;
 
 // Exception handling in cpp_interface
 #define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
@@ -29,7 +30,7 @@ class Type : public BaseType { public:  /*NOLINT*/     \
 DEFINE_EXCEPTION_TYPE(GeneralError, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(ObjectNotFound, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidMessage, std::runtime_error);
-DEFINE_EXCEPTION_TYPE(UnsupportedReconfiguration, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 
@@ -76,6 +77,7 @@ class Model {
   ~Model();
 
   void Reconfigure(const ModelConfig& config);
+  void Overwrite(const TopicModel& topic_model);
   void Enable();
   void Disable();
   void InvokePhiRegularizers();
@@ -106,6 +108,22 @@ class Regularizer {
   int master_id_;
   RegularizerConfig config_;
   DISALLOW_COPY_AND_ASSIGN(Regularizer);
+};
+
+class Dictionary {
+ public:
+  Dictionary(const MasterComponent& master_component, const DictionaryConfig& config);
+  ~Dictionary();
+
+  void Reconfigure(const DictionaryConfig& config);
+
+  int master_id() const { return master_id_; }
+  const DictionaryConfig& config() const { return config_; }
+
+ private:
+  int master_id_;
+  DictionaryConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(Dictionary);
 };
 
 }  // namespace artm

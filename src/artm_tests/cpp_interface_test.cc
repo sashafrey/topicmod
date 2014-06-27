@@ -135,6 +135,38 @@ void BasicTest(bool is_network_mode) {
       EXPECT_LE(abs(sum - 1), 0.001);
     }
   }
+
+  if (!is_network_mode) {
+    // Test overwrite topic model
+    artm::TopicModel new_topic_model;
+    new_topic_model.set_items_processed(0);
+    new_topic_model.set_name(model.name());
+    new_topic_model.set_topics_count(nTopics);
+    new_topic_model.mutable_scores()->add_value(0.0);  // add dummy score
+    new_topic_model.add_token("my overwritten token");
+    new_topic_model.add_token("my overwritten token2");
+    auto weights = new_topic_model.add_token_weights();
+    auto weights2 = new_topic_model.add_token_weights();
+    for (int i = 0; i < nTopics; ++i) {
+      weights->add_value((float)i);
+      weights2->add_value((float)(nTopics - i));
+    }
+
+    model.Overwrite(new_topic_model);
+    auto new_topic_model2 = master_component.GetTopicModel(model);
+    ASSERT_EQ(new_topic_model2->token_size(), 2);
+    EXPECT_EQ(new_topic_model2->token(0), "my overwritten token");
+    EXPECT_EQ(new_topic_model2->token(1), "my overwritten token2");
+    for (int i = 0; i < nTopics; ++i) {
+      EXPECT_FLOAT_EQ(
+        new_topic_model2->token_weights(0).value(i),
+        (float)i / (float)nTopics);
+
+      EXPECT_FLOAT_EQ(
+        new_topic_model2->token_weights(1).value(i),
+        1.0f - (float)i / (float)nTopics);
+    }
+  }
 }
 
 // To run this particular test:
@@ -160,5 +192,5 @@ TEST(CppInterface, Exceptions) {
   artm::Model model(master_component, model_config);
 
   model.mutable_config()->set_topics_count(20);
-  ASSERT_THROW(model.Reconfigure(model.config()), artm::UnsupportedReconfiguration);
+  ASSERT_THROW(model.Reconfigure(model.config()), artm::InvalidOperation);
 }

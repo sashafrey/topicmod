@@ -64,6 +64,14 @@ void MasterComponent::DisposeRegularizer(const std::string& name) {
   client_interface_->DisposeRegularizer(name);
 }
 
+void MasterComponent::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
+  client_interface_->CreateOrReconfigureDictionary(config);
+}
+
+void MasterComponent::DisposeDictionary(const std::string& name) {
+  client_interface_->DisposeDictionary(name);
+}
+
 void MasterComponent::InvokePhiRegularizers() {
   client_interface_->InvokePhiRegularizers();
 }
@@ -108,6 +116,20 @@ bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel
 
   if (isInNetworkModusOperandi()) {
     return service_endpoint_->impl()->RequestTopicModel(model_name, topic_model);
+  }
+
+  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+}
+
+void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  if (isInLocalModusOperandi()) {
+    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
+    local_client->OverwriteTopicModel(topic_model);
+    return;
+  }
+
+  if (isInNetworkModusOperandi()) {
+    BOOST_THROW_EXCEPTION(NotImplementedException("OverwriteTopicModel in network mode"));
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
@@ -254,12 +276,12 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
   if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
     if (!config.has_master_component_connect_endpoint() ||
         !config.has_master_component_create_endpoint()) {
-      BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(
+      BOOST_THROW_EXCEPTION(InvalidOperation(
         "Network modus operandi require all endpoints to be set."));
     }
 
     if (!config.has_disk_path()) {
-      BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(
+      BOOST_THROW_EXCEPTION(InvalidOperation(
         "Network modus operandi require disk_path to be set."));
     }
   }
@@ -274,12 +296,24 @@ void LocalClient::DisposeModel(ModelName model_name) {
   local_data_loader_->DisposeModel(model_name);
 }
 
+void LocalClient::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  local_instance_->OverwriteTopicModel(topic_model);
+}
+
 void LocalClient::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   local_instance_->CreateOrReconfigureRegularizer(config);
 }
 
 void LocalClient::DisposeRegularizer(const std::string& name) {
   local_instance_->DisposeRegularizer(name);
+}
+
+void LocalClient::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
+  local_instance_->CreateOrReconfigureDictionary(config);
+}
+
+void LocalClient::DisposeDictionary(const std::string& name) {
+  local_instance_->DisposeDictionary(name);
 }
 
 void LocalClient::InvokePhiRegularizers() {
@@ -372,6 +406,24 @@ void NetworkClientCollection::DisposeRegularizer(const std::string& name) {
     args.set_regularizer_name(name);
     Void response;
     client.DisposeRegularizer(args, &response);
+  });
+}
+
+void NetworkClientCollection::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    CreateOrReconfigureDictionaryArgs args;
+    args.mutable_dictionary()->CopyFrom(config);
+    Void response;
+    client.CreateOrReconfigureDictionary(args, &response);
+  });
+}
+
+void NetworkClientCollection::DisposeDictionary(const std::string& name) {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    DisposeDictionaryArgs args;
+    args.set_dictionary_name(name);
+    Void response;
+    client.DisposeDictionary(args, &response);
   });
 }
 

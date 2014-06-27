@@ -40,7 +40,7 @@ class MasterComponentService : public rpcz::service {
   static const ::google::protobuf::ServiceDescriptor* descriptor();
 
   virtual void UpdateModel(const ::artm::core::ModelIncrement& request,
-                       ::rpcz::reply< ::artm::TopicModel> response);
+                       ::rpcz::reply< ::artm::core::Void> response);
   virtual void RetrieveModel(const ::artm::core::String& request,
                        ::rpcz::reply< ::artm::TopicModel> response);
   virtual void RequestBatches(const ::artm::core::Int& request,
@@ -80,10 +80,10 @@ class MasterComponentService_Stub {
 
 
   void UpdateModel(const ::artm::core::ModelIncrement& request,
-                       ::artm::TopicModel* response,
+                       ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void UpdateModel(const ::artm::core::ModelIncrement& request,
-                       ::artm::TopicModel* response,
+                       ::artm::core::Void* response,
                        long deadline_ms = -1);
   void RetrieveModel(const ::artm::core::String& request,
                        ::artm::TopicModel* response,
@@ -151,7 +151,13 @@ class NodeControllerService : public rpcz::service {
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void ForceSyncWithMemcached(const ::artm::core::Void& request,
+  virtual void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void ForcePullTopicModel(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void ForcePushTopicModelIncrement(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
   // implements Service ----------------------------------------------
@@ -229,10 +235,28 @@ class NodeControllerService_Stub {
   void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
-  void ForceSyncWithMemcached(const ::artm::core::Void& request,
+  void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void ForceSyncWithMemcached(const ::artm::core::Void& request,
+  void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void ForcePullTopicModel(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void ForcePullTopicModel(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void ForcePushTopicModelIncrement(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void ForcePushTopicModelIncrement(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
  private:

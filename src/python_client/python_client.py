@@ -10,6 +10,7 @@ else:
 import messages_pb2
 from python_interface import *
 import operator
+import random
 
 with open('../../datasets/vocab.kos.txt', 'r') as content_file:
     content = content_file.read()
@@ -93,8 +94,20 @@ with library.CreateMasterComponent(master_config) as master_component:
       regularizer_name_theta,
       RegularizerConfig_Type_DirichletTheta,
       regularizer_config_theta)
-    
+
     model = master_component.CreateModel(model_config)
+    initial_topic_model = messages_pb2.TopicModel();
+    initial_topic_model.topics_count = topics_count;
+    initial_topic_model.name = model.name()
+    initial_topic_model.scores.value.append(0.0)
+    random.seed(123)
+    for token in tokens:
+      initial_topic_model.token.append(token);
+      weights = initial_topic_model.token_weights.add();
+      for topic_index in range(0, topics_count):
+        weights.value.append(random.random())
+    model.Overwrite(initial_topic_model)
+
     for iter in range(0, outer_iteration_count):
         master_component.InvokeIteration(1)
         master_component.WaitIdle();

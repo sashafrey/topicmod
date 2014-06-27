@@ -57,7 +57,7 @@ class MasterComponent : boost::noncopyable {
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
   void ReconfigureModel(const ModelConfig& config);
-
+  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
   void DisposeModel(ModelName model_name);
   void Reconfigure(const MasterComponentConfig& config);
@@ -65,6 +65,9 @@ class MasterComponent : boost::noncopyable {
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
   void InvokePhiRegularizers();
+
+  void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  void DisposeDictionary(const std::string& name);
 
   void WaitIdle();
   void InvokeIteration(int iterations_count);
@@ -74,7 +77,7 @@ class MasterComponent : boost::noncopyable {
                                                    int instance_id);
   static InstanceConfig ExtractInstanceConfig(const MasterComponentConfig& config);
 
-  // Throws UnsupportedReconfiguration exception if new config is invalid.
+  // Throws InvalidOperation exception if new config is invalid.
   void ValidateConfig(const MasterComponentConfig& config);
 
  private:
@@ -129,6 +132,9 @@ class ClientInterface {
   virtual void DisposeRegularizer(const std::string& name) = 0;
   virtual void InvokePhiRegularizers() = 0;
 
+  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config) = 0;
+  virtual void DisposeDictionary(const std::string& name) = 0;
+
   virtual void Reconfigure(const MasterComponentConfig& config) = 0;
 };
 
@@ -143,6 +149,10 @@ class LocalClient : public ClientInterface {
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   virtual void DisposeRegularizer(const std::string& name);
   virtual void InvokePhiRegularizers();
+  virtual void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
+
+  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  virtual void DisposeDictionary(const std::string& name);
 
   virtual void Reconfigure(const MasterComponentConfig& config);
 
@@ -168,6 +178,9 @@ class NetworkClientCollection : public ClientInterface {
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   virtual void DisposeRegularizer(const std::string& name);
   virtual void InvokePhiRegularizers();
+
+  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  virtual void DisposeDictionary(const std::string& name);
 
   virtual void Reconfigure(const MasterComponentConfig& config);
 

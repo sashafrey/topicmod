@@ -28,6 +28,8 @@ namespace core {
 class Processor;
 class Merger;
 class InstanceSchema;
+typedef std::map<std::string, ::artm::DictionaryEntry> DictionaryMap;
+typedef ThreadSafeCollectionHolder<std::string, DictionaryMap> ThreadSafeDictionaryCollection;
 
 class Instance : boost::noncopyable {
  public:
@@ -55,9 +57,13 @@ class Instance : boost::noncopyable {
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
+  void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  void DisposeDictionary(const std::string& name);
   void ForceResetScores(ModelName model_name);
-  void ForceSyncWithMemcached(ModelName model_name);
+  void ForcePullTopicModel();
+  void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();
+  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;
@@ -83,6 +89,8 @@ class Instance : boost::noncopyable {
 
   // creates background threads for processing
   std::vector<std::shared_ptr<Processor> > processors_;
+
+  ThreadSafeDictionaryCollection dictionaries_;
 };
 
 typedef TemplateManager<Instance, InstanceConfig> InstanceManager;

@@ -29,7 +29,7 @@ MasterComponentServiceImpl::MasterComponentServiceImpl(
 }
 
 void MasterComponentServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& request,
-                                       ::rpcz::reply< ::artm::TopicModel> response) {
+                                       ::rpcz::reply< ::artm::core::Void> response) {
   auto ttm = topic_model_.get(request.model_name());
   if (ttm == nullptr) {
     ttm = std::make_shared<::artm::core::TopicModel>(request);
@@ -38,9 +38,7 @@ void MasterComponentServiceImpl::UpdateModel(const ::artm::core::ModelIncrement&
     ttm->ApplyDiff(request);
   }
 
-  ::artm::TopicModel topic_model;
-  ttm->RetrieveExternalTopicModel(&topic_model);
-  response.send(topic_model);
+  response.send(::artm::core::Void());
 }
 
 void MasterComponentServiceImpl::RetrieveModel(const ::artm::core::String& request,
@@ -136,11 +134,21 @@ void MasterComponentServiceImpl::WaitIdle() {
   clients_->for_each_client([&](NodeControllerService_Stub& client) {
     Void response;
     try {
-      client.ForceSyncWithMemcached(Void(), &response);
+      client.ForcePushTopicModelIncrement(Void(), &response);
     } catch(...) {
-      LOG(ERROR) << "Unable to force sync with memcached on one of clients";
+      LOG(ERROR) << "Unable to force push topic model increment on one of clients";
     }
   });
+
+  clients_->for_each_client([&](NodeControllerService_Stub& client) {
+  Void response;
+  try {
+    client.ForcePullTopicModel(Void(), &response);
+  } catch(...) {
+    LOG(ERROR) << "Unable to force pull topic model on one of clients";
+  }
+});
+
 }
 
 bool MasterComponentServiceImpl::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {

@@ -38,7 +38,13 @@ class NodeControllerServiceImpl : public NodeControllerService {
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void ForceSyncWithMemcached(const ::artm::core::Void& request,
+  virtual void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void ForcePullTopicModel(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void ForcePushTopicModelIncrement(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
  private:

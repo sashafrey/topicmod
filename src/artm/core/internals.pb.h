@@ -51,6 +51,8 @@ class CreateOrReconfigureModelArgs;
 class DisposeModelArgs;
 class CreateOrReconfigureRegularizerArgs;
 class DisposeRegularizerArgs;
+class CreateOrReconfigureDictionaryArgs;
+class DisposeDictionaryArgs;
 
 // ===================================================================
 
@@ -1779,6 +1781,177 @@ class DisposeRegularizerArgs : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DisposeRegularizerArgs* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CreateOrReconfigureDictionaryArgs : public ::google::protobuf::Message {
+ public:
+  CreateOrReconfigureDictionaryArgs();
+  virtual ~CreateOrReconfigureDictionaryArgs();
+
+  CreateOrReconfigureDictionaryArgs(const CreateOrReconfigureDictionaryArgs& from);
+
+  inline CreateOrReconfigureDictionaryArgs& operator=(const CreateOrReconfigureDictionaryArgs& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CreateOrReconfigureDictionaryArgs& default_instance();
+
+  void Swap(CreateOrReconfigureDictionaryArgs* other);
+
+  // implements Message ----------------------------------------------
+
+  CreateOrReconfigureDictionaryArgs* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CreateOrReconfigureDictionaryArgs& from);
+  void MergeFrom(const CreateOrReconfigureDictionaryArgs& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .artm.DictionaryConfig dictionary = 2;
+  inline bool has_dictionary() const;
+  inline void clear_dictionary();
+  static const int kDictionaryFieldNumber = 2;
+  inline const ::artm::DictionaryConfig& dictionary() const;
+  inline ::artm::DictionaryConfig* mutable_dictionary();
+  inline ::artm::DictionaryConfig* release_dictionary();
+  inline void set_allocated_dictionary(::artm::DictionaryConfig* dictionary);
+
+  // @@protoc_insertion_point(class_scope:artm.core.CreateOrReconfigureDictionaryArgs)
+ private:
+  inline void set_has_dictionary();
+  inline void clear_has_dictionary();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::artm::DictionaryConfig* dictionary_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fcore_2finternals_2eproto();
+  friend void protobuf_AssignDesc_artm_2fcore_2finternals_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto();
+
+  void InitAsDefaultInstance();
+  static CreateOrReconfigureDictionaryArgs* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DisposeDictionaryArgs : public ::google::protobuf::Message {
+ public:
+  DisposeDictionaryArgs();
+  virtual ~DisposeDictionaryArgs();
+
+  DisposeDictionaryArgs(const DisposeDictionaryArgs& from);
+
+  inline DisposeDictionaryArgs& operator=(const DisposeDictionaryArgs& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DisposeDictionaryArgs& default_instance();
+
+  void Swap(DisposeDictionaryArgs* other);
+
+  // implements Message ----------------------------------------------
+
+  DisposeDictionaryArgs* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DisposeDictionaryArgs& from);
+  void MergeFrom(const DisposeDictionaryArgs& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string dictionary_name = 2;
+  inline bool has_dictionary_name() const;
+  inline void clear_dictionary_name();
+  static const int kDictionaryNameFieldNumber = 2;
+  inline const ::std::string& dictionary_name() const;
+  inline void set_dictionary_name(const ::std::string& value);
+  inline void set_dictionary_name(const char* value);
+  inline void set_dictionary_name(const char* value, size_t size);
+  inline ::std::string* mutable_dictionary_name();
+  inline ::std::string* release_dictionary_name();
+  inline void set_allocated_dictionary_name(::std::string* dictionary_name);
+
+  // @@protoc_insertion_point(class_scope:artm.core.DisposeDictionaryArgs)
+ private:
+  inline void set_has_dictionary_name();
+  inline void clear_has_dictionary_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* dictionary_name_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fcore_2finternals_2eproto();
+  friend void protobuf_AssignDesc_artm_2fcore_2finternals_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto();
+
+  void InitAsDefaultInstance();
+  static DisposeDictionaryArgs* default_instance_;
 };
 // ===================================================================
 
@@ -3608,6 +3781,122 @@ inline void DisposeRegularizerArgs::set_allocated_regularizer_name(::std::string
   } else {
     clear_has_regularizer_name();
     regularizer_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// CreateOrReconfigureDictionaryArgs
+
+// optional .artm.DictionaryConfig dictionary = 2;
+inline bool CreateOrReconfigureDictionaryArgs::has_dictionary() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CreateOrReconfigureDictionaryArgs::set_has_dictionary() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CreateOrReconfigureDictionaryArgs::clear_has_dictionary() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CreateOrReconfigureDictionaryArgs::clear_dictionary() {
+  if (dictionary_ != NULL) dictionary_->::artm::DictionaryConfig::Clear();
+  clear_has_dictionary();
+}
+inline const ::artm::DictionaryConfig& CreateOrReconfigureDictionaryArgs::dictionary() const {
+  return dictionary_ != NULL ? *dictionary_ : *default_instance_->dictionary_;
+}
+inline ::artm::DictionaryConfig* CreateOrReconfigureDictionaryArgs::mutable_dictionary() {
+  set_has_dictionary();
+  if (dictionary_ == NULL) dictionary_ = new ::artm::DictionaryConfig;
+  return dictionary_;
+}
+inline ::artm::DictionaryConfig* CreateOrReconfigureDictionaryArgs::release_dictionary() {
+  clear_has_dictionary();
+  ::artm::DictionaryConfig* temp = dictionary_;
+  dictionary_ = NULL;
+  return temp;
+}
+inline void CreateOrReconfigureDictionaryArgs::set_allocated_dictionary(::artm::DictionaryConfig* dictionary) {
+  delete dictionary_;
+  dictionary_ = dictionary;
+  if (dictionary) {
+    set_has_dictionary();
+  } else {
+    clear_has_dictionary();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// DisposeDictionaryArgs
+
+// optional string dictionary_name = 2;
+inline bool DisposeDictionaryArgs::has_dictionary_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DisposeDictionaryArgs::set_has_dictionary_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DisposeDictionaryArgs::clear_has_dictionary_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DisposeDictionaryArgs::clear_dictionary_name() {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_->clear();
+  }
+  clear_has_dictionary_name();
+}
+inline const ::std::string& DisposeDictionaryArgs::dictionary_name() const {
+  return *dictionary_name_;
+}
+inline void DisposeDictionaryArgs::set_dictionary_name(const ::std::string& value) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(value);
+}
+inline void DisposeDictionaryArgs::set_dictionary_name(const char* value) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(value);
+}
+inline void DisposeDictionaryArgs::set_dictionary_name(const char* value, size_t size) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DisposeDictionaryArgs::mutable_dictionary_name() {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  return dictionary_name_;
+}
+inline ::std::string* DisposeDictionaryArgs::release_dictionary_name() {
+  clear_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = dictionary_name_;
+    dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DisposeDictionaryArgs::set_allocated_dictionary_name(::std::string* dictionary_name) {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete dictionary_name_;
+  }
+  if (dictionary_name) {
+    set_has_dictionary_name();
+    dictionary_name_ = dictionary_name;
+  } else {
+    clear_has_dictionary_name();
+    dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

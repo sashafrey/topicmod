@@ -28,8 +28,8 @@ inline int HandleErrorCode(int artm_error_code) {
       throw ObjectNotFound();
     case ARTM_INVALID_MESSAGE:
       throw InvalidMessage();
-    case ARTM_UNSUPPORTED_RECONFIGURATION:
-      throw UnsupportedReconfiguration();
+    case ARTM_INVALID_OPERATION:
+      throw InvalidOperation();
     case ARTM_GENERAL_ERROR:
     default:
       throw GeneralError();
@@ -123,6 +123,12 @@ void Model::Reconfigure(const ModelConfig& config) {
   config_.CopyFrom(config);
 }
 
+void Model::Overwrite(const TopicModel& topic_model) {
+  std::string blob;
+  topic_model.SerializeToString(&blob);
+  HandleErrorCode(ArtmOverwriteTopicModel(master_id(), blob.size(), StringAsArray(&blob)));
+}
+
 void Model::Enable() {
   ModelConfig config_copy_(config_);
   config_copy_.set_enabled(true);
@@ -157,6 +163,27 @@ void Regularizer::Reconfigure(const RegularizerConfig& config) {
   config.SerializeToString(&regularizer_config_blob);
   HandleErrorCode(ArtmReconfigureRegularizer(master_id(), regularizer_config_blob.size(),
     StringAsArray(&regularizer_config_blob)));
+  config_.CopyFrom(config);
+}
+
+Dictionary::Dictionary(const MasterComponent& master_component, const DictionaryConfig& config)
+    : master_id_(master_component.id()),
+      config_(config) {
+  std::string dictionary_config_blob;
+  config.SerializeToString(&dictionary_config_blob);
+  HandleErrorCode(ArtmCreateDictionary(master_id_, dictionary_config_blob.size(),
+    StringAsArray(&dictionary_config_blob)));
+}
+
+Dictionary::~Dictionary() {
+  ArtmDisposeDictionary(master_id(), config_.name().c_str());
+}
+
+void Dictionary::Reconfigure(const DictionaryConfig& config) {
+  std::string dictionary_config_blob;
+  config.SerializeToString(&dictionary_config_blob);
+  HandleErrorCode(ArtmReconfigureDictionary(master_id(), dictionary_config_blob.size(),
+    StringAsArray(&dictionary_config_blob)));
   config_.CopyFrom(config);
 }
 

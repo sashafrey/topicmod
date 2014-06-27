@@ -69,6 +69,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* DisposeRegularizerArgs_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   DisposeRegularizerArgs_reflection_ = NULL;
+const ::google::protobuf::Descriptor* CreateOrReconfigureDictionaryArgs_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  CreateOrReconfigureDictionaryArgs_reflection_ = NULL;
+const ::google::protobuf::Descriptor* DisposeDictionaryArgs_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  DisposeDictionaryArgs_reflection_ = NULL;
 
 }  // namespace
 
@@ -347,6 +353,36 @@ void protobuf_AssignDesc_artm_2fcore_2finternals_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DisposeRegularizerArgs));
+  CreateOrReconfigureDictionaryArgs_descriptor_ = file->message_type(16);
+  static const int CreateOrReconfigureDictionaryArgs_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureDictionaryArgs, dictionary_),
+  };
+  CreateOrReconfigureDictionaryArgs_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      CreateOrReconfigureDictionaryArgs_descriptor_,
+      CreateOrReconfigureDictionaryArgs::default_instance_,
+      CreateOrReconfigureDictionaryArgs_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureDictionaryArgs, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CreateOrReconfigureDictionaryArgs, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(CreateOrReconfigureDictionaryArgs));
+  DisposeDictionaryArgs_descriptor_ = file->message_type(17);
+  static const int DisposeDictionaryArgs_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeDictionaryArgs, dictionary_name_),
+  };
+  DisposeDictionaryArgs_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      DisposeDictionaryArgs_descriptor_,
+      DisposeDictionaryArgs::default_instance_,
+      DisposeDictionaryArgs_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeDictionaryArgs, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DisposeDictionaryArgs, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(DisposeDictionaryArgs));
 }
 
 namespace {
@@ -391,6 +427,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
     CreateOrReconfigureRegularizerArgs_descriptor_, &CreateOrReconfigureRegularizerArgs::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     DisposeRegularizerArgs_descriptor_, &DisposeRegularizerArgs::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    CreateOrReconfigureDictionaryArgs_descriptor_, &CreateOrReconfigureDictionaryArgs::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    DisposeDictionaryArgs_descriptor_, &DisposeDictionaryArgs::default_instance());
 }
 
 }  // namespace
@@ -428,6 +468,10 @@ void protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto() {
   delete CreateOrReconfigureRegularizerArgs_reflection_;
   delete DisposeRegularizerArgs::default_instance_;
   delete DisposeRegularizerArgs_reflection_;
+  delete CreateOrReconfigureDictionaryArgs::default_instance_;
+  delete CreateOrReconfigureDictionaryArgs_reflection_;
+  delete DisposeDictionaryArgs::default_instance_;
+  delete DisposeDictionaryArgs_reflection_;
 }
 
 void protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
@@ -475,33 +519,42 @@ void protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "econfigureRegularizerArgs\022\030\n\020regularizer"
     "_name\030\002 \001(\t\022\'\n\006config\030\003 \001(\0132\027.artm.Regul"
     "arizerConfig\"2\n\026DisposeRegularizerArgs\022\030"
-    "\n\020regularizer_name\030\002 \001(\t2\345\002\n\026MasterCompo"
-    "nentService\022:\n\013UpdateModel\022\031.artm.core.M"
-    "odelIncrement\032\020.artm.TopicModel\0224\n\rRetri"
-    "eveModel\022\021.artm.core.String\032\020.artm.Topic"
-    "Model\0225\n\016RequestBatches\022\016.artm.core.Int\032"
-    "\023.artm.core.BatchIds\0225\n\rReportBatches\022\023."
-    "artm.core.BatchIds\032\017.artm.core.Void\0223\n\rC"
-    "onnectClient\022\021.artm.core.String\032\017.artm.c"
-    "ore.Void\0226\n\020DisconnectClient\022\021.artm.core"
-    ".String\032\017.artm.core.Void2\231\005\n\025NodeControl"
-    "lerService\022I\n\033CreateOrReconfigureInstanc"
-    "e\022\031.artm.core.InstanceConfig\032\017.artm.core"
-    ".Void\0223\n\017DisposeInstance\022\017.artm.core.Voi"
-    "d\032\017.artm.core.Void\022M\n\035CreateOrReconfigur"
-    "eDataLoader\022\033.artm.core.DataLoaderConfig"
-    "\032\017.artm.core.Void\0225\n\021DisposeDataLoader\022\017"
-    ".artm.core.Void\032\017.artm.core.Void\022T\n\030Crea"
-    "teOrReconfigureModel\022\'.artm.core.CreateO"
-    "rReconfigureModelArgs\032\017.artm.core.Void\022<"
-    "\n\014DisposeModel\022\033.artm.core.DisposeModelA"
-    "rgs\032\017.artm.core.Void\022`\n\036CreateOrReconfig"
-    "ureRegularizer\022-.artm.core.CreateOrRecon"
-    "figureRegularizerArgs\032\017.artm.core.Void\022H"
-    "\n\022DisposeRegularizer\022!.artm.core.Dispose"
-    "RegularizerArgs\032\017.artm.core.Void\022:\n\026Forc"
-    "eSyncWithMemcached\022\017.artm.core.Void\032\017.ar"
-    "tm.core.Void", 2532);
+    "\n\020regularizer_name\030\002 \001(\t\"O\n!CreateOrReco"
+    "nfigureDictionaryArgs\022*\n\ndictionary\030\002 \001("
+    "\0132\026.artm.DictionaryConfig\"0\n\025DisposeDict"
+    "ionaryArgs\022\027\n\017dictionary_name\030\002 \001(\t2\344\002\n\026"
+    "MasterComponentService\0229\n\013UpdateModel\022\031."
+    "artm.core.ModelIncrement\032\017.artm.core.Voi"
+    "d\0224\n\rRetrieveModel\022\021.artm.core.String\032\020."
+    "artm.TopicModel\0225\n\016RequestBatches\022\016.artm"
+    ".core.Int\032\023.artm.core.BatchIds\0225\n\rReport"
+    "Batches\022\023.artm.core.BatchIds\032\017.artm.core"
+    ".Void\0223\n\rConnectClient\022\021.artm.core.Strin"
+    "g\032\017.artm.core.Void\0226\n\020DisconnectClient\022\021"
+    ".artm.core.String\032\017.artm.core.Void2\200\007\n\025N"
+    "odeControllerService\022I\n\033CreateOrReconfig"
+    "ureInstance\022\031.artm.core.InstanceConfig\032\017"
+    ".artm.core.Void\0223\n\017DisposeInstance\022\017.art"
+    "m.core.Void\032\017.artm.core.Void\022M\n\035CreateOr"
+    "ReconfigureDataLoader\022\033.artm.core.DataLo"
+    "aderConfig\032\017.artm.core.Void\0225\n\021DisposeDa"
+    "taLoader\022\017.artm.core.Void\032\017.artm.core.Vo"
+    "id\022T\n\030CreateOrReconfigureModel\022\'.artm.co"
+    "re.CreateOrReconfigureModelArgs\032\017.artm.c"
+    "ore.Void\022<\n\014DisposeModel\022\033.artm.core.Dis"
+    "poseModelArgs\032\017.artm.core.Void\022`\n\036Create"
+    "OrReconfigureRegularizer\022-.artm.core.Cre"
+    "ateOrReconfigureRegularizerArgs\032\017.artm.c"
+    "ore.Void\022H\n\022DisposeRegularizer\022!.artm.co"
+    "re.DisposeRegularizerArgs\032\017.artm.core.Vo"
+    "id\022^\n\035CreateOrReconfigureDictionary\022,.ar"
+    "tm.core.CreateOrReconfigureDictionaryArg"
+    "s\032\017.artm.core.Void\022F\n\021DisposeDictionary\022"
+    " .artm.core.DisposeDictionaryArgs\032\017.artm"
+    ".core.Void\0227\n\023ForcePullTopicModel\022\017.artm"
+    ".core.Void\032\017.artm.core.Void\022@\n\034ForcePush"
+    "TopicModelIncrement\022\017.artm.core.Void\032\017.a"
+    "rtm.core.Void", 2893);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/core/internals.proto", &protobuf_RegisterTypes);
   Mask::default_instance_ = new Mask();
@@ -520,6 +573,8 @@ void protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
   DisposeModelArgs::default_instance_ = new DisposeModelArgs();
   CreateOrReconfigureRegularizerArgs::default_instance_ = new CreateOrReconfigureRegularizerArgs();
   DisposeRegularizerArgs::default_instance_ = new DisposeRegularizerArgs();
+  CreateOrReconfigureDictionaryArgs::default_instance_ = new CreateOrReconfigureDictionaryArgs();
+  DisposeDictionaryArgs::default_instance_ = new DisposeDictionaryArgs();
   Mask::default_instance_->InitAsDefaultInstance();
   Bool::default_instance_->InitAsDefaultInstance();
   Int::default_instance_->InitAsDefaultInstance();
@@ -536,6 +591,8 @@ void protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
   DisposeModelArgs::default_instance_->InitAsDefaultInstance();
   CreateOrReconfigureRegularizerArgs::default_instance_->InitAsDefaultInstance();
   DisposeRegularizerArgs::default_instance_->InitAsDefaultInstance();
+  CreateOrReconfigureDictionaryArgs::default_instance_->InitAsDefaultInstance();
+  DisposeDictionaryArgs::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto);
 }
 
@@ -5284,6 +5341,447 @@ void DisposeRegularizerArgs::Swap(DisposeRegularizerArgs* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = DisposeRegularizerArgs_descriptor_;
   metadata.reflection = DisposeRegularizerArgs_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int CreateOrReconfigureDictionaryArgs::kDictionaryFieldNumber;
+#endif  // !_MSC_VER
+
+CreateOrReconfigureDictionaryArgs::CreateOrReconfigureDictionaryArgs()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void CreateOrReconfigureDictionaryArgs::InitAsDefaultInstance() {
+  dictionary_ = const_cast< ::artm::DictionaryConfig*>(&::artm::DictionaryConfig::default_instance());
+}
+
+CreateOrReconfigureDictionaryArgs::CreateOrReconfigureDictionaryArgs(const CreateOrReconfigureDictionaryArgs& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void CreateOrReconfigureDictionaryArgs::SharedCtor() {
+  _cached_size_ = 0;
+  dictionary_ = NULL;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+CreateOrReconfigureDictionaryArgs::~CreateOrReconfigureDictionaryArgs() {
+  SharedDtor();
+}
+
+void CreateOrReconfigureDictionaryArgs::SharedDtor() {
+  if (this != default_instance_) {
+    delete dictionary_;
+  }
+}
+
+void CreateOrReconfigureDictionaryArgs::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CreateOrReconfigureDictionaryArgs::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CreateOrReconfigureDictionaryArgs_descriptor_;
+}
+
+const CreateOrReconfigureDictionaryArgs& CreateOrReconfigureDictionaryArgs::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_artm_2fcore_2finternals_2eproto();
+  return *default_instance_;
+}
+
+CreateOrReconfigureDictionaryArgs* CreateOrReconfigureDictionaryArgs::default_instance_ = NULL;
+
+CreateOrReconfigureDictionaryArgs* CreateOrReconfigureDictionaryArgs::New() const {
+  return new CreateOrReconfigureDictionaryArgs;
+}
+
+void CreateOrReconfigureDictionaryArgs::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_dictionary()) {
+      if (dictionary_ != NULL) dictionary_->::artm::DictionaryConfig::Clear();
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool CreateOrReconfigureDictionaryArgs::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .artm.DictionaryConfig dictionary = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_dictionary()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void CreateOrReconfigureDictionaryArgs::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .artm.DictionaryConfig dictionary = 2;
+  if (has_dictionary()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->dictionary(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* CreateOrReconfigureDictionaryArgs::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .artm.DictionaryConfig dictionary = 2;
+  if (has_dictionary()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->dictionary(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int CreateOrReconfigureDictionaryArgs::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .artm.DictionaryConfig dictionary = 2;
+    if (has_dictionary()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->dictionary());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CreateOrReconfigureDictionaryArgs::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const CreateOrReconfigureDictionaryArgs* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CreateOrReconfigureDictionaryArgs*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void CreateOrReconfigureDictionaryArgs::MergeFrom(const CreateOrReconfigureDictionaryArgs& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_dictionary()) {
+      mutable_dictionary()->::artm::DictionaryConfig::MergeFrom(from.dictionary());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void CreateOrReconfigureDictionaryArgs::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CreateOrReconfigureDictionaryArgs::CopyFrom(const CreateOrReconfigureDictionaryArgs& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CreateOrReconfigureDictionaryArgs::IsInitialized() const {
+
+  if (has_dictionary()) {
+    if (!this->dictionary().IsInitialized()) return false;
+  }
+  return true;
+}
+
+void CreateOrReconfigureDictionaryArgs::Swap(CreateOrReconfigureDictionaryArgs* other) {
+  if (other != this) {
+    std::swap(dictionary_, other->dictionary_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata CreateOrReconfigureDictionaryArgs::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = CreateOrReconfigureDictionaryArgs_descriptor_;
+  metadata.reflection = CreateOrReconfigureDictionaryArgs_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int DisposeDictionaryArgs::kDictionaryNameFieldNumber;
+#endif  // !_MSC_VER
+
+DisposeDictionaryArgs::DisposeDictionaryArgs()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void DisposeDictionaryArgs::InitAsDefaultInstance() {
+}
+
+DisposeDictionaryArgs::DisposeDictionaryArgs(const DisposeDictionaryArgs& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void DisposeDictionaryArgs::SharedCtor() {
+  _cached_size_ = 0;
+  dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+DisposeDictionaryArgs::~DisposeDictionaryArgs() {
+  SharedDtor();
+}
+
+void DisposeDictionaryArgs::SharedDtor() {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete dictionary_name_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void DisposeDictionaryArgs::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* DisposeDictionaryArgs::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return DisposeDictionaryArgs_descriptor_;
+}
+
+const DisposeDictionaryArgs& DisposeDictionaryArgs::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_artm_2fcore_2finternals_2eproto();
+  return *default_instance_;
+}
+
+DisposeDictionaryArgs* DisposeDictionaryArgs::default_instance_ = NULL;
+
+DisposeDictionaryArgs* DisposeDictionaryArgs::New() const {
+  return new DisposeDictionaryArgs;
+}
+
+void DisposeDictionaryArgs::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_dictionary_name()) {
+      if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+        dictionary_name_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool DisposeDictionaryArgs::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string dictionary_name = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_dictionary_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->dictionary_name().data(), this->dictionary_name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void DisposeDictionaryArgs::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string dictionary_name = 2;
+  if (has_dictionary_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->dictionary_name().data(), this->dictionary_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->dictionary_name(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* DisposeDictionaryArgs::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string dictionary_name = 2;
+  if (has_dictionary_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->dictionary_name().data(), this->dictionary_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->dictionary_name(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int DisposeDictionaryArgs::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string dictionary_name = 2;
+    if (has_dictionary_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->dictionary_name());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void DisposeDictionaryArgs::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const DisposeDictionaryArgs* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const DisposeDictionaryArgs*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void DisposeDictionaryArgs::MergeFrom(const DisposeDictionaryArgs& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_dictionary_name()) {
+      set_dictionary_name(from.dictionary_name());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void DisposeDictionaryArgs::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void DisposeDictionaryArgs::CopyFrom(const DisposeDictionaryArgs& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool DisposeDictionaryArgs::IsInitialized() const {
+
+  return true;
+}
+
+void DisposeDictionaryArgs::Swap(DisposeDictionaryArgs* other) {
+  if (other != this) {
+    std::swap(dictionary_name_, other->dictionary_name_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata DisposeDictionaryArgs::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = DisposeDictionaryArgs_descriptor_;
+  metadata.reflection = DisposeDictionaryArgs_reflection_;
   return metadata;
 }
 

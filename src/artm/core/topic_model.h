@@ -115,14 +115,11 @@ class TopicModel {
   void RetrieveExternalTopicModel(::artm::TopicModel* topic_model) const;
   void CopyFromExternalTopicModel(const ::artm::TopicModel& topic_model);
 
-  // Calculates a diff between this model and rhs, assuming that this model is newer.
-  // The output is stored as ModelIncrement in the diff object.
-  // This operation can be summarized as "diff = this - rhs"
-  void CalculateDiff(const ::artm::core::TopicModel& rhs,
-                     ::artm::core::ModelIncrement* diff) const;
+  void RetrieveModelIncrement(::artm::core::ModelIncrement* diff) const;
 
   // Applies model increment to this TopicModel.
   void ApplyDiff(const ::artm::core::ModelIncrement& diff);
+  void ApplyDiff(const ::artm::core::TopicModel& diff);
 
   int  AddToken(const std::string& token, bool random_init = true);
   void IncreaseTokenWeight(const std::string& token, int topic_id, float value);

@@ -118,7 +118,7 @@ message BatchIds {
 }
 
 service MasterComponentService {
-  rpc UpdateModel(ModelIncrement) returns (TopicModel);
+  rpc UpdateModel(ModelIncrement) returns (Void);
   rpc RetrieveModel(String) returns (TopicModel);
 
   rpc RequestBatches(Int) returns (BatchIds);
@@ -148,6 +148,14 @@ message DisposeRegularizerArgs {
   optional string regularizer_name = 2;
 }
 
+message CreateOrReconfigureDictionaryArgs {
+  optional DictionaryConfig dictionary = 2;
+}
+
+message DisposeDictionaryArgs {
+  optional string dictionary_name = 2;
+}
+
 service NodeControllerService {
   rpc CreateOrReconfigureInstance(InstanceConfig) returns (Void);
   rpc DisposeInstance(Void) returns (Void);
@@ -161,5 +169,9 @@ service NodeControllerService {
   rpc CreateOrReconfigureRegularizer(CreateOrReconfigureRegularizerArgs) returns (Void);
   rpc DisposeRegularizer(DisposeRegularizerArgs) returns (Void);
 
-  rpc ForceSyncWithMemcached(Void) returns (Void);
+  rpc CreateOrReconfigureDictionary(CreateOrReconfigureDictionaryArgs) returns (Void);
+  rpc DisposeDictionary(DisposeDictionaryArgs) returns (Void);
+
+  rpc ForcePullTopicModel(Void) returns (Void);
+  rpc ForcePushTopicModelIncrement(Void) returns (Void);
 }

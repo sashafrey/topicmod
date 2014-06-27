@@ -38,6 +38,7 @@ TARGET_LIB    = $(OUT_DIR)libartm.so
 SRCS_LIB      = artm/cpp_interface.cc \
 		artm/c_interface.cc \
 		artm/messages.pb.cc \
+		artm/regularizer_interface.cc \
 		artm/core/batch_manager.cc \
 		artm/core/data_loader.cc \
 		artm/core/generation.cc \

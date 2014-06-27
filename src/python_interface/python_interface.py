@@ -89,6 +89,12 @@ class MasterComponent:
   def RemoveRegularizer(self, regularizer):
     regularizer.__Dispose__()
 
+  def CreateDictionary(self, config):
+    return Dictionary(self, config)
+
+  def RemoveDictionary(self, dictionary):
+    dictionary.__Dispose__()
+
   def Reconfigure(self, config):
     config_blob = config.SerializeToString()
     config_blob_p = ctypes.create_string_buffer(config_blob)
@@ -232,3 +238,36 @@ class Regularizer:
     HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.master_id_,
                     len(regularizer_config_blob), regularizer_config_blob_p))
     self.config_.CopyFrom(general_config)
+
+#################################################################################
+
+class Dictionary:
+  def __init__(self, master_component, config):
+    self.lib_ = master_component.lib_
+    self.master_id_ = master_component.id_
+    self.config_ = config
+    dictionary_config_blob = config.SerializeToString()
+    dictionary_config_blob_p = ctypes.create_string_buffer(dictionary_config_blob)
+    HandleErrorCode(self.lib_.ArtmCreateDictionary(self.master_id_,
+                     len(dictionary_config_blob), dictionary_config_blob_p))
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, type, value, traceback):
+    __Dispose__(self)
+
+  def __Dispose__(self):
+    self.lib_.ArtmDisposeDictionary(self.master_id_, self.config_.name)
+    self.config_.name = ''
+    self.master_id_ = -1
+
+  def name(self):
+    return self.config_.name
+
+  def Reconfigure(self, config):
+    dictionary_config_blob = config.SerializeToString()
+    dictionary_config_blob_p = ctypes.create_string_buffer(dictionary_config_blob)
+    HandleErrorCode(self.lib_.ArtmReconfigureDictionary(self.master_id_,
+                    len(dictionary_config_blob), dictionary_config_blob_p))
+    self.config_.CopyFrom(config)

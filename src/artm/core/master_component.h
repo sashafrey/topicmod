@@ -66,6 +66,9 @@ class MasterComponent : boost::noncopyable {
   void DisposeRegularizer(const std::string& name);
   void InvokePhiRegularizers();
 
+  void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  void DisposeDictionary(const std::string& name);
+
   void WaitIdle();
   void InvokeIteration(int iterations_count);
   void AddBatch(const Batch& batch);
@@ -129,6 +132,9 @@ class ClientInterface {
   virtual void DisposeRegularizer(const std::string& name) = 0;
   virtual void InvokePhiRegularizers() = 0;
 
+  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config) = 0;
+  virtual void DisposeDictionary(const std::string& name) = 0;
+
   virtual void Reconfigure(const MasterComponentConfig& config) = 0;
 };
 
@@ -143,6 +149,9 @@ class LocalClient : public ClientInterface {
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   virtual void DisposeRegularizer(const std::string& name);
   virtual void InvokePhiRegularizers();
+
+  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  virtual void DisposeDictionary(const std::string& name);
 
   virtual void Reconfigure(const MasterComponentConfig& config);
 
@@ -168,6 +177,9 @@ class NetworkClientCollection : public ClientInterface {
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   virtual void DisposeRegularizer(const std::string& name);
   virtual void InvokePhiRegularizers();
+
+  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  virtual void DisposeDictionary(const std::string& name);
 
   virtual void Reconfigure(const MasterComponentConfig& config);
 

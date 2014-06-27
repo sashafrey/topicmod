@@ -5,8 +5,6 @@
 #ifndef SRC_ARTM_REGULARIZER_SANDBOX_SMOOTH_SPARSE_PHI_H_
 #define SRC_ARTM_REGULARIZER_SANDBOX_SMOOTH_SPARSE_PHI_H_
 
-#include <vector>
-
 #include "artm/messages.pb.h"
 #include "artm/regularizer_interface.h"
 

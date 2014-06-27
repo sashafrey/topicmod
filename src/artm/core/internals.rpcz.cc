@@ -84,33 +84,40 @@ void rpcz_protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "econfigureRegularizerArgs\022\030\n\020regularizer"
     "_name\030\002 \001(\t\022\'\n\006config\030\003 \001(\0132\027.artm.Regul"
     "arizerConfig\"2\n\026DisposeRegularizerArgs\022\030"
-    "\n\020regularizer_name\030\002 \001(\t2\345\002\n\026MasterCompo"
-    "nentService\022:\n\013UpdateModel\022\031.artm.core.M"
-    "odelIncrement\032\020.artm.TopicModel\0224\n\rRetri"
-    "eveModel\022\021.artm.core.String\032\020.artm.Topic"
-    "Model\0225\n\016RequestBatches\022\016.artm.core.Int\032"
-    "\023.artm.core.BatchIds\0225\n\rReportBatches\022\023."
-    "artm.core.BatchIds\032\017.artm.core.Void\0223\n\rC"
-    "onnectClient\022\021.artm.core.String\032\017.artm.c"
-    "ore.Void\0226\n\020DisconnectClient\022\021.artm.core"
-    ".String\032\017.artm.core.Void2\231\005\n\025NodeControl"
-    "lerService\022I\n\033CreateOrReconfigureInstanc"
-    "e\022\031.artm.core.InstanceConfig\032\017.artm.core"
-    ".Void\0223\n\017DisposeInstance\022\017.artm.core.Voi"
-    "d\032\017.artm.core.Void\022M\n\035CreateOrReconfigur"
-    "eDataLoader\022\033.artm.core.DataLoaderConfig"
-    "\032\017.artm.core.Void\0225\n\021DisposeDataLoader\022\017"
-    ".artm.core.Void\032\017.artm.core.Void\022T\n\030Crea"
-    "teOrReconfigureModel\022\'.artm.core.CreateO"
-    "rReconfigureModelArgs\032\017.artm.core.Void\022<"
-    "\n\014DisposeModel\022\033.artm.core.DisposeModelA"
-    "rgs\032\017.artm.core.Void\022`\n\036CreateOrReconfig"
-    "ureRegularizer\022-.artm.core.CreateOrRecon"
-    "figureRegularizerArgs\032\017.artm.core.Void\022H"
-    "\n\022DisposeRegularizer\022!.artm.core.Dispose"
-    "RegularizerArgs\032\017.artm.core.Void\022:\n\026Forc"
-    "eSyncWithMemcached\022\017.artm.core.Void\032\017.ar"
-    "tm.core.Void", 2532);
+    "\n\020regularizer_name\030\002 \001(\t\"O\n!CreateOrReco"
+    "nfigureDictionaryArgs\022*\n\ndictionary\030\002 \001("
+    "\0132\026.artm.DictionaryConfig\"0\n\025DisposeDict"
+    "ionaryArgs\022\027\n\017dictionary_name\030\002 \001(\t2\345\002\n\026"
+    "MasterComponentService\022:\n\013UpdateModel\022\031."
+    "artm.core.ModelIncrement\032\020.artm.TopicMod"
+    "el\0224\n\rRetrieveModel\022\021.artm.core.String\032\020"
+    ".artm.TopicModel\0225\n\016RequestBatches\022\016.art"
+    "m.core.Int\032\023.artm.core.BatchIds\0225\n\rRepor"
+    "tBatches\022\023.artm.core.BatchIds\032\017.artm.cor"
+    "e.Void\0223\n\rConnectClient\022\021.artm.core.Stri"
+    "ng\032\017.artm.core.Void\0226\n\020DisconnectClient\022"
+    "\021.artm.core.String\032\017.artm.core.Void2\301\006\n\025"
+    "NodeControllerService\022I\n\033CreateOrReconfi"
+    "gureInstance\022\031.artm.core.InstanceConfig\032"
+    "\017.artm.core.Void\0223\n\017DisposeInstance\022\017.ar"
+    "tm.core.Void\032\017.artm.core.Void\022M\n\035CreateO"
+    "rReconfigureDataLoader\022\033.artm.core.DataL"
+    "oaderConfig\032\017.artm.core.Void\0225\n\021DisposeD"
+    "ataLoader\022\017.artm.core.Void\032\017.artm.core.V"
+    "oid\022T\n\030CreateOrReconfigureModel\022\'.artm.c"
+    "ore.CreateOrReconfigureModelArgs\032\017.artm."
+    "core.Void\022<\n\014DisposeModel\022\033.artm.core.Di"
+    "sposeModelArgs\032\017.artm.core.Void\022`\n\036Creat"
+    "eOrReconfigureRegularizer\022-.artm.core.Cr"
+    "eateOrReconfigureRegularizerArgs\032\017.artm."
+    "core.Void\022H\n\022DisposeRegularizer\022!.artm.c"
+    "ore.DisposeRegularizerArgs\032\017.artm.core.V"
+    "oid\022^\n\035CreateOrReconfigureDictionary\022,.a"
+    "rtm.core.CreateOrReconfigureDictionaryAr"
+    "gs\032\017.artm.core.Void\022F\n\021DisposeDictionary"
+    "\022 .artm.core.DisposeDictionaryArgs\032\017.art"
+    "m.core.Void\022:\n\026ForceSyncWithMemcached\022\017."
+    "artm.core.Void\032\017.artm.core.Void", 2831);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/core/internals.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto);
@@ -452,6 +459,18 @@ void NodeControllerService::DisposeRegularizer(const ::artm::core::DisposeRegula
               "Method DisposeRegularizer() not implemented.");
 }
 
+void NodeControllerService::CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method CreateOrReconfigureDictionary() not implemented.");
+}
+
+void NodeControllerService::DisposeDictionary(const ::artm::core::DisposeDictionaryArgs&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method DisposeDictionary() not implemented.");
+}
+
 void NodeControllerService::ForceSyncWithMemcached(const ::artm::core::Void&,
                          ::rpcz::reply< ::artm::core::Void> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
@@ -504,6 +523,16 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
     case 8:
+      CreateOrReconfigureDictionary(
+          *::google::protobuf::down_cast<const ::artm::core::CreateOrReconfigureDictionaryArgs*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 9:
+      DisposeDictionary(
+          *::google::protobuf::down_cast<const ::artm::core::DisposeDictionaryArgs*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 10:
       ForceSyncWithMemcached(
           *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
@@ -535,6 +564,10 @@ const ::google::protobuf::Message& NodeControllerService::GetRequestPrototype(
     case 7:
       return ::artm::core::DisposeRegularizerArgs::default_instance();
     case 8:
+      return ::artm::core::CreateOrReconfigureDictionaryArgs::default_instance();
+    case 9:
+      return ::artm::core::DisposeDictionaryArgs::default_instance();
+    case 10:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -563,6 +596,10 @@ const ::google::protobuf::Message& NodeControllerService::GetResponsePrototype(
     case 7:
       return ::artm::core::Void::default_instance();
     case 8:
+      return ::artm::core::Void::default_instance();
+    case 9:
+      return ::artm::core::Void::default_instance();
+    case 10:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -751,12 +788,54 @@ void NodeControllerService_Stub::DisposeRegularizer(const ::artm::core::DisposeR
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void& request,
+void NodeControllerService_Stub::CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
                         NodeControllerService::descriptor()->method(8),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(8),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(9),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(9),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(10),
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void& request,
@@ -765,7 +844,7 @@ void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(8),
+                        NodeControllerService::descriptor()->method(10),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {

@@ -44,9 +44,12 @@ stream.modulus = 3
 stream.residuals.append(1)
 
 # Create regularizer_config
-dirichlet_regularizer_config = messages_pb2.DirichletThetaConfig()
-alpha = dirichlet_regularizer_config.alpha.add()
+dirichlet_theta_config = messages_pb2.DirichletThetaConfig()
+alpha = dirichlet_theta_config.alpha.add()
 alpha.value.append(0.1)
+
+dirichlet_phi_config = messages_pb2.DirichletPhiConfig()
+dirichlet_phi_config.dictionary_name = 'dictionary_1'
 
 # Create model_config
 model_config = messages_pb2.ModelConfig()
@@ -54,8 +57,10 @@ model_config.stream_name = ('stream_0')
 score_ = model_config.score.add()
 score_.type = Score_Type_Perplexity
 score_.stream_name = ('stream_0')
-model_config.regularizer_name.append('regularizer1')
+model_config.regularizer_name.append('regularizer_1')
 model_config.regularizer_tau.append(1)
+model_config.regularizer_name.append('regularizer_2')
+model_config.regularizer_tau.append(2)
 
 # New configs to reconfigure stuff
 master_config_new = messages_pb2.MasterComponentConfig()
@@ -67,9 +72,16 @@ model_config_new = messages_pb2.ModelConfig()
 model_config_new.CopyFrom(model_config)
 model_config_new.inner_iterations_count = 20
 
-dirichlet_regularizer_config_new = messages_pb2.DirichletThetaConfig()
-alpha = dirichlet_regularizer_config_new.alpha.add()
-alpha.value.append(0.2)
+
+dictionary_config = messages_pb2.DictionaryConfig()
+dictionary_config.name = 'dictionary_1'
+
+entry_1 = dictionary_config.entry.add()
+entry_1.key_token = 'token_1'
+entry_1.value = 0.4
+entry_2 = dictionary_config.entry.add()
+entry_2.key_token = 'token_2'
+entry_2.value = 0.6
 
 #################################################################################
 # TEST SECTION
@@ -94,9 +106,12 @@ with library.CreateMasterComponent() as master_component:
   master_component.RemoveModel(model)
   model = master_component.CreateModel(model_config)
 
-  regularizer = master_component.CreateRegularizer('regularizer1', 0, dirichlet_regularizer_config)
+  dictionary = master_component.CreateDictionary(dictionary_config)
+  regularizer = master_component.CreateRegularizer('regularizer_1', 0, dirichlet_theta_config)
   master_component.RemoveRegularizer(regularizer)
-  regularizer = master_component.CreateRegularizer('regularizer1', 0, dirichlet_regularizer_config)
+  regularizer = master_component.CreateRegularizer('regularizer_1', 0, dirichlet_theta_config)
+
+  regularizer_phi = master_component.CreateRegularizer('regularizer_2', 1, dirichlet_phi_config)
 
   master_component.AddBatch(batch)
   model.Enable()
@@ -106,8 +121,10 @@ with library.CreateMasterComponent() as master_component:
   theta_matrix = master_component.GetThetaMatrix(model)
 
   # Test all 'reconfigure' methods
-  regularizer.Reconfigure(0, dirichlet_regularizer_config_new)
+  regularizer.Reconfigure(0, dirichlet_theta_config)
   model.Reconfigure(model_config_new)
   master_component.Reconfigure(master_config_new)
+
+  master_component.RemoveDictionary(dictionary)
 
 print 'All tests have been successfully passed!'

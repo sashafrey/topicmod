@@ -1,12 +1,14 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
 #include <string>
+#include <utility>
 
 #include "artm/core/instance.h"
 
 #include "boost/bind.hpp"
 
 #include "artm/core/common.h"
+#include "artm/core/dictionary.h"
 #include "artm/core/exceptions.h"
 #include "artm/core/processor.h"
 #include "artm/core/merger.h"
@@ -26,8 +28,8 @@
   if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {    \
     BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));  \
   }                                                                                       \
-  regularizer.reset(new RegularizerType(regularizer_config));                 \
-}
+  regularizer.reset(new RegularizerType(regularizer_config));                             \
+}                                                                                         \
 
 namespace artm {
 namespace core {
@@ -43,9 +45,11 @@ Instance::Instance(int id, const InstanceConfig& config)
       merger_queue_lock_(),
       merger_queue_(),
       merger_(),
-      processors_() {
-  merger_.reset(new Merger(
-    &merger_queue_lock_, &merger_queue_, &schema_, &master_component_service_proxy_));
+      processors_(),
+      dictionaries_(lock_) {
+  merger_.reset(new Merger(&merger_queue_lock_, &merger_queue_, &schema_,
+                           &master_component_service_proxy_));
+
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
@@ -73,13 +77,17 @@ void Instance::DisposeModel(ModelName model_name) {
 void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   std::string regularizer_name = config.name();
   artm::RegularizerConfig_Type regularizer_type = config.type();
-  std::string config_blob = config.config();
+
+  std::string config_blob;  // Used by CREATE_OR_RECONFIGURE_REGULARIZER
+  if (config.has_config()) {
+    config_blob = config.config();
+  }
 
   std::shared_ptr<artm::RegularizerInterface> regularizer;
 
   // add here new case if adding new regularizer
   switch (regularizer_type) {
-  case artm::RegularizerConfig_Type_DirichletTheta: {
+    case artm::RegularizerConfig_Type_DirichletTheta: {
       CREATE_OR_RECONFIGURE_REGULARIZER(::artm::DirichletThetaConfig,
                                         ::artm::regularizer_sandbox::DirichletTheta);
       break;
@@ -107,8 +115,9 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
       BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));
   }
 
+  regularizer->set_dictionaries(&dictionaries_);
   auto new_schema = schema_.get_copy();
-  new_schema->set_regularizer(config.name(), regularizer);
+  new_schema->set_regularizer(regularizer_name, regularizer);
   schema_.set(new_schema);
 }
 
@@ -116,6 +125,20 @@ void Instance::DisposeRegularizer(const std::string& name) {
   auto new_schema = schema_.get_copy();
   new_schema->clear_regularizer(name);
   schema_.set(new_schema);
+}
+
+void Instance::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
+  auto dictionary = std::make_shared<DictionaryMap>();
+  for (int index = 0; index < config.entry_size(); ++index) {
+    const ::artm::DictionaryEntry& entry = config.entry(index);
+    dictionary->insert(std::pair<std::string, DictionaryEntry>(entry.key_token(), entry));
+  }
+
+  dictionaries_.set(config.name(), dictionary);
+}
+
+void Instance::DisposeDictionary(const std::string& name) {
+  dictionaries_.erase(name);
 }
 
 void Instance::ForceResetScores(ModelName model_name) {

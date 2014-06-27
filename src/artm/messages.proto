@@ -101,8 +101,8 @@ message RegularizerConfig {
   enum Type {
     DirichletTheta = 0;
     DirichletPhi = 1;
-	  SmoothSparseTheta = 2;
-	  SmoothSparsePhi = 3;
+    SmoothSparseTheta = 2;
+    SmoothSparsePhi = 3;
   }
 
   optional string name = 1;
@@ -117,7 +117,7 @@ message DirichletThetaConfig {
 
 // Configuration of a Dirichlet Phi regularizer
 message DirichletPhiConfig {
-  optional DoubleArray beta = 1;
+  optional string dictionary_name = 1;
 }
 
 // Configuration of a SmoothSparse Theta regularizer
@@ -129,8 +129,19 @@ message SmoothSparseThetaConfig {
 // Configuration of a SmoothSparse Phi regularizer
 message SmoothSparsePhiConfig {
   required int32 background_topics_count = 1;
-  optional DoubleArray beta = 2;
-  repeated DoubleArray background_beta = 3;
+  optional string dictionary_name = 2;
+}
+
+message DictionaryConfig {
+  required string name = 1;
+  repeated DictionaryEntry entry = 2;
+}
+
+message DictionaryEntry {
+  required string key_token = 1;
+  optional float value = 2;
+  repeated string value_tokens = 3;
+  optional FloatArray values = 4;
 }
 
 message DoubleArray {

@@ -76,6 +76,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   regularizer_config.set_name("regularizer_phi");
   regularizer_config.set_type(::artm::RegularizerConfig_Type_DirichletPhi);
   regularizer_config.set_config(::artm::DirichletPhiConfig().SerializeAsString());
+  regularizer_config.add_dictionary_name("dictionary_1");
   Regularizer dirichlet_phi_regularizer(master_component, regularizer_config);
 
   // Create model

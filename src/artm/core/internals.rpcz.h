@@ -151,6 +151,10 @@ class NodeControllerService : public rpcz::service {
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
+  virtual void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
   virtual void ForceSyncWithMemcached(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
@@ -227,6 +231,18 @@ class NodeControllerService_Stub {
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void ForceSyncWithMemcached(const ::artm::core::Void& request,

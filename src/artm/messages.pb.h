@@ -45,6 +45,8 @@ class DirichletThetaConfig;
 class DirichletPhiConfig;
 class SmoothSparseThetaConfig;
 class SmoothSparsePhiConfig;
+class DictionaryConfig;
+class DictionaryEntry;
 class DoubleArray;
 class FloatArray;
 class Score;
@@ -1282,23 +1284,26 @@ class DirichletPhiConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional .artm.DoubleArray beta = 1;
-  inline bool has_beta() const;
-  inline void clear_beta();
-  static const int kBetaFieldNumber = 1;
-  inline const ::artm::DoubleArray& beta() const;
-  inline ::artm::DoubleArray* mutable_beta();
-  inline ::artm::DoubleArray* release_beta();
-  inline void set_allocated_beta(::artm::DoubleArray* beta);
+  // optional string dictionary_name = 1;
+  inline bool has_dictionary_name() const;
+  inline void clear_dictionary_name();
+  static const int kDictionaryNameFieldNumber = 1;
+  inline const ::std::string& dictionary_name() const;
+  inline void set_dictionary_name(const ::std::string& value);
+  inline void set_dictionary_name(const char* value);
+  inline void set_dictionary_name(const char* value, size_t size);
+  inline ::std::string* mutable_dictionary_name();
+  inline ::std::string* release_dictionary_name();
+  inline void set_allocated_dictionary_name(::std::string* dictionary_name);
 
   // @@protoc_insertion_point(class_scope:artm.DirichletPhiConfig)
  private:
-  inline void set_has_beta();
-  inline void clear_has_beta();
+  inline void set_has_dictionary_name();
+  inline void clear_has_dictionary_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::artm::DoubleArray* beta_;
+  ::std::string* dictionary_name_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
@@ -1468,42 +1473,32 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 background_topics_count() const;
   inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // optional .artm.DoubleArray beta = 2;
-  inline bool has_beta() const;
-  inline void clear_beta();
-  static const int kBetaFieldNumber = 2;
-  inline const ::artm::DoubleArray& beta() const;
-  inline ::artm::DoubleArray* mutable_beta();
-  inline ::artm::DoubleArray* release_beta();
-  inline void set_allocated_beta(::artm::DoubleArray* beta);
-
-  // repeated .artm.DoubleArray background_beta = 3;
-  inline int background_beta_size() const;
-  inline void clear_background_beta();
-  static const int kBackgroundBetaFieldNumber = 3;
-  inline const ::artm::DoubleArray& background_beta(int index) const;
-  inline ::artm::DoubleArray* mutable_background_beta(int index);
-  inline ::artm::DoubleArray* add_background_beta();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      background_beta() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_background_beta();
+  // optional string dictionary_name = 2;
+  inline bool has_dictionary_name() const;
+  inline void clear_dictionary_name();
+  static const int kDictionaryNameFieldNumber = 2;
+  inline const ::std::string& dictionary_name() const;
+  inline void set_dictionary_name(const ::std::string& value);
+  inline void set_dictionary_name(const char* value);
+  inline void set_dictionary_name(const char* value, size_t size);
+  inline ::std::string* mutable_dictionary_name();
+  inline ::std::string* release_dictionary_name();
+  inline void set_allocated_dictionary_name(::std::string* dictionary_name);
 
   // @@protoc_insertion_point(class_scope:artm.SmoothSparsePhiConfig)
  private:
   inline void set_has_background_topics_count();
   inline void clear_has_background_topics_count();
-  inline void set_has_beta();
-  inline void clear_has_beta();
+  inline void set_has_dictionary_name();
+  inline void clear_has_dictionary_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::artm::DoubleArray* beta_;
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > background_beta_;
+  ::std::string* dictionary_name_;
   ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -1511,6 +1506,232 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SmoothSparsePhiConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DictionaryConfig : public ::google::protobuf::Message {
+ public:
+  DictionaryConfig();
+  virtual ~DictionaryConfig();
+
+  DictionaryConfig(const DictionaryConfig& from);
+
+  inline DictionaryConfig& operator=(const DictionaryConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DictionaryConfig& default_instance();
+
+  void Swap(DictionaryConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  DictionaryConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DictionaryConfig& from);
+  void MergeFrom(const DictionaryConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // repeated .artm.DictionaryEntry entry = 2;
+  inline int entry_size() const;
+  inline void clear_entry();
+  static const int kEntryFieldNumber = 2;
+  inline const ::artm::DictionaryEntry& entry(int index) const;
+  inline ::artm::DictionaryEntry* mutable_entry(int index);
+  inline ::artm::DictionaryEntry* add_entry();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::DictionaryEntry >&
+      entry() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::DictionaryEntry >*
+      mutable_entry();
+
+  // @@protoc_insertion_point(class_scope:artm.DictionaryConfig)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* name_;
+  ::google::protobuf::RepeatedPtrField< ::artm::DictionaryEntry > entry_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static DictionaryConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DictionaryEntry : public ::google::protobuf::Message {
+ public:
+  DictionaryEntry();
+  virtual ~DictionaryEntry();
+
+  DictionaryEntry(const DictionaryEntry& from);
+
+  inline DictionaryEntry& operator=(const DictionaryEntry& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DictionaryEntry& default_instance();
+
+  void Swap(DictionaryEntry* other);
+
+  // implements Message ----------------------------------------------
+
+  DictionaryEntry* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DictionaryEntry& from);
+  void MergeFrom(const DictionaryEntry& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // required string key_token = 1;
+  inline bool has_key_token() const;
+  inline void clear_key_token();
+  static const int kKeyTokenFieldNumber = 1;
+  inline const ::std::string& key_token() const;
+  inline void set_key_token(const ::std::string& value);
+  inline void set_key_token(const char* value);
+  inline void set_key_token(const char* value, size_t size);
+  inline ::std::string* mutable_key_token();
+  inline ::std::string* release_key_token();
+  inline void set_allocated_key_token(::std::string* key_token);
+
+  // optional float value = 2;
+  inline bool has_value() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 2;
+  inline float value() const;
+  inline void set_value(float value);
+
+  // repeated string value_tokens = 3;
+  inline int value_tokens_size() const;
+  inline void clear_value_tokens();
+  static const int kValueTokensFieldNumber = 3;
+  inline const ::std::string& value_tokens(int index) const;
+  inline ::std::string* mutable_value_tokens(int index);
+  inline void set_value_tokens(int index, const ::std::string& value);
+  inline void set_value_tokens(int index, const char* value);
+  inline void set_value_tokens(int index, const char* value, size_t size);
+  inline ::std::string* add_value_tokens();
+  inline void add_value_tokens(const ::std::string& value);
+  inline void add_value_tokens(const char* value);
+  inline void add_value_tokens(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& value_tokens() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_value_tokens();
+
+  // optional .artm.FloatArray values = 4;
+  inline bool has_values() const;
+  inline void clear_values();
+  static const int kValuesFieldNumber = 4;
+  inline const ::artm::FloatArray& values() const;
+  inline ::artm::FloatArray* mutable_values();
+  inline ::artm::FloatArray* release_values();
+  inline void set_allocated_values(::artm::FloatArray* values);
+
+  // @@protoc_insertion_point(class_scope:artm.DictionaryEntry)
+ private:
+  inline void set_has_key_token();
+  inline void clear_has_key_token();
+  inline void set_has_value();
+  inline void clear_has_value();
+  inline void set_has_values();
+  inline void clear_has_values();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* key_token_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> value_tokens_;
+  ::artm::FloatArray* values_;
+  float value_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static DictionaryEntry* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -3716,41 +3937,73 @@ DirichletThetaConfig::mutable_alpha() {
 
 // DirichletPhiConfig
 
-// optional .artm.DoubleArray beta = 1;
-inline bool DirichletPhiConfig::has_beta() const {
+// optional string dictionary_name = 1;
+inline bool DirichletPhiConfig::has_dictionary_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void DirichletPhiConfig::set_has_beta() {
+inline void DirichletPhiConfig::set_has_dictionary_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void DirichletPhiConfig::clear_has_beta() {
+inline void DirichletPhiConfig::clear_has_dictionary_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void DirichletPhiConfig::clear_beta() {
-  if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
-  clear_has_beta();
+inline void DirichletPhiConfig::clear_dictionary_name() {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_->clear();
+  }
+  clear_has_dictionary_name();
 }
-inline const ::artm::DoubleArray& DirichletPhiConfig::beta() const {
-  return beta_ != NULL ? *beta_ : *default_instance_->beta_;
+inline const ::std::string& DirichletPhiConfig::dictionary_name() const {
+  return *dictionary_name_;
 }
-inline ::artm::DoubleArray* DirichletPhiConfig::mutable_beta() {
-  set_has_beta();
-  if (beta_ == NULL) beta_ = new ::artm::DoubleArray;
-  return beta_;
+inline void DirichletPhiConfig::set_dictionary_name(const ::std::string& value) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(value);
 }
-inline ::artm::DoubleArray* DirichletPhiConfig::release_beta() {
-  clear_has_beta();
-  ::artm::DoubleArray* temp = beta_;
-  beta_ = NULL;
-  return temp;
+inline void DirichletPhiConfig::set_dictionary_name(const char* value) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(value);
 }
-inline void DirichletPhiConfig::set_allocated_beta(::artm::DoubleArray* beta) {
-  delete beta_;
-  beta_ = beta;
-  if (beta) {
-    set_has_beta();
+inline void DirichletPhiConfig::set_dictionary_name(const char* value, size_t size) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DirichletPhiConfig::mutable_dictionary_name() {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  return dictionary_name_;
+}
+inline ::std::string* DirichletPhiConfig::release_dictionary_name() {
+  clear_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
   } else {
-    clear_has_beta();
+    ::std::string* temp = dictionary_name_;
+    dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DirichletPhiConfig::set_allocated_dictionary_name(::std::string* dictionary_name) {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete dictionary_name_;
+  }
+  if (dictionary_name) {
+    set_has_dictionary_name();
+    dictionary_name_ = dictionary_name;
+  } else {
+    clear_has_dictionary_name();
+    dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
@@ -3831,67 +4084,351 @@ inline void SmoothSparsePhiConfig::set_background_topics_count(::google::protobu
   background_topics_count_ = value;
 }
 
-// optional .artm.DoubleArray beta = 2;
-inline bool SmoothSparsePhiConfig::has_beta() const {
+// optional string dictionary_name = 2;
+inline bool SmoothSparsePhiConfig::has_dictionary_name() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SmoothSparsePhiConfig::set_has_beta() {
+inline void SmoothSparsePhiConfig::set_has_dictionary_name() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_has_beta() {
+inline void SmoothSparsePhiConfig::clear_has_dictionary_name() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_beta() {
-  if (beta_ != NULL) beta_->::artm::DoubleArray::Clear();
-  clear_has_beta();
+inline void SmoothSparsePhiConfig::clear_dictionary_name() {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_->clear();
+  }
+  clear_has_dictionary_name();
 }
-inline const ::artm::DoubleArray& SmoothSparsePhiConfig::beta() const {
-  return beta_ != NULL ? *beta_ : *default_instance_->beta_;
+inline const ::std::string& SmoothSparsePhiConfig::dictionary_name() const {
+  return *dictionary_name_;
 }
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_beta() {
-  set_has_beta();
-  if (beta_ == NULL) beta_ = new ::artm::DoubleArray;
-  return beta_;
+inline void SmoothSparsePhiConfig::set_dictionary_name(const ::std::string& value) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(value);
 }
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::release_beta() {
-  clear_has_beta();
-  ::artm::DoubleArray* temp = beta_;
-  beta_ = NULL;
-  return temp;
+inline void SmoothSparsePhiConfig::set_dictionary_name(const char* value) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(value);
 }
-inline void SmoothSparsePhiConfig::set_allocated_beta(::artm::DoubleArray* beta) {
-  delete beta_;
-  beta_ = beta;
-  if (beta) {
-    set_has_beta();
+inline void SmoothSparsePhiConfig::set_dictionary_name(const char* value, size_t size) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SmoothSparsePhiConfig::mutable_dictionary_name() {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    dictionary_name_ = new ::std::string;
+  }
+  return dictionary_name_;
+}
+inline ::std::string* SmoothSparsePhiConfig::release_dictionary_name() {
+  clear_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
   } else {
-    clear_has_beta();
+    ::std::string* temp = dictionary_name_;
+    dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SmoothSparsePhiConfig::set_allocated_dictionary_name(::std::string* dictionary_name) {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+    delete dictionary_name_;
+  }
+  if (dictionary_name) {
+    set_has_dictionary_name();
+    dictionary_name_ = dictionary_name;
+  } else {
+    clear_has_dictionary_name();
+    dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
-// repeated .artm.DoubleArray background_beta = 3;
-inline int SmoothSparsePhiConfig::background_beta_size() const {
-  return background_beta_.size();
+// -------------------------------------------------------------------
+
+// DictionaryConfig
+
+// required string name = 1;
+inline bool DictionaryConfig::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SmoothSparsePhiConfig::clear_background_beta() {
-  background_beta_.Clear();
+inline void DictionaryConfig::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
 }
-inline const ::artm::DoubleArray& SmoothSparsePhiConfig::background_beta(int index) const {
-  return background_beta_.Get(index);
+inline void DictionaryConfig::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
 }
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::mutable_background_beta(int index) {
-  return background_beta_.Mutable(index);
+inline void DictionaryConfig::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
 }
-inline ::artm::DoubleArray* SmoothSparsePhiConfig::add_background_beta() {
-  return background_beta_.Add();
+inline const ::std::string& DictionaryConfig::name() const {
+  return *name_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-SmoothSparsePhiConfig::background_beta() const {
-  return background_beta_;
+inline void DictionaryConfig::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
 }
-inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-SmoothSparsePhiConfig::mutable_background_beta() {
-  return &background_beta_;
+inline void DictionaryConfig::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void DictionaryConfig::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DictionaryConfig::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* DictionaryConfig::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DictionaryConfig::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// repeated .artm.DictionaryEntry entry = 2;
+inline int DictionaryConfig::entry_size() const {
+  return entry_.size();
+}
+inline void DictionaryConfig::clear_entry() {
+  entry_.Clear();
+}
+inline const ::artm::DictionaryEntry& DictionaryConfig::entry(int index) const {
+  return entry_.Get(index);
+}
+inline ::artm::DictionaryEntry* DictionaryConfig::mutable_entry(int index) {
+  return entry_.Mutable(index);
+}
+inline ::artm::DictionaryEntry* DictionaryConfig::add_entry() {
+  return entry_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::DictionaryEntry >&
+DictionaryConfig::entry() const {
+  return entry_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::DictionaryEntry >*
+DictionaryConfig::mutable_entry() {
+  return &entry_;
+}
+
+// -------------------------------------------------------------------
+
+// DictionaryEntry
+
+// required string key_token = 1;
+inline bool DictionaryEntry::has_key_token() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DictionaryEntry::set_has_key_token() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DictionaryEntry::clear_has_key_token() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DictionaryEntry::clear_key_token() {
+  if (key_token_ != &::google::protobuf::internal::kEmptyString) {
+    key_token_->clear();
+  }
+  clear_has_key_token();
+}
+inline const ::std::string& DictionaryEntry::key_token() const {
+  return *key_token_;
+}
+inline void DictionaryEntry::set_key_token(const ::std::string& value) {
+  set_has_key_token();
+  if (key_token_ == &::google::protobuf::internal::kEmptyString) {
+    key_token_ = new ::std::string;
+  }
+  key_token_->assign(value);
+}
+inline void DictionaryEntry::set_key_token(const char* value) {
+  set_has_key_token();
+  if (key_token_ == &::google::protobuf::internal::kEmptyString) {
+    key_token_ = new ::std::string;
+  }
+  key_token_->assign(value);
+}
+inline void DictionaryEntry::set_key_token(const char* value, size_t size) {
+  set_has_key_token();
+  if (key_token_ == &::google::protobuf::internal::kEmptyString) {
+    key_token_ = new ::std::string;
+  }
+  key_token_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DictionaryEntry::mutable_key_token() {
+  set_has_key_token();
+  if (key_token_ == &::google::protobuf::internal::kEmptyString) {
+    key_token_ = new ::std::string;
+  }
+  return key_token_;
+}
+inline ::std::string* DictionaryEntry::release_key_token() {
+  clear_has_key_token();
+  if (key_token_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = key_token_;
+    key_token_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void DictionaryEntry::set_allocated_key_token(::std::string* key_token) {
+  if (key_token_ != &::google::protobuf::internal::kEmptyString) {
+    delete key_token_;
+  }
+  if (key_token) {
+    set_has_key_token();
+    key_token_ = key_token;
+  } else {
+    clear_has_key_token();
+    key_token_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional float value = 2;
+inline bool DictionaryEntry::has_value() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void DictionaryEntry::set_has_value() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void DictionaryEntry::clear_has_value() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void DictionaryEntry::clear_value() {
+  value_ = 0;
+  clear_has_value();
+}
+inline float DictionaryEntry::value() const {
+  return value_;
+}
+inline void DictionaryEntry::set_value(float value) {
+  set_has_value();
+  value_ = value;
+}
+
+// repeated string value_tokens = 3;
+inline int DictionaryEntry::value_tokens_size() const {
+  return value_tokens_.size();
+}
+inline void DictionaryEntry::clear_value_tokens() {
+  value_tokens_.Clear();
+}
+inline const ::std::string& DictionaryEntry::value_tokens(int index) const {
+  return value_tokens_.Get(index);
+}
+inline ::std::string* DictionaryEntry::mutable_value_tokens(int index) {
+  return value_tokens_.Mutable(index);
+}
+inline void DictionaryEntry::set_value_tokens(int index, const ::std::string& value) {
+  value_tokens_.Mutable(index)->assign(value);
+}
+inline void DictionaryEntry::set_value_tokens(int index, const char* value) {
+  value_tokens_.Mutable(index)->assign(value);
+}
+inline void DictionaryEntry::set_value_tokens(int index, const char* value, size_t size) {
+  value_tokens_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* DictionaryEntry::add_value_tokens() {
+  return value_tokens_.Add();
+}
+inline void DictionaryEntry::add_value_tokens(const ::std::string& value) {
+  value_tokens_.Add()->assign(value);
+}
+inline void DictionaryEntry::add_value_tokens(const char* value) {
+  value_tokens_.Add()->assign(value);
+}
+inline void DictionaryEntry::add_value_tokens(const char* value, size_t size) {
+  value_tokens_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+DictionaryEntry::value_tokens() const {
+  return value_tokens_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+DictionaryEntry::mutable_value_tokens() {
+  return &value_tokens_;
+}
+
+// optional .artm.FloatArray values = 4;
+inline bool DictionaryEntry::has_values() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void DictionaryEntry::set_has_values() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void DictionaryEntry::clear_has_values() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void DictionaryEntry::clear_values() {
+  if (values_ != NULL) values_->::artm::FloatArray::Clear();
+  clear_has_values();
+}
+inline const ::artm::FloatArray& DictionaryEntry::values() const {
+  return values_ != NULL ? *values_ : *default_instance_->values_;
+}
+inline ::artm::FloatArray* DictionaryEntry::mutable_values() {
+  set_has_values();
+  if (values_ == NULL) values_ = new ::artm::FloatArray;
+  return values_;
+}
+inline ::artm::FloatArray* DictionaryEntry::release_values() {
+  clear_has_values();
+  ::artm::FloatArray* temp = values_;
+  values_ = NULL;
+  return temp;
+}
+inline void DictionaryEntry::set_allocated_values(::artm::FloatArray* values) {
+  delete values_;
+  values_ = values;
+  if (values) {
+    set_has_values();
+  } else {
+    clear_has_values();
+  }
 }
 
 // -------------------------------------------------------------------

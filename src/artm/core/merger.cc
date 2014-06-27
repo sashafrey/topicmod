@@ -116,7 +116,7 @@ void Merger::InvokePhiRegularizers() {
           }
         } else {
           LOG(ERROR) << "Phi Regularizer with name <" <<
-            reg_name_iterator->c_str() << "> does not exist.";
+            reg_name_iterator->c_str() << "> does not exist.\n";
         }
       }
       topic_model_.set(model_name, new_ttm);

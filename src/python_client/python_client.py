@@ -93,7 +93,7 @@ with library.CreateMasterComponent(master_config) as master_component:
       regularizer_name_theta,
       RegularizerConfig_Type_DirichletTheta,
       regularizer_config_theta)
-    
+
     model = master_component.CreateModel(model_config)
     for iter in range(0, outer_iteration_count):
         master_component.InvokeIteration(1)

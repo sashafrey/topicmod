@@ -140,6 +140,40 @@ void NodeControllerServiceImpl::DisposeRegularizer(
   response.send(Void());
 }
 
+void NodeControllerServiceImpl::CreateOrReconfigureDictionary(
+    const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+    ::rpcz::reply< ::artm::core::Void> response) {
+  try {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
+    if (instance == nullptr) {
+      LOG(ERROR) << "Instance not found";
+      BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("Instance not found"));
+    }
+
+    instance->CreateOrReconfigureDictionary(request.dictionary());
+    response.send(Void());
+  } catch(...) {
+    response.Error(-1);  // todo(alfrey): fix error handling in services
+  }
+}
+
+void NodeControllerServiceImpl::DisposeDictionary(
+    const ::artm::core::DisposeDictionaryArgs& request,
+    ::rpcz::reply< ::artm::core::Void> response) {
+  try {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
+    if (instance != nullptr) {
+      instance->DisposeDictionary(request.dictionary_name());
+    }
+
+    response.send(Void());
+  } catch(...) {
+    response.Error(-1);  // todo(alfrey): fix error handling in services
+  }
+}
+
 void NodeControllerServiceImpl::ForceSyncWithMemcached(
     const ::artm::core::Void& request,
     ::rpcz::reply< ::artm::core::Void> response) {

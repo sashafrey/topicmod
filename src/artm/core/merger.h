@@ -42,15 +42,18 @@ class Merger : boost::noncopyable {
   void DisposeModel(ModelName model_name);
   void UpdateModel(const ModelConfig& model);
   void ForceResetScores(ModelName model_name);
-  void ForceSyncWithMemcached(ModelName model_name);
+  void ForcePullTopicModel();
+  void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();
+  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
   std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelName model_name) const;
 
  private:
   enum MergerTaskType {
     kDisposeModel,
-    kForceSyncWithMemcached,
+    kForcePullTopicModel,
+    kForcePushTopicModelIncrement,
     kForceResetScores,
   };
 
@@ -69,7 +72,7 @@ class Merger : boost::noncopyable {
 
   mutable boost::mutex lock_;
   ThreadSafeCollectionHolder<ModelName, TopicModel> topic_model_;
-  std::map<ModelName, std::shared_ptr<TopicModel>> new_topic_model_;
+  std::map<ModelName, std::shared_ptr<TopicModel>> topic_model_inc_;
   ThreadSafeHolder<InstanceSchema>* schema_;
   ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service_;
 
@@ -82,7 +85,8 @@ class Merger : boost::noncopyable {
   boost::thread thread_;
   void ThreadFunction();
 
-  void SyncWithMemcached(ModelName model_name);
+  void PullTopicModel();
+  void PushTopicModelIncrement();
   void ResetScores(ModelName model_name);
 };
 

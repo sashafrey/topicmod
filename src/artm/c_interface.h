@@ -22,7 +22,7 @@ extern "C" {
     ARTM_GENERAL_ERROR = -1,
     ARTM_OBJECT_NOT_FOUND = -2,
     ARTM_INVALID_MESSAGE = -3,
-    ARTM_UNSUPPORTED_RECONFIGURATION = -4,
+    ARTM_INVALID_OPERATION = -4,
     ARTM_NETWORK_ERROR = -5,
   };
 
@@ -67,6 +67,7 @@ extern "C" {
 
   DLL_PUBLIC int ArtmRequestThetaMatrix(int master_id, const char* model_name);
   DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_name);
+  DLL_PUBLIC int ArtmOverwriteTopicModel(int master_id, int length, const char* topic_model_blob);
 }
 
 #endif  // SRC_ARTM_C_INTERFACE_H_

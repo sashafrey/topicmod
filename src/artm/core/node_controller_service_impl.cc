@@ -174,14 +174,32 @@ void NodeControllerServiceImpl::DisposeDictionary(
   }
 }
 
-void NodeControllerServiceImpl::ForceSyncWithMemcached(
+void NodeControllerServiceImpl::ForcePullTopicModel(
     const ::artm::core::Void& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
     auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
     if (instance != nullptr) {
-      instance->ForceSyncWithMemcached(ModelName());
+      instance->ForcePullTopicModel();
+    } else {
+      LOG(ERROR) << "No instances exist in node controller";
+    }
+
+    response.send(Void());
+  } catch(...) {
+    response.Error(-1);  // todo(alfrey): fix error handling in services
+  }
+}
+
+void NodeControllerServiceImpl::ForcePushTopicModelIncrement(
+    const ::artm::core::Void& request,
+    ::rpcz::reply< ::artm::core::Void> response) {
+  try {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
+    if (instance != nullptr) {
+      instance->ForcePushTopicModelIncrement();
     } else {
       LOG(ERROR) << "No instances exist in node controller";
     }

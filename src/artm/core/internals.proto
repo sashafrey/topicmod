@@ -118,7 +118,7 @@ message BatchIds {
 }
 
 service MasterComponentService {
-  rpc UpdateModel(ModelIncrement) returns (TopicModel);
+  rpc UpdateModel(ModelIncrement) returns (Void);
   rpc RetrieveModel(String) returns (TopicModel);
 
   rpc RequestBatches(Int) returns (BatchIds);
@@ -172,5 +172,6 @@ service NodeControllerService {
   rpc CreateOrReconfigureDictionary(CreateOrReconfigureDictionaryArgs) returns (Void);
   rpc DisposeDictionary(DisposeDictionaryArgs) returns (Void);
 
-  rpc ForceSyncWithMemcached(Void) returns (Void);
+  rpc ForcePullTopicModel(Void) returns (Void);
+  rpc ForcePushTopicModelIncrement(Void) returns (Void);
 }

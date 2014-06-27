@@ -145,12 +145,20 @@ void Instance::ForceResetScores(ModelName model_name) {
   merger_->ForceResetScores(model_name);
 }
 
-void Instance::ForceSyncWithMemcached(ModelName model_name) {
-  merger_->ForceSyncWithMemcached(model_name);
+void Instance::ForcePullTopicModel() {
+  merger_->ForcePullTopicModel();
+}
+
+void Instance::ForcePushTopicModelIncrement() {
+  merger_->ForcePushTopicModelIncrement();
 }
 
 void Instance::InvokePhiRegularizers() {
   merger_->InvokePhiRegularizers();
+}
+
+void Instance::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  merger_->OverwriteTopicModel(topic_model);
 }
 
 void Instance::Reconfigure(const InstanceConfig& config) {

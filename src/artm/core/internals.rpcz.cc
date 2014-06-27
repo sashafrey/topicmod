@@ -87,37 +87,39 @@ void rpcz_protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "\n\020regularizer_name\030\002 \001(\t\"O\n!CreateOrReco"
     "nfigureDictionaryArgs\022*\n\ndictionary\030\002 \001("
     "\0132\026.artm.DictionaryConfig\"0\n\025DisposeDict"
-    "ionaryArgs\022\027\n\017dictionary_name\030\002 \001(\t2\345\002\n\026"
-    "MasterComponentService\022:\n\013UpdateModel\022\031."
-    "artm.core.ModelIncrement\032\020.artm.TopicMod"
-    "el\0224\n\rRetrieveModel\022\021.artm.core.String\032\020"
-    ".artm.TopicModel\0225\n\016RequestBatches\022\016.art"
-    "m.core.Int\032\023.artm.core.BatchIds\0225\n\rRepor"
-    "tBatches\022\023.artm.core.BatchIds\032\017.artm.cor"
-    "e.Void\0223\n\rConnectClient\022\021.artm.core.Stri"
-    "ng\032\017.artm.core.Void\0226\n\020DisconnectClient\022"
-    "\021.artm.core.String\032\017.artm.core.Void2\301\006\n\025"
-    "NodeControllerService\022I\n\033CreateOrReconfi"
-    "gureInstance\022\031.artm.core.InstanceConfig\032"
-    "\017.artm.core.Void\0223\n\017DisposeInstance\022\017.ar"
-    "tm.core.Void\032\017.artm.core.Void\022M\n\035CreateO"
-    "rReconfigureDataLoader\022\033.artm.core.DataL"
-    "oaderConfig\032\017.artm.core.Void\0225\n\021DisposeD"
-    "ataLoader\022\017.artm.core.Void\032\017.artm.core.V"
-    "oid\022T\n\030CreateOrReconfigureModel\022\'.artm.c"
-    "ore.CreateOrReconfigureModelArgs\032\017.artm."
-    "core.Void\022<\n\014DisposeModel\022\033.artm.core.Di"
-    "sposeModelArgs\032\017.artm.core.Void\022`\n\036Creat"
-    "eOrReconfigureRegularizer\022-.artm.core.Cr"
-    "eateOrReconfigureRegularizerArgs\032\017.artm."
-    "core.Void\022H\n\022DisposeRegularizer\022!.artm.c"
-    "ore.DisposeRegularizerArgs\032\017.artm.core.V"
-    "oid\022^\n\035CreateOrReconfigureDictionary\022,.a"
-    "rtm.core.CreateOrReconfigureDictionaryAr"
-    "gs\032\017.artm.core.Void\022F\n\021DisposeDictionary"
-    "\022 .artm.core.DisposeDictionaryArgs\032\017.art"
-    "m.core.Void\022:\n\026ForceSyncWithMemcached\022\017."
-    "artm.core.Void\032\017.artm.core.Void", 2831);
+    "ionaryArgs\022\027\n\017dictionary_name\030\002 \001(\t2\344\002\n\026"
+    "MasterComponentService\0229\n\013UpdateModel\022\031."
+    "artm.core.ModelIncrement\032\017.artm.core.Voi"
+    "d\0224\n\rRetrieveModel\022\021.artm.core.String\032\020."
+    "artm.TopicModel\0225\n\016RequestBatches\022\016.artm"
+    ".core.Int\032\023.artm.core.BatchIds\0225\n\rReport"
+    "Batches\022\023.artm.core.BatchIds\032\017.artm.core"
+    ".Void\0223\n\rConnectClient\022\021.artm.core.Strin"
+    "g\032\017.artm.core.Void\0226\n\020DisconnectClient\022\021"
+    ".artm.core.String\032\017.artm.core.Void2\200\007\n\025N"
+    "odeControllerService\022I\n\033CreateOrReconfig"
+    "ureInstance\022\031.artm.core.InstanceConfig\032\017"
+    ".artm.core.Void\0223\n\017DisposeInstance\022\017.art"
+    "m.core.Void\032\017.artm.core.Void\022M\n\035CreateOr"
+    "ReconfigureDataLoader\022\033.artm.core.DataLo"
+    "aderConfig\032\017.artm.core.Void\0225\n\021DisposeDa"
+    "taLoader\022\017.artm.core.Void\032\017.artm.core.Vo"
+    "id\022T\n\030CreateOrReconfigureModel\022\'.artm.co"
+    "re.CreateOrReconfigureModelArgs\032\017.artm.c"
+    "ore.Void\022<\n\014DisposeModel\022\033.artm.core.Dis"
+    "poseModelArgs\032\017.artm.core.Void\022`\n\036Create"
+    "OrReconfigureRegularizer\022-.artm.core.Cre"
+    "ateOrReconfigureRegularizerArgs\032\017.artm.c"
+    "ore.Void\022H\n\022DisposeRegularizer\022!.artm.co"
+    "re.DisposeRegularizerArgs\032\017.artm.core.Vo"
+    "id\022^\n\035CreateOrReconfigureDictionary\022,.ar"
+    "tm.core.CreateOrReconfigureDictionaryArg"
+    "s\032\017.artm.core.Void\022F\n\021DisposeDictionary\022"
+    " .artm.core.DisposeDictionaryArgs\032\017.artm"
+    ".core.Void\0227\n\023ForcePullTopicModel\022\017.artm"
+    ".core.Void\032\017.artm.core.Void\022@\n\034ForcePush"
+    "TopicModelIncrement\022\017.artm.core.Void\032\017.a"
+    "rtm.core.Void", 2893);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/core/internals.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto);
@@ -138,7 +140,7 @@ const ::google::protobuf::ServiceDescriptor* MasterComponentService::GetDescript
 }
 
 void MasterComponentService::UpdateModel(const ::artm::core::ModelIncrement&,
-                         ::rpcz::reply< ::artm::TopicModel> reply) {
+                         ::rpcz::reply< ::artm::core::Void> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
               "Method UpdateModel() not implemented.");
 }
@@ -181,7 +183,7 @@ void MasterComponentService::call_method(const ::google::protobuf::MethodDescrip
     case 0:
       UpdateModel(
           *::google::protobuf::down_cast<const ::artm::core::ModelIncrement*>(&request),
-          ::rpcz::reply< ::artm::TopicModel>(channel));
+          ::rpcz::reply< ::artm::core::Void>(channel));
       break;
     case 1:
       RetrieveModel(
@@ -241,7 +243,7 @@ const ::google::protobuf::Message& MasterComponentService::GetResponsePrototype(
   GOOGLE_DCHECK_EQ(method->service(), descriptor());
   switch(method->index()) {
     case 0:
-      return ::artm::TopicModel::default_instance();
+      return ::artm::core::Void::default_instance();
     case 1:
       return ::artm::TopicModel::default_instance();
     case 2:
@@ -272,7 +274,7 @@ MasterComponentService_Stub::~MasterComponentService_Stub() {
 }
 
 void MasterComponentService_Stub::UpdateModel(const ::artm::core::ModelIncrement& request,
-                              ::artm::TopicModel* response,
+                              ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
@@ -280,7 +282,7 @@ void MasterComponentService_Stub::UpdateModel(const ::artm::core::ModelIncrement
                         request, response, rpc, done);
 }
 void MasterComponentService_Stub::UpdateModel(const ::artm::core::ModelIncrement& request,
-                              ::artm::TopicModel* response,
+                              ::artm::core::Void* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
@@ -471,10 +473,16 @@ void NodeControllerService::DisposeDictionary(const ::artm::core::DisposeDiction
               "Method DisposeDictionary() not implemented.");
 }
 
-void NodeControllerService::ForceSyncWithMemcached(const ::artm::core::Void&,
+void NodeControllerService::ForcePullTopicModel(const ::artm::core::Void&,
                          ::rpcz::reply< ::artm::core::Void> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
-              "Method ForceSyncWithMemcached() not implemented.");
+              "Method ForcePullTopicModel() not implemented.");
+}
+
+void NodeControllerService::ForcePushTopicModelIncrement(const ::artm::core::Void&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method ForcePushTopicModelIncrement() not implemented.");
 }
 
 void NodeControllerService::call_method(const ::google::protobuf::MethodDescriptor* method,
@@ -533,7 +541,12 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
     case 10:
-      ForceSyncWithMemcached(
+      ForcePullTopicModel(
+          *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 11:
+      ForcePushTopicModelIncrement(
           *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
@@ -569,6 +582,8 @@ const ::google::protobuf::Message& NodeControllerService::GetRequestPrototype(
       return ::artm::core::DisposeDictionaryArgs::default_instance();
     case 10:
       return ::artm::core::Void::default_instance();
+    case 11:
+      return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *reinterpret_cast< ::google::protobuf::Message*>(NULL);
@@ -600,6 +615,8 @@ const ::google::protobuf::Message& NodeControllerService::GetResponsePrototype(
     case 9:
       return ::artm::core::Void::default_instance();
     case 10:
+      return ::artm::core::Void::default_instance();
+    case 11:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -830,7 +847,7 @@ void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDi
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void& request,
+void NodeControllerService_Stub::ForcePullTopicModel(const ::artm::core::Void& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
@@ -838,13 +855,34 @@ void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void
                         NodeControllerService::descriptor()->method(10),
                         request, response, rpc, done);
 }
-void NodeControllerService_Stub::ForceSyncWithMemcached(const ::artm::core::Void& request,
+void NodeControllerService_Stub::ForcePullTopicModel(const ::artm::core::Void& request,
                               ::artm::core::Void* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
                         NodeControllerService::descriptor()->method(10),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::ForcePushTopicModelIncrement(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(11),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::ForcePushTopicModelIncrement(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(11),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {

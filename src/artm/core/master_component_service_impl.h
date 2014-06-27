@@ -39,7 +39,7 @@ class MasterComponentServiceImpl : public MasterComponentService {
   ~MasterComponentServiceImpl() { ; }
 
   virtual void UpdateModel(const ::artm::core::ModelIncrement& request,
-                       ::rpcz::reply< ::artm::TopicModel> response);
+                       ::rpcz::reply< ::artm::core::Void> response);
   virtual void RetrieveModel(const ::artm::core::String& request,
                        ::rpcz::reply< ::artm::TopicModel> response);
 

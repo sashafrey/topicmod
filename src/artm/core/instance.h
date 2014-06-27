@@ -60,8 +60,10 @@ class Instance : boost::noncopyable {
   void CreateOrReconfigureDictionary(const DictionaryConfig& config);
   void DisposeDictionary(const std::string& name);
   void ForceResetScores(ModelName model_name);
-  void ForceSyncWithMemcached(ModelName model_name);
+  void ForcePullTopicModel();
+  void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();
+  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
  private:
   friend class TemplateManager<Instance, InstanceConfig>;

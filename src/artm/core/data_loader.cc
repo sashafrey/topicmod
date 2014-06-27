@@ -179,7 +179,8 @@ void LocalDataLoader::WaitIdle() {
   if (instance == nullptr)
     return;
 
-  instance->ForceSyncWithMemcached(ModelName());
+  instance->ForcePushTopicModelIncrement();
+  instance->ForcePullTopicModel();
 }
 
 void LocalDataLoader::DisposeModel(ModelName model_name) {

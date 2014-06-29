@@ -20,25 +20,30 @@
 #include "artm/core/thread_safe_holder.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
+#include "artm/core/node_controller_service_impl.h"
 
 namespace artm {
 namespace core {
+
+class Instance;
 
 class NodeController : boost::noncopyable {
  public:
   ~NodeController();
   int id() const;
+  NodeControllerServiceImpl* impl() { return &node_controller_service_impl_; }
 
  private:
   class ServiceEndpoint : boost::noncopyable {
    public:
-    explicit ServiceEndpoint(const std::string& endpoint);
+    explicit ServiceEndpoint(const std::string& endpoint, NodeControllerServiceImpl* impl);
     ~ServiceEndpoint();
     std::string endpoint() const { return endpoint_; }
 
    private:
     std::string endpoint_;
     std::unique_ptr<rpcz::application> application_;
+    NodeControllerServiceImpl* impl_;
 
     // Keep all threads at the end of class members
     // (because the order of class members defines initialization order;
@@ -61,6 +66,7 @@ class NodeController : boost::noncopyable {
 
   std::unique_ptr<rpcz::application> application_;
   std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
+  NodeControllerServiceImpl node_controller_service_impl_;
 };
 
 typedef TemplateManager<NodeController, NodeControllerConfig> NodeControllerManager;

@@ -18,12 +18,13 @@ NodeController::NodeController(int id, const NodeControllerConfig& config)
       config_(std::make_shared<NodeControllerConfig>(NodeControllerConfig(config))),
       service_endpoint_(nullptr),
       application_(nullptr),
-      master_component_service_proxy_(nullptr) {
+      master_component_service_proxy_(nullptr),
+      node_controller_service_impl_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
 
-  service_endpoint_.reset(new ServiceEndpoint(config.node_controller_create_endpoint()));
+  service_endpoint_.reset(new ServiceEndpoint(config.node_controller_create_endpoint(), impl()));
 
   LOG(INFO) << "Connecting node " << config.node_controller_connect_endpoint()
             << " to master " << config.master_component_connect_endpoint();
@@ -66,8 +67,9 @@ NodeController::ServiceEndpoint::~ServiceEndpoint() {
   thread_.join();
 }
 
-NodeController::ServiceEndpoint::ServiceEndpoint(const std::string& endpoint)
-    : endpoint_(endpoint), application_(nullptr), thread_() {
+NodeController::ServiceEndpoint::ServiceEndpoint(const std::string& endpoint,
+                                                 NodeControllerServiceImpl* impl)
+    : endpoint_(endpoint), application_(nullptr), impl_(impl), thread_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
@@ -80,8 +82,7 @@ void NodeController::ServiceEndpoint::ThreadFunction() {
     Helpers::SetThreadName(-1, "NodeController");
     LOG(INFO) << "Establishing NodeControllerService on " << endpoint();
     rpcz::server server(*application_);
-    ::artm::core::NodeControllerServiceImpl node_controller_service_impl;
-    server.register_service(&node_controller_service_impl);
+    server.register_service(impl_);
     server.bind(endpoint());
     application_->run();
     LOG(INFO) << "NodeControllerService on " << endpoint() << " is stopped.";

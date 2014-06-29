@@ -35,9 +35,8 @@
 namespace artm {
 namespace core {
 
-Instance::Instance(int id, const MasterComponentConfig& config)
+Instance::Instance(const MasterComponentConfig& config)
     : is_configured_(false),
-      instance_id_(id),
       schema_(std::make_shared<InstanceSchema>(InstanceSchema(config))),
       application_(nullptr),
       master_component_service_proxy_(nullptr),

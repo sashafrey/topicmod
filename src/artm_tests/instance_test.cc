@@ -17,15 +17,9 @@ class InstanceTest : boost::noncopyable {
  public:
   std::shared_ptr<artm::core::Instance> instance() { return instance_; }
 
-  InstanceTest() {
-    artm::core::InstanceManager& im = artm::core::InstanceManager::singleton();
-    int instance_id = im.Create(::artm::MasterComponentConfig());
-    instance_ = im.Get(instance_id);
-  }
+  InstanceTest() : instance_(new ::artm::core::Instance(::artm::MasterComponentConfig())) {}
 
-  ~InstanceTest() {
-    artm::core::InstanceManager::singleton().Erase(instance_->id());
-  }
+  ~InstanceTest() {}
 
   // Some way of generating a junk content..
   // If you call this, then you really shouldn't care which content it will be;
@@ -69,9 +63,7 @@ class InstanceTest : boost::noncopyable {
 
 // artm_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
-  artm::core::InstanceManager& im = artm::core::InstanceManager::singleton();
-  int instance_id = im.Create(::artm::MasterComponentConfig());
-  std::shared_ptr<artm::core::Instance> instance = im.Get(instance_id);
+  auto instance = std::make_shared<::artm::core::Instance>(::artm::MasterComponentConfig());
 
   artm::Batch batch1;
   batch1.add_token("first token");
@@ -129,8 +121,6 @@ TEST(Instance, Basic) {
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "second"));
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "last"));
   EXPECT_FALSE(artm::core::model_has_token(topic_model, "of cource!"));
-
-  artm::core::InstanceManager::singleton().Erase(instance_id);
 }
 
 // artm_tests.exe --gtest_filter=Instance.MultipleStreamsAndModels

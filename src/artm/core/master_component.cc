@@ -272,19 +272,13 @@ void LocalClient::InvokePhiRegularizers() {
 
 void LocalClient::Reconfigure(const MasterComponentConfig& config) {
   if (local_instance_ == nullptr) {
-    int instance_id = artm::core::InstanceManager::singleton().Create(config);
-    local_instance_ = artm::core::InstanceManager::singleton().Get(instance_id);
+    local_instance_.reset(new Instance(config));
   } else {
     local_instance_->Reconfigure(config);
   }
 }
 
-LocalClient::~LocalClient() {
-  if (local_instance_ != nullptr) {
-    artm::core::InstanceManager::singleton().Erase(local_instance_->id());
-    local_instance_.reset();
-  }
-}
+LocalClient::~LocalClient() {}
 
 bool LocalClient::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
   return local_instance_->RequestTopicModel(model_name, topic_model);

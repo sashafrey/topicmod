@@ -3,7 +3,6 @@
 #ifndef SRC_ARTM_CORE_NODE_CONTROLLER_SERVICE_IMPL_H_
 #define SRC_ARTM_CORE_NODE_CONTROLLER_SERVICE_IMPL_H_
 
-#include <map>
 #include <memory>
 
 #include "boost/thread/mutex.hpp"
@@ -17,10 +16,13 @@
 namespace artm {
 namespace core {
 
+class Instance;
+
 class NodeControllerServiceImpl : public NodeControllerService {
  public:
-  NodeControllerServiceImpl() : lock_(), instance_id_(kUndefinedId) { ; }
+  NodeControllerServiceImpl();
   ~NodeControllerServiceImpl();
+  Instance* instance();
 
   virtual void CreateOrReconfigureInstance(const ::artm::MasterComponentConfig& request,
                        ::rpcz::reply< ::artm::core::Void> response);
@@ -44,13 +46,12 @@ class NodeControllerServiceImpl : public NodeControllerService {
                        ::rpcz::reply< ::artm::core::Void> response);
 
  private:
-  static const int kUndefinedId = -1;
   mutable boost::mutex lock_;
 
   // Currently node controller supports only one Instance per node.
   // This makes it simpler to implement MasterComponent --- it doesn't have to keep track
   // of instance_id for each of its clients.
-  int instance_id_;
+  std::shared_ptr<Instance> instance_;
 };
 
 }  // namespace core

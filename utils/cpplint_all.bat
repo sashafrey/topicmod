@@ -24,7 +24,7 @@ call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.cc
 
 call cpplint.bat ../src/artm_tests/boost_thread_test.cc
 call cpplint.bat ../src/artm_tests/cpp_interface_test.cc
-call cpplint.bat ../src/artm_tests/instance_manager_test.cc
+call cpplint.bat ../src/artm_tests/template_manager_test.cc
 call cpplint.bat ../src/artm_tests/nodes_connectivity_test.cc
 call cpplint.bat ../src/artm_tests/instance_test.cc
 call cpplint.bat ../src/artm_tests/test_mother.cc

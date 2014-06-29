@@ -76,7 +76,9 @@ void MasterComponent::DisposeDictionary(const std::string& name) {
 }
 
 void MasterComponent::InvokePhiRegularizers() {
-  client_interface_->InvokePhiRegularizers();
+  if (local_client_interface_ != nullptr) {
+    local_client_interface_->InvokePhiRegularizers();
+  }
 }
 
 void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
@@ -369,10 +371,6 @@ void NetworkClientCollection::DisposeDictionary(const std::string& name) {
     Void response;
     client.DisposeDictionary(args, &response);
   });
-}
-
-void NetworkClientCollection::InvokePhiRegularizers() {
-  BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
 }
 
 void NetworkClientCollection::Reconfigure(const MasterComponentConfig& config) {

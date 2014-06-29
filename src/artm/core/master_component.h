@@ -127,7 +127,6 @@ class ClientInterface {
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config) = 0;
   virtual void DisposeRegularizer(const std::string& name) = 0;
-  virtual void InvokePhiRegularizers() = 0;
 
   virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config) = 0;
   virtual void DisposeDictionary(const std::string& name) = 0;
@@ -145,14 +144,14 @@ class LocalClient : public ClientInterface {
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   virtual void DisposeRegularizer(const std::string& name);
-  virtual void InvokePhiRegularizers();
-  virtual void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
   virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
   virtual void DisposeDictionary(const std::string& name);
 
   virtual void Reconfigure(const MasterComponentConfig& config);
 
+  void InvokePhiRegularizers();
+  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
   bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
   void WaitIdle();
@@ -173,7 +172,6 @@ class NetworkClientCollection : public ClientInterface {
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   virtual void DisposeRegularizer(const std::string& name);
-  virtual void InvokePhiRegularizers();
 
   virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
   virtual void DisposeDictionary(const std::string& name);

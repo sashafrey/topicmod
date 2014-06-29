@@ -129,7 +129,7 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
   this->IncreaseItemsProcessed(diff.items_processed());
 
   for (int score_index = 0; score_index < diff.score_size(); ++score_index) {
-    if (score_index >= this->score_size() ) {
+    if (score_index >= this->score_size()) {
       LOG(ERROR) << "ModelIncrement has more scores than base model. Ignoring score updates.";
       continue;
     }

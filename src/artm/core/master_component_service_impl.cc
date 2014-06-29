@@ -141,14 +141,13 @@ void MasterComponentServiceImpl::WaitIdle() {
   });
 
   clients_->for_each_client([&](NodeControllerService_Stub& client) {
-  Void response;
-  try {
-    client.ForcePullTopicModel(Void(), &response);
-  } catch(...) {
-    LOG(ERROR) << "Unable to force pull topic model on one of clients";
-  }
-});
-
+    Void response;
+    try {
+      client.ForcePullTopicModel(Void(), &response);
+    } catch(...) {
+      LOG(ERROR) << "Unable to force pull topic model on one of clients";
+    }
+  });
 }
 
 bool MasterComponentServiceImpl::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {

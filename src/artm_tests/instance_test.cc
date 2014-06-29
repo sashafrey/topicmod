@@ -15,23 +15,16 @@
 
 class InstanceTest : boost::noncopyable {
  public:
-  std::shared_ptr<artm::core::LocalDataLoader> data_loader() { return data_loader_; }
   std::shared_ptr<artm::core::Instance> instance() { return instance_; }
 
   InstanceTest() {
-    int instance_id = artm::core::InstanceManager::singleton().Create(::artm::core::InstanceConfig());
-    instance_ = artm::core::InstanceManager::singleton().Get(instance_id);
-
-    ::artm::core::DataLoaderConfig data_loader_config;
-    data_loader_config.set_instance_id(instance_id);
-    artm::core::DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
-    int data_loader_id = dlm.Create<artm::core::LocalDataLoader>(data_loader_config);
-    data_loader_ = dlm.Get<artm::core::LocalDataLoader>(data_loader_id);
+    artm::core::InstanceManager& im = artm::core::InstanceManager::singleton();
+    int instance_id = im.Create(::artm::MasterComponentConfig());
+    instance_ = im.Get(instance_id);
   }
 
   ~InstanceTest() {
     artm::core::InstanceManager::singleton().Erase(instance_->id());
-    artm::core::DataLoaderManager::singleton().Erase(data_loader_->id());
   }
 
   // Some way of generating a junk content..
@@ -71,22 +64,14 @@ class InstanceTest : boost::noncopyable {
   }
 
  private:
-  std::shared_ptr<artm::core::LocalDataLoader> data_loader_;
   std::shared_ptr<artm::core::Instance> instance_;
 };
 
 // artm_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
-  int instance_id = artm::core::InstanceManager::singleton().Create(::artm::core::InstanceConfig());
-  std::shared_ptr<artm::core::Instance> instance =
-    artm::core::InstanceManager::singleton().Get(instance_id);
-
-  ::artm::core::DataLoaderConfig data_loader_config;
-  data_loader_config.set_instance_id(instance_id);
-  artm::core::DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
-  int data_loader_id = dlm.Create<artm::core::LocalDataLoader>(data_loader_config);
-  std::shared_ptr<artm::core::LocalDataLoader> data_loader =
-    artm::core::DataLoaderManager::singleton().Get<artm::core::LocalDataLoader>(data_loader_id);
+  artm::core::InstanceManager& im = artm::core::InstanceManager::singleton();
+  int instance_id = im.Create(::artm::MasterComponentConfig());
+  std::shared_ptr<artm::core::Instance> instance = im.Get(instance_id);
 
   artm::Batch batch1;
   batch1.add_token("first token");
@@ -98,18 +83,18 @@ TEST(Instance, Basic) {
     field->add_token_count(i+1);
   }
 
-  data_loader->AddBatch(batch1);  // +2
+  instance->local_data_loader()->AddBatch(batch1);  // +2
 
   for (int iBatch = 0; iBatch < 2; ++iBatch) {
     artm::Batch batch;
     for (int i = 0; i < (3 + iBatch); ++i) batch.add_item();  // +3, +4
-    data_loader->AddBatch(batch);
+    instance->local_data_loader()->AddBatch(batch);
   }
 
-  EXPECT_EQ(data_loader->GetTotalItemsCount(), 9);
+  EXPECT_EQ(instance->local_data_loader()->GetTotalItemsCount(), 9);
 
-  data_loader->AddBatch(batch1);  // +2
-  EXPECT_EQ(data_loader->GetTotalItemsCount(), 11);
+  instance->local_data_loader()->AddBatch(batch1);  // +2
+  EXPECT_EQ(instance->local_data_loader()->GetTotalItemsCount(), 11);
 
   artm::Batch batch4;
   batch4.add_token("second");
@@ -121,7 +106,7 @@ TEST(Instance, Basic) {
     field->add_token_count(iToken + 2);
   }
 
-  data_loader->AddBatch(batch4);
+  instance->local_data_loader()->AddBatch(batch4);
 
   artm::ModelConfig config;
   config.set_enabled(true);
@@ -131,8 +116,8 @@ TEST(Instance, Basic) {
   config.set_name(boost::lexical_cast<std::string>(model_name));
   instance->ReconfigureModel(config);
 
-  data_loader->InvokeIteration(20);
-  data_loader->WaitIdle();
+  instance->local_data_loader()->InvokeIteration(20);
+  instance->local_data_loader()->WaitIdle();
 
   config.set_enabled(false);
   instance->ReconfigureModel(config);
@@ -146,9 +131,9 @@ TEST(Instance, Basic) {
   EXPECT_FALSE(artm::core::model_has_token(topic_model, "of cource!"));
 
   artm::core::InstanceManager::singleton().Erase(instance_id);
-  artm::core::DataLoaderManager::singleton().Erase(data_loader_id);
 }
 
+// artm_tests.exe --gtest_filter=Instance.MultipleStreamsAndModels
 TEST(Instance, MultipleStreamsAndModels) {
   InstanceTest test;
 
@@ -156,10 +141,9 @@ TEST(Instance, MultipleStreamsAndModels) {
   // - first model have  Token0, Token2, Token4,
   // - second model have Token1, Token3, Token6,
   auto batch = test.GenerateBatch(6, 6, 0, 1, 1);
-  test.data_loader()->AddBatch(*batch);
+  test.instance()->local_data_loader()->AddBatch(*batch);
 
-  ::artm::core::DataLoaderConfig config;
-  config.set_instance_id(test.instance()->id());
+  ::artm::MasterComponentConfig config;
   artm::Stream* s1 = config.add_stream();
   s1->set_type(artm::Stream_Type_ItemIdModulus);
   s1->set_modulus(2);
@@ -170,7 +154,7 @@ TEST(Instance, MultipleStreamsAndModels) {
   s2->set_modulus(2);
   s2->add_residuals(1);
   s2->set_name("test");
-  test.data_loader()->Reconfigure(config);
+  test.instance()->Reconfigure(config);
 
   artm::ModelConfig m1;
   m1.set_stream_name("train");
@@ -195,8 +179,8 @@ TEST(Instance, MultipleStreamsAndModels) {
   test.instance()->ReconfigureModel(m2);
 
   for (int iter = 0; iter < 100; ++iter) {
-  test.data_loader()->InvokeIteration(1);
-    test.data_loader()->WaitIdle();
+  test.instance()->local_data_loader()->InvokeIteration(1);
+    test.instance()->local_data_loader()->WaitIdle();
   }
 
 

@@ -10,14 +10,14 @@ using ::artm::core::InstanceManager;
 // To run this particular test:
 // artm_tests.exe --gtest_filter=InstanceManager.*
 TEST(InstanceManager, Basic) {
-  int id = InstanceManager::singleton().Create(::artm::core::InstanceConfig());
+  int id = InstanceManager::singleton().Create(::artm::MasterComponentConfig());
   EXPECT_EQ(InstanceManager::singleton().Get(id)->id(), id);
 
-  int id2 = InstanceManager::singleton().Create(::artm::core::InstanceConfig());
+  int id2 = InstanceManager::singleton().Create(::artm::MasterComponentConfig());
   EXPECT_EQ(id2, id+1);
   EXPECT_EQ(InstanceManager::singleton().Get(id2)->id(), id2);
 
-  EXPECT_FALSE(InstanceManager::singleton().TryCreate(id2, ::artm::core::InstanceConfig()));
+  EXPECT_FALSE(InstanceManager::singleton().TryCreate(id2, ::artm::MasterComponentConfig()));
 
   InstanceManager::singleton().Erase(id);
   EXPECT_FALSE(InstanceManager::singleton().Get(id) != nullptr);

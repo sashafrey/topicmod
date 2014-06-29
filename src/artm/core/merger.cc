@@ -27,7 +27,8 @@ namespace core {
 Merger::Merger(boost::mutex* merger_queue_lock,
                std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
                ThreadSafeHolder<InstanceSchema>* schema,
-               ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service)
+               artm::core::MasterComponentService_Stub* master_component_service,
+               DataLoader* data_loader)
     : lock_(),
       topic_model_(lock_),
       topic_model_inc_(),
@@ -35,6 +36,7 @@ Merger::Merger(boost::mutex* merger_queue_lock,
       master_component_service_(master_component_service),
       merger_queue_lock_(merger_queue_lock),
       merger_queue_(merger_queue),
+      data_loader_(data_loader),
       is_stopping(false),
       thread_() {
   // Keep this at the last action in constructor.
@@ -204,13 +206,7 @@ void Merger::ThreadFunction() {
         }
 
         call_on_destruction c([&]() {
-          // Callback to DataLoader
-          auto data_loader = DataLoaderManager::singleton().Get(
-            processor_output->data_loader_id());
-
-          if (data_loader != nullptr) {
-            data_loader->Callback(processor_output);
-          }
+          data_loader_->Callback(processor_output);
         });
 
         for (int modex_index = 0;
@@ -253,8 +249,7 @@ void Merger::PullTopicModel() {
     if (old_ttm.get() == nullptr)
       return;  // model had been disposed during ongoing processing;
 
-    std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
-    if (master_component_service == nullptr) {
+    if (master_component_service_ == nullptr) {
       auto inc_ttm = topic_model_inc_.find(model_name);
       if (inc_ttm == topic_model_inc_.end())
        return;  // model had been disposed during ongoing processing;
@@ -274,7 +269,7 @@ void Merger::PullTopicModel() {
         ::artm::core::String request;
         request.set_value(model_name);
         ::artm::TopicModel reply;
-        master_component_service->RetrieveModel(request, &reply);
+        master_component_service_->RetrieveModel(request, &reply);
         std::shared_ptr<::artm::core::TopicModel> new_global_ttm(
           new ::artm::core::TopicModel(reply));
 
@@ -289,8 +284,7 @@ void Merger::PullTopicModel() {
 }
 
 void Merger::PushTopicModelIncrement() {
-  std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
-  if (master_component_service == nullptr) {
+  if (master_component_service_ == nullptr) {
     return;  // no-op in local modus operandi
   }
 
@@ -309,7 +303,7 @@ void Merger::PushTopicModelIncrement() {
 
     try {
       ::artm::core::Void reply;
-      master_component_service->UpdateModel(model_increment, &reply);
+      master_component_service_->UpdateModel(model_increment, &reply);
       topic_model_inc_.erase(model_name);
     } catch(const rpcz::rpc_error&) {
       LOG(ERROR) << "Merger failed to send updates to master component service.";
@@ -324,9 +318,8 @@ void Merger::ResetScores(ModelName model_name) {
     model_names = topic_model_.keys();
   }
 
-  std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
   for (auto &model_name : model_names) {
-    if (master_component_service == nullptr) {
+    if (master_component_service_ == nullptr) {
       auto old_ttm = GetLatestTopicModel(model_name);
       if (old_ttm == nullptr)
         return;  // model had been disposed during ongoing processing;

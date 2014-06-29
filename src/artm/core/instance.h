@@ -25,6 +25,9 @@
 namespace artm {
 namespace core {
 
+class LocalDataLoader;
+class RemoteDataLoader;
+class DataLoader;
 class Processor;
 class Merger;
 class InstanceSchema;
@@ -43,6 +46,11 @@ class Instance : boost::noncopyable {
     return schema_.get();
   }
 
+  LocalDataLoader* local_data_loader() { return local_data_loader_.get(); }
+  RemoteDataLoader* remote_data_loader() { return remote_data_loader_.get(); }
+  DataLoader* data_loader() { return data_loader_; }
+  MasterComponentService_Stub* master_component_service_proxy() { return master_component_service_proxy_.get(); }
+
   int processor_queue_size() const;
 
   // Retrieves topic model.
@@ -53,7 +61,7 @@ class Instance : boost::noncopyable {
   void ReconfigureModel(const ModelConfig& config);
 
   void DisposeModel(ModelName model_name);
-  void Reconfigure(const InstanceConfig& config);
+  void Reconfigure(const MasterComponentConfig& config);
   void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
@@ -66,17 +74,19 @@ class Instance : boost::noncopyable {
   void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
  private:
-  friend class TemplateManager<Instance, InstanceConfig>;
+  friend class TemplateManager<Instance, MasterComponentConfig>;
 
   // All instances must be created via TemplateManager.
-  Instance(int id, const InstanceConfig& config);
+  Instance(int id, const MasterComponentConfig& config);
+
+  bool is_configured_;
 
   mutable boost::mutex lock_;
   int instance_id_;
   ThreadSafeHolder<InstanceSchema> schema_;
 
   std::unique_ptr<rpcz::application> application_;
-  ThreadSafeHolder<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
+  std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
 
   mutable boost::mutex processor_queue_lock_;
   std::queue<std::shared_ptr<const ProcessorInput> > processor_queue_;
@@ -90,10 +100,14 @@ class Instance : boost::noncopyable {
   // creates background threads for processing
   std::vector<std::shared_ptr<Processor> > processors_;
 
+  std::shared_ptr<LocalDataLoader> local_data_loader_;
+  std::shared_ptr<RemoteDataLoader> remote_data_loader_;
+  DataLoader* data_loader_;
+
   ThreadSafeDictionaryCollection dictionaries_;
 };
 
-typedef TemplateManager<Instance, InstanceConfig> InstanceManager;
+typedef TemplateManager<Instance, MasterComponentConfig> InstanceManager;
 
 }  // namespace core
 }  // namespace artm

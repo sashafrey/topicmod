@@ -5,7 +5,6 @@ call cpplint.bat ../src/artm/c_interface.cc
 
 REM call cpplint.bat ../src/artm/core/batch_manager.сс
 call cpplint.bat ../src/artm/core/data_loader.cc
-call cpplint.bat ../src/artm/core/dictionary.cc
 call cpplint.bat ../src/artm/core/generation.cc
 call cpplint.bat ../src/artm/core/helpers.cc
 call cpplint.bat ../src/artm/core/instance.cc

@@ -148,8 +148,8 @@ void BasicTest(bool is_network_mode) {
     auto weights = new_topic_model.add_token_weights();
     auto weights2 = new_topic_model.add_token_weights();
     for (int i = 0; i < nTopics; ++i) {
-      weights->add_value((float)i);
-      weights2->add_value((float)(nTopics - i));
+      weights->add_value(static_cast<float>(i));
+      weights2->add_value(static_cast<float>(nTopics - i));
     }
 
     model.Overwrite(new_topic_model);
@@ -160,11 +160,11 @@ void BasicTest(bool is_network_mode) {
     for (int i = 0; i < nTopics; ++i) {
       EXPECT_FLOAT_EQ(
         new_topic_model2->token_weights(0).value(i),
-        (float)i / (float)nTopics);
+        static_cast<float>(i) / static_cast<float>(nTopics));
 
       EXPECT_FLOAT_EQ(
         new_topic_model2->token_weights(1).value(i),
-        1.0f - (float)i / (float)nTopics);
+        1.0f - static_cast<float>(i) / static_cast<float>(nTopics));
     }
   }
 }

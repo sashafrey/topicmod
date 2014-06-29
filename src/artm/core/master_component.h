@@ -35,9 +35,6 @@ namespace core {
 class ClientInterface;
 class LocalClient;
 class NetworkClientCollection;
-class DataLoader;
-class LocalDataLoader;
-class RemoteDataLoader;
 class Instance;
 class TopicModel;
 
@@ -72,10 +69,6 @@ class MasterComponent : boost::noncopyable {
   void WaitIdle();
   void InvokeIteration(int iterations_count);
   void AddBatch(const Batch& batch);
-
-  static DataLoaderConfig ExtractdDataLoaderConfig(const MasterComponentConfig& config,
-                                                   int instance_id);
-  static InstanceConfig ExtractInstanceConfig(const MasterComponentConfig& config);
 
   // Throws InvalidOperation exception if new config is invalid.
   void ValidateConfig(const MasterComponentConfig& config);
@@ -164,7 +157,6 @@ class LocalClient : public ClientInterface {
 
  private:
   std::shared_ptr<Instance> local_instance_;
-  std::shared_ptr<LocalDataLoader> local_data_loader_;
 };
 
 class NetworkClientCollection : public ClientInterface {

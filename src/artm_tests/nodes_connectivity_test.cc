@@ -32,13 +32,11 @@ TEST(NodesConnectivityTest, Basic) {
   EXPECT_EQ(master->clients_size(), 1);
 
   EXPECT_TRUE(::artm::core::InstanceManager::singleton().First() == nullptr);
-  EXPECT_TRUE(::artm::core::DataLoaderManager::singleton().First() == nullptr);
 
   // Push configuration to all clients
   master->Reconfigure(master_config);
 
   EXPECT_FALSE(::artm::core::InstanceManager::singleton().First() == nullptr);
-  EXPECT_FALSE(::artm::core::DataLoaderManager::singleton().First() == nullptr);
 
   auto regularizer_config = test_mother.GenerateRegularizerConfig();
   auto model_config = test_mother.GenerateModelConfig();
@@ -53,7 +51,6 @@ TEST(NodesConnectivityTest, Basic) {
   artm::core::NodeControllerManager::singleton().Erase(node_id);
   EXPECT_EQ(master->clients_size(), 0);
   EXPECT_TRUE(::artm::core::InstanceManager::singleton().First() == nullptr);
-  EXPECT_TRUE(::artm::core::DataLoaderManager::singleton().First() == nullptr);
 
   master.reset();
   artm::core::MasterComponentManager::singleton().Erase(master_id);

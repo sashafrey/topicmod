@@ -8,23 +8,23 @@
 namespace artm {
 namespace core {
 
-InstanceSchema::InstanceSchema() : instance_config_(),  regularizers_(), models_config_() {}
+InstanceSchema::InstanceSchema() : config_(),  regularizers_(), models_config_() {}
 
 InstanceSchema::InstanceSchema(const InstanceSchema& schema)
-    : instance_config_(schema.instance_config_),
+    : config_(schema.config_),
       regularizers_(schema.regularizers_),
       models_config_(schema.models_config_) {}
 
 
-InstanceSchema::InstanceSchema(const InstanceConfig& config)
-    : instance_config_(config), regularizers_(), models_config_() {}
+InstanceSchema::InstanceSchema(const MasterComponentConfig& config)
+    : config_(config), regularizers_(), models_config_() {}
 
-void InstanceSchema::set_instance_config(const InstanceConfig& instance_config) {
-  instance_config_.CopyFrom(instance_config);
+void InstanceSchema::set_config(const MasterComponentConfig& config) {
+  config_.CopyFrom(config);
 }
 
-const InstanceConfig& InstanceSchema::instance_config() const {
-  return instance_config_;
+const MasterComponentConfig& InstanceSchema::config() const {
+  return config_;
 }
 
 void InstanceSchema::set_model_config(

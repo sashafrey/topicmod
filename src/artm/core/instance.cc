@@ -8,6 +8,7 @@
 #include "boost/bind.hpp"
 
 #include "artm/core/common.h"
+#include "artm/core/data_loader.h"
 #include "artm/core/dictionary.h"
 #include "artm/core/exceptions.h"
 #include "artm/core/processor.h"
@@ -34,25 +35,27 @@
 namespace artm {
 namespace core {
 
-Instance::Instance(int id, const InstanceConfig& config)
-    : lock_(),
+Instance::Instance(int id, const MasterComponentConfig& config)
+    : is_configured_(false),
+      lock_(),
       instance_id_(id),
       schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
       application_(nullptr),
-      master_component_service_proxy_(lock_, nullptr),
+      master_component_service_proxy_(nullptr),
       processor_queue_lock_(),
       processor_queue_(),
       merger_queue_lock_(),
       merger_queue_(),
       merger_(),
       processors_(),
-      dictionaries_(lock_) {
-  merger_.reset(new Merger(&merger_queue_lock_, &merger_queue_, &schema_,
-                           &master_component_service_proxy_));
-
+      dictionaries_(lock_),
+      local_data_loader_(nullptr),
+      remote_data_loader_(nullptr),
+      data_loader_(nullptr) {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
+
   Reconfigure(config);
 }
 
@@ -161,10 +164,43 @@ void Instance::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
   merger_->OverwriteTopicModel(topic_model);
 }
 
-void Instance::Reconfigure(const InstanceConfig& config) {
+void Instance::Reconfigure(const MasterComponentConfig& config) {
+  MasterComponentConfig old_config = schema_.get()->config();
+
   auto new_schema = schema_.get_copy();
-  new_schema->set_instance_config(config);
+  new_schema->set_config(config);
   schema_.set(new_schema);
+
+  if (!is_configured_) {
+    // First reconfiguration.
+
+    // Recreate master_component_service_proxy_;
+    if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
+      master_component_service_proxy_.reset(
+        new artm::core::MasterComponentService_Stub(
+          application_->create_rpc_channel(config.master_component_connect_endpoint()), true));
+    }
+
+    // Reconfigure local/remote data loader
+    if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
+      remote_data_loader_.reset(new RemoteDataLoader(this));
+      data_loader_ = remote_data_loader_.get();
+    } else {
+      local_data_loader_.reset(new LocalDataLoader(this));
+      data_loader_ = local_data_loader_.get();
+    }
+
+    merger_.reset(new Merger(&merger_queue_lock_, &merger_queue_, &schema_,
+                             master_component_service_proxy_.get(), data_loader_));
+
+    is_configured_  = true;
+  } else {
+    // Second and subsequent reconfiguration - some restrictions apply
+    if (old_config.master_component_connect_endpoint() !=
+        config.master_component_connect_endpoint()) {
+      BOOST_THROW_EXCEPTION(InvalidOperation("Changing master endpoint is not supported"));
+    }
+  }
 
   // Adjust size of processors_; cast size to int to avoid compiler warning.
   while (static_cast<int>(processors_.size()) > config.processors_count()) processors_.pop_back();
@@ -177,16 +213,6 @@ void Instance::Reconfigure(const InstanceConfig& config) {
         &merger_queue_,
         *merger_,
         schema_)));
-  }
-
-  // Recreate master_component_service_proxy_;
-  if (config.has_master_component_endpoint()) {
-    std::shared_ptr<artm::core::MasterComponentService_Stub> new_ptr(
-      new artm::core::MasterComponentService_Stub(
-        application_->create_rpc_channel(config.master_component_endpoint()), true));
-    master_component_service_proxy_.set(new_ptr);
-  } else {
-    master_component_service_proxy_.set(nullptr);
   }
 }
 

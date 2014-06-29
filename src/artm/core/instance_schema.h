@@ -22,10 +22,10 @@ class InstanceSchema {
  public:
   InstanceSchema();
   explicit InstanceSchema(const InstanceSchema& schema);
-  explicit InstanceSchema(const InstanceConfig& config);
+  explicit InstanceSchema(const MasterComponentConfig& config);
 
-  const InstanceConfig& instance_config() const;
-  void set_instance_config(const InstanceConfig& instance_config);
+  const MasterComponentConfig& config() const;
+  void set_config(const MasterComponentConfig& config);
 
   const ModelConfig& model_config(ModelName id) const;
   void set_model_config(ModelName id, const std::shared_ptr<const ModelConfig>& model_config);
@@ -42,7 +42,7 @@ class InstanceSchema {
   std::vector<ModelName> GetModelNames() const;
 
  private:
-  InstanceConfig instance_config_;
+  MasterComponentConfig config_;
   std::map<std::string, std::shared_ptr<RegularizerInterface> > regularizers_;
   std::map<ModelName, std::shared_ptr<const ModelConfig> > models_config_;
 };

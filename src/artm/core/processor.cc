@@ -360,7 +360,6 @@ void Processor::ThreadFunction() {
 
       std::shared_ptr<ProcessorOutput> processor_output = std::make_shared<ProcessorOutput>();
       processor_output->set_batch_uuid(part->batch_uuid());
-      processor_output->set_data_loader_id(part->data_loader_id());
       call_on_destruction c([&]() {
         boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
         merger_queue_->push(processor_output);
@@ -490,7 +489,7 @@ void Processor::ThreadFunction() {
           merger_queue_size = merger_queue_->size();
         }
 
-        if (merger_queue_size < schema_.get()->instance_config().merger_queue_max_size())
+        if (merger_queue_size < schema_.get()->config().merger_queue_max_size())
           break;
 
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));

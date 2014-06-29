@@ -27,6 +27,7 @@
 namespace artm {
 namespace core {
 
+class DataLoader;
 class TopicModel;
 class InstanceSchema;
 
@@ -35,7 +36,8 @@ class Merger : boost::noncopyable {
   Merger(boost::mutex* merger_queue_lock,
          std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
          ThreadSafeHolder<InstanceSchema>* schema,
-         ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service);
+         MasterComponentService_Stub* master_component_service,
+         DataLoader* data_loader);
 
   ~Merger();
 
@@ -74,12 +76,14 @@ class Merger : boost::noncopyable {
   ThreadSafeCollectionHolder<ModelName, TopicModel> topic_model_;
   std::map<ModelName, std::shared_ptr<TopicModel>> topic_model_inc_;
   ThreadSafeHolder<InstanceSchema>* schema_;
-  ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service_;
+  artm::core::MasterComponentService_Stub* master_component_service_;
 
   boost::mutex* merger_queue_lock_;
   std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue_;
 
   ThreadSafeQueue<MergerTask> internal_task_queue_;
+
+  DataLoader* data_loader_;
 
   mutable std::atomic<bool> is_stopping;
   boost::thread thread_;

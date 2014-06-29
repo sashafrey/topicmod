@@ -27,32 +27,29 @@ namespace rpcz {
 namespace artm {
 namespace core {
 
+class Instance;
 class MasterComponentService_Stub;
 class Generation;
 
 class DataLoader : boost::noncopyable {
  public:
-  DataLoader(int id, const DataLoaderConfig& config);
+  explicit DataLoader(Instance* instance);
   virtual ~DataLoader() {}
 
-  int id() const;
-  static void PopulateDataStreams(const DataLoaderConfig& config, const Batch& batch,
-                                  ProcessorInput* pi);
-
   virtual void Callback(std::shared_ptr<const ProcessorOutput> cache) = 0;
-  virtual void Reconfigure(const DataLoaderConfig& config);
+  Instance* instance();
 
  protected:
-  boost::mutex lock_;
-  ThreadSafeHolder<DataLoaderConfig> config_;
+  void PopulateDataStreams(const Batch& batch, ProcessorInput* pi);
 
- private:
-  int data_loader_id_;
+  Instance* instance_;
+  boost::mutex lock_;
 };
 
 // DataLoader for local modus operandi
 class LocalDataLoader : public DataLoader {
  public:
+  explicit LocalDataLoader(Instance* instance);
   virtual ~LocalDataLoader();
 
   int GetTotalItemsCount() const;
@@ -65,10 +62,6 @@ class LocalDataLoader : public DataLoader {
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
  private:
-  friend class TemplateManager<DataLoader, DataLoaderConfig>;
-
-  // All instances of DataLoader should be created via DataLoaderManager
-  LocalDataLoader(int id, const DataLoaderConfig& config);
   static void CompactBatch(const Batch& batch, Batch* compacted_batch);
 
   ThreadSafeHolder<Generation> generation_;
@@ -93,19 +86,11 @@ class LocalDataLoader : public DataLoader {
 // DataLoader for network modus operandi
 class RemoteDataLoader : public DataLoader {
  public:
+  explicit RemoteDataLoader(Instance* instance);
   virtual ~RemoteDataLoader();
-  virtual void Reconfigure(const DataLoaderConfig& config);
   virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
 
  private:
-  friend class TemplateManager<DataLoader, DataLoaderConfig>;
-
-  // All instances of DataLoader should be created via NetworkLoaderManager
-  RemoteDataLoader(int id, const DataLoaderConfig& config);
-
-  std::unique_ptr<rpcz::application> application_;
-  std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
-
   mutable std::atomic<bool> is_stopping;
 
   // Keep all threads at the end of class members
@@ -115,8 +100,6 @@ class RemoteDataLoader : public DataLoader {
 
   void ThreadFunction();
 };
-
-typedef TemplateManager<DataLoader, DataLoaderConfig> DataLoaderManager;
 
 }  // namespace core
 }  // namespace artm

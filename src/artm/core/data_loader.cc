@@ -15,6 +15,7 @@
 
 #include "artm/core/exceptions.h"
 #include "artm/core/instance.h"
+#include "artm/core/instance_schema.h"
 #include "artm/core/internals.rpcz.h"
 #include "artm/core/protobuf_helpers.h"
 #include "artm/core/helpers.h"
@@ -24,23 +25,16 @@
 namespace artm {
 namespace core {
 
-DataLoader::DataLoader(int id, const DataLoaderConfig& config)
-    : lock_(),
-      config_(lock_, std::make_shared<DataLoaderConfig>(config)),
-      data_loader_id_(id) {
+DataLoader::DataLoader(Instance* instance)
+    : instance_(instance), lock_() { }
+
+Instance* DataLoader::instance() {
+  return instance_;
 }
 
-int DataLoader::id() const {
-  return data_loader_id_;
-}
-
-void DataLoader::Reconfigure(const DataLoaderConfig& config) {
-  config_.set(std::make_shared<DataLoaderConfig>(config));
-}
-
-void DataLoader::PopulateDataStreams(const DataLoaderConfig& config, const Batch& batch,
-                                     ProcessorInput* pi) {
+void DataLoader::PopulateDataStreams(const Batch& batch, ProcessorInput* pi) {
   // loop through all streams
+  MasterComponentConfig config = instance()->schema()->config();
   for (int stream_index = 0; stream_index < config.stream_size(); ++stream_index) {
     const Stream& stream = config.stream(stream_index);
     pi->add_stream_name(stream.name());
@@ -70,9 +64,9 @@ void DataLoader::PopulateDataStreams(const DataLoaderConfig& config, const Batch
   }
 }
 
-LocalDataLoader::LocalDataLoader(int id, const DataLoaderConfig& config)
-    : DataLoader(id, config),
-      generation_(lock_, std::make_shared<Generation>(config.disk_path())),
+LocalDataLoader::LocalDataLoader(Instance* instance)
+    : DataLoader(instance),
+      generation_(lock_, std::make_shared<Generation>(instance->schema()->config().disk_path())),
       cache_lock_(),
       cache_(cache_lock_),
       batch_manager_lock_(),
@@ -93,13 +87,14 @@ LocalDataLoader::~LocalDataLoader() {
 }
 
 void LocalDataLoader::AddBatch(const Batch& batch) {
+  MasterComponentConfig config = instance()->schema()->config();
   std::shared_ptr<Generation> next_gen = generation_.get_copy();
-  if (config_.get()->compact_batches()) {
+  if (config.compact_batches()) {
     Batch compacted_batch;
     CompactBatch(batch, &compacted_batch);
-    next_gen->AddBatch(std::make_shared<Batch>(compacted_batch), config_.get()->disk_path());
+    next_gen->AddBatch(std::make_shared<Batch>(compacted_batch), config.disk_path());
   } else {
-    next_gen->AddBatch(std::make_shared<Batch>(batch), config_.get()->disk_path());
+    next_gen->AddBatch(std::make_shared<Batch>(batch), config.disk_path());
   }
 
   generation_.set(next_gen);
@@ -147,10 +142,7 @@ void LocalDataLoader::InvokeIteration(int iterations_count) {
   }
 
   // Reset scores
-  auto instance = InstanceManager::singleton().Get(config_.get()->instance_id());
-  if (instance != nullptr) {
-    instance->ForceResetScores(ModelName());
-  }
+  instance()->ForceResetScores(ModelName());
 
   auto latest_generation = generation_.get();
   if (latest_generation->empty()) {
@@ -175,12 +167,8 @@ void LocalDataLoader::WaitIdle() {
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));
   }
 
-  auto instance = InstanceManager::singleton().Get(config_.get()->instance_id());
-  if (instance == nullptr)
-    return;
-
-  instance->ForcePushTopicModelIncrement();
-  instance->ForcePullTopicModel();
+  instance()->ForcePushTopicModelIncrement();
+  instance()->ForcePullTopicModel();
 }
 
 void LocalDataLoader::DisposeModel(ModelName model_name) {
@@ -219,9 +207,10 @@ bool LocalDataLoader::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
 }
 
 void LocalDataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
+  MasterComponentConfig config = instance()->schema()->config();
   boost::uuids::uuid uuid(boost::uuids::string_generator()(cache->batch_uuid().c_str()));
   batch_manager_.Done(uuid);
-  if (config_.get()->cache_processor_output()) {
+  if (config.cache_processor_output()) {
     for (int model_index = 0; model_index < cache->model_increment_size(); model_index++) {
       const ModelIncrement& model_increment = cache->model_increment(model_index);
       ModelName model_name = model_increment.model_name();
@@ -254,13 +243,10 @@ void LocalDataLoader::ThreadFunction() {
       // which also throws boost::thread_interrupted
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-      auto config = config_.get();
+      auto schema = instance()->schema();
+      auto config = schema->config();
 
-      auto instance = InstanceManager::singleton().Get(config->instance_id());
-      if (instance == nullptr)
-        continue;
-
-      if (instance->processor_queue_size() >= config->queue_size())
+      if (instance()->processor_queue_size() >= config.processor_queue_max_size())
         continue;
 
       boost::uuids::uuid next_batch_uuid = batch_manager_.Next();
@@ -269,7 +255,7 @@ void LocalDataLoader::ThreadFunction() {
 
       auto latest_generation = generation_.get();
       std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid,
-                                                                    config_.get()->disk_path());
+                                                                    config.disk_path());
       if (batch == nullptr) {
         batch_manager_.Done(next_batch_uuid);
         continue;
@@ -278,7 +264,6 @@ void LocalDataLoader::ThreadFunction() {
       auto pi = std::make_shared<ProcessorInput>();
       pi->mutable_batch()->CopyFrom(*batch);
       pi->set_batch_uuid(boost::lexical_cast<std::string>(next_batch_uuid));
-      pi->set_data_loader_id(id());
 
       auto keys = cache_.keys();
       for (auto &key : keys) {
@@ -292,8 +277,8 @@ void LocalDataLoader::ThreadFunction() {
         }
       }
 
-      DataLoader::PopulateDataStreams(*config, *batch, pi.get());
-      instance->AddBatchIntoProcessorQueue(pi);
+      DataLoader::PopulateDataStreams(*batch, pi.get());
+      instance()->AddBatchIntoProcessorQueue(pi);
     }
   }
   catch(boost::thread_interrupted&) {
@@ -306,17 +291,10 @@ void LocalDataLoader::ThreadFunction() {
   }
 }
 
-RemoteDataLoader::RemoteDataLoader(int id, const DataLoaderConfig& config)
-    : DataLoader(id, config),
-      application_(nullptr),
-      master_component_service_proxy_(nullptr),
+RemoteDataLoader::RemoteDataLoader(Instance* instance)
+    : DataLoader(instance),
       is_stopping(false),
       thread_() {
-  rpcz::application::options options(3);
-  options.zeromq_context = ZmqContext::singleton().get();
-  application_.reset(new rpcz::application(options));
-  Reconfigure(config);
-
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
   boost::thread t(&RemoteDataLoader::ThreadFunction, this);
@@ -337,22 +315,9 @@ void RemoteDataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
   processed_batches.add_batch_id(cache->batch_uuid());
   Void response;
   try {
-    master_component_service_proxy_->ReportBatches(processed_batches, &response);
+    instance()->master_component_service_proxy()->ReportBatches(processed_batches, &response);
   } catch(...) {
     LOG(ERROR) << "Unable to report processed batches to master.";
-  }
-}
-
-void RemoteDataLoader::Reconfigure(const DataLoaderConfig& config) {
-  std::string old_endpoint = config_.get()->master_component_endpoint();
-  std::string new_endpoind = config.master_component_endpoint();
-  config_.set(std::make_shared<DataLoaderConfig>(config));
-
-  if ((master_component_service_proxy_ == nullptr) || (old_endpoint != new_endpoind)) {
-    LOG(INFO) << "Connecting to master " << config.master_component_endpoint();
-    master_component_service_proxy_.reset(
-        new artm::core::MasterComponentService_Stub(
-        application_->create_rpc_channel(config.master_component_endpoint()), true));
   }
 }
 
@@ -371,14 +336,9 @@ void RemoteDataLoader::ThreadFunction() {
       // which also throws boost::thread_interrupted
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
-      auto config = config_.get();
-
-      auto instance = InstanceManager::singleton().Get(config->instance_id());
-      if (instance == nullptr)
-        continue;
-
-      int processor_queue_size = instance->processor_queue_size();
-      int max_queue_size = config->queue_size();
+      MasterComponentConfig config = instance()->schema()->config();
+      int processor_queue_size = instance()->processor_queue_size();
+      int max_queue_size = config.processor_queue_max_size();
       if (processor_queue_size >= max_queue_size)
         continue;
 
@@ -386,7 +346,7 @@ void RemoteDataLoader::ThreadFunction() {
       BatchIds response;
       request.set_value(max_queue_size - processor_queue_size);
       try {
-        master_component_service_proxy_->RequestBatches(request, &response);
+        instance()->master_component_service_proxy()->RequestBatches(request, &response);
       } catch(const std::runtime_error& exception) {
         LOG(ERROR) << exception.what();
       } catch(...) {
@@ -399,10 +359,10 @@ void RemoteDataLoader::ThreadFunction() {
         std::string batch_id = response.batch_id(batch_index);
         boost::uuids::uuid next_batch_uuid(boost::uuids::string_generator()(batch_id.c_str()));
         std::shared_ptr<const Batch> batch =
-          Generation::LoadBatch(next_batch_uuid, config->disk_path());
+          Generation::LoadBatch(next_batch_uuid, config.disk_path());
 
         if (batch == nullptr) {
-          LOG(ERROR) << "Unable to load batch '" << batch_id << "' from " << config->disk_path();
+          LOG(ERROR) << "Unable to load batch '" << batch_id << "' from " << config.disk_path();
           failed_batches.add_batch_id(batch_id);
           continue;
         }
@@ -410,17 +370,16 @@ void RemoteDataLoader::ThreadFunction() {
         auto pi = std::make_shared<ProcessorInput>();
         pi->mutable_batch()->CopyFrom(*batch);
         pi->set_batch_uuid(boost::lexical_cast<std::string>(next_batch_uuid));
-        pi->set_data_loader_id(id());
 
         // ToDo(alfrey): implement Theta-caching in network modus operandi
-        DataLoader::PopulateDataStreams(*config, *batch, pi.get());
-        instance->AddBatchIntoProcessorQueue(pi);
+        DataLoader::PopulateDataStreams(*batch, pi.get());
+        instance()->AddBatchIntoProcessorQueue(pi);
       }
 
       if (failed_batches.batch_id_size() > 0) {
         Void response;
         try {
-          master_component_service_proxy_->ReportBatches(failed_batches, &response);
+          instance()->master_component_service_proxy()->ReportBatches(failed_batches, &response);
         } catch(...) {
           LOG(ERROR) << "Unable to report failed batches to master.";
         }

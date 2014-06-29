@@ -26,7 +26,7 @@ namespace artm {
 namespace core {
 
 DataLoader::DataLoader(Instance* instance)
-    : instance_(instance), lock_() { }
+    : instance_(instance) { }
 
 Instance* DataLoader::instance() {
   return instance_;
@@ -66,11 +66,9 @@ void DataLoader::PopulateDataStreams(const Batch& batch, ProcessorInput* pi) {
 
 LocalDataLoader::LocalDataLoader(Instance* instance)
     : DataLoader(instance),
-      generation_(lock_, std::make_shared<Generation>(instance->schema()->config().disk_path())),
-      cache_lock_(),
-      cache_(cache_lock_),
-      batch_manager_lock_(),
-      batch_manager_(&batch_manager_lock_),
+      generation_(std::make_shared<Generation>(instance->schema()->config().disk_path())),
+      cache_(),
+      batch_manager_(),
       is_stopping(false),
       thread_() {
   // Keep this at the last action in constructor.
@@ -246,7 +244,7 @@ void LocalDataLoader::ThreadFunction() {
       auto schema = instance()->schema();
       auto config = schema->config();
 
-      if (instance()->processor_queue_size() >= config.processor_queue_max_size())
+      if (instance()->processor_queue()->size() >= config.processor_queue_max_size())
         continue;
 
       boost::uuids::uuid next_batch_uuid = batch_manager_.Next();
@@ -278,7 +276,7 @@ void LocalDataLoader::ThreadFunction() {
       }
 
       DataLoader::PopulateDataStreams(*batch, pi.get());
-      instance()->AddBatchIntoProcessorQueue(pi);
+      instance()->processor_queue()->push(pi);
     }
   }
   catch(boost::thread_interrupted&) {
@@ -337,7 +335,7 @@ void RemoteDataLoader::ThreadFunction() {
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
       MasterComponentConfig config = instance()->schema()->config();
-      int processor_queue_size = instance()->processor_queue_size();
+      int processor_queue_size = instance()->processor_queue()->size();
       int max_queue_size = config.processor_queue_max_size();
       if (processor_queue_size >= max_queue_size)
         continue;
@@ -373,7 +371,7 @@ void RemoteDataLoader::ThreadFunction() {
 
         // ToDo(alfrey): implement Theta-caching in network modus operandi
         DataLoader::PopulateDataStreams(*batch, pi.get());
-        instance()->AddBatchIntoProcessorQueue(pi);
+        instance()->processor_queue()->push(pi);
       }
 
       if (failed_batches.batch_id_size() > 0) {

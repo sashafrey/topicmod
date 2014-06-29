@@ -20,15 +20,11 @@
 namespace artm {
 namespace core {
 
-Processor::Processor(boost::mutex* processor_queue_lock,
-    std::queue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
-    boost::mutex* merger_queue_lock,
-    std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
-    const Merger& merger,
-    const ThreadSafeHolder<InstanceSchema>& schema)
-    : processor_queue_lock_(processor_queue_lock),
-      processor_queue_(processor_queue),
-      merger_queue_lock_(merger_queue_lock),
+Processor::Processor(ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
+                     ThreadSafeQueue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+                     const Merger& merger,
+                     const ThreadSafeHolder<InstanceSchema>& schema)
+    : processor_queue_(processor_queue),
       merger_queue_(merger_queue),
       merger_(merger),
       schema_(schema),
@@ -348,20 +344,13 @@ void Processor::ThreadFunction() {
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
       std::shared_ptr<const ProcessorInput> part;
-      {
-        boost::lock_guard<boost::mutex> guard(*processor_queue_lock_);
-        if (processor_queue_->empty()) {
-          continue;
-        }
-
-        part = processor_queue_->front();
-        processor_queue_->pop();
+      if (!processor_queue_->try_pop(&part)) {
+        continue;
       }
 
       std::shared_ptr<ProcessorOutput> processor_output = std::make_shared<ProcessorOutput>();
       processor_output->set_batch_uuid(part->batch_uuid());
       call_on_destruction c([&]() {
-        boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
         merger_queue_->push(processor_output);
       });
 
@@ -482,18 +471,16 @@ void Processor::ThreadFunction() {
         }
       });
 
+      // Wait until merger queue has space for a new element
+      int merger_queue_max_size = schema_.get()->config().merger_queue_max_size();
       for (;;) {
-        int merger_queue_size = 0;
-        {
-          boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
-          merger_queue_size = merger_queue_->size();
-        }
-
-        if (merger_queue_size < schema_.get()->config().merger_queue_max_size())
+        if (merger_queue_->size() < merger_queue_max_size)
           break;
 
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));
       }
+
+      // Here call_in_destruction will enqueue processor output into the merger queue.
     }
   }
   catch(boost::thread_interrupted&) {

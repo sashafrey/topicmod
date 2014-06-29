@@ -114,13 +114,13 @@ TEST(Instance, Basic) {
   artm::core::ModelName model_name =
     boost::lexical_cast<std::string>(boost::uuids::random_generator()());
   config.set_name(boost::lexical_cast<std::string>(model_name));
-  instance->ReconfigureModel(config);
+  instance->CreateOrReconfigureModel(config);
 
   instance->local_data_loader()->InvokeIteration(20);
   instance->local_data_loader()->WaitIdle();
 
   config.set_enabled(false);
-  instance->ReconfigureModel(config);
+  instance->CreateOrReconfigureModel(config);
 
   artm::TopicModel topic_model;
   instance->RequestTopicModel(model_name, &topic_model);
@@ -170,13 +170,13 @@ TEST(Instance, MultipleStreamsAndModels) {
   // are present in token-topic-matrix. Therefore,
   // using train sample to get non-zero perplexity score.
   score->set_stream_name("train");
-  test.instance()->ReconfigureModel(m1);
+  test.instance()->CreateOrReconfigureModel(m1);
 
   artm::ModelConfig m2;
   m2.set_stream_name("test");
   m2.set_enabled(true);
   m2.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
-  test.instance()->ReconfigureModel(m2);
+  test.instance()->CreateOrReconfigureModel(m2);
 
   for (int iter = 0; iter < 100; ++iter) {
   test.instance()->local_data_loader()->InvokeIteration(1);

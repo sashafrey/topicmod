@@ -21,9 +21,8 @@ namespace artm {
 namespace core {
 
 MasterComponent::MasterComponent(int id, const MasterComponentConfig& config)
-    : lock_(),
-      master_id_(id),
-      config_(lock_, std::make_shared<MasterComponentConfig>(MasterComponentConfig(config))),
+    : master_id_(id),
+      config_(std::make_shared<MasterComponentConfig>(MasterComponentConfig(config))),
       service_endpoint_(nullptr),
       client_interface_(nullptr) {
   Reconfigure(config);
@@ -48,8 +47,8 @@ bool MasterComponent::isInNetworkModusOperandi() const {
   return config_.get()->modus_operandi() == MasterComponentConfig_ModusOperandi_Network;
 }
 
-void MasterComponent::ReconfigureModel(const ModelConfig& config) {
-  client_interface_->ReconfigureModel(config);
+void MasterComponent::CreateOrReconfigureModel(const ModelConfig& config) {
+  client_interface_->CreateOrReconfigureModel(config);
 }
 
 void MasterComponent::DisposeModel(ModelName model_name) {
@@ -97,7 +96,7 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
   }
 
   if (new_modus_operandi == MasterComponentConfig_ModusOperandi_Network) {
-    client_interface_.reset(new NetworkClientCollection(lock_));
+    client_interface_.reset(new NetworkClientCollection());
     service_endpoint_.reset(
       new ServiceEndpoint(config_.get()->master_component_create_endpoint(),
                           dynamic_cast<NetworkClientCollection*>(client_interface_.get())));
@@ -239,8 +238,8 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
   }
 }
 
-void LocalClient::ReconfigureModel(const ModelConfig& config) {
-  local_instance_->ReconfigureModel(config);
+void LocalClient::CreateOrReconfigureModel(const ModelConfig& config) {
+  local_instance_->CreateOrReconfigureModel(config);
 }
 
 void LocalClient::DisposeModel(ModelName model_name) {
@@ -307,7 +306,7 @@ void LocalClient::AddBatch(const Batch& batch) {
   local_instance_->local_data_loader()->AddBatch(batch);
 }
 
-void NetworkClientCollection::ReconfigureModel(const ModelConfig& config) {
+void NetworkClientCollection::CreateOrReconfigureModel(const ModelConfig& config) {
   for_each_client([&](NodeControllerService_Stub& client) {
     CreateOrReconfigureModelArgs args;
     args.mutable_config()->CopyFrom(config);

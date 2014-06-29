@@ -53,7 +53,7 @@ class MasterComponent : boost::noncopyable {
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
-  void ReconfigureModel(const ModelConfig& config);
+  void CreateOrReconfigureModel(const ModelConfig& config);
   void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
   void DisposeModel(ModelName model_name);
@@ -101,7 +101,6 @@ class MasterComponent : boost::noncopyable {
   // All master components must be created via TemplateManager.
   MasterComponent(int id, const MasterComponentConfig& config);
 
-  mutable boost::mutex lock_;
   int master_id_;
   ThreadSafeHolder<MasterComponentConfig> config_;
 
@@ -118,7 +117,7 @@ class ClientInterface {
  public:
   virtual ~ClientInterface() {}
 
-  virtual void ReconfigureModel(const ModelConfig& config) = 0;
+  virtual void CreateOrReconfigureModel(const ModelConfig& config) = 0;
   virtual void DisposeModel(ModelName model_name) = 0;
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config) = 0;
@@ -136,7 +135,7 @@ class LocalClient : public ClientInterface {
   LocalClient() {}
   virtual ~LocalClient();
 
-  virtual void ReconfigureModel(const ModelConfig& config);
+  virtual void CreateOrReconfigureModel(const ModelConfig& config);
   virtual void DisposeModel(ModelName model_name);
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
@@ -161,10 +160,10 @@ class LocalClient : public ClientInterface {
 
 class NetworkClientCollection : public ClientInterface {
  public:
-  NetworkClientCollection(boost::mutex& lock) : lock_(lock), clients_(lock_) {}  // NOLINT
+  NetworkClientCollection() : clients_() {}
   virtual ~NetworkClientCollection();
 
-  virtual void ReconfigureModel(const ModelConfig& config);
+  virtual void CreateOrReconfigureModel(const ModelConfig& config);
   virtual void DisposeModel(ModelName model_name);
 
   virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
@@ -187,7 +186,6 @@ class NetworkClientCollection : public ClientInterface {
   void for_each_endpoint(std::function<void(std::string)> f);
 
  private:
-  boost::mutex& lock_;
   ThreadSafeCollectionHolder<std::string, artm::core::NodeControllerService_Stub> clients_;
 };
 

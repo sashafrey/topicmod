@@ -41,7 +41,7 @@ TEST(NodesConnectivityTest, Basic) {
   auto regularizer_config = test_mother.GenerateRegularizerConfig();
   auto model_config = test_mother.GenerateModelConfig();
   master->CreateOrReconfigureRegularizer(regularizer_config);
-  master->ReconfigureModel(model_config);
+  master->CreateOrReconfigureModel(model_config);
   auto schema = ::artm::core::InstanceManager::singleton().First()->schema();
   EXPECT_TRUE(schema->has_model_config(model_config.name()));
   EXPECT_TRUE(schema->has_regularizer(regularizer_config.name()));

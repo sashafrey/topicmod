@@ -15,7 +15,7 @@ namespace core {
 NodeController::NodeController(int id, const NodeControllerConfig& config)
     : lock_(),
       node_controller_id_(id),
-      config_(lock_, std::make_shared<NodeControllerConfig>(NodeControllerConfig(config))),
+      config_(std::make_shared<NodeControllerConfig>(NodeControllerConfig(config))),
       service_endpoint_(nullptr),
       application_(nullptr),
       master_component_service_proxy_(nullptr) {

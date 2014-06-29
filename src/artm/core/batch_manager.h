@@ -22,8 +22,8 @@ namespace core {
 // In such situation BatchManager will ensure that no other processors will receive the
 // batch until slow processor is done.
 class BatchManager : boost::noncopyable {
-  public:
-  explicit BatchManager(boost::mutex* lock);
+ public:
+  explicit BatchManager();
 
   // Add batch to the task queue.
   // OK to add the same uuid multiple times.
@@ -42,7 +42,7 @@ class BatchManager : boost::noncopyable {
   bool IsEverythingProcessed() const;
 
  private:
-  mutable boost::mutex* lock_;
+  mutable boost::mutex lock_;
   std::list<boost::uuids::uuid> tasks_;
   std::set<boost::uuids::uuid> in_progress_;
 };

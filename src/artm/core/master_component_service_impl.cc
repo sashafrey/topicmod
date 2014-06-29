@@ -20,9 +20,8 @@
 namespace artm {
 namespace core {
 
-MasterComponentServiceImpl::MasterComponentServiceImpl(
-    NetworkClientCollection* clients)
-    : lock_(), batch_manager_(&lock_), topic_model_(lock_), application_(), clients_(clients) {
+MasterComponentServiceImpl::MasterComponentServiceImpl(NetworkClientCollection* clients)
+    : batch_manager_(), topic_model_(), application_(), clients_(clients) {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));

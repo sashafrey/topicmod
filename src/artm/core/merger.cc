@@ -24,17 +24,14 @@ using ::artm::core::MasterComponentService_Stub;
 namespace artm {
 namespace core {
 
-Merger::Merger(boost::mutex* merger_queue_lock,
-               std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+Merger::Merger(ThreadSafeQueue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
                ThreadSafeHolder<InstanceSchema>* schema,
                artm::core::MasterComponentService_Stub* master_component_service,
                DataLoader* data_loader)
-    : lock_(),
-      topic_model_(lock_),
+    : topic_model_(),
       topic_model_inc_(),
       schema_(schema),
       master_component_service_(master_component_service),
-      merger_queue_lock_(merger_queue_lock),
       merger_queue_(merger_queue),
       data_loader_(data_loader),
       is_stopping(false),
@@ -57,7 +54,7 @@ void Merger::DisposeModel(ModelName model_name) {
   internal_task_queue_.push(MergerTask(kDisposeModel, model_name));
 }
 
-void Merger::UpdateModel(const ModelConfig& model) {
+void Merger::CreateOrReconfigureModel(const ModelConfig& model) {
   if (!topic_model_.has_key(model.name())) {
     // Handle more type of reconfigs - for example, changing the number of topics;
     auto ttm = std::make_shared<TopicModel>(model.name(), model.topics_count(),
@@ -195,14 +192,8 @@ void Merger::ThreadFunction() {
 
         // Second, merge everything from the queue and update topic model.
         std::shared_ptr<const ProcessorOutput> processor_output;
-        {
-          boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
-          if (merger_queue_->empty()) {
-            break;  // MAIN FOR LOOP
-          }
-
-          processor_output = merger_queue_->front();
-          merger_queue_->pop();
+        if (!merger_queue_->try_pop(&processor_output)) {
+          break;  // MAIN FOR LOOP
         }
 
         call_on_destruction c([&]() {

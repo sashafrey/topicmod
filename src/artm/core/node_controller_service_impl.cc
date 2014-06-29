@@ -56,7 +56,7 @@ void NodeControllerServiceImpl::CreateOrReconfigureModel(
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("Instance not found"));
     }
 
-    instance->ReconfigureModel(request.config());
+    instance->CreateOrReconfigureModel(request.config());
     response.send(Void());
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services

@@ -35,7 +35,6 @@ class NetworkClientCollection;
 class MasterComponentServiceImpl : public MasterComponentService {
  public:
   explicit MasterComponentServiceImpl(NetworkClientCollection* clients);
-
   ~MasterComponentServiceImpl() { ; }
 
   virtual void UpdateModel(const ::artm::core::ModelIncrement& request,
@@ -59,7 +58,6 @@ class MasterComponentServiceImpl : public MasterComponentService {
   bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
 
  private:
-  mutable boost::mutex lock_;
   BatchManager batch_manager_;
   ThreadSafeCollectionHolder<::artm::core::ModelName, ::artm::core::TopicModel> topic_model_;
   std::unique_ptr<rpcz::application> application_;

@@ -5,16 +5,15 @@
 namespace artm {
 namespace core {
 
-BatchManager::BatchManager(boost::mutex* lock)
-    : lock_(lock), tasks_(), in_progress_() {}
+BatchManager::BatchManager() : lock_(), tasks_(), in_progress_() {}
 
 void BatchManager::Add(const boost::uuids::uuid& id) {
-  boost::lock_guard<boost::mutex> guard(*lock_);
+  boost::lock_guard<boost::mutex> guard(lock_);
   tasks_.push_back(id);
 }
 
 boost::uuids::uuid BatchManager::Next() {
-  boost::lock_guard<boost::mutex> guard(*lock_);
+  boost::lock_guard<boost::mutex> guard(lock_);
   for (auto iter = tasks_.begin(); iter != tasks_.end(); ++iter) {
     if (in_progress_.find(*iter) == in_progress_.end()) {
       boost::uuids::uuid retval = *iter;
@@ -28,12 +27,12 @@ boost::uuids::uuid BatchManager::Next() {
 }
 
 void BatchManager::Done(const boost::uuids::uuid& id) {
-  boost::lock_guard<boost::mutex> guard(*lock_);
+  boost::lock_guard<boost::mutex> guard(lock_);
   in_progress_.erase(id);
 }
 
 bool BatchManager::IsEverythingProcessed() const {
-  boost::lock_guard<boost::mutex> guard(*lock_);
+  boost::lock_guard<boost::mutex> guard(lock_);
   return (tasks_.empty() && in_progress_.empty());
 }
 

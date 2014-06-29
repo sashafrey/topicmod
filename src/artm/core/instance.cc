@@ -37,18 +37,15 @@ namespace core {
 
 Instance::Instance(int id, const MasterComponentConfig& config)
     : is_configured_(false),
-      lock_(),
       instance_id_(id),
-      schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
+      schema_(std::make_shared<InstanceSchema>(InstanceSchema(config))),
       application_(nullptr),
       master_component_service_proxy_(nullptr),
-      processor_queue_lock_(),
       processor_queue_(),
-      merger_queue_lock_(),
       merger_queue_(),
       merger_(),
       processors_(),
-      dictionaries_(lock_),
+      dictionaries_(),
       local_data_loader_(nullptr),
       remote_data_loader_(nullptr),
       data_loader_(nullptr) {
@@ -61,8 +58,8 @@ Instance::Instance(int id, const MasterComponentConfig& config)
 
 Instance::~Instance() {}
 
-void Instance::ReconfigureModel(const ModelConfig& config) {
-  merger_->UpdateModel(config);
+void Instance::CreateOrReconfigureModel(const ModelConfig& config) {
+  merger_->CreateOrReconfigureModel(config);
 
   auto new_schema = schema_.get_copy();
   new_schema->set_model_config(config.name(), std::make_shared<const ModelConfig>(config));
@@ -190,7 +187,7 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
       data_loader_ = local_data_loader_.get();
     }
 
-    merger_.reset(new Merger(&merger_queue_lock_, &merger_queue_, &schema_,
+    merger_.reset(new Merger(&merger_queue_, &schema_,
                              master_component_service_proxy_.get(), data_loader_));
 
     is_configured_  = true;
@@ -207,9 +204,7 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
   while (static_cast<int>(processors_.size()) < config.processors_count()) {
     processors_.push_back(
       std::shared_ptr<Processor>(new Processor(
-        &processor_queue_lock_,
         &processor_queue_,
-        &merger_queue_lock_,
         &merger_queue_,
         *merger_,
         schema_)));
@@ -221,16 +216,6 @@ bool Instance::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic
   if (ttm == nullptr) return false;
   ttm->RetrieveExternalTopicModel(topic_model);
   return true;
-}
-
-int Instance::processor_queue_size() const {
-  boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
-  return processor_queue_.size();
-}
-
-void Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input) {
-  boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
-  processor_queue_.push(input);
 }
 
 }  // namespace core

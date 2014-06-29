@@ -43,7 +43,6 @@ class DataLoader : boost::noncopyable {
   void PopulateDataStreams(const Batch& batch, ProcessorInput* pi);
 
   Instance* instance_;
-  boost::mutex lock_;
 };
 
 // DataLoader for local modus operandi
@@ -67,10 +66,8 @@ class LocalDataLoader : public DataLoader {
   ThreadSafeHolder<Generation> generation_;
 
   typedef std::pair<boost::uuids::uuid, ModelName> CacheKey;
-  boost::mutex cache_lock_;
   ThreadSafeCollectionHolder<CacheKey, DataLoaderCacheEntry> cache_;
 
-  boost::mutex batch_manager_lock_;
   BatchManager batch_manager_;
 
   mutable std::atomic<bool> is_stopping;

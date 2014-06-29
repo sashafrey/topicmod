@@ -21,10 +21,14 @@ namespace artm {
 namespace core {
 
 MasterComponent::MasterComponent(int id, const MasterComponentConfig& config)
-    : master_id_(id),
+    : is_configured_(false),
+      master_id_(id),
       config_(std::make_shared<MasterComponentConfig>(MasterComponentConfig(config))),
-      service_endpoint_(nullptr),
-      client_interface_(nullptr) {
+      network_client_interface_(nullptr),
+      local_client_interface_(nullptr),
+      client_interface_(nullptr),
+      master_component_service_impl_(nullptr),
+      service_endpoint_(nullptr) {
   Reconfigure(config);
 }
 
@@ -36,7 +40,7 @@ int MasterComponent::id() const {
 }
 
 int MasterComponent::clients_size() const {
-  return dynamic_cast<NetworkClientCollection*>(client_interface_.get())->clients_size();
+  return (network_client_interface_ == nullptr) ? 0 : network_client_interface_->clients_size();
 }
 
 bool MasterComponent::isInLocalModusOperandi() const {
@@ -78,43 +82,47 @@ void MasterComponent::InvokePhiRegularizers() {
 void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
   ValidateConfig(config);
 
-  auto previous_modus_operandi = config_.get()->modus_operandi();
-  auto new_modus_operandi = config.modus_operandi();
+  if (!is_configured_) {
+    // First configuration
+    switch (config.modus_operandi()) {
+      case MasterComponentConfig_ModusOperandi_Local: {
+        local_client_interface_.reset(new LocalClient());
+        client_interface_ = local_client_interface_.get();
+        break;
+      }
+
+      case MasterComponentConfig_ModusOperandi_Network: {
+        network_client_interface_.reset(new NetworkClientCollection());
+        client_interface_ = network_client_interface_.get();
+
+        master_component_service_impl_.reset(
+          new MasterComponentServiceImpl(network_client_interface_.get()));
+
+        service_endpoint_.reset(
+          new ServiceEndpoint(config.master_component_create_endpoint(),
+                              master_component_service_impl_.get()));
+        break;
+      }
+
+      default: {
+        BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+      }
+    }
+
+    is_configured_ = true;
+  }
 
   config_.set(std::make_shared<MasterComponentConfig>(config));
-
-  if ((new_modus_operandi == previous_modus_operandi) && (client_interface_ != nullptr)) {
-    client_interface_->Reconfigure(config);
-    return;
-  }
-
-  if (new_modus_operandi == MasterComponentConfig_ModusOperandi_Local) {
-    service_endpoint_.reset();
-    client_interface_.reset(new LocalClient());
-    client_interface_->Reconfigure(config);
-    return;
-  }
-
-  if (new_modus_operandi == MasterComponentConfig_ModusOperandi_Network) {
-    client_interface_.reset(new NetworkClientCollection());
-    service_endpoint_.reset(
-      new ServiceEndpoint(config_.get()->master_component_create_endpoint(),
-                          dynamic_cast<NetworkClientCollection*>(client_interface_.get())));
-    client_interface_->Reconfigure(config);
-    return;
-  }
-
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  client_interface_->Reconfigure(config);
 }
 
 bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
   if (isInLocalModusOperandi()) {
-    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
-    return local_client->RequestTopicModel(model_name, topic_model);
+    return local_client_interface_->RequestTopicModel(model_name, topic_model);
   }
 
   if (isInNetworkModusOperandi()) {
-    return service_endpoint_->impl()->RequestTopicModel(model_name, topic_model);
+    return impl()->RequestTopicModel(model_name, topic_model);
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
@@ -122,8 +130,7 @@ bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel
 
 void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
   if (isInLocalModusOperandi()) {
-    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
-    local_client->OverwriteTopicModel(topic_model);
+    local_client_interface_->OverwriteTopicModel(topic_model);
     return;
   }
 
@@ -136,8 +143,7 @@ void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model)
 
 bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
   if (isInLocalModusOperandi()) {
-    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
-    return local_client->RequestThetaMatrix(model_name, theta_matrix);
+    return local_client_interface_->RequestThetaMatrix(model_name, theta_matrix);
   }
 
   if (isInNetworkModusOperandi()) {
@@ -149,13 +155,12 @@ bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
 
 void MasterComponent::WaitIdle() {
   if (isInLocalModusOperandi()) {
-    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
-    local_client->WaitIdle();
+    local_client_interface_->WaitIdle();
     return;
   }
 
   if (isInNetworkModusOperandi()) {
-    service_endpoint_->impl()->WaitIdle();
+    impl()->WaitIdle();
     return;
   }
 
@@ -164,13 +169,12 @@ void MasterComponent::WaitIdle() {
 
 void MasterComponent::InvokeIteration(int iterations_count) {
   if (isInLocalModusOperandi()) {
-    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
-    local_client->InvokeIteration(iterations_count);
+    local_client_interface_->InvokeIteration(iterations_count);
     return;
   }
 
   if (isInNetworkModusOperandi()) {
-    service_endpoint_->impl()->InvokeIteration(iterations_count, config_.get()->disk_path());
+    impl()->InvokeIteration(iterations_count, config_.get()->disk_path());
     return;
   }
 
@@ -179,8 +183,7 @@ void MasterComponent::InvokeIteration(int iterations_count) {
 
 void MasterComponent::AddBatch(const Batch& batch) {
   if (isInLocalModusOperandi()) {
-    LocalClient* local_client = dynamic_cast<LocalClient*>(client_interface_.get());
-    return local_client->AddBatch(batch);
+    return local_client_interface_->AddBatch(batch);
   }
 
   if (isInNetworkModusOperandi()) {
@@ -197,9 +200,8 @@ MasterComponent::ServiceEndpoint::~ServiceEndpoint() {
 }
 
 MasterComponent::ServiceEndpoint::ServiceEndpoint(
-    const std::string& endpoint, NetworkClientCollection* clients)
-    : endpoint_(endpoint), clients_(clients), application_(nullptr),
-      master_component_service_impl_(clients_), thread_() {
+    const std::string& endpoint, MasterComponentServiceImpl* impl)
+    : endpoint_(endpoint), application_(nullptr), impl_(impl), thread_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
@@ -212,7 +214,7 @@ void MasterComponent::ServiceEndpoint::ThreadFunction() {
     Helpers::SetThreadName(-1, "MasterComponent");
     LOG(INFO) << "Establishing MasterComponentService on " << endpoint();
     rpcz::server server(*application_);
-    server.register_service(&master_component_service_impl_);
+    server.register_service(impl_);
     server.bind(endpoint());
     application_->run();
     LOG(INFO) << "MasterComponentService on " << endpoint() << " is stopped.";
@@ -224,16 +226,30 @@ void MasterComponent::ServiceEndpoint::ThreadFunction() {
 
 
 void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
-  if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
-    if (!config.has_master_component_connect_endpoint() ||
-        !config.has_master_component_create_endpoint()) {
-      BOOST_THROW_EXCEPTION(InvalidOperation(
-        "Network modus operandi require all endpoints to be set."));
+  if (!is_configured_) {
+    if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
+      if (!config.has_master_component_connect_endpoint() ||
+          !config.has_master_component_create_endpoint()) {
+        BOOST_THROW_EXCEPTION(InvalidOperation(
+          "Network modus operandi require all endpoints to be set."));
+      }
+
+      if (!config.has_disk_path()) {
+        BOOST_THROW_EXCEPTION(InvalidOperation(
+          "Network modus operandi require disk_path to be set."));
+      }
+    }
+  }
+
+  if (is_configured_) {
+    std::shared_ptr<MasterComponentConfig> current_config = config_.get();
+    if (current_config->modus_operandi() != config.modus_operandi()) {
+      BOOST_THROW_EXCEPTION(InvalidOperation("Unable to change modus operandi"));
     }
 
-    if (!config.has_disk_path()) {
-      BOOST_THROW_EXCEPTION(InvalidOperation(
-        "Network modus operandi require disk_path to be set."));
+    if (current_config->master_component_create_endpoint() !=
+        config.master_component_create_endpoint()) {
+      BOOST_THROW_EXCEPTION(InvalidOperation("Unable to change master component create endpoint"));
     }
   }
 }

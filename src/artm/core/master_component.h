@@ -46,6 +46,7 @@ class MasterComponent : boost::noncopyable {
   bool isInLocalModusOperandi() const;
   bool isInNetworkModusOperandi() const;
   int clients_size() const;
+  MasterComponentServiceImpl* impl() { return master_component_service_impl_.get(); }
 
   // Retrieves topic model.
   // Returns true if succeeded, and false if model_name hasn't been found.
@@ -76,17 +77,15 @@ class MasterComponent : boost::noncopyable {
  private:
   class ServiceEndpoint : boost::noncopyable {
    public:
-    ServiceEndpoint(const std::string& endpoint, NetworkClientCollection* clients);
+    ServiceEndpoint(const std::string& endpoint, MasterComponentServiceImpl* impl);
     ~ServiceEndpoint();
     std::string endpoint() const { return endpoint_; }
-    MasterComponentServiceImpl* impl() { return &master_component_service_impl_; }
+    MasterComponentServiceImpl* impl_;
 
    private:
     std::string endpoint_;
-    NetworkClientCollection* clients_;
     std::unique_ptr<zmq::context_t> zeromq_context_;
     std::unique_ptr<rpcz::application> application_;
-    MasterComponentServiceImpl master_component_service_impl_;
 
     // Keep all threads at the end of class members
     // (because the order of class members defines initialization order;
@@ -101,13 +100,19 @@ class MasterComponent : boost::noncopyable {
   // All master components must be created via TemplateManager.
   MasterComponent(int id, const MasterComponentConfig& config);
 
+  bool is_configured_;
+
   int master_id_;
   ThreadSafeHolder<MasterComponentConfig> config_;
 
+  std::shared_ptr<NetworkClientCollection> network_client_interface_;
+  std::shared_ptr<LocalClient> local_client_interface_;
+  ClientInterface* client_interface_;
+
+  std::shared_ptr<MasterComponentServiceImpl> master_component_service_impl_;
+
   // Endpoint for clients to talk with master component
   std::shared_ptr<ServiceEndpoint> service_endpoint_;
-
-  std::shared_ptr<ClientInterface> client_interface_;
 };
 
 typedef TemplateManager<MasterComponent, MasterComponentConfig> MasterComponentManager;

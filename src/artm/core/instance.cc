@@ -9,6 +9,7 @@
 
 #include "artm/core/common.h"
 #include "artm/core/data_loader.h"
+#include "artm/core/batch_manager.h"
 #include "artm/core/dictionary.h"
 #include "artm/core/exceptions.h"
 #include "artm/core/processor.h"
@@ -45,10 +46,11 @@ Instance::Instance(const MasterComponentConfig& config, InstanceType instance_ty
       merger_queue_(),
       merger_(),
       processors_(),
-      dictionaries_(),
+      batch_manager_(),
       local_data_loader_(nullptr),
       remote_data_loader_(nullptr),
-      data_loader_(nullptr) {
+      data_loader_(nullptr),
+      dictionaries_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
@@ -156,6 +158,10 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
       master_component_service_proxy_.reset(
         new artm::core::MasterComponentService_Stub(
           application_->create_rpc_channel(config.master_component_connect_endpoint()), true));
+    }
+
+    if (instance_type_ != NodeControllerInstance) {
+      batch_manager_.reset(new BatchManager());
     }
 
     // Reconfigure local/remote data loader

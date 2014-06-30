@@ -14,14 +14,16 @@
 #include "rpcz/application.hpp"
 
 #include "artm/core/master_component.h"
+#include "artm/core/instance.h"
+#include "artm/core/batch_manager.h"
 #include "artm/core/zmq_context.h"
 #include "artm/core/generation.h"
 
 namespace artm {
 namespace core {
 
-MasterComponentServiceImpl::MasterComponentServiceImpl(NetworkClientCollection* clients)
-    : batch_manager_(), topic_model_(), application_(), clients_(clients) {
+MasterComponentServiceImpl::MasterComponentServiceImpl(Instance* instance, NetworkClientCollection* clients)
+    : instance_(instance), topic_model_(), application_(), clients_(clients) {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
@@ -56,7 +58,7 @@ void MasterComponentServiceImpl::RequestBatches(const ::artm::core::Int& request
                       ::rpcz::reply< ::artm::core::BatchIds> response) {
   BatchIds reply;
   for (int i = 0; i < request.value(); ++i) {
-    boost::uuids::uuid uuid = batch_manager_.Next();
+    boost::uuids::uuid uuid = instance_->batch_manager()->Next();
     if (uuid.is_nil()) {
       break;
     }
@@ -80,7 +82,7 @@ void MasterComponentServiceImpl::ReportBatches(const ::artm::core::BatchIds& req
       continue;
     }
 
-    batch_manager_.Done(uuid);
+    instance_->batch_manager()->Done(uuid);
   }
 
   try {
@@ -117,14 +119,14 @@ void MasterComponentServiceImpl::InvokeIteration(int iterations_count, std::stri
   auto uuids = Generation::ListAllBatches(disk_path);
   for (int iter = 0; iter < iterations_count; ++iter) {
     for (auto &uuid : uuids) {
-      batch_manager_.Add(uuid);
+      instance_->batch_manager()->Add(uuid);
     }
   }
 }
 
 void MasterComponentServiceImpl::WaitIdle() {
   for (;;) {
-    if (batch_manager_.IsEverythingProcessed())
+    if (instance_->batch_manager()->IsEverythingProcessed())
       break;
 
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));

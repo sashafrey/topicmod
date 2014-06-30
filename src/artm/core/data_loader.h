@@ -14,7 +14,6 @@
 #include "boost/uuid/uuid.hpp"
 
 #include "artm/messages.pb.h"
-#include "artm/core/batch_manager.h"
 #include "artm/core/common.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/template_manager.h"
@@ -67,8 +66,6 @@ class LocalDataLoader : public DataLoader {
 
   typedef std::pair<boost::uuids::uuid, ModelName> CacheKey;
   ThreadSafeCollectionHolder<CacheKey, DataLoaderCacheEntry> cache_;
-
-  BatchManager batch_manager_;
 
   mutable std::atomic<bool> is_stopping;
 

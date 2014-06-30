@@ -15,6 +15,7 @@
 
 #include "artm/core/exceptions.h"
 #include "artm/core/instance.h"
+#include "artm/core/batch_manager.h"
 #include "artm/core/instance_schema.h"
 #include "artm/core/internals.rpcz.h"
 #include "artm/core/protobuf_helpers.h"
@@ -69,7 +70,6 @@ LocalDataLoader::LocalDataLoader(Instance* instance)
     : DataLoader(instance),
       generation_(std::make_shared<Generation>(instance->schema()->config().disk_path())),
       cache_(),
-      batch_manager_(),
       is_stopping(false),
       thread_() {
   // Keep this at the last action in constructor.
@@ -153,14 +153,14 @@ void LocalDataLoader::InvokeIteration(int iterations_count) {
   for (int iter = 0; iter < iterations_count; ++iter) {
     latest_generation->InvokeOnEachPartition(
       [&](boost::uuids::uuid uuid, std::shared_ptr<const Batch> batch) {
-        batch_manager_.Add(uuid);
+        instance_->batch_manager()->Add(uuid);
       });
   }
 }
 
 void LocalDataLoader::WaitIdle() {
   for (;;) {
-    if (batch_manager_.IsEverythingProcessed())
+    if (instance_->batch_manager()->IsEverythingProcessed())
       break;
 
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));
@@ -208,7 +208,7 @@ bool LocalDataLoader::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
 void LocalDataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
   MasterComponentConfig config = instance()->schema()->config();
   boost::uuids::uuid uuid(boost::uuids::string_generator()(cache->batch_uuid().c_str()));
-  batch_manager_.Done(uuid);
+  instance_->batch_manager()->Done(uuid);
   if (config.cache_processor_output()) {
     for (int model_index = 0; model_index < cache->model_increment_size(); model_index++) {
       const ModelIncrement& model_increment = cache->model_increment(model_index);
@@ -248,7 +248,7 @@ void LocalDataLoader::ThreadFunction() {
       if (instance()->processor_queue()->size() >= config.processor_queue_max_size())
         continue;
 
-      boost::uuids::uuid next_batch_uuid = batch_manager_.Next();
+      boost::uuids::uuid next_batch_uuid = instance_->batch_manager()->Next();
       if (next_batch_uuid.is_nil())
         continue;
 
@@ -256,7 +256,7 @@ void LocalDataLoader::ThreadFunction() {
       std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid,
                                                                     config.disk_path());
       if (batch == nullptr) {
-        batch_manager_.Done(next_batch_uuid);
+        instance_->batch_manager()->Done(next_batch_uuid);
         continue;
       }
 

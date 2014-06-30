@@ -26,6 +26,7 @@ namespace core {
 
 class LocalDataLoader;
 class RemoteDataLoader;
+class BatchManager;
 class DataLoader;
 class Processor;
 class Merger;
@@ -85,6 +86,9 @@ class Instance : boost::noncopyable {
   DataLoader* data_loader() { return data_loader_; }
   bool has_data_loader() { return data_loader_ != nullptr; }
 
+  BatchManager* batch_manager() { return batch_manager_.get(); }
+  bool has_batch_manager() { return batch_manager_ != nullptr; }
+
   MasterComponentService_Stub* master_component_service_proxy() { return master_component_service_proxy_.get(); }
   bool has_master_component_service_proxy() { return master_component_service_proxy_ != nullptr; }
 
@@ -116,6 +120,8 @@ class Instance : boost::noncopyable {
 
   // creates background threads for processing
   std::vector<std::shared_ptr<Processor> > processors_;
+
+  std::shared_ptr<BatchManager> batch_manager_;
 
   std::shared_ptr<LocalDataLoader> local_data_loader_;
   std::shared_ptr<RemoteDataLoader> remote_data_loader_;

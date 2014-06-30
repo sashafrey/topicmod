@@ -105,7 +105,7 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
 
     if (is_network) {
       master_component_service_impl_.reset(
-        new MasterComponentServiceImpl(network_client_interface_.get()));
+        new MasterComponentServiceImpl(instance_.get(), network_client_interface_.get()));
 
       service_endpoint_.reset(new ServiceEndpoint(
         config.master_component_create_endpoint(),

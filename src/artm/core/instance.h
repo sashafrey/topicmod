@@ -34,7 +34,7 @@ class InstanceSchema;
 typedef std::map<std::string, ::artm::DictionaryEntry> DictionaryMap;
 typedef ThreadSafeCollectionHolder<std::string, DictionaryMap> ThreadSafeDictionaryCollection;
 typedef ThreadSafeQueue<std::shared_ptr<const ProcessorInput>> ProcessorQueue;
-typedef ThreadSafeQueue<std::shared_ptr<const ProcessorOutput>> MergerQueue;
+typedef ThreadSafeQueue<std::shared_ptr<const ModelIncrement>> MergerQueue;
 
 // Instance type defines which components will be hosted in the instance.
 // =============================

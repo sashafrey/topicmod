@@ -29,7 +29,7 @@ class TopicWeightIterator;
 class Processor : boost::noncopyable {
  public:
   Processor(ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
-            ThreadSafeQueue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+            ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
             const Merger& merger,
             const ThreadSafeHolder<InstanceSchema>& schema);
 
@@ -37,7 +37,7 @@ class Processor : boost::noncopyable {
 
  private:
   ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >* processor_queue_;
-  ThreadSafeQueue<std::shared_ptr<const ProcessorOutput> >* merger_queue_;
+  ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue_;
   const Merger& merger_;
   const ThreadSafeHolder<InstanceSchema>& schema_;
 

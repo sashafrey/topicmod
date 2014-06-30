@@ -35,7 +35,7 @@ class DataLoader : boost::noncopyable {
   explicit DataLoader(Instance* instance);
   virtual ~DataLoader() {}
 
-  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache) = 0;
+  virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment) = 0;
   Instance* instance();
 
  protected:
@@ -52,7 +52,7 @@ class LocalDataLoader : public DataLoader {
 
   int GetTotalItemsCount() const;
   void AddBatch(const Batch& batch);
-  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
+  virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment);
 
   void InvokeIteration(int iterations_count);
   void WaitIdle();
@@ -82,7 +82,7 @@ class RemoteDataLoader : public DataLoader {
  public:
   explicit RemoteDataLoader(Instance* instance);
   virtual ~RemoteDataLoader();
-  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
+  virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment);
 
  private:
   mutable std::atomic<bool> is_stopping;

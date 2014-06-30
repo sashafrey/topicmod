@@ -24,7 +24,7 @@ using ::artm::core::MasterComponentService_Stub;
 namespace artm {
 namespace core {
 
-Merger::Merger(ThreadSafeQueue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+Merger::Merger(ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
                ThreadSafeHolder<InstanceSchema>* schema,
                artm::core::MasterComponentService_Stub* master_component_service,
                DataLoader* data_loader)
@@ -191,36 +191,31 @@ void Merger::ThreadFunction() {
         }
 
         // Second, merge everything from the queue and update topic model.
-        std::shared_ptr<const ProcessorOutput> processor_output;
-        if (!merger_queue_->try_pop(&processor_output)) {
+        std::shared_ptr<const ModelIncrement> model_increment;
+        if (!merger_queue_->try_pop(&model_increment)) {
           break;  // MAIN FOR LOOP
         }
 
         call_on_destruction c([&]() {
-          data_loader_->Callback(processor_output);
+          data_loader_->Callback(model_increment);
         });
 
-        for (int modex_index = 0;
-             modex_index < processor_output->model_increment_size();
-             modex_index++) {
-          auto model_increment = processor_output->model_increment(modex_index);
-          ModelName model_name = model_increment.model_name();
-          auto cur_ttm = topic_model_.get(model_name);
-          if (cur_ttm.get() == nullptr) {
-            // model had been disposed during ongoing processing;
-            continue;  // for (int model_index = 0; ...
-          }
-
-          auto iter = topic_model_inc_.find(model_name);
-          if (iter == topic_model_inc_.end()) {
-            topic_model_inc_.insert(std::make_pair(
-              model_name, std::make_shared<::artm::core::TopicModel>(
-                cur_ttm->model_name(), cur_ttm->topic_size(), cur_ttm->score_size())));
-            iter = topic_model_inc_.find(model_name);
-          }
-
-          iter->second->ApplyDiff(model_increment);
+        ModelName model_name = model_increment->model_name();
+        auto cur_ttm = topic_model_.get(model_name);
+        if (cur_ttm.get() == nullptr) {
+          // model had been disposed during ongoing processing;
+          continue;  // for (int model_index = 0; ...
         }
+
+        auto iter = topic_model_inc_.find(model_name);
+        if (iter == topic_model_inc_.end()) {
+          topic_model_inc_.insert(std::make_pair(
+            model_name, std::make_shared<::artm::core::TopicModel>(
+              cur_ttm->model_name(), cur_ttm->topic_size(), cur_ttm->score_size())));
+          iter = topic_model_inc_.find(model_name);
+        }
+
+        iter->second->ApplyDiff(*model_increment);
       }  // MAIN FOR LOOP
     }
   }

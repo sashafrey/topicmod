@@ -51,16 +51,6 @@ message ProcessorInput
   repeated DataLoaderCacheEntry cached_theta = 6;
 }
 
-// A massage to pass from Processor to Merger
-message ProcessorOutput
-{
-  // Identificator of the batch.
-  required string batch_uuid = 1;
-
-  // One entry per model
-  repeated ModelIncrement model_increment = 3;
-}
-
 // All information, gathered by Processor for a particular batch and model.
 message ModelIncrement {
   required string model_name = 1;
@@ -85,6 +75,9 @@ message ModelIncrement {
   // Cached thetas from previous iteration
   repeated int32 item_id = 9;
   repeated FloatArray theta = 10;
+
+  // Identificators of all batches, contributing to this model increment.
+  repeated string batch_uuid = 11;
 }
 
 // ======== MasterComponentService ========

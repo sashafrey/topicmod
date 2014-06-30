@@ -32,7 +32,7 @@ class InstanceSchema;
 
 class Merger : boost::noncopyable {
  public:
-  Merger(ThreadSafeQueue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+  Merger(ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
          ThreadSafeHolder<InstanceSchema>* schema,
          MasterComponentService_Stub* master_component_service,
          DataLoader* data_loader);
@@ -76,7 +76,7 @@ class Merger : boost::noncopyable {
   ThreadSafeHolder<InstanceSchema>* schema_;
   artm::core::MasterComponentService_Stub* master_component_service_;
 
-  ThreadSafeQueue<std::shared_ptr<const ProcessorOutput> >* merger_queue_;
+  ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue_;
   ThreadSafeQueue<MergerTask> internal_task_queue_;
 
   DataLoader* data_loader_;

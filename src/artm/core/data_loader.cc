@@ -205,22 +205,24 @@ bool LocalDataLoader::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
   return true;
 }
 
-void LocalDataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
+void LocalDataLoader::Callback(std::shared_ptr<const ModelIncrement> model_increment) {
   MasterComponentConfig config = instance()->schema()->config();
-  boost::uuids::uuid uuid(boost::uuids::string_generator()(cache->batch_uuid().c_str()));
-  for (int model_index = 0; model_index < cache->model_increment_size(); model_index++) {
-    const ModelIncrement& model_increment = cache->model_increment(model_index);
-    ModelName model_name = model_increment.model_name();
+  bool is_single_batch = (model_increment->batch_uuid_size() == 1);
+  for (int batch_index = 0; batch_index < model_increment->batch_uuid_size(); ++batch_index) {
+    std::string uuid_str = model_increment->batch_uuid(batch_index);
+    boost::uuids::uuid uuid(boost::uuids::string_generator()(uuid_str.c_str()));
+
+    ModelName model_name = model_increment->model_name();
     instance_->batch_manager()->Done(uuid, model_name);
 
-    if (config.cache_processor_output()) {
+    if (is_single_batch && config.cache_processor_output()) {
       CacheKey cache_key(uuid, model_name);
       std::shared_ptr<DataLoaderCacheEntry> cache_entry(new DataLoaderCacheEntry());
-      cache_entry->set_batch_uuid(cache->batch_uuid());
+      cache_entry->set_batch_uuid(uuid_str);
       cache_entry->set_model_name(model_name);
-      for (int item_index = 0; item_index < model_increment.item_id_size(); ++item_index) {
-        cache_entry->add_item_id(model_increment.item_id(item_index));
-        cache_entry->add_theta()->CopyFrom(model_increment.theta(item_index));
+      for (int item_index = 0; item_index < model_increment->item_id_size(); ++item_index) {
+        cache_entry->add_item_id(model_increment->item_id(item_index));
+        cache_entry->add_theta()->CopyFrom(model_increment->theta(item_index));
       }
 
       cache_.set(cache_key, cache_entry);
@@ -308,11 +310,14 @@ RemoteDataLoader::~RemoteDataLoader() {
   }
 }
 
-void RemoteDataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
+void RemoteDataLoader::Callback(std::shared_ptr<const ModelIncrement> model_increment) {
   // ToDo(alfrey): implement Theta-caching in network modus operandi
 
   BatchIds processed_batches;
-  processed_batches.add_batch_id(cache->batch_uuid());
+  for (int batch_index = 0; batch_index < model_increment->batch_uuid_size(); ++batch_index) {
+    processed_batches.add_batch_id(model_increment->batch_uuid(batch_index));
+  }
+
   Void response;
   try {
     instance()->master_component_service_proxy()->ReportBatches(processed_batches, &response);

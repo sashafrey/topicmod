@@ -21,7 +21,7 @@ namespace artm {
 namespace core {
 
 Processor::Processor(ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
-                     ThreadSafeQueue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+                     ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
                      const Merger& merger,
                      const ThreadSafeHolder<InstanceSchema>& schema)
     : processor_queue_(processor_queue),
@@ -348,12 +348,6 @@ void Processor::ThreadFunction() {
         continue;
       }
 
-      std::shared_ptr<ProcessorOutput> processor_output = std::make_shared<ProcessorOutput>();
-      processor_output->set_batch_uuid(part->batch_uuid());
-      call_on_destruction c([&]() {
-        merger_queue_->push(processor_output);
-      });
-
       std::shared_ptr<InstanceSchema> schema = schema_.get();
       std::vector<ModelName> model_names = schema->GetModelNames();
       std::for_each(model_names.begin(), model_names.end(), [&](ModelName model_name) {
@@ -361,6 +355,12 @@ void Processor::ThreadFunction() {
 
         // do not process disabled models.
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each
+
+        std::shared_ptr<ModelIncrement> model_increment = std::make_shared<ModelIncrement>();
+        model_increment->add_batch_uuid(part->batch_uuid());
+        call_on_destruction c([&]() {
+          merger_queue_->push(model_increment);
+        });
 
         // find cache
         const DataLoaderCacheEntry* cache = nullptr;
@@ -378,7 +378,6 @@ void Processor::ThreadFunction() {
         assert(topic_size > 0);
 
         // process part and store result in merger queue
-        auto model_increment = processor_output->add_model_increment();
         model_increment->set_model_name(model_name);
         model_increment->set_items_processed(0);
 
@@ -427,7 +426,7 @@ void Processor::ThreadFunction() {
 
           bool update_token_counters = true;
           bool update_theta_cache = true;
-          item_processor.InferTheta(model, *item, model_increment, update_token_counters,
+          item_processor.InferTheta(model, *item, model_increment.get(), update_token_counters,
                                     update_theta_cache, &theta[0]);
         }
 
@@ -457,8 +456,8 @@ void Processor::ThreadFunction() {
             // ToDo(alfrey): find a better solution! This may cause duplicates in theta_matrix.
             bool update_theta_cache = (score.stream_name() != model.stream_name());
             bool update_token_counters = false;
-            test_item_processor.InferTheta(model, *item, model_increment, update_token_counters,
-                                           update_theta_cache, theta);
+            test_item_processor.InferTheta(model, *item, model_increment.get(),
+                                           update_token_counters, update_theta_cache, theta);
             test_item_processor.CalculateScore(
               score, *item, theta, &perplexity_score, &perplexity_norm);
           }

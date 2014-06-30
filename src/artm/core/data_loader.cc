@@ -208,11 +208,12 @@ bool LocalDataLoader::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
 void LocalDataLoader::Callback(std::shared_ptr<const ProcessorOutput> cache) {
   MasterComponentConfig config = instance()->schema()->config();
   boost::uuids::uuid uuid(boost::uuids::string_generator()(cache->batch_uuid().c_str()));
-  instance_->batch_manager()->Done(uuid);
-  if (config.cache_processor_output()) {
-    for (int model_index = 0; model_index < cache->model_increment_size(); model_index++) {
-      const ModelIncrement& model_increment = cache->model_increment(model_index);
-      ModelName model_name = model_increment.model_name();
+  for (int model_index = 0; model_index < cache->model_increment_size(); model_index++) {
+    const ModelIncrement& model_increment = cache->model_increment(model_index);
+    ModelName model_name = model_increment.model_name();
+    instance_->batch_manager()->Done(uuid, model_name);
+
+    if (config.cache_processor_output()) {
       CacheKey cache_key(uuid, model_name);
       std::shared_ptr<DataLoaderCacheEntry> cache_entry(new DataLoaderCacheEntry());
       cache_entry->set_batch_uuid(cache->batch_uuid());
@@ -256,7 +257,7 @@ void LocalDataLoader::ThreadFunction() {
       std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid,
                                                                     config.disk_path());
       if (batch == nullptr) {
-        instance_->batch_manager()->Done(next_batch_uuid);
+        instance_->batch_manager()->Done(next_batch_uuid, ModelName());
         continue;
       }
 

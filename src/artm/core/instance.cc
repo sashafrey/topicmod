@@ -61,7 +61,9 @@ Instance::Instance(const MasterComponentConfig& config, InstanceType instance_ty
 Instance::~Instance() {}
 
 void Instance::CreateOrReconfigureModel(const ModelConfig& config) {
-  merger_->CreateOrReconfigureModel(config);
+  if (merger_ != nullptr) {
+    merger_->CreateOrReconfigureModel(config);
+  }
 
   auto new_schema = schema_.get_copy();
   new_schema->set_model_config(config.name(), std::make_shared<const ModelConfig>(config));
@@ -73,7 +75,13 @@ void Instance::DisposeModel(ModelName model_name) {
   new_schema->clear_model_config(model_name);
   schema_.set(new_schema);
 
-  merger_->DisposeModel(model_name);
+  if (merger_ != nullptr) {
+    merger_->DisposeModel(model_name);
+  }
+
+  if (batch_manager_ != nullptr) {
+    batch_manager_->DisposeModel(model_name);
+  }
 }
 
 void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
@@ -161,7 +169,7 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
     }
 
     if (instance_type_ != NodeControllerInstance) {
-      batch_manager_.reset(new BatchManager());
+      batch_manager_.reset(new BatchManager(&schema_));
     }
 
     // Reconfigure local/remote data loader

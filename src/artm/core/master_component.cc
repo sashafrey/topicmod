@@ -52,16 +52,12 @@ bool MasterComponent::isInNetworkModusOperandi() const {
 }
 
 void MasterComponent::CreateOrReconfigureModel(const ModelConfig& config) {
-  if (isInLocalModusOperandi())
-    instance_->CreateOrReconfigureModel(config);
-
+  instance_->CreateOrReconfigureModel(config);
   network_client_interface_->CreateOrReconfigureModel(config);
 }
 
 void MasterComponent::DisposeModel(ModelName model_name) {
-  if (isInLocalModusOperandi())
-    instance_->DisposeModel(model_name);
-
+  instance_->DisposeModel(model_name);
   network_client_interface_->DisposeModel(model_name);
 }
 

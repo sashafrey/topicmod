@@ -82,7 +82,7 @@ void MasterComponentServiceImpl::ReportBatches(const ::artm::core::BatchIds& req
       continue;
     }
 
-    instance_->batch_manager()->Done(uuid);
+    instance_->batch_manager()->Done(uuid, ModelName());
   }
 
   try {

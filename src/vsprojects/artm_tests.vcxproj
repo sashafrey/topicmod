@@ -22,6 +22,7 @@
     <ClCompile Include="$(RepositoryRoot)\3rdparty\gtest\src\gtest-all.cc" />
     <ClCompile Include="$(RepositoryRoot)\3rdparty\gtest\src\gtest_main.cc" />
     <ClCompile Include="..\artm\cpp_interface.cc" />
+    <ClCompile Include="..\artm_tests\batch_manager_test.cc" />
     <ClCompile Include="..\artm_tests\boost_thread_test.cc" />
     <ClCompile Include="..\artm_tests\cpp_interface_test.cc" />
     <ClCompile Include="..\artm_tests\template_manager_test.cc" />

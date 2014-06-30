@@ -16,6 +16,7 @@
 #include "artm/core/data_loader.h"
 #include "artm/core/instance.h"
 #include "artm/core/topic_model.h"
+#include "artm/core/merger.h"
 
 namespace artm {
 namespace core {
@@ -23,10 +24,9 @@ namespace core {
 MasterComponent::MasterComponent(int id, const MasterComponentConfig& config)
     : is_configured_(false),
       master_id_(id),
-      config_(std::make_shared<MasterComponentConfig>(MasterComponentConfig(config))),
+      config_(std::make_shared<MasterComponentConfig>(config)),
+      instance_(nullptr),
       network_client_interface_(nullptr),
-      local_client_interface_(nullptr),
-      client_interface_(nullptr),
       master_component_service_impl_(nullptr),
       service_endpoint_(nullptr) {
   Reconfigure(config);
@@ -52,78 +52,81 @@ bool MasterComponent::isInNetworkModusOperandi() const {
 }
 
 void MasterComponent::CreateOrReconfigureModel(const ModelConfig& config) {
-  client_interface_->CreateOrReconfigureModel(config);
+  if (isInLocalModusOperandi())
+    instance_->CreateOrReconfigureModel(config);
+
+  network_client_interface_->CreateOrReconfigureModel(config);
 }
 
 void MasterComponent::DisposeModel(ModelName model_name) {
-  client_interface_->DisposeModel(model_name);
+  if (isInLocalModusOperandi())
+    instance_->DisposeModel(model_name);
+
+  network_client_interface_->DisposeModel(model_name);
 }
 
 void MasterComponent::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
-  client_interface_->CreateOrReconfigureRegularizer(config);
+  instance_->CreateOrReconfigureRegularizer(config);
+  network_client_interface_->CreateOrReconfigureRegularizer(config);
 }
 
 void MasterComponent::DisposeRegularizer(const std::string& name) {
-  client_interface_->DisposeRegularizer(name);
+  instance_->DisposeRegularizer(name);
+  network_client_interface_->DisposeRegularizer(name);
 }
 
 void MasterComponent::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
-  client_interface_->CreateOrReconfigureDictionary(config);
+  instance_->CreateOrReconfigureDictionary(config);
+  network_client_interface_->CreateOrReconfigureDictionary(config);
 }
 
 void MasterComponent::DisposeDictionary(const std::string& name) {
-  client_interface_->DisposeDictionary(name);
+  instance_->DisposeDictionary(name);
+  network_client_interface_->DisposeDictionary(name);
 }
 
 void MasterComponent::InvokePhiRegularizers() {
-  if (local_client_interface_ != nullptr) {
-    local_client_interface_->InvokePhiRegularizers();
-  }
+  if (config_.get()->modus_operandi() == MasterComponentConfig_ModusOperandi_Local)
+    instance_->merger()->InvokePhiRegularizers();
 }
 
 void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
   ValidateConfig(config);
+  config_.set(std::make_shared<MasterComponentConfig>(config));
 
   if (!is_configured_) {
     // First configuration
-    switch (config.modus_operandi()) {
-      case MasterComponentConfig_ModusOperandi_Local: {
-        local_client_interface_.reset(new LocalClient());
-        client_interface_ = local_client_interface_.get();
-        break;
-      }
+    bool is_local = (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Local);
+    bool is_network = (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network);
+    InstanceType type = (is_local) ? MasterInstanceLocal : MasterInstanceNetwork;
+    instance_.reset(new Instance(config, type));
 
-      case MasterComponentConfig_ModusOperandi_Network: {
-        network_client_interface_.reset(new NetworkClientCollection());
-        client_interface_ = network_client_interface_.get();
+    network_client_interface_.reset(new NetworkClientCollection());
 
-        master_component_service_impl_.reset(
-          new MasterComponentServiceImpl(network_client_interface_.get()));
+    if (is_network) {
+      master_component_service_impl_.reset(
+        new MasterComponentServiceImpl(network_client_interface_.get()));
 
-        service_endpoint_.reset(
-          new ServiceEndpoint(config.master_component_create_endpoint(),
-                              master_component_service_impl_.get()));
-        break;
-      }
-
-      default: {
-        BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
-      }
+      service_endpoint_.reset(new ServiceEndpoint(
+        config.master_component_create_endpoint(),
+        master_component_service_impl_.get()));
     }
 
+    network_client_interface_->Reconfigure(config);
     is_configured_ = true;
+  } else {
+    instance_->Reconfigure(config);
+    network_client_interface_->Reconfigure(config);
   }
-
-  config_.set(std::make_shared<MasterComponentConfig>(config));
-  client_interface_->Reconfigure(config);
 }
 
 bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
   if (isInLocalModusOperandi()) {
-    return local_client_interface_->RequestTopicModel(model_name, topic_model);
+    return instance_->merger()->RetrieveExternalTopicModel(model_name, topic_model);
   }
 
   if (isInNetworkModusOperandi()) {
+    // ToDo(alfrey): this should also go through instance
     return impl()->RequestTopicModel(model_name, topic_model);
   }
 
@@ -132,7 +135,7 @@ bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel
 
 void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
   if (isInLocalModusOperandi()) {
-    local_client_interface_->OverwriteTopicModel(topic_model);
+    instance_->merger()->OverwriteTopicModel(topic_model);
     return;
   }
 
@@ -145,7 +148,7 @@ void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model)
 
 bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
   if (isInLocalModusOperandi()) {
-    return local_client_interface_->RequestThetaMatrix(model_name, theta_matrix);
+    return instance_->local_data_loader()->RequestThetaMatrix(model_name, theta_matrix);
   }
 
   if (isInNetworkModusOperandi()) {
@@ -157,7 +160,7 @@ bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
 
 void MasterComponent::WaitIdle() {
   if (isInLocalModusOperandi()) {
-    local_client_interface_->WaitIdle();
+    instance_->local_data_loader()->WaitIdle();
     return;
   }
 
@@ -171,7 +174,7 @@ void MasterComponent::WaitIdle() {
 
 void MasterComponent::InvokeIteration(int iterations_count) {
   if (isInLocalModusOperandi()) {
-    local_client_interface_->InvokeIteration(iterations_count);
+    instance_->local_data_loader()->InvokeIteration(iterations_count);
     return;
   }
 
@@ -185,7 +188,7 @@ void MasterComponent::InvokeIteration(int iterations_count) {
 
 void MasterComponent::AddBatch(const Batch& batch) {
   if (isInLocalModusOperandi()) {
-    return local_client_interface_->AddBatch(batch);
+    return instance_->local_data_loader()->AddBatch(batch);
   }
 
   if (isInNetworkModusOperandi()) {
@@ -229,6 +232,10 @@ void MasterComponent::ServiceEndpoint::ThreadFunction() {
 
 void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
   if (!is_configured_) {
+    if ((config.modus_operandi() != MasterComponentConfig_ModusOperandi_Local) &&
+        (config.modus_operandi() != MasterComponentConfig_ModusOperandi_Network)) {
+      BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+    }
     if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
       if (!config.has_master_component_connect_endpoint() ||
           !config.has_master_component_create_endpoint()) {
@@ -254,68 +261,6 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
       BOOST_THROW_EXCEPTION(InvalidOperation("Unable to change master component create endpoint"));
     }
   }
-}
-
-void LocalClient::CreateOrReconfigureModel(const ModelConfig& config) {
-  local_instance_->CreateOrReconfigureModel(config);
-}
-
-void LocalClient::DisposeModel(ModelName model_name) {
-  local_instance_->DisposeModel(model_name);
-}
-
-void LocalClient::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
-  local_instance_->OverwriteTopicModel(topic_model);
-}
-
-void LocalClient::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
-  local_instance_->CreateOrReconfigureRegularizer(config);
-}
-
-void LocalClient::DisposeRegularizer(const std::string& name) {
-  local_instance_->DisposeRegularizer(name);
-}
-
-void LocalClient::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
-  local_instance_->CreateOrReconfigureDictionary(config);
-}
-
-void LocalClient::DisposeDictionary(const std::string& name) {
-  local_instance_->DisposeDictionary(name);
-}
-
-void LocalClient::InvokePhiRegularizers() {
-  local_instance_->InvokePhiRegularizers();
-}
-
-void LocalClient::Reconfigure(const MasterComponentConfig& config) {
-  if (local_instance_ == nullptr) {
-    local_instance_.reset(new Instance(config));
-  } else {
-    local_instance_->Reconfigure(config);
-  }
-}
-
-LocalClient::~LocalClient() {}
-
-bool LocalClient::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
-  return local_instance_->RequestTopicModel(model_name, topic_model);
-}
-
-bool LocalClient::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
-  return local_instance_->local_data_loader()->RequestThetaMatrix(model_name, theta_matrix);
-}
-
-void LocalClient::WaitIdle() {
-  local_instance_->local_data_loader()->WaitIdle();
-}
-
-void LocalClient::InvokeIteration(int iterations_count) {
-  local_instance_->local_data_loader()->InvokeIteration(iterations_count);
-}
-
-void LocalClient::AddBatch(const Batch& batch) {
-  local_instance_->local_data_loader()->AddBatch(batch);
 }
 
 void NetworkClientCollection::CreateOrReconfigureModel(const ModelConfig& config) {

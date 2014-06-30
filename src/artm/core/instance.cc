@@ -35,9 +35,10 @@
 namespace artm {
 namespace core {
 
-Instance::Instance(const MasterComponentConfig& config)
-    : is_configured_(false),
-      schema_(std::make_shared<InstanceSchema>(InstanceSchema(config))),
+Instance::Instance(const MasterComponentConfig& config, InstanceType instance_type)
+    : instance_type_(instance_type),
+      is_configured_(false),
+      schema_(std::make_shared<InstanceSchema>(config)),
       application_(nullptr),
       master_component_service_proxy_(nullptr),
       processor_queue_(),
@@ -140,26 +141,6 @@ void Instance::DisposeDictionary(const std::string& name) {
   dictionaries_.erase(name);
 }
 
-void Instance::ForceResetScores(ModelName model_name) {
-  merger_->ForceResetScores(model_name);
-}
-
-void Instance::ForcePullTopicModel() {
-  merger_->ForcePullTopicModel();
-}
-
-void Instance::ForcePushTopicModelIncrement() {
-  merger_->ForcePushTopicModelIncrement();
-}
-
-void Instance::InvokePhiRegularizers() {
-  merger_->InvokePhiRegularizers();
-}
-
-void Instance::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
-  merger_->OverwriteTopicModel(topic_model);
-}
-
 void Instance::Reconfigure(const MasterComponentConfig& config) {
   MasterComponentConfig old_config = schema_.get()->config();
 
@@ -171,23 +152,25 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
     // First reconfiguration.
 
     // Recreate master_component_service_proxy_;
-    if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
+    if (instance_type_ == NodeControllerInstance) {
       master_component_service_proxy_.reset(
         new artm::core::MasterComponentService_Stub(
           application_->create_rpc_channel(config.master_component_connect_endpoint()), true));
     }
 
     // Reconfigure local/remote data loader
-    if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
+    if (instance_type_ == NodeControllerInstance) {
       remote_data_loader_.reset(new RemoteDataLoader(this));
       data_loader_ = remote_data_loader_.get();
-    } else {
+    } else if (instance_type_ == MasterInstanceLocal) {
       local_data_loader_.reset(new LocalDataLoader(this));
       data_loader_ = local_data_loader_.get();
     }
 
-    merger_.reset(new Merger(&merger_queue_, &schema_,
-                             master_component_service_proxy_.get(), data_loader_));
+    if (instance_type_ != MasterInstanceNetwork) {
+      merger_.reset(new Merger(&merger_queue_, &schema_,
+                               master_component_service_proxy_.get(), data_loader_));
+    }
 
     is_configured_  = true;
   } else {
@@ -198,23 +181,18 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
     }
   }
 
-  // Adjust size of processors_; cast size to int to avoid compiler warning.
-  while (static_cast<int>(processors_.size()) > config.processors_count()) processors_.pop_back();
-  while (static_cast<int>(processors_.size()) < config.processors_count()) {
-    processors_.push_back(
-      std::shared_ptr<Processor>(new Processor(
-        &processor_queue_,
-        &merger_queue_,
-        *merger_,
-        schema_)));
+  if (instance_type_ != MasterInstanceNetwork) {
+    // Adjust size of processors_; cast size to int to avoid compiler warning.
+    while (static_cast<int>(processors_.size()) > config.processors_count()) processors_.pop_back();
+    while (static_cast<int>(processors_.size()) < config.processors_count()) {
+      processors_.push_back(
+        std::shared_ptr<Processor>(new Processor(
+          &processor_queue_,
+          &merger_queue_,
+          *merger_,
+          schema_)));
+    }
   }
-}
-
-bool Instance::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
-  std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_->GetLatestTopicModel(model_name);
-  if (ttm == nullptr) return false;
-  ttm->RetrieveExternalTopicModel(topic_model);
-  return true;
 }
 
 }  // namespace core

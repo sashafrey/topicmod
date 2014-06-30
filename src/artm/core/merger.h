@@ -48,6 +48,7 @@ class Merger : boost::noncopyable {
   void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
   std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelName model_name) const;
+  bool RetrieveExternalTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) const;
 
  private:
   enum MergerTaskType {

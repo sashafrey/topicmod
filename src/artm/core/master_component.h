@@ -32,8 +32,6 @@ class RegularizerInterface;
 
 namespace core {
 
-class ClientInterface;
-class LocalClient;
 class NetworkClientCollection;
 class Instance;
 class TopicModel;
@@ -106,8 +104,7 @@ class MasterComponent : boost::noncopyable {
   ThreadSafeHolder<MasterComponentConfig> config_;
 
   std::shared_ptr<NetworkClientCollection> network_client_interface_;
-  std::shared_ptr<LocalClient> local_client_interface_;
-  ClientInterface* client_interface_;
+  std::shared_ptr<Instance> instance_;
 
   std::shared_ptr<MasterComponentServiceImpl> master_component_service_impl_;
 
@@ -117,52 +114,7 @@ class MasterComponent : boost::noncopyable {
 
 typedef TemplateManager<MasterComponent, MasterComponentConfig> MasterComponentManager;
 
-// Common interface that share operations, applicable in both modus operandi (Local and Network).
-class ClientInterface {
- public:
-  virtual ~ClientInterface() {}
-
-  virtual void CreateOrReconfigureModel(const ModelConfig& config) = 0;
-  virtual void DisposeModel(ModelName model_name) = 0;
-
-  virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config) = 0;
-  virtual void DisposeRegularizer(const std::string& name) = 0;
-
-  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config) = 0;
-  virtual void DisposeDictionary(const std::string& name) = 0;
-
-  virtual void Reconfigure(const MasterComponentConfig& config) = 0;
-};
-
-class LocalClient : public ClientInterface {
- public:
-  LocalClient() {}
-  virtual ~LocalClient();
-
-  virtual void CreateOrReconfigureModel(const ModelConfig& config);
-  virtual void DisposeModel(ModelName model_name);
-
-  virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
-  virtual void DisposeRegularizer(const std::string& name);
-
-  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
-  virtual void DisposeDictionary(const std::string& name);
-
-  virtual void Reconfigure(const MasterComponentConfig& config);
-
-  void InvokePhiRegularizers();
-  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
-  bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
-  bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
-  void WaitIdle();
-  void InvokeIteration(int iterations_count);
-  void AddBatch(const Batch& batch);
-
- private:
-  std::shared_ptr<Instance> local_instance_;
-};
-
-class NetworkClientCollection : public ClientInterface {
+class NetworkClientCollection {
  public:
   NetworkClientCollection() : clients_() {}
   virtual ~NetworkClientCollection();

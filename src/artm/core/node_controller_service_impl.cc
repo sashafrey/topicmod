@@ -8,6 +8,7 @@
 
 #include "artm/core/instance.h"
 #include "artm/core/exceptions.h"
+#include "artm/core/merger.h"
 
 namespace artm {
 namespace core {
@@ -23,7 +24,7 @@ void NodeControllerServiceImpl::CreateOrReconfigureInstance(
     if (instance_ != nullptr) {
         instance_->Reconfigure(request);
     } else {
-      instance_.reset(new Instance(request));
+      instance_.reset(new Instance(request, NodeControllerInstance));
     }
 
     response.send(Void());
@@ -134,7 +135,7 @@ void NodeControllerServiceImpl::ForcePullTopicModel(
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
     if (instance_ != nullptr) {
-      instance_->ForcePullTopicModel();
+      instance_->merger()->ForcePullTopicModel();
     } else {
       LOG(ERROR) << "No instances exist in node controller";
     }
@@ -151,7 +152,7 @@ void NodeControllerServiceImpl::ForcePushTopicModelIncrement(
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
     if (instance_ != nullptr) {
-      instance_->ForcePushTopicModelIncrement();
+      instance_->merger()->ForcePushTopicModelIncrement();
     } else {
       LOG(ERROR) << "No instances exist in node controller";
     }

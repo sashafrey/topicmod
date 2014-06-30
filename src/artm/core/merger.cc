@@ -329,6 +329,14 @@ void Merger::ResetScores(ModelName model_name) {
   }
 }
 
+bool Merger::RetrieveExternalTopicModel(ModelName model_name,
+                                        ::artm::TopicModel* topic_model) const {
+  auto ttm = this->GetLatestTopicModel(model_name);
+  if (ttm == nullptr) return false;
+  ttm->RetrieveExternalTopicModel(topic_model);
+  return true;
+}
+
 }  // namespace core
 }  // namespace artm
 

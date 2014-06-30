@@ -10,6 +10,7 @@
 
 #include "artm/messages.pb.h"
 #include "artm/core/instance.h"
+#include "artm/core/merger.h"
 #include "artm/core/data_loader.h"
 #include "artm/core/protobuf_helpers.h"
 
@@ -17,7 +18,10 @@ class InstanceTest : boost::noncopyable {
  public:
   std::shared_ptr<artm::core::Instance> instance() { return instance_; }
 
-  InstanceTest() : instance_(new ::artm::core::Instance(::artm::MasterComponentConfig())) {}
+  InstanceTest() : instance_(nullptr) {
+    instance_.reset(new ::artm::core::Instance(
+      ::artm::MasterComponentConfig(), ::artm::core::MasterInstanceLocal));
+  }
 
   ~InstanceTest() {}
 
@@ -63,7 +67,8 @@ class InstanceTest : boost::noncopyable {
 
 // artm_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
-  auto instance = std::make_shared<::artm::core::Instance>(::artm::MasterComponentConfig());
+  auto instance = std::make_shared<::artm::core::Instance>(
+    ::artm::MasterComponentConfig(), ::artm::core::MasterInstanceLocal);
 
   artm::Batch batch1;
   batch1.add_token("first token");
@@ -115,7 +120,7 @@ TEST(Instance, Basic) {
   instance->CreateOrReconfigureModel(config);
 
   artm::TopicModel topic_model;
-  instance->RequestTopicModel(model_name, &topic_model);
+  instance->merger()->RetrieveExternalTopicModel(model_name, &topic_model);
   EXPECT_EQ(topic_model.token_size(), 3);
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "first token"));
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "second"));
@@ -173,12 +178,11 @@ TEST(Instance, MultipleStreamsAndModels) {
     test.instance()->local_data_loader()->WaitIdle();
   }
 
-
   artm::TopicModel m1t;
-  test.instance()->RequestTopicModel(m1.name(), &m1t);
+  test.instance()->merger()->RetrieveExternalTopicModel(m1.name(), &m1t);
 
   artm::TopicModel m2t;
-  test.instance()->RequestTopicModel(m2.name(), &m2t);
+  test.instance()->merger()->RetrieveExternalTopicModel(m2.name(), &m2t);
 
   // Verification for m1t (the first model)
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token0"));

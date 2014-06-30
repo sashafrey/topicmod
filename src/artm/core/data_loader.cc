@@ -21,6 +21,7 @@
 #include "artm/core/helpers.h"
 #include "artm/core/zmq_context.h"
 #include "artm/core/generation.h"
+#include "artm/core/merger.h"
 
 namespace artm {
 namespace core {
@@ -140,7 +141,7 @@ void LocalDataLoader::InvokeIteration(int iterations_count) {
   }
 
   // Reset scores
-  instance()->ForceResetScores(ModelName());
+  instance()->merger()->ForceResetScores(ModelName());
 
   auto latest_generation = generation_.get();
   if (latest_generation->empty()) {
@@ -165,8 +166,8 @@ void LocalDataLoader::WaitIdle() {
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));
   }
 
-  instance()->ForcePushTopicModelIncrement();
-  instance()->ForcePullTopicModel();
+  instance()->merger()->ForcePushTopicModelIncrement();
+  instance()->merger()->ForcePullTopicModel();
 }
 
 void LocalDataLoader::DisposeModel(ModelName model_name) {

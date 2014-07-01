@@ -6,7 +6,7 @@
 #include <memory>
 #include <string>
 
-#include "internals.pb.h"
+#include "artm/core/internals.pb.h"
 
 namespace artm {
 namespace core {
@@ -18,9 +18,9 @@ const int UnknownId = -1;
 const std::string kBatchExtension = ".batch";
 
 class Notifiable {
-public:
- virtual ~Notifiable() {};
- virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment) = 0;
+ public:
+  virtual ~Notifiable() {}
+  virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment) = 0;
 };
 
 }  // namespace core

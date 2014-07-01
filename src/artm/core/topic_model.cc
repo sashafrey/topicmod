@@ -473,7 +473,6 @@ void TopicModel::IncreaseRegularizerWeight(const std::string& token, int topic_i
 }
 
 void TopicModel::IncreaseRegularizerWeight(int token_id, int topic_id, float value) {
-
   float old_regularizer_value = r_wt_[token_id][topic_id];
   r_wt_[token_id][topic_id] += value;
 

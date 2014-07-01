@@ -227,7 +227,7 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
     }
 
     Notifiable* notifiable;
-    switch(instance_type_) {
+    switch (instance_type_) {
       case MasterInstanceLocal:
         notifiable = local_data_loader_.get();
         break;

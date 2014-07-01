@@ -56,11 +56,9 @@ class MasterComponentServiceImpl : public MasterComponentService {
 
   void InvokeIteration(int iterations_count, std::string disk_path);
   void WaitIdle();
-  bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
 
  private:
   Instance* instance_;
-  ThreadSafeCollectionHolder<::artm::core::ModelName, ::artm::core::TopicModel> topic_model_;
   std::unique_ptr<rpcz::application> application_;
   NetworkClientCollection* clients_;
 };

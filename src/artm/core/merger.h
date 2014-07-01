@@ -26,7 +26,6 @@
 namespace artm {
 namespace core {
 
-class DataLoader;
 class TopicModel;
 class InstanceSchema;
 
@@ -35,13 +34,14 @@ class Merger : boost::noncopyable {
   Merger(ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
          ThreadSafeHolder<InstanceSchema>* schema,
          MasterComponentService_Stub* master_component_service,
-         DataLoader* data_loader);
+         Notifiable* notifiable);
 
   ~Merger();
 
   void DisposeModel(ModelName model_name);
   void CreateOrReconfigureModel(const ModelConfig& model);
   void ForceResetScores(ModelName model_name);
+  void WaitIdle();
   void ForcePullTopicModel();
   void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();
@@ -76,10 +76,11 @@ class Merger : boost::noncopyable {
   ThreadSafeHolder<InstanceSchema>* schema_;
   artm::core::MasterComponentService_Stub* master_component_service_;
 
+  mutable std::atomic<bool> is_idle_;
   ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue_;
   ThreadSafeQueue<MergerTask> internal_task_queue_;
 
-  DataLoader* data_loader_;
+  Notifiable* notifiable_;
 
   mutable std::atomic<bool> is_stopping;
   boost::thread thread_;

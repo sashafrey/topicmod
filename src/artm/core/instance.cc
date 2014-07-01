@@ -49,7 +49,6 @@ Instance::Instance(const MasterComponentConfig& config, InstanceType instance_ty
       batch_manager_(),
       local_data_loader_(nullptr),
       remote_data_loader_(nullptr),
-      data_loader_(nullptr),
       dictionaries_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
@@ -59,6 +58,47 @@ Instance::Instance(const MasterComponentConfig& config, InstanceType instance_ty
 }
 
 Instance::~Instance() {}
+
+LocalDataLoader* Instance::local_data_loader() {
+  if (!has_local_data_loader()) {
+    LOG(ERROR) << "Illegal access to local_data_loader()";
+  }
+
+  return local_data_loader_.get();
+}
+
+RemoteDataLoader* Instance::remote_data_loader() {
+  if (!has_remote_data_loader()) {
+    LOG(ERROR) << "Illegal access to remote_data_loader()";
+  }
+
+  return remote_data_loader_.get();
+}
+
+BatchManager* Instance::batch_manager() {
+  if (!has_batch_manager()) {
+    LOG(ERROR) << "Illegal access to batch_manager()";
+  }
+
+  return batch_manager_.get();
+}
+
+MasterComponentService_Stub* Instance::master_component_service_proxy() {
+  if (!has_master_component_service_proxy()) {
+    LOG(ERROR) << "Illegal access to master_component_service_proxy()";
+  }
+
+  return master_component_service_proxy_.get();
+}
+
+Merger* Instance::merger() {
+  if (!has_merger()) {
+    LOG(ERROR) << "Illegal access to merger()()";
+  }
+
+  return merger_.get();
+}
+
 
 void Instance::CreateOrReconfigureModel(const ModelConfig& config) {
   if (merger_ != nullptr) {
@@ -175,16 +215,30 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
     // Reconfigure local/remote data loader
     if (instance_type_ == NodeControllerInstance) {
       remote_data_loader_.reset(new RemoteDataLoader(this));
-      data_loader_ = remote_data_loader_.get();
     } else if (instance_type_ == MasterInstanceLocal) {
       local_data_loader_.reset(new LocalDataLoader(this));
-      data_loader_ = local_data_loader_.get();
     }
 
-    if (instance_type_ != MasterInstanceNetwork) {
-      merger_.reset(new Merger(&merger_queue_, &schema_,
-                               master_component_service_proxy_.get(), data_loader_));
+    Notifiable* notifiable;
+    switch(instance_type_) {
+      case MasterInstanceLocal:
+        notifiable = local_data_loader_.get();
+        break;
+
+      case MasterInstanceNetwork:
+        notifiable = nullptr;
+        break;
+
+      case NodeControllerInstance:
+        notifiable = remote_data_loader_.get();
+        break;
+
+      default:
+        BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("instance_type_"));
     }
+
+    merger_.reset(new Merger(&merger_queue_, &schema_,
+                              master_component_service_proxy_.get(), notifiable));
 
     is_configured_  = true;
   } else {

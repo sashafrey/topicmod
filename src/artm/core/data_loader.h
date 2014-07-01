@@ -30,7 +30,7 @@ class Instance;
 class MasterComponentService_Stub;
 class Generation;
 
-class DataLoader : boost::noncopyable {
+class DataLoader : boost::noncopyable, public Notifiable {
  public:
   explicit DataLoader(Instance* instance);
   virtual ~DataLoader() {}

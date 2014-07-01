@@ -25,9 +25,10 @@ class InstanceSchema;
 // and it keeps processing the batch when DataLoader starts the next iteration.
 // In such situation BatchManager will ensure that no other processors will receive the
 // batch until slow processor is done.
-class BatchManager : boost::noncopyable {
+class BatchManager : boost::noncopyable, public Notifiable {
  public:
   explicit BatchManager(ThreadSafeHolder<InstanceSchema>* schema);
+  virtual ~BatchManager() {};
 
   // Add batch to the task queue.
   // OK to add the same uuid multiple times.
@@ -47,6 +48,8 @@ class BatchManager : boost::noncopyable {
 
   // Checks if all added tasks were processed (and marked as "Done").
   bool IsEverythingProcessed() const;
+
+  virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment);
 
  private:
   mutable boost::mutex lock_;

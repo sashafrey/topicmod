@@ -27,7 +27,6 @@ namespace core {
 class LocalDataLoader;
 class RemoteDataLoader;
 class BatchManager;
-class DataLoader;
 class Processor;
 class Merger;
 class InstanceSchema;
@@ -77,22 +76,19 @@ class Instance : boost::noncopyable {
   ProcessorQueue* processor_queue() { return &processor_queue_; }
   MergerQueue* merger_queue() { return &merger_queue_; }
 
-  LocalDataLoader* local_data_loader() { return local_data_loader_.get(); }
+  LocalDataLoader* local_data_loader();
   bool has_local_data_loader() { return local_data_loader_ != nullptr; }
 
-  RemoteDataLoader* remote_data_loader() { return remote_data_loader_.get(); }
+  RemoteDataLoader* remote_data_loader();
   bool has_remote_data_loader() { return remote_data_loader_ != nullptr; }
 
-  DataLoader* data_loader() { return data_loader_; }
-  bool has_data_loader() { return data_loader_ != nullptr; }
-
-  BatchManager* batch_manager() { return batch_manager_.get(); }
+  BatchManager* batch_manager();
   bool has_batch_manager() { return batch_manager_ != nullptr; }
 
-  MasterComponentService_Stub* master_component_service_proxy() { return master_component_service_proxy_.get(); }
+  MasterComponentService_Stub* master_component_service_proxy();
   bool has_master_component_service_proxy() { return master_component_service_proxy_ != nullptr; }
 
-  Merger* merger() { return merger_.get(); }
+  Merger* merger();
   bool has_merger() { return merger_ != nullptr; }
 
   void Reconfigure(const MasterComponentConfig& config);
@@ -125,7 +121,6 @@ class Instance : boost::noncopyable {
 
   std::shared_ptr<LocalDataLoader> local_data_loader_;
   std::shared_ptr<RemoteDataLoader> remote_data_loader_;
-  DataLoader* data_loader_;
 
   ThreadSafeDictionaryCollection dictionaries_;
 };

@@ -11,9 +11,7 @@
 #include "rpcz/rpc.hpp"
 
 #include "artm/regularizer_interface.h"
-#include "artm/core/common.h"
 #include "artm/core/call_on_destruction.h"
-#include "artm/core/data_loader.h"
 #include "artm/core/exceptions.h"
 #include "artm/core/helpers.h"
 #include "artm/core/topic_model.h"
@@ -27,13 +25,14 @@ namespace core {
 Merger::Merger(ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
                ThreadSafeHolder<InstanceSchema>* schema,
                artm::core::MasterComponentService_Stub* master_component_service,
-               DataLoader* data_loader)
+               Notifiable* notifiable)
     : topic_model_(),
       topic_model_inc_(),
       schema_(schema),
       master_component_service_(master_component_service),
+      is_idle_(true),
       merger_queue_(merger_queue),
-      data_loader_(data_loader),
+      notifiable_(notifiable),
       is_stopping(false),
       thread_() {
   // Keep this at the last action in constructor.
@@ -163,7 +162,9 @@ void Merger::ThreadFunction() {
       // To check for interrupt without sleep,
       // use boost::this_thread::interruption_point()
       // which also throws boost::thread_interrupted
+      is_idle_ = true;
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      is_idle_ = false;
 
       for (;;) {  // MAIN FOR LOOP
         // First, handle priority tasks in the internal_task_queue.
@@ -197,7 +198,9 @@ void Merger::ThreadFunction() {
         }
 
         call_on_destruction c([&]() {
-          data_loader_->Callback(model_increment);
+          if (notifiable_ != nullptr) {
+            notifiable_->Callback(model_increment);
+          }
         });
 
         ModelName model_name = model_increment->model_name();
@@ -330,6 +333,15 @@ bool Merger::RetrieveExternalTopicModel(ModelName model_name,
   if (ttm == nullptr) return false;
   ttm->RetrieveExternalTopicModel(topic_model);
   return true;
+}
+
+void Merger::WaitIdle() {
+  for (;;) {
+    if (is_idle_ && merger_queue_->empty())
+      break;
+
+    boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+  }
 }
 
 }  // namespace core

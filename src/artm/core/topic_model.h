@@ -11,6 +11,7 @@
 #include <string>
 
 #include "boost/utility.hpp"
+#include "boost/uuid/uuid.hpp"
 
 #include "artm/messages.pb.h"
 
@@ -171,6 +172,8 @@ class TopicModel {
   std::vector<float*> n_wt_;  // vector of length tokens_count
   std::vector<float*> r_wt_;  // regularizer's additions
   std::vector<float> n_t_;  // normalization constant for each topic
+
+  std::vector<boost::uuids::uuid> batch_uuid_;  // batches contributing to this model
 };
 
 }  // namespace core

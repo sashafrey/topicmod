@@ -117,16 +117,7 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
 }
 
 bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
-  if (isInLocalModusOperandi()) {
-    return instance_->merger()->RetrieveExternalTopicModel(model_name, topic_model);
-  }
-
-  if (isInNetworkModusOperandi()) {
-    // ToDo(alfrey): this should also go through instance
-    return impl()->RequestTopicModel(model_name, topic_model);
-  }
-
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  return instance_->merger()->RetrieveExternalTopicModel(model_name, topic_model);
 }
 
 void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {

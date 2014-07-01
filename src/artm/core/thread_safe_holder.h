@@ -147,6 +147,11 @@ class ThreadSafeQueue : boost::noncopyable {
     return queue_.size();
   }
 
+  int empty() const {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    return queue_.empty();
+  }
+
  private:
   mutable boost::mutex lock_;
   std::queue<T> queue_;

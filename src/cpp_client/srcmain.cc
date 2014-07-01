@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
+#include <set>
 
 using namespace std;
 
@@ -22,6 +23,10 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string batches_disk_path = "batches";
   std::string vocab_file = "";
   std::string docword_file = "";
+
+  // Recommended values for decorrelator_tau are as follows:
+  // kos - 700000, nips - 2000000.
+  float decorrelator_tau = 700000;
 
   bool is_network_mode = (instance_size > 1);
 
@@ -74,8 +79,8 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   RegularizerConfig regularizer_config;
   regularizer_config.set_name("regularizer_phi");
-  regularizer_config.set_type(::artm::RegularizerConfig_Type_DirichletPhi);
-  regularizer_config.set_config(::artm::DirichletPhiConfig().SerializeAsString());
+  regularizer_config.set_type(::artm::RegularizerConfig_Type_DecorrelatorPhi);
+  regularizer_config.set_config(::artm::DecorrelatorPhiConfig().SerializeAsString());
   Regularizer dirichlet_phi_regularizer(master_component, regularizer_config);
 
   // Create model
@@ -87,7 +92,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_reuse_theta(true);
   model_config.set_name("15081980-90a7-4767-ab85-7cb551c39339");
   model_config.add_regularizer_name("regularizer_phi");
-  model_config.add_regularizer_tau(0.1);
+  model_config.add_regularizer_tau(decorrelator_tau);
 
   Score* score = model_config.add_score();
   score->set_type(Score_Type_Perplexity);
@@ -180,6 +185,8 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   clock_t end = clock();
 
+  std::set<std::string> unique_words;
+
   // Log top 7 words per each topic
   {
     int wordsToSort = 7;
@@ -201,12 +208,15 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
              (word_index >= 0) && (word_index >= (int)p_w.size() - wordsToSort);
              word_index--)
         {
+          unique_words.insert(p_w[word_index].second);
           std::cout << p_w[word_index].second << " ";
         }
 
       std::cout << std::endl;
     }
   }
+
+  std::cout << "Unique words: " << unique_words.size() << "\n";
 
   if (!is_network_mode) {
     int docs_to_show = 7;

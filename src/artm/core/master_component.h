@@ -78,12 +78,11 @@ class MasterComponent : boost::noncopyable {
     ServiceEndpoint(const std::string& endpoint, MasterComponentServiceImpl* impl);
     ~ServiceEndpoint();
     std::string endpoint() const { return endpoint_; }
-    MasterComponentServiceImpl* impl_;
 
    private:
     std::string endpoint_;
-    std::unique_ptr<zmq::context_t> zeromq_context_;
     std::unique_ptr<rpcz::application> application_;
+    MasterComponentServiceImpl* impl_;
 
     // Keep all threads at the end of class members
     // (because the order of class members defines initialization order;

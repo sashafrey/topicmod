@@ -54,6 +54,7 @@ SRCS_LIB      = artm/cpp_interface.cc \
 		artm/core/node_controller_service_impl.cc \
 		artm/core/processor.cc \
 		artm/core/topic_model.cc \
+		artm/regularizer_sandbox/decorrelator_phi.cc \
 		artm/regularizer_sandbox/dirichlet_phi.cc \
 		artm/regularizer_sandbox/dirichlet_theta.cc \
 		artm/regularizer_sandbox/smooth_sparse_phi.cc \

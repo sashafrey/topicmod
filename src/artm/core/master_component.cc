@@ -25,8 +25,8 @@ MasterComponent::MasterComponent(int id, const MasterComponentConfig& config)
     : is_configured_(false),
       master_id_(id),
       config_(std::make_shared<MasterComponentConfig>(config)),
-      instance_(nullptr),
       network_client_interface_(nullptr),
+      instance_(nullptr),
       master_component_service_impl_(nullptr),
       service_endpoint_(nullptr) {
   Reconfigure(config);

@@ -133,6 +133,9 @@ class NetworkClientCollection {
   bool ConnectClient(std::string endpoint, rpcz::application* application);
   bool DisconnectClient(std::string endpoint);
 
+  void ForcePullTopicModel();
+  void ForcePushTopicModelIncrement();
+
   int clients_size() const {
     return clients_.size();
   }

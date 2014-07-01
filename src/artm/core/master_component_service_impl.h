@@ -53,10 +53,6 @@ class MasterComponentServiceImpl : public MasterComponentService {
   virtual void DisconnectClient(const ::artm::core::String& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
-
-  void InvokeIteration(int iterations_count, std::string disk_path);
-  void WaitIdle();
-
  private:
   Instance* instance_;
   std::unique_ptr<rpcz::application> application_;

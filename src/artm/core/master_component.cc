@@ -121,16 +121,11 @@ bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel
 }
 
 void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
-  if (isInLocalModusOperandi()) {
-    instance_->merger()->OverwriteTopicModel(topic_model);
-    return;
-  }
+  instance_->merger()->OverwriteTopicModel(topic_model);
 
   if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("OverwriteTopicModel in network mode"));
+    network_client_interface_->ForcePullTopicModel();
   }
-
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
 }
 
 bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
@@ -152,7 +147,24 @@ void MasterComponent::WaitIdle() {
   }
 
   if (isInNetworkModusOperandi()) {
-    impl()->WaitIdle();
+    // Wait for all nodes to process all the batches.
+    for (;;) {
+      if (instance_->batch_manager()->IsEverythingProcessed())
+      break;
+
+      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    }
+
+    // Ask all nodes to pull the new model
+    network_client_interface_->ForcePushTopicModelIncrement();
+
+    // Wait merger on master to process all model increments and set them as active topic model
+    instance_->merger()->WaitIdle();
+    instance_->merger()->ForcePushTopicModelIncrement();
+    instance_->merger()->ForcePullTopicModel();
+
+    // Ask all nodes to push their updates to topic model
+    network_client_interface_->ForcePullTopicModel();
     return;
   }
 
@@ -166,7 +178,13 @@ void MasterComponent::InvokeIteration(int iterations_count) {
   }
 
   if (isInNetworkModusOperandi()) {
-    impl()->InvokeIteration(iterations_count, config_.get()->disk_path());
+    auto uuids = Generation::ListAllBatches(config_.get()->disk_path());
+    for (int iter = 0; iter < iterations_count; ++iter) {
+      for (auto &uuid : uuids) {
+        instance_->batch_manager()->Add(uuid);
+      }
+    }
+
     return;
   }
 
@@ -355,6 +373,28 @@ void NetworkClientCollection::for_each_endpoint(
   for (auto &client_id : client_ids) {
     f(client_id);
   }
+}
+
+void NetworkClientCollection::ForcePullTopicModel() {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    Void response;
+    try {
+      client.ForcePullTopicModel(Void(), &response);
+    } catch(...) {
+      LOG(ERROR) << "Unable to force pull topic model on one of clients";
+    }
+  });
+}
+
+void NetworkClientCollection::ForcePushTopicModelIncrement() {
+  for_each_client([&](NodeControllerService_Stub& client) {
+    Void response;
+    try {
+      client.ForcePushTopicModelIncrement(Void(), &response);
+    } catch(...) {
+      LOG(ERROR) << "Unable to force push topic model increment on one of clients";
+    }
+  });
 }
 
 }  // namespace core

@@ -116,49 +116,5 @@ void MasterComponentServiceImpl::DisconnectClient(const ::artm::core::String& re
   }
 }
 
-void MasterComponentServiceImpl::InvokeIteration(int iterations_count, std::string disk_path) {
-  auto uuids = Generation::ListAllBatches(disk_path);
-  for (int iter = 0; iter < iterations_count; ++iter) {
-    for (auto &uuid : uuids) {
-      instance_->batch_manager()->Add(uuid);
-    }
-  }
-}
-
-void MasterComponentServiceImpl::WaitIdle() {
-  // Wait for all nodes to process all the batches.
-  for (;;) {
-      if (instance_->batch_manager()->IsEverythingProcessed())
-      break;
-
-    boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-  }
-
-  // Ask all nodes to push their updates to topic model
-  clients_->for_each_client([&](NodeControllerService_Stub& client) {
-    Void response;
-    try {
-      client.ForcePushTopicModelIncrement(Void(), &response);
-    } catch(...) {
-      LOG(ERROR) << "Unable to force push topic model increment on one of clients";
-    }
-  });
-
-  // Wait merger on master to process all model increments and set them as active topic model
-  instance_->merger()->WaitIdle();
-  instance_->merger()->ForcePushTopicModelIncrement();
-  instance_->merger()->ForcePullTopicModel();
-
-  // Ask all nodes to pull the new model
-  clients_->for_each_client([&](NodeControllerService_Stub& client) {
-    Void response;
-    try {
-      client.ForcePullTopicModel(Void(), &response);
-    } catch(...) {
-      LOG(ERROR) << "Unable to force pull topic model on one of clients";
-    }
-  });
-}
-
 }  // namespace core
 }  // namespace artm

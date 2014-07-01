@@ -26,24 +26,6 @@ message Void {
 
 // ======= Specific messages =========
 
-// Configuration of DataLoader component.
-message DataLoaderConfig {
-  optional int32 instance_id = 2;
-  optional string disk_path = 3;
-  optional int32 queue_size = 4 [default = 10];
-  repeated Stream stream = 5;
-  optional bool compact_batches = 6 [default = true];
-  optional bool cache_processor_output = 7 [default = false];
-  optional string master_component_endpoint = 8;
-}
-
-// Configuration of Instance component.
-message InstanceConfig {
-  optional int32 processors_count = 2 [default = 1];
-  optional string master_component_endpoint = 3;
-  optional int32 merger_queue_max_size = 4 [default = 10];
-}
-
 message DataLoaderCacheEntry {
   optional string model_name = 1;
   optional string batch_uuid = 2;
@@ -59,9 +41,6 @@ message ProcessorInput
   // Identificator of the batch
   required string batch_uuid = 2;
 
-  // Id of DataLoader
-  required int32 data_loader_id = 3;
-
   // Information about streams (for example, training and testing items).
   // Withing each stream the length of flags vector
   // is the same as number of items in the batch.
@@ -70,19 +49,6 @@ message ProcessorInput
 
   // Contains information about theta matrix on previous iteration.
   repeated DataLoaderCacheEntry cached_theta = 6;
-}
-
-// A massage to pass from Processor to Merger
-message ProcessorOutput
-{
-  // Identificator of the batch.
-  required string batch_uuid = 1;
-
-  // Id of DataLoader
-  required int32 data_loader_id = 2;
-
-  // One entry per model
-  repeated ModelIncrement model_increment = 3;
 }
 
 // All information, gathered by Processor for a particular batch and model.
@@ -109,6 +75,9 @@ message ModelIncrement {
   // Cached thetas from previous iteration
   repeated int32 item_id = 9;
   repeated FloatArray theta = 10;
+
+  // Identificators of all batches, contributing to this model increment.
+  repeated string batch_uuid = 11;
 }
 
 // ======== MasterComponentService ========
@@ -157,11 +126,8 @@ message DisposeDictionaryArgs {
 }
 
 service NodeControllerService {
-  rpc CreateOrReconfigureInstance(InstanceConfig) returns (Void);
+  rpc CreateOrReconfigureInstance(MasterComponentConfig) returns (Void);
   rpc DisposeInstance(Void) returns (Void);
-
-  rpc CreateOrReconfigureDataLoader(DataLoaderConfig) returns (Void);
-  rpc DisposeDataLoader(Void) returns (Void);
 
   rpc CreateOrReconfigureModel(CreateOrReconfigureModelArgs) returns (Void);
   rpc DisposeModel(DisposeModelArgs) returns (Void);

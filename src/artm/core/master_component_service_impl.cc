@@ -14,15 +14,17 @@
 #include "rpcz/application.hpp"
 
 #include "artm/core/master_component.h"
+#include "artm/core/instance.h"
+#include "artm/core/merger.h"
+#include "artm/core/batch_manager.h"
 #include "artm/core/zmq_context.h"
 #include "artm/core/generation.h"
 
 namespace artm {
 namespace core {
 
-MasterComponentServiceImpl::MasterComponentServiceImpl(
-    NetworkClientCollection* clients)
-    : lock_(), batch_manager_(&lock_), topic_model_(lock_), application_(), clients_(clients) {
+MasterComponentServiceImpl::MasterComponentServiceImpl(Instance* instance, NetworkClientCollection* clients)
+    : instance_(instance), application_(), clients_(clients) {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
@@ -30,26 +32,26 @@ MasterComponentServiceImpl::MasterComponentServiceImpl(
 
 void MasterComponentServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& request,
                                        ::rpcz::reply< ::artm::core::Void> response) {
-  auto ttm = topic_model_.get(request.model_name());
-  if (ttm == nullptr) {
-    ttm = std::make_shared<::artm::core::TopicModel>(request);
-    topic_model_.set(request.model_name(), ttm);
-  } else {
-    ttm->ApplyDiff(request);
+    instance_->merger_queue()->push(std::make_shared<::artm::core::ModelIncrement>(request));
+  try {
+    response.send(::artm::core::Void());
+  } catch(...) {
+    LOG(ERROR) << "Unable to send reply to UpdateModel.";
   }
-
-  response.send(::artm::core::Void());
 }
 
 void MasterComponentServiceImpl::RetrieveModel(const ::artm::core::String& request,
                                          ::rpcz::reply< ::artm::TopicModel> response) {
-  auto ttm = topic_model_.get(request.value());
-  if (ttm == nullptr) {
-    response.Error(0, "Model with requested ID was does not exist on server");
-  } else {
-    ::artm::TopicModel topic_model;
-    ttm->RetrieveExternalTopicModel(&topic_model);
-    response.send(topic_model);
+  ::artm::TopicModel topic_model;
+  bool succeeded = instance_->merger()->RetrieveExternalTopicModel(request.value(), &topic_model);
+  try {
+    if (succeeded) {
+      response.send(topic_model);
+    } else {
+      response.Error(0, "Model with requested ID was does not exist on server");
+    }
+  } catch(...) {
+    LOG(ERROR) << "Unable to send reply to UpdateModel.";
   }
 }
 
@@ -57,7 +59,7 @@ void MasterComponentServiceImpl::RequestBatches(const ::artm::core::Int& request
                       ::rpcz::reply< ::artm::core::BatchIds> response) {
   BatchIds reply;
   for (int i = 0; i < request.value(); ++i) {
-    boost::uuids::uuid uuid = batch_manager_.Next();
+    boost::uuids::uuid uuid = instance_->batch_manager()->Next();
     if (uuid.is_nil()) {
       break;
     }
@@ -81,7 +83,7 @@ void MasterComponentServiceImpl::ReportBatches(const ::artm::core::BatchIds& req
       continue;
     }
 
-    batch_manager_.Done(uuid);
+    instance_->batch_manager()->Done(uuid, ModelName());
   }
 
   try {
@@ -112,50 +114,6 @@ void MasterComponentServiceImpl::DisconnectClient(const ::artm::core::String& re
   } else {
     response.Error(-1, "client with this endpoint is not connected");
   }
-}
-
-void MasterComponentServiceImpl::InvokeIteration(int iterations_count, std::string disk_path) {
-  auto uuids = Generation::ListAllBatches(disk_path);
-  for (int iter = 0; iter < iterations_count; ++iter) {
-    for (auto &uuid : uuids) {
-      batch_manager_.Add(uuid);
-    }
-  }
-}
-
-void MasterComponentServiceImpl::WaitIdle() {
-  for (;;) {
-    if (batch_manager_.IsEverythingProcessed())
-      break;
-
-    boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-  }
-
-  clients_->for_each_client([&](NodeControllerService_Stub& client) {
-    Void response;
-    try {
-      client.ForcePushTopicModelIncrement(Void(), &response);
-    } catch(...) {
-      LOG(ERROR) << "Unable to force push topic model increment on one of clients";
-    }
-  });
-
-  clients_->for_each_client([&](NodeControllerService_Stub& client) {
-  Void response;
-  try {
-    client.ForcePullTopicModel(Void(), &response);
-  } catch(...) {
-    LOG(ERROR) << "Unable to force pull topic model on one of clients";
-  }
-});
-
-}
-
-bool MasterComponentServiceImpl::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
-  auto ttm = topic_model_.get(model_name);
-  if (ttm == nullptr) return false;
-  ttm->RetrieveExternalTopicModel(topic_model);
-  return true;
 }
 
 }  // namespace core

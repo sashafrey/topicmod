@@ -5,7 +5,6 @@
 
 #include <atomic>
 #include <memory>
-#include <queue>
 #include <string>
 
 #include "boost/thread.hpp"
@@ -29,25 +28,22 @@ class TopicWeightIterator;
 
 class Processor : boost::noncopyable {
  public:
-  Processor(boost::mutex* processor_queue_lock,
-      std::queue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
-      boost::mutex* merger_queue_lock,
-      std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
-      const Merger& merger,
-      const ThreadSafeHolder<InstanceSchema>& schema);
+  Processor(ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
+            ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
+            const Merger& merger,
+            const ThreadSafeHolder<InstanceSchema>& schema);
 
   ~Processor();
 
  private:
-  boost::mutex* processor_queue_lock_;
-  std::queue<std::shared_ptr<const ProcessorInput> >* processor_queue_;
-  boost::mutex* merger_queue_lock_;
-  std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue_;
+  ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >* processor_queue_;
+  ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue_;
   const Merger& merger_;
   const ThreadSafeHolder<InstanceSchema>& schema_;
 
   mutable std::atomic<bool> is_stopping;
   boost::thread thread_;
+
   void ThreadFunction();
 
   // Helper class to iterate on stream

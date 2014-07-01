@@ -147,7 +147,7 @@ int ArtmReconfigureModel(int master_id, int length, const char* config_blob) {
 
     auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    master_component->ReconfigureModel(config);
+    master_component->CreateOrReconfigureModel(config);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }

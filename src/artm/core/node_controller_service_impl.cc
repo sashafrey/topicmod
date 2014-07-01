@@ -7,32 +7,24 @@
 #include "glog/logging.h"
 
 #include "artm/core/instance.h"
-#include "artm/core/data_loader.h"
 #include "artm/core/exceptions.h"
+#include "artm/core/merger.h"
 
 namespace artm {
 namespace core {
 
-NodeControllerServiceImpl::~NodeControllerServiceImpl() {
-  if (instance_id_ != kUndefinedId) {
-    artm::core::InstanceManager::singleton().Erase(instance_id_);
-  }
-
-  if (data_loader_id_ != kUndefinedId) {
-    artm::core::DataLoaderManager::singleton().Erase(data_loader_id_);
-  }
-}
+NodeControllerServiceImpl::NodeControllerServiceImpl() : lock_(), instance_(nullptr) { ; }
+NodeControllerServiceImpl::~NodeControllerServiceImpl() {}
 
 void NodeControllerServiceImpl::CreateOrReconfigureInstance(
-    const ::artm::core::InstanceConfig& request,
+    const ::artm::MasterComponentConfig& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
-    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-    if (instance != nullptr) {
-        instance->Reconfigure(request);
+    if (instance_ != nullptr) {
+        instance_->Reconfigure(request);
     } else {
-      instance_id_ = artm::core::InstanceManager::singleton().Create(request);
+      instance_.reset(new Instance(request, NodeControllerInstance));
     }
 
     response.send(Void());
@@ -45,38 +37,7 @@ void NodeControllerServiceImpl::DisposeInstance(
     const ::artm::core::Void& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
-  artm::core::InstanceManager::singleton().Erase(instance_id_);
-  instance_id_ = kUndefinedId;
-  response.send(Void());
-}
-
-void NodeControllerServiceImpl::CreateOrReconfigureDataLoader(
-    const ::artm::core::DataLoaderConfig& request,
-    ::rpcz::reply< ::artm::core::Void> response) {
-  try {
-    boost::lock_guard<boost::mutex> guard(lock_);
-    auto data_loader = artm::core::DataLoaderManager::singleton().Get(data_loader_id_);
-    DataLoaderConfig data_loader_config(request);
-    data_loader_config.set_instance_id(instance_id_);
-    if (data_loader != nullptr) {
-      data_loader->Reconfigure(data_loader_config);
-    } else {
-      DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
-      data_loader_id_ = dlm.Create<RemoteDataLoader>(data_loader_config);
-    }
-
-    response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
-}
-
-void NodeControllerServiceImpl::DisposeDataLoader(
-    const ::artm::core::Void& request,
-    ::rpcz::reply< ::artm::core::Void> response) {
-  boost::lock_guard<boost::mutex> guard(lock_);
-  artm::core::DataLoaderManager::singleton().Erase(data_loader_id_);
-  data_loader_id_ = kUndefinedId;
+  instance_.reset();
   response.send(Void());
 }
 
@@ -85,13 +46,12 @@ void NodeControllerServiceImpl::CreateOrReconfigureModel(
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
-    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-    if (instance == nullptr) {
+    if (instance_ == nullptr) {
       LOG(ERROR) << "Instance not found";
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("Instance not found"));
     }
 
-    instance->ReconfigureModel(request.config());
+    instance_->CreateOrReconfigureModel(request.config());
     response.send(Void());
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services
@@ -102,9 +62,8 @@ void NodeControllerServiceImpl::DisposeModel(
     const ::artm::core::DisposeModelArgs& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
-  auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-  if (instance != nullptr) {
-    instance->DisposeModel(request.model_name());
+  if (instance_ != nullptr) {
+    instance_->DisposeModel(request.model_name());
   }
 
   response.send(Void());
@@ -115,13 +74,12 @@ void NodeControllerServiceImpl::CreateOrReconfigureRegularizer(
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
-    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-    if (instance == nullptr) {
+    if (instance_ == nullptr) {
       LOG(ERROR) << "Instance not found";
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("Instance not found"));
     }
 
-    instance->CreateOrReconfigureRegularizer(request.config());
+    instance_->CreateOrReconfigureRegularizer(request.config());
     response.send(Void());
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services
@@ -132,9 +90,8 @@ void NodeControllerServiceImpl::DisposeRegularizer(
     const ::artm::core::DisposeRegularizerArgs& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
-  auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-  if (instance != nullptr) {
-    instance->DisposeRegularizer(request.regularizer_name());
+  if (instance_ != nullptr) {
+    instance_->DisposeRegularizer(request.regularizer_name());
   }
 
   response.send(Void());
@@ -145,13 +102,12 @@ void NodeControllerServiceImpl::CreateOrReconfigureDictionary(
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
-    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-    if (instance == nullptr) {
+    if (instance_ == nullptr) {
       LOG(ERROR) << "Instance not found";
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("Instance not found"));
     }
 
-    instance->CreateOrReconfigureDictionary(request.dictionary());
+    instance_->CreateOrReconfigureDictionary(request.dictionary());
     response.send(Void());
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services
@@ -163,9 +119,8 @@ void NodeControllerServiceImpl::DisposeDictionary(
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
-    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-    if (instance != nullptr) {
-      instance->DisposeDictionary(request.dictionary_name());
+    if (instance_ != nullptr) {
+      instance_->DisposeDictionary(request.dictionary_name());
     }
 
     response.send(Void());
@@ -179,9 +134,8 @@ void NodeControllerServiceImpl::ForcePullTopicModel(
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
-    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-    if (instance != nullptr) {
-      instance->ForcePullTopicModel();
+    if (instance_ != nullptr) {
+      instance_->merger()->ForcePullTopicModel();
     } else {
       LOG(ERROR) << "No instances exist in node controller";
     }
@@ -197,9 +151,8 @@ void NodeControllerServiceImpl::ForcePushTopicModelIncrement(
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
-    auto instance = artm::core::InstanceManager::singleton().Get(instance_id_);
-    if (instance != nullptr) {
-      instance->ForcePushTopicModelIncrement();
+    if (instance_ != nullptr) {
+      instance_->merger()->ForcePushTopicModelIncrement();
     } else {
       LOG(ERROR) << "No instances exist in node controller";
     }
@@ -208,6 +161,10 @@ void NodeControllerServiceImpl::ForcePushTopicModelIncrement(
   } catch(...) {
     response.Error(-1);  // todo(alfrey): fix error handling in services
   }
+}
+
+Instance* NodeControllerServiceImpl::instance() {
+  return instance_.get();
 }
 
 }  // namespace core

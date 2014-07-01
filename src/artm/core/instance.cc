@@ -8,6 +8,8 @@
 #include "boost/bind.hpp"
 
 #include "artm/core/common.h"
+#include "artm/core/data_loader.h"
+#include "artm/core/batch_manager.h"
 #include "artm/core/dictionary.h"
 #include "artm/core/exceptions.h"
 #include "artm/core/processor.h"
@@ -35,32 +37,74 @@
 namespace artm {
 namespace core {
 
-Instance::Instance(int id, const InstanceConfig& config)
-    : lock_(),
-      instance_id_(id),
-      schema_(lock_, std::make_shared<InstanceSchema>(InstanceSchema(config))),
+Instance::Instance(const MasterComponentConfig& config, InstanceType instance_type)
+    : instance_type_(instance_type),
+      is_configured_(false),
+      schema_(std::make_shared<InstanceSchema>(config)),
       application_(nullptr),
-      master_component_service_proxy_(lock_, nullptr),
-      processor_queue_lock_(),
+      master_component_service_proxy_(nullptr),
       processor_queue_(),
-      merger_queue_lock_(),
       merger_queue_(),
       merger_(),
       processors_(),
-      dictionaries_(lock_) {
-  merger_.reset(new Merger(&merger_queue_lock_, &merger_queue_, &schema_,
-                           &master_component_service_proxy_));
-
+      batch_manager_(),
+      local_data_loader_(nullptr),
+      remote_data_loader_(nullptr),
+      dictionaries_() {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
+
   Reconfigure(config);
 }
 
 Instance::~Instance() {}
 
-void Instance::ReconfigureModel(const ModelConfig& config) {
-  merger_->UpdateModel(config);
+LocalDataLoader* Instance::local_data_loader() {
+  if (!has_local_data_loader()) {
+    LOG(ERROR) << "Illegal access to local_data_loader()";
+  }
+
+  return local_data_loader_.get();
+}
+
+RemoteDataLoader* Instance::remote_data_loader() {
+  if (!has_remote_data_loader()) {
+    LOG(ERROR) << "Illegal access to remote_data_loader()";
+  }
+
+  return remote_data_loader_.get();
+}
+
+BatchManager* Instance::batch_manager() {
+  if (!has_batch_manager()) {
+    LOG(ERROR) << "Illegal access to batch_manager()";
+  }
+
+  return batch_manager_.get();
+}
+
+MasterComponentService_Stub* Instance::master_component_service_proxy() {
+  if (!has_master_component_service_proxy()) {
+    LOG(ERROR) << "Illegal access to master_component_service_proxy()";
+  }
+
+  return master_component_service_proxy_.get();
+}
+
+Merger* Instance::merger() {
+  if (!has_merger()) {
+    LOG(ERROR) << "Illegal access to merger()()";
+  }
+
+  return merger_.get();
+}
+
+
+void Instance::CreateOrReconfigureModel(const ModelConfig& config) {
+  if (merger_ != nullptr) {
+    merger_->CreateOrReconfigureModel(config);
+  }
 
   auto new_schema = schema_.get_copy();
   new_schema->set_model_config(config.name(), std::make_shared<const ModelConfig>(config));
@@ -72,7 +116,13 @@ void Instance::DisposeModel(ModelName model_name) {
   new_schema->clear_model_config(model_name);
   schema_.set(new_schema);
 
-  merger_->DisposeModel(model_name);
+  if (merger_ != nullptr) {
+    merger_->DisposeModel(model_name);
+  }
+
+  if (batch_manager_ != nullptr) {
+    batch_manager_->DisposeModel(model_name);
+  }
 }
 
 void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
@@ -148,70 +198,76 @@ void Instance::DisposeDictionary(const std::string& name) {
   dictionaries_.erase(name);
 }
 
-void Instance::ForceResetScores(ModelName model_name) {
-  merger_->ForceResetScores(model_name);
-}
+void Instance::Reconfigure(const MasterComponentConfig& config) {
+  MasterComponentConfig old_config = schema_.get()->config();
 
-void Instance::ForcePullTopicModel() {
-  merger_->ForcePullTopicModel();
-}
-
-void Instance::ForcePushTopicModelIncrement() {
-  merger_->ForcePushTopicModelIncrement();
-}
-
-void Instance::InvokePhiRegularizers() {
-  merger_->InvokePhiRegularizers();
-}
-
-void Instance::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
-  merger_->OverwriteTopicModel(topic_model);
-}
-
-void Instance::Reconfigure(const InstanceConfig& config) {
   auto new_schema = schema_.get_copy();
-  new_schema->set_instance_config(config);
+  new_schema->set_config(config);
   schema_.set(new_schema);
 
-  // Adjust size of processors_; cast size to int to avoid compiler warning.
-  while (static_cast<int>(processors_.size()) > config.processors_count()) processors_.pop_back();
-  while (static_cast<int>(processors_.size()) < config.processors_count()) {
-    processors_.push_back(
-      std::shared_ptr<Processor>(new Processor(
-        &processor_queue_lock_,
-        &processor_queue_,
-        &merger_queue_lock_,
-        &merger_queue_,
-        *merger_,
-        schema_)));
-  }
+  if (!is_configured_) {
+    // First reconfiguration.
 
-  // Recreate master_component_service_proxy_;
-  if (config.has_master_component_endpoint()) {
-    std::shared_ptr<artm::core::MasterComponentService_Stub> new_ptr(
-      new artm::core::MasterComponentService_Stub(
-        application_->create_rpc_channel(config.master_component_endpoint()), true));
-    master_component_service_proxy_.set(new_ptr);
+    // Recreate master_component_service_proxy_;
+    if (instance_type_ == NodeControllerInstance) {
+      master_component_service_proxy_.reset(
+        new artm::core::MasterComponentService_Stub(
+          application_->create_rpc_channel(config.master_component_connect_endpoint()), true));
+    }
+
+    if (instance_type_ != NodeControllerInstance) {
+      batch_manager_.reset(new BatchManager(&schema_));
+    }
+
+    // Reconfigure local/remote data loader
+    if (instance_type_ == NodeControllerInstance) {
+      remote_data_loader_.reset(new RemoteDataLoader(this));
+    } else if (instance_type_ == MasterInstanceLocal) {
+      local_data_loader_.reset(new LocalDataLoader(this));
+    }
+
+    Notifiable* notifiable;
+    switch(instance_type_) {
+      case MasterInstanceLocal:
+        notifiable = local_data_loader_.get();
+        break;
+
+      case MasterInstanceNetwork:
+        notifiable = nullptr;
+        break;
+
+      case NodeControllerInstance:
+        notifiable = remote_data_loader_.get();
+        break;
+
+      default:
+        BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("instance_type_"));
+    }
+
+    merger_.reset(new Merger(&merger_queue_, &schema_,
+                              master_component_service_proxy_.get(), notifiable));
+
+    is_configured_  = true;
   } else {
-    master_component_service_proxy_.set(nullptr);
+    // Second and subsequent reconfiguration - some restrictions apply
+    if (old_config.master_component_connect_endpoint() !=
+        config.master_component_connect_endpoint()) {
+      BOOST_THROW_EXCEPTION(InvalidOperation("Changing master endpoint is not supported"));
+    }
   }
-}
 
-bool Instance::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
-  std::shared_ptr<const ::artm::core::TopicModel> ttm = merger_->GetLatestTopicModel(model_name);
-  if (ttm == nullptr) return false;
-  ttm->RetrieveExternalTopicModel(topic_model);
-  return true;
-}
-
-int Instance::processor_queue_size() const {
-  boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
-  return processor_queue_.size();
-}
-
-void Instance::AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input) {
-  boost::lock_guard<boost::mutex> guard(processor_queue_lock_);
-  processor_queue_.push(input);
+  if (instance_type_ != MasterInstanceNetwork) {
+    // Adjust size of processors_; cast size to int to avoid compiler warning.
+    while (static_cast<int>(processors_.size()) > config.processors_count()) processors_.pop_back();
+    while (static_cast<int>(processors_.size()) < config.processors_count()) {
+      processors_.push_back(
+        std::shared_ptr<Processor>(new Processor(
+          &processor_queue_,
+          &merger_queue_,
+          *merger_,
+          schema_)));
+    }
+  }
 }
 
 }  // namespace core

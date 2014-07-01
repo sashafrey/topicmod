@@ -5,7 +5,6 @@ call cpplint.bat ../src/artm/c_interface.cc
 
 REM call cpplint.bat ../src/artm/core/batch_manager.сс
 call cpplint.bat ../src/artm/core/data_loader.cc
-call cpplint.bat ../src/artm/core/dictionary.cc
 call cpplint.bat ../src/artm/core/generation.cc
 call cpplint.bat ../src/artm/core/helpers.cc
 call cpplint.bat ../src/artm/core/instance.cc
@@ -25,7 +24,7 @@ call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.cc
 
 call cpplint.bat ../src/artm_tests/boost_thread_test.cc
 call cpplint.bat ../src/artm_tests/cpp_interface_test.cc
-call cpplint.bat ../src/artm_tests/instance_manager_test.cc
+call cpplint.bat ../src/artm_tests/template_manager_test.cc
 call cpplint.bat ../src/artm_tests/nodes_connectivity_test.cc
 call cpplint.bat ../src/artm_tests/instance_test.cc
 call cpplint.bat ../src/artm_tests/test_mother.cc

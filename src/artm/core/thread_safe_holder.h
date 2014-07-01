@@ -27,21 +27,16 @@ namespace core {
 template<typename T>
 class ThreadSafeHolder : boost::noncopyable {
  public:
-  explicit ThreadSafeHolder(boost::mutex& lock)  // NOLINT
-      : lock_(lock), object_(std::make_shared<T>()) {}
+  explicit ThreadSafeHolder()
+      : lock_(), object_(std::make_shared<T>()) {}
 
-  ThreadSafeHolder(boost::mutex& lock, const std::shared_ptr<T>& object)  // NOLINT
-      : lock_(lock), object_(object) {}
+  explicit ThreadSafeHolder(const std::shared_ptr<T>& object)
+      : lock_(), object_(object) {}
 
   ~ThreadSafeHolder() {}
 
   std::shared_ptr<T> get() const {
     boost::lock_guard<boost::mutex> guard(lock_);
-    return get_locked();
-  }
-
-  // Use this instead of get() when the lock is already acquired.
-  std::shared_ptr<T> get_locked() const {
     return object_;
   }
 
@@ -56,15 +51,15 @@ class ThreadSafeHolder : boost::noncopyable {
   }
 
  private:
-  boost::mutex& lock_;
+  mutable boost::mutex lock_;
   std::shared_ptr<T> object_;
 };
 
 template<typename K, typename T>
 class ThreadSafeCollectionHolder : boost::noncopyable {
  public:
-  explicit ThreadSafeCollectionHolder(boost::mutex& lock) :  // NOLINT
-    lock_(lock), object_(std::map<K, std::shared_ptr<T>>()) {}
+  explicit ThreadSafeCollectionHolder()
+      : lock_(), object_(std::map<K, std::shared_ptr<T>>()) {}
 
   ~ThreadSafeCollectionHolder() {}
 
@@ -86,14 +81,9 @@ class ThreadSafeCollectionHolder : boost::noncopyable {
     }
   }
 
-  // Use this instead of get() when the lock is already acquired.
-  std::shared_ptr<T> get_locked(const K& key) const {
-    auto iter = object_.find(key);
-    return (iter != object_.end()) ? iter->second : std::shared_ptr<T>();
-  }
-
   std::shared_ptr<T> get_copy(const K& key) const {
-    auto value = get(key);
+    boost::lock_guard<boost::mutex> guard(lock_);
+    auto value = get_locked(key);
     return value != nullptr ? std::make_shared<T>(*value) : std::shared_ptr<T>();
   }
 
@@ -123,8 +113,14 @@ class ThreadSafeCollectionHolder : boost::noncopyable {
   }
 
  private:
-  boost::mutex& lock_;
+  mutable boost::mutex lock_;
   std::map<K, std::shared_ptr<T> > object_;
+
+  // Use this instead of get() when the lock is already acquired.
+  std::shared_ptr<T> get_locked(const K& key) const {
+    auto iter = object_.find(key);
+    return (iter != object_.end()) ? iter->second : std::shared_ptr<T>();
+  }
 };
 
 template<typename T>
@@ -145,8 +141,19 @@ class ThreadSafeQueue : boost::noncopyable {
     boost::lock_guard<boost::mutex> guard(lock_);
     queue_.push(elem);
   }
+
+  int size() const {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    return queue_.size();
+  }
+
+  int empty() const {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    return queue_.empty();
+  }
+
  private:
-  boost::mutex lock_;
+  mutable boost::mutex lock_;
   std::queue<T> queue_;
 };
 

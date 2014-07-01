@@ -135,13 +135,9 @@ class NodeControllerService : public rpcz::service {
 
   static const ::google::protobuf::ServiceDescriptor* descriptor();
 
-  virtual void CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
+  virtual void CreateOrReconfigureInstance(const ::artm::MasterComponentConfig& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeInstance(const ::artm::core::Void& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
-  virtual void CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
-  virtual void DisposeDataLoader(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
@@ -187,28 +183,16 @@ class NodeControllerService_Stub {
   inline ::rpcz::rpc_channel* channel() { return channel_; }
 
 
-  void CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
+  void CreateOrReconfigureInstance(const ::artm::MasterComponentConfig& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
+  void CreateOrReconfigureInstance(const ::artm::MasterComponentConfig& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void DisposeInstance(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void DisposeInstance(const ::artm::core::Void& request,
-                       ::artm::core::Void* response,
-                       long deadline_ms = -1);
-  void CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
-                       ::artm::core::Void* response,
-                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
-                       ::artm::core::Void* response,
-                       long deadline_ms = -1);
-  void DisposeDataLoader(const ::artm::core::Void& request,
-                       ::artm::core::Void* response,
-                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void DisposeDataLoader(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,

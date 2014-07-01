@@ -7,6 +7,10 @@
 #include <algorithm>
 #include <string>
 
+#include "boost/lexical_cast.hpp"
+#include "boost/uuid/string_generator.hpp"
+#include "boost/uuid/uuid_io.hpp"
+
 #include "glog/logging.h"
 
 #include "artm/core/exceptions.h"
@@ -24,7 +28,8 @@ TopicModel::TopicModel(ModelName model_name, int topics_count, int scores_count)
       scores_norm_(),
       n_wt_(),
       r_wt_(),
-      n_t_() {
+      n_t_(),
+      batch_uuid_() {
   assert(topics_count_ > 0);
   n_t_.resize(topics_count_);
   memset(&n_t_[0], 0, sizeof(float) * topics_count_);
@@ -43,7 +48,8 @@ TopicModel::TopicModel(const TopicModel& rhs)
       scores_norm_(rhs.scores_norm_),
       n_wt_(),  // must be deep-copied
       r_wt_(),  // must be deep-copied
-      n_t_(rhs.n_t_) {
+      n_t_(rhs.n_t_),
+      batch_uuid_(rhs.batch_uuid_) {
   for (size_t i = 0; i < rhs.n_wt_.size(); i++) {
     float* values = new float[topics_count_];
     n_wt_.push_back(values);
@@ -104,6 +110,8 @@ void TopicModel::Clear(ModelName model_name, int topics_count, int scores_count)
 
   n_t_.clear();
   n_t_.resize(topics_count);
+
+  batch_uuid_.clear();
 }
 
 void TopicModel::RetrieveModelIncrement(::artm::core::ModelIncrement* diff) const {
@@ -123,13 +131,17 @@ void TopicModel::RetrieveModelIncrement(::artm::core::ModelIncrement* diff) cons
     diff->add_score(scores_[score_index]);
     diff->add_score_norm(scores_norm_[score_index]);
   }
+
+  for (auto &batch : batch_uuid_) {
+    diff->add_batch_uuid(boost::lexical_cast<std::string>(batch));
+  }
 }
 
 void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
   this->IncreaseItemsProcessed(diff.items_processed());
 
   for (int score_index = 0; score_index < diff.score_size(); ++score_index) {
-    if (score_index >= this->score_size() ) {
+    if (score_index >= this->score_size()) {
       LOG(ERROR) << "ModelIncrement has more scores than base model. Ignoring score updates.";
       continue;
     }
@@ -163,6 +175,12 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
       this->IncreaseTokenWeight(token, topic_index, counters.value(topic_index));
     }
   }
+
+  for (int batch_index = 0;
+       batch_index < diff.batch_uuid_size();
+       batch_index++) {
+    batch_uuid_.push_back(boost::uuids::string_generator()(diff.batch_uuid(batch_index)));
+  }
 }
 
 void TopicModel::ApplyDiff(const ::artm::core::TopicModel& diff) {
@@ -186,6 +204,10 @@ void TopicModel::ApplyDiff(const ::artm::core::TopicModel& diff) {
     for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
       this->IncreaseTokenWeight(token, topic_index, counters[topic_index]);
     }
+  }
+
+  for (auto &batch : diff.batch_uuid_) {
+    batch_uuid_.push_back(batch);
   }
 }
 
@@ -502,7 +524,8 @@ std::string TopicModel::token(int index) const {
   return token_id_to_token_[index];
 }
 
-TopicWeightIterator TopicModel::GetTopicWeightIterator(const std::string& token) const {
+TopicWeightIterator TopicModel::GetTopicWeightIterator(
+    const std::string& token) const {
   auto iter = token_to_token_id_.find(token);
   return std::move(TopicWeightIterator(n_wt_[iter->second], r_wt_[iter->second],
     &n_t_[0], topics_count_));

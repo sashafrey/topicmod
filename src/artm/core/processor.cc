@@ -20,15 +20,11 @@
 namespace artm {
 namespace core {
 
-Processor::Processor(boost::mutex* processor_queue_lock,
-    std::queue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
-    boost::mutex* merger_queue_lock,
-    std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
-    const Merger& merger,
-    const ThreadSafeHolder<InstanceSchema>& schema)
-    : processor_queue_lock_(processor_queue_lock),
-      processor_queue_(processor_queue),
-      merger_queue_lock_(merger_queue_lock),
+Processor::Processor(ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
+                     ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
+                     const Merger& merger,
+                     const ThreadSafeHolder<InstanceSchema>& schema)
+    : processor_queue_(processor_queue),
       merger_queue_(merger_queue),
       merger_(merger),
       schema_(schema),
@@ -348,23 +344,9 @@ void Processor::ThreadFunction() {
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
       std::shared_ptr<const ProcessorInput> part;
-      {
-        boost::lock_guard<boost::mutex> guard(*processor_queue_lock_);
-        if (processor_queue_->empty()) {
-          continue;
-        }
-
-        part = processor_queue_->front();
-        processor_queue_->pop();
+      if (!processor_queue_->try_pop(&part)) {
+        continue;
       }
-
-      std::shared_ptr<ProcessorOutput> processor_output = std::make_shared<ProcessorOutput>();
-      processor_output->set_batch_uuid(part->batch_uuid());
-      processor_output->set_data_loader_id(part->data_loader_id());
-      call_on_destruction c([&]() {
-        boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
-        merger_queue_->push(processor_output);
-      });
 
       std::shared_ptr<InstanceSchema> schema = schema_.get();
       std::vector<ModelName> model_names = schema->GetModelNames();
@@ -373,6 +355,12 @@ void Processor::ThreadFunction() {
 
         // do not process disabled models.
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each
+
+        std::shared_ptr<ModelIncrement> model_increment = std::make_shared<ModelIncrement>();
+        model_increment->add_batch_uuid(part->batch_uuid());
+        call_on_destruction c([&]() {
+          merger_queue_->push(model_increment);
+        });
 
         // find cache
         const DataLoaderCacheEntry* cache = nullptr;
@@ -390,7 +378,6 @@ void Processor::ThreadFunction() {
         assert(topic_size > 0);
 
         // process part and store result in merger queue
-        auto model_increment = processor_output->add_model_increment();
         model_increment->set_model_name(model_name);
         model_increment->set_items_processed(0);
 
@@ -439,7 +426,7 @@ void Processor::ThreadFunction() {
 
           bool update_token_counters = true;
           bool update_theta_cache = true;
-          item_processor.InferTheta(model, *item, model_increment, update_token_counters,
+          item_processor.InferTheta(model, *item, model_increment.get(), update_token_counters,
                                     update_theta_cache, &theta[0]);
         }
 
@@ -469,8 +456,8 @@ void Processor::ThreadFunction() {
             // ToDo(alfrey): find a better solution! This may cause duplicates in theta_matrix.
             bool update_theta_cache = (score.stream_name() != model.stream_name());
             bool update_token_counters = false;
-            test_item_processor.InferTheta(model, *item, model_increment, update_token_counters,
-                                           update_theta_cache, theta);
+            test_item_processor.InferTheta(model, *item, model_increment.get(),
+                                           update_token_counters, update_theta_cache, theta);
             test_item_processor.CalculateScore(
               score, *item, theta, &perplexity_score, &perplexity_norm);
           }
@@ -483,18 +470,16 @@ void Processor::ThreadFunction() {
         }
       });
 
+      // Wait until merger queue has space for a new element
+      int merger_queue_max_size = schema_.get()->config().merger_queue_max_size();
       for (;;) {
-        int merger_queue_size = 0;
-        {
-          boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
-          merger_queue_size = merger_queue_->size();
-        }
-
-        if (merger_queue_size < schema_.get()->instance_config().merger_queue_max_size())
+        if (merger_queue_->size() < merger_queue_max_size)
           break;
 
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));
       }
+
+      // Here call_in_destruction will enqueue processor output into the merger queue.
     }
   }
   catch(boost::thread_interrupted&) {

@@ -5,7 +5,6 @@
 
 #include <map>
 #include <memory>
-#include <queue>
 #include <vector>
 #include <string>
 
@@ -25,64 +24,92 @@
 namespace artm {
 namespace core {
 
+class LocalDataLoader;
+class RemoteDataLoader;
+class BatchManager;
 class Processor;
 class Merger;
 class InstanceSchema;
 typedef std::map<std::string, ::artm::DictionaryEntry> DictionaryMap;
 typedef ThreadSafeCollectionHolder<std::string, DictionaryMap> ThreadSafeDictionaryCollection;
+typedef ThreadSafeQueue<std::shared_ptr<const ProcessorInput>> ProcessorQueue;
+typedef ThreadSafeQueue<std::shared_ptr<const ModelIncrement>> MergerQueue;
 
+// Instance type defines which components will be hosted in the instance.
+// =============================
+// The following components are always hosted:
+//   - dictionaries   - yes
+//   - regularizers   - yes
+//   - schema         - yes
+// =============================
+enum InstanceType {
+  // - merger        - yes, master
+  // - processors    - yes
+  // - batch_manager - yes
+  // - data_loader   - yes, local
+  MasterInstanceLocal,
+
+  // - merger        - yes, master
+  // - processor     - no
+  // - batch_manager - yes
+  // - data_loader   - no
+  MasterInstanceNetwork,
+
+  // - merger        - yes, working
+  // - processors    - yes
+  // - batch_manager - no
+  // - data_loader   - yes, remote
+  NodeControllerInstance,
+};
+
+// Class Instance is respondible for joint hosting of many other components
+// (processors, merger, data loader) and data structures (schema, queues, etc).
+// The set of objects, hosted in the Instance, depends on instance_type.
 class Instance : boost::noncopyable {
  public:
+  explicit Instance(const MasterComponentConfig& config, InstanceType instance_type);
   ~Instance();
 
-  int id() const {
-    return instance_id_;
-  }
+  InstanceType type() const { return instance_type_; }
 
-  const std::shared_ptr<InstanceSchema> schema() const {
-    return schema_.get();
-  }
+  std::shared_ptr<InstanceSchema> schema() const { return schema_.get(); }
+  ProcessorQueue* processor_queue() { return &processor_queue_; }
+  MergerQueue* merger_queue() { return &merger_queue_; }
 
-  int processor_queue_size() const;
+  LocalDataLoader* local_data_loader();
+  bool has_local_data_loader() { return local_data_loader_ != nullptr; }
 
-  // Retrieves topic model.
-  // Returns true if succeeded, and false if model_name hasn't been found.
-  bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
+  RemoteDataLoader* remote_data_loader();
+  bool has_remote_data_loader() { return remote_data_loader_ != nullptr; }
 
-  // Reconfigures topic model if already exists, otherwise creates a new model.
-  void ReconfigureModel(const ModelConfig& config);
+  BatchManager* batch_manager();
+  bool has_batch_manager() { return batch_manager_ != nullptr; }
 
+  MasterComponentService_Stub* master_component_service_proxy();
+  bool has_master_component_service_proxy() { return master_component_service_proxy_ != nullptr; }
+
+  Merger* merger();
+  bool has_merger() { return merger_ != nullptr; }
+
+  void Reconfigure(const MasterComponentConfig& config);
+  void CreateOrReconfigureModel(const ModelConfig& config);
   void DisposeModel(ModelName model_name);
-  void Reconfigure(const InstanceConfig& config);
-  void AddBatchIntoProcessorQueue(std::shared_ptr<const ProcessorInput> input);
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
   void DisposeRegularizer(const std::string& name);
   void CreateOrReconfigureDictionary(const DictionaryConfig& config);
   void DisposeDictionary(const std::string& name);
-  void ForceResetScores(ModelName model_name);
-  void ForcePullTopicModel();
-  void ForcePushTopicModelIncrement();
-  void InvokePhiRegularizers();
-  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
  private:
-  friend class TemplateManager<Instance, InstanceConfig>;
+  bool is_configured_;
+  InstanceType instance_type_;
 
-  // All instances must be created via TemplateManager.
-  Instance(int id, const InstanceConfig& config);
-
-  mutable boost::mutex lock_;
-  int instance_id_;
   ThreadSafeHolder<InstanceSchema> schema_;
 
   std::unique_ptr<rpcz::application> application_;
-  ThreadSafeHolder<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
+  std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
 
-  mutable boost::mutex processor_queue_lock_;
-  std::queue<std::shared_ptr<const ProcessorInput> > processor_queue_;
-
-  mutable boost::mutex merger_queue_lock_;
-  std::queue<std::shared_ptr<const ProcessorOutput> > merger_queue_;
+  ProcessorQueue processor_queue_;
+  MergerQueue merger_queue_;
 
   // creates a background thread that keep merging processor output
   std::shared_ptr<Merger> merger_;
@@ -90,10 +117,13 @@ class Instance : boost::noncopyable {
   // creates background threads for processing
   std::vector<std::shared_ptr<Processor> > processors_;
 
+  std::shared_ptr<BatchManager> batch_manager_;
+
+  std::shared_ptr<LocalDataLoader> local_data_loader_;
+  std::shared_ptr<RemoteDataLoader> remote_data_loader_;
+
   ThreadSafeDictionaryCollection dictionaries_;
 };
-
-typedef TemplateManager<Instance, InstanceConfig> InstanceManager;
 
 }  // namespace core
 }  // namespace artm

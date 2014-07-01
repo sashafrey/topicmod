@@ -99,27 +99,25 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   score->set_stream_name("test_stream");
   Model model(master_component, model_config);
 
-  if (!is_network_mode) {
-    std::cout << rand() << std::endl;
-    // Overwrite topic model with well-known "initial topic model"
-    // (skip this in network mode because the operation is not supported yet)
-    TopicModel initial_topic_model;
-    initial_topic_model.set_name(model_config.name());
-    initial_topic_model.set_topics_count(nTopics);
-    initial_topic_model.set_items_processed(0);
-    initial_topic_model.mutable_scores()->add_value(0.0);  // add one dummy score
-    VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
-    for (int token_index = 0; token_index < (int)vocab_ptr->size(); ++token_index) {
-      std::string token = (*vocab_ptr)[token_index];
-      initial_topic_model.add_token(token);
-      artm::FloatArray* weights = initial_topic_model.add_token_weights();
-      for (int topic_index = 0; topic_index < nTopics; ++topic_index) {
-        weights->add_value((float) rand() / (float)RAND_MAX);
-      }
+  std::cout << rand() << std::endl;
+  // Overwrite topic model with well-known "initial topic model"
+  // (skip this in network mode because the operation is not supported yet)
+  TopicModel initial_topic_model;
+  initial_topic_model.set_name(model_config.name());
+  initial_topic_model.set_topics_count(nTopics);
+  initial_topic_model.set_items_processed(0);
+  initial_topic_model.mutable_scores()->add_value(0.0);  // add one dummy score
+  VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
+  for (int token_index = 0; token_index < (int)vocab_ptr->size(); ++token_index) {
+    std::string token = (*vocab_ptr)[token_index];
+    initial_topic_model.add_token(token);
+    artm::FloatArray* weights = initial_topic_model.add_token_weights();
+    for (int topic_index = 0; topic_index < nTopics; ++topic_index) {
+      weights->add_value((float) rand() / (float)RAND_MAX);
     }
-
-    model.Overwrite(initial_topic_model);
   }
+
+  model.Overwrite(initial_topic_model);
 
   int batch_files_count = countFilesInDirectory(batches_disk_path, ".batch");
   if (batch_files_count == 0) {
@@ -169,10 +167,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
-    if (!is_network_mode) {
-      // ToDo(alfrey): enable phi-regularizers in network modus operandi
-      model.InvokePhiRegularizers();
-    }
+    model.InvokePhiRegularizers();
 
     topic_model = master_component.GetTopicModel(model);
     std::cout << "Iter #" << (iter + 1) << ": "

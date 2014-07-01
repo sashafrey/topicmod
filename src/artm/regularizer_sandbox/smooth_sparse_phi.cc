@@ -6,12 +6,12 @@
 #include <string>
 
 #include "artm/regularizer_sandbox/smooth_sparse_phi.h"
-#include "artm/core/topic_model.h"
+#include "artm/core/regularizable.h"
 
 namespace artm {
 namespace regularizer_sandbox {
 
-bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, double tau) {
+bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, double tau) {
   // read the parameters from config
   const int topic_size = topic_model->topic_size();
   const int background_topics_count = config_.background_topics_count();
@@ -35,9 +35,7 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
     for (int topic_id = 0; topic_id < topic_size; ++topic_id) {
       for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
         float value = static_cast<float>(tau * 1);
-        auto topic_iterator = topic_model->GetTopicWeightIterator(token_id);
-        value += static_cast<float>((topic_iterator.GetRegularizer())[topic_id]);
-        topic_model->SetRegularizerWeight(token_id, topic_id, value);
+        topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
       }
     }
   } else {
@@ -56,9 +54,7 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
           }
 
           float value = static_cast<float>(tau * coef);
-          auto topic_iterator = topic_model->GetTopicWeightIterator(token_id);
-          value += static_cast<float>((topic_iterator.GetRegularizer())[topic_id]);
-          topic_model->SetRegularizerWeight(token_id, topic_id, value);
+          topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
         }
       } else {  // background topics
         for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
@@ -71,9 +67,7 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::TopicModel* topic_model, doubl
           }
 
           float value = static_cast<float>(tau * coef);
-          auto topic_iterator = topic_model->GetTopicWeightIterator(token_id);
-          value += static_cast<float>((topic_iterator.GetRegularizer())[topic_id]);
-          topic_model->SetRegularizerWeight(token_id, topic_id, value);
+          topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
         }
       }
     }

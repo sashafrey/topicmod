@@ -16,7 +16,7 @@ namespace artm {
 
 namespace core {
   // Forward declarations
-  class TopicModel;
+  class Regularizable;
   template<typename K, typename T> class ThreadSafeCollectionHolder;
   typedef std::map<std::string, ::artm::DictionaryEntry> DictionaryMap;
   typedef ThreadSafeCollectionHolder<std::string, DictionaryMap> ThreadSafeDictionaryCollection;
@@ -33,7 +33,7 @@ class RegularizerInterface {
                                int inner_iter,
                                double tau) { return true; }
 
-  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau) { return true; }
+  virtual bool RegularizePhi(::artm::core::Regularizable* topic_model, double tau) { return true; }
 
   std::shared_ptr<::artm::core::DictionaryMap> dictionary(const std::string& dictionary_name);
   void set_dictionaries(const ::artm::core::ThreadSafeDictionaryCollection* dictionaries);

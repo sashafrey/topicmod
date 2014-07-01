@@ -145,6 +145,9 @@
     <ClInclude Include="..\artm\core\dictionary.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\artm\core\regularizable.h">
+      <Filter>core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />

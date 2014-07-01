@@ -63,6 +63,7 @@
     <ClInclude Include="..\artm\core\node_controller_service_impl.h" />
     <ClInclude Include="..\artm\core\processor.h" />
     <ClInclude Include="..\artm\core\protobuf_helpers.h" />
+    <ClInclude Include="..\artm\core\regularizable.h" />
     <ClInclude Include="..\artm\core\template_manager.h" />
     <ClInclude Include="..\artm\core\thread_safe_holder.h" />
     <ClInclude Include="..\artm\core\topic_model.h" />

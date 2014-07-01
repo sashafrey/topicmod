@@ -16,6 +16,7 @@
 
 #include "artm/core/common.h"
 #include "artm/core/internals.pb.h"
+#include "artm/core/regularizable.h"
 
 namespace artm {
 namespace core {
@@ -92,6 +93,7 @@ class TopicWeightIterator {
   }
 
   friend class ::artm::core::TopicModel;
+  friend class ::artm::core::Regularizable;
 };
 
 // A class representing a topic model.
@@ -102,7 +104,7 @@ class TopicWeightIterator {
 // - ::artm::core::ModelIncrement is very similar to the model, but it used to represent
 //   an increment to the model. This representation is used to transfer an updates from
 //   processor to Merger, and from Merger to MemcachedService.
-class TopicModel {
+class TopicModel : public Regularizable {
  public:
   explicit TopicModel(ModelName model_name, int topics_count, int scores_count);
   explicit TopicModel(const TopicModel& rhs);
@@ -127,6 +129,8 @@ class TopicModel {
   void SetTokenWeight(const std::string& token, int topic_id, float value);
   void SetTokenWeight(int token_id, int topic_id, float value);
 
+  void IncreaseRegularizerWeight(const std::string& token, int topic_id, float value);
+  void IncreaseRegularizerWeight(int token_id, int topic_id, float value);
   void SetRegularizerWeight(const std::string& token, int topic_id, float value);
   void SetRegularizerWeight(int token_id, int topic_id, float value);
 

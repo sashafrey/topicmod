@@ -438,6 +438,36 @@ void TopicModel::SetRegularizerWeight(int token_id, int topic_id, float value) {
   }
 }
 
+void TopicModel::IncreaseRegularizerWeight(const std::string& token, int topic_id, float value) {
+  if (!has_token(token)) {
+    if (value != 0.0f) {
+      LOG(ERROR) << "Token '" << token << "' not found in the model";
+    }
+
+    return;
+  }
+
+  IncreaseRegularizerWeight(token_id(token), topic_id, value);
+}
+
+void TopicModel::IncreaseRegularizerWeight(int token_id, int topic_id, float value) {
+
+  float old_regularizer_value = r_wt_[token_id][topic_id];
+  r_wt_[token_id][topic_id] += value;
+
+  if (n_wt_[token_id][topic_id] + old_regularizer_value < 0) {
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
+    }
+  } else {
+    if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
+      n_t_[topic_id] += value;
+    } else {
+      n_t_[topic_id] -= (n_wt_[token_id][topic_id] + old_regularizer_value);
+    }
+  }
+}
+
 int TopicModel::token_size() const {
   return n_wt_.size();
 }

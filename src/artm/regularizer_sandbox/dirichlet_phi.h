@@ -16,7 +16,7 @@ class DirichletPhi : public RegularizerInterface {
   explicit DirichletPhi(const DirichletPhiConfig& config)
     : config_(config) {}
 
-  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau);
+  virtual bool RegularizePhi(::artm::core::Regularizable* topic_model, double tau);
 
  private:
   DirichletPhiConfig config_;

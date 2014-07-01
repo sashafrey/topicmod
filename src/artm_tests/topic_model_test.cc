@@ -129,7 +129,7 @@ TEST(TopicModelTest, Basic) {
 
     for (int j = 0; j < 100; ++j) {
       int index = 0 + rand() % 5;  // NOLINT
-      int func = 0 + rand() % 3;   // NOLINT
+      int func = 0 + rand() % 4;   // NOLINT
       float value = -1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2));  // NOLINT
       switch (func) {
       case 0:
@@ -140,6 +140,9 @@ TEST(TopicModelTest, Basic) {
         break;
       case 2:
         topic_model_1.IncreaseTokenWeight(index, 0, value);
+        break;
+      case 4:
+        topic_model_1.IncreaseRegularizerWeight(index, 0, value);
         break;
       }
 

@@ -16,7 +16,7 @@ class SmoothSparsePhi : public RegularizerInterface {
   explicit SmoothSparsePhi(const SmoothSparsePhiConfig& config)
     : config_(config) {}
 
-  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau);
+  virtual bool RegularizePhi(::artm::core::Regularizable* topic_model, double tau);
 
  private:
   SmoothSparsePhiConfig config_;

@@ -18,6 +18,7 @@
 #include "artm/core/instance_schema.h"
 
 #include "artm/regularizer_interface.h"
+#include "artm/regularizer_sandbox/decorrelator_phi.h"
 #include "artm/regularizer_sandbox/dirichlet_theta.h"
 #include "artm/regularizer_sandbox/dirichlet_phi.h"
 #include "artm/regularizer_sandbox/smooth_sparse_theta.h"
@@ -108,6 +109,12 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
     case artm::RegularizerConfig_Type_SmoothSparsePhi: {
       CREATE_OR_RECONFIGURE_REGULARIZER(::artm::SmoothSparsePhiConfig,
                                         ::artm::regularizer_sandbox::SmoothSparsePhi);
+      break;
+    }
+
+    case artm::RegularizerConfig_Type_DecorrelatorPhi: {
+      CREATE_OR_RECONFIGURE_REGULARIZER(::artm::DecorrelatorPhiConfig,
+                                        ::artm::regularizer_sandbox::DecorrelatorPhi);
       break;
     }
 

@@ -45,6 +45,7 @@ class DirichletThetaConfig;
 class DirichletPhiConfig;
 class SmoothSparseThetaConfig;
 class SmoothSparsePhiConfig;
+class DecorrelatorPhiConfig;
 class DictionaryConfig;
 class DictionaryEntry;
 class DoubleArray;
@@ -97,11 +98,12 @@ enum RegularizerConfig_Type {
   RegularizerConfig_Type_DirichletTheta = 0,
   RegularizerConfig_Type_DirichletPhi = 1,
   RegularizerConfig_Type_SmoothSparseTheta = 2,
-  RegularizerConfig_Type_SmoothSparsePhi = 3
+  RegularizerConfig_Type_SmoothSparsePhi = 3,
+  RegularizerConfig_Type_DecorrelatorPhi = 4
 };
 bool RegularizerConfig_Type_IsValid(int value);
 const RegularizerConfig_Type RegularizerConfig_Type_Type_MIN = RegularizerConfig_Type_DirichletTheta;
-const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_SmoothSparsePhi;
+const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_DecorrelatorPhi;
 const int RegularizerConfig_Type_Type_ARRAYSIZE = RegularizerConfig_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor();
@@ -1064,6 +1066,7 @@ class RegularizerConfig : public ::google::protobuf::Message {
   static const Type DirichletPhi = RegularizerConfig_Type_DirichletPhi;
   static const Type SmoothSparseTheta = RegularizerConfig_Type_SmoothSparseTheta;
   static const Type SmoothSparsePhi = RegularizerConfig_Type_SmoothSparsePhi;
+  static const Type DecorrelatorPhi = RegularizerConfig_Type_DecorrelatorPhi;
   static inline bool Type_IsValid(int value) {
     return RegularizerConfig_Type_IsValid(value);
   }
@@ -1506,6 +1509,78 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SmoothSparsePhiConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DecorrelatorPhiConfig : public ::google::protobuf::Message {
+ public:
+  DecorrelatorPhiConfig();
+  virtual ~DecorrelatorPhiConfig();
+
+  DecorrelatorPhiConfig(const DecorrelatorPhiConfig& from);
+
+  inline DecorrelatorPhiConfig& operator=(const DecorrelatorPhiConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DecorrelatorPhiConfig& default_instance();
+
+  void Swap(DecorrelatorPhiConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  DecorrelatorPhiConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DecorrelatorPhiConfig& from);
+  void MergeFrom(const DecorrelatorPhiConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:artm.DecorrelatorPhiConfig)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[1];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static DecorrelatorPhiConfig* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -4153,6 +4228,10 @@ inline void SmoothSparsePhiConfig::set_allocated_dictionary_name(::std::string* 
     dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
+
+// -------------------------------------------------------------------
+
+// DecorrelatorPhiConfig
 
 // -------------------------------------------------------------------
 

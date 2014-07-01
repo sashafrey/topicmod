@@ -60,6 +60,9 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="..\artm\regularizer_interface.cc" />
+    <ClCompile Include="..\artm\regularizer_sandbox\decorrelator_phi.cc">
+      <Filter>regularizer_sandbox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\artm\messages.pb.h" />
@@ -147,6 +150,9 @@
     </ClInclude>
     <ClInclude Include="..\artm\core\regularizable.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\regularizer_sandbox\decorrelator_phi.h">
+      <Filter>regularizer_sandbox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

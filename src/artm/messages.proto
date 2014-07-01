@@ -103,6 +103,7 @@ message RegularizerConfig {
     DirichletPhi = 1;
     SmoothSparseTheta = 2;
     SmoothSparsePhi = 3;
+	DecorrelatorPhi = 4;
   }
 
   optional string name = 1;
@@ -130,6 +131,10 @@ message SmoothSparseThetaConfig {
 message SmoothSparsePhiConfig {
   required int32 background_topics_count = 1;
   optional string dictionary_name = 2;
+}
+
+// Configuration of a Decorrelator Phi regularizer
+message DecorrelatorPhiConfig {
 }
 
 message DictionaryConfig {

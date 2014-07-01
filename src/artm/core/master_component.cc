@@ -82,8 +82,11 @@ void MasterComponent::DisposeDictionary(const std::string& name) {
 }
 
 void MasterComponent::InvokePhiRegularizers() {
-  if (config_.get()->modus_operandi() == MasterComponentConfig_ModusOperandi_Local)
-    instance_->merger()->InvokePhiRegularizers();
+  instance_->merger()->InvokePhiRegularizers();
+
+  if (isInNetworkModusOperandi()) {
+    network_client_interface_->ForcePullTopicModel();
+  }
 }
 
 void MasterComponent::Reconfigure(const MasterComponentConfig& config) {

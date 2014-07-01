@@ -162,10 +162,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
-    if (!is_network_mode) {
-      // ToDo(alfrey): enable phi-regularizers in network modus operandi
-      model.InvokePhiRegularizers();
-    }
+    model.InvokePhiRegularizers();
 
     topic_model = master_component.GetTopicModel(model);
     std::cout << "Iter #" << (iter + 1) << ": "

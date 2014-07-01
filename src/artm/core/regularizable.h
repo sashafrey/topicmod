@@ -25,8 +25,8 @@ class Regularizable {
   virtual int topic_size() const = 0;
   virtual std::string token(int index) const = 0;
 
-  TopicWeightIterator GetTopicWeightIterator(const std::string& token) const;
-  TopicWeightIterator GetTopicWeightIterator(int token_id) const;
+  virtual TopicWeightIterator GetTopicWeightIterator(const std::string& token) const = 0;
+  virtual TopicWeightIterator GetTopicWeightIterator(int token_id) const = 0;
 
 };
 

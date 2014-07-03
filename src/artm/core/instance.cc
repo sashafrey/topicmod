@@ -41,20 +41,16 @@ Instance::Instance(const MasterComponentConfig& config, InstanceType instance_ty
     : instance_type_(instance_type),
       is_configured_(false),
       schema_(std::make_shared<InstanceSchema>(config)),
+      dictionaries_(),
       application_(nullptr),
       master_component_service_proxy_(nullptr),
       processor_queue_(),
       merger_queue_(),
-      merger_(),
-      processors_(),
       batch_manager_(),
       local_data_loader_(nullptr),
       remote_data_loader_(nullptr),
-      dictionaries_() {
-  rpcz::application::options options(3);
-  options.zeromq_context = ZmqContext::singleton().get();
-  application_.reset(new rpcz::application(options));
-
+      merger_(),
+      processors_() {
   Reconfigure(config);
 }
 
@@ -210,6 +206,10 @@ void Instance::Reconfigure(const MasterComponentConfig& master_config) {
 
     // Recreate master_component_service_proxy_;
     if (instance_type_ == NodeControllerInstance) {
+      rpcz::application::options options(3);
+      options.zeromq_context = ZmqContext::singleton().get();
+      application_.reset(new rpcz::application(options));
+
       master_component_service_proxy_.reset(
         new artm::core::MasterComponentService_Stub(
           application_->create_rpc_channel(master_config.connect_endpoint()), true));

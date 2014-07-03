@@ -103,26 +103,35 @@ class Instance : boost::noncopyable {
   bool is_configured_;
   InstanceType instance_type_;
 
+  // The order of the class members defines the order in which obects are created and destroyed.
+  // Pay special attantion to the order of data_loader_, merger_ and processor_,
+  // because all this objects has an associated thread.
+  // Such threads must be terminated prior to all the objects that the thread might potentially access.
+
   ThreadSafeHolder<InstanceSchema> schema_;
+  ThreadSafeDictionaryCollection dictionaries_;
 
   std::unique_ptr<rpcz::application> application_;
+
+  // Depends on application_
   std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
 
   ProcessorQueue processor_queue_;
+
   MergerQueue merger_queue_;
 
-  // creates a background thread that keep merging processor output
-  std::shared_ptr<Merger> merger_;
-
-  // creates background threads for processing
-  std::vector<std::shared_ptr<Processor> > processors_;
-
+  // Depends on schema_
   std::shared_ptr<BatchManager> batch_manager_;
 
+  // Depends on schema_, master_component_service_proxy_, processor_queue_, batch_manager_
   std::shared_ptr<LocalDataLoader> local_data_loader_;
   std::shared_ptr<RemoteDataLoader> remote_data_loader_;
 
-  ThreadSafeDictionaryCollection dictionaries_;
+  // Depends on schema_, master_component_service_proxy_, merger_queue_, local&remote_data_loader_
+  std::shared_ptr<Merger> merger_;
+
+  // Depends on schema_, processor_queue_, merger_queue_, and merger_
+  std::vector<std::shared_ptr<Processor> > processors_;
 };
 
 }  // namespace core

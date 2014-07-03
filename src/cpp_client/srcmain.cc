@@ -28,8 +28,13 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   // kos - 700000, nips - 2000000.
   float decorrelator_tau = 700000;
 
-  bool is_network_mode = (instance_size > 1);
+  // instance_size = 0 stands for "connect to external node_controller process",
+  // instance_size = 1 stands for "local modus operandi",
+  // instance_size = 2 or higher defines the number of node controllers to create in this process,
+  //                   used in the same way as if they were on remote nodes.
+  bool is_network_mode = (instance_size != 1);
 
+  MasterComponentConfig master_config;
   std::vector<std::shared_ptr<::artm::NodeController>> node_controller;
   if (is_network_mode) {
     for (int port = 5556; port < 5556 + instance_size; ++port) {
@@ -39,17 +44,20 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
       port_str << port;
       node_config.set_create_endpoint(std::string("tcp://*:") + port_str.str());
       node_controller.push_back(std::make_shared<::artm::NodeController>(node_config));
+      master_config.add_node_connect_endpoint(std::string("tcp://localhost:") + port_str.str());
+    }
+
+    if (instance_size == 0) {
+      master_config.add_node_connect_endpoint("tcp://localhost:5556");
     }
   }
 
-  MasterComponentConfig master_config;
   master_config.set_processors_count(processors_count);
   master_config.set_disk_path(batches_disk_path);
   if (is_network_mode) {
     master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Network);
     master_config.set_create_endpoint("tcp://*:5555");
     master_config.set_connect_endpoint("tcp://localhost:5555");
-    master_config.add_node_connect_endpoint("tcp://localhost:5556");
   } else {
     master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
     master_config.set_cache_processor_output(true);

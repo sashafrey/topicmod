@@ -3,6 +3,7 @@
 #include "artm/core/master_component.h"
 
 #include <vector>
+#include <set>
 
 #include "glog/logging.h"
 #include "zmq.hpp"
@@ -14,6 +15,7 @@
 #include "artm/core/zmq_context.h"
 #include "artm/core/generation.h"
 #include "artm/core/data_loader.h"
+#include "artm/core/batch_manager.h"
 #include "artm/core/instance.h"
 #include "artm/core/topic_model.h"
 #include "artm/core/merger.h"
@@ -25,10 +27,10 @@ MasterComponent::MasterComponent(int id, const MasterComponentConfig& config)
     : is_configured_(false),
       master_id_(id),
       config_(std::make_shared<MasterComponentConfig>(config)),
-      network_client_interface_(nullptr),
-      instance_(nullptr),
       master_component_service_impl_(nullptr),
-      service_endpoint_(nullptr) {
+      service_endpoint_(nullptr),
+      instance_(nullptr),
+      network_client_interface_(nullptr) {
   Reconfigure(config);
 }
 
@@ -37,10 +39,6 @@ MasterComponent::~MasterComponent() {
 
 int MasterComponent::id() const {
   return master_id_;
-}
-
-int MasterComponent::clients_size() const {
-  return (network_client_interface_ == nullptr) ? 0 : network_client_interface_->clients_size();
 }
 
 bool MasterComponent::isInLocalModusOperandi() const {
@@ -104,19 +102,46 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
 
     if (is_network) {
       master_component_service_impl_.reset(
-        new MasterComponentServiceImpl(instance_.get(), network_client_interface_.get()));
+        new MasterComponentServiceImpl(instance_.get()));
 
       service_endpoint_.reset(new ServiceEndpoint(
-        config.master_component_create_endpoint(),
-        master_component_service_impl_.get()));
+        config.create_endpoint(), master_component_service_impl_.get()));
     }
 
-    network_client_interface_->Reconfigure(config);
     is_configured_ = true;
   } else {
     instance_->Reconfigure(config);
-    network_client_interface_->Reconfigure(config);
   }
+
+  if (isInNetworkModusOperandi()) {
+    std::vector<std::string> vec = network_client_interface_->endpoints();
+    std::set<std::string> current_endpoints(vec.begin(), vec.end());
+    std::set<std::string> to_be_deleted(vec.begin(), vec.end());
+
+    // Scan through all endpoints in the new config.
+    // (1) All endpoints that are NOT present in current_endpoints will be created.
+    // (2) All endpoints that are NOT present in config.node_endpoint() list shell be deleted.
+    // (3) Endpoints that are present in both lists should stay as they are.
+    for (int i = 0; i < config.node_connect_endpoint_size(); ++i) {
+      std::string endpoint = config.node_connect_endpoint(i);
+
+      // Endpoint already exists and must not be deleted (3)
+      to_be_deleted.erase(endpoint);
+
+      auto iter = current_endpoints.find(endpoint);
+      if (iter == current_endpoints.end()) {
+        // Endpoint does not exist and must be created (1)
+        network_client_interface_->ConnectClient(endpoint);
+      }
+    }
+
+    for (auto &endpoint : to_be_deleted) {
+      // Obsolete endpoints must be deleted (2)
+      network_client_interface_->DisconnectClient(endpoint);
+    }
+  }
+
+  network_client_interface_->Reconfigure(config);
 }
 
 bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
@@ -245,10 +270,10 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
     }
     if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
-      if (!config.has_master_component_connect_endpoint() ||
-          !config.has_master_component_create_endpoint()) {
+      if (!config.has_create_endpoint() ||
+          !config.has_connect_endpoint()) {
         BOOST_THROW_EXCEPTION(InvalidOperation(
-          "Network modus operandi require all endpoints to be set."));
+          "Network modus operandi require endpoint to be set."));
       }
 
       if (!config.has_disk_path()) {
@@ -264,9 +289,13 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
       BOOST_THROW_EXCEPTION(InvalidOperation("Unable to change modus operandi"));
     }
 
-    if (current_config->master_component_create_endpoint() !=
-        config.master_component_create_endpoint()) {
+    if (current_config->create_endpoint() != config.create_endpoint()) {
       BOOST_THROW_EXCEPTION(InvalidOperation("Unable to change master component create endpoint"));
+    }
+
+    if (current_config->connect_endpoint() != config.connect_endpoint()) {
+      std::string message = "Unable to change master component connect endpoint";
+      BOOST_THROW_EXCEPTION(InvalidOperation(message));
     }
   }
 }
@@ -339,21 +368,37 @@ NetworkClientCollection::~NetworkClientCollection() {
   });
 }
 
-bool NetworkClientCollection::ConnectClient(std::string endpoint, rpcz::application* application) {
+bool NetworkClientCollection::ConnectClient(std::string endpoint) {
   if (clients_.has_key(endpoint)) {
     LOG(ERROR) << "Unable to connect client " << endpoint << ", client already exists.";
     return false;
   }
 
+  {
+    // application_ is created "on demand" (upon first call to ConnectClient).
+    // The reason is to avoid any rpcz object when master component is in local modus operandi.
+    // The lock_ is needed when two ConnectClient() calls happen from two threads simultaneously.
+    boost::lock_guard<boost::mutex> guard(lock_);
+    if (application_ == nullptr) {
+      rpcz::application::options options(3);
+      options.zeromq_context = ZmqContext::singleton().get();
+      application_.reset(new rpcz::application(options));
+    }
+  }
+
   std::shared_ptr<NodeControllerService_Stub> client(
     new artm::core::NodeControllerService_Stub(
-      application->create_rpc_channel(endpoint), true));
+      application_->create_rpc_channel(endpoint), true));
   clients_.set(endpoint, client);
   return true;
 }
 
 bool NetworkClientCollection::DisconnectClient(std::string endpoint) {
-  if (!clients_.has_key(endpoint)) {
+  auto client = clients_.get(endpoint);
+  if (client != nullptr) {
+    Void response;
+    client->DisposeInstance(Void(), &response);
+  } else {
     LOG(ERROR) << "Unable to disconnect client " << endpoint << ", client is not connected.";
     return false;
   }
@@ -366,7 +411,10 @@ void NetworkClientCollection::for_each_client(
     std::function<void(artm::core::NodeControllerService_Stub&)> f) {
   std::vector<std::string> client_ids(clients_.keys());
   for (auto &client_id : client_ids) {
-    f(*clients_.get(client_id));
+    std::shared_ptr<NodeControllerService_Stub> client = clients_.get(client_id);
+    if (client != nullptr) {
+      f(*client);
+    }
   }
 }
 

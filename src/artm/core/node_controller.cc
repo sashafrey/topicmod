@@ -13,49 +13,14 @@ namespace artm {
 namespace core {
 
 NodeController::NodeController(int id, const NodeControllerConfig& config)
-    : lock_(),
-      node_controller_id_(id),
+    : node_controller_id_(id),
       config_(std::make_shared<NodeControllerConfig>(NodeControllerConfig(config))),
       service_endpoint_(nullptr),
-      application_(nullptr),
-      master_component_service_proxy_(nullptr),
       node_controller_service_impl_() {
-  rpcz::application::options options(3);
-  options.zeromq_context = ZmqContext::singleton().get();
-  application_.reset(new rpcz::application(options));
-
-  service_endpoint_.reset(new ServiceEndpoint(config.node_controller_create_endpoint(), impl()));
-
-  LOG(INFO) << "Connecting node " << config.node_controller_connect_endpoint()
-            << " to master " << config.master_component_connect_endpoint();
-
-  master_component_service_proxy_.reset(
-      new artm::core::MasterComponentService_Stub(
-      application_->create_rpc_channel(config.master_component_connect_endpoint()), true));
-
-  ::artm::core::String request;
-  ::artm::core::Void response;
-  request.set_value(config.node_controller_connect_endpoint());
-  master_component_service_proxy_->ConnectClient(request, &response);
+  service_endpoint_.reset(new ServiceEndpoint(config.create_endpoint(), impl()));
 }
 
 NodeController::~NodeController() {
-  auto config = config_.get();
-  LOG(INFO) << "Disconnecting node " << config->node_controller_connect_endpoint()
-            << " from master " << config->master_component_connect_endpoint();
-
-  ::artm::core::String request;
-  ::artm::core::Void response;
-  request.set_value(config->node_controller_connect_endpoint());
-  try {
-    master_component_service_proxy_->DisconnectClient(request, &response);
-  } catch(...) {
-    LOG(ERROR) << "Unable to send disconnect message to master node.";
-  }
-
-  if (service_endpoint_ != nullptr) {
-    service_endpoint_.reset();
-  }
 }
 
 int NodeController::id() const {

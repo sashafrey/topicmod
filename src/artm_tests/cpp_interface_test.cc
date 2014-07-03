@@ -16,10 +16,16 @@ TEST(CppInterface, Canary) {
 void BasicTest(bool is_network_mode) {
   const int nTopics = 5;
 
+  std::shared_ptr<::artm::NodeController> node_controller;
   ::artm::MasterComponentConfig master_config;
   if (is_network_mode) {
-    master_config.set_master_component_create_endpoint("tcp://*:5555");
-    master_config.set_master_component_connect_endpoint("tcp://localhost:5555");
+    ::artm::NodeControllerConfig node_config;
+    node_config.set_create_endpoint("tcp://*:5556");
+    node_controller.reset(new ::artm::NodeController(node_config));
+
+    master_config.set_create_endpoint("tcp://*:5555");
+    master_config.set_connect_endpoint("tcp://localhost:5555");
+    master_config.add_node_connect_endpoint("tcp://localhost:5556");
     master_config.set_disk_path(".");
 
     // Clean all .batches files
@@ -41,16 +47,6 @@ void BasicTest(bool is_network_mode) {
 
   // Create master component
   artm::MasterComponent master_component(master_config);
-
-  std::shared_ptr<::artm::NodeController> node_controller;
-  if (is_network_mode) {
-    ::artm::NodeControllerConfig node_config;
-    node_config.set_master_component_connect_endpoint("tcp://localhost:5555");
-    node_config.set_node_controller_create_endpoint("tcp://*:5556");
-    node_config.set_node_controller_connect_endpoint("tcp://localhost:5556");
-    node_controller.reset(new ::artm::NodeController(node_config));
-    master_component.Reconfigure(master_config);  // Push configuration to client
-  }
 
   // Create model
   artm::ModelConfig model_config;

@@ -92,9 +92,6 @@ service MasterComponentService {
 
   rpc RequestBatches(Int) returns (BatchIds);
   rpc ReportBatches(BatchIds) returns (Void);
-
-  rpc ConnectClient(String) returns (Void);
-  rpc DisconnectClient(String) returns (Void);
 }
 
 // ===== NodeControllerService ======

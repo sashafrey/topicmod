@@ -91,7 +91,7 @@ class Instance : boost::noncopyable {
   Merger* merger();
   bool has_merger() { return merger_ != nullptr; }
 
-  void Reconfigure(const MasterComponentConfig& config);
+  void Reconfigure(const MasterComponentConfig& master_config);
   void CreateOrReconfigureModel(const ModelConfig& config);
   void DisposeModel(ModelName model_name);
   void CreateOrReconfigureRegularizer(const RegularizerConfig& config);

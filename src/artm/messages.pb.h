@@ -736,29 +736,45 @@ class MasterComponentConfig : public ::google::protobuf::Message {
   inline ::artm::MasterComponentConfig_ModusOperandi modus_operandi() const;
   inline void set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi value);
 
-  // optional string master_component_create_endpoint = 101;
-  inline bool has_master_component_create_endpoint() const;
-  inline void clear_master_component_create_endpoint();
-  static const int kMasterComponentCreateEndpointFieldNumber = 101;
-  inline const ::std::string& master_component_create_endpoint() const;
-  inline void set_master_component_create_endpoint(const ::std::string& value);
-  inline void set_master_component_create_endpoint(const char* value);
-  inline void set_master_component_create_endpoint(const char* value, size_t size);
-  inline ::std::string* mutable_master_component_create_endpoint();
-  inline ::std::string* release_master_component_create_endpoint();
-  inline void set_allocated_master_component_create_endpoint(::std::string* master_component_create_endpoint);
+  // optional string create_endpoint = 101;
+  inline bool has_create_endpoint() const;
+  inline void clear_create_endpoint();
+  static const int kCreateEndpointFieldNumber = 101;
+  inline const ::std::string& create_endpoint() const;
+  inline void set_create_endpoint(const ::std::string& value);
+  inline void set_create_endpoint(const char* value);
+  inline void set_create_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_create_endpoint();
+  inline ::std::string* release_create_endpoint();
+  inline void set_allocated_create_endpoint(::std::string* create_endpoint);
 
-  // optional string master_component_connect_endpoint = 102;
-  inline bool has_master_component_connect_endpoint() const;
-  inline void clear_master_component_connect_endpoint();
-  static const int kMasterComponentConnectEndpointFieldNumber = 102;
-  inline const ::std::string& master_component_connect_endpoint() const;
-  inline void set_master_component_connect_endpoint(const ::std::string& value);
-  inline void set_master_component_connect_endpoint(const char* value);
-  inline void set_master_component_connect_endpoint(const char* value, size_t size);
-  inline ::std::string* mutable_master_component_connect_endpoint();
-  inline ::std::string* release_master_component_connect_endpoint();
-  inline void set_allocated_master_component_connect_endpoint(::std::string* master_component_connect_endpoint);
+  // optional string connect_endpoint = 102;
+  inline bool has_connect_endpoint() const;
+  inline void clear_connect_endpoint();
+  static const int kConnectEndpointFieldNumber = 102;
+  inline const ::std::string& connect_endpoint() const;
+  inline void set_connect_endpoint(const ::std::string& value);
+  inline void set_connect_endpoint(const char* value);
+  inline void set_connect_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_connect_endpoint();
+  inline ::std::string* release_connect_endpoint();
+  inline void set_allocated_connect_endpoint(::std::string* connect_endpoint);
+
+  // repeated string node_connect_endpoint = 103;
+  inline int node_connect_endpoint_size() const;
+  inline void clear_node_connect_endpoint();
+  static const int kNodeConnectEndpointFieldNumber = 103;
+  inline const ::std::string& node_connect_endpoint(int index) const;
+  inline ::std::string* mutable_node_connect_endpoint(int index);
+  inline void set_node_connect_endpoint(int index, const ::std::string& value);
+  inline void set_node_connect_endpoint(int index, const char* value);
+  inline void set_node_connect_endpoint(int index, const char* value, size_t size);
+  inline ::std::string* add_node_connect_endpoint();
+  inline void add_node_connect_endpoint(const ::std::string& value);
+  inline void add_node_connect_endpoint(const char* value);
+  inline void add_node_connect_endpoint(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& node_connect_endpoint() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_node_connect_endpoint();
 
   // @@protoc_insertion_point(class_scope:artm.MasterComponentConfig)
  private:
@@ -776,10 +792,10 @@ class MasterComponentConfig : public ::google::protobuf::Message {
   inline void clear_has_merger_queue_max_size();
   inline void set_has_modus_operandi();
   inline void clear_has_modus_operandi();
-  inline void set_has_master_component_create_endpoint();
-  inline void clear_has_master_component_create_endpoint();
-  inline void set_has_master_component_connect_endpoint();
-  inline void clear_has_master_component_connect_endpoint();
+  inline void set_has_create_endpoint();
+  inline void clear_has_create_endpoint();
+  inline void set_has_connect_endpoint();
+  inline void clear_has_connect_endpoint();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -790,12 +806,13 @@ class MasterComponentConfig : public ::google::protobuf::Message {
   ::google::protobuf::int32 processors_count_;
   ::google::protobuf::int32 processor_queue_max_size_;
   ::google::protobuf::int32 merger_queue_max_size_;
-  ::std::string* master_component_create_endpoint_;
-  ::std::string* master_component_connect_endpoint_;
+  ::std::string* create_endpoint_;
+  ::std::string* connect_endpoint_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> node_connect_endpoint_;
   int modus_operandi_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -2588,59 +2605,29 @@ class NodeControllerConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string node_controller_create_endpoint = 1;
-  inline bool has_node_controller_create_endpoint() const;
-  inline void clear_node_controller_create_endpoint();
-  static const int kNodeControllerCreateEndpointFieldNumber = 1;
-  inline const ::std::string& node_controller_create_endpoint() const;
-  inline void set_node_controller_create_endpoint(const ::std::string& value);
-  inline void set_node_controller_create_endpoint(const char* value);
-  inline void set_node_controller_create_endpoint(const char* value, size_t size);
-  inline ::std::string* mutable_node_controller_create_endpoint();
-  inline ::std::string* release_node_controller_create_endpoint();
-  inline void set_allocated_node_controller_create_endpoint(::std::string* node_controller_create_endpoint);
-
-  // optional string node_controller_connect_endpoint = 2;
-  inline bool has_node_controller_connect_endpoint() const;
-  inline void clear_node_controller_connect_endpoint();
-  static const int kNodeControllerConnectEndpointFieldNumber = 2;
-  inline const ::std::string& node_controller_connect_endpoint() const;
-  inline void set_node_controller_connect_endpoint(const ::std::string& value);
-  inline void set_node_controller_connect_endpoint(const char* value);
-  inline void set_node_controller_connect_endpoint(const char* value, size_t size);
-  inline ::std::string* mutable_node_controller_connect_endpoint();
-  inline ::std::string* release_node_controller_connect_endpoint();
-  inline void set_allocated_node_controller_connect_endpoint(::std::string* node_controller_connect_endpoint);
-
-  // optional string master_component_connect_endpoint = 3;
-  inline bool has_master_component_connect_endpoint() const;
-  inline void clear_master_component_connect_endpoint();
-  static const int kMasterComponentConnectEndpointFieldNumber = 3;
-  inline const ::std::string& master_component_connect_endpoint() const;
-  inline void set_master_component_connect_endpoint(const ::std::string& value);
-  inline void set_master_component_connect_endpoint(const char* value);
-  inline void set_master_component_connect_endpoint(const char* value, size_t size);
-  inline ::std::string* mutable_master_component_connect_endpoint();
-  inline ::std::string* release_master_component_connect_endpoint();
-  inline void set_allocated_master_component_connect_endpoint(::std::string* master_component_connect_endpoint);
+  // optional string create_endpoint = 1;
+  inline bool has_create_endpoint() const;
+  inline void clear_create_endpoint();
+  static const int kCreateEndpointFieldNumber = 1;
+  inline const ::std::string& create_endpoint() const;
+  inline void set_create_endpoint(const ::std::string& value);
+  inline void set_create_endpoint(const char* value);
+  inline void set_create_endpoint(const char* value, size_t size);
+  inline ::std::string* mutable_create_endpoint();
+  inline ::std::string* release_create_endpoint();
+  inline void set_allocated_create_endpoint(::std::string* create_endpoint);
 
   // @@protoc_insertion_point(class_scope:artm.NodeControllerConfig)
  private:
-  inline void set_has_node_controller_create_endpoint();
-  inline void clear_has_node_controller_create_endpoint();
-  inline void set_has_node_controller_connect_endpoint();
-  inline void clear_has_node_controller_connect_endpoint();
-  inline void set_has_master_component_connect_endpoint();
-  inline void clear_has_master_component_connect_endpoint();
+  inline void set_has_create_endpoint();
+  inline void clear_has_create_endpoint();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* node_controller_create_endpoint_;
-  ::std::string* node_controller_connect_endpoint_;
-  ::std::string* master_component_connect_endpoint_;
+  ::std::string* create_endpoint_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -3276,144 +3263,188 @@ inline void MasterComponentConfig::set_modus_operandi(::artm::MasterComponentCon
   modus_operandi_ = value;
 }
 
-// optional string master_component_create_endpoint = 101;
-inline bool MasterComponentConfig::has_master_component_create_endpoint() const {
+// optional string create_endpoint = 101;
+inline bool MasterComponentConfig::has_create_endpoint() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
-inline void MasterComponentConfig::set_has_master_component_create_endpoint() {
+inline void MasterComponentConfig::set_has_create_endpoint() {
   _has_bits_[0] |= 0x00000100u;
 }
-inline void MasterComponentConfig::clear_has_master_component_create_endpoint() {
+inline void MasterComponentConfig::clear_has_create_endpoint() {
   _has_bits_[0] &= ~0x00000100u;
 }
-inline void MasterComponentConfig::clear_master_component_create_endpoint() {
-  if (master_component_create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    master_component_create_endpoint_->clear();
+inline void MasterComponentConfig::clear_create_endpoint() {
+  if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_->clear();
   }
-  clear_has_master_component_create_endpoint();
+  clear_has_create_endpoint();
 }
-inline const ::std::string& MasterComponentConfig::master_component_create_endpoint() const {
-  return *master_component_create_endpoint_;
+inline const ::std::string& MasterComponentConfig::create_endpoint() const {
+  return *create_endpoint_;
 }
-inline void MasterComponentConfig::set_master_component_create_endpoint(const ::std::string& value) {
-  set_has_master_component_create_endpoint();
-  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_create_endpoint_ = new ::std::string;
+inline void MasterComponentConfig::set_create_endpoint(const ::std::string& value) {
+  set_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_ = new ::std::string;
   }
-  master_component_create_endpoint_->assign(value);
+  create_endpoint_->assign(value);
 }
-inline void MasterComponentConfig::set_master_component_create_endpoint(const char* value) {
-  set_has_master_component_create_endpoint();
-  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_create_endpoint_ = new ::std::string;
+inline void MasterComponentConfig::set_create_endpoint(const char* value) {
+  set_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_ = new ::std::string;
   }
-  master_component_create_endpoint_->assign(value);
+  create_endpoint_->assign(value);
 }
-inline void MasterComponentConfig::set_master_component_create_endpoint(const char* value, size_t size) {
-  set_has_master_component_create_endpoint();
-  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_create_endpoint_ = new ::std::string;
+inline void MasterComponentConfig::set_create_endpoint(const char* value, size_t size) {
+  set_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_ = new ::std::string;
   }
-  master_component_create_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+  create_endpoint_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* MasterComponentConfig::mutable_master_component_create_endpoint() {
-  set_has_master_component_create_endpoint();
-  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_create_endpoint_ = new ::std::string;
+inline ::std::string* MasterComponentConfig::mutable_create_endpoint() {
+  set_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_ = new ::std::string;
   }
-  return master_component_create_endpoint_;
+  return create_endpoint_;
 }
-inline ::std::string* MasterComponentConfig::release_master_component_create_endpoint() {
-  clear_has_master_component_create_endpoint();
-  if (master_component_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* MasterComponentConfig::release_create_endpoint() {
+  clear_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = master_component_create_endpoint_;
-    master_component_create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = create_endpoint_;
+    create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void MasterComponentConfig::set_allocated_master_component_create_endpoint(::std::string* master_component_create_endpoint) {
-  if (master_component_create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    delete master_component_create_endpoint_;
+inline void MasterComponentConfig::set_allocated_create_endpoint(::std::string* create_endpoint) {
+  if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete create_endpoint_;
   }
-  if (master_component_create_endpoint) {
-    set_has_master_component_create_endpoint();
-    master_component_create_endpoint_ = master_component_create_endpoint;
+  if (create_endpoint) {
+    set_has_create_endpoint();
+    create_endpoint_ = create_endpoint;
   } else {
-    clear_has_master_component_create_endpoint();
-    master_component_create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_create_endpoint();
+    create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 
-// optional string master_component_connect_endpoint = 102;
-inline bool MasterComponentConfig::has_master_component_connect_endpoint() const {
+// optional string connect_endpoint = 102;
+inline bool MasterComponentConfig::has_connect_endpoint() const {
   return (_has_bits_[0] & 0x00000200u) != 0;
 }
-inline void MasterComponentConfig::set_has_master_component_connect_endpoint() {
+inline void MasterComponentConfig::set_has_connect_endpoint() {
   _has_bits_[0] |= 0x00000200u;
 }
-inline void MasterComponentConfig::clear_has_master_component_connect_endpoint() {
+inline void MasterComponentConfig::clear_has_connect_endpoint() {
   _has_bits_[0] &= ~0x00000200u;
 }
-inline void MasterComponentConfig::clear_master_component_connect_endpoint() {
-  if (master_component_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_->clear();
+inline void MasterComponentConfig::clear_connect_endpoint() {
+  if (connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    connect_endpoint_->clear();
   }
-  clear_has_master_component_connect_endpoint();
+  clear_has_connect_endpoint();
 }
-inline const ::std::string& MasterComponentConfig::master_component_connect_endpoint() const {
-  return *master_component_connect_endpoint_;
+inline const ::std::string& MasterComponentConfig::connect_endpoint() const {
+  return *connect_endpoint_;
 }
-inline void MasterComponentConfig::set_master_component_connect_endpoint(const ::std::string& value) {
-  set_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_ = new ::std::string;
+inline void MasterComponentConfig::set_connect_endpoint(const ::std::string& value) {
+  set_has_connect_endpoint();
+  if (connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    connect_endpoint_ = new ::std::string;
   }
-  master_component_connect_endpoint_->assign(value);
+  connect_endpoint_->assign(value);
 }
-inline void MasterComponentConfig::set_master_component_connect_endpoint(const char* value) {
-  set_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_ = new ::std::string;
+inline void MasterComponentConfig::set_connect_endpoint(const char* value) {
+  set_has_connect_endpoint();
+  if (connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    connect_endpoint_ = new ::std::string;
   }
-  master_component_connect_endpoint_->assign(value);
+  connect_endpoint_->assign(value);
 }
-inline void MasterComponentConfig::set_master_component_connect_endpoint(const char* value, size_t size) {
-  set_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_ = new ::std::string;
+inline void MasterComponentConfig::set_connect_endpoint(const char* value, size_t size) {
+  set_has_connect_endpoint();
+  if (connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    connect_endpoint_ = new ::std::string;
   }
-  master_component_connect_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+  connect_endpoint_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* MasterComponentConfig::mutable_master_component_connect_endpoint() {
-  set_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_ = new ::std::string;
+inline ::std::string* MasterComponentConfig::mutable_connect_endpoint() {
+  set_has_connect_endpoint();
+  if (connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    connect_endpoint_ = new ::std::string;
   }
-  return master_component_connect_endpoint_;
+  return connect_endpoint_;
 }
-inline ::std::string* MasterComponentConfig::release_master_component_connect_endpoint() {
-  clear_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* MasterComponentConfig::release_connect_endpoint() {
+  clear_has_connect_endpoint();
+  if (connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = master_component_connect_endpoint_;
-    master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = connect_endpoint_;
+    connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void MasterComponentConfig::set_allocated_master_component_connect_endpoint(::std::string* master_component_connect_endpoint) {
-  if (master_component_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    delete master_component_connect_endpoint_;
+inline void MasterComponentConfig::set_allocated_connect_endpoint(::std::string* connect_endpoint) {
+  if (connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete connect_endpoint_;
   }
-  if (master_component_connect_endpoint) {
-    set_has_master_component_connect_endpoint();
-    master_component_connect_endpoint_ = master_component_connect_endpoint;
+  if (connect_endpoint) {
+    set_has_connect_endpoint();
+    connect_endpoint_ = connect_endpoint;
   } else {
-    clear_has_master_component_connect_endpoint();
-    master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_connect_endpoint();
+    connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// repeated string node_connect_endpoint = 103;
+inline int MasterComponentConfig::node_connect_endpoint_size() const {
+  return node_connect_endpoint_.size();
+}
+inline void MasterComponentConfig::clear_node_connect_endpoint() {
+  node_connect_endpoint_.Clear();
+}
+inline const ::std::string& MasterComponentConfig::node_connect_endpoint(int index) const {
+  return node_connect_endpoint_.Get(index);
+}
+inline ::std::string* MasterComponentConfig::mutable_node_connect_endpoint(int index) {
+  return node_connect_endpoint_.Mutable(index);
+}
+inline void MasterComponentConfig::set_node_connect_endpoint(int index, const ::std::string& value) {
+  node_connect_endpoint_.Mutable(index)->assign(value);
+}
+inline void MasterComponentConfig::set_node_connect_endpoint(int index, const char* value) {
+  node_connect_endpoint_.Mutable(index)->assign(value);
+}
+inline void MasterComponentConfig::set_node_connect_endpoint(int index, const char* value, size_t size) {
+  node_connect_endpoint_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* MasterComponentConfig::add_node_connect_endpoint() {
+  return node_connect_endpoint_.Add();
+}
+inline void MasterComponentConfig::add_node_connect_endpoint(const ::std::string& value) {
+  node_connect_endpoint_.Add()->assign(value);
+}
+inline void MasterComponentConfig::add_node_connect_endpoint(const char* value) {
+  node_connect_endpoint_.Add()->assign(value);
+}
+inline void MasterComponentConfig::add_node_connect_endpoint(const char* value, size_t size) {
+  node_connect_endpoint_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+MasterComponentConfig::node_connect_endpoint() const {
+  return node_connect_endpoint_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+MasterComponentConfig::mutable_node_connect_endpoint() {
+  return &node_connect_endpoint_;
 }
 
 // -------------------------------------------------------------------
@@ -5326,213 +5357,73 @@ ThetaMatrix::mutable_item_weights() {
 
 // NodeControllerConfig
 
-// optional string node_controller_create_endpoint = 1;
-inline bool NodeControllerConfig::has_node_controller_create_endpoint() const {
+// optional string create_endpoint = 1;
+inline bool NodeControllerConfig::has_create_endpoint() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void NodeControllerConfig::set_has_node_controller_create_endpoint() {
+inline void NodeControllerConfig::set_has_create_endpoint() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void NodeControllerConfig::clear_has_node_controller_create_endpoint() {
+inline void NodeControllerConfig::clear_has_create_endpoint() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void NodeControllerConfig::clear_node_controller_create_endpoint() {
-  if (node_controller_create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    node_controller_create_endpoint_->clear();
+inline void NodeControllerConfig::clear_create_endpoint() {
+  if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_->clear();
   }
-  clear_has_node_controller_create_endpoint();
+  clear_has_create_endpoint();
 }
-inline const ::std::string& NodeControllerConfig::node_controller_create_endpoint() const {
-  return *node_controller_create_endpoint_;
+inline const ::std::string& NodeControllerConfig::create_endpoint() const {
+  return *create_endpoint_;
 }
-inline void NodeControllerConfig::set_node_controller_create_endpoint(const ::std::string& value) {
-  set_has_node_controller_create_endpoint();
-  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    node_controller_create_endpoint_ = new ::std::string;
+inline void NodeControllerConfig::set_create_endpoint(const ::std::string& value) {
+  set_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_ = new ::std::string;
   }
-  node_controller_create_endpoint_->assign(value);
+  create_endpoint_->assign(value);
 }
-inline void NodeControllerConfig::set_node_controller_create_endpoint(const char* value) {
-  set_has_node_controller_create_endpoint();
-  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    node_controller_create_endpoint_ = new ::std::string;
+inline void NodeControllerConfig::set_create_endpoint(const char* value) {
+  set_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_ = new ::std::string;
   }
-  node_controller_create_endpoint_->assign(value);
+  create_endpoint_->assign(value);
 }
-inline void NodeControllerConfig::set_node_controller_create_endpoint(const char* value, size_t size) {
-  set_has_node_controller_create_endpoint();
-  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    node_controller_create_endpoint_ = new ::std::string;
+inline void NodeControllerConfig::set_create_endpoint(const char* value, size_t size) {
+  set_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_ = new ::std::string;
   }
-  node_controller_create_endpoint_->assign(reinterpret_cast<const char*>(value), size);
+  create_endpoint_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* NodeControllerConfig::mutable_node_controller_create_endpoint() {
-  set_has_node_controller_create_endpoint();
-  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    node_controller_create_endpoint_ = new ::std::string;
+inline ::std::string* NodeControllerConfig::mutable_create_endpoint() {
+  set_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+    create_endpoint_ = new ::std::string;
   }
-  return node_controller_create_endpoint_;
+  return create_endpoint_;
 }
-inline ::std::string* NodeControllerConfig::release_node_controller_create_endpoint() {
-  clear_has_node_controller_create_endpoint();
-  if (node_controller_create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
+inline ::std::string* NodeControllerConfig::release_create_endpoint() {
+  clear_has_create_endpoint();
+  if (create_endpoint_ == &::google::protobuf::internal::kEmptyString) {
     return NULL;
   } else {
-    ::std::string* temp = node_controller_create_endpoint_;
-    node_controller_create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    ::std::string* temp = create_endpoint_;
+    create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
 }
-inline void NodeControllerConfig::set_allocated_node_controller_create_endpoint(::std::string* node_controller_create_endpoint) {
-  if (node_controller_create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    delete node_controller_create_endpoint_;
+inline void NodeControllerConfig::set_allocated_create_endpoint(::std::string* create_endpoint) {
+  if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
+    delete create_endpoint_;
   }
-  if (node_controller_create_endpoint) {
-    set_has_node_controller_create_endpoint();
-    node_controller_create_endpoint_ = node_controller_create_endpoint;
+  if (create_endpoint) {
+    set_has_create_endpoint();
+    create_endpoint_ = create_endpoint;
   } else {
-    clear_has_node_controller_create_endpoint();
-    node_controller_create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional string node_controller_connect_endpoint = 2;
-inline bool NodeControllerConfig::has_node_controller_connect_endpoint() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void NodeControllerConfig::set_has_node_controller_connect_endpoint() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void NodeControllerConfig::clear_has_node_controller_connect_endpoint() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void NodeControllerConfig::clear_node_controller_connect_endpoint() {
-  if (node_controller_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    node_controller_connect_endpoint_->clear();
-  }
-  clear_has_node_controller_connect_endpoint();
-}
-inline const ::std::string& NodeControllerConfig::node_controller_connect_endpoint() const {
-  return *node_controller_connect_endpoint_;
-}
-inline void NodeControllerConfig::set_node_controller_connect_endpoint(const ::std::string& value) {
-  set_has_node_controller_connect_endpoint();
-  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    node_controller_connect_endpoint_ = new ::std::string;
-  }
-  node_controller_connect_endpoint_->assign(value);
-}
-inline void NodeControllerConfig::set_node_controller_connect_endpoint(const char* value) {
-  set_has_node_controller_connect_endpoint();
-  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    node_controller_connect_endpoint_ = new ::std::string;
-  }
-  node_controller_connect_endpoint_->assign(value);
-}
-inline void NodeControllerConfig::set_node_controller_connect_endpoint(const char* value, size_t size) {
-  set_has_node_controller_connect_endpoint();
-  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    node_controller_connect_endpoint_ = new ::std::string;
-  }
-  node_controller_connect_endpoint_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* NodeControllerConfig::mutable_node_controller_connect_endpoint() {
-  set_has_node_controller_connect_endpoint();
-  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    node_controller_connect_endpoint_ = new ::std::string;
-  }
-  return node_controller_connect_endpoint_;
-}
-inline ::std::string* NodeControllerConfig::release_node_controller_connect_endpoint() {
-  clear_has_node_controller_connect_endpoint();
-  if (node_controller_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = node_controller_connect_endpoint_;
-    node_controller_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void NodeControllerConfig::set_allocated_node_controller_connect_endpoint(::std::string* node_controller_connect_endpoint) {
-  if (node_controller_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    delete node_controller_connect_endpoint_;
-  }
-  if (node_controller_connect_endpoint) {
-    set_has_node_controller_connect_endpoint();
-    node_controller_connect_endpoint_ = node_controller_connect_endpoint;
-  } else {
-    clear_has_node_controller_connect_endpoint();
-    node_controller_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional string master_component_connect_endpoint = 3;
-inline bool NodeControllerConfig::has_master_component_connect_endpoint() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void NodeControllerConfig::set_has_master_component_connect_endpoint() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void NodeControllerConfig::clear_has_master_component_connect_endpoint() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void NodeControllerConfig::clear_master_component_connect_endpoint() {
-  if (master_component_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_->clear();
-  }
-  clear_has_master_component_connect_endpoint();
-}
-inline const ::std::string& NodeControllerConfig::master_component_connect_endpoint() const {
-  return *master_component_connect_endpoint_;
-}
-inline void NodeControllerConfig::set_master_component_connect_endpoint(const ::std::string& value) {
-  set_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_ = new ::std::string;
-  }
-  master_component_connect_endpoint_->assign(value);
-}
-inline void NodeControllerConfig::set_master_component_connect_endpoint(const char* value) {
-  set_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_ = new ::std::string;
-  }
-  master_component_connect_endpoint_->assign(value);
-}
-inline void NodeControllerConfig::set_master_component_connect_endpoint(const char* value, size_t size) {
-  set_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_ = new ::std::string;
-  }
-  master_component_connect_endpoint_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* NodeControllerConfig::mutable_master_component_connect_endpoint() {
-  set_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    master_component_connect_endpoint_ = new ::std::string;
-  }
-  return master_component_connect_endpoint_;
-}
-inline ::std::string* NodeControllerConfig::release_master_component_connect_endpoint() {
-  clear_has_master_component_connect_endpoint();
-  if (master_component_connect_endpoint_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = master_component_connect_endpoint_;
-    master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void NodeControllerConfig::set_allocated_master_component_connect_endpoint(::std::string* master_component_connect_endpoint) {
-  if (master_component_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
-    delete master_component_connect_endpoint_;
-  }
-  if (master_component_connect_endpoint) {
-    set_has_master_component_connect_endpoint();
-    master_component_connect_endpoint_ = master_component_connect_endpoint;
-  } else {
-    clear_has_master_component_connect_endpoint();
-    master_component_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    clear_has_create_endpoint();
+    create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

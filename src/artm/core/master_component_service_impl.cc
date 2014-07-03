@@ -6,6 +6,7 @@
 
 #include "boost/thread.hpp"
 #include "boost/lexical_cast.hpp"
+#include "boost/uuid/string_generator.hpp"
 #include "boost/uuid/uuid_io.hpp"
 #include "boost/uuid/uuid.hpp"
 #include "boost/utility.hpp"
@@ -13,21 +14,14 @@
 
 #include "rpcz/application.hpp"
 
-#include "artm/core/master_component.h"
 #include "artm/core/instance.h"
 #include "artm/core/merger.h"
 #include "artm/core/batch_manager.h"
-#include "artm/core/zmq_context.h"
-#include "artm/core/generation.h"
 
 namespace artm {
 namespace core {
 
-MasterComponentServiceImpl::MasterComponentServiceImpl(Instance* instance, NetworkClientCollection* clients)
-    : instance_(instance), application_(), clients_(clients) {
-  rpcz::application::options options(3);
-  options.zeromq_context = ZmqContext::singleton().get();
-  application_.reset(new rpcz::application(options));
+MasterComponentServiceImpl::MasterComponentServiceImpl(Instance* instance) : instance_(instance) {
 }
 
 void MasterComponentServiceImpl::UpdateModel(const ::artm::core::ModelIncrement& request,
@@ -90,29 +84,6 @@ void MasterComponentServiceImpl::ReportBatches(const ::artm::core::BatchIds& req
     response.send(Void());
   } catch(...) {
     LOG(ERROR) << "Unable to send reply to ReportBatches.";
-  }
-}
-
-void MasterComponentServiceImpl::ConnectClient(const ::artm::core::String& request,
-                      ::rpcz::reply< ::artm::core::Void> response) {
-  LOG(INFO) << "Receive connect request from client " << request.value();
-  bool success = clients_->ConnectClient(request.value(), application_.get());
-  if (success) {
-    response.send(artm::core::Void());
-  } else {
-    response.Error(-1, "client with the same endpoint is already connected");
-  }
-}
-
-void MasterComponentServiceImpl::DisconnectClient(const ::artm::core::String& request,
-                      ::rpcz::reply< ::artm::core::Void> response) {
-  LOG(INFO) << "Receive disconnect request from client " << request.value();
-  bool success = clients_->DisconnectClient(request.value());
-
-  if (success) {
-    response.send(artm::core::Void());
-  } else {
-    response.Error(-1, "client with this endpoint is not connected");
   }
 }
 

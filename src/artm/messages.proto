@@ -77,9 +77,12 @@ message MasterComponentConfig {
   // Modus operandi of the master component
   optional ModusOperandi modus_operandi = 100 [default = Local];
 
-  // Service endpoints
-  optional string master_component_create_endpoint = 101;
-  optional string master_component_connect_endpoint = 102;
+  // Master endpoint
+  optional string create_endpoint = 101;
+  optional string connect_endpoint = 102;
+
+  // Endpoints of all NodeControllers to connect to
+  repeated string node_connect_endpoint = 103;
 }
 
 // Configuration of a model.
@@ -201,7 +204,5 @@ message ThetaMatrix {
 
 // Configuration of the Node Controller
 message NodeControllerConfig {
-  optional string node_controller_create_endpoint = 1;
-  optional string node_controller_connect_endpoint = 2;
-  optional string master_component_connect_endpoint = 3;
+  optional string create_endpoint = 1;
 }

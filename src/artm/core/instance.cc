@@ -198,11 +198,11 @@ void Instance::DisposeDictionary(const std::string& name) {
   dictionaries_.erase(name);
 }
 
-void Instance::Reconfigure(const MasterComponentConfig& config) {
+void Instance::Reconfigure(const MasterComponentConfig& master_config) {
   MasterComponentConfig old_config = schema_.get()->config();
 
   auto new_schema = schema_.get_copy();
-  new_schema->set_config(config);
+  new_schema->set_config(master_config);
   schema_.set(new_schema);
 
   if (!is_configured_) {
@@ -212,7 +212,7 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
     if (instance_type_ == NodeControllerInstance) {
       master_component_service_proxy_.reset(
         new artm::core::MasterComponentService_Stub(
-          application_->create_rpc_channel(config.master_component_connect_endpoint()), true));
+          application_->create_rpc_channel(master_config.connect_endpoint()), true));
     }
 
     if (instance_type_ != NodeControllerInstance) {
@@ -250,16 +250,19 @@ void Instance::Reconfigure(const MasterComponentConfig& config) {
     is_configured_  = true;
   } else {
     // Second and subsequent reconfiguration - some restrictions apply
-    if (old_config.master_component_connect_endpoint() !=
-        config.master_component_connect_endpoint()) {
+    if (old_config.connect_endpoint() !=
+        master_config.connect_endpoint()) {
       BOOST_THROW_EXCEPTION(InvalidOperation("Changing master endpoint is not supported"));
     }
   }
 
   if (instance_type_ != MasterInstanceNetwork) {
     // Adjust size of processors_; cast size to int to avoid compiler warning.
-    while (static_cast<int>(processors_.size()) > config.processors_count()) processors_.pop_back();
-    while (static_cast<int>(processors_.size()) < config.processors_count()) {
+    while (static_cast<int>(processors_.size()) > master_config.processors_count()) {
+      processors_.pop_back();
+    }
+
+    while (static_cast<int>(processors_.size()) < master_config.processors_count()) {
       processors_.push_back(
         std::shared_ptr<Processor>(new Processor(
           &processor_queue_,

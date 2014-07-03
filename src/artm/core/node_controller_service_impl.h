@@ -49,8 +49,6 @@ class NodeControllerServiceImpl : public NodeControllerService {
   mutable boost::mutex lock_;
 
   // Currently node controller supports only one Instance per node.
-  // This makes it simpler to implement MasterComponent --- it doesn't have to keep track
-  // of instance_id for each of its clients.
   std::shared_ptr<Instance> instance_;
 };
 

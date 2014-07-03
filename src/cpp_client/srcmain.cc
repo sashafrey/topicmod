@@ -30,35 +30,32 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   bool is_network_mode = (instance_size > 1);
 
+  std::vector<std::shared_ptr<::artm::NodeController>> node_controller;
+  if (is_network_mode) {
+    for (int port = 5556; port < 5556 + instance_size; ++port) {
+      ::artm::NodeControllerConfig node_config;
+
+      std::stringstream port_str;
+      port_str << port;
+      node_config.set_create_endpoint(std::string("tcp://*:") + port_str.str());
+      node_controller.push_back(std::make_shared<::artm::NodeController>(node_config));
+    }
+  }
+
   MasterComponentConfig master_config;
   master_config.set_processors_count(processors_count);
   master_config.set_disk_path(batches_disk_path);
   if (is_network_mode) {
     master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Network);
-    master_config.set_master_component_create_endpoint("tcp://*:5555");
-    master_config.set_master_component_connect_endpoint("tcp://localhost:5555");
+    master_config.set_create_endpoint("tcp://*:5555");
+    master_config.set_connect_endpoint("tcp://localhost:5555");
+    master_config.add_node_connect_endpoint("tcp://localhost:5556");
   } else {
     master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
     master_config.set_cache_processor_output(true);
   }
 
   MasterComponent master_component(master_config);
-
-  std::vector<std::shared_ptr<::artm::NodeController>> node_controller;
-  if (is_network_mode) {
-    for (int port = 5556; port < 5556 + instance_size; ++port) {
-      ::artm::NodeControllerConfig node_config;
-      node_config.set_master_component_connect_endpoint("tcp://localhost:5555");
-
-      std::stringstream port_str;
-      port_str << port;
-      node_config.set_node_controller_create_endpoint(std::string("tcp://*:") + port_str.str());
-      node_config.set_node_controller_connect_endpoint(std::string("tcp://localhost:") + port_str.str());
-      node_controller.push_back(std::make_shared<::artm::NodeController>(node_config));
-    }
-
-    master_component.Reconfigure(master_config);  // Push configuration to clients
-  }
 
   // Configure train and test streams
   Stream train_stream, test_stream;
@@ -99,9 +96,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   score->set_stream_name("test_stream");
   Model model(master_component, model_config);
 
-  std::cout << rand() << std::endl;
   // Overwrite topic model with well-known "initial topic model"
-  // (skip this in network mode because the operation is not supported yet)
   TopicModel initial_topic_model;
   initial_topic_model.set_name(model_config.name());
   initial_topic_model.set_topics_count(nTopics);
@@ -229,8 +224,6 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   } else {
     // std::cout << "GetThetaMatrix is not implemented in Network modus operandi."; // todo(alfrey)
   }
-
-  node_controller.clear();  // Destroy nodes; todo(alfrey): it should be OK to stop master before nodes.
 
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
   return elapsed_secs;

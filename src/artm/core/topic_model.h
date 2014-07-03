@@ -51,7 +51,7 @@ class TopicWeightIterator {
   // It is caller responsibility to verify this condition.
   inline float Weight() {
     assert(current_topic_ < topics_count_);
-    return std::max(n_w_[current_topic_] + r_w_[current_topic_], 0.0f) / n_t_[current_topic_];
+    return std::max<float>(n_w_[current_topic_] + r_w_[current_topic_], 0.0f) / n_t_[current_topic_];
   }
 
   // Not normalized weight.

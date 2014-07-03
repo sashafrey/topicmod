@@ -76,35 +76,32 @@ void rpcz_protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "me\030\002 \001(\t\"O\n!CreateOrReconfigureDictionar"
     "yArgs\022*\n\ndictionary\030\002 \001(\0132\026.artm.Diction"
     "aryConfig\"0\n\025DisposeDictionaryArgs\022\027\n\017di"
-    "ctionary_name\030\002 \001(\t2\344\002\n\026MasterComponentS"
+    "ctionary_name\030\002 \001(\t2\367\001\n\026MasterComponentS"
     "ervice\0229\n\013UpdateModel\022\031.artm.core.ModelI"
     "ncrement\032\017.artm.core.Void\0224\n\rRetrieveMod"
     "el\022\021.artm.core.String\032\020.artm.TopicModel\022"
     "5\n\016RequestBatches\022\016.artm.core.Int\032\023.artm"
     ".core.BatchIds\0225\n\rReportBatches\022\023.artm.c"
-    "ore.BatchIds\032\017.artm.core.Void\0223\n\rConnect"
-    "Client\022\021.artm.core.String\032\017.artm.core.Vo"
-    "id\0226\n\020DisconnectClient\022\021.artm.core.Strin"
-    "g\032\017.artm.core.Void2\374\005\n\025NodeControllerSer"
-    "vice\022K\n\033CreateOrReconfigureInstance\022\033.ar"
-    "tm.MasterComponentConfig\032\017.artm.core.Voi"
-    "d\0223\n\017DisposeInstance\022\017.artm.core.Void\032\017."
-    "artm.core.Void\022T\n\030CreateOrReconfigureMod"
-    "el\022\'.artm.core.CreateOrReconfigureModelA"
-    "rgs\032\017.artm.core.Void\022<\n\014DisposeModel\022\033.a"
-    "rtm.core.DisposeModelArgs\032\017.artm.core.Vo"
-    "id\022`\n\036CreateOrReconfigureRegularizer\022-.a"
-    "rtm.core.CreateOrReconfigureRegularizerA"
-    "rgs\032\017.artm.core.Void\022H\n\022DisposeRegulariz"
-    "er\022!.artm.core.DisposeRegularizerArgs\032\017."
-    "artm.core.Void\022^\n\035CreateOrReconfigureDic"
-    "tionary\022,.artm.core.CreateOrReconfigureD"
-    "ictionaryArgs\032\017.artm.core.Void\022F\n\021Dispos"
-    "eDictionary\022 .artm.core.DisposeDictionar"
-    "yArgs\032\017.artm.core.Void\0227\n\023ForcePullTopic"
-    "Model\022\017.artm.core.Void\032\017.artm.core.Void\022"
-    "@\n\034ForcePushTopicModelIncrement\022\017.artm.c"
-    "ore.Void\032\017.artm.core.Void", 2305);
+    "ore.BatchIds\032\017.artm.core.Void2\374\005\n\025NodeCo"
+    "ntrollerService\022K\n\033CreateOrReconfigureIn"
+    "stance\022\033.artm.MasterComponentConfig\032\017.ar"
+    "tm.core.Void\0223\n\017DisposeInstance\022\017.artm.c"
+    "ore.Void\032\017.artm.core.Void\022T\n\030CreateOrRec"
+    "onfigureModel\022\'.artm.core.CreateOrReconf"
+    "igureModelArgs\032\017.artm.core.Void\022<\n\014Dispo"
+    "seModel\022\033.artm.core.DisposeModelArgs\032\017.a"
+    "rtm.core.Void\022`\n\036CreateOrReconfigureRegu"
+    "larizer\022-.artm.core.CreateOrReconfigureR"
+    "egularizerArgs\032\017.artm.core.Void\022H\n\022Dispo"
+    "seRegularizer\022!.artm.core.DisposeRegular"
+    "izerArgs\032\017.artm.core.Void\022^\n\035CreateOrRec"
+    "onfigureDictionary\022,.artm.core.CreateOrR"
+    "econfigureDictionaryArgs\032\017.artm.core.Voi"
+    "d\022F\n\021DisposeDictionary\022 .artm.core.Dispo"
+    "seDictionaryArgs\032\017.artm.core.Void\0227\n\023For"
+    "cePullTopicModel\022\017.artm.core.Void\032\017.artm"
+    ".core.Void\022@\n\034ForcePushTopicModelIncreme"
+    "nt\022\017.artm.core.Void\032\017.artm.core.Void", 2196);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/core/internals.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto);
@@ -148,18 +145,6 @@ void MasterComponentService::ReportBatches(const ::artm::core::BatchIds&,
               "Method ReportBatches() not implemented.");
 }
 
-void MasterComponentService::ConnectClient(const ::artm::core::String&,
-                         ::rpcz::reply< ::artm::core::Void> reply) {
-  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
-              "Method ConnectClient() not implemented.");
-}
-
-void MasterComponentService::DisconnectClient(const ::artm::core::String&,
-                         ::rpcz::reply< ::artm::core::Void> reply) {
-  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
-              "Method DisconnectClient() not implemented.");
-}
-
 void MasterComponentService::call_method(const ::google::protobuf::MethodDescriptor* method,
                              const ::google::protobuf::Message& request,
                              ::rpcz::server_channel* channel) {
@@ -185,16 +170,6 @@ void MasterComponentService::call_method(const ::google::protobuf::MethodDescrip
           *::google::protobuf::down_cast<const ::artm::core::BatchIds*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 4:
-      ConnectClient(
-          *::google::protobuf::down_cast<const ::artm::core::String*>(&request),
-          ::rpcz::reply< ::artm::core::Void>(channel));
-      break;
-    case 5:
-      DisconnectClient(
-          *::google::protobuf::down_cast<const ::artm::core::String*>(&request),
-          ::rpcz::reply< ::artm::core::Void>(channel));
-      break;
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       break;
@@ -213,10 +188,6 @@ const ::google::protobuf::Message& MasterComponentService::GetRequestPrototype(
       return ::artm::core::Int::default_instance();
     case 3:
       return ::artm::core::BatchIds::default_instance();
-    case 4:
-      return ::artm::core::String::default_instance();
-    case 5:
-      return ::artm::core::String::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
       return *reinterpret_cast< ::google::protobuf::Message*>(NULL);
@@ -234,10 +205,6 @@ const ::google::protobuf::Message& MasterComponentService::GetResponsePrototype(
     case 2:
       return ::artm::core::BatchIds::default_instance();
     case 3:
-      return ::artm::core::Void::default_instance();
-    case 4:
-      return ::artm::core::Void::default_instance();
-    case 5:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -336,48 +303,6 @@ void MasterComponentService_Stub::ReportBatches(const ::artm::core::BatchIds& re
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
                         MasterComponentService::descriptor()->method(3),
-                        request, response, &rpc, NULL);
-  rpc.wait();
-  if (!rpc.ok()) {
-    throw ::rpcz::rpc_error(rpc);
-  }
-}
-void MasterComponentService_Stub::ConnectClient(const ::artm::core::String& request,
-                              ::artm::core::Void* response,
-                              ::rpcz::rpc* rpc,
-                              ::rpcz::closure* done) {
-  channel_->call_method(service_name_,
-                        MasterComponentService::descriptor()->method(4),
-                        request, response, rpc, done);
-}
-void MasterComponentService_Stub::ConnectClient(const ::artm::core::String& request,
-                              ::artm::core::Void* response,
-                              long deadline_ms) {
-  ::rpcz::rpc rpc;
-  rpc.set_deadline_ms(deadline_ms);
-  channel_->call_method(service_name_,
-                        MasterComponentService::descriptor()->method(4),
-                        request, response, &rpc, NULL);
-  rpc.wait();
-  if (!rpc.ok()) {
-    throw ::rpcz::rpc_error(rpc);
-  }
-}
-void MasterComponentService_Stub::DisconnectClient(const ::artm::core::String& request,
-                              ::artm::core::Void* response,
-                              ::rpcz::rpc* rpc,
-                              ::rpcz::closure* done) {
-  channel_->call_method(service_name_,
-                        MasterComponentService::descriptor()->method(5),
-                        request, response, rpc, done);
-}
-void MasterComponentService_Stub::DisconnectClient(const ::artm::core::String& request,
-                              ::artm::core::Void* response,
-                              long deadline_ms) {
-  ::rpcz::rpc rpc;
-  rpc.set_deadline_ms(deadline_ms);
-  channel_->call_method(service_name_,
-                        MasterComponentService::descriptor()->method(5),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {

@@ -25,8 +25,6 @@
 namespace artm {
 namespace core {
 
-class Instance;
-
 class NodeController : boost::noncopyable {
  public:
   ~NodeController();
@@ -58,14 +56,11 @@ class NodeController : boost::noncopyable {
   // All node controllers must be created via TemplateManager.
   NodeController(int id, const NodeControllerConfig& config);
 
-  mutable boost::mutex lock_;
   int node_controller_id_;
   ThreadSafeHolder<NodeControllerConfig> config_;
 
   std::shared_ptr<ServiceEndpoint> service_endpoint_;
 
-  std::unique_ptr<rpcz::application> application_;
-  std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
   NodeControllerServiceImpl node_controller_service_impl_;
 };
 

@@ -47,10 +47,6 @@ class MasterComponentService : public rpcz::service {
                        ::rpcz::reply< ::artm::core::BatchIds> response);
   virtual void ReportBatches(const ::artm::core::BatchIds& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void ConnectClient(const ::artm::core::String& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
-  virtual void DisconnectClient(const ::artm::core::String& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
 
   // implements Service ----------------------------------------------
 
@@ -101,18 +97,6 @@ class MasterComponentService_Stub {
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void ReportBatches(const ::artm::core::BatchIds& request,
-                       ::artm::core::Void* response,
-                       long deadline_ms = -1);
-  void ConnectClient(const ::artm::core::String& request,
-                       ::artm::core::Void* response,
-                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void ConnectClient(const ::artm::core::String& request,
-                       ::artm::core::Void* response,
-                       long deadline_ms = -1);
-  void DisconnectClient(const ::artm::core::String& request,
-                       ::artm::core::Void* response,
-                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void DisconnectClient(const ::artm::core::String& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
  private:

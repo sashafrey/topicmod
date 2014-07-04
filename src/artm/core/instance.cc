@@ -38,8 +38,8 @@ namespace artm {
 namespace core {
 
 Instance::Instance(const MasterComponentConfig& config, InstanceType instance_type)
-    : instance_type_(instance_type),
-      is_configured_(false),
+    : is_configured_(false),
+      instance_type_(instance_type),
       schema_(std::make_shared<InstanceSchema>(config)),
       dictionaries_(),
       application_(nullptr),

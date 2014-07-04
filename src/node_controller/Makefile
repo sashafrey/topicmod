@@ -9,8 +9,3 @@ clean:
 run:
 	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$$(pwd)/$(OUT_DIR); \
 	$(OUT_DIR)node_controller tcp://*:5556
-
-
-
-
-

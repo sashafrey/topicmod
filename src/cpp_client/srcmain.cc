@@ -4,8 +4,10 @@
 #include <iomanip>
 #include <vector>
 #include <set>
-
 using namespace std;
+
+#include "boost/filesystem.hpp"
+using namespace boost::filesystem;
 
 #include "doc_token_matrix.h"
 #include "token_topic_matrix.h"
@@ -16,7 +18,6 @@ using namespace std;
 #include "artm/cpp_interface.h"
 #include "artm/messages.pb.h"
 #include "glog/logging.h"
-
 using namespace artm;
 
 double proc(int argc, char * argv[], int processors_count, int instance_size) {
@@ -53,6 +54,8 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   }
 
   master_config.set_processors_count(processors_count);
+  batches_disk_path = (current_path() / path(batches_disk_path)).string();
+  
   master_config.set_disk_path(batches_disk_path);
   if (is_network_mode) {
     master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Network);

@@ -268,10 +268,17 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
 void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& item,
                                               const float* theta, double* perplexity,
-                                              double* normalizer) {
+                                              double* normalizer, int* zero_words) {
   int topics_size = topic_model_.topic_size();
   TokenIterator iter(token_dict_, topic_model_, item, score.field_name(),
                       TokenIterator::Mode_Known);
+
+  int n_d_integer = 0;
+  while (iter.Next())
+    n_d_integer += iter.count();
+  float n_d = static_cast<float>(n_d_integer);
+
+  iter.Reset();
   while (iter.Next()) {
     float sum = 0.0f;
     TopicWeightIterator topic_iter = iter.GetTopicWeightIterator();
@@ -279,12 +286,14 @@ void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& it
       sum += theta[topic_iter.TopicIndex()] * topic_iter.Weight();
     }
 
-    if (sum > 0) {
-      (*normalizer) += iter.count();
-      (*perplexity) += iter.count() * log(sum);
-    } else {
-      LOG(WARNING) << "Skipping negative summand in perplexity calculation.";
+    if (sum == 0.0f) {
+      // Use document unigram model
+      sum = static_cast<float>(iter.count()) / n_d;
+      (*zero_words)++;
     }
+
+    (*normalizer) += iter.count();
+    (*perplexity) += iter.count() * log(sum);
   }
 }
 
@@ -351,6 +360,7 @@ void Processor::ThreadFunction() {
       std::shared_ptr<InstanceSchema> schema = schema_.get();
       std::vector<ModelName> model_names = schema->GetModelNames();
       std::for_each(model_names.begin(), model_names.end(), [&](ModelName model_name) {
+        int zero_words = 0;
         const ModelConfig& model = schema->model_config(model_name);
 
         // do not process disabled models.
@@ -459,7 +469,7 @@ void Processor::ThreadFunction() {
             test_item_processor.InferTheta(model, *item, model_increment.get(),
                                            update_token_counters, update_theta_cache, theta);
             test_item_processor.CalculateScore(
-              score, *item, theta, &perplexity_score, &perplexity_norm);
+              score, *item, theta, &perplexity_score, &perplexity_norm, &zero_words);
           }
 
           model_increment->set_score(score_index,
@@ -467,6 +477,13 @@ void Processor::ThreadFunction() {
 
           model_increment->set_score_norm(
             score_index, model_increment->score_norm(score_index) + perplexity_norm);
+        }
+
+        if (zero_words > 0) {
+          LOG(INFO) << "Calculate perplexity score hit " << zero_words
+                    << " words and documents with p(w|d)=0"
+                    << " (model = " << model.name() << ", batch = " << part->batch_uuid()
+                    << "). Using document unigram model to cal perplexity for these (w, d) pairs.";
         }
       });
 

@@ -79,7 +79,8 @@ class Processor : boost::noncopyable {
                         const Item& item,
                         const float* theta,
                         double* perplexity,
-                        double* normalizer);
+                        double* normalizer,
+                        int* zero_words);
 
    private:
     const TopicModel& topic_model_;

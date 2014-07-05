@@ -133,7 +133,8 @@ with library.CreateMasterComponent() as master_component:
 
   master_component.RemoveDictionary(dictionary)
 
-with library.CreateMasterComponent(master_proxy_config) as master_component:
-  master_component.Reconfigure(master_config)
+with library.CreateNodeController("tcp://*:5555") as node_controller:
+  with library.CreateMasterComponent(master_proxy_config) as master_component:
+    master_component.Reconfigure(master_config)
 
 print 'All tests have been successfully passed!'

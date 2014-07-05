@@ -82,26 +82,39 @@ void rpcz_protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "el\022\021.artm.core.String\032\020.artm.TopicModel\022"
     "5\n\016RequestBatches\022\016.artm.core.Int\032\023.artm"
     ".core.BatchIds\0225\n\rReportBatches\022\023.artm.c"
-    "ore.BatchIds\032\017.artm.core.Void2\374\005\n\025NodeCo"
+    "ore.BatchIds\032\017.artm.core.Void2\204\n\n\025NodeCo"
     "ntrollerService\022K\n\033CreateOrReconfigureIn"
     "stance\022\033.artm.MasterComponentConfig\032\017.ar"
     "tm.core.Void\0223\n\017DisposeInstance\022\017.artm.c"
-    "ore.Void\032\017.artm.core.Void\022T\n\030CreateOrRec"
-    "onfigureModel\022\'.artm.core.CreateOrReconf"
-    "igureModelArgs\032\017.artm.core.Void\022<\n\014Dispo"
-    "seModel\022\033.artm.core.DisposeModelArgs\032\017.a"
-    "rtm.core.Void\022`\n\036CreateOrReconfigureRegu"
-    "larizer\022-.artm.core.CreateOrReconfigureR"
-    "egularizerArgs\032\017.artm.core.Void\022H\n\022Dispo"
-    "seRegularizer\022!.artm.core.DisposeRegular"
-    "izerArgs\032\017.artm.core.Void\022^\n\035CreateOrRec"
-    "onfigureDictionary\022,.artm.core.CreateOrR"
-    "econfigureDictionaryArgs\032\017.artm.core.Voi"
-    "d\022F\n\021DisposeDictionary\022 .artm.core.Dispo"
-    "seDictionaryArgs\032\017.artm.core.Void\0227\n\023For"
-    "cePullTopicModel\022\017.artm.core.Void\032\017.artm"
-    ".core.Void\022@\n\034ForcePushTopicModelIncreme"
-    "nt\022\017.artm.core.Void\032\017.artm.core.Void", 2196);
+    "ore.Void\032\017.artm.core.Void\022R\n\"CreateOrRec"
+    "onfigureMasterComponent\022\033.artm.MasterCom"
+    "ponentConfig\032\017.artm.core.Void\022:\n\026Dispose"
+    "MasterComponent\022\017.artm.core.Void\032\017.artm."
+    "core.Void\022T\n\030CreateOrReconfigureModel\022\'."
+    "artm.core.CreateOrReconfigureModelArgs\032\017"
+    ".artm.core.Void\022<\n\014DisposeModel\022\033.artm.c"
+    "ore.DisposeModelArgs\032\017.artm.core.Void\022`\n"
+    "\036CreateOrReconfigureRegularizer\022-.artm.c"
+    "ore.CreateOrReconfigureRegularizerArgs\032\017"
+    ".artm.core.Void\022H\n\022DisposeRegularizer\022!."
+    "artm.core.DisposeRegularizerArgs\032\017.artm."
+    "core.Void\022^\n\035CreateOrReconfigureDictiona"
+    "ry\022,.artm.core.CreateOrReconfigureDictio"
+    "naryArgs\032\017.artm.core.Void\022F\n\021DisposeDict"
+    "ionary\022 .artm.core.DisposeDictionaryArgs"
+    "\032\017.artm.core.Void\0227\n\023ForcePullTopicModel"
+    "\022\017.artm.core.Void\032\017.artm.core.Void\022@\n\034Fo"
+    "rcePushTopicModelIncrement\022\017.artm.core.V"
+    "oid\032\017.artm.core.Void\0228\n\023OverwriteTopicMo"
+    "del\022\020.artm.TopicModel\032\017.artm.core.Void\0228"
+    "\n\021RequestTopicModel\022\021.artm.core.String\032\020"
+    ".artm.TopicModel\022:\n\022RequestThetaMatrix\022\021"
+    ".artm.core.String\032\021.artm.ThetaMatrix\022(\n\010"
+    "AddBatch\022\013.artm.Batch\032\017.artm.core.Void\0223"
+    "\n\017InvokeIteration\022\017.artm.core.Void\032\017.art"
+    "m.core.Void\022,\n\010WaitIdle\022\017.artm.core.Void"
+    "\032\017.artm.core.Void\0229\n\025InvokePhiRegularize"
+    "rs\022\017.artm.core.Void\032\017.artm.core.Void", 2716);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/core/internals.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto);
@@ -335,6 +348,18 @@ void NodeControllerService::DisposeInstance(const ::artm::core::Void&,
               "Method DisposeInstance() not implemented.");
 }
 
+void NodeControllerService::CreateOrReconfigureMasterComponent(const ::artm::MasterComponentConfig&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method CreateOrReconfigureMasterComponent() not implemented.");
+}
+
+void NodeControllerService::DisposeMasterComponent(const ::artm::core::Void&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method DisposeMasterComponent() not implemented.");
+}
+
 void NodeControllerService::CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs&,
                          ::rpcz::reply< ::artm::core::Void> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
@@ -383,6 +408,48 @@ void NodeControllerService::ForcePushTopicModelIncrement(const ::artm::core::Voi
               "Method ForcePushTopicModelIncrement() not implemented.");
 }
 
+void NodeControllerService::OverwriteTopicModel(const ::artm::TopicModel&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method OverwriteTopicModel() not implemented.");
+}
+
+void NodeControllerService::RequestTopicModel(const ::artm::core::String&,
+                         ::rpcz::reply< ::artm::TopicModel> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method RequestTopicModel() not implemented.");
+}
+
+void NodeControllerService::RequestThetaMatrix(const ::artm::core::String&,
+                         ::rpcz::reply< ::artm::ThetaMatrix> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method RequestThetaMatrix() not implemented.");
+}
+
+void NodeControllerService::AddBatch(const ::artm::Batch&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method AddBatch() not implemented.");
+}
+
+void NodeControllerService::InvokeIteration(const ::artm::core::Void&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method InvokeIteration() not implemented.");
+}
+
+void NodeControllerService::WaitIdle(const ::artm::core::Void&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method WaitIdle() not implemented.");
+}
+
+void NodeControllerService::InvokePhiRegularizers(const ::artm::core::Void&,
+                         ::rpcz::reply< ::artm::core::Void> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method InvokePhiRegularizers() not implemented.");
+}
+
 void NodeControllerService::call_method(const ::google::protobuf::MethodDescriptor* method,
                              const ::google::protobuf::Message& request,
                              ::rpcz::server_channel* channel) {
@@ -399,42 +466,87 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
     case 2:
+      CreateOrReconfigureMasterComponent(
+          *::google::protobuf::down_cast<const ::artm::MasterComponentConfig*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 3:
+      DisposeMasterComponent(
+          *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 4:
       CreateOrReconfigureModel(
           *::google::protobuf::down_cast<const ::artm::core::CreateOrReconfigureModelArgs*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 3:
+    case 5:
       DisposeModel(
           *::google::protobuf::down_cast<const ::artm::core::DisposeModelArgs*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 4:
+    case 6:
       CreateOrReconfigureRegularizer(
           *::google::protobuf::down_cast<const ::artm::core::CreateOrReconfigureRegularizerArgs*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 5:
+    case 7:
       DisposeRegularizer(
           *::google::protobuf::down_cast<const ::artm::core::DisposeRegularizerArgs*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 6:
+    case 8:
       CreateOrReconfigureDictionary(
           *::google::protobuf::down_cast<const ::artm::core::CreateOrReconfigureDictionaryArgs*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 7:
+    case 9:
       DisposeDictionary(
           *::google::protobuf::down_cast<const ::artm::core::DisposeDictionaryArgs*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 8:
+    case 10:
       ForcePullTopicModel(
           *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 9:
+    case 11:
       ForcePushTopicModelIncrement(
+          *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 12:
+      OverwriteTopicModel(
+          *::google::protobuf::down_cast<const ::artm::TopicModel*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 13:
+      RequestTopicModel(
+          *::google::protobuf::down_cast<const ::artm::core::String*>(&request),
+          ::rpcz::reply< ::artm::TopicModel>(channel));
+      break;
+    case 14:
+      RequestThetaMatrix(
+          *::google::protobuf::down_cast<const ::artm::core::String*>(&request),
+          ::rpcz::reply< ::artm::ThetaMatrix>(channel));
+      break;
+    case 15:
+      AddBatch(
+          *::google::protobuf::down_cast<const ::artm::Batch*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 16:
+      InvokeIteration(
+          *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 17:
+      WaitIdle(
+          *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
+          ::rpcz::reply< ::artm::core::Void>(channel));
+      break;
+    case 18:
+      InvokePhiRegularizers(
           *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
@@ -453,20 +565,38 @@ const ::google::protobuf::Message& NodeControllerService::GetRequestPrototype(
     case 1:
       return ::artm::core::Void::default_instance();
     case 2:
-      return ::artm::core::CreateOrReconfigureModelArgs::default_instance();
+      return ::artm::MasterComponentConfig::default_instance();
     case 3:
-      return ::artm::core::DisposeModelArgs::default_instance();
-    case 4:
-      return ::artm::core::CreateOrReconfigureRegularizerArgs::default_instance();
-    case 5:
-      return ::artm::core::DisposeRegularizerArgs::default_instance();
-    case 6:
-      return ::artm::core::CreateOrReconfigureDictionaryArgs::default_instance();
-    case 7:
-      return ::artm::core::DisposeDictionaryArgs::default_instance();
-    case 8:
       return ::artm::core::Void::default_instance();
+    case 4:
+      return ::artm::core::CreateOrReconfigureModelArgs::default_instance();
+    case 5:
+      return ::artm::core::DisposeModelArgs::default_instance();
+    case 6:
+      return ::artm::core::CreateOrReconfigureRegularizerArgs::default_instance();
+    case 7:
+      return ::artm::core::DisposeRegularizerArgs::default_instance();
+    case 8:
+      return ::artm::core::CreateOrReconfigureDictionaryArgs::default_instance();
     case 9:
+      return ::artm::core::DisposeDictionaryArgs::default_instance();
+    case 10:
+      return ::artm::core::Void::default_instance();
+    case 11:
+      return ::artm::core::Void::default_instance();
+    case 12:
+      return ::artm::TopicModel::default_instance();
+    case 13:
+      return ::artm::core::String::default_instance();
+    case 14:
+      return ::artm::core::String::default_instance();
+    case 15:
+      return ::artm::Batch::default_instance();
+    case 16:
+      return ::artm::core::Void::default_instance();
+    case 17:
+      return ::artm::core::Void::default_instance();
+    case 18:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -497,6 +627,24 @@ const ::google::protobuf::Message& NodeControllerService::GetResponsePrototype(
     case 8:
       return ::artm::core::Void::default_instance();
     case 9:
+      return ::artm::core::Void::default_instance();
+    case 10:
+      return ::artm::core::Void::default_instance();
+    case 11:
+      return ::artm::core::Void::default_instance();
+    case 12:
+      return ::artm::core::Void::default_instance();
+    case 13:
+      return ::artm::TopicModel::default_instance();
+    case 14:
+      return ::artm::ThetaMatrix::default_instance();
+    case 15:
+      return ::artm::core::Void::default_instance();
+    case 16:
+      return ::artm::core::Void::default_instance();
+    case 17:
+      return ::artm::core::Void::default_instance();
+    case 18:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -559,12 +707,54 @@ void NodeControllerService_Stub::DisposeInstance(const ::artm::core::Void& reque
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
+void NodeControllerService_Stub::CreateOrReconfigureMasterComponent(const ::artm::MasterComponentConfig& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
                         NodeControllerService::descriptor()->method(2),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::CreateOrReconfigureMasterComponent(const ::artm::MasterComponentConfig& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(2),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::DisposeMasterComponent(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(3),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::DisposeMasterComponent(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(3),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(4),
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
@@ -573,7 +763,7 @@ void NodeControllerService_Stub::CreateOrReconfigureModel(const ::artm::core::Cr
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(2),
+                        NodeControllerService::descriptor()->method(4),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {
@@ -585,7 +775,7 @@ void NodeControllerService_Stub::DisposeModel(const ::artm::core::DisposeModelAr
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(3),
+                        NodeControllerService::descriptor()->method(5),
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::DisposeModel(const ::artm::core::DisposeModelArgs& request,
@@ -594,48 +784,6 @@ void NodeControllerService_Stub::DisposeModel(const ::artm::core::DisposeModelAr
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(3),
-                        request, response, &rpc, NULL);
-  rpc.wait();
-  if (!rpc.ok()) {
-    throw ::rpcz::rpc_error(rpc);
-  }
-}
-void NodeControllerService_Stub::CreateOrReconfigureRegularizer(const ::artm::core::CreateOrReconfigureRegularizerArgs& request,
-                              ::artm::core::Void* response,
-                              ::rpcz::rpc* rpc,
-                              ::rpcz::closure* done) {
-  channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(4),
-                        request, response, rpc, done);
-}
-void NodeControllerService_Stub::CreateOrReconfigureRegularizer(const ::artm::core::CreateOrReconfigureRegularizerArgs& request,
-                              ::artm::core::Void* response,
-                              long deadline_ms) {
-  ::rpcz::rpc rpc;
-  rpc.set_deadline_ms(deadline_ms);
-  channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(4),
-                        request, response, &rpc, NULL);
-  rpc.wait();
-  if (!rpc.ok()) {
-    throw ::rpcz::rpc_error(rpc);
-  }
-}
-void NodeControllerService_Stub::DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
-                              ::artm::core::Void* response,
-                              ::rpcz::rpc* rpc,
-                              ::rpcz::closure* done) {
-  channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(5),
-                        request, response, rpc, done);
-}
-void NodeControllerService_Stub::DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
-                              ::artm::core::Void* response,
-                              long deadline_ms) {
-  ::rpcz::rpc rpc;
-  rpc.set_deadline_ms(deadline_ms);
-  channel_->call_method(service_name_,
                         NodeControllerService::descriptor()->method(5),
                         request, response, &rpc, NULL);
   rpc.wait();
@@ -643,7 +791,7 @@ void NodeControllerService_Stub::DisposeRegularizer(const ::artm::core::DisposeR
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+void NodeControllerService_Stub::CreateOrReconfigureRegularizer(const ::artm::core::CreateOrReconfigureRegularizerArgs& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
@@ -651,7 +799,7 @@ void NodeControllerService_Stub::CreateOrReconfigureDictionary(const ::artm::cor
                         NodeControllerService::descriptor()->method(6),
                         request, response, rpc, done);
 }
-void NodeControllerService_Stub::CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+void NodeControllerService_Stub::CreateOrReconfigureRegularizer(const ::artm::core::CreateOrReconfigureRegularizerArgs& request,
                               ::artm::core::Void* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
@@ -664,7 +812,7 @@ void NodeControllerService_Stub::CreateOrReconfigureDictionary(const ::artm::cor
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+void NodeControllerService_Stub::DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
@@ -672,7 +820,7 @@ void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDi
                         NodeControllerService::descriptor()->method(7),
                         request, response, rpc, done);
 }
-void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+void NodeControllerService_Stub::DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                               ::artm::core::Void* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
@@ -685,7 +833,7 @@ void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDi
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::ForcePullTopicModel(const ::artm::core::Void& request,
+void NodeControllerService_Stub::CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
@@ -693,7 +841,7 @@ void NodeControllerService_Stub::ForcePullTopicModel(const ::artm::core::Void& r
                         NodeControllerService::descriptor()->method(8),
                         request, response, rpc, done);
 }
-void NodeControllerService_Stub::ForcePullTopicModel(const ::artm::core::Void& request,
+void NodeControllerService_Stub::CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
                               ::artm::core::Void* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
@@ -706,12 +854,54 @@ void NodeControllerService_Stub::ForcePullTopicModel(const ::artm::core::Void& r
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::ForcePushTopicModelIncrement(const ::artm::core::Void& request,
+void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
                         NodeControllerService::descriptor()->method(9),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(9),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::ForcePullTopicModel(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(10),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::ForcePullTopicModel(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(10),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::ForcePushTopicModelIncrement(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(11),
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::ForcePushTopicModelIncrement(const ::artm::core::Void& request,
@@ -720,7 +910,154 @@ void NodeControllerService_Stub::ForcePushTopicModelIncrement(const ::artm::core
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(9),
+                        NodeControllerService::descriptor()->method(11),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::OverwriteTopicModel(const ::artm::TopicModel& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(12),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::OverwriteTopicModel(const ::artm::TopicModel& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(12),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::RequestTopicModel(const ::artm::core::String& request,
+                              ::artm::TopicModel* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(13),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::RequestTopicModel(const ::artm::core::String& request,
+                              ::artm::TopicModel* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(13),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::RequestThetaMatrix(const ::artm::core::String& request,
+                              ::artm::ThetaMatrix* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(14),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::RequestThetaMatrix(const ::artm::core::String& request,
+                              ::artm::ThetaMatrix* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(14),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::AddBatch(const ::artm::Batch& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(15),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::AddBatch(const ::artm::Batch& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(15),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::InvokeIteration(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(16),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::InvokeIteration(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(16),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::WaitIdle(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(17),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::WaitIdle(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(17),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
+void NodeControllerService_Stub::InvokePhiRegularizers(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(18),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::InvokePhiRegularizers(const ::artm::core::Void& request,
+                              ::artm::core::Void* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(18),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {

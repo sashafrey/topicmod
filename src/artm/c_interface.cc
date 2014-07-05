@@ -160,7 +160,7 @@ int ArtmReconfigureMasterComponent(int master_id, int length, const char* config
       return ARTM_INVALID_MESSAGE;
     }
 
-    auto& master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
     master_component->Reconfigure(config);
     return ARTM_SUCCESS;

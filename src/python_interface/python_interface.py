@@ -52,6 +52,11 @@ class ArtmLibrary:
   def CreateMasterComponent(self, config=messages_pb2.MasterComponentConfig()):
     return MasterComponent(config, self.lib_)
 
+  def CreateNodeController(self, endpoint):
+    config = messages_pb2.NodeControllerConfig();
+    config.create_endpoint = endpoint;
+    return NodeController(config, self.lib_)
+
 #################################################################################
 
 class MasterComponent:
@@ -162,6 +167,27 @@ class MasterComponent:
     theta_matrix = messages_pb2.ThetaMatrix()
     theta_matrix.ParseFromString(blob)
     return theta_matrix
+
+#################################################################################
+
+class NodeController:
+  def __init__(self, config, lib):
+    self.lib_ = lib
+    config_blob = config.SerializeToString()
+    config_blob_p = ctypes.create_string_buffer(config_blob)
+
+    self.id_ = HandleErrorCode(self.lib_.ArtmCreateNodeController(0,
+               len(config_blob), config_blob_p))
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, type, value, traceback):
+    self.Dispose()
+
+  def Dispose(self):
+    self.lib_.ArtmDisposeNodeController(self.id_)
+    self.id_ = -1
 
 #################################################################################
 

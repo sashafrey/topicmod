@@ -3,8 +3,13 @@
 #ifndef SRC_ARTM_CORE_COMMON_H_
 #define SRC_ARTM_CORE_COMMON_H_
 
+#include <functional>
 #include <memory>
 #include <string>
+
+#include "glog/logging.h"
+
+#include "rpcz/rpc.hpp"
 
 #include "artm/core/internals.pb.h"
 
@@ -22,6 +27,23 @@ class Notifiable {
   virtual ~Notifiable() {}
   virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment) = 0;
 };
+
+inline void make_rpcz_call(std::function<void()> f) {
+  try {
+    f();
+  } catch(const rpcz::rpc_error&) {
+    LOG(ERROR) << "Error in rpcz service call (on client side)";
+    throw;
+  }
+}
+
+inline void make_rpcz_call_no_throw(std::function<void()> f) {
+  try {
+    f();
+  } catch(const rpcz::rpc_error&) {
+    LOG(ERROR) << "Error in rpcz service call (on client side)";
+  }
+}
 
 }  // namespace core
 }  // namespace artm

@@ -16,10 +16,13 @@ TEST(CppInterface, Canary) {
 void BasicTest(bool is_network_mode, bool is_proxy_mode) {
   const int nTopics = 5;
 
-  // is_proxy_mode imply is_network_mode
-  if (is_proxy_mode) is_network_mode = true;
+  // Endpoints:
+  // 5555 - master component (network_mode)
+  // 5556 - node controller for workers (network_mode)
+  // 5557 - node controller for master (proxy_mode)
 
   std::shared_ptr<::artm::NodeController> node_controller;
+  std::shared_ptr<::artm::NodeController> node_controller_master;
   ::artm::MasterComponentConfig master_config;
   if (is_network_mode) {
     ::artm::NodeControllerConfig node_config;
@@ -53,9 +56,13 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
   if (!is_proxy_mode) {
     master_component.reset(new ::artm::MasterComponent(master_config));
   } else {
+    ::artm::NodeControllerConfig node_config;
+    node_config.set_create_endpoint("tcp://*:5557");
+    node_controller_master.reset(new ::artm::NodeController(node_config));
+
     ::artm::MasterProxyConfig master_proxy_config;
     master_proxy_config.mutable_config()->CopyFrom(master_config);
-    master_proxy_config.set_node_connect_endpoint("tcp://localhost:5556");
+    master_proxy_config.set_node_connect_endpoint("tcp://localhost:5557");
     master_component.reset(new ::artm::MasterComponent(master_proxy_config));
   }
 
@@ -181,14 +188,18 @@ TEST(CppInterface, BasicTest_StandaloneMode) {
   BasicTest(false, false);
 }
 
+// artm_tests.exe --gtest_filter=CppInterface.BasicTest_StandaloneProxyMode
+TEST(CppInterface, BasicTest_StandaloneProxyMode) {
+  BasicTest(false, true);
+}
+
 // artm_tests.exe --gtest_filter=CppInterface.BasicTest_NetworkMode
 TEST(CppInterface, BasicTest_NetworkMode) {
   BasicTest(true, false);
 }
 
-// artm_tests.exe --gtest_filter=CppInterface.BasicTest_ProxyMode
-TEST(CppInterface, BasicTest_ProxyMode) {
-  ASSERT_TRUE(false);  // proxy mode is not implemented yet
+// artm_tests.exe --gtest_filter=CppInterface.BasicTest_NetworkProxyMode
+TEST(CppInterface, BasicTest_NetworkProxyMode) {
   BasicTest(true, true);
 }
 

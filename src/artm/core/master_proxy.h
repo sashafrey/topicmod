@@ -5,7 +5,11 @@
 
 #include <string>
 
+#include "rpcz/application.hpp"
+
 #include "artm/messages.pb.h"
+#include "artm/core/internals.pb.h"
+#include "artm/core/internals.rpcz.h"
 #include "artm/core/master_interface.h"
 #include "artm/core/template_manager.h"
 
@@ -45,6 +49,9 @@ class MasterProxy : boost::noncopyable, public MasterInterface {
   MasterProxy(int id, const MasterProxyConfig& config);
 
   int id_;
+
+  std::unique_ptr<rpcz::application> application_;
+  std::shared_ptr<artm::core::NodeControllerService_Stub> node_controller_service_proxy_;
 };
 
 }  // namespace core

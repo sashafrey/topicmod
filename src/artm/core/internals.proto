@@ -126,6 +126,9 @@ service NodeControllerService {
   rpc CreateOrReconfigureInstance(MasterComponentConfig) returns (Void);
   rpc DisposeInstance(Void) returns (Void);
 
+  rpc CreateOrReconfigureMasterComponent(MasterComponentConfig) returns (Void);
+  rpc DisposeMasterComponent(Void) returns (Void);
+
   rpc CreateOrReconfigureModel(CreateOrReconfigureModelArgs) returns (Void);
   rpc DisposeModel(DisposeModelArgs) returns (Void);
 
@@ -137,4 +140,13 @@ service NodeControllerService {
 
   rpc ForcePullTopicModel(Void) returns (Void);
   rpc ForcePushTopicModelIncrement(Void) returns (Void);
+
+  rpc OverwriteTopicModel(TopicModel) returns (Void);
+  rpc RequestTopicModel(String) returns (TopicModel);
+  rpc RequestThetaMatrix(String) returns (ThetaMatrix);
+
+  rpc AddBatch(Batch) returns (Void);
+  rpc InvokeIteration(Void) returns (Void);
+  rpc WaitIdle(Void) returns (Void);
+  rpc InvokePhiRegularizers(Void) returns (Void);
 }

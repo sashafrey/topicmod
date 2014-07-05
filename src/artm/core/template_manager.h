@@ -32,13 +32,20 @@ class TemplateManager : boost::noncopyable {
   // Return: true if id() was available and object was created successfully, and false otherwise.
   template<typename Derrived, typename DerrivedConfig>
   bool TryCreate(int id, const DerrivedConfig& config) {
-    boost::lock_guard<boost::mutex> guard(lock_);
-    if (map_.find(id) != map_.end()) {
-      return false;
+    {
+      boost::lock_guard<boost::mutex> guard(lock_);
+      if (map_.find(id) != map_.end()) {
+        return false;
+      }
     }
 
+    // Do not lock_ during construction of the object.
     std::shared_ptr<Type> ptr(new Derrived(id, config));
-    map_.insert(std::make_pair(id, ptr));
+
+    {
+      boost::lock_guard<boost::mutex> guard(lock_);
+      map_.insert(std::make_pair(id, ptr));
+    }
     return true;
   }
 
@@ -50,16 +57,26 @@ class TemplateManager : boost::noncopyable {
   // Create an object and returns its ID.
   template<typename Derrived, typename DerrivedConfig>
   int Create(const DerrivedConfig& config) {
-    boost::lock_guard<boost::mutex> guard(lock_);
+    int id;
+    {
+      boost::lock_guard<boost::mutex> guard(lock_);
 
-    // iterate through instance_map_ until find an available slot
-    while (map_.find(next_id_) != map_.end()) {
-      next_id_++;
+      // iterate through instance_map_ until find an available slot
+      while (map_.find(next_id_) != map_.end()) {
+        next_id_++;
+      }
+
+      id = next_id_++;
     }
 
-    int id = next_id_++;
+    // Do not lock_ during construction of the object.
     std::shared_ptr<Type> ptr(new Derrived(id, config));
-    map_.insert(std::make_pair(id, ptr));
+
+    {
+      boost::lock_guard<boost::mutex> guard(lock_);
+      map_.insert(std::make_pair(id, ptr));
+    }
+
     return id;
   }
 
@@ -106,8 +123,19 @@ class TemplateManager : boost::noncopyable {
   }
 
   void Erase(int id) {
-    boost::lock_guard<boost::mutex> guard(lock_);
-    map_.erase(id);
+    // Destruction of the object should happen when no lock is acquired.
+    // To achieve this we hold a reference to the object during 'map_.erase(id)'.
+    std::shared_ptr<Type> object;
+
+    {
+      boost::lock_guard<boost::mutex> guard(lock_);
+      auto iter = map_.find(id);
+      if (iter != map_.end()) {
+        object = iter->second;
+      }
+
+      map_.erase(id);
+    }
   }
 
   void Clear() {

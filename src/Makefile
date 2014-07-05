@@ -49,6 +49,7 @@ SRCS_LIB      = artm/cpp_interface.cc \
 		artm/core/internals.rpcz.cc \
 		artm/core/master_component.cc \
 		artm/core/master_component_service_impl.cc \
+		artm/core/master_proxy.cc \
 		artm/core/merger.cc \
 		artm/core/node_controller.cc \
 		artm/core/node_controller_service_impl.cc \

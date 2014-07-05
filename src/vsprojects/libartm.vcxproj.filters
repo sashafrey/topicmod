@@ -63,6 +63,9 @@
     <ClCompile Include="..\artm\regularizer_sandbox\decorrelator_phi.cc">
       <Filter>regularizer_sandbox</Filter>
     </ClCompile>
+    <ClCompile Include="..\artm\core\master_proxy.cc">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\artm\messages.pb.h" />
@@ -153,6 +156,12 @@
     </ClInclude>
     <ClInclude Include="..\artm\regularizer_sandbox\decorrelator_phi.h">
       <Filter>regularizer_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\master_proxy.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\master_interface.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

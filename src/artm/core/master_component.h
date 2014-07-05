@@ -20,6 +20,7 @@
 #include "artm/messages.pb.h"
 
 #include "artm/core/common.h"
+#include "artm/core/master_interface.h"
 #include "artm/core/master_component_service_impl.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/template_manager.h"
@@ -39,11 +40,11 @@ class NetworkClientCollection;
 class Instance;
 class TopicModel;
 
-class MasterComponent : boost::noncopyable {
+class MasterComponent : boost::noncopyable, public MasterInterface {
  public:
   ~MasterComponent();
 
-  int id() const;
+  virtual int id() const;
   bool isInLocalModusOperandi() const;
   bool isInNetworkModusOperandi() const;
 
@@ -51,26 +52,26 @@ class MasterComponent : boost::noncopyable {
 
   // Retrieves topic model.
   // Returns true if succeeded, and false if model_name hasn't been found.
-  bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
-  bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
+  virtual bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
+  virtual bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
   // Reconfigures topic model if already exists, otherwise creates a new model.
-  void CreateOrReconfigureModel(const ModelConfig& config);
-  void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
+  virtual void CreateOrReconfigureModel(const ModelConfig& config);
+  virtual void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
 
-  void DisposeModel(ModelName model_name);
-  void Reconfigure(const MasterComponentConfig& config);
+  virtual void DisposeModel(ModelName model_name);
+  virtual void Reconfigure(const MasterComponentConfig& config);
 
-  void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
-  void DisposeRegularizer(const std::string& name);
-  void InvokePhiRegularizers();
+  virtual void CreateOrReconfigureRegularizer(const RegularizerConfig& config);
+  virtual void DisposeRegularizer(const std::string& name);
+  virtual void InvokePhiRegularizers();
 
-  void CreateOrReconfigureDictionary(const DictionaryConfig& config);
-  void DisposeDictionary(const std::string& name);
+  virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
+  virtual void DisposeDictionary(const std::string& name);
 
-  void WaitIdle();
-  void InvokeIteration(int iterations_count);
-  void AddBatch(const Batch& batch);
+  virtual void WaitIdle();
+  virtual void InvokeIteration(int iterations_count);
+  virtual void AddBatch(const Batch& batch);
 
   // Throws InvalidOperation exception if new config is invalid.
   void ValidateConfig(const MasterComponentConfig& config);
@@ -95,7 +96,7 @@ class MasterComponent : boost::noncopyable {
     void ThreadFunction();
   };
 
-  friend class TemplateManager<MasterComponent, MasterComponentConfig>;
+  friend class TemplateManager<MasterInterface>;
 
   // All master components must be created via TemplateManager.
   MasterComponent(int id, const MasterComponentConfig& config);
@@ -112,8 +113,6 @@ class MasterComponent : boost::noncopyable {
   std::shared_ptr<Instance> instance_;
   std::shared_ptr<NetworkClientCollection> network_client_interface_;
 };
-
-typedef TemplateManager<MasterComponent, MasterComponentConfig> MasterComponentManager;
 
 class NetworkClientCollection {
  public:

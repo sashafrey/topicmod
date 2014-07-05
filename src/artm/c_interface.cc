@@ -11,6 +11,7 @@
 #include "artm/messages.pb.h"
 #include "artm/core/common.h"
 #include "artm/core/master_component.h"
+#include "artm/core/master_proxy.h"
 #include "artm/core/node_controller.h"
 #include "artm/core/exceptions.h"
 
@@ -97,8 +98,31 @@ int ArtmWaitIdle(int master_id) {
 }
 
 // =========================================================================
-// MasterComponent interface
+// MasterComponent / MasterProxy
 // =========================================================================
+
+int ArtmCreateMasterProxy(int master_id, int length, const char* config_blob) {
+  try {
+    EnableLogging();
+
+    artm::MasterProxyConfig config;
+    if (!config.ParseFromArray(config_blob, length)) {
+      return ARTM_INVALID_MESSAGE;
+    }
+
+    auto& mcm = artm::core::MasterComponentManager::singleton();
+    if (master_id > 0) {
+      bool succeeded = mcm.TryCreate<::artm::core::MasterProxy,
+                                     ::artm::MasterProxyConfig>(master_id, config);
+
+      return succeeded ? ARTM_SUCCESS : ARTM_OBJECT_NOT_FOUND;
+    } else {
+      int retval = mcm.Create<::artm::core::MasterProxy, ::artm::MasterProxyConfig>(config);
+      assert(retval > 0);
+      return retval;
+    }
+  } CATCH_EXCEPTIONS;
+}
 
 int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob) {
   try {
@@ -109,11 +133,16 @@ int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob
       return ARTM_INVALID_MESSAGE;
     }
 
+    auto& mcm = artm::core::MasterComponentManager::singleton();
     if (master_id > 0) {
-      bool succeeded = artm::core::MasterComponentManager::singleton().TryCreate(master_id, config);
-      return succeeded ? ARTM_SUCCESS : ARTM_OBJECT_NOT_FOUND;
+      bool ok = mcm.TryCreate<::artm::core::MasterComponent,
+                              ::artm::MasterComponentConfig>(master_id, config);
+
+      return ok ? ARTM_SUCCESS : ARTM_OBJECT_NOT_FOUND;
     } else {
-      int retval = artm::core::MasterComponentManager::singleton().Create(config);
+      int retval = mcm.Create<::artm::core::MasterComponent,
+                              ::artm::MasterComponentConfig>(config);
+
       assert(retval > 0);
       return retval;
     }
@@ -131,7 +160,7 @@ int ArtmReconfigureMasterComponent(int master_id, int length, const char* config
       return ARTM_INVALID_MESSAGE;
     }
 
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+    auto& master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
     master_component->Reconfigure(config);
     return ARTM_SUCCESS;
@@ -204,11 +233,14 @@ int ArtmCreateNodeController(int node_controller_id, int length, const char* con
       return ARTM_INVALID_MESSAGE;
     }
 
+    auto& ncm = artm::core::NodeControllerManager::singleton();
     if (node_controller_id > 0) {
-      bool succeeded = artm::core::NodeControllerManager::singleton().TryCreate(node_controller_id, config);
+      bool succeeded = ncm.TryCreate<::artm::core::NodeController,
+                                     ::artm::NodeControllerConfig>(node_controller_id, config);
       return succeeded ? ARTM_SUCCESS : ARTM_OBJECT_NOT_FOUND;
     } else {
-      int retval = artm::core::NodeControllerManager::singleton().Create(config);
+      int retval = ncm.Create<::artm::core::NodeController,
+                              ::artm::NodeControllerConfig>(config);
       assert(retval > 0);
       return retval;
     }

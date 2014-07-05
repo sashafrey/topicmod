@@ -4,23 +4,31 @@
 
 #include "artm/messages.pb.h"
 #include "artm/core/master_component.h"
+#include "artm/core/template_manager.h"
 
 using ::artm::core::MasterComponentManager;
 
 // To run this particular test:
 // artm_tests.exe --gtest_filter=TemplateManager.*
 TEST(TemplateManager, Basic) {
-  int id = MasterComponentManager::singleton().Create(::artm::MasterComponentConfig());
-  EXPECT_EQ(MasterComponentManager::singleton().Get(id)->id(), id);
+  auto& mcm = MasterComponentManager::singleton();
+  int id = mcm.Create<::artm::core::MasterComponent, ::artm::MasterComponentConfig>(
+    ::artm::MasterComponentConfig());
 
-  int id2 = MasterComponentManager::singleton().Create(::artm::MasterComponentConfig());
+  EXPECT_EQ(mcm.Get(id)->id(), id);
+
+  int id2 = mcm.Create<::artm::core::MasterComponent, ::artm::MasterComponentConfig>(
+    ::artm::MasterComponentConfig());
+
   EXPECT_EQ(id2, id+1);
-  EXPECT_EQ(MasterComponentManager::singleton().Get(id2)->id(), id2);
+  EXPECT_EQ(mcm.Get(id2)->id(), id2);
 
-  EXPECT_FALSE(MasterComponentManager::singleton().TryCreate(id2, ::artm::MasterComponentConfig()));
+  bool succeeded = mcm.TryCreate<::artm::core::MasterComponent, ::artm::MasterComponentConfig>(
+    id2, ::artm::MasterComponentConfig());
+  EXPECT_FALSE(succeeded);
 
-  MasterComponentManager::singleton().Erase(id);
-  EXPECT_FALSE(MasterComponentManager::singleton().Get(id) != nullptr);
+  mcm.Erase(id);
+  EXPECT_FALSE(mcm.Get(id) != nullptr);
 
-  MasterComponentManager::singleton().Erase(id2);
+  mcm.Erase(id2);
 }

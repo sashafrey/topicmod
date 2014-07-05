@@ -57,11 +57,22 @@ class ArtmLibrary:
 class MasterComponent:
   def __init__(self, config, lib):
     self.lib_ = lib
-    self.config_ = config
     master_config_blob = config.SerializeToString()
     master_config_blob_p = ctypes.create_string_buffer(master_config_blob)
-    self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
-               len(master_config_blob), master_config_blob_p))
+
+    if (isinstance(config, messages_pb2.MasterComponentConfig)):
+      self.config_ = config
+      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
+                 len(master_config_blob), master_config_blob_p))
+      return
+
+    if (isinstance(config, messages_pb2.MasterProxyConfig)):
+      self.config_ = config.config
+      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterProxy(0,
+                 len(master_config_blob), master_config_blob_p))
+      return
+
+    raise InvalidOperation()
 
   def __enter__(self):
     return self

@@ -21,6 +21,11 @@ master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = 2
 master_config.processor_queue_max_size = 5
 master_config.cache_processor_output = 1
+
+master_proxy_config = messages_pb2.MasterProxyConfig()
+master_proxy_config.node_connect_endpoint = "tcp://localhost:5555"
+master_proxy_config.config.CopyFrom(master_config)
+
 stream_ = master_config.stream.add()
 stream_.name = ('stream_0')
 stream_.type = Stream_Type_Global
@@ -127,5 +132,8 @@ with library.CreateMasterComponent() as master_component:
   master_component.Reconfigure(master_config_new)
 
   master_component.RemoveDictionary(dictionary)
+
+with library.CreateMasterComponent(master_proxy_config) as master_component:
+  master_component.Reconfigure(master_config)
 
 print 'All tests have been successfully passed!'

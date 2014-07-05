@@ -13,8 +13,11 @@
 TEST(CppInterface, Canary) {
 }
 
-void BasicTest(bool is_network_mode) {
+void BasicTest(bool is_network_mode, bool is_proxy_mode) {
   const int nTopics = 5;
+
+  // is_proxy_mode imply is_network_mode
+  if (is_proxy_mode) is_network_mode = true;
 
   std::shared_ptr<::artm::NodeController> node_controller;
   ::artm::MasterComponentConfig master_config;
@@ -46,7 +49,15 @@ void BasicTest(bool is_network_mode) {
   }
 
   // Create master component
-  artm::MasterComponent master_component(master_config);
+  std::unique_ptr<artm::MasterComponent> master_component;
+  if (!is_proxy_mode) {
+    master_component.reset(new ::artm::MasterComponent(master_config));
+  } else {
+    ::artm::MasterProxyConfig master_proxy_config;
+    master_proxy_config.mutable_config()->CopyFrom(master_config);
+    master_proxy_config.set_node_connect_endpoint("tcp://localhost:5556");
+    master_component.reset(new ::artm::MasterComponent(master_proxy_config));
+  }
 
   // Create model
   artm::ModelConfig model_config;
@@ -54,7 +65,7 @@ void BasicTest(bool is_network_mode) {
 
   artm::Score* score = model_config.add_score();
   score->set_type(artm::Score_Type_Perplexity);
-  artm::Model model(master_component, model_config);
+  artm::Model model(*master_component, model_config);
 
   // Load doc-token matrix
   int nTokens = 10;
@@ -83,14 +94,14 @@ void BasicTest(bool is_network_mode) {
   }
 
   // Index doc-token matrix
-  master_component.AddBatch(batch);
+  master_component->AddBatch(batch);
 
   std::shared_ptr<artm::TopicModel> topic_model;
   double expected_normalizer = 0;
   for (int iter = 0; iter < 5; ++iter) {
-    master_component.InvokeIteration(1);
-    master_component.WaitIdle();
-    topic_model = master_component.GetTopicModel(model);
+    master_component->InvokeIteration(1);
+    master_component->WaitIdle();
+    topic_model = master_component->GetTopicModel(model);
 
     ::artm::TopicModel_TopicModelInternals internals;
     internals.ParseFromString(topic_model->internals());
@@ -106,8 +117,8 @@ void BasicTest(bool is_network_mode) {
     }
   }
 
-  master_component.InvokeIteration(3);
-  master_component.WaitIdle();
+  master_component->InvokeIteration(3);
+  master_component->WaitIdle();
   model.Disable();
 
   int nUniqueTokens = nTokens;
@@ -116,7 +127,7 @@ void BasicTest(bool is_network_mode) {
   EXPECT_EQ(first_token_topics.value_size(), nTopics);
 
   if (!is_network_mode) {
-    std::shared_ptr<::artm::ThetaMatrix> theta_matrix = master_component.GetThetaMatrix(model);
+    std::shared_ptr<::artm::ThetaMatrix> theta_matrix = master_component->GetThetaMatrix(model);
     EXPECT_TRUE(theta_matrix->item_id_size() == nDocs);
     for (int item_index = 0; item_index < theta_matrix->item_id_size(); ++item_index) {
       const ::artm::FloatArray& weights = theta_matrix->item_weights(item_index);
@@ -149,7 +160,7 @@ void BasicTest(bool is_network_mode) {
     }
 
     model.Overwrite(new_topic_model);
-    auto new_topic_model2 = master_component.GetTopicModel(model);
+    auto new_topic_model2 = master_component->GetTopicModel(model);
     ASSERT_EQ(new_topic_model2->token_size(), 2);
     EXPECT_EQ(new_topic_model2->token(0), "my overwritten token");
     EXPECT_EQ(new_topic_model2->token(1), "my overwritten token2");
@@ -165,15 +176,20 @@ void BasicTest(bool is_network_mode) {
   }
 }
 
-// To run this particular test:
-// artm_tests.exe --gtest_filter=CppInterface.BasicTest_NetworkMode
-TEST(CppInterface, BasicTest_NetworkMode) {
-  BasicTest(true);
-}
-
 // artm_tests.exe --gtest_filter=CppInterface.BasicTest_StandaloneMode
 TEST(CppInterface, BasicTest_StandaloneMode) {
-  BasicTest(false);
+  BasicTest(false, false);
+}
+
+// artm_tests.exe --gtest_filter=CppInterface.BasicTest_NetworkMode
+TEST(CppInterface, BasicTest_NetworkMode) {
+  BasicTest(true, false);
+}
+
+// artm_tests.exe --gtest_filter=CppInterface.BasicTest_ProxyMode
+TEST(CppInterface, BasicTest_ProxyMode) {
+  ASSERT_TRUE(false);  // proxy mode is not implemented yet
+  BasicTest(true, true);
 }
 
 // artm_tests.exe --gtest_filter=CppInterface.Exceptions

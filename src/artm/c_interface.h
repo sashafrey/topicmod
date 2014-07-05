@@ -36,9 +36,10 @@ extern "C" {
   DLL_PUBLIC void ArtmDisposeRequest(int request_id);
 
   // ===============================================================================================
-  // MasterComponent interface
+  // MasterComponent / MasterProxy
   // ===============================================================================================
   DLL_PUBLIC int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob);
+  DLL_PUBLIC int ArtmCreateMasterProxy(int master_id, int length, const char* config_blob);
   DLL_PUBLIC int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
   DLL_PUBLIC void ArtmDisposeMasterComponent(int master_id);
 

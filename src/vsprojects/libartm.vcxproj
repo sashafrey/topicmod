@@ -31,6 +31,7 @@
     <ClCompile Include="..\artm\core\internals.rpcz.cc" />
     <ClCompile Include="..\artm\core\master_component.cc" />
     <ClCompile Include="..\artm\core\master_component_service_impl.cc" />
+    <ClCompile Include="..\artm\core\master_proxy.cc" />
     <ClCompile Include="..\artm\core\merger.cc" />
     <ClCompile Include="..\artm\messages.pb.cc" />
     <ClCompile Include="..\artm\core\node_controller.cc" />
@@ -59,6 +60,8 @@
     <ClInclude Include="..\artm\core\internals.rpcz.h" />
     <ClInclude Include="..\artm\core\master_component.h" />
     <ClInclude Include="..\artm\core\master_component_service_impl.h" />
+    <ClInclude Include="..\artm\core\master_interface.h" />
+    <ClInclude Include="..\artm\core\master_proxy.h" />
     <ClInclude Include="..\artm\core\merger.h" />
     <ClInclude Include="..\artm\core\node_controller.h" />
     <ClInclude Include="..\artm\core\node_controller_service_impl.h" />

@@ -51,7 +51,7 @@ class NodeController : boost::noncopyable {
     void ThreadFunction();
   };
 
-  friend class TemplateManager<NodeController, NodeControllerConfig>;
+  friend class TemplateManager<NodeController>;
 
   // All node controllers must be created via TemplateManager.
   NodeController(int id, const NodeControllerConfig& config);
@@ -64,7 +64,7 @@ class NodeController : boost::noncopyable {
   NodeControllerServiceImpl node_controller_service_impl_;
 };
 
-typedef TemplateManager<NodeController, NodeControllerConfig> NodeControllerManager;
+typedef TemplateManager<NodeController> NodeControllerManager;
 
 }  // namespace core
 }  // namespace artm

@@ -85,6 +85,11 @@ message MasterComponentConfig {
   repeated string node_connect_endpoint = 103;
 }
 
+message MasterProxyConfig {
+  required string node_connect_endpoint = 1;
+  required MasterComponentConfig config = 2;
+}
+
 // Configuration of a model.
 message ModelConfig {
   optional string name = 1 [default = "@model"];

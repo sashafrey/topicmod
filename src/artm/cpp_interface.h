@@ -37,6 +37,7 @@ DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
 class MasterComponent {
  public:
   explicit MasterComponent(const MasterComponentConfig& config);
+  explicit MasterComponent(const MasterProxyConfig& config);
   ~MasterComponent();
 
   int id() const { return id_; }

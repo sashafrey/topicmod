@@ -11,6 +11,7 @@ call cpplint.bat ../src/artm/core/instance.cc
 call cpplint.bat ../src/artm/core/instance_schema.cc
 call cpplint.bat ../src/artm/core/master_component.cc
 call cpplint.bat ../src/artm/core/master_component_service_impl.cc
+call cpplint.bat ../src/artm/core/master_proxy.cc
 call cpplint.bat ../src/artm/core/merger.cc
 call cpplint.bat ../src/artm/core/node_controller.cc
 call cpplint.bat ../src/artm/core/node_controller_service_impl.cc
@@ -48,6 +49,8 @@ call cpplint.bat ../src/artm/core/instance.h
 call cpplint.bat ../src/artm/core/instance_schema.h
 call cpplint.bat ../src/artm/core/master_component.h
 call cpplint.bat ../src/artm/core/master_component_service_impl.h
+call cpplint.bat ../src/artm/core/master_interface.h
+call cpplint.bat ../src/artm/core/master_proxy.h
 call cpplint.bat ../src/artm/core/merger.h
 call cpplint.bat ../src/artm/core/node_controller.h
 call cpplint.bat ../src/artm/core/node_controller_service_impl.h

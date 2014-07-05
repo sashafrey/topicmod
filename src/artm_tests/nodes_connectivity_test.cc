@@ -28,8 +28,11 @@ TEST(NodesConnectivityTest, Basic) {
   master_config.set_connect_endpoint("tcp://localhost:5555");
   master_config.add_node_connect_endpoint("tcp://localhost:5556");
   master_config.set_disk_path(".");
-  int master_id = artm::core::MasterComponentManager::singleton().Create(master_config);
-  auto master = artm::core::MasterComponentManager::singleton().Get(master_id);
+
+  auto& mcm = artm::core::MasterComponentManager::singleton();
+  int master_id = mcm.Create<::artm::core::MasterComponent,
+                             ::artm::MasterComponentConfig>(master_config);
+  auto master = mcm.Get(master_id);
   EXPECT_FALSE(node->impl()->instance() == nullptr);
 
   auto regularizer_config = test_mother.GenerateRegularizerConfig();

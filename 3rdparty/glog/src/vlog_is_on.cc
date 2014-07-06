@@ -40,8 +40,13 @@
 #include <cstdio>
 #include <string>
 #include "base/commandlineflags.h"
-#include "glog/logging.h"
-#include "glog/raw_logging.h"
+#if _WIN32
+# include "windows/glog/logging.h"
+# include "windows/glog/raw_logging.h"
+#else
+# include "glog/logging.h"
+# include "glog/raw_logging.h"
+#endif
 #include "base/googleinit.h"
 
 // glog doesn't have annotation

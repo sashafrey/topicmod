@@ -49,9 +49,18 @@ class Processor : boost::noncopyable {
   // Helper class to iterate on stream
   class StreamIterator : boost::noncopyable {
    public:
-    StreamIterator(const ProcessorInput& processor_input, const std::string stream_name);
+    // Iterates on a global stream (all items in the batch)
+    explicit StreamIterator(const ProcessorInput& processor_input);
+
+    // Iterates on items from a specific stream
+    explicit StreamIterator(const ProcessorInput& processor_input, const std::string& stream_name);
+
     const Item* Next();
     const Item* Current() const;
+
+    // Checks whether Current() item belongs to a specific stream
+    bool InStream(const std::string& stream_name);
+    bool InStream(int stream_index);
 
    private:
     int items_count_;
@@ -64,15 +73,14 @@ class Processor : boost::noncopyable {
   // (inferring theta distribution or perplexity calculation)
   class ItemProcessor : boost::noncopyable {
    public:
-    ItemProcessor(const TopicModel& topic_model,
-                  const google::protobuf::RepeatedPtrField<std::string>& token_dict,
-                  std::shared_ptr<InstanceSchema> schema);
+    explicit ItemProcessor(const TopicModel& topic_model,
+                           const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+                           std::shared_ptr<InstanceSchema> schema);
 
     void InferTheta(const ModelConfig& model,
                     const Item& item,
                     ModelIncrement* model_increment,
-                    bool update_token_counters,
-                    bool update_theta_cache,
+                    bool update_model,
                     float* theta);
 
     void CalculateScore(const Score& score,

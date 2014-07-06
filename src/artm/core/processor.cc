@@ -128,12 +128,11 @@ Processor::ItemProcessor::ItemProcessor(
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
                                           ModelIncrement* model_increment,
-                                          bool update_token_counters,
-                                          bool update_theta_cache,
+                                          bool update_model,
                                           float* theta) {
   int topic_size = topic_model_.topic_size();
 
-  if ((model_increment != nullptr) && update_token_counters) {
+  if ((model_increment != nullptr) && update_model) {
     model_increment->set_items_processed(model_increment->items_processed() + 1);
   }
 
@@ -194,7 +193,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
         if ((inner_iter == inner_iters_count) &&
             (model_increment != nullptr) &&
-             update_token_counters) {
+             update_model) {
           // Last iteration, updating final counters
           FloatArray* hat_n_wt_cur = model_increment->mutable_token_increment(
             token_id[token_index]);
@@ -211,15 +210,6 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     }
 
     if (inner_iter == inner_iters_count) {
-      if ((model_increment != nullptr) && update_theta_cache) {
-        // Cache theta for the next iteration
-        model_increment->add_item_id(item.id());
-        FloatArray* cached_theta = model_increment->add_theta();
-        for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-          cached_theta->add_value(theta[topic_index]);
-        }
-      }
-
       // inner_iter goes from 0 to inner_iters_count inclusively.
       // The goal of this "last iteration" is to update model_increment.
       // As soon as model_increment is updated, we should exit.
@@ -297,8 +287,15 @@ void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& it
   }
 }
 
+Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input)
+    : items_count_(processor_input.batch().item_size()),
+      item_index_(-1),  // // handy trick for iterators
+      stream_flags_(nullptr),
+      processor_input_(processor_input) {
+}
+
 Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input,
-                                          const std::string stream_name)
+                                          const std::string& stream_name)
     : items_count_(processor_input.batch().item_size()),
       item_index_(-1),  // // handy trick for iterators
       stream_flags_(nullptr),
@@ -307,6 +304,7 @@ Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input,
 
   if (index_of_stream == -1) {
     // log a warning and process all documents from the stream
+    LOG(WARNING) << "Stream " << stream_name << " does not exist in the batch.";
   } else {
     stream_flags_ = &processor_input.stream_mask(index_of_stream);
   }
@@ -337,6 +335,30 @@ const Item* Processor::StreamIterator::Current() const {
   return &(processor_input_.batch().item(item_index_));
 }
 
+bool Processor::StreamIterator::InStream(const std::string& stream_name) {
+  if (item_index_ >= items_count_)
+    return false;
+
+  int index_of_stream = repeated_field_index_of(processor_input_.stream_name(), stream_name);
+  if (index_of_stream == -1) {
+    return true;
+  }
+
+  return processor_input_.stream_mask(index_of_stream).value(item_index_);
+}
+
+bool Processor::StreamIterator::InStream(int stream_index) {
+  if (stream_index == -1)
+    return true;
+
+  assert(stream_index >= 0 && stream_index < processor_input_.stream_name_size());
+
+  if (item_index_ >= items_count_)
+    return false;
+
+  return processor_input_.stream_mask(stream_index).value(item_index_);
+}
+
 void Processor::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "Processor thread");
@@ -365,6 +387,9 @@ void Processor::ThreadFunction() {
 
         // do not process disabled models.
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each
+
+        // Find and save to the variable the index of model stream in the part->stream_name() list.
+        int model_stream_index = repeated_field_index_of(part->stream_name(), model.stream_name());
 
         std::shared_ptr<ModelIncrement> model_increment = std::make_shared<ModelIncrement>();
         model_increment->add_batch_uuid(part->batch_uuid());
@@ -413,10 +438,11 @@ void Processor::ThreadFunction() {
         }
 
         ItemProcessor item_processor(*topic_model, part->batch().token(), schema_.get());
-        StreamIterator iter(*part, model.stream_name());
+        StreamIterator iter(*part);
         while (iter.Next() != nullptr) {
           const Item* item = iter.Current();
 
+          // Initialize theta (either assign random values or reuse values from previous iteration)
           std::vector<float> theta(topic_size);
           int index_of_item = -1;
           if ((cache != nullptr) && model.reuse_theta()) {
@@ -434,49 +460,39 @@ void Processor::ThreadFunction() {
             }
           }
 
-          bool update_token_counters = true;
-          bool update_theta_cache = true;
-          item_processor.InferTheta(model, *item, model_increment.get(), update_token_counters,
-                                    update_theta_cache, &theta[0]);
-        }
+          bool update_model = iter.InStream(model_stream_index);
+          item_processor.InferTheta(model, *item, model_increment.get(), update_model, &theta[0]);
 
-        // Calculate all requested scores (such as perplexity)
-        for (int score_index = 0; score_index < model.score_size(); ++score_index) {
-          const Score& score = model.score(score_index);
-
-          // Perplexity is so far the only score that Processor know how to calculate.
-          if (score.type() != Score_Type_Perplexity)
-            continue;
-
-          double perplexity_score = 0.0;
-          double perplexity_norm = 0.0;
-          StreamIterator test_iter(*part, score.stream_name());
-          ItemProcessor test_item_processor(*topic_model, part->batch().token(), schema_.get());
-          while (test_iter.Next() != nullptr) {
-            const Item* item = test_iter.Current();
-
-            std::vector<float> theta_vec;
-            theta_vec.resize(topic_size);
-            float* theta = &theta_vec[0];
-            for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-              theta[topic_index] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-            }
-
-            // Calculate theta cache only if score's stream is different from model's stream.
-            // ToDo(alfrey): find a better solution! This may cause duplicates in theta_matrix.
-            bool update_theta_cache = (score.stream_name() != model.stream_name());
-            bool update_token_counters = false;
-            test_item_processor.InferTheta(model, *item, model_increment.get(),
-                                           update_token_counters, update_theta_cache, theta);
-            test_item_processor.CalculateScore(
-              score, *item, theta, &perplexity_score, &perplexity_norm, &zero_words);
+          // Update theta cache
+          model_increment->add_item_id(item->id());
+          FloatArray* cached_theta = model_increment->add_theta();
+          for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
+            cached_theta->add_value(theta[topic_index]);
           }
 
-          model_increment->set_score(score_index,
-            model_increment->score(score_index) + perplexity_score);
+          // Calculate all requested scores (such as perplexity)
+          for (int score_index = 0; score_index < model.score_size(); ++score_index) {
+            const Score& score = model.score(score_index);
 
-          model_increment->set_score_norm(
-            score_index, model_increment->score_norm(score_index) + perplexity_norm);
+            // Perplexity is so far the only score that Processor know how to calculate.
+            if (score.type() != Score_Type_Perplexity)
+              continue;
+
+            if (!iter.InStream(score.stream_name()))
+              continue;
+
+            double perplexity_score = 0.0;
+            double perplexity_norm = 0.0;
+
+            item_processor.CalculateScore(score, *item, &theta[0], &perplexity_score,
+                                          &perplexity_norm, &zero_words);
+
+            model_increment->set_score(score_index,
+              model_increment->score(score_index) + perplexity_score);
+
+            model_increment->set_score_norm(
+              score_index, model_increment->score_norm(score_index) + perplexity_norm);
+          }
         }
 
         if (zero_words > 0) {

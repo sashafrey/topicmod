@@ -19,7 +19,7 @@ else()
 endif()
 
 # find Protobuf
-find_package(Protobuf REQUIRED)
+find_package(ProtobufPlugin REQUIRED)
 if(NOT PROTOBUF_FOUND)
   message(SEND_ERROR "Failed to find protobuf.")
   return()

@@ -7,7 +7,7 @@
 
 # BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
 # make it prominent in the GUI.
-option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
+option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." ON)
 
 # When other libraries are using a shared version of runtime libraries,
 # Google Test also has to use one.
@@ -48,13 +48,25 @@ endif()
 
 # Define helper functions and macros used by Google Test.
 include(cmake/internal_utils.cmake)
+include(cmake/FindGlog.cmake)
 
 config_compiler_and_linker()  # Defined in internal_utils.cmake.
+
+# find Glog
+find_package(Glog REQUIRED)
+if(NOT GLOG_FOUND)
+  message(SEND_ERROR "Failed to find glog.")
+  return()
+else()
+  include_directories(${GLOG_INCLUDE_DIRS})
+endif()
 
 # Where Google Test's .h files can be found.
 include_directories(
   ${gtest_SOURCE_DIR}/include
-  ${gtest_SOURCE_DIR})
+  ${gtest_SOURCE_DIR}
+  ${GLOG_INCLUDE_DIRS}
+)
 
 # Where Google Test's libraries can be found.
 link_directories(${gtest_BINARY_DIR}/src)

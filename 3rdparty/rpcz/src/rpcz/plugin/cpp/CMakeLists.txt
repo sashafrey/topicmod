@@ -1,5 +1,5 @@
 find_package(ProtobufPlugin REQUIRED)
-include_directories($PROTOBUF_INCLUDE_DIR)
+include_directories(${PROTOBUF_INCLUDE_DIR})
 
 set(RPCZ_SRCS rpcz_cpp_generator.cc file_generator.cc rpcz_cpp_main.cc
               rpcz_cpp_service.cc)

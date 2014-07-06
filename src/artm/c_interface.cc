@@ -9,6 +9,7 @@
 #include "rpcz/rpc.hpp"
 
 #include "artm/messages.pb.h"
+#include "artm/score_calculator_interface.h"
 #include "artm/core/common.h"
 #include "artm/core/master_component.h"
 #include "artm/core/master_proxy.h"
@@ -201,6 +202,18 @@ int ArtmRequestTopicModel(int master_id, const char* model_name) {
 
     master_component->RequestTopicModel(model_name, &topic_model);
     topic_model.SerializeToString(&message);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
+}
+
+int ArtmRequestScore(int master_id, const char* model_name, const char* score_name) {
+  try {
+    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
+
+    ::artm::ScoreData score_data;
+    master_component->RequestScore(model_name, score_name, &score_data);
+    score_data.SerializeToString(&message);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }

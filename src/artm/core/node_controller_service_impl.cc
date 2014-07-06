@@ -281,6 +281,29 @@ void NodeControllerServiceImpl::RequestThetaMatrix(
   }
 }
 
+void NodeControllerServiceImpl::RequestScore(
+    const ::artm::core::RequestScoreArgs& request,
+    ::rpcz::reply< ::artm::ScoreData> response) {
+  try {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    artm::ScoreData score_data;
+    bool ok = false;
+    if (master_ != nullptr) {
+      ok = master_->RequestScore(request.model_name(), request.score_name(), &score_data);
+    } else {
+      LOG(ERROR) << "No master component exist in node controller";
+    }
+
+    if (ok) {
+      response.send(score_data);
+    } else {
+      response.Error(-1);  // todo(alfrey): fix error handling in services
+    }
+  } catch(...) {
+    response.Error(-1);  // todo(alfrey): fix error handling in services
+  }
+}
+
 void NodeControllerServiceImpl::AddBatch(
     const ::artm::Batch& request,
     ::rpcz::reply< ::artm::core::Void> response) {

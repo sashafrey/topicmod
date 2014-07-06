@@ -68,6 +68,7 @@ extern "C" {
 
   DLL_PUBLIC int ArtmRequestThetaMatrix(int master_id, const char* model_name);
   DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_name);
+  DLL_PUBLIC int ArtmRequestScore(int master_id, const char* model_name, const char* score_name);
   DLL_PUBLIC int ArtmOverwriteTopicModel(int master_id, int length, const char* topic_model_blob);
 }
 

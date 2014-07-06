@@ -36,6 +36,8 @@ class MasterProxy : boost::noncopyable, public MasterInterface {
   virtual void OverwriteTopicModel(const ::artm::TopicModel& topic_model);
   virtual bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
   virtual bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
+  virtual bool RequestScore(const ModelName& model_name, const ScoreName& score_name,
+                            ScoreData* score_data);
 
   virtual void AddBatch(const Batch& batch);
   virtual void InvokeIteration(int iterations_count);

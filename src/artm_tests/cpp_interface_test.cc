@@ -51,6 +51,12 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
     master_config.set_cache_processor_output(true);
   }
 
+  ::artm::ScoreConfig score_config;
+  score_config.set_config(::artm::PerplexityScoreConfig().SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_Perplexity);
+  score_config.set_name("PerplexityScore");
+  master_config.add_score_config()->CopyFrom(score_config);
+
   // Create master component
   std::unique_ptr<artm::MasterComponent> master_component;
   if (!is_proxy_mode) {
@@ -69,9 +75,7 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-
-  artm::Score* score = model_config.add_score();
-  score->set_type(artm::Score_Type_Perplexity);
+  model_config.add_score_name("PerplexityScore");
   artm::Model model(*master_component, model_config);
 
   // Load doc-token matrix
@@ -109,17 +113,17 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
     master_component->InvokeIteration(1);
     master_component->WaitIdle();
     topic_model = master_component->GetTopicModel(model);
+    std::shared_ptr<::artm::PerplexityScore> perplexity =
+      master_component->GetScoreAs<::artm::PerplexityScore>(model, "PerplexityScore");
 
-    ::artm::TopicModel_TopicModelInternals internals;
-    internals.ParseFromString(topic_model->internals());
     if (iter == 1) {
-      expected_normalizer = internals.scores_normalizer().value(0);
+      expected_normalizer = perplexity->normalizer();
       EXPECT_GT(expected_normalizer, 0);
     } else if (iter >= 2) {
       if (!is_network_mode) {
         // Verify that normalizer does not grow starting from second iteration.
         // This confirms that the Instance::ForceResetScores() function works as expected.
-        EXPECT_EQ(internals.scores_normalizer().value(0), expected_normalizer);
+        EXPECT_EQ(perplexity->normalizer(), expected_normalizer);
       }
     }
   }
@@ -153,10 +157,8 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
   if (!is_network_mode) {
     // Test overwrite topic model
     artm::TopicModel new_topic_model;
-    new_topic_model.set_items_processed(0);
     new_topic_model.set_name(model.name());
     new_topic_model.set_topics_count(nTopics);
-    new_topic_model.mutable_scores()->add_value(0.0);  // add dummy score
     new_topic_model.add_token("my overwritten token");
     new_topic_model.add_token("my overwritten token2");
     auto weights = new_topic_model.add_token_weights();

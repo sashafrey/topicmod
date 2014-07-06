@@ -3,21 +3,24 @@
 #include "artm/core/instance_schema.h"
 
 #include "artm/regularizer_interface.h"
+#include "artm/score_calculator_interface.h"
 #include "artm/messages.pb.h"
 
 namespace artm {
 namespace core {
 
-InstanceSchema::InstanceSchema() : config_(),  regularizers_(), models_config_() {}
+InstanceSchema::InstanceSchema()
+    : config_(),  regularizers_(), models_config_(), score_calculators_() {}
 
 InstanceSchema::InstanceSchema(const InstanceSchema& schema)
     : config_(schema.config_),
       regularizers_(schema.regularizers_),
-      models_config_(schema.models_config_) {}
+      models_config_(schema.models_config_),
+      score_calculators_(schema.score_calculators_) {}
 
 
 InstanceSchema::InstanceSchema(const MasterComponentConfig& config)
-    : config_(config), regularizers_(), models_config_() {}
+    : config_(config), regularizers_(), models_config_(), score_calculators_() {}
 
 void InstanceSchema::set_config(const MasterComponentConfig& config) {
   config_.CopyFrom(config);
@@ -68,7 +71,8 @@ bool InstanceSchema::has_regularizer(const std::string& name) const {
   auto iter = regularizers_.find(name);
   return iter != regularizers_.end();
 }
-void InstanceSchema::clear_regularizer(const std::string name) {
+
+void InstanceSchema::clear_regularizer(const std::string& name) {
   auto iter = regularizers_.find(name);
   if (iter != regularizers_.end()) {
     regularizers_.erase(iter);
@@ -82,6 +86,43 @@ std::shared_ptr<RegularizerInterface> InstanceSchema::regularizer(const std::str
   } else {
     return nullptr;
   }
+}
+
+void InstanceSchema::set_score_calculator(
+    const ScoreName& name,
+    const std::shared_ptr<ScoreCalculatorInterface>& score_calculator) {
+  auto iter = score_calculators_.find(name);
+  if (iter != score_calculators_.end()) {
+    iter->second = score_calculator;
+  } else {
+    score_calculators_.insert(std::make_pair(name, score_calculator));
+  }
+}
+
+bool InstanceSchema::has_score_calculator(const ScoreName& name) const {
+  auto iter = score_calculators_.find(name);
+  return iter != score_calculators_.end();
+}
+
+void InstanceSchema::clear_score_calculator(const ScoreName& name) {
+  auto iter = score_calculators_.find(name);
+  if (iter != score_calculators_.end()) {
+    score_calculators_.erase(iter);
+  }
+}
+
+std::shared_ptr<ScoreCalculatorInterface> InstanceSchema::score_calculator(
+    const ScoreName& name) {
+  auto iter = score_calculators_.find(name);
+  if (iter != score_calculators_.end()) {
+    return iter->second;
+  } else {
+    return nullptr;
+  }
+}
+
+void InstanceSchema::clear_score_calculators() {
+  score_calculators_.clear();
 }
 
 std::vector<ModelName> InstanceSchema::GetModelNames() const {

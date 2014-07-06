@@ -51,7 +51,10 @@ class DictionaryConfig;
 class DictionaryEntry;
 class DoubleArray;
 class FloatArray;
-class Score;
+class ScoreConfig;
+class ScoreData;
+class PerplexityScoreConfig;
+class PerplexityScore;
 class TopicModel;
 class TopicModel_TopicModelInternals;
 class ThetaMatrix;
@@ -117,23 +120,41 @@ inline bool RegularizerConfig_Type_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<RegularizerConfig_Type>(
     RegularizerConfig_Type_descriptor(), name, value);
 }
-enum Score_Type {
-  Score_Type_Perplexity = 0
+enum ScoreConfig_Type {
+  ScoreConfig_Type_Perplexity = 0
 };
-bool Score_Type_IsValid(int value);
-const Score_Type Score_Type_Type_MIN = Score_Type_Perplexity;
-const Score_Type Score_Type_Type_MAX = Score_Type_Perplexity;
-const int Score_Type_Type_ARRAYSIZE = Score_Type_Type_MAX + 1;
+bool ScoreConfig_Type_IsValid(int value);
+const ScoreConfig_Type ScoreConfig_Type_Type_MIN = ScoreConfig_Type_Perplexity;
+const ScoreConfig_Type ScoreConfig_Type_Type_MAX = ScoreConfig_Type_Perplexity;
+const int ScoreConfig_Type_Type_ARRAYSIZE = ScoreConfig_Type_Type_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* Score_Type_descriptor();
-inline const ::std::string& Score_Type_Name(Score_Type value) {
+const ::google::protobuf::EnumDescriptor* ScoreConfig_Type_descriptor();
+inline const ::std::string& ScoreConfig_Type_Name(ScoreConfig_Type value) {
   return ::google::protobuf::internal::NameOfEnum(
-    Score_Type_descriptor(), value);
+    ScoreConfig_Type_descriptor(), value);
 }
-inline bool Score_Type_Parse(
-    const ::std::string& name, Score_Type* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<Score_Type>(
-    Score_Type_descriptor(), name, value);
+inline bool ScoreConfig_Type_Parse(
+    const ::std::string& name, ScoreConfig_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ScoreConfig_Type>(
+    ScoreConfig_Type_descriptor(), name, value);
+}
+enum ScoreData_Type {
+  ScoreData_Type_Perplexity = 0
+};
+bool ScoreData_Type_IsValid(int value);
+const ScoreData_Type ScoreData_Type_Type_MIN = ScoreData_Type_Perplexity;
+const ScoreData_Type ScoreData_Type_Type_MAX = ScoreData_Type_Perplexity;
+const int ScoreData_Type_Type_ARRAYSIZE = ScoreData_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ScoreData_Type_descriptor();
+inline const ::std::string& ScoreData_Type_Name(ScoreData_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ScoreData_Type_descriptor(), value);
+}
+inline bool ScoreData_Type_Parse(
+    const ::std::string& name, ScoreData_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ScoreData_Type>(
+    ScoreData_Type_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -730,6 +751,18 @@ class MasterComponentConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 merger_queue_max_size() const;
   inline void set_merger_queue_max_size(::google::protobuf::int32 value);
 
+  // repeated .artm.ScoreConfig score_config = 8;
+  inline int score_config_size() const;
+  inline void clear_score_config();
+  static const int kScoreConfigFieldNumber = 8;
+  inline const ::artm::ScoreConfig& score_config(int index) const;
+  inline ::artm::ScoreConfig* mutable_score_config(int index);
+  inline ::artm::ScoreConfig* add_score_config();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::ScoreConfig >&
+      score_config() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::ScoreConfig >*
+      mutable_score_config();
+
   // optional .artm.MasterComponentConfig.ModusOperandi modus_operandi = 100 [default = Local];
   inline bool has_modus_operandi() const;
   inline void clear_modus_operandi();
@@ -807,13 +840,14 @@ class MasterComponentConfig : public ::google::protobuf::Message {
   ::google::protobuf::int32 processors_count_;
   ::google::protobuf::int32 processor_queue_max_size_;
   ::google::protobuf::int32 merger_queue_max_size_;
+  ::google::protobuf::RepeatedPtrField< ::artm::ScoreConfig > score_config_;
   ::std::string* create_endpoint_;
   ::std::string* connect_endpoint_;
   ::google::protobuf::RepeatedPtrField< ::std::string> node_connect_endpoint_;
   int modus_operandi_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -1034,17 +1068,21 @@ class ModelConfig : public ::google::protobuf::Message {
   inline ::std::string* release_stream_name();
   inline void set_allocated_stream_name(::std::string* stream_name);
 
-  // repeated .artm.Score score = 7;
-  inline int score_size() const;
-  inline void clear_score();
-  static const int kScoreFieldNumber = 7;
-  inline const ::artm::Score& score(int index) const;
-  inline ::artm::Score* mutable_score(int index);
-  inline ::artm::Score* add_score();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::Score >&
-      score() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::Score >*
-      mutable_score();
+  // repeated string score_name = 7;
+  inline int score_name_size() const;
+  inline void clear_score_name();
+  static const int kScoreNameFieldNumber = 7;
+  inline const ::std::string& score_name(int index) const;
+  inline ::std::string* mutable_score_name(int index);
+  inline void set_score_name(int index, const ::std::string& value);
+  inline void set_score_name(int index, const char* value);
+  inline void set_score_name(int index, const char* value, size_t size);
+  inline ::std::string* add_score_name();
+  inline void add_score_name(const ::std::string& value);
+  inline void add_score_name(const char* value);
+  inline void add_score_name(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& score_name() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_score_name();
 
   // optional bool reuse_theta = 8 [default = false];
   inline bool has_reuse_theta() const;
@@ -1108,7 +1146,7 @@ class ModelConfig : public ::google::protobuf::Message {
   static ::std::string* _default_field_name_;
   ::std::string* stream_name_;
   static ::std::string* _default_stream_name_;
-  ::google::protobuf::RepeatedPtrField< ::artm::Score > score_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> score_name_;
   ::google::protobuf::RepeatedPtrField< ::std::string> regularizer_name_;
   ::google::protobuf::RepeatedField< double > regularizer_tau_;
   bool enabled_;
@@ -2099,14 +2137,14 @@ class FloatArray : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Score : public ::google::protobuf::Message {
+class ScoreConfig : public ::google::protobuf::Message {
  public:
-  Score();
-  virtual ~Score();
+  ScoreConfig();
+  virtual ~ScoreConfig();
 
-  Score(const Score& from);
+  ScoreConfig(const ScoreConfig& from);
 
-  inline Score& operator=(const Score& from) {
+  inline ScoreConfig& operator=(const ScoreConfig& from) {
     CopyFrom(from);
     return *this;
   }
@@ -2120,17 +2158,17 @@ class Score : public ::google::protobuf::Message {
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Score& default_instance();
+  static const ScoreConfig& default_instance();
 
-  void Swap(Score* other);
+  void Swap(ScoreConfig* other);
 
   // implements Message ----------------------------------------------
 
-  Score* New() const;
+  ScoreConfig* New() const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Score& from);
-  void MergeFrom(const Score& from);
+  void CopyFrom(const ScoreConfig& from);
+  void MergeFrom(const ScoreConfig& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -2151,42 +2189,282 @@ class Score : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
-  typedef Score_Type Type;
-  static const Type Perplexity = Score_Type_Perplexity;
+  typedef ScoreConfig_Type Type;
+  static const Type Perplexity = ScoreConfig_Type_Perplexity;
   static inline bool Type_IsValid(int value) {
-    return Score_Type_IsValid(value);
+    return ScoreConfig_Type_IsValid(value);
   }
   static const Type Type_MIN =
-    Score_Type_Type_MIN;
+    ScoreConfig_Type_Type_MIN;
   static const Type Type_MAX =
-    Score_Type_Type_MAX;
+    ScoreConfig_Type_Type_MAX;
   static const int Type_ARRAYSIZE =
-    Score_Type_Type_ARRAYSIZE;
+    ScoreConfig_Type_Type_ARRAYSIZE;
   static inline const ::google::protobuf::EnumDescriptor*
   Type_descriptor() {
-    return Score_Type_descriptor();
+    return ScoreConfig_Type_descriptor();
   }
   static inline const ::std::string& Type_Name(Type value) {
-    return Score_Type_Name(value);
+    return ScoreConfig_Type_Name(value);
   }
   static inline bool Type_Parse(const ::std::string& name,
       Type* value) {
-    return Score_Type_Parse(name, value);
+    return ScoreConfig_Type_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
-  // optional .artm.Score.Type type = 1;
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional .artm.ScoreConfig.Type type = 2;
   inline bool has_type() const;
   inline void clear_type();
-  static const int kTypeFieldNumber = 1;
-  inline ::artm::Score_Type type() const;
-  inline void set_type(::artm::Score_Type value);
+  static const int kTypeFieldNumber = 2;
+  inline ::artm::ScoreConfig_Type type() const;
+  inline void set_type(::artm::ScoreConfig_Type value);
 
-  // optional string field_name = 2 [default = "@body"];
+  // optional bytes config = 3;
+  inline bool has_config() const;
+  inline void clear_config();
+  static const int kConfigFieldNumber = 3;
+  inline const ::std::string& config() const;
+  inline void set_config(const ::std::string& value);
+  inline void set_config(const char* value);
+  inline void set_config(const void* value, size_t size);
+  inline ::std::string* mutable_config();
+  inline ::std::string* release_config();
+  inline void set_allocated_config(::std::string* config);
+
+  // @@protoc_insertion_point(class_scope:artm.ScoreConfig)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_config();
+  inline void clear_has_config();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* name_;
+  ::std::string* config_;
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static ScoreConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class ScoreData : public ::google::protobuf::Message {
+ public:
+  ScoreData();
+  virtual ~ScoreData();
+
+  ScoreData(const ScoreData& from);
+
+  inline ScoreData& operator=(const ScoreData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const ScoreData& default_instance();
+
+  void Swap(ScoreData* other);
+
+  // implements Message ----------------------------------------------
+
+  ScoreData* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const ScoreData& from);
+  void MergeFrom(const ScoreData& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef ScoreData_Type Type;
+  static const Type Perplexity = ScoreData_Type_Perplexity;
+  static inline bool Type_IsValid(int value) {
+    return ScoreData_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    ScoreData_Type_Type_MIN;
+  static const Type Type_MAX =
+    ScoreData_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    ScoreData_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return ScoreData_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return ScoreData_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return ScoreData_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional .artm.ScoreData.Type type = 2;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 2;
+  inline ::artm::ScoreData_Type type() const;
+  inline void set_type(::artm::ScoreData_Type value);
+
+  // optional bytes data = 3;
+  inline bool has_data() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 3;
+  inline const ::std::string& data() const;
+  inline void set_data(const ::std::string& value);
+  inline void set_data(const char* value);
+  inline void set_data(const void* value, size_t size);
+  inline ::std::string* mutable_data();
+  inline ::std::string* release_data();
+  inline void set_allocated_data(::std::string* data);
+
+  // @@protoc_insertion_point(class_scope:artm.ScoreData)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_data();
+  inline void clear_has_data();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* name_;
+  ::std::string* data_;
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static ScoreData* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class PerplexityScoreConfig : public ::google::protobuf::Message {
+ public:
+  PerplexityScoreConfig();
+  virtual ~PerplexityScoreConfig();
+
+  PerplexityScoreConfig(const PerplexityScoreConfig& from);
+
+  inline PerplexityScoreConfig& operator=(const PerplexityScoreConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PerplexityScoreConfig& default_instance();
+
+  void Swap(PerplexityScoreConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  PerplexityScoreConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const PerplexityScoreConfig& from);
+  void MergeFrom(const PerplexityScoreConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string field_name = 1 [default = "@body"];
   inline bool has_field_name() const;
   inline void clear_field_name();
-  static const int kFieldNameFieldNumber = 2;
+  static const int kFieldNameFieldNumber = 1;
   inline const ::std::string& field_name() const;
   inline void set_field_name(const ::std::string& value);
   inline void set_field_name(const char* value);
@@ -2195,10 +2473,10 @@ class Score : public ::google::protobuf::Message {
   inline ::std::string* release_field_name();
   inline void set_allocated_field_name(::std::string* field_name);
 
-  // optional string stream_name = 3 [default = "@global"];
+  // optional string stream_name = 2 [default = "@global"];
   inline bool has_stream_name() const;
   inline void clear_stream_name();
-  static const int kStreamNameFieldNumber = 3;
+  static const int kStreamNameFieldNumber = 2;
   inline const ::std::string& stream_name() const;
   inline void set_stream_name(const ::std::string& value);
   inline void set_stream_name(const char* value);
@@ -2207,10 +2485,8 @@ class Score : public ::google::protobuf::Message {
   inline ::std::string* release_stream_name();
   inline void set_allocated_stream_name(::std::string* stream_name);
 
-  // @@protoc_insertion_point(class_scope:artm.Score)
+  // @@protoc_insertion_point(class_scope:artm.PerplexityScoreConfig)
  private:
-  inline void set_has_type();
-  inline void clear_has_type();
   inline void set_has_field_name();
   inline void clear_has_field_name();
   inline void set_has_stream_name();
@@ -2222,17 +2498,128 @@ class Score : public ::google::protobuf::Message {
   static ::std::string* _default_field_name_;
   ::std::string* stream_name_;
   static ::std::string* _default_stream_name_;
-  int type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
   friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
 
   void InitAsDefaultInstance();
-  static Score* default_instance_;
+  static PerplexityScoreConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class PerplexityScore : public ::google::protobuf::Message {
+ public:
+  PerplexityScore();
+  virtual ~PerplexityScore();
+
+  PerplexityScore(const PerplexityScore& from);
+
+  inline PerplexityScore& operator=(const PerplexityScore& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PerplexityScore& default_instance();
+
+  void Swap(PerplexityScore* other);
+
+  // implements Message ----------------------------------------------
+
+  PerplexityScore* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const PerplexityScore& from);
+  void MergeFrom(const PerplexityScore& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional double value = 1;
+  inline bool has_value() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 1;
+  inline double value() const;
+  inline void set_value(double value);
+
+  // optional double raw = 2;
+  inline bool has_raw() const;
+  inline void clear_raw();
+  static const int kRawFieldNumber = 2;
+  inline double raw() const;
+  inline void set_raw(double value);
+
+  // optional double normalizer = 3;
+  inline bool has_normalizer() const;
+  inline void clear_normalizer();
+  static const int kNormalizerFieldNumber = 3;
+  inline double normalizer() const;
+  inline void set_normalizer(double value);
+
+  // optional int32 zero_words = 4;
+  inline bool has_zero_words() const;
+  inline void clear_zero_words();
+  static const int kZeroWordsFieldNumber = 4;
+  inline ::google::protobuf::int32 zero_words() const;
+  inline void set_zero_words(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:artm.PerplexityScore)
+ private:
+  inline void set_has_value();
+  inline void clear_has_value();
+  inline void set_has_raw();
+  inline void clear_has_raw();
+  inline void set_has_normalizer();
+  inline void clear_has_normalizer();
+  inline void set_has_zero_words();
+  inline void clear_has_zero_words();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double value_;
+  double raw_;
+  double normalizer_;
+  ::google::protobuf::int32 zero_words_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static PerplexityScore* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -2323,43 +2710,19 @@ class TopicModel_TopicModelInternals : public ::google::protobuf::Message {
   inline ::artm::FloatArray* release_n_t();
   inline void set_allocated_n_t(::artm::FloatArray* n_t);
 
-  // optional .artm.DoubleArray scores_raw = 4;
-  inline bool has_scores_raw() const;
-  inline void clear_scores_raw();
-  static const int kScoresRawFieldNumber = 4;
-  inline const ::artm::DoubleArray& scores_raw() const;
-  inline ::artm::DoubleArray* mutable_scores_raw();
-  inline ::artm::DoubleArray* release_scores_raw();
-  inline void set_allocated_scores_raw(::artm::DoubleArray* scores_raw);
-
-  // optional .artm.DoubleArray scores_normalizer = 5;
-  inline bool has_scores_normalizer() const;
-  inline void clear_scores_normalizer();
-  static const int kScoresNormalizerFieldNumber = 5;
-  inline const ::artm::DoubleArray& scores_normalizer() const;
-  inline ::artm::DoubleArray* mutable_scores_normalizer();
-  inline ::artm::DoubleArray* release_scores_normalizer();
-  inline void set_allocated_scores_normalizer(::artm::DoubleArray* scores_normalizer);
-
   // @@protoc_insertion_point(class_scope:artm.TopicModel.TopicModelInternals)
  private:
   inline void set_has_n_t();
   inline void clear_has_n_t();
-  inline void set_has_scores_raw();
-  inline void clear_has_scores_raw();
-  inline void set_has_scores_normalizer();
-  inline void clear_has_scores_normalizer();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > n_wt_;
   ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > r_wt_;
   ::artm::FloatArray* n_t_;
-  ::artm::DoubleArray* scores_raw_;
-  ::artm::DoubleArray* scores_normalizer_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -2445,17 +2808,10 @@ class TopicModel : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 topics_count() const;
   inline void set_topics_count(::google::protobuf::int32 value);
 
-  // optional int32 items_processed = 3;
-  inline bool has_items_processed() const;
-  inline void clear_items_processed();
-  static const int kItemsProcessedFieldNumber = 3;
-  inline ::google::protobuf::int32 items_processed() const;
-  inline void set_items_processed(::google::protobuf::int32 value);
-
-  // repeated string token = 4;
+  // repeated string token = 3;
   inline int token_size() const;
   inline void clear_token();
-  static const int kTokenFieldNumber = 4;
+  static const int kTokenFieldNumber = 3;
   inline const ::std::string& token(int index) const;
   inline ::std::string* mutable_token(int index);
   inline void set_token(int index, const ::std::string& value);
@@ -2468,10 +2824,10 @@ class TopicModel : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_token();
 
-  // repeated .artm.FloatArray token_weights = 5;
+  // repeated .artm.FloatArray token_weights = 4;
   inline int token_weights_size() const;
   inline void clear_token_weights();
-  static const int kTokenWeightsFieldNumber = 5;
+  static const int kTokenWeightsFieldNumber = 4;
   inline const ::artm::FloatArray& token_weights(int index) const;
   inline ::artm::FloatArray* mutable_token_weights(int index);
   inline ::artm::FloatArray* add_token_weights();
@@ -2480,19 +2836,10 @@ class TopicModel : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
       mutable_token_weights();
 
-  // optional .artm.DoubleArray scores = 6;
-  inline bool has_scores() const;
-  inline void clear_scores();
-  static const int kScoresFieldNumber = 6;
-  inline const ::artm::DoubleArray& scores() const;
-  inline ::artm::DoubleArray* mutable_scores();
-  inline ::artm::DoubleArray* release_scores();
-  inline void set_allocated_scores(::artm::DoubleArray* scores);
-
-  // optional bytes internals = 7;
+  // optional bytes internals = 5;
   inline bool has_internals() const;
   inline void clear_internals();
-  static const int kInternalsFieldNumber = 7;
+  static const int kInternalsFieldNumber = 5;
   inline const ::std::string& internals() const;
   inline void set_internals(const ::std::string& value);
   inline void set_internals(const char* value);
@@ -2507,10 +2854,6 @@ class TopicModel : public ::google::protobuf::Message {
   inline void clear_has_name();
   inline void set_has_topics_count();
   inline void clear_has_topics_count();
-  inline void set_has_items_processed();
-  inline void clear_has_items_processed();
-  inline void set_has_scores();
-  inline void clear_has_scores();
   inline void set_has_internals();
   inline void clear_has_internals();
 
@@ -2518,15 +2861,13 @@ class TopicModel : public ::google::protobuf::Message {
 
   ::std::string* name_;
   static ::std::string* _default_name_;
-  ::google::protobuf::int32 topics_count_;
-  ::google::protobuf::int32 items_processed_;
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
   ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > token_weights_;
-  ::artm::DoubleArray* scores_;
   ::std::string* internals_;
+  ::google::protobuf::int32 topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -3340,15 +3681,40 @@ inline void MasterComponentConfig::set_merger_queue_max_size(::google::protobuf:
   merger_queue_max_size_ = value;
 }
 
+// repeated .artm.ScoreConfig score_config = 8;
+inline int MasterComponentConfig::score_config_size() const {
+  return score_config_.size();
+}
+inline void MasterComponentConfig::clear_score_config() {
+  score_config_.Clear();
+}
+inline const ::artm::ScoreConfig& MasterComponentConfig::score_config(int index) const {
+  return score_config_.Get(index);
+}
+inline ::artm::ScoreConfig* MasterComponentConfig::mutable_score_config(int index) {
+  return score_config_.Mutable(index);
+}
+inline ::artm::ScoreConfig* MasterComponentConfig::add_score_config() {
+  return score_config_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::ScoreConfig >&
+MasterComponentConfig::score_config() const {
+  return score_config_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::ScoreConfig >*
+MasterComponentConfig::mutable_score_config() {
+  return &score_config_;
+}
+
 // optional .artm.MasterComponentConfig.ModusOperandi modus_operandi = 100 [default = Local];
 inline bool MasterComponentConfig::has_modus_operandi() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000100u) != 0;
 }
 inline void MasterComponentConfig::set_has_modus_operandi() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000100u;
 }
 inline void MasterComponentConfig::clear_has_modus_operandi() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000100u;
 }
 inline void MasterComponentConfig::clear_modus_operandi() {
   modus_operandi_ = 0;
@@ -3365,13 +3731,13 @@ inline void MasterComponentConfig::set_modus_operandi(::artm::MasterComponentCon
 
 // optional string create_endpoint = 101;
 inline bool MasterComponentConfig::has_create_endpoint() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000200u) != 0;
 }
 inline void MasterComponentConfig::set_has_create_endpoint() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000200u;
 }
 inline void MasterComponentConfig::clear_has_create_endpoint() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void MasterComponentConfig::clear_create_endpoint() {
   if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
@@ -3435,13 +3801,13 @@ inline void MasterComponentConfig::set_allocated_create_endpoint(::std::string* 
 
 // optional string connect_endpoint = 102;
 inline bool MasterComponentConfig::has_connect_endpoint() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00000400u) != 0;
 }
 inline void MasterComponentConfig::set_has_connect_endpoint() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00000400u;
 }
 inline void MasterComponentConfig::clear_has_connect_endpoint() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00000400u;
 }
 inline void MasterComponentConfig::clear_connect_endpoint() {
   if (connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
@@ -3939,29 +4305,48 @@ inline void ModelConfig::set_allocated_stream_name(::std::string* stream_name) {
   }
 }
 
-// repeated .artm.Score score = 7;
-inline int ModelConfig::score_size() const {
-  return score_.size();
+// repeated string score_name = 7;
+inline int ModelConfig::score_name_size() const {
+  return score_name_.size();
 }
-inline void ModelConfig::clear_score() {
-  score_.Clear();
+inline void ModelConfig::clear_score_name() {
+  score_name_.Clear();
 }
-inline const ::artm::Score& ModelConfig::score(int index) const {
-  return score_.Get(index);
+inline const ::std::string& ModelConfig::score_name(int index) const {
+  return score_name_.Get(index);
 }
-inline ::artm::Score* ModelConfig::mutable_score(int index) {
-  return score_.Mutable(index);
+inline ::std::string* ModelConfig::mutable_score_name(int index) {
+  return score_name_.Mutable(index);
 }
-inline ::artm::Score* ModelConfig::add_score() {
-  return score_.Add();
+inline void ModelConfig::set_score_name(int index, const ::std::string& value) {
+  score_name_.Mutable(index)->assign(value);
 }
-inline const ::google::protobuf::RepeatedPtrField< ::artm::Score >&
-ModelConfig::score() const {
-  return score_;
+inline void ModelConfig::set_score_name(int index, const char* value) {
+  score_name_.Mutable(index)->assign(value);
 }
-inline ::google::protobuf::RepeatedPtrField< ::artm::Score >*
-ModelConfig::mutable_score() {
-  return &score_;
+inline void ModelConfig::set_score_name(int index, const char* value, size_t size) {
+  score_name_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ModelConfig::add_score_name() {
+  return score_name_.Add();
+}
+inline void ModelConfig::add_score_name(const ::std::string& value) {
+  score_name_.Add()->assign(value);
+}
+inline void ModelConfig::add_score_name(const char* value) {
+  score_name_.Add()->assign(value);
+}
+inline void ModelConfig::add_score_name(const char* value, size_t size) {
+  score_name_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ModelConfig::score_name() const {
+  return score_name_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ModelConfig::mutable_score_name() {
+  return &score_name_;
 }
 
 // optional bool reuse_theta = 8 [default = false];
@@ -4813,79 +5198,390 @@ FloatArray::mutable_value() {
 
 // -------------------------------------------------------------------
 
-// Score
+// ScoreConfig
 
-// optional .artm.Score.Type type = 1;
-inline bool Score::has_type() const {
+// optional string name = 1;
+inline bool ScoreConfig::has_name() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void Score::set_has_type() {
+inline void ScoreConfig::set_has_name() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void Score::clear_has_type() {
+inline void ScoreConfig::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
-inline void Score::clear_type() {
+inline void ScoreConfig::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& ScoreConfig::name() const {
+  return *name_;
+}
+inline void ScoreConfig::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void ScoreConfig::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void ScoreConfig::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ScoreConfig::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* ScoreConfig::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ScoreConfig::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .artm.ScoreConfig.Type type = 2;
+inline bool ScoreConfig::has_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void ScoreConfig::set_has_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void ScoreConfig::clear_has_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void ScoreConfig::clear_type() {
   type_ = 0;
   clear_has_type();
 }
-inline ::artm::Score_Type Score::type() const {
-  return static_cast< ::artm::Score_Type >(type_);
+inline ::artm::ScoreConfig_Type ScoreConfig::type() const {
+  return static_cast< ::artm::ScoreConfig_Type >(type_);
 }
-inline void Score::set_type(::artm::Score_Type value) {
-  assert(::artm::Score_Type_IsValid(value));
+inline void ScoreConfig::set_type(::artm::ScoreConfig_Type value) {
+  assert(::artm::ScoreConfig_Type_IsValid(value));
   set_has_type();
   type_ = value;
 }
 
-// optional string field_name = 2 [default = "@body"];
-inline bool Score::has_field_name() const {
+// optional bytes config = 3;
+inline bool ScoreConfig::has_config() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ScoreConfig::set_has_config() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ScoreConfig::clear_has_config() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ScoreConfig::clear_config() {
+  if (config_ != &::google::protobuf::internal::kEmptyString) {
+    config_->clear();
+  }
+  clear_has_config();
+}
+inline const ::std::string& ScoreConfig::config() const {
+  return *config_;
+}
+inline void ScoreConfig::set_config(const ::std::string& value) {
+  set_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    config_ = new ::std::string;
+  }
+  config_->assign(value);
+}
+inline void ScoreConfig::set_config(const char* value) {
+  set_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    config_ = new ::std::string;
+  }
+  config_->assign(value);
+}
+inline void ScoreConfig::set_config(const void* value, size_t size) {
+  set_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    config_ = new ::std::string;
+  }
+  config_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ScoreConfig::mutable_config() {
+  set_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    config_ = new ::std::string;
+  }
+  return config_;
+}
+inline ::std::string* ScoreConfig::release_config() {
+  clear_has_config();
+  if (config_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = config_;
+    config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ScoreConfig::set_allocated_config(::std::string* config) {
+  if (config_ != &::google::protobuf::internal::kEmptyString) {
+    delete config_;
+  }
+  if (config) {
+    set_has_config();
+    config_ = config;
+  } else {
+    clear_has_config();
+    config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// ScoreData
+
+// optional string name = 1;
+inline bool ScoreData::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void ScoreData::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void ScoreData::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void ScoreData::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& ScoreData::name() const {
+  return *name_;
+}
+inline void ScoreData::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void ScoreData::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void ScoreData::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ScoreData::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* ScoreData::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ScoreData::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .artm.ScoreData.Type type = 2;
+inline bool ScoreData::has_type() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Score::set_has_field_name() {
+inline void ScoreData::set_has_type() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void Score::clear_has_field_name() {
+inline void ScoreData::clear_has_type() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void Score::clear_field_name() {
+inline void ScoreData::clear_type() {
+  type_ = 0;
+  clear_has_type();
+}
+inline ::artm::ScoreData_Type ScoreData::type() const {
+  return static_cast< ::artm::ScoreData_Type >(type_);
+}
+inline void ScoreData::set_type(::artm::ScoreData_Type value) {
+  assert(::artm::ScoreData_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional bytes data = 3;
+inline bool ScoreData::has_data() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void ScoreData::set_has_data() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void ScoreData::clear_has_data() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void ScoreData::clear_data() {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    data_->clear();
+  }
+  clear_has_data();
+}
+inline const ::std::string& ScoreData::data() const {
+  return *data_;
+}
+inline void ScoreData::set_data(const ::std::string& value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void ScoreData::set_data(const char* value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void ScoreData::set_data(const void* value, size_t size) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ScoreData::mutable_data() {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  return data_;
+}
+inline ::std::string* ScoreData::release_data() {
+  clear_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = data_;
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void ScoreData::set_allocated_data(::std::string* data) {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    delete data_;
+  }
+  if (data) {
+    set_has_data();
+    data_ = data;
+  } else {
+    clear_has_data();
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// PerplexityScoreConfig
+
+// optional string field_name = 1 [default = "@body"];
+inline bool PerplexityScoreConfig::has_field_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void PerplexityScoreConfig::set_has_field_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void PerplexityScoreConfig::clear_has_field_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void PerplexityScoreConfig::clear_field_name() {
   if (field_name_ != _default_field_name_) {
     field_name_->assign(*_default_field_name_);
   }
   clear_has_field_name();
 }
-inline const ::std::string& Score::field_name() const {
+inline const ::std::string& PerplexityScoreConfig::field_name() const {
   return *field_name_;
 }
-inline void Score::set_field_name(const ::std::string& value) {
+inline void PerplexityScoreConfig::set_field_name(const ::std::string& value) {
   set_has_field_name();
   if (field_name_ == _default_field_name_) {
     field_name_ = new ::std::string;
   }
   field_name_->assign(value);
 }
-inline void Score::set_field_name(const char* value) {
+inline void PerplexityScoreConfig::set_field_name(const char* value) {
   set_has_field_name();
   if (field_name_ == _default_field_name_) {
     field_name_ = new ::std::string;
   }
   field_name_->assign(value);
 }
-inline void Score::set_field_name(const char* value, size_t size) {
+inline void PerplexityScoreConfig::set_field_name(const char* value, size_t size) {
   set_has_field_name();
   if (field_name_ == _default_field_name_) {
     field_name_ = new ::std::string;
   }
   field_name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Score::mutable_field_name() {
+inline ::std::string* PerplexityScoreConfig::mutable_field_name() {
   set_has_field_name();
   if (field_name_ == _default_field_name_) {
     field_name_ = new ::std::string(*_default_field_name_);
   }
   return field_name_;
 }
-inline ::std::string* Score::release_field_name() {
+inline ::std::string* PerplexityScoreConfig::release_field_name() {
   clear_has_field_name();
   if (field_name_ == _default_field_name_) {
     return NULL;
@@ -4895,7 +5591,7 @@ inline ::std::string* Score::release_field_name() {
     return temp;
   }
 }
-inline void Score::set_allocated_field_name(::std::string* field_name) {
+inline void PerplexityScoreConfig::set_allocated_field_name(::std::string* field_name) {
   if (field_name_ != _default_field_name_) {
     delete field_name_;
   }
@@ -4908,54 +5604,54 @@ inline void Score::set_allocated_field_name(::std::string* field_name) {
   }
 }
 
-// optional string stream_name = 3 [default = "@global"];
-inline bool Score::has_stream_name() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+// optional string stream_name = 2 [default = "@global"];
+inline bool PerplexityScoreConfig::has_stream_name() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void Score::set_has_stream_name() {
-  _has_bits_[0] |= 0x00000004u;
+inline void PerplexityScoreConfig::set_has_stream_name() {
+  _has_bits_[0] |= 0x00000002u;
 }
-inline void Score::clear_has_stream_name() {
-  _has_bits_[0] &= ~0x00000004u;
+inline void PerplexityScoreConfig::clear_has_stream_name() {
+  _has_bits_[0] &= ~0x00000002u;
 }
-inline void Score::clear_stream_name() {
+inline void PerplexityScoreConfig::clear_stream_name() {
   if (stream_name_ != _default_stream_name_) {
     stream_name_->assign(*_default_stream_name_);
   }
   clear_has_stream_name();
 }
-inline const ::std::string& Score::stream_name() const {
+inline const ::std::string& PerplexityScoreConfig::stream_name() const {
   return *stream_name_;
 }
-inline void Score::set_stream_name(const ::std::string& value) {
+inline void PerplexityScoreConfig::set_stream_name(const ::std::string& value) {
   set_has_stream_name();
   if (stream_name_ == _default_stream_name_) {
     stream_name_ = new ::std::string;
   }
   stream_name_->assign(value);
 }
-inline void Score::set_stream_name(const char* value) {
+inline void PerplexityScoreConfig::set_stream_name(const char* value) {
   set_has_stream_name();
   if (stream_name_ == _default_stream_name_) {
     stream_name_ = new ::std::string;
   }
   stream_name_->assign(value);
 }
-inline void Score::set_stream_name(const char* value, size_t size) {
+inline void PerplexityScoreConfig::set_stream_name(const char* value, size_t size) {
   set_has_stream_name();
   if (stream_name_ == _default_stream_name_) {
     stream_name_ = new ::std::string;
   }
   stream_name_->assign(reinterpret_cast<const char*>(value), size);
 }
-inline ::std::string* Score::mutable_stream_name() {
+inline ::std::string* PerplexityScoreConfig::mutable_stream_name() {
   set_has_stream_name();
   if (stream_name_ == _default_stream_name_) {
     stream_name_ = new ::std::string(*_default_stream_name_);
   }
   return stream_name_;
 }
-inline ::std::string* Score::release_stream_name() {
+inline ::std::string* PerplexityScoreConfig::release_stream_name() {
   clear_has_stream_name();
   if (stream_name_ == _default_stream_name_) {
     return NULL;
@@ -4965,7 +5661,7 @@ inline ::std::string* Score::release_stream_name() {
     return temp;
   }
 }
-inline void Score::set_allocated_stream_name(::std::string* stream_name) {
+inline void PerplexityScoreConfig::set_allocated_stream_name(::std::string* stream_name) {
   if (stream_name_ != _default_stream_name_) {
     delete stream_name_;
   }
@@ -4976,6 +5672,98 @@ inline void Score::set_allocated_stream_name(::std::string* stream_name) {
     clear_has_stream_name();
     stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
   }
+}
+
+// -------------------------------------------------------------------
+
+// PerplexityScore
+
+// optional double value = 1;
+inline bool PerplexityScore::has_value() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void PerplexityScore::set_has_value() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void PerplexityScore::clear_has_value() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void PerplexityScore::clear_value() {
+  value_ = 0;
+  clear_has_value();
+}
+inline double PerplexityScore::value() const {
+  return value_;
+}
+inline void PerplexityScore::set_value(double value) {
+  set_has_value();
+  value_ = value;
+}
+
+// optional double raw = 2;
+inline bool PerplexityScore::has_raw() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void PerplexityScore::set_has_raw() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void PerplexityScore::clear_has_raw() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void PerplexityScore::clear_raw() {
+  raw_ = 0;
+  clear_has_raw();
+}
+inline double PerplexityScore::raw() const {
+  return raw_;
+}
+inline void PerplexityScore::set_raw(double value) {
+  set_has_raw();
+  raw_ = value;
+}
+
+// optional double normalizer = 3;
+inline bool PerplexityScore::has_normalizer() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void PerplexityScore::set_has_normalizer() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void PerplexityScore::clear_has_normalizer() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void PerplexityScore::clear_normalizer() {
+  normalizer_ = 0;
+  clear_has_normalizer();
+}
+inline double PerplexityScore::normalizer() const {
+  return normalizer_;
+}
+inline void PerplexityScore::set_normalizer(double value) {
+  set_has_normalizer();
+  normalizer_ = value;
+}
+
+// optional int32 zero_words = 4;
+inline bool PerplexityScore::has_zero_words() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void PerplexityScore::set_has_zero_words() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void PerplexityScore::clear_has_zero_words() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void PerplexityScore::clear_zero_words() {
+  zero_words_ = 0;
+  clear_has_zero_words();
+}
+inline ::google::protobuf::int32 PerplexityScore::zero_words() const {
+  return zero_words_;
+}
+inline void PerplexityScore::set_zero_words(::google::protobuf::int32 value) {
+  set_has_zero_words();
+  zero_words_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -5067,82 +5855,6 @@ inline void TopicModel_TopicModelInternals::set_allocated_n_t(::artm::FloatArray
     set_has_n_t();
   } else {
     clear_has_n_t();
-  }
-}
-
-// optional .artm.DoubleArray scores_raw = 4;
-inline bool TopicModel_TopicModelInternals::has_scores_raw() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void TopicModel_TopicModelInternals::set_has_scores_raw() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void TopicModel_TopicModelInternals::clear_has_scores_raw() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void TopicModel_TopicModelInternals::clear_scores_raw() {
-  if (scores_raw_ != NULL) scores_raw_->::artm::DoubleArray::Clear();
-  clear_has_scores_raw();
-}
-inline const ::artm::DoubleArray& TopicModel_TopicModelInternals::scores_raw() const {
-  return scores_raw_ != NULL ? *scores_raw_ : *default_instance_->scores_raw_;
-}
-inline ::artm::DoubleArray* TopicModel_TopicModelInternals::mutable_scores_raw() {
-  set_has_scores_raw();
-  if (scores_raw_ == NULL) scores_raw_ = new ::artm::DoubleArray;
-  return scores_raw_;
-}
-inline ::artm::DoubleArray* TopicModel_TopicModelInternals::release_scores_raw() {
-  clear_has_scores_raw();
-  ::artm::DoubleArray* temp = scores_raw_;
-  scores_raw_ = NULL;
-  return temp;
-}
-inline void TopicModel_TopicModelInternals::set_allocated_scores_raw(::artm::DoubleArray* scores_raw) {
-  delete scores_raw_;
-  scores_raw_ = scores_raw;
-  if (scores_raw) {
-    set_has_scores_raw();
-  } else {
-    clear_has_scores_raw();
-  }
-}
-
-// optional .artm.DoubleArray scores_normalizer = 5;
-inline bool TopicModel_TopicModelInternals::has_scores_normalizer() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void TopicModel_TopicModelInternals::set_has_scores_normalizer() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void TopicModel_TopicModelInternals::clear_has_scores_normalizer() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void TopicModel_TopicModelInternals::clear_scores_normalizer() {
-  if (scores_normalizer_ != NULL) scores_normalizer_->::artm::DoubleArray::Clear();
-  clear_has_scores_normalizer();
-}
-inline const ::artm::DoubleArray& TopicModel_TopicModelInternals::scores_normalizer() const {
-  return scores_normalizer_ != NULL ? *scores_normalizer_ : *default_instance_->scores_normalizer_;
-}
-inline ::artm::DoubleArray* TopicModel_TopicModelInternals::mutable_scores_normalizer() {
-  set_has_scores_normalizer();
-  if (scores_normalizer_ == NULL) scores_normalizer_ = new ::artm::DoubleArray;
-  return scores_normalizer_;
-}
-inline ::artm::DoubleArray* TopicModel_TopicModelInternals::release_scores_normalizer() {
-  clear_has_scores_normalizer();
-  ::artm::DoubleArray* temp = scores_normalizer_;
-  scores_normalizer_ = NULL;
-  return temp;
-}
-inline void TopicModel_TopicModelInternals::set_allocated_scores_normalizer(::artm::DoubleArray* scores_normalizer) {
-  delete scores_normalizer_;
-  scores_normalizer_ = scores_normalizer;
-  if (scores_normalizer) {
-    set_has_scores_normalizer();
-  } else {
-    clear_has_scores_normalizer();
   }
 }
 
@@ -5242,29 +5954,7 @@ inline void TopicModel::set_topics_count(::google::protobuf::int32 value) {
   topics_count_ = value;
 }
 
-// optional int32 items_processed = 3;
-inline bool TopicModel::has_items_processed() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void TopicModel::set_has_items_processed() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void TopicModel::clear_has_items_processed() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void TopicModel::clear_items_processed() {
-  items_processed_ = 0;
-  clear_has_items_processed();
-}
-inline ::google::protobuf::int32 TopicModel::items_processed() const {
-  return items_processed_;
-}
-inline void TopicModel::set_items_processed(::google::protobuf::int32 value) {
-  set_has_items_processed();
-  items_processed_ = value;
-}
-
-// repeated string token = 4;
+// repeated string token = 3;
 inline int TopicModel::token_size() const {
   return token_.size();
 }
@@ -5308,7 +5998,7 @@ TopicModel::mutable_token() {
   return &token_;
 }
 
-// repeated .artm.FloatArray token_weights = 5;
+// repeated .artm.FloatArray token_weights = 4;
 inline int TopicModel::token_weights_size() const {
   return token_weights_.size();
 }
@@ -5333,53 +6023,15 @@ TopicModel::mutable_token_weights() {
   return &token_weights_;
 }
 
-// optional .artm.DoubleArray scores = 6;
-inline bool TopicModel::has_scores() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void TopicModel::set_has_scores() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void TopicModel::clear_has_scores() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void TopicModel::clear_scores() {
-  if (scores_ != NULL) scores_->::artm::DoubleArray::Clear();
-  clear_has_scores();
-}
-inline const ::artm::DoubleArray& TopicModel::scores() const {
-  return scores_ != NULL ? *scores_ : *default_instance_->scores_;
-}
-inline ::artm::DoubleArray* TopicModel::mutable_scores() {
-  set_has_scores();
-  if (scores_ == NULL) scores_ = new ::artm::DoubleArray;
-  return scores_;
-}
-inline ::artm::DoubleArray* TopicModel::release_scores() {
-  clear_has_scores();
-  ::artm::DoubleArray* temp = scores_;
-  scores_ = NULL;
-  return temp;
-}
-inline void TopicModel::set_allocated_scores(::artm::DoubleArray* scores) {
-  delete scores_;
-  scores_ = scores;
-  if (scores) {
-    set_has_scores();
-  } else {
-    clear_has_scores();
-  }
-}
-
-// optional bytes internals = 7;
+// optional bytes internals = 5;
 inline bool TopicModel::has_internals() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void TopicModel::set_has_internals() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void TopicModel::clear_has_internals() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void TopicModel::clear_internals() {
   if (internals_ != &::google::protobuf::internal::kEmptyString) {
@@ -5661,8 +6313,12 @@ inline const EnumDescriptor* GetEnumDescriptor< ::artm::RegularizerConfig_Type>(
   return ::artm::RegularizerConfig_Type_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::artm::Score_Type>() {
-  return ::artm::Score_Type_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::ScoreConfig_Type>() {
+  return ::artm::ScoreConfig_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::ScoreData_Type>() {
+  return ::artm::ScoreData_Type_descriptor();
 }
 
 }  // namespace google

@@ -66,6 +66,24 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     master_config.set_cache_processor_output(true);
   }
 
+  ::artm::ScoreConfig score_config;
+  ::artm::PerplexityScoreConfig perplexity_config;
+  perplexity_config.set_stream_name("test_stream");
+  score_config.set_config(perplexity_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_Perplexity);
+  score_config.set_name("test_perplexity");
+  master_config.add_score_config()->CopyFrom(score_config);
+
+  perplexity_config.set_stream_name("train_stream");
+  score_config.set_config(perplexity_config.SerializeAsString());
+  score_config.set_name("train_perplexity");
+  master_config.add_score_config()->CopyFrom(score_config);
+
+  // MasterProxyConfig master_proxy_config;
+  // master_proxy_config.set_node_connect_endpoint("tcp://localhost:5556");
+  // master_proxy_config.mutable_config()->CopyFrom(master_config);
+  // MasterComponent master_component(master_proxy_config);
+
   MasterComponent master_component(master_config);
 
   // Configure train and test streams
@@ -101,18 +119,15 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_name("15081980-90a7-4767-ab85-7cb551c39339");
   model_config.add_regularizer_name("regularizer_phi");
   model_config.add_regularizer_tau(decorrelator_tau);
+  model_config.add_score_name("test_perplexity");
+  model_config.add_score_name("train_perplexity");
 
-  Score* score = model_config.add_score();
-  score->set_type(Score_Type_Perplexity);
-  score->set_stream_name("test_stream");
   Model model(master_component, model_config);
 
   // Overwrite topic model with well-known "initial topic model"
   TopicModel initial_topic_model;
   initial_topic_model.set_name(model_config.name());
   initial_topic_model.set_topics_count(nTopics);
-  initial_topic_model.set_items_processed(0);
-  initial_topic_model.mutable_scores()->add_value(0.0);  // add one dummy score
   VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
   for (int token_index = 0; token_index < (int)vocab_ptr->size(); ++token_index) {
     std::string token = (*vocab_ptr)[token_index];
@@ -170,16 +185,19 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   clock_t begin = clock();
 
   std::shared_ptr<TopicModel> topic_model;
+  std::shared_ptr<PerplexityScore> test_perplexity, train_perplexity;
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
     model.InvokePhiRegularizers();
 
     topic_model = master_component.GetTopicModel(model);
+    test_perplexity = master_component.GetScoreAs<::artm::PerplexityScore>(model, "test_perplexity");
+    train_perplexity = master_component.GetScoreAs<::artm::PerplexityScore>(model, "train_perplexity");
     std::cout << "Iter #" << (iter + 1) << ": "
               << "#Tokens = "  << topic_model->token_size() << ", "
-              << "#Items = " << topic_model->items_processed() << ", "
-              << "Perplexity = " << topic_model->scores().value(0) << endl;
+              << "Test perplexity = " << test_perplexity->value() << ", "
+              << "Train perplexity = " << train_perplexity->value() << endl;
   }
 
   std::cout << endl;
@@ -248,8 +266,14 @@ int main(int argc, char * argv[]) {
 
   int instance_size = 1;
   int processors_size = 2;
-  cout << proc(argc, argv, processors_size, instance_size)
-       << " sec. ================= " << endl << endl;
+  try {
+    cout << proc(argc, argv, processors_size, instance_size)
+         << " sec. ================= " << endl << endl;
+  } catch (std::runtime_error& error) {
+    cout << "Exception occured: " << error.what() << "\n";
+  } catch (...) {
+    cout << "Unknown exception occured.\n";
+  }
 
   return 0;
 }

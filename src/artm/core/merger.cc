@@ -30,6 +30,7 @@ Merger::Merger(ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_q
       topic_model_inc_(),
       schema_(schema),
       master_component_service_(master_component_service),
+      scores_merger_(schema),
       is_idle_(true),
       merger_queue_(merger_queue),
       notifiable_(notifiable),
@@ -56,8 +57,7 @@ void Merger::DisposeModel(ModelName model_name) {
 void Merger::CreateOrReconfigureModel(const ModelConfig& model) {
   if (!topic_model_.has_key(model.name())) {
     // Handle more type of reconfigs - for example, changing the number of topics;
-    auto ttm = std::make_shared<TopicModel>(model.name(), model.topics_count(),
-                                            model.score_size());
+    auto ttm = std::make_shared<TopicModel>(model.name(), model.topics_count());
     topic_model_.set(model.name(), ttm);
   }
 
@@ -213,12 +213,18 @@ void Merger::ThreadFunction() {
         auto iter = topic_model_inc_.find(model_name);
         if (iter == topic_model_inc_.end()) {
           topic_model_inc_.insert(std::make_pair(
-            model_name, std::make_shared<::artm::core::TopicModel>(
-              cur_ttm->model_name(), cur_ttm->topic_size(), cur_ttm->score_size())));
+            model_name, std::make_shared<::artm::core::TopicModel>(cur_ttm->model_name(),
+                                                                   cur_ttm->topic_size())));
           iter = topic_model_inc_.find(model_name);
         }
 
         iter->second->ApplyDiff(*model_increment);
+        for (int score_index = 0;
+             score_index < model_increment->score_name_size();
+             ++score_index) {
+          scores_merger_.Append(model_name, model_increment->score_name(score_index),
+                                model_increment->score(score_index));
+        }
       }  // MAIN FOR LOOP
     }
   }
@@ -247,9 +253,8 @@ void Merger::PullTopicModel() {
       // auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
 
       // New mode: accumulate counters only accross one iteration, then re-calculate Phi from scratch.
-      auto new_ttm = std::make_shared<::artm::core::TopicModel>(
-        old_ttm->model_name(), old_ttm->topic_size(), old_ttm->score_size());
-
+      auto new_ttm = std::make_shared<::artm::core::TopicModel>(old_ttm->model_name(),
+                                                                old_ttm->topic_size());
       new_ttm->ApplyDiff(*inc_ttm->second);
       topic_model_.set(model_name, new_ttm);
       topic_model_inc_.erase(model_name);
@@ -289,11 +294,13 @@ void Merger::PushTopicModelIncrement() {
 
     ModelIncrement model_increment;
     inc_ttm->second->RetrieveModelIncrement(&model_increment);
+    scores_merger_.RetrieveModelIncrement(model_name, &model_increment);
 
     try {
       ::artm::core::Void reply;
       master_component_service_->UpdateModel(model_increment, &reply);
       topic_model_inc_.erase(model_name);
+      scores_merger_.ResetScores(model_name);
     } catch(const rpcz::rpc_error&) {
       LOG(ERROR) << "Merger failed to send updates to master component service.";
       throw;
@@ -302,29 +309,7 @@ void Merger::PushTopicModelIncrement() {
 }
 
 void Merger::ResetScores(ModelName model_name) {
-  std::vector<ModelName> model_names;
-  if (model_name.empty()) {
-    model_names = topic_model_.keys();
-  }
-
-  for (auto &model_name : model_names) {
-    if (master_component_service_ == nullptr) {
-      auto old_ttm = GetLatestTopicModel(model_name);
-      if (old_ttm == nullptr)
-        return;  // model had been disposed during ongoing processing;
-
-      auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
-      for (int score_index = 0; score_index < new_ttm->score_size(); ++score_index) {
-        new_ttm->SetScores(score_index, 0.0, 0.0);
-      }
-
-      topic_model_.set(model_name, new_ttm);
-    } else {
-      // TODO(alfrey) to this on master
-      std::string message("In Network mode ResetScores should happen on Master.");
-      LOG(WARNING) << message;
-    }
-  }
+  scores_merger_.ResetScores(model_name);
 }
 
 bool Merger::RetrieveExternalTopicModel(ModelName model_name,
@@ -342,6 +327,81 @@ void Merger::WaitIdle() {
 
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));
   }
+}
+
+void Merger::ScoresMerger::Append(const ModelName& model_name, const ScoreName& score_name,
+                                  const std::string& score_blob) {
+  auto key = std::make_pair(model_name, score_name);
+  auto score_calculator = schema_->get()->score_calculator(score_name);
+  if (score_calculator == nullptr) {
+    LOG(ERROR) << "Unable to find score calculator: " << score_name;
+    return;
+  }
+
+  auto score_inc = score_calculator->CreateScore();
+  if (!score_inc->ParseFromString(score_blob)) {
+    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse score blob"));
+  }
+
+  auto score = score_map_.get(key);
+  if (score != nullptr) {
+    score_calculator->AppendScore(*score, score_inc.get());
+  }
+
+  score_map_.set(key, score_inc);
+}
+
+void Merger::ScoresMerger::ResetScores(const ModelName& model_name) {
+  if (model_name.empty()) {
+    score_map_.clear();
+    return;
+  }
+
+  auto keys = score_map_.keys();
+  for (auto &key : keys) {
+    if (key.first == model_name) {
+      score_map_.erase(key);
+    }
+  }
+}
+
+void Merger::ScoresMerger::RetrieveModelIncrement(const ModelName& model_name,
+                                                  ModelIncrement* model_increment) {
+  auto keys = score_map_.keys();
+  for (auto &key : keys) {
+    if (key.first == model_name) {
+      auto score = score_map_.get(key);
+      if (score == nullptr)
+        continue;
+
+      model_increment->add_score_name(key.second);
+      model_increment->add_score(score->SerializeAsString());
+    }
+  }
+}
+
+bool Merger::ScoresMerger::RequestScore(const ModelName& model_name, const ScoreName& score_name,
+                    ScoreData *score_data) const {
+  auto score_calculator = schema_->get()->score_calculator(score_name);
+  if (score_calculator == nullptr) {
+    BOOST_THROW_EXCEPTION(InvalidOperation("Score does not exist"));
+  }
+
+  auto score = score_map_.get(ScoreKey(model_name, score_name));
+  if (score == nullptr) {
+    score_data->set_data(score_calculator->CreateScore()->SerializeAsString());
+  } else {
+    score_data->set_data(score->SerializeAsString());
+  }
+
+  score_data->set_type(score_calculator->score_type());
+  score_data->set_name(score_name);
+  return true;
+}
+
+bool Merger::RequestScore(const ModelName& model_name, const ScoreName& score_name,
+                          ScoreData *score_data) const {
+  return scores_merger_.RequestScore(model_name, score_name, score_data);
 }
 
 }  // namespace core

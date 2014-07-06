@@ -81,6 +81,11 @@ class ThreadSafeCollectionHolder : boost::noncopyable {
     }
   }
 
+  void clear() {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    object_.clear();
+  }
+
   std::shared_ptr<T> get_copy(const K& key) const {
     boost::lock_guard<boost::mutex> guard(lock_);
     auto value = get_locked(key);

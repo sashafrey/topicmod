@@ -95,6 +95,23 @@ std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model)
   return theta_matrix;
 }
 
+std::shared_ptr<ScoreData> MasterComponent::GetScore(const Model& model,
+                                                     const std::string& score_name) {
+  int request_id = HandleErrorCode(ArtmRequestScore(
+    id(), model.name().c_str(), score_name.c_str()));
+
+  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  std::string blob;
+  blob.resize(length);
+  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&blob)));
+
+  ArtmDisposeRequest(request_id);
+
+  std::shared_ptr<ScoreData> score_data(new ScoreData());
+  score_data->ParseFromString(blob);
+  return score_data;
+}
+
 NodeController::NodeController(const NodeControllerConfig& config) : id_(0), config_(config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);

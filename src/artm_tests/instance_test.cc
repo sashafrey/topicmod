@@ -149,14 +149,6 @@ TEST(Instance, MultipleStreamsAndModels) {
   s2->set_modulus(2);
   s2->add_residuals(1);
   s2->set_name("test");
-  test.instance()->Reconfigure(config);
-
-  artm::ModelConfig m1;
-  m1.set_stream_name("train");
-  m1.set_enabled(true);
-  m1.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
-  artm::Score* score = m1.add_score();
-  score->set_type(artm::Score_Type_Perplexity);
 
   // In the little synthetic dataset created below
   // tokens in 'train' and 'test' sample won't overlap.
@@ -164,7 +156,21 @@ TEST(Instance, MultipleStreamsAndModels) {
   // it will be zero, because none of test-sample tokens
   // are present in token-topic-matrix. Therefore,
   // using train sample to get non-zero perplexity score.
-  score->set_stream_name("train");
+  ::artm::ScoreConfig score_config;
+  ::artm::PerplexityScoreConfig perplexity_config;
+  perplexity_config.set_stream_name("train");
+  score_config.set_config(perplexity_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_Perplexity);
+  score_config.set_name("perplexity");
+  config.add_score_config()->CopyFrom(score_config);
+
+  test.instance()->Reconfigure(config);
+
+  artm::ModelConfig m1;
+  m1.set_stream_name("train");
+  m1.set_enabled(true);
+  m1.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
+  m1.add_score_name("perplexity");
   test.instance()->CreateOrReconfigureModel(m1);
 
   artm::ModelConfig m2;
@@ -183,6 +189,11 @@ TEST(Instance, MultipleStreamsAndModels) {
 
   artm::TopicModel m2t;
   test.instance()->merger()->RetrieveExternalTopicModel(m2.name(), &m2t);
+
+  artm::ScoreData m1score_data;
+  test.instance()->merger()->RequestScore(m1.name(), "perplexity", &m1score_data);
+  artm::PerplexityScore perplexity_score;
+  perplexity_score.ParseFromString(m1score_data.data());
 
   // Verification for m1t (the first model)
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token0"));
@@ -216,6 +227,5 @@ TEST(Instance, MultipleStreamsAndModels) {
     }
   }
 
-  EXPECT_EQ(m1t.scores().value_size(), 1);
-  EXPECT_GT(m1t.scores().value(0), 0);
+  EXPECT_GT(perplexity_score.value(), 0);
 }

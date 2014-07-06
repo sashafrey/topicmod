@@ -18,14 +18,11 @@
 namespace artm {
 namespace core {
 
-TopicModel::TopicModel(ModelName model_name, int topics_count, int scores_count)
+TopicModel::TopicModel(ModelName model_name, int topics_count)
     : model_name_(model_name),
       token_to_token_id_(),
       token_id_to_token_(),
       topics_count_(topics_count),
-      items_processed_(0),
-      scores_(),
-      scores_norm_(),
       n_wt_(),
       r_wt_(),
       n_t_(),
@@ -33,9 +30,6 @@ TopicModel::TopicModel(ModelName model_name, int topics_count, int scores_count)
   assert(topics_count_ > 0);
   n_t_.resize(topics_count_);
   memset(&n_t_[0], 0, sizeof(float) * topics_count_);
-
-  scores_.resize(scores_count);
-  scores_norm_.resize(scores_count);
 }
 
 TopicModel::TopicModel(const TopicModel& rhs)
@@ -43,9 +37,6 @@ TopicModel::TopicModel(const TopicModel& rhs)
       token_to_token_id_(rhs.token_to_token_id_),
       token_id_to_token_(rhs.token_id_to_token_),
       topics_count_(rhs.topics_count_),
-      items_processed_(rhs.items_processed_),
-      scores_(rhs.scores_),
-      scores_norm_(rhs.scores_norm_),
       n_wt_(),  // must be deep-copied
       r_wt_(),  // must be deep-copied
       n_t_(rhs.n_t_),
@@ -70,21 +61,16 @@ TopicModel::TopicModel(const ::artm::TopicModel& external_topic_model) {
 TopicModel::TopicModel(const ::artm::core::ModelIncrement& model_increment) {
   model_name_ = model_increment.model_name();
   topics_count_ = model_increment.topics_count();
-  items_processed_ = 0;
-
-  scores_.resize(model_increment.score_size());
-  scores_norm_.resize(model_increment.score_size());
-
   n_t_.resize(topics_count_);
 
   ApplyDiff(model_increment);
 }
 
 TopicModel::~TopicModel() {
-  Clear(model_name(), topic_size(), score_size());
+  Clear(model_name(), topic_size());
 }
 
-void TopicModel::Clear(ModelName model_name, int topics_count, int scores_count) {
+void TopicModel::Clear(ModelName model_name, int topics_count) {
   std::for_each(n_wt_.begin(), n_wt_.end(), [&](float* value) {
     delete [] value;
   });
@@ -95,18 +81,11 @@ void TopicModel::Clear(ModelName model_name, int topics_count, int scores_count)
 
   model_name_ = model_name;
   topics_count_ = topics_count;
-  items_processed_ = 0;
 
   token_to_token_id_.clear();
   token_id_to_token_.clear();
   n_wt_.clear();
   r_wt_.clear();
-
-  scores_.clear();
-  scores_.resize(scores_count);
-
-  scores_norm_.clear();
-  scores_norm_.resize(scores_count);
 
   n_t_.clear();
   n_t_.resize(topics_count);
@@ -117,7 +96,6 @@ void TopicModel::Clear(ModelName model_name, int topics_count, int scores_count)
 void TopicModel::RetrieveModelIncrement(::artm::core::ModelIncrement* diff) const {
   diff->set_model_name(model_name_);
   diff->set_topics_count(topic_size());
-  diff->set_items_processed(items_processed());
 
   for (int token_index = 0; token_index < token_size(); ++token_index) {
     diff->add_token(token(token_index));
@@ -127,29 +105,12 @@ void TopicModel::RetrieveModelIncrement(::artm::core::ModelIncrement* diff) cons
     }
   }
 
-  for (int score_index = 0; score_index < score_size(); ++score_index) {
-    diff->add_score(scores_[score_index]);
-    diff->add_score_norm(scores_norm_[score_index]);
-  }
-
   for (auto &batch : batch_uuid_) {
     diff->add_batch_uuid(boost::lexical_cast<std::string>(batch));
   }
 }
 
 void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
-  this->IncreaseItemsProcessed(diff.items_processed());
-
-  for (int score_index = 0; score_index < diff.score_size(); ++score_index) {
-    if (score_index >= this->score_size()) {
-      LOG(ERROR) << "ModelIncrement has more scores than base model. Ignoring score updates.";
-      continue;
-    }
-
-    this->IncreaseScores(score_index, diff.score(score_index),
-                         diff.score_norm(score_index));
-  }
-
   // Add new tokens discovered by processor
   for (int token_index = 0;
        token_index < diff.discovered_token_size();
@@ -184,12 +145,6 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
 }
 
 void TopicModel::ApplyDiff(const ::artm::core::TopicModel& diff) {
-  this->IncreaseItemsProcessed(diff.items_processed());
-  for (int score_index = 0; score_index < diff.score_size(); ++score_index) {
-    this->IncreaseScores(score_index, diff.score_not_normalized(score_index),
-                         diff.score_normalizer(score_index));
-  }
-
   int topics_count = this->topic_size();
 
   for (int token_index = 0;
@@ -215,7 +170,6 @@ void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) con
   // 1. Fill in non-internal part of ::artm::TopicModel
   topic_model->set_name(model_name_);
   topic_model->set_topics_count(topic_size());
-  topic_model->set_items_processed(items_processed());
 
   for (int token_index = 0; token_index < token_size(); ++token_index) {
     topic_model->add_token(token_id_to_token_[token_index]);
@@ -224,10 +178,6 @@ void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) con
     while (iter.NextTopic() < topic_size()) {
       weights->add_value(iter.Weight());
     }
-  }
-
-  for (int score_index = 0; score_index < score_size(); ++score_index) {
-    topic_model->mutable_scores()->add_value(score(score_index));
   }
 
   // 2. Fill in internal part of ::artm::TopicModel
@@ -245,19 +195,11 @@ void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) con
     topic_model_internals.mutable_n_t()->add_value(n_t_[topic_index]);
   }
 
-  for (int score_index = 0; score_index < score_size(); ++score_index) {
-    topic_model_internals.mutable_scores_raw()->add_value(scores_[score_index]);
-    topic_model_internals.mutable_scores_normalizer()->add_value(scores_norm_[score_index]);
-  }
-
   topic_model->set_internals(topic_model_internals.SerializeAsString());
 }
 
 void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_topic_model) {
-  int scores_size = external_topic_model.scores().value_size();
-  Clear(external_topic_model.name(), external_topic_model.topics_count(), scores_size);
-
-  items_processed_ = external_topic_model.items_processed();
+  Clear(external_topic_model.name(), external_topic_model.topics_count());
 
   if (!external_topic_model.has_internals()) {
     // Creating a model based on weights
@@ -269,10 +211,6 @@ void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_t
         SetTokenWeight(token_id, topic_index, weights.value(topic_index));
         SetRegularizerWeight(token_id, topic_index, 0);
       }
-    }
-
-    for (int score_index = 0; score_index < scores_size; ++score_index) {
-      SetScores(score_index, 0.0, 0.0);
     }
   } else {
     // Creating a model based on internals
@@ -294,12 +232,6 @@ void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_t
         SetTokenWeight(token_id, topic_index, n_wt.value(topic_index));
         SetRegularizerWeight(token_id, topic_index, r_wt.value(topic_index));
       }
-    }
-
-    for (int score_index = 0; score_index < scores_size; ++score_index) {
-      SetScores(score_index,
-                topic_model_internals.scores_raw().value(score_index),
-                topic_model_internals.scores_normalizer().value(score_index));
     }
   }
 }
@@ -342,41 +274,6 @@ int TopicModel::AddToken(const std::string& token, bool random_init) {
   r_wt_.push_back(regularizer_values);
 
   return token_id;
-}
-
-void TopicModel::IncreaseItemsProcessed(int value) {
-  items_processed_ += value;
-}
-
-void TopicModel::SetItemsProcessed(int value) {
-  items_processed_ = value;
-}
-
-void TopicModel::IncreaseScores(int score_index, double value, double norm) {
-  assert(score_index < static_cast<int>(scores_.size()));
-  scores_[score_index] += value;
-  scores_norm_[score_index] += norm;
-}
-
-void TopicModel::SetScores(int score_index, double value, double norm) {
-  assert(score_index < static_cast<int>(scores_.size()));
-  scores_[score_index] = value;
-  scores_norm_[score_index] = norm;
-}
-
-double TopicModel::score(int score_index) const {
-  // The only supported type so far is perplexity.
-  return exp(- scores_[score_index] / scores_norm_[score_index]);
-}
-
-double TopicModel::score_not_normalized(int score_index) const {
-  if (score_index >= score_size()) return 0.0f;
-  return scores_[score_index];
-}
-
-double TopicModel::score_normalizer(int score_index) const {
-  if (score_index >= score_size()) return 0.0f;
-  return scores_norm_[score_index];
 }
 
 void TopicModel::IncreaseTokenWeight(const std::string& token, int topic_id, float value) {
@@ -499,14 +396,6 @@ int TopicModel::topic_size() const {
 
 ModelName TopicModel::model_name() const {
   return model_name_;
-}
-
-int TopicModel::items_processed() const {
-  return items_processed_;
-}
-
-int TopicModel::score_size() const {
-  return scores_.size();
 }
 
 bool TopicModel::has_token(const std::string& token) const {

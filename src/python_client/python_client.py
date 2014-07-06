@@ -26,7 +26,7 @@ topics_count = 16
 outer_iteration_count = 13
 inner_iterations_count = 5
 top_tokens_count_to_visualize = 4
-parse_collection_from_text = 1
+parse_collection_from_text = 0
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 
@@ -40,6 +40,13 @@ master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
 master_config.cache_processor_output = 1
 master_config.disk_path = '.'
+
+perplexity_config = messages_pb2.PerplexityScoreConfig();
+score_config = master_config.score_config.add()
+score_config.config = messages_pb2.PerplexityScoreConfig().SerializeToString();
+score_config.type = ScoreConfig_Type_Perplexity;
+score_config.name = "perplexity_score"
+
 with library.CreateMasterComponent(master_config) as master_component:
     batch = messages_pb2.Batch()
     batch_tokens = {}
@@ -82,8 +89,7 @@ with library.CreateMasterComponent(master_config) as master_component:
     model_config = messages_pb2.ModelConfig()
     model_config.topics_count = topics_count
     model_config.inner_iterations_count = inner_iterations_count
-    score_ = model_config.score.add()
-    score_.type = Score_Type_Perplexity
+    model_config.score_name.append('perplexity_score')
 
     ################################################################################
     regularizer_config_theta = messages_pb2.DirichletThetaConfig()
@@ -99,7 +105,7 @@ with library.CreateMasterComponent(master_config) as master_component:
     initial_topic_model = messages_pb2.TopicModel();
     initial_topic_model.topics_count = topics_count;
     initial_topic_model.name = model.name()
-    initial_topic_model.scores.value.append(0.0)
+
     random.seed(123)
     for token in tokens:
       initial_topic_model.token.append(token);
@@ -112,11 +118,11 @@ with library.CreateMasterComponent(master_config) as master_component:
         master_component.InvokeIteration(1)
         master_component.WaitIdle();
         topic_model = master_component.GetTopicModel(model)
+        perplexity_score = master_component.GetScore(model, 'perplexity_score')
         model.InvokePhiRegularizers();
 
         print "Iter# = " + str(iter) + \
-                ", Items# = " + str(topic_model.items_processed) + \
-                ", Perplexity = " + str(topic_model.scores.value[0])
+                ", Perplexity = " + str(perplexity_score.value)
 
     # Log to 7 words in each topic
     tokens_size = len(topic_model.token)

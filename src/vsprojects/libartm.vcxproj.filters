@@ -66,6 +66,9 @@
     <ClCompile Include="..\artm\core\master_proxy.cc">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\perplexity.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\artm\messages.pb.h" />
@@ -163,6 +166,10 @@
     <ClInclude Include="..\artm\core\master_interface.h">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="..\artm\score_calculator_interface.h" />
+    <ClInclude Include="..\artm\score_sandbox\perplexity.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />
@@ -177,6 +184,9 @@
     </Filter>
     <Filter Include="regularizer_sandbox">
       <UniqueIdentifier>{988f6989-44b9-43c5-b92b-968415dc6295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="score_sandbox">
+      <UniqueIdentifier>{589d3151-6522-494d-967f-43c6097446c9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

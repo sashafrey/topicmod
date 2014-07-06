@@ -3,12 +3,15 @@
 #include "artm/core/processor.h"
 
 #include <stdlib.h>
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "glog/logging.h"
 
 #include "artm/regularizer_interface.h"
+#include "artm/score_calculator_interface.h"
 
 #include "artm/core/protobuf_helpers.h"
 #include "artm/core/call_on_destruction.h"
@@ -132,10 +135,6 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           float* theta) {
   int topic_size = topic_model_.topic_size();
 
-  if ((model_increment != nullptr) && update_model) {
-    model_increment->set_items_processed(model_increment->items_processed() + 1);
-  }
-
   // find the id of token in topic_model
   std::vector<int> token_id;
   std::vector<float> token_count;
@@ -256,37 +255,6 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
   }
 }
 
-void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& item,
-                                              const float* theta, double* perplexity,
-                                              double* normalizer, int* zero_words) {
-  int topics_size = topic_model_.topic_size();
-  TokenIterator iter(token_dict_, topic_model_, item, score.field_name(),
-                      TokenIterator::Mode_Known);
-
-  int n_d_integer = 0;
-  while (iter.Next())
-    n_d_integer += iter.count();
-  float n_d = static_cast<float>(n_d_integer);
-
-  iter.Reset();
-  while (iter.Next()) {
-    float sum = 0.0f;
-    TopicWeightIterator topic_iter = iter.GetTopicWeightIterator();
-    while (topic_iter.NextNonZeroTopic() < topics_size) {
-      sum += theta[topic_iter.TopicIndex()] * topic_iter.Weight();
-    }
-
-    if (sum == 0.0f) {
-      // Use document unigram model
-      sum = static_cast<float>(iter.count()) / n_d;
-      (*zero_words)++;
-    }
-
-    (*normalizer) += iter.count();
-    (*perplexity) += iter.count() * log(sum);
-  }
-}
-
 Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input)
     : items_count_(processor_input.batch().item_size()),
       item_index_(-1),  // // handy trick for iterators
@@ -382,7 +350,6 @@ void Processor::ThreadFunction() {
       std::shared_ptr<InstanceSchema> schema = schema_.get();
       std::vector<ModelName> model_names = schema->GetModelNames();
       std::for_each(model_names.begin(), model_names.end(), [&](ModelName model_name) {
-        int zero_words = 0;
         const ModelConfig& model = schema->model_config(model_name);
 
         // do not process disabled models.
@@ -390,6 +357,22 @@ void Processor::ThreadFunction() {
 
         // Find and save to the variable the index of model stream in the part->stream_name() list.
         int model_stream_index = repeated_field_index_of(part->stream_name(), model.stream_name());
+
+        std::map<ScoreName, std::shared_ptr<Score>> score_container;
+        for (int score_index = 0; score_index < model.score_name_size(); ++score_index) {
+          const ScoreName& score_name = model.score_name(score_index);
+          auto score_calc = schema->score_calculator(score_name);
+          if (score_calc == nullptr) {
+            LOG(ERROR) << "Unable to find score calculator '" << score_name << "', referenced by "
+                        << "model " << model.name() << ".";
+            continue;
+          }
+
+          if (!score_calc->is_cumulative())
+            continue;  // skip all non-cumulative scores
+
+          score_container.insert(std::make_pair(score_name, score_calc->CreateScore()));
+        }
 
         std::shared_ptr<ModelIncrement> model_increment = std::make_shared<ModelIncrement>();
         model_increment->add_batch_uuid(part->batch_uuid());
@@ -414,14 +397,6 @@ void Processor::ThreadFunction() {
 
         // process part and store result in merger queue
         model_increment->set_model_name(model_name);
-        model_increment->set_items_processed(0);
-
-        // Prepare score vector
-        for (int score_index = 0; score_index < model.score_size(); ++score_index) {
-          model_increment->add_score(0.0);
-          model_increment->add_score_norm(0.0);
-        }
-
         model_increment->set_topics_count(topic_size);
 
         for (int token_index = 0; token_index < part->batch().token_size(); ++token_index) {
@@ -471,35 +446,25 @@ void Processor::ThreadFunction() {
           }
 
           // Calculate all requested scores (such as perplexity)
-          for (int score_index = 0; score_index < model.score_size(); ++score_index) {
-            const Score& score = model.score(score_index);
+          for (auto score_iter = score_container.begin();
+               score_iter != score_container.end();
+               ++score_iter) {
+            const ScoreName& score_name = score_iter->first;
+            std::shared_ptr<Score> score = score_iter->second;
+            auto score_calc = schema->score_calculator(score_name);
 
-            // Perplexity is so far the only score that Processor know how to calculate.
-            if (score.type() != Score_Type_Perplexity)
-              continue;
+            if (!iter.InStream(score_calc->stream_name())) continue;
 
-            if (!iter.InStream(score.stream_name()))
-              continue;
-
-            double perplexity_score = 0.0;
-            double perplexity_norm = 0.0;
-
-            item_processor.CalculateScore(score, *item, &theta[0], &perplexity_score,
-                                          &perplexity_norm, &zero_words);
-
-            model_increment->set_score(score_index,
-              model_increment->score(score_index) + perplexity_score);
-
-            model_increment->set_score_norm(
-              score_index, model_increment->score_norm(score_index) + perplexity_norm);
+            score_calc->AppendScore(*item, part->batch().token(), *topic_model, theta,
+                                    score.get());
           }
         }
 
-        if (zero_words > 0) {
-          LOG(INFO) << "Calculate perplexity score hit " << zero_words
-                    << " words and documents with p(w|d)=0"
-                    << " (model = " << model.name() << ", batch = " << part->batch_uuid()
-                    << "). Using document unigram model to cal perplexity for these (w, d) pairs.";
+        for (auto score_iter = score_container.begin();
+             score_iter != score_container.end();
+             ++score_iter) {
+          model_increment->add_score_name(score_iter->first);
+          model_increment->add_score(score_iter->second->SerializeAsString());
         }
       });
 

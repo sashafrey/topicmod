@@ -55,29 +55,27 @@ message ProcessorInput
 message ModelIncrement {
   required string model_name = 1;
   required int32 topics_count = 2;
-  optional int32 items_processed = 3;
 
   // Newly discovered tokens, not yet included in matrix Phi.
-  repeated string discovered_token = 4;
+  repeated string discovered_token = 3;
 
   // Known tokens
-  repeated string token = 5;
+  repeated string token = 4;
 
   // n_wt values for this batch; the length of this repeated field
   // equals the number of known tokens.
   // For each token, the length of Counters array equals topics_count.
-  repeated FloatArray token_increment = 6;
+  repeated FloatArray token_increment = 5;
 
-  // Messages related to scores such as perplexity.
-  repeated double score = 7;      // cumulative part of perplexity
-  repeated double score_norm = 8;  // total 'n' (accumulated number of tokens)
+  repeated string score_name = 6;
+  repeated bytes score = 7;
 
   // Cached thetas from previous iteration
-  repeated int32 item_id = 9;
-  repeated FloatArray theta = 10;
+  repeated int32 item_id = 8;
+  repeated FloatArray theta = 9;
 
   // Identificators of all batches, contributing to this model increment.
-  repeated string batch_uuid = 11;
+  repeated string batch_uuid = 10;
 }
 
 // ======== MasterComponentService ========
@@ -122,6 +120,11 @@ message DisposeDictionaryArgs {
   optional string dictionary_name = 2;
 }
 
+message RequestScoreArgs {
+  optional string model_name = 1;
+  optional string score_name = 2;
+}
+
 service NodeControllerService {
   rpc CreateOrReconfigureInstance(MasterComponentConfig) returns (Void);
   rpc DisposeInstance(Void) returns (Void);
@@ -144,6 +147,7 @@ service NodeControllerService {
   rpc OverwriteTopicModel(TopicModel) returns (Void);
   rpc RequestTopicModel(String) returns (TopicModel);
   rpc RequestThetaMatrix(String) returns (ThetaMatrix);
+  rpc RequestScore(RequestScoreArgs) returns (ScoreData);
 
   rpc AddBatch(Batch) returns (Void);
   rpc InvokeIteration(Void) returns (Void);

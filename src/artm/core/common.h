@@ -17,6 +17,7 @@ namespace artm {
 namespace core {
 
 typedef std::string ModelName;
+typedef std::string ScoreName;
 
 const int UnknownId = -1;
 

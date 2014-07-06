@@ -26,12 +26,23 @@
 #include "artm/regularizer_sandbox/smooth_sparse_theta.h"
 #include "artm/regularizer_sandbox/smooth_sparse_phi.h"
 
+#include "artm/score_calculator_interface.h"
+#include "artm/score_sandbox/perplexity.h"
+
 #define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                  \
   ConfigType regularizer_config;                                                          \
   if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {    \
     BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));  \
   }                                                                                       \
   regularizer.reset(new RegularizerType(regularizer_config));                             \
+}                                                                                         \
+
+#define CREATE_SCORE_CALCULATOR(ConfigType, ScoreType) {                                  \
+  ConfigType score_config;                                                                \
+  if (!score_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {          \
+    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse score config"));        \
+  }                                                                                       \
+  score_calculator.reset(new ScoreType(score_config));                                    \
 }                                                                                         \
 
 namespace artm {
@@ -125,7 +136,7 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   std::string regularizer_name = config.name();
   artm::RegularizerConfig_Type regularizer_type = config.type();
 
-  std::string config_blob;  // Used by CREATE_OR_RECONFIGURE_REGULARIZER
+  std::string config_blob;  // Used by CREATE_OR_RECONFIGURE_REGULARIZER marco
   if (config.has_config()) {
     config_blob = config.config();
   }
@@ -174,6 +185,32 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   schema_.set(new_schema);
 }
 
+static std::shared_ptr<ScoreCalculatorInterface> CreateScoreCalculator(const ScoreConfig& config) {
+  std::string score_name = config.name();
+  artm::ScoreConfig_Type score_type = config.type();
+
+  std::string config_blob;  // Used by CREATE_SCORE_CALCULATOR macro
+  if (config.has_config()) {
+    config_blob = config.config();
+  }
+
+  std::shared_ptr<artm::ScoreCalculatorInterface> score_calculator;
+
+  // add here new case if adding new score
+  switch (score_type) {
+    case artm::ScoreConfig_Type_Perplexity: {
+      CREATE_SCORE_CALCULATOR(::artm::PerplexityScoreConfig,
+                              ::artm::score_sandbox::Perplexity);
+      break;
+    }
+
+    default:
+      BOOST_THROW_EXCEPTION(SerializationException("Unable to parse score config"));
+  }
+
+  return score_calculator;
+}
+
 void Instance::DisposeRegularizer(const std::string& name) {
   auto new_schema = schema_.get_copy();
   new_schema->clear_regularizer(name);
@@ -199,6 +236,16 @@ void Instance::Reconfigure(const MasterComponentConfig& master_config) {
 
   auto new_schema = schema_.get_copy();
   new_schema->set_config(master_config);
+
+  new_schema->clear_score_calculators();  // Clear all score calculators
+  for (int score_index = 0;
+       score_index < master_config.score_config_size();
+       ++score_index) {
+    const ScoreConfig& score_config = master_config.score_config(score_index);
+    auto score_calculator = CreateScoreCalculator(score_config);
+    new_schema->set_score_calculator(score_config.name(), score_calculator);
+  }
+
   schema_.set(new_schema);
 
   if (!is_configured_) {

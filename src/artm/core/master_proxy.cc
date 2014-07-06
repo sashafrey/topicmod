@@ -123,6 +123,18 @@ bool MasterProxy::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* 
   return true;
 }
 
+bool MasterProxy::RequestScore(const ModelName& model_name, const ScoreName& score_name,
+                               ::artm::ScoreData* score_data) {
+  make_rpcz_call([&]() {
+    RequestScoreArgs request;
+    request.set_model_name(model_name);
+    request.set_score_name(score_name);
+    node_controller_service_proxy_->RequestScore(request, score_data);
+  });
+
+  return true;
+}
+
 void MasterProxy::AddBatch(const Batch& batch) {
   make_rpcz_call([&]() {
     Void response;

@@ -58,63 +58,66 @@ void rpcz_protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "Batch\022\022\n\nbatch_uuid\030\002 \002(\t\022$\n\013stream_mask"
     "\030\004 \003(\0132\017.artm.core.Mask\022\023\n\013stream_name\030\005"
     " \003(\t\0225\n\014cached_theta\030\006 \003(\0132\037.artm.core.D"
-    "ataLoaderCacheEntry\"\220\002\n\016ModelIncrement\022\022"
+    "ataLoaderCacheEntry\"\367\001\n\016ModelIncrement\022\022"
     "\n\nmodel_name\030\001 \002(\t\022\024\n\014topics_count\030\002 \002(\005"
-    "\022\027\n\017items_processed\030\003 \001(\005\022\030\n\020discovered_"
-    "token\030\004 \003(\t\022\r\n\005token\030\005 \003(\t\022)\n\017token_incr"
-    "ement\030\006 \003(\0132\020.artm.FloatArray\022\r\n\005score\030\007"
-    " \003(\001\022\022\n\nscore_norm\030\010 \003(\001\022\017\n\007item_id\030\t \003("
-    "\005\022\037\n\005theta\030\n \003(\0132\020.artm.FloatArray\022\022\n\nba"
-    "tch_uuid\030\013 \003(\t\"\034\n\010BatchIds\022\020\n\010batch_id\030\001"
-    " \003(\t\"U\n\034CreateOrReconfigureModelArgs\022\022\n\n"
-    "model_name\030\002 \001(\t\022!\n\006config\030\003 \001(\0132\021.artm."
-    "ModelConfig\"&\n\020DisposeModelArgs\022\022\n\nmodel"
-    "_name\030\002 \001(\t\"g\n\"CreateOrReconfigureRegula"
-    "rizerArgs\022\030\n\020regularizer_name\030\002 \001(\t\022\'\n\006c"
-    "onfig\030\003 \001(\0132\027.artm.RegularizerConfig\"2\n\026"
-    "DisposeRegularizerArgs\022\030\n\020regularizer_na"
-    "me\030\002 \001(\t\"O\n!CreateOrReconfigureDictionar"
-    "yArgs\022*\n\ndictionary\030\002 \001(\0132\026.artm.Diction"
-    "aryConfig\"0\n\025DisposeDictionaryArgs\022\027\n\017di"
-    "ctionary_name\030\002 \001(\t2\367\001\n\026MasterComponentS"
-    "ervice\0229\n\013UpdateModel\022\031.artm.core.ModelI"
-    "ncrement\032\017.artm.core.Void\0224\n\rRetrieveMod"
-    "el\022\021.artm.core.String\032\020.artm.TopicModel\022"
-    "5\n\016RequestBatches\022\016.artm.core.Int\032\023.artm"
-    ".core.BatchIds\0225\n\rReportBatches\022\023.artm.c"
-    "ore.BatchIds\032\017.artm.core.Void2\204\n\n\025NodeCo"
-    "ntrollerService\022K\n\033CreateOrReconfigureIn"
-    "stance\022\033.artm.MasterComponentConfig\032\017.ar"
-    "tm.core.Void\0223\n\017DisposeInstance\022\017.artm.c"
-    "ore.Void\032\017.artm.core.Void\022R\n\"CreateOrRec"
-    "onfigureMasterComponent\022\033.artm.MasterCom"
-    "ponentConfig\032\017.artm.core.Void\022:\n\026Dispose"
-    "MasterComponent\022\017.artm.core.Void\032\017.artm."
-    "core.Void\022T\n\030CreateOrReconfigureModel\022\'."
-    "artm.core.CreateOrReconfigureModelArgs\032\017"
-    ".artm.core.Void\022<\n\014DisposeModel\022\033.artm.c"
-    "ore.DisposeModelArgs\032\017.artm.core.Void\022`\n"
-    "\036CreateOrReconfigureRegularizer\022-.artm.c"
-    "ore.CreateOrReconfigureRegularizerArgs\032\017"
-    ".artm.core.Void\022H\n\022DisposeRegularizer\022!."
-    "artm.core.DisposeRegularizerArgs\032\017.artm."
-    "core.Void\022^\n\035CreateOrReconfigureDictiona"
-    "ry\022,.artm.core.CreateOrReconfigureDictio"
-    "naryArgs\032\017.artm.core.Void\022F\n\021DisposeDict"
-    "ionary\022 .artm.core.DisposeDictionaryArgs"
-    "\032\017.artm.core.Void\0227\n\023ForcePullTopicModel"
-    "\022\017.artm.core.Void\032\017.artm.core.Void\022@\n\034Fo"
-    "rcePushTopicModelIncrement\022\017.artm.core.V"
-    "oid\032\017.artm.core.Void\0228\n\023OverwriteTopicMo"
-    "del\022\020.artm.TopicModel\032\017.artm.core.Void\0228"
-    "\n\021RequestTopicModel\022\021.artm.core.String\032\020"
-    ".artm.TopicModel\022:\n\022RequestThetaMatrix\022\021"
-    ".artm.core.String\032\021.artm.ThetaMatrix\022(\n\010"
-    "AddBatch\022\013.artm.Batch\032\017.artm.core.Void\0223"
-    "\n\017InvokeIteration\022\017.artm.core.Void\032\017.art"
-    "m.core.Void\022,\n\010WaitIdle\022\017.artm.core.Void"
-    "\032\017.artm.core.Void\0229\n\025InvokePhiRegularize"
-    "rs\022\017.artm.core.Void\032\017.artm.core.Void", 2716);
+    "\022\030\n\020discovered_token\030\003 \003(\t\022\r\n\005token\030\004 \003("
+    "\t\022)\n\017token_increment\030\005 \003(\0132\020.artm.FloatA"
+    "rray\022\022\n\nscore_name\030\006 \003(\t\022\r\n\005score\030\007 \003(\014\022"
+    "\017\n\007item_id\030\010 \003(\005\022\037\n\005theta\030\t \003(\0132\020.artm.F"
+    "loatArray\022\022\n\nbatch_uuid\030\n \003(\t\"\034\n\010BatchId"
+    "s\022\020\n\010batch_id\030\001 \003(\t\"U\n\034CreateOrReconfigu"
+    "reModelArgs\022\022\n\nmodel_name\030\002 \001(\t\022!\n\006confi"
+    "g\030\003 \001(\0132\021.artm.ModelConfig\"&\n\020DisposeMod"
+    "elArgs\022\022\n\nmodel_name\030\002 \001(\t\"g\n\"CreateOrRe"
+    "configureRegularizerArgs\022\030\n\020regularizer_"
+    "name\030\002 \001(\t\022\'\n\006config\030\003 \001(\0132\027.artm.Regula"
+    "rizerConfig\"2\n\026DisposeRegularizerArgs\022\030\n"
+    "\020regularizer_name\030\002 \001(\t\"O\n!CreateOrRecon"
+    "figureDictionaryArgs\022*\n\ndictionary\030\002 \001(\013"
+    "2\026.artm.DictionaryConfig\"0\n\025DisposeDicti"
+    "onaryArgs\022\027\n\017dictionary_name\030\002 \001(\t\":\n\020Re"
+    "questScoreArgs\022\022\n\nmodel_name\030\001 \001(\t\022\022\n\nsc"
+    "ore_name\030\002 \001(\t2\367\001\n\026MasterComponentServic"
+    "e\0229\n\013UpdateModel\022\031.artm.core.ModelIncrem"
+    "ent\032\017.artm.core.Void\0224\n\rRetrieveModel\022\021."
+    "artm.core.String\032\020.artm.TopicModel\0225\n\016Re"
+    "questBatches\022\016.artm.core.Int\032\023.artm.core"
+    ".BatchIds\0225\n\rReportBatches\022\023.artm.core.B"
+    "atchIds\032\017.artm.core.Void2\302\n\n\025NodeControl"
+    "lerService\022K\n\033CreateOrReconfigureInstanc"
+    "e\022\033.artm.MasterComponentConfig\032\017.artm.co"
+    "re.Void\0223\n\017DisposeInstance\022\017.artm.core.V"
+    "oid\032\017.artm.core.Void\022R\n\"CreateOrReconfig"
+    "ureMasterComponent\022\033.artm.MasterComponen"
+    "tConfig\032\017.artm.core.Void\022:\n\026DisposeMaste"
+    "rComponent\022\017.artm.core.Void\032\017.artm.core."
+    "Void\022T\n\030CreateOrReconfigureModel\022\'.artm."
+    "core.CreateOrReconfigureModelArgs\032\017.artm"
+    ".core.Void\022<\n\014DisposeModel\022\033.artm.core.D"
+    "isposeModelArgs\032\017.artm.core.Void\022`\n\036Crea"
+    "teOrReconfigureRegularizer\022-.artm.core.C"
+    "reateOrReconfigureRegularizerArgs\032\017.artm"
+    ".core.Void\022H\n\022DisposeRegularizer\022!.artm."
+    "core.DisposeRegularizerArgs\032\017.artm.core."
+    "Void\022^\n\035CreateOrReconfigureDictionary\022,."
+    "artm.core.CreateOrReconfigureDictionaryA"
+    "rgs\032\017.artm.core.Void\022F\n\021DisposeDictionar"
+    "y\022 .artm.core.DisposeDictionaryArgs\032\017.ar"
+    "tm.core.Void\0227\n\023ForcePullTopicModel\022\017.ar"
+    "tm.core.Void\032\017.artm.core.Void\022@\n\034ForcePu"
+    "shTopicModelIncrement\022\017.artm.core.Void\032\017"
+    ".artm.core.Void\0228\n\023OverwriteTopicModel\022\020"
+    ".artm.TopicModel\032\017.artm.core.Void\0228\n\021Req"
+    "uestTopicModel\022\021.artm.core.String\032\020.artm"
+    ".TopicModel\022:\n\022RequestThetaMatrix\022\021.artm"
+    ".core.String\032\021.artm.ThetaMatrix\022<\n\014Reque"
+    "stScore\022\033.artm.core.RequestScoreArgs\032\017.a"
+    "rtm.ScoreData\022(\n\010AddBatch\022\013.artm.Batch\032\017"
+    ".artm.core.Void\0223\n\017InvokeIteration\022\017.art"
+    "m.core.Void\032\017.artm.core.Void\022,\n\010WaitIdle"
+    "\022\017.artm.core.Void\032\017.artm.core.Void\0229\n\025In"
+    "vokePhiRegularizers\022\017.artm.core.Void\032\017.a"
+    "rtm.core.Void", 2813);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/core/internals.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto);
@@ -426,6 +429,12 @@ void NodeControllerService::RequestThetaMatrix(const ::artm::core::String&,
               "Method RequestThetaMatrix() not implemented.");
 }
 
+void NodeControllerService::RequestScore(const ::artm::core::RequestScoreArgs&,
+                         ::rpcz::reply< ::artm::ScoreData> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method RequestScore() not implemented.");
+}
+
 void NodeControllerService::AddBatch(const ::artm::Batch&,
                          ::rpcz::reply< ::artm::core::Void> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
@@ -531,21 +540,26 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
           ::rpcz::reply< ::artm::ThetaMatrix>(channel));
       break;
     case 15:
+      RequestScore(
+          *::google::protobuf::down_cast<const ::artm::core::RequestScoreArgs*>(&request),
+          ::rpcz::reply< ::artm::ScoreData>(channel));
+      break;
+    case 16:
       AddBatch(
           *::google::protobuf::down_cast<const ::artm::Batch*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 16:
+    case 17:
       InvokeIteration(
           *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 17:
+    case 18:
       WaitIdle(
           *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
       break;
-    case 18:
+    case 19:
       InvokePhiRegularizers(
           *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
           ::rpcz::reply< ::artm::core::Void>(channel));
@@ -591,12 +605,14 @@ const ::google::protobuf::Message& NodeControllerService::GetRequestPrototype(
     case 14:
       return ::artm::core::String::default_instance();
     case 15:
-      return ::artm::Batch::default_instance();
+      return ::artm::core::RequestScoreArgs::default_instance();
     case 16:
-      return ::artm::core::Void::default_instance();
+      return ::artm::Batch::default_instance();
     case 17:
       return ::artm::core::Void::default_instance();
     case 18:
+      return ::artm::core::Void::default_instance();
+    case 19:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -639,12 +655,14 @@ const ::google::protobuf::Message& NodeControllerService::GetResponsePrototype(
     case 14:
       return ::artm::ThetaMatrix::default_instance();
     case 15:
-      return ::artm::core::Void::default_instance();
+      return ::artm::ScoreData::default_instance();
     case 16:
       return ::artm::core::Void::default_instance();
     case 17:
       return ::artm::core::Void::default_instance();
     case 18:
+      return ::artm::core::Void::default_instance();
+    case 19:
       return ::artm::core::Void::default_instance();
     default:
       GOOGLE_LOG(FATAL) << "Bad method index; this should never happen.";
@@ -980,12 +998,33 @@ void NodeControllerService_Stub::RequestThetaMatrix(const ::artm::core::String& 
     throw ::rpcz::rpc_error(rpc);
   }
 }
+void NodeControllerService_Stub::RequestScore(const ::artm::core::RequestScoreArgs& request,
+                              ::artm::ScoreData* response,
+                              ::rpcz::rpc* rpc,
+                              ::rpcz::closure* done) {
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(15),
+                        request, response, rpc, done);
+}
+void NodeControllerService_Stub::RequestScore(const ::artm::core::RequestScoreArgs& request,
+                              ::artm::ScoreData* response,
+                              long deadline_ms) {
+  ::rpcz::rpc rpc;
+  rpc.set_deadline_ms(deadline_ms);
+  channel_->call_method(service_name_,
+                        NodeControllerService::descriptor()->method(15),
+                        request, response, &rpc, NULL);
+  rpc.wait();
+  if (!rpc.ok()) {
+    throw ::rpcz::rpc_error(rpc);
+  }
+}
 void NodeControllerService_Stub::AddBatch(const ::artm::Batch& request,
                               ::artm::core::Void* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(15),
+                        NodeControllerService::descriptor()->method(16),
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::AddBatch(const ::artm::Batch& request,
@@ -994,7 +1033,7 @@ void NodeControllerService_Stub::AddBatch(const ::artm::Batch& request,
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(15),
+                        NodeControllerService::descriptor()->method(16),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {
@@ -1006,7 +1045,7 @@ void NodeControllerService_Stub::InvokeIteration(const ::artm::core::Void& reque
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(16),
+                        NodeControllerService::descriptor()->method(17),
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::InvokeIteration(const ::artm::core::Void& request,
@@ -1015,7 +1054,7 @@ void NodeControllerService_Stub::InvokeIteration(const ::artm::core::Void& reque
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(16),
+                        NodeControllerService::descriptor()->method(17),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {
@@ -1027,7 +1066,7 @@ void NodeControllerService_Stub::WaitIdle(const ::artm::core::Void& request,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(17),
+                        NodeControllerService::descriptor()->method(18),
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::WaitIdle(const ::artm::core::Void& request,
@@ -1036,7 +1075,7 @@ void NodeControllerService_Stub::WaitIdle(const ::artm::core::Void& request,
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(17),
+                        NodeControllerService::descriptor()->method(18),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {
@@ -1048,7 +1087,7 @@ void NodeControllerService_Stub::InvokePhiRegularizers(const ::artm::core::Void&
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(18),
+                        NodeControllerService::descriptor()->method(19),
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::InvokePhiRegularizers(const ::artm::core::Void& request,
@@ -1057,7 +1096,7 @@ void NodeControllerService_Stub::InvokePhiRegularizers(const ::artm::core::Void&
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
   channel_->call_method(service_name_,
-                        NodeControllerService::descriptor()->method(18),
+                        NodeControllerService::descriptor()->method(19),
                         request, response, &rpc, NULL);
   rpc.wait();
   if (!rpc.ok()) {

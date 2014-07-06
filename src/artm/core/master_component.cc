@@ -9,6 +9,7 @@
 #include "zmq.hpp"
 
 #include "artm/regularizer_interface.h"
+#include "artm/score_calculator_interface.h"
 
 #include "artm/core/exceptions.h"
 #include "artm/core/helpers.h"
@@ -146,6 +147,12 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
 
 bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) {
   return instance_->merger()->RetrieveExternalTopicModel(model_name, topic_model);
+}
+
+bool MasterComponent::RequestScore(const ModelName& model_name,
+                                   const ScoreName& score_name,
+                                   ScoreData* score_data) {
+  return instance_->merger()->RequestScore(model_name, score_name, score_data);
 }
 
 void MasterComponent::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {

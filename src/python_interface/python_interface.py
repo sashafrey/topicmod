@@ -20,7 +20,8 @@ RegularizerConfig_Type_DirichletTheta = 0
 RegularizerConfig_Type_DirichletPhi = 1
 RegularizerConfig_Type_SmoothSparseTheta = 2
 RegularizerConfig_Type_SmoothSparsePhi = 3
-Score_Type_Perplexity = 0
+ScoreConfig_Type_Perplexity = 0
+ScoreData_Type_Perplexity = 0
 
 #################################################################################
 
@@ -167,6 +168,25 @@ class MasterComponent:
     theta_matrix = messages_pb2.ThetaMatrix()
     theta_matrix.ParseFromString(blob)
     return theta_matrix
+
+  def GetScore(self, model, score_name):
+    request_id = HandleErrorCode(self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
+    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+
+    blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, blob))
+    self.lib_.ArtmDisposeRequest(request_id)
+
+    score_data = messages_pb2.ScoreData()
+    score_data.ParseFromString(blob)
+
+    if (score_data.type == ScoreData_Type_Perplexity):
+      score = messages_pb2.PerplexityScore();
+      score.ParseFromString(score_data.data);
+      return score;
+
+    # Unknown score type
+    raise InvalidMessage()
 
 #################################################################################
 

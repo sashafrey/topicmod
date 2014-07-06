@@ -83,13 +83,6 @@ class Processor : boost::noncopyable {
                     bool update_model,
                     float* theta);
 
-    void CalculateScore(const Score& score,
-                        const Item& item,
-                        const float* theta,
-                        double* perplexity,
-                        double* normalizer,
-                        int* zero_words);
-
    private:
     const TopicModel& topic_model_;
     const google::protobuf::RepeatedPtrField<std::string>& token_dict_;

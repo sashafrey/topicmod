@@ -58,8 +58,13 @@
 #include <errno.h>                   // for errno
 #include <sstream>
 #include "base/commandlineflags.h"        // to get the program name
-#include "glog/logging.h"
-#include "glog/raw_logging.h"
+#if _WIN32
+# include "windows/glog/logging.h"
+# include "windows/glog/raw_logging.h"
+#else
+# include "glog/logging.h"
+# include "glog/raw_logging.h"
+#endif
 #include "base/googleinit.h"
 
 #ifdef HAVE_STACKTRACE

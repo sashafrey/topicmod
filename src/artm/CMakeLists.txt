@@ -19,7 +19,7 @@ else()
 endif()
 
 # find Protobuf
-find_package(Protobuf REQUIRED)
+find_package(ProtobufPlugin REQUIRED)
 if(NOT PROTOBUF_FOUND)
   message(SEND_ERROR "Failed to find protobuf.")
   return()
@@ -36,13 +36,13 @@ else()
   include_directories(${GLOG_INCLUDE_DIRS})
 endif()
 
-# find ZeroMQ
+# find ZEROMQ
 find_package(ZeroMQ REQUIRED)
 if(NOT ZeroMQ_FOUND)
   message(SEND_ERROR "Failed to find zeromq.")
   return()
 else()
-  include_directories(${ZeroMQ_INCLUDE_DIRS})
+  include_directories(${ZEROMQ_INCLUDE_DIRS})
 endif()
 
 # can it be avoided?
@@ -82,7 +82,7 @@ set(ARTM_LIB_DEPS  rpcz
                    ${Boost_FILESYSTEM_LIBRARIES}
                    ${PROTOBUF_LIBRARIES}
                    ${GLOG_LIBRARIES}
-                   ${ZeroMQ_LIBRARIES})
+                   ${ZEROMQ_LIBRARIES})
 
 add_library(${LIBRARY_NAME} SHARED ${SRC_LIST})
 target_link_libraries(${LIBRARY_NAME} ${ARTM_LIB_DEPS})

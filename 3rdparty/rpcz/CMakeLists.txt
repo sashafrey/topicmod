@@ -10,11 +10,11 @@ option(rpcz_build_tests "Build rpcz's tests." OFF)
 option(rpcz_build_static "Build static library." OFF)
 option(rpcz_build_examples "Build rpcz's examples." OFF)
 
-find_package(ProtobufPlugin REQUIRED)
+find_package(Protobuf REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread program_options)
 find_package(ZeroMQ REQUIRED)
 
-include_directories(${ZeroMQ_INCLUDE_DIRS})
+include_directories(${ZEROMQ_INCLUDE_DIRS})
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${PROJECT_SOURCE_DIR}/include)

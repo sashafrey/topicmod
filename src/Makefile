@@ -60,6 +60,7 @@ SRCS_LIB      = artm/cpp_interface.cc \
 		artm/regularizer_sandbox/dirichlet_theta.cc \
 		artm/regularizer_sandbox/smooth_sparse_phi.cc \
 		artm/regularizer_sandbox/smooth_sparse_theta.cc \
+		artm/score_sandbox/perplexity.cc \
 
 OBJS_LIB      = $(SRCS_LIB:.cc=.o)
 DEPS_LIB      = $(SRCS_LIB:.cc=.depends)

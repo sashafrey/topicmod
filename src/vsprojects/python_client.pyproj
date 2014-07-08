@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>8cbe34f8-5d46-4832-b615-db183812f81f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>../python_client/python_client.py</StartupFile>
+    <StartupFile>smooth_sparse_experiment.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -29,6 +29,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\python_client\python_client.py" />
+    <Compile Include="smooth_sparse_experiment.py" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" />
 </Project>

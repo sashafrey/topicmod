@@ -135,6 +135,7 @@ message SmoothSparsePhiConfig {
 
 // Configuration of a Decorrelator Phi regularizer
 message DecorrelatorPhiConfig {
+  required int32 background_topics_count = 1;
 }
 
 message DictionaryConfig {

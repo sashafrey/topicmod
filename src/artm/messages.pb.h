@@ -1566,14 +1566,24 @@ class DecorrelatorPhiConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
+  // required int32 background_topics_count = 1;
+  inline bool has_background_topics_count() const;
+  inline void clear_background_topics_count();
+  static const int kBackgroundTopicsCountFieldNumber = 1;
+  inline ::google::protobuf::int32 background_topics_count() const;
+  inline void set_background_topics_count(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:artm.DecorrelatorPhiConfig)
  private:
+  inline void set_has_background_topics_count();
+  inline void clear_has_background_topics_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[1];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -4232,6 +4242,28 @@ inline void SmoothSparsePhiConfig::set_allocated_dictionary_name(::std::string* 
 // -------------------------------------------------------------------
 
 // DecorrelatorPhiConfig
+
+// required int32 background_topics_count = 1;
+inline bool DecorrelatorPhiConfig::has_background_topics_count() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DecorrelatorPhiConfig::set_has_background_topics_count() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DecorrelatorPhiConfig::clear_has_background_topics_count() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DecorrelatorPhiConfig::clear_background_topics_count() {
+  background_topics_count_ = 0;
+  clear_has_background_topics_count();
+}
+inline ::google::protobuf::int32 DecorrelatorPhiConfig::background_topics_count() const {
+  return background_topics_count_;
+}
+inline void DecorrelatorPhiConfig::set_background_topics_count(::google::protobuf::int32 value) {
+  set_has_background_topics_count();
+  background_topics_count_ = value;
+}
 
 // -------------------------------------------------------------------
 

@@ -18,6 +18,8 @@ class TopicWeightIterator;
 
 class Regularizable {
  public:
+   virtual ~Regularizable() { }
+
   virtual void IncreaseRegularizerWeight(const std::string& token, int topic_id, float value) = 0;
   virtual void IncreaseRegularizerWeight(int token_id, int topic_id, float value) = 0;
 

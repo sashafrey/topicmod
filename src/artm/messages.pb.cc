@@ -296,6 +296,7 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       sizeof(SmoothSparsePhiConfig));
   DecorrelatorPhiConfig_descriptor_ = file->message_type(11);
   static const int DecorrelatorPhiConfig_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DecorrelatorPhiConfig, background_topics_count_),
   };
   DecorrelatorPhiConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -622,33 +623,34 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "ount\030\001 \002(\005\022 \n\005alpha\030\002 \003(\0132\021.artm.DoubleA"
     "rray\"Q\n\025SmoothSparsePhiConfig\022\037\n\027backgro"
     "und_topics_count\030\001 \002(\005\022\027\n\017dictionary_nam"
-    "e\030\002 \001(\t\"\027\n\025DecorrelatorPhiConfig\"F\n\020Dict"
-    "ionaryConfig\022\014\n\004name\030\001 \002(\t\022$\n\005entry\030\002 \003("
-    "\0132\025.artm.DictionaryEntry\"k\n\017DictionaryEn"
-    "try\022\021\n\tkey_token\030\001 \002(\t\022\r\n\005value\030\002 \001(\002\022\024\n"
-    "\014value_tokens\030\003 \003(\t\022 \n\006values\030\004 \001(\0132\020.ar"
-    "tm.FloatArray\" \n\013DoubleArray\022\021\n\005value\030\001 "
-    "\003(\001B\002\020\001\"\037\n\nFloatArray\022\021\n\005value\030\001 \003(\002B\002\020\001"
-    "\"x\n\005Score\022\036\n\004type\030\001 \001(\0162\020.artm.Score.Typ"
-    "e\022\031\n\nfield_name\030\002 \001(\t:\005@body\022\034\n\013stream_n"
-    "ame\030\003 \001(\t:\007@global\"\026\n\004Type\022\016\n\nPerplexity"
-    "\020\000\"\213\003\n\nTopicModel\022\024\n\004name\030\001 \001(\t:\006@model\022"
-    "\024\n\014topics_count\030\002 \001(\005\022\027\n\017items_processed"
-    "\030\003 \001(\005\022\r\n\005token\030\004 \003(\t\022\'\n\rtoken_weights\030\005"
-    " \003(\0132\020.artm.FloatArray\022!\n\006scores\030\006 \001(\0132\021"
-    ".artm.DoubleArray\022\021\n\tinternals\030\007 \001(\014\032\311\001\n"
-    "\023TopicModelInternals\022\036\n\004n_wt\030\001 \003(\0132\020.art"
-    "m.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020.artm.FloatA"
-    "rray\022\035\n\003n_t\030\003 \001(\0132\020.artm.FloatArray\022%\n\ns"
-    "cores_raw\030\004 \001(\0132\021.artm.DoubleArray\022,\n\021sc"
-    "ores_normalizer\030\005 \001(\0132\021.artm.DoubleArray"
-    "\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 \001(\t:\006@mo"
-    "del\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_weights\030\003 \003"
-    "(\0132\020.artm.FloatArray\"\224\001\n\024NodeControllerC"
-    "onfig\022\'\n\037node_controller_create_endpoint"
-    "\030\001 \001(\t\022(\n node_controller_connect_endpoi"
-    "nt\030\002 \001(\t\022)\n!master_component_connect_end"
-    "point\030\003 \001(\t", 2611);
+    "e\030\002 \001(\t\"8\n\025DecorrelatorPhiConfig\022\037\n\027back"
+    "ground_topics_count\030\001 \002(\005\"F\n\020DictionaryC"
+    "onfig\022\014\n\004name\030\001 \002(\t\022$\n\005entry\030\002 \003(\0132\025.art"
+    "m.DictionaryEntry\"k\n\017DictionaryEntry\022\021\n\t"
+    "key_token\030\001 \002(\t\022\r\n\005value\030\002 \001(\002\022\024\n\014value_"
+    "tokens\030\003 \003(\t\022 \n\006values\030\004 \001(\0132\020.artm.Floa"
+    "tArray\" \n\013DoubleArray\022\021\n\005value\030\001 \003(\001B\002\020\001"
+    "\"\037\n\nFloatArray\022\021\n\005value\030\001 \003(\002B\002\020\001\"x\n\005Sco"
+    "re\022\036\n\004type\030\001 \001(\0162\020.artm.Score.Type\022\031\n\nfi"
+    "eld_name\030\002 \001(\t:\005@body\022\034\n\013stream_name\030\003 \001"
+    "(\t:\007@global\"\026\n\004Type\022\016\n\nPerplexity\020\000\"\213\003\n\n"
+    "TopicModel\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topi"
+    "cs_count\030\002 \001(\005\022\027\n\017items_processed\030\003 \001(\005\022"
+    "\r\n\005token\030\004 \003(\t\022\'\n\rtoken_weights\030\005 \003(\0132\020."
+    "artm.FloatArray\022!\n\006scores\030\006 \001(\0132\021.artm.D"
+    "oubleArray\022\021\n\tinternals\030\007 \001(\014\032\311\001\n\023TopicM"
+    "odelInternals\022\036\n\004n_wt\030\001 \003(\0132\020.artm.Float"
+    "Array\022\036\n\004r_wt\030\002 \003(\0132\020.artm.FloatArray\022\035\n"
+    "\003n_t\030\003 \001(\0132\020.artm.FloatArray\022%\n\nscores_r"
+    "aw\030\004 \001(\0132\021.artm.DoubleArray\022,\n\021scores_no"
+    "rmalizer\030\005 \001(\0132\021.artm.DoubleArray\"b\n\013The"
+    "taMatrix\022\032\n\nmodel_name\030\001 \001(\t:\006@model\022\017\n\007"
+    "item_id\030\002 \003(\005\022&\n\014item_weights\030\003 \003(\0132\020.ar"
+    "tm.FloatArray\"\224\001\n\024NodeControllerConfig\022\'"
+    "\n\037node_controller_create_endpoint\030\001 \001(\t\022"
+    "(\n node_controller_connect_endpoint\030\002 \001("
+    "\t\022)\n!master_component_connect_endpoint\030\003"
+    " \001(\t", 2644);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -4494,6 +4496,7 @@ void SmoothSparsePhiConfig::Swap(SmoothSparsePhiConfig* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int DecorrelatorPhiConfig::kBackgroundTopicsCountFieldNumber;
 #endif  // !_MSC_VER
 
 DecorrelatorPhiConfig::DecorrelatorPhiConfig()
@@ -4512,6 +4515,7 @@ DecorrelatorPhiConfig::DecorrelatorPhiConfig(const DecorrelatorPhiConfig& from)
 
 void DecorrelatorPhiConfig::SharedCtor() {
   _cached_size_ = 0;
+  background_topics_count_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4546,6 +4550,9 @@ DecorrelatorPhiConfig* DecorrelatorPhiConfig::New() const {
 }
 
 void DecorrelatorPhiConfig::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    background_topics_count_ = 0;
+  }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -4555,12 +4562,33 @@ bool DecorrelatorPhiConfig::MergePartialFromCodedStream(
 #define DO_(EXPRESSION) if (!(EXPRESSION)) return false
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
-    if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-        ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-      return true;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // required int32 background_topics_count = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &background_topics_count_)));
+          set_has_background_topics_count();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
     }
-    DO_(::google::protobuf::internal::WireFormat::SkipField(
-          input, tag, mutable_unknown_fields()));
   }
   return true;
 #undef DO_
@@ -4568,6 +4596,11 @@ bool DecorrelatorPhiConfig::MergePartialFromCodedStream(
 
 void DecorrelatorPhiConfig::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // required int32 background_topics_count = 1;
+  if (has_background_topics_count()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->background_topics_count(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -4576,6 +4609,11 @@ void DecorrelatorPhiConfig::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* DecorrelatorPhiConfig::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // required int32 background_topics_count = 1;
+  if (has_background_topics_count()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->background_topics_count(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -4586,6 +4624,15 @@ void DecorrelatorPhiConfig::SerializeWithCachedSizes(
 int DecorrelatorPhiConfig::ByteSize() const {
   int total_size = 0;
 
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // required int32 background_topics_count = 1;
+    if (has_background_topics_count()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->background_topics_count());
+    }
+
+  }
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -4611,6 +4658,11 @@ void DecorrelatorPhiConfig::MergeFrom(const ::google::protobuf::Message& from) {
 
 void DecorrelatorPhiConfig::MergeFrom(const DecorrelatorPhiConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_background_topics_count()) {
+      set_background_topics_count(from.background_topics_count());
+    }
+  }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
 
@@ -4627,12 +4679,15 @@ void DecorrelatorPhiConfig::CopyFrom(const DecorrelatorPhiConfig& from) {
 }
 
 bool DecorrelatorPhiConfig::IsInitialized() const {
+  if ((_has_bits_[0] & 0x00000001) != 0x00000001) return false;
 
   return true;
 }
 
 void DecorrelatorPhiConfig::Swap(DecorrelatorPhiConfig* other) {
   if (other != this) {
+    std::swap(background_topics_count_, other->background_topics_count_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
   }

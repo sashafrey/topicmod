@@ -68,6 +68,9 @@ message MasterComponentConfig {
   // Max size of merger queue
   optional int32 merger_queue_max_size = 7 [default = 10];
 
+  // All scores, available for calculation
+  repeated ScoreConfig score_config = 8;
+
   // ====== [Under Development fields - excluded from public API] ======
   enum ModusOperandi {
     Local = 0;
@@ -77,9 +80,17 @@ message MasterComponentConfig {
   // Modus operandi of the master component
   optional ModusOperandi modus_operandi = 100 [default = Local];
 
-  // Service endpoints
-  optional string master_component_create_endpoint = 101;
-  optional string master_component_connect_endpoint = 102;
+  // Master endpoint
+  optional string create_endpoint = 101;
+  optional string connect_endpoint = 102;
+
+  // Endpoints of all NodeControllers to connect to
+  repeated string node_connect_endpoint = 103;
+}
+
+message MasterProxyConfig {
+  required string node_connect_endpoint = 1;
+  required MasterComponentConfig config = 2;
 }
 
 // Configuration of a model.
@@ -90,7 +101,7 @@ message ModelConfig {
   optional int32 inner_iterations_count = 4 [default = 10];
   optional string field_name = 5 [default = "@body"];
   optional string stream_name = 6 [default = "@global"];
-  repeated Score score = 7;
+  repeated string score_name = 7;
   optional bool reuse_theta = 8 [default = false];
   repeated string regularizer_name = 9;
   repeated double regularizer_tau = 10;
@@ -103,7 +114,7 @@ message RegularizerConfig {
     DirichletPhi = 1;
     SmoothSparseTheta = 2;
     SmoothSparsePhi = 3;
-	DecorrelatorPhi = 4;
+	  DecorrelatorPhi = 4;
   }
 
   optional string name = 1;
@@ -123,19 +134,20 @@ message DirichletPhiConfig {
 
 // Configuration of a SmoothSparse Theta regularizer
 message SmoothSparseThetaConfig {
-  required int32 background_topics_count = 1;
+  optional int32 background_topics_count = 1;
   repeated DoubleArray alpha = 2;
 }
 
 // Configuration of a SmoothSparse Phi regularizer
 message SmoothSparsePhiConfig {
-  required int32 background_topics_count = 1;
-  optional string dictionary_name = 2;
+  optional int32 background_topics_count = 1;
+  optional BoolArray topics_to_regularize = 2;
+  optional string dictionary_name = 3;
 }
 
 // Configuration of a Decorrelator Phi regularizer
 message DecorrelatorPhiConfig {
-  required int32 background_topics_count = 1;
+  optional BoolArray topics_to_regularize = 1;
 }
 
 message DictionaryConfig {
@@ -158,26 +170,48 @@ message FloatArray {
   repeated float value = 1 [packed = true];
 }
 
-message Score {
+message BoolArray {
+  repeated bool value = 1 [packed = true];
+}
+
+message ScoreConfig {
   enum Type {
     Perplexity = 0;
   }
 
-  optional Type type = 1;
-  optional string field_name = 2 [default = "@body"];
-  optional string stream_name = 3 [default = "@global"];
+  optional string name = 1;
+  optional Type type = 2;
+  optional bytes config = 3;
+}
+
+message ScoreData {
+  enum Type {
+    Perplexity = 0;
+  }
+
+  optional string name = 1;
+  optional Type type = 2;
+  optional bytes data = 3;
+}
+
+message PerplexityScoreConfig {
+  optional string field_name = 1 [default = "@body"];
+  optional string stream_name = 2 [default = "@global"];
+}
+
+message PerplexityScore {
+  optional double value = 1;
+  optional double raw = 2;
+  optional double normalizer = 3;
+  optional int32 zero_words = 4;
 }
 
 // A topic model, represented by Matrix Phi
 message TopicModel {
   optional string name = 1 [default = "@model"];
   optional int32 topics_count = 2;	   // number of topics in the model
-  optional int32 items_processed = 3;
-
-  repeated string token = 4;              // tokens, included in the model
-  repeated FloatArray token_weights = 5;  // one vector for each token
-
-  optional DoubleArray scores = 6;        // perplexity and other quality scores
+  repeated string token = 3;              // tokens, included in the model
+  repeated FloatArray token_weights = 4;  // one vector for each token
 
   // Data structure to keep all the raw data of the model.
   // This allows users to send a TopicModel back into BigARTM library.
@@ -185,11 +219,9 @@ message TopicModel {
     repeated FloatArray n_wt = 1;
     repeated FloatArray r_wt = 2;
     optional FloatArray n_t = 3;
-    optional DoubleArray scores_raw = 4;
-    optional DoubleArray scores_normalizer = 5;
   }
 
-  optional bytes internals = 7;  // serialized instance of TopicModelInternals
+  optional bytes internals = 5;  // serialized instance of TopicModelInternals
 }
 
 message ThetaMatrix {
@@ -202,7 +234,5 @@ message ThetaMatrix {
 
 // Configuration of the Node Controller
 message NodeControllerConfig {
-  optional string node_controller_create_endpoint = 1;
-  optional string node_controller_connect_endpoint = 2;
-  optional string master_component_connect_endpoint = 3;
+  optional string create_endpoint = 1;
 }

@@ -10,6 +10,7 @@
 # The base of code is the BigARTM python_client.py
 #################################################################################
 
+from __future__ import division
 import sys
 import os
 import time
@@ -23,6 +24,7 @@ else:
 import messages_pb2
 from python_interface import *
 import operator
+import random
 
 #######
 def FindName(list_name, name):
@@ -59,7 +61,7 @@ topics_count = 100
 outer_iteration_count = 41
 inner_iterations_count = 1
 top_tokens_count_to_visualize = 10
-parse_collection_from_text = 0
+parse_collection_from_text = 1
 
 #######
 #critical_prob_mass = 0.5
@@ -134,6 +136,13 @@ master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
 master_config.cache_processor_output = 1
 master_config.disk_path = '.'
+
+perplexity_config = messages_pb2.PerplexityScoreConfig();
+score_config = master_config.score_config.add()
+score_config.config = messages_pb2.PerplexityScoreConfig().SerializeToString();
+score_config.type = ScoreConfig_Type_Perplexity;
+score_config.name = "perplexity_score"
+
 with library.CreateMasterComponent(master_config) as master_component:
     batch = messages_pb2.Batch()
     batch_tokens = {}
@@ -175,7 +184,6 @@ with library.CreateMasterComponent(master_config) as master_component:
 
     #######
     reg_decor_config = messages_pb2.DecorrelatorPhiConfig()
-    reg_decor_config.background_topics_count = background_topics_count
     reg_decor_name = 'regularizer_decor'
     reg_decor_type = 4
     regularizer_decor = master_component.CreateRegularizer(
@@ -264,15 +272,13 @@ with library.CreateMasterComponent(master_config) as master_component:
     model_config = messages_pb2.ModelConfig()
     model_config.topics_count = topics_count
     model_config.inner_iterations_count = inner_iterations_count
-    score_ = model_config.score.add()
-    score_.type = Score_Type_Perplexity
+    model_config.score_name.append('perplexity_score')
  
     model = master_component.CreateModel(model_config)
-
     initial_topic_model = messages_pb2.TopicModel();
     initial_topic_model.topics_count = topics_count;
     initial_topic_model.name = model.name()
-    initial_topic_model.scores.value.append(0.0)
+
     random.seed(123)
     for token in tokens:
       initial_topic_model.token.append(token);
@@ -291,6 +297,7 @@ with library.CreateMasterComponent(master_config) as master_component:
         if (iter > 0):
             print 'Elapsed time for iteration: ' + str(elapsed)
         topic_model = master_component.GetTopicModel(model)
+        perplexity_score = master_component.GetScore(model, 'perplexity_score')
 
         #######
         if (iter == 0):
@@ -423,8 +430,7 @@ with library.CreateMasterComponent(master_config) as master_component:
             print 'Elapsed time for Phi regularization: ' + str(elapsed)
             print '---------'
             print "Iter# = " + str(iter) + \
-                    ", Items# = " + str(topic_model.items_processed) + \
-                    ", Perplexity = " + str(topic_model.scores.value[0])
+                    ", Perplexity = " + str(perplexity_score.value)
         else:
             print 'start!\n'
 
@@ -441,7 +447,7 @@ with library.CreateMasterComponent(master_config) as master_component:
                     if (abs(token_weight) < eps):
                         no_zero_elem = no_zero_elem + 1
 
-            zero_part = no_zero_elem / (topics_size * tokens_size * 1.0)
+            zero_part = no_zero_elem / (topics_size * tokens_size)
             print '-----'
             print 'percentage of zero elements in Phi: ' + str(zero_part * 100.0) + ' %'
             phi_sparsity_file.write(str(zero_part * 100.0) + '\n')
@@ -453,7 +459,7 @@ with library.CreateMasterComponent(master_config) as master_component:
                         token_weight = topic_model.token_weights[token_index].value[topic_index]
                         if (abs(token_weight) < eps):
                             no_zero_elem = no_zero_elem + 1
-                zero_part = no_zero_elem / (background_topics_count * tokens_size * 1.0)
+                zero_part = no_zero_elem / (background_topics_count * tokens_size)
                 print '-----'
                 print 'percentage of zero elements in Phi (bcgd): ' + str(zero_part * 100.0) + ' %'
 
@@ -468,16 +474,16 @@ with library.CreateMasterComponent(master_config) as master_component:
                     if (abs(weight) < eps):
                         no_zero_elem = no_zero_elem + 1                  
                                          
-            zero_part = no_zero_elem / (topics_size * docs_size * 1.0)
+            zero_part = no_zero_elem / (topics_size * docs_size)
             print '-----'
             print 'percentage of zero elements in Theta: ' + str(zero_part * 100.0) + ' %'
             theta_sparsity_file.write(str(zero_part * 100.0) + '\n')
 
             print '-----'
-            print 'Real perplexity - etalon: ' + str(topic_model.scores.value[0] - 
+            print 'Real perplexity - etalon: ' + str(perplexity_score.value - 
                                                      etalon_perplexity[iter - 1])
 
-            perplexity_file.write(str(topic_model.scores.value[0]) + '\n')
+            perplexity_file.write(str(perplexity_score.value) + '\n')
 
             min_top_size = 10
             max_top_size = 100

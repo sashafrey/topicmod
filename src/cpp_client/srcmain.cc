@@ -3,8 +3,11 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
-
+#include <set>
 using namespace std;
+
+#include "boost/filesystem.hpp"
+using namespace boost::filesystem;
 
 #include "doc_token_matrix.h"
 #include "token_topic_matrix.h"
@@ -15,7 +18,6 @@ using namespace std;
 #include "artm/cpp_interface.h"
 #include "artm/messages.pb.h"
 #include "glog/logging.h"
-
 using namespace artm;
 
 double proc(int argc, char * argv[], int processors_count, int instance_size) {
@@ -23,37 +25,66 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string vocab_file = "";
   std::string docword_file = "";
 
-  bool is_network_mode = (instance_size > 1);
+  // Recommended values for decorrelator_tau are as follows:
+  // kos - 700000, nips - 2000000.
+  float decorrelator_tau = 700000;
+
+  // instance_size = 0 stands for "connect to external node_controller process",
+  // instance_size = 1 stands for "local modus operandi",
+  // instance_size = 2 or higher defines the number of node controllers to create in this process,
+  //                   used in the same way as if they were on remote nodes.
+  bool is_network_mode = (instance_size != 1);
 
   MasterComponentConfig master_config;
+  std::vector<std::shared_ptr<::artm::NodeController>> node_controller;
+  if (is_network_mode) {
+    for (int port = 5556; port < 5556 + instance_size; ++port) {
+      ::artm::NodeControllerConfig node_config;
+
+      std::stringstream port_str;
+      port_str << port;
+      node_config.set_create_endpoint(std::string("tcp://*:") + port_str.str());
+      node_controller.push_back(std::make_shared<::artm::NodeController>(node_config));
+      master_config.add_node_connect_endpoint(std::string("tcp://localhost:") + port_str.str());
+    }
+
+    if (instance_size == 0) {
+      master_config.add_node_connect_endpoint("tcp://localhost:5556");
+    }
+  }
+
   master_config.set_processors_count(processors_count);
+  batches_disk_path = (current_path() / path(batches_disk_path)).string();
+  
   master_config.set_disk_path(batches_disk_path);
   if (is_network_mode) {
     master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Network);
-    master_config.set_master_component_create_endpoint("tcp://*:5555");
-    master_config.set_master_component_connect_endpoint("tcp://localhost:5555");
+    master_config.set_create_endpoint("tcp://*:5555");
+    master_config.set_connect_endpoint("tcp://localhost:5555");
   } else {
     master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
     master_config.set_cache_processor_output(true);
   }
 
+  ::artm::ScoreConfig score_config;
+  ::artm::PerplexityScoreConfig perplexity_config;
+  perplexity_config.set_stream_name("test_stream");
+  score_config.set_config(perplexity_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_Perplexity);
+  score_config.set_name("test_perplexity");
+  master_config.add_score_config()->CopyFrom(score_config);
+
+  perplexity_config.set_stream_name("train_stream");
+  score_config.set_config(perplexity_config.SerializeAsString());
+  score_config.set_name("train_perplexity");
+  master_config.add_score_config()->CopyFrom(score_config);
+
+  // MasterProxyConfig master_proxy_config;
+  // master_proxy_config.set_node_connect_endpoint("tcp://localhost:5556");
+  // master_proxy_config.mutable_config()->CopyFrom(master_config);
+  // MasterComponent master_component(master_proxy_config);
+
   MasterComponent master_component(master_config);
-
-  std::vector<std::shared_ptr<::artm::NodeController>> node_controller;
-  if (is_network_mode) {
-    for (int port = 5556; port < 5556 + instance_size; ++port) {
-      ::artm::NodeControllerConfig node_config;
-      node_config.set_master_component_connect_endpoint("tcp://localhost:5555");
-
-      std::stringstream port_str;
-      port_str << port;
-      node_config.set_node_controller_create_endpoint(std::string("tcp://*:") + port_str.str());
-      node_config.set_node_controller_connect_endpoint(std::string("tcp://localhost:") + port_str.str());
-      node_controller.push_back(std::make_shared<::artm::NodeController>(node_config));
-    }
-
-    master_component.Reconfigure(master_config);  // Push configuration to clients
-  }
 
   // Configure train and test streams
   Stream train_stream, test_stream;
@@ -74,8 +105,8 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   RegularizerConfig regularizer_config;
   regularizer_config.set_name("regularizer_phi");
-  regularizer_config.set_type(::artm::RegularizerConfig_Type_DirichletPhi);
-  regularizer_config.set_config(::artm::DirichletPhiConfig().SerializeAsString());
+  regularizer_config.set_type(::artm::RegularizerConfig_Type_DecorrelatorPhi);
+  regularizer_config.set_config(::artm::DecorrelatorPhiConfig().SerializeAsString());
   Regularizer dirichlet_phi_regularizer(master_component, regularizer_config);
 
   // Create model
@@ -87,34 +118,27 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_reuse_theta(true);
   model_config.set_name("15081980-90a7-4767-ab85-7cb551c39339");
   model_config.add_regularizer_name("regularizer_phi");
-  model_config.add_regularizer_tau(0.1);
+  model_config.add_regularizer_tau(decorrelator_tau);
+  model_config.add_score_name("test_perplexity");
+  model_config.add_score_name("train_perplexity");
 
-  Score* score = model_config.add_score();
-  score->set_type(Score_Type_Perplexity);
-  score->set_stream_name("test_stream");
   Model model(master_component, model_config);
 
-  if (!is_network_mode) {
-    std::cout << rand() << std::endl;
-    // Overwrite topic model with well-known "initial topic model"
-    // (skip this in network mode because the operation is not supported yet)
-    TopicModel initial_topic_model;
-    initial_topic_model.set_name(model_config.name());
-    initial_topic_model.set_topics_count(nTopics);
-    initial_topic_model.set_items_processed(0);
-    initial_topic_model.mutable_scores()->add_value(0.0);  // add one dummy score
-    VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
-    for (int token_index = 0; token_index < (int)vocab_ptr->size(); ++token_index) {
-      std::string token = (*vocab_ptr)[token_index];
-      initial_topic_model.add_token(token);
-      artm::FloatArray* weights = initial_topic_model.add_token_weights();
-      for (int topic_index = 0; topic_index < nTopics; ++topic_index) {
-        weights->add_value((float) rand() / (float)RAND_MAX);
-      }
+  // Overwrite topic model with well-known "initial topic model"
+  TopicModel initial_topic_model;
+  initial_topic_model.set_name(model_config.name());
+  initial_topic_model.set_topics_count(nTopics);
+  VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
+  for (int token_index = 0; token_index < (int)vocab_ptr->size(); ++token_index) {
+    std::string token = (*vocab_ptr)[token_index];
+    initial_topic_model.add_token(token);
+    artm::FloatArray* weights = initial_topic_model.add_token_weights();
+    for (int topic_index = 0; topic_index < nTopics; ++topic_index) {
+      weights->add_value((float) rand() / (float)RAND_MAX);
     }
-
-    model.Overwrite(initial_topic_model);
   }
+
+  model.Overwrite(initial_topic_model);
 
   int batch_files_count = countFilesInDirectory(batches_disk_path, ".batch");
   if (batch_files_count == 0) {
@@ -161,24 +185,26 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   clock_t begin = clock();
 
   std::shared_ptr<TopicModel> topic_model;
+  std::shared_ptr<PerplexityScore> test_perplexity, train_perplexity;
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
-    if (!is_network_mode) {
-      // ToDo(alfrey): enable phi-regularizers in network modus operandi
-      model.InvokePhiRegularizers();
-    }
+    model.InvokePhiRegularizers();
 
     topic_model = master_component.GetTopicModel(model);
+    test_perplexity = master_component.GetScoreAs<::artm::PerplexityScore>(model, "test_perplexity");
+    train_perplexity = master_component.GetScoreAs<::artm::PerplexityScore>(model, "train_perplexity");
     std::cout << "Iter #" << (iter + 1) << ": "
               << "#Tokens = "  << topic_model->token_size() << ", "
-              << "#Items = " << topic_model->items_processed() << ", "
-              << "Perplexity = " << topic_model->scores().value(0) << endl;
+              << "Test perplexity = " << test_perplexity->value() << ", "
+              << "Train perplexity = " << train_perplexity->value() << endl;
   }
 
   std::cout << endl;
 
   clock_t end = clock();
+
+  std::set<std::string> unique_words;
 
   // Log top 7 words per each topic
   {
@@ -201,12 +227,15 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
              (word_index >= 0) && (word_index >= (int)p_w.size() - wordsToSort);
              word_index--)
         {
+          unique_words.insert(p_w[word_index].second);
           std::cout << p_w[word_index].second << " ";
         }
 
       std::cout << std::endl;
     }
   }
+
+  std::cout << "Unique words: " << unique_words.size() << "\n";
 
   if (!is_network_mode) {
     int docs_to_show = 7;
@@ -225,8 +254,6 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     // std::cout << "GetThetaMatrix is not implemented in Network modus operandi."; // todo(alfrey)
   }
 
-  node_controller.clear();  // Destroy nodes; todo(alfrey): it should be OK to stop master before nodes.
-
   double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
   return elapsed_secs;
 }
@@ -239,8 +266,14 @@ int main(int argc, char * argv[]) {
 
   int instance_size = 1;
   int processors_size = 2;
-  cout << proc(argc, argv, processors_size, instance_size)
-       << " sec. ================= " << endl << endl;
+  try {
+    cout << proc(argc, argv, processors_size, instance_size)
+         << " sec. ================= " << endl << endl;
+  } catch (std::runtime_error& error) {
+    cout << "Exception occured: " << error.what() << "\n";
+  } catch (...) {
+    cout << "Unknown exception occured.\n";
+  }
 
   return 0;
 }

@@ -10,29 +10,20 @@
 
 #include "artm/messages.pb.h"
 #include "artm/core/instance.h"
+#include "artm/core/merger.h"
 #include "artm/core/data_loader.h"
 #include "artm/core/protobuf_helpers.h"
 
 class InstanceTest : boost::noncopyable {
  public:
-  std::shared_ptr<artm::core::LocalDataLoader> data_loader() { return data_loader_; }
   std::shared_ptr<artm::core::Instance> instance() { return instance_; }
 
-  InstanceTest() {
-    int instance_id = artm::core::InstanceManager::singleton().Create(::artm::core::InstanceConfig());
-    instance_ = artm::core::InstanceManager::singleton().Get(instance_id);
-
-    ::artm::core::DataLoaderConfig data_loader_config;
-    data_loader_config.set_instance_id(instance_id);
-    artm::core::DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
-    int data_loader_id = dlm.Create<artm::core::LocalDataLoader>(data_loader_config);
-    data_loader_ = dlm.Get<artm::core::LocalDataLoader>(data_loader_id);
+  InstanceTest() : instance_(nullptr) {
+    instance_.reset(new ::artm::core::Instance(
+      ::artm::MasterComponentConfig(), ::artm::core::MasterInstanceLocal));
   }
 
-  ~InstanceTest() {
-    artm::core::InstanceManager::singleton().Erase(instance_->id());
-    artm::core::DataLoaderManager::singleton().Erase(data_loader_->id());
-  }
+  ~InstanceTest() {}
 
   // Some way of generating a junk content..
   // If you call this, then you really shouldn't care which content it will be;
@@ -71,22 +62,13 @@ class InstanceTest : boost::noncopyable {
   }
 
  private:
-  std::shared_ptr<artm::core::LocalDataLoader> data_loader_;
   std::shared_ptr<artm::core::Instance> instance_;
 };
 
 // artm_tests.exe --gtest_filter=Instance.*
 TEST(Instance, Basic) {
-  int instance_id = artm::core::InstanceManager::singleton().Create(::artm::core::InstanceConfig());
-  std::shared_ptr<artm::core::Instance> instance =
-    artm::core::InstanceManager::singleton().Get(instance_id);
-
-  ::artm::core::DataLoaderConfig data_loader_config;
-  data_loader_config.set_instance_id(instance_id);
-  artm::core::DataLoaderManager& dlm = artm::core::DataLoaderManager::singleton();
-  int data_loader_id = dlm.Create<artm::core::LocalDataLoader>(data_loader_config);
-  std::shared_ptr<artm::core::LocalDataLoader> data_loader =
-    artm::core::DataLoaderManager::singleton().Get<artm::core::LocalDataLoader>(data_loader_id);
+  auto instance = std::make_shared<::artm::core::Instance>(
+    ::artm::MasterComponentConfig(), ::artm::core::MasterInstanceLocal);
 
   artm::Batch batch1;
   batch1.add_token("first token");
@@ -98,18 +80,18 @@ TEST(Instance, Basic) {
     field->add_token_count(i+1);
   }
 
-  data_loader->AddBatch(batch1);  // +2
+  instance->local_data_loader()->AddBatch(batch1);  // +2
 
   for (int iBatch = 0; iBatch < 2; ++iBatch) {
     artm::Batch batch;
     for (int i = 0; i < (3 + iBatch); ++i) batch.add_item();  // +3, +4
-    data_loader->AddBatch(batch);
+    instance->local_data_loader()->AddBatch(batch);
   }
 
-  EXPECT_EQ(data_loader->GetTotalItemsCount(), 9);
+  EXPECT_EQ(instance->local_data_loader()->GetTotalItemsCount(), 9);
 
-  data_loader->AddBatch(batch1);  // +2
-  EXPECT_EQ(data_loader->GetTotalItemsCount(), 11);
+  instance->local_data_loader()->AddBatch(batch1);  // +2
+  EXPECT_EQ(instance->local_data_loader()->GetTotalItemsCount(), 11);
 
   artm::Batch batch4;
   batch4.add_token("second");
@@ -121,7 +103,7 @@ TEST(Instance, Basic) {
     field->add_token_count(iToken + 2);
   }
 
-  data_loader->AddBatch(batch4);
+  instance->local_data_loader()->AddBatch(batch4);
 
   artm::ModelConfig config;
   config.set_enabled(true);
@@ -129,26 +111,24 @@ TEST(Instance, Basic) {
   artm::core::ModelName model_name =
     boost::lexical_cast<std::string>(boost::uuids::random_generator()());
   config.set_name(boost::lexical_cast<std::string>(model_name));
-  instance->ReconfigureModel(config);
+  instance->CreateOrReconfigureModel(config);
 
-  data_loader->InvokeIteration(20);
-  data_loader->WaitIdle();
+  instance->local_data_loader()->InvokeIteration(20);
+  instance->local_data_loader()->WaitIdle();
 
   config.set_enabled(false);
-  instance->ReconfigureModel(config);
+  instance->CreateOrReconfigureModel(config);
 
   artm::TopicModel topic_model;
-  instance->RequestTopicModel(model_name, &topic_model);
+  instance->merger()->RetrieveExternalTopicModel(model_name, &topic_model);
   EXPECT_EQ(topic_model.token_size(), 3);
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "first token"));
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "second"));
   EXPECT_TRUE(artm::core::model_has_token(topic_model, "last"));
   EXPECT_FALSE(artm::core::model_has_token(topic_model, "of cource!"));
-
-  artm::core::InstanceManager::singleton().Erase(instance_id);
-  artm::core::DataLoaderManager::singleton().Erase(data_loader_id);
 }
 
+// artm_tests.exe --gtest_filter=Instance.MultipleStreamsAndModels
 TEST(Instance, MultipleStreamsAndModels) {
   InstanceTest test;
 
@@ -156,10 +136,9 @@ TEST(Instance, MultipleStreamsAndModels) {
   // - first model have  Token0, Token2, Token4,
   // - second model have Token1, Token3, Token6,
   auto batch = test.GenerateBatch(6, 6, 0, 1, 1);
-  test.data_loader()->AddBatch(*batch);
+  test.instance()->local_data_loader()->AddBatch(*batch);
 
-  ::artm::core::DataLoaderConfig config;
-  config.set_instance_id(test.instance()->id());
+  ::artm::MasterComponentConfig config;
   artm::Stream* s1 = config.add_stream();
   s1->set_type(artm::Stream_Type_ItemIdModulus);
   s1->set_modulus(2);
@@ -170,14 +149,6 @@ TEST(Instance, MultipleStreamsAndModels) {
   s2->set_modulus(2);
   s2->add_residuals(1);
   s2->set_name("test");
-  test.data_loader()->Reconfigure(config);
-
-  artm::ModelConfig m1;
-  m1.set_stream_name("train");
-  m1.set_enabled(true);
-  m1.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
-  artm::Score* score = m1.add_score();
-  score->set_type(artm::Score_Type_Perplexity);
 
   // In the little synthetic dataset created below
   // tokens in 'train' and 'test' sample won't overlap.
@@ -185,26 +156,44 @@ TEST(Instance, MultipleStreamsAndModels) {
   // it will be zero, because none of test-sample tokens
   // are present in token-topic-matrix. Therefore,
   // using train sample to get non-zero perplexity score.
-  score->set_stream_name("train");
-  test.instance()->ReconfigureModel(m1);
+  ::artm::ScoreConfig score_config;
+  ::artm::PerplexityScoreConfig perplexity_config;
+  perplexity_config.set_stream_name("train");
+  score_config.set_config(perplexity_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_Perplexity);
+  score_config.set_name("perplexity");
+  config.add_score_config()->CopyFrom(score_config);
+
+  test.instance()->Reconfigure(config);
+
+  artm::ModelConfig m1;
+  m1.set_stream_name("train");
+  m1.set_enabled(true);
+  m1.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
+  m1.add_score_name("perplexity");
+  test.instance()->CreateOrReconfigureModel(m1);
 
   artm::ModelConfig m2;
   m2.set_stream_name("test");
   m2.set_enabled(true);
   m2.set_name(boost::lexical_cast<std::string>(boost::uuids::random_generator()()));
-  test.instance()->ReconfigureModel(m2);
+  test.instance()->CreateOrReconfigureModel(m2);
 
   for (int iter = 0; iter < 100; ++iter) {
-  test.data_loader()->InvokeIteration(1);
-    test.data_loader()->WaitIdle();
+  test.instance()->local_data_loader()->InvokeIteration(1);
+    test.instance()->local_data_loader()->WaitIdle();
   }
 
-
   artm::TopicModel m1t;
-  test.instance()->RequestTopicModel(m1.name(), &m1t);
+  test.instance()->merger()->RetrieveExternalTopicModel(m1.name(), &m1t);
 
   artm::TopicModel m2t;
-  test.instance()->RequestTopicModel(m2.name(), &m2t);
+  test.instance()->merger()->RetrieveExternalTopicModel(m2.name(), &m2t);
+
+  artm::ScoreData m1score_data;
+  test.instance()->merger()->RequestScore(m1.name(), "perplexity", &m1score_data);
+  artm::PerplexityScore perplexity_score;
+  perplexity_score.ParseFromString(m1score_data.data());
 
   // Verification for m1t (the first model)
   EXPECT_TRUE(artm::core::model_has_token(m1t, "token0"));
@@ -238,6 +227,5 @@ TEST(Instance, MultipleStreamsAndModels) {
     }
   }
 
-  EXPECT_EQ(m1t.scores().value_size(), 1);
-  EXPECT_GT(m1t.scores().value(0), 0);
+  EXPECT_GT(perplexity_score.value(), 0);
 }

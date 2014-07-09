@@ -37,11 +37,24 @@ DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
 class MasterComponent {
  public:
   explicit MasterComponent(const MasterComponentConfig& config);
+  explicit MasterComponent(const MasterProxyConfig& config);
   ~MasterComponent();
 
   int id() const { return id_; }
   std::shared_ptr<TopicModel> GetTopicModel(const Model& model);
   std::shared_ptr<ThetaMatrix> GetThetaMatrix(const Model& model);
+  std::shared_ptr<ScoreData> GetScore(const Model& model,
+                                      const std::string& score_name);
+
+  template <typename T>
+  std::shared_ptr<T> GetScoreAs(const Model& model,
+                                const std::string& score_name) {
+    auto score_data = GetScore(model, score_name);
+    auto score = std::make_shared<T>();
+    score->ParseFromString(score_data->data());
+    return score;
+  }
+
   void Reconfigure(const MasterComponentConfig& config);
   void AddBatch(const Batch& batch);
   void AddStream(const Stream& stream);

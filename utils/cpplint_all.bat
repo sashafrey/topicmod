@@ -5,13 +5,13 @@ call cpplint.bat ../src/artm/c_interface.cc
 
 REM call cpplint.bat ../src/artm/core/batch_manager.сс
 call cpplint.bat ../src/artm/core/data_loader.cc
-call cpplint.bat ../src/artm/core/dictionary.cc
 call cpplint.bat ../src/artm/core/generation.cc
 call cpplint.bat ../src/artm/core/helpers.cc
 call cpplint.bat ../src/artm/core/instance.cc
 call cpplint.bat ../src/artm/core/instance_schema.cc
 call cpplint.bat ../src/artm/core/master_component.cc
 call cpplint.bat ../src/artm/core/master_component_service_impl.cc
+call cpplint.bat ../src/artm/core/master_proxy.cc
 call cpplint.bat ../src/artm/core/merger.cc
 call cpplint.bat ../src/artm/core/node_controller.cc
 call cpplint.bat ../src/artm/core/node_controller_service_impl.cc
@@ -23,9 +23,11 @@ call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_theta.cc
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.cc
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.cc
 
+call cpplint.bat ../src/artm/score_sandbox/perplexity.cc
+
 call cpplint.bat ../src/artm_tests/boost_thread_test.cc
 call cpplint.bat ../src/artm_tests/cpp_interface_test.cc
-call cpplint.bat ../src/artm_tests/instance_manager_test.cc
+call cpplint.bat ../src/artm_tests/template_manager_test.cc
 call cpplint.bat ../src/artm_tests/nodes_connectivity_test.cc
 call cpplint.bat ../src/artm_tests/instance_test.cc
 call cpplint.bat ../src/artm_tests/test_mother.cc
@@ -34,6 +36,7 @@ call cpplint.bat ../src/artm_tests/topic_model_test.cc
 
 REM **************** HEADERS (.h) ****************
 call cpplint.bat ../src/artm/regularizer_interface.h
+call cpplint.bat ../src/artm/score_calculator_interface.h
 call cpplint.bat ../src/artm/cpp_interface.h
 call cpplint.bat ../src/artm/c_interface.h
 
@@ -49,6 +52,8 @@ call cpplint.bat ../src/artm/core/instance.h
 call cpplint.bat ../src/artm/core/instance_schema.h
 call cpplint.bat ../src/artm/core/master_component.h
 call cpplint.bat ../src/artm/core/master_component_service_impl.h
+call cpplint.bat ../src/artm/core/master_interface.h
+call cpplint.bat ../src/artm/core/master_proxy.h
 call cpplint.bat ../src/artm/core/merger.h
 call cpplint.bat ../src/artm/core/node_controller.h
 call cpplint.bat ../src/artm/core/node_controller_service_impl.h
@@ -65,3 +70,5 @@ call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_phi.h
 call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_theta.h
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.h
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.h
+
+call cpplint.bat ../src/artm/score_sandbox/perplexity.h

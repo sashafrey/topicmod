@@ -20,7 +20,8 @@ RegularizerConfig_Type_DirichletTheta = 0
 RegularizerConfig_Type_DirichletPhi = 1
 RegularizerConfig_Type_SmoothSparseTheta = 2
 RegularizerConfig_Type_SmoothSparsePhi = 3
-Score_Type_Perplexity = 0
+ScoreConfig_Type_Perplexity = 0
+ScoreData_Type_Perplexity = 0
 
 #################################################################################
 
@@ -52,16 +53,32 @@ class ArtmLibrary:
   def CreateMasterComponent(self, config=messages_pb2.MasterComponentConfig()):
     return MasterComponent(config, self.lib_)
 
+  def CreateNodeController(self, endpoint):
+    config = messages_pb2.NodeControllerConfig();
+    config.create_endpoint = endpoint;
+    return NodeController(config, self.lib_)
+
 #################################################################################
 
 class MasterComponent:
   def __init__(self, config, lib):
     self.lib_ = lib
-    self.config_ = config
     master_config_blob = config.SerializeToString()
     master_config_blob_p = ctypes.create_string_buffer(master_config_blob)
-    self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
-               len(master_config_blob), master_config_blob_p))
+
+    if (isinstance(config, messages_pb2.MasterComponentConfig)):
+      self.config_ = config
+      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
+                 len(master_config_blob), master_config_blob_p))
+      return
+
+    if (isinstance(config, messages_pb2.MasterProxyConfig)):
+      self.config_ = config.config
+      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterProxy(0,
+                 len(master_config_blob), master_config_blob_p))
+      return
+
+    raise InvalidOperation()
 
   def __enter__(self):
     return self
@@ -151,6 +168,46 @@ class MasterComponent:
     theta_matrix = messages_pb2.ThetaMatrix()
     theta_matrix.ParseFromString(blob)
     return theta_matrix
+
+  def GetScore(self, model, score_name):
+    request_id = HandleErrorCode(self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
+    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+
+    blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, blob))
+    self.lib_.ArtmDisposeRequest(request_id)
+
+    score_data = messages_pb2.ScoreData()
+    score_data.ParseFromString(blob)
+
+    if (score_data.type == ScoreData_Type_Perplexity):
+      score = messages_pb2.PerplexityScore();
+      score.ParseFromString(score_data.data);
+      return score;
+
+    # Unknown score type
+    raise InvalidMessage()
+
+#################################################################################
+
+class NodeController:
+  def __init__(self, config, lib):
+    self.lib_ = lib
+    config_blob = config.SerializeToString()
+    config_blob_p = ctypes.create_string_buffer(config_blob)
+
+    self.id_ = HandleErrorCode(self.lib_.ArtmCreateNodeController(0,
+               len(config_blob), config_blob_p))
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, type, value, traceback):
+    self.Dispose()
+
+  def Dispose(self):
+    self.lib_.ArtmDisposeNodeController(self.id_)
+    self.id_ = -1
 
 #################################################################################
 

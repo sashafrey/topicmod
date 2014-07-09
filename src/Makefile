@@ -49,15 +49,18 @@ SRCS_LIB      = artm/cpp_interface.cc \
 		artm/core/internals.rpcz.cc \
 		artm/core/master_component.cc \
 		artm/core/master_component_service_impl.cc \
+		artm/core/master_proxy.cc \
 		artm/core/merger.cc \
 		artm/core/node_controller.cc \
 		artm/core/node_controller_service_impl.cc \
 		artm/core/processor.cc \
 		artm/core/topic_model.cc \
+		artm/regularizer_sandbox/decorrelator_phi.cc \
 		artm/regularizer_sandbox/dirichlet_phi.cc \
 		artm/regularizer_sandbox/dirichlet_theta.cc \
 		artm/regularizer_sandbox/smooth_sparse_phi.cc \
 		artm/regularizer_sandbox/smooth_sparse_theta.cc \
+		artm/score_sandbox/perplexity.cc \
 
 OBJS_LIB      = $(SRCS_LIB:.cc=.o)
 DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
@@ -65,8 +68,9 @@ DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
 # Second target - executable (unittests)
 TARGET_TEST   = $(OUT_DIR)unittests
 SRCS_TEST     = artm_tests/boost_thread_test.cc \
+		artm_tests/batch_manager_test.cc \
 		artm_tests/cpp_interface_test.cc \
-		artm_tests/instance_manager_test.cc \
+		artm_tests/template_manager_test.cc \
 		artm_tests/instance_test.cc \
 		artm_tests/nodes_connectivity_test.cc \
 		artm_tests/test_mother.cc \

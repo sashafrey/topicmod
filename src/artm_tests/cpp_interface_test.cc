@@ -13,13 +13,25 @@
 TEST(CppInterface, Canary) {
 }
 
-void BasicTest(bool is_network_mode) {
+void BasicTest(bool is_network_mode, bool is_proxy_mode) {
   const int nTopics = 5;
 
+  // Endpoints:
+  // 5555 - master component (network_mode)
+  // 5556 - node controller for workers (network_mode)
+  // 5557 - node controller for master (proxy_mode)
+
+  std::shared_ptr<::artm::NodeController> node_controller;
+  std::shared_ptr<::artm::NodeController> node_controller_master;
   ::artm::MasterComponentConfig master_config;
   if (is_network_mode) {
-    master_config.set_master_component_create_endpoint("tcp://*:5555");
-    master_config.set_master_component_connect_endpoint("tcp://localhost:5555");
+    ::artm::NodeControllerConfig node_config;
+    node_config.set_create_endpoint("tcp://*:5556");
+    node_controller.reset(new ::artm::NodeController(node_config));
+
+    master_config.set_create_endpoint("tcp://*:5555");
+    master_config.set_connect_endpoint("tcp://localhost:5555");
+    master_config.add_node_connect_endpoint("tcp://localhost:5556");
     master_config.set_disk_path(".");
 
     // Clean all .batches files
@@ -39,26 +51,32 @@ void BasicTest(bool is_network_mode) {
     master_config.set_cache_processor_output(true);
   }
 
-  // Create master component
-  artm::MasterComponent master_component(master_config);
+  ::artm::ScoreConfig score_config;
+  score_config.set_config(::artm::PerplexityScoreConfig().SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_Perplexity);
+  score_config.set_name("PerplexityScore");
+  master_config.add_score_config()->CopyFrom(score_config);
 
-  std::shared_ptr<::artm::NodeController> node_controller;
-  if (is_network_mode) {
+  // Create master component
+  std::unique_ptr<artm::MasterComponent> master_component;
+  if (!is_proxy_mode) {
+    master_component.reset(new ::artm::MasterComponent(master_config));
+  } else {
     ::artm::NodeControllerConfig node_config;
-    node_config.set_master_component_connect_endpoint("tcp://localhost:5555");
-    node_config.set_node_controller_create_endpoint("tcp://*:5556");
-    node_config.set_node_controller_connect_endpoint("tcp://localhost:5556");
-    node_controller.reset(new ::artm::NodeController(node_config));
-    master_component.Reconfigure(master_config);  // Push configuration to client
+    node_config.set_create_endpoint("tcp://*:5557");
+    node_controller_master.reset(new ::artm::NodeController(node_config));
+
+    ::artm::MasterProxyConfig master_proxy_config;
+    master_proxy_config.mutable_config()->CopyFrom(master_config);
+    master_proxy_config.set_node_connect_endpoint("tcp://localhost:5557");
+    master_component.reset(new ::artm::MasterComponent(master_proxy_config));
   }
 
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-
-  artm::Score* score = model_config.add_score();
-  score->set_type(artm::Score_Type_Perplexity);
-  artm::Model model(master_component, model_config);
+  model_config.add_score_name("PerplexityScore");
+  artm::Model model(*master_component, model_config);
 
   // Load doc-token matrix
   int nTokens = 10;
@@ -87,31 +105,31 @@ void BasicTest(bool is_network_mode) {
   }
 
   // Index doc-token matrix
-  master_component.AddBatch(batch);
+  master_component->AddBatch(batch);
 
   std::shared_ptr<artm::TopicModel> topic_model;
   double expected_normalizer = 0;
   for (int iter = 0; iter < 5; ++iter) {
-    master_component.InvokeIteration(1);
-    master_component.WaitIdle();
-    topic_model = master_component.GetTopicModel(model);
+    master_component->InvokeIteration(1);
+    master_component->WaitIdle();
+    topic_model = master_component->GetTopicModel(model);
+    std::shared_ptr<::artm::PerplexityScore> perplexity =
+      master_component->GetScoreAs<::artm::PerplexityScore>(model, "PerplexityScore");
 
-    ::artm::TopicModel_TopicModelInternals internals;
-    internals.ParseFromString(topic_model->internals());
     if (iter == 1) {
-      expected_normalizer = internals.scores_normalizer().value(0);
+      expected_normalizer = perplexity->normalizer();
       EXPECT_GT(expected_normalizer, 0);
     } else if (iter >= 2) {
       if (!is_network_mode) {
         // Verify that normalizer does not grow starting from second iteration.
         // This confirms that the Instance::ForceResetScores() function works as expected.
-        EXPECT_EQ(internals.scores_normalizer().value(0), expected_normalizer);
+        EXPECT_EQ(perplexity->normalizer(), expected_normalizer);
       }
     }
   }
 
-  master_component.InvokeIteration(3);
-  master_component.WaitIdle();
+  master_component->InvokeIteration(3);
+  master_component->WaitIdle();
   model.Disable();
 
   int nUniqueTokens = nTokens;
@@ -120,7 +138,7 @@ void BasicTest(bool is_network_mode) {
   EXPECT_EQ(first_token_topics.value_size(), nTopics);
 
   if (!is_network_mode) {
-    std::shared_ptr<::artm::ThetaMatrix> theta_matrix = master_component.GetThetaMatrix(model);
+    std::shared_ptr<::artm::ThetaMatrix> theta_matrix = master_component->GetThetaMatrix(model);
     EXPECT_TRUE(theta_matrix->item_id_size() == nDocs);
     for (int item_index = 0; item_index < theta_matrix->item_id_size(); ++item_index) {
       const ::artm::FloatArray& weights = theta_matrix->item_weights(item_index);
@@ -139,45 +157,52 @@ void BasicTest(bool is_network_mode) {
   if (!is_network_mode) {
     // Test overwrite topic model
     artm::TopicModel new_topic_model;
-    new_topic_model.set_items_processed(0);
     new_topic_model.set_name(model.name());
     new_topic_model.set_topics_count(nTopics);
-    new_topic_model.mutable_scores()->add_value(0.0);  // add dummy score
     new_topic_model.add_token("my overwritten token");
     new_topic_model.add_token("my overwritten token2");
     auto weights = new_topic_model.add_token_weights();
     auto weights2 = new_topic_model.add_token_weights();
     for (int i = 0; i < nTopics; ++i) {
-      weights->add_value((float)i);
-      weights2->add_value((float)(nTopics - i));
+      weights->add_value(static_cast<float>(i));
+      weights2->add_value(static_cast<float>(nTopics - i));
     }
 
     model.Overwrite(new_topic_model);
-    auto new_topic_model2 = master_component.GetTopicModel(model);
+    auto new_topic_model2 = master_component->GetTopicModel(model);
     ASSERT_EQ(new_topic_model2->token_size(), 2);
     EXPECT_EQ(new_topic_model2->token(0), "my overwritten token");
     EXPECT_EQ(new_topic_model2->token(1), "my overwritten token2");
     for (int i = 0; i < nTopics; ++i) {
       EXPECT_FLOAT_EQ(
         new_topic_model2->token_weights(0).value(i),
-        (float)i / (float)nTopics);
+        static_cast<float>(i) / static_cast<float>(nTopics));
 
       EXPECT_FLOAT_EQ(
         new_topic_model2->token_weights(1).value(i),
-        1.0f - (float)i / (float)nTopics);
+        1.0f - static_cast<float>(i) / static_cast<float>(nTopics));
     }
   }
 }
 
-// To run this particular test:
-// artm_tests.exe --gtest_filter=CppInterface.BasicTest_NetworkMode
-TEST(CppInterface, BasicTest_NetworkMode) {
-  BasicTest(true);
-}
-
 // artm_tests.exe --gtest_filter=CppInterface.BasicTest_StandaloneMode
 TEST(CppInterface, BasicTest_StandaloneMode) {
-  BasicTest(false);
+  BasicTest(false, false);
+}
+
+// artm_tests.exe --gtest_filter=CppInterface.BasicTest_StandaloneProxyMode
+TEST(CppInterface, BasicTest_StandaloneProxyMode) {
+  BasicTest(false, true);
+}
+
+// artm_tests.exe --gtest_filter=CppInterface.BasicTest_NetworkMode
+TEST(CppInterface, BasicTest_NetworkMode) {
+  BasicTest(true, false);
+}
+
+// artm_tests.exe --gtest_filter=CppInterface.BasicTest_NetworkProxyMode
+TEST(CppInterface, BasicTest_NetworkProxyMode) {
+  BasicTest(true, true);
 }
 
 // artm_tests.exe --gtest_filter=CppInterface.Exceptions

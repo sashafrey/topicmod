@@ -21,6 +21,18 @@ master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = 2
 master_config.processor_queue_max_size = 5
 master_config.cache_processor_output = 1
+
+perplexity_config = messages_pb2.PerplexityScoreConfig();
+perplexity_config.stream_name = 'stream_0'
+score_config = master_config.score_config.add()
+score_config.config = messages_pb2.PerplexityScoreConfig().SerializeToString();
+score_config.type = ScoreConfig_Type_Perplexity;
+score_config.name = "perplexity_score"
+
+master_proxy_config = messages_pb2.MasterProxyConfig()
+master_proxy_config.node_connect_endpoint = "tcp://localhost:5555"
+master_proxy_config.config.CopyFrom(master_config)
+
 stream_ = master_config.stream.add()
 stream_.name = ('stream_0')
 stream_.type = Stream_Type_Global
@@ -54,13 +66,11 @@ dirichlet_phi_config.dictionary_name = 'dictionary_1'
 # Create model_config
 model_config = messages_pb2.ModelConfig()
 model_config.stream_name = ('stream_0')
-score_ = model_config.score.add()
-score_.type = Score_Type_Perplexity
-score_.stream_name = ('stream_0')
 model_config.regularizer_name.append('regularizer_1')
 model_config.regularizer_tau.append(1)
 model_config.regularizer_name.append('regularizer_2')
 model_config.regularizer_tau.append(2)
+model_config.score_name.append('perplexity_score')
 
 # New configs to reconfigure stuff
 master_config_new = messages_pb2.MasterComponentConfig()
@@ -127,5 +137,11 @@ with library.CreateMasterComponent() as master_component:
   master_component.Reconfigure(master_config_new)
 
   master_component.RemoveDictionary(dictionary)
+
+  perplexity_score = master_component.GetScore(model, 'perplexity_score')
+
+with library.CreateNodeController("tcp://*:5555") as node_controller:
+  with library.CreateMasterComponent(master_proxy_config) as master_component:
+    master_component.Reconfigure(master_config)
 
 print 'All tests have been successfully passed!'

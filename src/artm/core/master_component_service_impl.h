@@ -3,21 +3,14 @@
 #ifndef SRC_ARTM_CORE_MASTER_COMPONENT_SERVICE_IMPL_H_
 #define SRC_ARTM_CORE_MASTER_COMPONENT_SERVICE_IMPL_H_
 
-#include <map>
-#include <memory>
-#include <string>
-
 #include "boost/thread/mutex.hpp"
 
 #include "rpcz/service.hpp"
 
 #include "artm/messages.pb.h"
-#include "artm/core/batch_manager.h"
 #include "artm/core/common.h"
 #include "artm/core/internals.pb.h"
 #include "artm/core/internals.rpcz.h"
-#include "artm/core/topic_model.h"
-#include "artm/core/thread_safe_holder.h"
 
 namespace zmq {
 class context_t;
@@ -30,12 +23,11 @@ class application;
 namespace artm {
 namespace core {
 
-class NetworkClientCollection;
+class Instance;
 
 class MasterComponentServiceImpl : public MasterComponentService {
  public:
-  explicit MasterComponentServiceImpl(NetworkClientCollection* clients);
-
+  explicit MasterComponentServiceImpl(Instance* instance);
   ~MasterComponentServiceImpl() { ; }
 
   virtual void UpdateModel(const ::artm::core::ModelIncrement& request,
@@ -48,22 +40,8 @@ class MasterComponentServiceImpl : public MasterComponentService {
   virtual void ReportBatches(const ::artm::core::BatchIds& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
-  virtual void ConnectClient(const ::artm::core::String& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
-  virtual void DisconnectClient(const ::artm::core::String& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
-
-
-  void InvokeIteration(int iterations_count, std::string disk_path);
-  void WaitIdle();
-  bool RequestTopicModel(ModelName model_name, ::artm::TopicModel* topic_model);
-
  private:
-  mutable boost::mutex lock_;
-  BatchManager batch_manager_;
-  ThreadSafeCollectionHolder<::artm::core::ModelName, ::artm::core::TopicModel> topic_model_;
-  std::unique_ptr<rpcz::application> application_;
-  NetworkClientCollection* clients_;
+  Instance* instance_;
 };
 
 }  // namespace core

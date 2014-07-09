@@ -3,12 +3,15 @@
 #include "artm/core/processor.h"
 
 #include <stdlib.h>
+#include <map>
+#include <memory>
 #include <string>
 #include <vector>
 
 #include "glog/logging.h"
 
 #include "artm/regularizer_interface.h"
+#include "artm/score_calculator_interface.h"
 
 #include "artm/core/protobuf_helpers.h"
 #include "artm/core/call_on_destruction.h"
@@ -20,15 +23,11 @@
 namespace artm {
 namespace core {
 
-Processor::Processor(boost::mutex* processor_queue_lock,
-    std::queue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
-    boost::mutex* merger_queue_lock,
-    std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
-    const Merger& merger,
-    const ThreadSafeHolder<InstanceSchema>& schema)
-    : processor_queue_lock_(processor_queue_lock),
-      processor_queue_(processor_queue),
-      merger_queue_lock_(merger_queue_lock),
+Processor::Processor(ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
+                     ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
+                     const Merger& merger,
+                     const ThreadSafeHolder<InstanceSchema>& schema)
+    : processor_queue_(processor_queue),
       merger_queue_(merger_queue),
       merger_(merger),
       schema_(schema),
@@ -132,14 +131,9 @@ Processor::ItemProcessor::ItemProcessor(
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
                                           ModelIncrement* model_increment,
-                                          bool update_token_counters,
-                                          bool update_theta_cache,
+                                          bool update_model,
                                           float* theta) {
   int topic_size = topic_model_.topic_size();
-
-  if ((model_increment != nullptr) && update_token_counters) {
-    model_increment->set_items_processed(model_increment->items_processed() + 1);
-  }
 
   // find the id of token in topic_model
   std::vector<int> token_id;
@@ -198,7 +192,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
         if ((inner_iter == inner_iters_count) &&
             (model_increment != nullptr) &&
-             update_token_counters) {
+             update_model) {
           // Last iteration, updating final counters
           FloatArray* hat_n_wt_cur = model_increment->mutable_token_increment(
             token_id[token_index]);
@@ -215,15 +209,6 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     }
 
     if (inner_iter == inner_iters_count) {
-      if ((model_increment != nullptr) && update_theta_cache) {
-        // Cache theta for the next iteration
-        model_increment->add_item_id(item.id());
-        FloatArray* cached_theta = model_increment->add_theta();
-        for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-          cached_theta->add_value(theta[topic_index]);
-        }
-      }
-
       // inner_iter goes from 0 to inner_iters_count inclusively.
       // The goal of this "last iteration" is to update model_increment.
       // As soon as model_increment is updated, we should exit.
@@ -270,30 +255,15 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
   }
 }
 
-void Processor::ItemProcessor::CalculateScore(const Score& score, const Item& item,
-                                              const float* theta, double* perplexity,
-                                              double* normalizer) {
-  int topics_size = topic_model_.topic_size();
-  TokenIterator iter(token_dict_, topic_model_, item, score.field_name(),
-                      TokenIterator::Mode_Known);
-  while (iter.Next()) {
-    float sum = 0.0f;
-    TopicWeightIterator topic_iter = iter.GetTopicWeightIterator();
-    while (topic_iter.NextNonZeroTopic() < topics_size) {
-      sum += theta[topic_iter.TopicIndex()] * topic_iter.Weight();
-    }
-
-    if (sum > 0) {
-      (*normalizer) += iter.count();
-      (*perplexity) += iter.count() * log(sum);
-    } else {
-      LOG(WARNING) << "Skipping negative summand in perplexity calculation.";
-    }
-  }
+Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input)
+    : items_count_(processor_input.batch().item_size()),
+      item_index_(-1),  // // handy trick for iterators
+      stream_flags_(nullptr),
+      processor_input_(processor_input) {
 }
 
 Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input,
-                                          const std::string stream_name)
+                                          const std::string& stream_name)
     : items_count_(processor_input.batch().item_size()),
       item_index_(-1),  // // handy trick for iterators
       stream_flags_(nullptr),
@@ -302,6 +272,7 @@ Processor::StreamIterator::StreamIterator(const ProcessorInput& processor_input,
 
   if (index_of_stream == -1) {
     // log a warning and process all documents from the stream
+    LOG(WARNING) << "Stream " << stream_name << " does not exist in the batch.";
   } else {
     stream_flags_ = &processor_input.stream_mask(index_of_stream);
   }
@@ -332,6 +303,30 @@ const Item* Processor::StreamIterator::Current() const {
   return &(processor_input_.batch().item(item_index_));
 }
 
+bool Processor::StreamIterator::InStream(const std::string& stream_name) {
+  if (item_index_ >= items_count_)
+    return false;
+
+  int index_of_stream = repeated_field_index_of(processor_input_.stream_name(), stream_name);
+  if (index_of_stream == -1) {
+    return true;
+  }
+
+  return processor_input_.stream_mask(index_of_stream).value(item_index_);
+}
+
+bool Processor::StreamIterator::InStream(int stream_index) {
+  if (stream_index == -1)
+    return true;
+
+  assert(stream_index >= 0 && stream_index < processor_input_.stream_name_size());
+
+  if (item_index_ >= items_count_)
+    return false;
+
+  return processor_input_.stream_mask(stream_index).value(item_index_);
+}
+
 void Processor::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "Processor thread");
@@ -348,23 +343,9 @@ void Processor::ThreadFunction() {
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
 
       std::shared_ptr<const ProcessorInput> part;
-      {
-        boost::lock_guard<boost::mutex> guard(*processor_queue_lock_);
-        if (processor_queue_->empty()) {
-          continue;
-        }
-
-        part = processor_queue_->front();
-        processor_queue_->pop();
+      if (!processor_queue_->try_pop(&part)) {
+        continue;
       }
-
-      std::shared_ptr<ProcessorOutput> processor_output = std::make_shared<ProcessorOutput>();
-      processor_output->set_batch_uuid(part->batch_uuid());
-      processor_output->set_data_loader_id(part->data_loader_id());
-      call_on_destruction c([&]() {
-        boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
-        merger_queue_->push(processor_output);
-      });
 
       std::shared_ptr<InstanceSchema> schema = schema_.get();
       std::vector<ModelName> model_names = schema->GetModelNames();
@@ -373,6 +354,31 @@ void Processor::ThreadFunction() {
 
         // do not process disabled models.
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each
+
+        // Find and save to the variable the index of model stream in the part->stream_name() list.
+        int model_stream_index = repeated_field_index_of(part->stream_name(), model.stream_name());
+
+        std::map<ScoreName, std::shared_ptr<Score>> score_container;
+        for (int score_index = 0; score_index < model.score_name_size(); ++score_index) {
+          const ScoreName& score_name = model.score_name(score_index);
+          auto score_calc = schema->score_calculator(score_name);
+          if (score_calc == nullptr) {
+            LOG(ERROR) << "Unable to find score calculator '" << score_name << "', referenced by "
+                        << "model " << model.name() << ".";
+            continue;
+          }
+
+          if (!score_calc->is_cumulative())
+            continue;  // skip all non-cumulative scores
+
+          score_container.insert(std::make_pair(score_name, score_calc->CreateScore()));
+        }
+
+        std::shared_ptr<ModelIncrement> model_increment = std::make_shared<ModelIncrement>();
+        model_increment->add_batch_uuid(part->batch_uuid());
+        call_on_destruction c([&]() {
+          merger_queue_->push(model_increment);
+        });
 
         // find cache
         const DataLoaderCacheEntry* cache = nullptr;
@@ -390,16 +396,7 @@ void Processor::ThreadFunction() {
         assert(topic_size > 0);
 
         // process part and store result in merger queue
-        auto model_increment = processor_output->add_model_increment();
         model_increment->set_model_name(model_name);
-        model_increment->set_items_processed(0);
-
-        // Prepare score vector
-        for (int score_index = 0; score_index < model.score_size(); ++score_index) {
-          model_increment->add_score(0.0);
-          model_increment->add_score_norm(0.0);
-        }
-
         model_increment->set_topics_count(topic_size);
 
         for (int token_index = 0; token_index < part->batch().token_size(); ++token_index) {
@@ -416,10 +413,11 @@ void Processor::ThreadFunction() {
         }
 
         ItemProcessor item_processor(*topic_model, part->batch().token(), schema_.get());
-        StreamIterator iter(*part, model.stream_name());
+        StreamIterator iter(*part);
         while (iter.Next() != nullptr) {
           const Item* item = iter.Current();
 
+          // Initialize theta (either assign random values or reuse values from previous iteration)
           std::vector<float> theta(topic_size);
           int index_of_item = -1;
           if ((cache != nullptr) && model.reuse_theta()) {
@@ -437,64 +435,49 @@ void Processor::ThreadFunction() {
             }
           }
 
-          bool update_token_counters = true;
-          bool update_theta_cache = true;
-          item_processor.InferTheta(model, *item, model_increment, update_token_counters,
-                                    update_theta_cache, &theta[0]);
-        }
+          bool update_model = iter.InStream(model_stream_index);
+          item_processor.InferTheta(model, *item, model_increment.get(), update_model, &theta[0]);
 
-        // Calculate all requested scores (such as perplexity)
-        for (int score_index = 0; score_index < model.score_size(); ++score_index) {
-          const Score& score = model.score(score_index);
-
-          // Perplexity is so far the only score that Processor know how to calculate.
-          if (score.type() != Score_Type_Perplexity)
-            continue;
-
-          double perplexity_score = 0.0;
-          double perplexity_norm = 0.0;
-          StreamIterator test_iter(*part, score.stream_name());
-          ItemProcessor test_item_processor(*topic_model, part->batch().token(), schema_.get());
-          while (test_iter.Next() != nullptr) {
-            const Item* item = test_iter.Current();
-
-            std::vector<float> theta_vec;
-            theta_vec.resize(topic_size);
-            float* theta = &theta_vec[0];
-            for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-              theta[topic_index] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-            }
-
-            // Calculate theta cache only if score's stream is different from model's stream.
-            // ToDo(alfrey): find a better solution! This may cause duplicates in theta_matrix.
-            bool update_theta_cache = (score.stream_name() != model.stream_name());
-            bool update_token_counters = false;
-            test_item_processor.InferTheta(model, *item, model_increment, update_token_counters,
-                                           update_theta_cache, theta);
-            test_item_processor.CalculateScore(
-              score, *item, theta, &perplexity_score, &perplexity_norm);
+          // Update theta cache
+          model_increment->add_item_id(item->id());
+          FloatArray* cached_theta = model_increment->add_theta();
+          for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
+            cached_theta->add_value(theta[topic_index]);
           }
 
-          model_increment->set_score(score_index,
-            model_increment->score(score_index) + perplexity_score);
+          // Calculate all requested scores (such as perplexity)
+          for (auto score_iter = score_container.begin();
+               score_iter != score_container.end();
+               ++score_iter) {
+            const ScoreName& score_name = score_iter->first;
+            std::shared_ptr<Score> score = score_iter->second;
+            auto score_calc = schema->score_calculator(score_name);
 
-          model_increment->set_score_norm(
-            score_index, model_increment->score_norm(score_index) + perplexity_norm);
+            if (!iter.InStream(score_calc->stream_name())) continue;
+
+            score_calc->AppendScore(*item, part->batch().token(), *topic_model, theta,
+                                    score.get());
+          }
+        }
+
+        for (auto score_iter = score_container.begin();
+             score_iter != score_container.end();
+             ++score_iter) {
+          model_increment->add_score_name(score_iter->first);
+          model_increment->add_score(score_iter->second->SerializeAsString());
         }
       });
 
+      // Wait until merger queue has space for a new element
+      int merger_queue_max_size = schema_.get()->config().merger_queue_max_size();
       for (;;) {
-        int merger_queue_size = 0;
-        {
-          boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
-          merger_queue_size = merger_queue_->size();
-        }
-
-        if (merger_queue_size < schema_.get()->instance_config().merger_queue_max_size())
+        if (merger_queue_->size() < merger_queue_max_size)
           break;
 
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));
       }
+
+      // Here call_in_destruction will enqueue processor output into the merger queue.
     }
   }
   catch(boost::thread_interrupted&) {

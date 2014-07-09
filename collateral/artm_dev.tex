@@ -225,7 +225,7 @@ and all computation is therefore transferred to the remote nodes.
 Master component became responsible for the following operations:
 \begin{enumerate}
 \item Keeping track of all remote nodes
-\item Reconfiguring all remote nodes once the user reconfigures the master component 
+\item Reconfiguring all remote nodes once the user reconfigures the master component
       (including updates of ModelConfig and RegularizerConfig)
 \item Hosting the latest token-topic matrix, and updating it with increments produced on remote nodes
 \item Distribution of the latest token-topic matrix to the remote nodes
@@ -235,21 +235,21 @@ Master component became responsible for the following operations:
 
 Fig. \ref{fig:diagramm_artm_network} represents the architecture diagram of BigARTM in network modus operandi.
 Compare it with Fig. \ref{fig:diagramm_artm_core}, which represents the local modus operandi.
-Note that the key  ``DataLoader $\rightarrow$ Processor $\rightarrow$ Merger'' workflow 
+Note that the key  ``DataLoader $\rightarrow$ Processor $\rightarrow$ Merger'' workflow
 at the nodes is similar to the workflow of the MasterComponent in local modus operandi.
 Few important things to remember:
 \begin{itemize}
-    \item In network mode master component has to be configured with a network endpoint, 
+    \item In network mode master component has to be configured with a network endpoint,
           accessible by all node controllers
-    \item Master component has to be configured with the disk path location which refers 
+    \item Master component has to be configured with the disk path location which refers
           to a network file share, accessible by all nodes
-    \item Currently the master component shell be launched earlier than all other nodes. 
+    \item Currently the master component shell be launched earlier than all other nodes.
           It is the node controller who initializes the connection with the master component.
           \emph{ToDo: we should fix this so that MasterComponent can connect to all nodes in a predefined list}
     \item Currently the master component does not reconfigure automatically reconfigure newly connected nodes.
           A new Reconfigure() operation should be issued on MasterComponent
           after all nodes are connected in order to push the configuration to the nodes.
-    \item Some important operations, such as regularization of Phi matrix, 
+    \item Some important operations, such as regularization of Phi matrix,
           are not yet implemented in the network modus operandi.
     \item Error handling is not yet implemented in network modus operandi,
           so it is expected to get crashes or undefined behaviour due to minor network glitches.
@@ -267,7 +267,7 @@ Few important things to remember:
 
 Interaction between MasterComponent and NodeControllers is implemented on \emph{RPCZ} technology.
 Please, familiarize yourself with the concept of a
-\href{en.wikipedia.org/wiki/Remote_procedure_call}{remote procedure call}, 
+\href{en.wikipedia.org/wiki/Remote_procedure_call}{remote procedure call},
 and read an overview of the following two libraries:
 \href{code.google.com/p/rpcz/}{rpcz} and \href{http://zeromq.org}{ZeroMQ}.
 
@@ -425,15 +425,14 @@ Online PLSA is the only method implemented at the moment.
 It has the following implementation details:
 \begin{enumerate}
     \item Processing of documents happens in parallel, according to the design
-    \item Strategy of updating matrix $\Phi$: whenever Merger finishes processing of the next Processors output,
-    it updates matrix $\Phi$. It will be picked by each processor whenever it starts processing next partition.
+    \item Strategy of updating matrix $\Phi$: after every scan of the whole collection.
+          A next $\Phi$ matrix is accumulated from '0'.
+          No exponential decay is currently implemented.
     \item Matrix Phi is initialized with random [0..1] values.
     \item By default distributions $\theta_{t d}$ are inferred from scratch on every scan of the collection.
           Processors can be configured to re-use the $\Theta$ values from previous iteration.
-    \item Counters $n_{w t}$ and $n_t$ keep increasing, even between scans of the whole collection.
-          No exponential decay is currently implemented.
-    \item Current perplexity calculation is also cumulative.
-          There is stupid limitation: perplexity can't be calculated for a single iteration.
+    \item Current perplexity calculation accumulates on test collection for every iteration.
+    \item When p(w|d)=0 perplexity score uses unigram document model.
     \item Perplexity can be evaluated on testing items.
           Each item from the testing set is used to both infer theta, and evaluate perplexity.
           An alternative is to randomly split each testing document into two halves.

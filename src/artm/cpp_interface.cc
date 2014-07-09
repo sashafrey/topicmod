@@ -43,6 +43,14 @@ MasterComponent::MasterComponent(const MasterComponentConfig& config) : id_(0), 
     StringAsArray(&config_blob)));
 }
 
+MasterComponent::MasterComponent(const MasterProxyConfig& config)
+    : id_(0), config_(config.config()) {
+  std::string config_blob;
+  config.SerializeToString(&config_blob);
+  id_ = HandleErrorCode(ArtmCreateMasterProxy(0, config_blob.size(),
+    StringAsArray(&config_blob)));
+}
+
 MasterComponent::~MasterComponent() {
   ArtmDisposeMasterComponent(id());
 }
@@ -85,6 +93,23 @@ std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model)
   std::shared_ptr<ThetaMatrix> theta_matrix(new ThetaMatrix());
   theta_matrix->ParseFromString(blob);
   return theta_matrix;
+}
+
+std::shared_ptr<ScoreData> MasterComponent::GetScore(const Model& model,
+                                                     const std::string& score_name) {
+  int request_id = HandleErrorCode(ArtmRequestScore(
+    id(), model.name().c_str(), score_name.c_str()));
+
+  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  std::string blob;
+  blob.resize(length);
+  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&blob)));
+
+  ArtmDisposeRequest(request_id);
+
+  std::shared_ptr<ScoreData> score_data(new ScoreData());
+  score_data->ParseFromString(blob);
+  return score_data;
 }
 
 NodeController::NodeController(const NodeControllerConfig& config) : id_(0), config_(config) {

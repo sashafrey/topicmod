@@ -62,7 +62,6 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
   } else {
     // proceed the regularization
     for (int topic_id = 0; topic_id < topic_size; ++topic_id) {
-
       // objective topics
       if (topic_id < objective_topic_size) {
         if (topics_to_regularize.value(topic_id)) {

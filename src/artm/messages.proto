@@ -114,7 +114,7 @@ message RegularizerConfig {
     DirichletPhi = 1;
     SmoothSparseTheta = 2;
     SmoothSparsePhi = 3;
-	  DecorrelatorPhi = 4;
+    DecorrelatorPhi = 4;
   }
 
   optional string name = 1;

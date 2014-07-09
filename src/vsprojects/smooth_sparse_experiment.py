@@ -61,7 +61,7 @@ topics_count = 100
 outer_iteration_count = 41
 inner_iterations_count = 1
 top_tokens_count_to_visualize = 10
-parse_collection_from_text = 1
+parse_collection_from_text = 0
 
 #######
 #critical_prob_mass = 0.5
@@ -79,7 +79,7 @@ top100_file = open('top100.txt', 'w')
 #kernel_param_file = open('kernel_param.txt', 'w')
 #kernel_words_file = open('kernel_words.txt', 'w')
 
-decor = False
+decor = True
 sp_phi = False
 sm_phi = False
 sp_theta = False
@@ -87,6 +87,13 @@ sm_theta = False
 
 const = 200000
 not_need = 0
+
+topics_for_decor = messages_pb2.BoolArray()
+for i in range(0, topics_count):
+    if (i < topics_count - background_topics_count):
+        topics_for_decor.value.append(True)
+    else:
+        topics_for_decor.value.append(False)
 
 reg_decor_coef = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
                   const * 0.1, const * 0.2, const * 0.3, const * 0.4, const * 0.5, 
@@ -118,10 +125,10 @@ reg_phi_smooth_coef = [2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 
                        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, not_need]
 
-etalon_perplexity = [12350, 2567, 2565, 2561, 2556, 2549, 2537, 2523, 2503, 2476, 
-                      2444, 2403, 2355, 2301, 2243, 2184, 2123, 2073, 2021, 1978,
-                      1937, 1898, 1866, 1832, 1805, 1778, 1754, 1736, 1718, 1694, 
-                      1681, 1670, 1651, 1640, 1631, 1620, 1611, 1600, 1597, 1584]
+etalon_perplexity = [2567, 2565, 2561, 2555, 2548, 2536, 2520, 2499, 2470, 2434, 
+                      2392, 2340, 2285, 2228, 2168, 2106, 2059, 2012, 1964, 1918,
+                      1880, 1848, 1818, 1792, 1763, 1739, 1725, 1703, 1686, 1673,
+                      1655, 1650, 1637, 1623, 1616, 1604, 1601, 1590, 1581, 1575]
 #######
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
@@ -184,6 +191,7 @@ with library.CreateMasterComponent(master_config) as master_component:
 
     #######
     reg_decor_config = messages_pb2.DecorrelatorPhiConfig()
+    reg_decor_config.topics_to_regularize.CopyFrom(topics_for_decor)
     reg_decor_name = 'regularizer_decor'
     reg_decor_type = 4
     regularizer_decor = master_component.CreateRegularizer(
@@ -286,8 +294,6 @@ with library.CreateMasterComponent(master_config) as master_component:
       for topic_index in range(0, topics_count):
         weights.value.append(random.random())
     model.Overwrite(initial_topic_model)
-
-
 
     for iter in range(0, outer_iteration_count):
         start = time.clock()

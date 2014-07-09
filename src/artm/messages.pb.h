@@ -51,6 +51,7 @@ class DictionaryConfig;
 class DictionaryEntry;
 class DoubleArray;
 class FloatArray;
+class BoolArray;
 class ScoreConfig;
 class ScoreData;
 class PerplexityScoreConfig;
@@ -1529,7 +1530,7 @@ class SmoothSparseThetaConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 background_topics_count = 1;
+  // optional int32 background_topics_count = 1;
   inline bool has_background_topics_count() const;
   inline void clear_background_topics_count();
   static const int kBackgroundTopicsCountFieldNumber = 1;
@@ -1624,17 +1625,26 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // required int32 background_topics_count = 1;
+  // optional int32 background_topics_count = 1;
   inline bool has_background_topics_count() const;
   inline void clear_background_topics_count();
   static const int kBackgroundTopicsCountFieldNumber = 1;
   inline ::google::protobuf::int32 background_topics_count() const;
   inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // optional string dictionary_name = 2;
+  // optional .artm.BoolArray topics_to_regularize = 2;
+  inline bool has_topics_to_regularize() const;
+  inline void clear_topics_to_regularize();
+  static const int kTopicsToRegularizeFieldNumber = 2;
+  inline const ::artm::BoolArray& topics_to_regularize() const;
+  inline ::artm::BoolArray* mutable_topics_to_regularize();
+  inline ::artm::BoolArray* release_topics_to_regularize();
+  inline void set_allocated_topics_to_regularize(::artm::BoolArray* topics_to_regularize);
+
+  // optional string dictionary_name = 3;
   inline bool has_dictionary_name() const;
   inline void clear_dictionary_name();
-  static const int kDictionaryNameFieldNumber = 2;
+  static const int kDictionaryNameFieldNumber = 3;
   inline const ::std::string& dictionary_name() const;
   inline void set_dictionary_name(const ::std::string& value);
   inline void set_dictionary_name(const char* value);
@@ -1647,16 +1657,19 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
  private:
   inline void set_has_background_topics_count();
   inline void clear_has_background_topics_count();
+  inline void set_has_topics_to_regularize();
+  inline void clear_has_topics_to_regularize();
   inline void set_has_dictionary_name();
   inline void clear_has_dictionary_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::artm::BoolArray* topics_to_regularize_;
   ::std::string* dictionary_name_;
   ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -1721,14 +1734,26 @@ class DecorrelatorPhiConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
+  // optional .artm.BoolArray topics_to_regularize = 1;
+  inline bool has_topics_to_regularize() const;
+  inline void clear_topics_to_regularize();
+  static const int kTopicsToRegularizeFieldNumber = 1;
+  inline const ::artm::BoolArray& topics_to_regularize() const;
+  inline ::artm::BoolArray* mutable_topics_to_regularize();
+  inline ::artm::BoolArray* release_topics_to_regularize();
+  inline void set_allocated_topics_to_regularize(::artm::BoolArray* topics_to_regularize);
+
   // @@protoc_insertion_point(class_scope:artm.DecorrelatorPhiConfig)
  private:
+  inline void set_has_topics_to_regularize();
+  inline void clear_has_topics_to_regularize();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::artm::BoolArray* topics_to_regularize_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[1];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -2134,6 +2159,92 @@ class FloatArray : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static FloatArray* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class BoolArray : public ::google::protobuf::Message {
+ public:
+  BoolArray();
+  virtual ~BoolArray();
+
+  BoolArray(const BoolArray& from);
+
+  inline BoolArray& operator=(const BoolArray& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const BoolArray& default_instance();
+
+  void Swap(BoolArray* other);
+
+  // implements Message ----------------------------------------------
+
+  BoolArray* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const BoolArray& from);
+  void MergeFrom(const BoolArray& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated bool value = 1 [packed = true];
+  inline int value_size() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 1;
+  inline bool value(int index) const;
+  inline void set_value(int index, bool value);
+  inline void add_value(bool value);
+  inline const ::google::protobuf::RepeatedField< bool >&
+      value() const;
+  inline ::google::protobuf::RepeatedField< bool >*
+      mutable_value();
+
+  // @@protoc_insertion_point(class_scope:artm.BoolArray)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedField< bool > value_;
+  mutable int _value_cached_byte_size_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static BoolArray* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -4714,7 +4825,7 @@ inline void DirichletPhiConfig::set_allocated_dictionary_name(::std::string* dic
 
 // SmoothSparseThetaConfig
 
-// required int32 background_topics_count = 1;
+// optional int32 background_topics_count = 1;
 inline bool SmoothSparseThetaConfig::has_background_topics_count() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -4765,7 +4876,7 @@ SmoothSparseThetaConfig::mutable_alpha() {
 
 // SmoothSparsePhiConfig
 
-// required int32 background_topics_count = 1;
+// optional int32 background_topics_count = 1;
 inline bool SmoothSparsePhiConfig::has_background_topics_count() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
@@ -4787,15 +4898,53 @@ inline void SmoothSparsePhiConfig::set_background_topics_count(::google::protobu
   background_topics_count_ = value;
 }
 
-// optional string dictionary_name = 2;
-inline bool SmoothSparsePhiConfig::has_dictionary_name() const {
+// optional .artm.BoolArray topics_to_regularize = 2;
+inline bool SmoothSparsePhiConfig::has_topics_to_regularize() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SmoothSparsePhiConfig::set_has_dictionary_name() {
+inline void SmoothSparsePhiConfig::set_has_topics_to_regularize() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_has_dictionary_name() {
+inline void SmoothSparsePhiConfig::clear_has_topics_to_regularize() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void SmoothSparsePhiConfig::clear_topics_to_regularize() {
+  if (topics_to_regularize_ != NULL) topics_to_regularize_->::artm::BoolArray::Clear();
+  clear_has_topics_to_regularize();
+}
+inline const ::artm::BoolArray& SmoothSparsePhiConfig::topics_to_regularize() const {
+  return topics_to_regularize_ != NULL ? *topics_to_regularize_ : *default_instance_->topics_to_regularize_;
+}
+inline ::artm::BoolArray* SmoothSparsePhiConfig::mutable_topics_to_regularize() {
+  set_has_topics_to_regularize();
+  if (topics_to_regularize_ == NULL) topics_to_regularize_ = new ::artm::BoolArray;
+  return topics_to_regularize_;
+}
+inline ::artm::BoolArray* SmoothSparsePhiConfig::release_topics_to_regularize() {
+  clear_has_topics_to_regularize();
+  ::artm::BoolArray* temp = topics_to_regularize_;
+  topics_to_regularize_ = NULL;
+  return temp;
+}
+inline void SmoothSparsePhiConfig::set_allocated_topics_to_regularize(::artm::BoolArray* topics_to_regularize) {
+  delete topics_to_regularize_;
+  topics_to_regularize_ = topics_to_regularize;
+  if (topics_to_regularize) {
+    set_has_topics_to_regularize();
+  } else {
+    clear_has_topics_to_regularize();
+  }
+}
+
+// optional string dictionary_name = 3;
+inline bool SmoothSparsePhiConfig::has_dictionary_name() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SmoothSparsePhiConfig::set_has_dictionary_name() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SmoothSparsePhiConfig::clear_has_dictionary_name() {
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void SmoothSparsePhiConfig::clear_dictionary_name() {
   if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
@@ -4860,6 +5009,44 @@ inline void SmoothSparsePhiConfig::set_allocated_dictionary_name(::std::string* 
 // -------------------------------------------------------------------
 
 // DecorrelatorPhiConfig
+
+// optional .artm.BoolArray topics_to_regularize = 1;
+inline bool DecorrelatorPhiConfig::has_topics_to_regularize() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void DecorrelatorPhiConfig::set_has_topics_to_regularize() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void DecorrelatorPhiConfig::clear_has_topics_to_regularize() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void DecorrelatorPhiConfig::clear_topics_to_regularize() {
+  if (topics_to_regularize_ != NULL) topics_to_regularize_->::artm::BoolArray::Clear();
+  clear_has_topics_to_regularize();
+}
+inline const ::artm::BoolArray& DecorrelatorPhiConfig::topics_to_regularize() const {
+  return topics_to_regularize_ != NULL ? *topics_to_regularize_ : *default_instance_->topics_to_regularize_;
+}
+inline ::artm::BoolArray* DecorrelatorPhiConfig::mutable_topics_to_regularize() {
+  set_has_topics_to_regularize();
+  if (topics_to_regularize_ == NULL) topics_to_regularize_ = new ::artm::BoolArray;
+  return topics_to_regularize_;
+}
+inline ::artm::BoolArray* DecorrelatorPhiConfig::release_topics_to_regularize() {
+  clear_has_topics_to_regularize();
+  ::artm::BoolArray* temp = topics_to_regularize_;
+  topics_to_regularize_ = NULL;
+  return temp;
+}
+inline void DecorrelatorPhiConfig::set_allocated_topics_to_regularize(::artm::BoolArray* topics_to_regularize) {
+  delete topics_to_regularize_;
+  topics_to_regularize_ = topics_to_regularize;
+  if (topics_to_regularize) {
+    set_has_topics_to_regularize();
+  } else {
+    clear_has_topics_to_regularize();
+  }
+}
 
 // -------------------------------------------------------------------
 
@@ -5193,6 +5380,35 @@ FloatArray::value() const {
 }
 inline ::google::protobuf::RepeatedField< float >*
 FloatArray::mutable_value() {
+  return &value_;
+}
+
+// -------------------------------------------------------------------
+
+// BoolArray
+
+// repeated bool value = 1 [packed = true];
+inline int BoolArray::value_size() const {
+  return value_.size();
+}
+inline void BoolArray::clear_value() {
+  value_.Clear();
+}
+inline bool BoolArray::value(int index) const {
+  return value_.Get(index);
+}
+inline void BoolArray::set_value(int index, bool value) {
+  value_.Set(index, value);
+}
+inline void BoolArray::add_value(bool value) {
+  value_.Add(value);
+}
+inline const ::google::protobuf::RepeatedField< bool >&
+BoolArray::value() const {
+  return value_;
+}
+inline ::google::protobuf::RepeatedField< bool >*
+BoolArray::mutable_value() {
   return &value_;
 }
 

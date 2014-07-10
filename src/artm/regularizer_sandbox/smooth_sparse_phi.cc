@@ -60,7 +60,7 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
         }
       } else {
         for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
-          float value = static_cast<float>(tau * topics_coefficients.value().Get(topic_id) * (+1));
+          float value = static_cast<float>(tau * (+1));
           topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
         }
       }
@@ -91,7 +91,7 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
             coef = dictionary_ptr->find(token)->second.values().value(index);
           }
 
-          float value = static_cast<float>(tau * topics_coefficients.value().Get(topic_id) * coef);
+          float value = static_cast<float>(tau * coef);
           topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
         }
       }

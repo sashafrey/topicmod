@@ -26,7 +26,7 @@ bool SmoothSparseTheta::RegularizeTheta(const Item& item,
   }
   const int objective_topic_size = topic_size - background_topics_count;
 
-  ::artm::DoubleArray alpha_topic;
+  ::artm::FloatArray alpha_topic;
   if (config_.has_alpha_topic()) {
     alpha_topic.CopyFrom(config_.alpha_topic());
 
@@ -46,7 +46,7 @@ bool SmoothSparseTheta::RegularizeTheta(const Item& item,
   }
 
   float cur_iter_coef = 1;
-  if (config_.has_alpha_topic()) {
+  if (config_.has_alpha_iter()) {
     auto alpha_iter = config_.alpha_iter();
     // value_size() start from 1, inner_iter --- from 0
     if (alpha_iter.value_size() >= inner_iter + 1) {

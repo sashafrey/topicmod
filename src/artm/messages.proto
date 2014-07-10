@@ -114,7 +114,7 @@ message RegularizerConfig {
     DirichletPhi = 1;
     SmoothSparseTheta = 2;
     SmoothSparsePhi = 3;
-	  DecorrelatorPhi = 4;
+    DecorrelatorPhi = 4;
   }
 
   optional string name = 1;
@@ -135,13 +135,14 @@ message DirichletPhiConfig {
 // Configuration of a SmoothSparse Theta regularizer
 message SmoothSparseThetaConfig {
   optional int32 background_topics_count = 1;
-  repeated DoubleArray alpha = 2;
+  optional FloatArray alpha_topic = 2;
+  optional FloatArray alpha_iter = 3;
 }
 
 // Configuration of a SmoothSparse Phi regularizer
 message SmoothSparsePhiConfig {
   optional int32 background_topics_count = 1;
-  optional BoolArray topics_to_regularize = 2;
+  optional FloatArray topics_coefficients = 2;
   optional string dictionary_name = 3;
 }
 

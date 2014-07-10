@@ -1537,30 +1537,41 @@ class SmoothSparseThetaConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 background_topics_count() const;
   inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // repeated .artm.DoubleArray alpha = 2;
-  inline int alpha_size() const;
-  inline void clear_alpha();
-  static const int kAlphaFieldNumber = 2;
-  inline const ::artm::DoubleArray& alpha(int index) const;
-  inline ::artm::DoubleArray* mutable_alpha(int index);
-  inline ::artm::DoubleArray* add_alpha();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-      alpha() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-      mutable_alpha();
+  // optional .artm.FloatArray alpha_topic = 2;
+  inline bool has_alpha_topic() const;
+  inline void clear_alpha_topic();
+  static const int kAlphaTopicFieldNumber = 2;
+  inline const ::artm::FloatArray& alpha_topic() const;
+  inline ::artm::FloatArray* mutable_alpha_topic();
+  inline ::artm::FloatArray* release_alpha_topic();
+  inline void set_allocated_alpha_topic(::artm::FloatArray* alpha_topic);
+
+  // optional .artm.FloatArray alpha_iter = 3;
+  inline bool has_alpha_iter() const;
+  inline void clear_alpha_iter();
+  static const int kAlphaIterFieldNumber = 3;
+  inline const ::artm::FloatArray& alpha_iter() const;
+  inline ::artm::FloatArray* mutable_alpha_iter();
+  inline ::artm::FloatArray* release_alpha_iter();
+  inline void set_allocated_alpha_iter(::artm::FloatArray* alpha_iter);
 
   // @@protoc_insertion_point(class_scope:artm.SmoothSparseThetaConfig)
  private:
   inline void set_has_background_topics_count();
   inline void clear_has_background_topics_count();
+  inline void set_has_alpha_topic();
+  inline void clear_has_alpha_topic();
+  inline void set_has_alpha_iter();
+  inline void clear_has_alpha_iter();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray > alpha_;
+  ::artm::FloatArray* alpha_topic_;
+  ::artm::FloatArray* alpha_iter_;
   ::google::protobuf::int32 background_topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -1632,14 +1643,14 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 background_topics_count() const;
   inline void set_background_topics_count(::google::protobuf::int32 value);
 
-  // optional .artm.BoolArray topics_to_regularize = 2;
-  inline bool has_topics_to_regularize() const;
-  inline void clear_topics_to_regularize();
-  static const int kTopicsToRegularizeFieldNumber = 2;
-  inline const ::artm::BoolArray& topics_to_regularize() const;
-  inline ::artm::BoolArray* mutable_topics_to_regularize();
-  inline ::artm::BoolArray* release_topics_to_regularize();
-  inline void set_allocated_topics_to_regularize(::artm::BoolArray* topics_to_regularize);
+  // optional .artm.FloatArray topics_coefficients = 2;
+  inline bool has_topics_coefficients() const;
+  inline void clear_topics_coefficients();
+  static const int kTopicsCoefficientsFieldNumber = 2;
+  inline const ::artm::FloatArray& topics_coefficients() const;
+  inline ::artm::FloatArray* mutable_topics_coefficients();
+  inline ::artm::FloatArray* release_topics_coefficients();
+  inline void set_allocated_topics_coefficients(::artm::FloatArray* topics_coefficients);
 
   // optional string dictionary_name = 3;
   inline bool has_dictionary_name() const;
@@ -1657,14 +1668,14 @@ class SmoothSparsePhiConfig : public ::google::protobuf::Message {
  private:
   inline void set_has_background_topics_count();
   inline void clear_has_background_topics_count();
-  inline void set_has_topics_to_regularize();
-  inline void clear_has_topics_to_regularize();
+  inline void set_has_topics_coefficients();
+  inline void clear_has_topics_coefficients();
   inline void set_has_dictionary_name();
   inline void clear_has_dictionary_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::artm::BoolArray* topics_to_regularize_;
+  ::artm::FloatArray* topics_coefficients_;
   ::std::string* dictionary_name_;
   ::google::protobuf::int32 background_topics_count_;
 
@@ -4847,29 +4858,80 @@ inline void SmoothSparseThetaConfig::set_background_topics_count(::google::proto
   background_topics_count_ = value;
 }
 
-// repeated .artm.DoubleArray alpha = 2;
-inline int SmoothSparseThetaConfig::alpha_size() const {
-  return alpha_.size();
+// optional .artm.FloatArray alpha_topic = 2;
+inline bool SmoothSparseThetaConfig::has_alpha_topic() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SmoothSparseThetaConfig::clear_alpha() {
-  alpha_.Clear();
+inline void SmoothSparseThetaConfig::set_has_alpha_topic() {
+  _has_bits_[0] |= 0x00000002u;
 }
-inline const ::artm::DoubleArray& SmoothSparseThetaConfig::alpha(int index) const {
-  return alpha_.Get(index);
+inline void SmoothSparseThetaConfig::clear_has_alpha_topic() {
+  _has_bits_[0] &= ~0x00000002u;
 }
-inline ::artm::DoubleArray* SmoothSparseThetaConfig::mutable_alpha(int index) {
-  return alpha_.Mutable(index);
+inline void SmoothSparseThetaConfig::clear_alpha_topic() {
+  if (alpha_topic_ != NULL) alpha_topic_->::artm::FloatArray::Clear();
+  clear_has_alpha_topic();
 }
-inline ::artm::DoubleArray* SmoothSparseThetaConfig::add_alpha() {
-  return alpha_.Add();
+inline const ::artm::FloatArray& SmoothSparseThetaConfig::alpha_topic() const {
+  return alpha_topic_ != NULL ? *alpha_topic_ : *default_instance_->alpha_topic_;
 }
-inline const ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >&
-SmoothSparseThetaConfig::alpha() const {
-  return alpha_;
+inline ::artm::FloatArray* SmoothSparseThetaConfig::mutable_alpha_topic() {
+  set_has_alpha_topic();
+  if (alpha_topic_ == NULL) alpha_topic_ = new ::artm::FloatArray;
+  return alpha_topic_;
 }
-inline ::google::protobuf::RepeatedPtrField< ::artm::DoubleArray >*
-SmoothSparseThetaConfig::mutable_alpha() {
-  return &alpha_;
+inline ::artm::FloatArray* SmoothSparseThetaConfig::release_alpha_topic() {
+  clear_has_alpha_topic();
+  ::artm::FloatArray* temp = alpha_topic_;
+  alpha_topic_ = NULL;
+  return temp;
+}
+inline void SmoothSparseThetaConfig::set_allocated_alpha_topic(::artm::FloatArray* alpha_topic) {
+  delete alpha_topic_;
+  alpha_topic_ = alpha_topic;
+  if (alpha_topic) {
+    set_has_alpha_topic();
+  } else {
+    clear_has_alpha_topic();
+  }
+}
+
+// optional .artm.FloatArray alpha_iter = 3;
+inline bool SmoothSparseThetaConfig::has_alpha_iter() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SmoothSparseThetaConfig::set_has_alpha_iter() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SmoothSparseThetaConfig::clear_has_alpha_iter() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SmoothSparseThetaConfig::clear_alpha_iter() {
+  if (alpha_iter_ != NULL) alpha_iter_->::artm::FloatArray::Clear();
+  clear_has_alpha_iter();
+}
+inline const ::artm::FloatArray& SmoothSparseThetaConfig::alpha_iter() const {
+  return alpha_iter_ != NULL ? *alpha_iter_ : *default_instance_->alpha_iter_;
+}
+inline ::artm::FloatArray* SmoothSparseThetaConfig::mutable_alpha_iter() {
+  set_has_alpha_iter();
+  if (alpha_iter_ == NULL) alpha_iter_ = new ::artm::FloatArray;
+  return alpha_iter_;
+}
+inline ::artm::FloatArray* SmoothSparseThetaConfig::release_alpha_iter() {
+  clear_has_alpha_iter();
+  ::artm::FloatArray* temp = alpha_iter_;
+  alpha_iter_ = NULL;
+  return temp;
+}
+inline void SmoothSparseThetaConfig::set_allocated_alpha_iter(::artm::FloatArray* alpha_iter) {
+  delete alpha_iter_;
+  alpha_iter_ = alpha_iter;
+  if (alpha_iter) {
+    set_has_alpha_iter();
+  } else {
+    clear_has_alpha_iter();
+  }
 }
 
 // -------------------------------------------------------------------
@@ -4898,41 +4960,41 @@ inline void SmoothSparsePhiConfig::set_background_topics_count(::google::protobu
   background_topics_count_ = value;
 }
 
-// optional .artm.BoolArray topics_to_regularize = 2;
-inline bool SmoothSparsePhiConfig::has_topics_to_regularize() const {
+// optional .artm.FloatArray topics_coefficients = 2;
+inline bool SmoothSparsePhiConfig::has_topics_coefficients() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SmoothSparsePhiConfig::set_has_topics_to_regularize() {
+inline void SmoothSparsePhiConfig::set_has_topics_coefficients() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_has_topics_to_regularize() {
+inline void SmoothSparsePhiConfig::clear_has_topics_coefficients() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void SmoothSparsePhiConfig::clear_topics_to_regularize() {
-  if (topics_to_regularize_ != NULL) topics_to_regularize_->::artm::BoolArray::Clear();
-  clear_has_topics_to_regularize();
+inline void SmoothSparsePhiConfig::clear_topics_coefficients() {
+  if (topics_coefficients_ != NULL) topics_coefficients_->::artm::FloatArray::Clear();
+  clear_has_topics_coefficients();
 }
-inline const ::artm::BoolArray& SmoothSparsePhiConfig::topics_to_regularize() const {
-  return topics_to_regularize_ != NULL ? *topics_to_regularize_ : *default_instance_->topics_to_regularize_;
+inline const ::artm::FloatArray& SmoothSparsePhiConfig::topics_coefficients() const {
+  return topics_coefficients_ != NULL ? *topics_coefficients_ : *default_instance_->topics_coefficients_;
 }
-inline ::artm::BoolArray* SmoothSparsePhiConfig::mutable_topics_to_regularize() {
-  set_has_topics_to_regularize();
-  if (topics_to_regularize_ == NULL) topics_to_regularize_ = new ::artm::BoolArray;
-  return topics_to_regularize_;
+inline ::artm::FloatArray* SmoothSparsePhiConfig::mutable_topics_coefficients() {
+  set_has_topics_coefficients();
+  if (topics_coefficients_ == NULL) topics_coefficients_ = new ::artm::FloatArray;
+  return topics_coefficients_;
 }
-inline ::artm::BoolArray* SmoothSparsePhiConfig::release_topics_to_regularize() {
-  clear_has_topics_to_regularize();
-  ::artm::BoolArray* temp = topics_to_regularize_;
-  topics_to_regularize_ = NULL;
+inline ::artm::FloatArray* SmoothSparsePhiConfig::release_topics_coefficients() {
+  clear_has_topics_coefficients();
+  ::artm::FloatArray* temp = topics_coefficients_;
+  topics_coefficients_ = NULL;
   return temp;
 }
-inline void SmoothSparsePhiConfig::set_allocated_topics_to_regularize(::artm::BoolArray* topics_to_regularize) {
-  delete topics_to_regularize_;
-  topics_to_regularize_ = topics_to_regularize;
-  if (topics_to_regularize) {
-    set_has_topics_to_regularize();
+inline void SmoothSparsePhiConfig::set_allocated_topics_coefficients(::artm::FloatArray* topics_coefficients) {
+  delete topics_coefficients_;
+  topics_coefficients_ = topics_coefficients;
+  if (topics_coefficients) {
+    set_has_topics_coefficients();
   } else {
-    clear_has_topics_to_regularize();
+    clear_has_topics_coefficients();
   }
 }
 

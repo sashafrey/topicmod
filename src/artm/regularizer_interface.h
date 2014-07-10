@@ -12,6 +12,8 @@
 
 #include "artm/messages.pb.h"
 
+#include "glog/logging.h"
+
 namespace artm {
 
 namespace core {

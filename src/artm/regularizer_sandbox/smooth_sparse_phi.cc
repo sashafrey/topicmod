@@ -19,16 +19,24 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
     background_topics_count = config_.background_topics_count();
   }
 
-  if (background_topics_count < 0 || background_topics_count > topic_size) return false;
+  if (background_topics_count < 0 || background_topics_count > topic_size) {
+    LOG(ERROR) << "Smooth/Sparse Phi: background_topics_count must be in [0, topics_size]";
+    return false;
+  }
   const int objective_topic_size = topic_size - background_topics_count;
 
-  ::artm::BoolArray topics_to_regularize;
-  if (config_.has_topics_to_regularize()) {
-    topics_to_regularize.CopyFrom(config_.topics_to_regularize());
-    if (topics_to_regularize.value().size() != objective_topic_size) return false;
+  ::artm::FloatArray topics_coefficients;
+  if (config_.has_topics_coefficients()) {
+    topics_coefficients.CopyFrom(config_.topics_coefficients());
+    if (topics_coefficients.value().size() != objective_topic_size) {
+      LOG(ERROR) << "Smooth/Sparse Phi: len(topics_coefficients) must be equal" <<
+        "to len(objective_topic_size)";
+      return false;
+    }
   } else {
+    // make default values
     for (int topic_id = 0; topic_id < objective_topic_size; ++topic_id) {
-      topics_to_regularize.add_value(true);
+      topics_coefficients.add_value(1);
     }
   }
 
@@ -46,15 +54,13 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
   // proceed the regularization
     for (int topic_id = 0; topic_id < topic_size; ++topic_id) {
       if (topic_id < objective_topic_size) {
-        if (topics_to_regularize.value(topic_id)) {
-          for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
-            float value = static_cast<float>(tau * (-1));
-            topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
-          }
+        for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
+          float value = static_cast<float>(tau * topics_coefficients.value().Get(topic_id) * (-1));
+          topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
         }
       } else {
         for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
-          float value = static_cast<float>(tau * (+1));
+          float value = static_cast<float>(tau * topics_coefficients.value().Get(topic_id) * (+1));
           topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
         }
       }
@@ -65,18 +71,16 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
 
       // objective topics
       if (topic_id < objective_topic_size) {
-        if (topics_to_regularize.value(topic_id)) {
-          for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
-            std::string token = topic_model->token(token_id);
+        for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
+          std::string token = topic_model->token(token_id);
 
-            float coef = 0;
-            if (dictionary_ptr->find(token) != dictionary_ptr->end()) {
-              coef = dictionary_ptr->find(token)->second.value();
-            }
-
-            float value = static_cast<float>(tau * coef);
-            topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
+          float coef = 0;
+          if (dictionary_ptr->find(token) != dictionary_ptr->end()) {
+            coef = dictionary_ptr->find(token)->second.value();
           }
+
+          float value = static_cast<float>(tau * topics_coefficients.value().Get(topic_id) * coef);
+          topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
         }
       } else {  // background topics
         for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
@@ -88,7 +92,7 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
             coef = dictionary_ptr->find(token)->second.values().value(index);
           }
 
-          float value = static_cast<float>(tau * coef);
+          float value = static_cast<float>(tau * topics_coefficients.value().Get(topic_id) * coef);
           topic_model->IncreaseRegularizerWeight(token_id, topic_id, value);
         }
       }

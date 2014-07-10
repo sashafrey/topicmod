@@ -297,9 +297,10 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(DirichletPhiConfig));
   SmoothSparseThetaConfig_descriptor_ = file->message_type(10);
-  static const int SmoothSparseThetaConfig_offsets_[2] = {
+  static const int SmoothSparseThetaConfig_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparseThetaConfig, background_topics_count_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparseThetaConfig, alpha_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparseThetaConfig, alpha_topic_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparseThetaConfig, alpha_iter_),
   };
   SmoothSparseThetaConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -315,7 +316,7 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
   SmoothSparsePhiConfig_descriptor_ = file->message_type(11);
   static const int SmoothSparsePhiConfig_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, background_topics_count_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, topics_to_regularize_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, topics_coefficients_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SmoothSparsePhiConfig, dictionary_name_),
   };
   SmoothSparsePhiConfig_reflection_ =
@@ -737,41 +738,42 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "rseTheta\020\002\022\023\n\017SmoothSparsePhi\020\003\022\023\n\017Decor"
     "relatorPhi\020\004\"8\n\024DirichletThetaConfig\022 \n\005"
     "alpha\030\001 \003(\0132\021.artm.DoubleArray\"-\n\022Dirich"
-    "letPhiConfig\022\027\n\017dictionary_name\030\001 \001(\t\"\\\n"
-    "\027SmoothSparseThetaConfig\022\037\n\027background_t"
-    "opics_count\030\001 \001(\005\022 \n\005alpha\030\002 \003(\0132\021.artm."
-    "DoubleArray\"\200\001\n\025SmoothSparsePhiConfig\022\037\n"
-    "\027background_topics_count\030\001 \001(\005\022-\n\024topics"
-    "_to_regularize\030\002 \001(\0132\017.artm.BoolArray\022\027\n"
-    "\017dictionary_name\030\003 \001(\t\"F\n\025DecorrelatorPh"
-    "iConfig\022-\n\024topics_to_regularize\030\001 \001(\0132\017."
-    "artm.BoolArray\"F\n\020DictionaryConfig\022\014\n\004na"
-    "me\030\001 \002(\t\022$\n\005entry\030\002 \003(\0132\025.artm.Dictionar"
-    "yEntry\"k\n\017DictionaryEntry\022\021\n\tkey_token\030\001"
-    " \002(\t\022\r\n\005value\030\002 \001(\002\022\024\n\014value_tokens\030\003 \003("
-    "\t\022 \n\006values\030\004 \001(\0132\020.artm.FloatArray\" \n\013D"
-    "oubleArray\022\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFloatAr"
-    "ray\022\021\n\005value\030\001 \003(\002B\002\020\001\"\036\n\tBoolArray\022\021\n\005v"
-    "alue\030\001 \003(\010B\002\020\001\"i\n\013ScoreConfig\022\014\n\004name\030\001 "
-    "\001(\t\022$\n\004type\030\002 \001(\0162\026.artm.ScoreConfig.Typ"
-    "e\022\016\n\006config\030\003 \001(\014\"\026\n\004Type\022\016\n\nPerplexity\020"
-    "\000\"c\n\tScoreData\022\014\n\004name\030\001 \001(\t\022\"\n\004type\030\002 \001"
-    "(\0162\024.artm.ScoreData.Type\022\014\n\004data\030\003 \001(\014\"\026"
-    "\n\004Type\022\016\n\nPerplexity\020\000\"P\n\025PerplexityScor"
-    "eConfig\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013st"
-    "ream_name\030\002 \001(\t:\007@global\"U\n\017PerplexitySc"
-    "ore\022\r\n\005value\030\001 \001(\001\022\013\n\003raw\030\002 \001(\001\022\022\n\nnorma"
-    "lizer\030\003 \001(\001\022\022\n\nzero_words\030\004 \001(\005\"\371\001\n\nTopi"
-    "cModel\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topics_c"
-    "ount\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_weigh"
-    "ts\030\004 \003(\0132\020.artm.FloatArray\022\021\n\tinternals\030"
-    "\005 \001(\014\032t\n\023TopicModelInternals\022\036\n\004n_wt\030\001 \003"
-    "(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020.art"
-    "m.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.FloatAr"
-    "ray\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 \001(\t:\006"
-    "@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_weights\030"
-    "\003 \003(\0132\020.artm.FloatArray\"/\n\024NodeControlle"
-    "rConfig\022\027\n\017create_endpoint\030\001 \001(\t", 2872);
+    "letPhiConfig\022\027\n\017dictionary_name\030\001 \001(\t\"\207\001"
+    "\n\027SmoothSparseThetaConfig\022\037\n\027background_"
+    "topics_count\030\001 \001(\005\022%\n\013alpha_topic\030\002 \001(\0132"
+    "\020.artm.FloatArray\022$\n\nalpha_iter\030\003 \001(\0132\020."
+    "artm.FloatArray\"\200\001\n\025SmoothSparsePhiConfi"
+    "g\022\037\n\027background_topics_count\030\001 \001(\005\022-\n\023to"
+    "pics_coefficients\030\002 \001(\0132\020.artm.FloatArra"
+    "y\022\027\n\017dictionary_name\030\003 \001(\t\"F\n\025Decorrelat"
+    "orPhiConfig\022-\n\024topics_to_regularize\030\001 \001("
+    "\0132\017.artm.BoolArray\"F\n\020DictionaryConfig\022\014"
+    "\n\004name\030\001 \002(\t\022$\n\005entry\030\002 \003(\0132\025.artm.Dicti"
+    "onaryEntry\"k\n\017DictionaryEntry\022\021\n\tkey_tok"
+    "en\030\001 \002(\t\022\r\n\005value\030\002 \001(\002\022\024\n\014value_tokens\030"
+    "\003 \003(\t\022 \n\006values\030\004 \001(\0132\020.artm.FloatArray\""
+    " \n\013DoubleArray\022\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFlo"
+    "atArray\022\021\n\005value\030\001 \003(\002B\002\020\001\"\036\n\tBoolArray\022"
+    "\021\n\005value\030\001 \003(\010B\002\020\001\"i\n\013ScoreConfig\022\014\n\004nam"
+    "e\030\001 \001(\t\022$\n\004type\030\002 \001(\0162\026.artm.ScoreConfig"
+    ".Type\022\016\n\006config\030\003 \001(\014\"\026\n\004Type\022\016\n\nPerplex"
+    "ity\020\000\"c\n\tScoreData\022\014\n\004name\030\001 \001(\t\022\"\n\004type"
+    "\030\002 \001(\0162\024.artm.ScoreData.Type\022\014\n\004data\030\003 \001"
+    "(\014\"\026\n\004Type\022\016\n\nPerplexity\020\000\"P\n\025Perplexity"
+    "ScoreConfig\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034"
+    "\n\013stream_name\030\002 \001(\t:\007@global\"U\n\017Perplexi"
+    "tyScore\022\r\n\005value\030\001 \001(\001\022\013\n\003raw\030\002 \001(\001\022\022\n\nn"
+    "ormalizer\030\003 \001(\001\022\022\n\nzero_words\030\004 \001(\005\"\371\001\n\n"
+    "TopicModel\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topi"
+    "cs_count\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_w"
+    "eights\030\004 \003(\0132\020.artm.FloatArray\022\021\n\tintern"
+    "als\030\005 \001(\014\032t\n\023TopicModelInternals\022\036\n\004n_wt"
+    "\030\001 \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020"
+    ".artm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.Flo"
+    "atArray\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 \001"
+    "(\t:\006@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_weig"
+    "hts\030\003 \003(\0132\020.artm.FloatArray\"/\n\024NodeContr"
+    "ollerConfig\022\027\n\017create_endpoint\030\001 \001(\t", 2916);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -4480,7 +4482,8 @@ void DirichletPhiConfig::Swap(DirichletPhiConfig* other) {
 
 #ifndef _MSC_VER
 const int SmoothSparseThetaConfig::kBackgroundTopicsCountFieldNumber;
-const int SmoothSparseThetaConfig::kAlphaFieldNumber;
+const int SmoothSparseThetaConfig::kAlphaTopicFieldNumber;
+const int SmoothSparseThetaConfig::kAlphaIterFieldNumber;
 #endif  // !_MSC_VER
 
 SmoothSparseThetaConfig::SmoothSparseThetaConfig()
@@ -4489,6 +4492,8 @@ SmoothSparseThetaConfig::SmoothSparseThetaConfig()
 }
 
 void SmoothSparseThetaConfig::InitAsDefaultInstance() {
+  alpha_topic_ = const_cast< ::artm::FloatArray*>(&::artm::FloatArray::default_instance());
+  alpha_iter_ = const_cast< ::artm::FloatArray*>(&::artm::FloatArray::default_instance());
 }
 
 SmoothSparseThetaConfig::SmoothSparseThetaConfig(const SmoothSparseThetaConfig& from)
@@ -4500,6 +4505,8 @@ SmoothSparseThetaConfig::SmoothSparseThetaConfig(const SmoothSparseThetaConfig& 
 void SmoothSparseThetaConfig::SharedCtor() {
   _cached_size_ = 0;
   background_topics_count_ = 0;
+  alpha_topic_ = NULL;
+  alpha_iter_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4509,6 +4516,8 @@ SmoothSparseThetaConfig::~SmoothSparseThetaConfig() {
 
 void SmoothSparseThetaConfig::SharedDtor() {
   if (this != default_instance_) {
+    delete alpha_topic_;
+    delete alpha_iter_;
   }
 }
 
@@ -4536,8 +4545,13 @@ SmoothSparseThetaConfig* SmoothSparseThetaConfig::New() const {
 void SmoothSparseThetaConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     background_topics_count_ = 0;
+    if (has_alpha_topic()) {
+      if (alpha_topic_ != NULL) alpha_topic_->::artm::FloatArray::Clear();
+    }
+    if (has_alpha_iter()) {
+      if (alpha_iter_ != NULL) alpha_iter_->::artm::FloatArray::Clear();
+    }
   }
-  alpha_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -4559,21 +4573,34 @@ bool SmoothSparseThetaConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_alpha;
+        if (input->ExpectTag(18)) goto parse_alpha_topic;
         break;
       }
 
-      // repeated .artm.DoubleArray alpha = 2;
+      // optional .artm.FloatArray alpha_topic = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_alpha:
+         parse_alpha_topic:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-                input, add_alpha()));
+               input, mutable_alpha_topic()));
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_alpha;
+        if (input->ExpectTag(26)) goto parse_alpha_iter;
+        break;
+      }
+
+      // optional .artm.FloatArray alpha_iter = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_alpha_iter:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_alpha_iter()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4601,10 +4628,16 @@ void SmoothSparseThetaConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->background_topics_count(), output);
   }
 
-  // repeated .artm.DoubleArray alpha = 2;
-  for (int i = 0; i < this->alpha_size(); i++) {
+  // optional .artm.FloatArray alpha_topic = 2;
+  if (has_alpha_topic()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->alpha(i), output);
+      2, this->alpha_topic(), output);
+  }
+
+  // optional .artm.FloatArray alpha_iter = 3;
+  if (has_alpha_iter()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      3, this->alpha_iter(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -4620,11 +4653,18 @@ void SmoothSparseThetaConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->background_topics_count(), target);
   }
 
-  // repeated .artm.DoubleArray alpha = 2;
-  for (int i = 0; i < this->alpha_size(); i++) {
+  // optional .artm.FloatArray alpha_topic = 2;
+  if (has_alpha_topic()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->alpha(i), target);
+        2, this->alpha_topic(), target);
+  }
+
+  // optional .artm.FloatArray alpha_iter = 3;
+  if (has_alpha_iter()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        3, this->alpha_iter(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4645,15 +4685,21 @@ int SmoothSparseThetaConfig::ByteSize() const {
           this->background_topics_count());
     }
 
-  }
-  // repeated .artm.DoubleArray alpha = 2;
-  total_size += 1 * this->alpha_size();
-  for (int i = 0; i < this->alpha_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->alpha(i));
-  }
+    // optional .artm.FloatArray alpha_topic = 2;
+    if (has_alpha_topic()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->alpha_topic());
+    }
 
+    // optional .artm.FloatArray alpha_iter = 3;
+    if (has_alpha_iter()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->alpha_iter());
+    }
+
+  }
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -4679,10 +4725,15 @@ void SmoothSparseThetaConfig::MergeFrom(const ::google::protobuf::Message& from)
 
 void SmoothSparseThetaConfig::MergeFrom(const SmoothSparseThetaConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
-  alpha_.MergeFrom(from.alpha_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_background_topics_count()) {
       set_background_topics_count(from.background_topics_count());
+    }
+    if (from.has_alpha_topic()) {
+      mutable_alpha_topic()->::artm::FloatArray::MergeFrom(from.alpha_topic());
+    }
+    if (from.has_alpha_iter()) {
+      mutable_alpha_iter()->::artm::FloatArray::MergeFrom(from.alpha_iter());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -4708,7 +4759,8 @@ bool SmoothSparseThetaConfig::IsInitialized() const {
 void SmoothSparseThetaConfig::Swap(SmoothSparseThetaConfig* other) {
   if (other != this) {
     std::swap(background_topics_count_, other->background_topics_count_);
-    alpha_.Swap(&other->alpha_);
+    std::swap(alpha_topic_, other->alpha_topic_);
+    std::swap(alpha_iter_, other->alpha_iter_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -4728,7 +4780,7 @@ void SmoothSparseThetaConfig::Swap(SmoothSparseThetaConfig* other) {
 
 #ifndef _MSC_VER
 const int SmoothSparsePhiConfig::kBackgroundTopicsCountFieldNumber;
-const int SmoothSparsePhiConfig::kTopicsToRegularizeFieldNumber;
+const int SmoothSparsePhiConfig::kTopicsCoefficientsFieldNumber;
 const int SmoothSparsePhiConfig::kDictionaryNameFieldNumber;
 #endif  // !_MSC_VER
 
@@ -4738,7 +4790,7 @@ SmoothSparsePhiConfig::SmoothSparsePhiConfig()
 }
 
 void SmoothSparsePhiConfig::InitAsDefaultInstance() {
-  topics_to_regularize_ = const_cast< ::artm::BoolArray*>(&::artm::BoolArray::default_instance());
+  topics_coefficients_ = const_cast< ::artm::FloatArray*>(&::artm::FloatArray::default_instance());
 }
 
 SmoothSparsePhiConfig::SmoothSparsePhiConfig(const SmoothSparsePhiConfig& from)
@@ -4750,7 +4802,7 @@ SmoothSparsePhiConfig::SmoothSparsePhiConfig(const SmoothSparsePhiConfig& from)
 void SmoothSparsePhiConfig::SharedCtor() {
   _cached_size_ = 0;
   background_topics_count_ = 0;
-  topics_to_regularize_ = NULL;
+  topics_coefficients_ = NULL;
   dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -4764,7 +4816,7 @@ void SmoothSparsePhiConfig::SharedDtor() {
     delete dictionary_name_;
   }
   if (this != default_instance_) {
-    delete topics_to_regularize_;
+    delete topics_coefficients_;
   }
 }
 
@@ -4792,8 +4844,8 @@ SmoothSparsePhiConfig* SmoothSparsePhiConfig::New() const {
 void SmoothSparsePhiConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     background_topics_count_ = 0;
-    if (has_topics_to_regularize()) {
-      if (topics_to_regularize_ != NULL) topics_to_regularize_->::artm::BoolArray::Clear();
+    if (has_topics_coefficients()) {
+      if (topics_coefficients_ != NULL) topics_coefficients_->::artm::FloatArray::Clear();
     }
     if (has_dictionary_name()) {
       if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
@@ -4822,17 +4874,17 @@ bool SmoothSparsePhiConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_topics_to_regularize;
+        if (input->ExpectTag(18)) goto parse_topics_coefficients;
         break;
       }
 
-      // optional .artm.BoolArray topics_to_regularize = 2;
+      // optional .artm.FloatArray topics_coefficients = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_topics_to_regularize:
+         parse_topics_coefficients:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
-               input, mutable_topics_to_regularize()));
+               input, mutable_topics_coefficients()));
         } else {
           goto handle_uninterpreted;
         }
@@ -4880,10 +4932,10 @@ void SmoothSparsePhiConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->background_topics_count(), output);
   }
 
-  // optional .artm.BoolArray topics_to_regularize = 2;
-  if (has_topics_to_regularize()) {
+  // optional .artm.FloatArray topics_coefficients = 2;
+  if (has_topics_coefficients()) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->topics_to_regularize(), output);
+      2, this->topics_coefficients(), output);
   }
 
   // optional string dictionary_name = 3;
@@ -4908,11 +4960,11 @@ void SmoothSparsePhiConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->background_topics_count(), target);
   }
 
-  // optional .artm.BoolArray topics_to_regularize = 2;
-  if (has_topics_to_regularize()) {
+  // optional .artm.FloatArray topics_coefficients = 2;
+  if (has_topics_coefficients()) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->topics_to_regularize(), target);
+        2, this->topics_coefficients(), target);
   }
 
   // optional string dictionary_name = 3;
@@ -4943,11 +4995,11 @@ int SmoothSparsePhiConfig::ByteSize() const {
           this->background_topics_count());
     }
 
-    // optional .artm.BoolArray topics_to_regularize = 2;
-    if (has_topics_to_regularize()) {
+    // optional .artm.FloatArray topics_coefficients = 2;
+    if (has_topics_coefficients()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-          this->topics_to_regularize());
+          this->topics_coefficients());
     }
 
     // optional string dictionary_name = 3;
@@ -4987,8 +5039,8 @@ void SmoothSparsePhiConfig::MergeFrom(const SmoothSparsePhiConfig& from) {
     if (from.has_background_topics_count()) {
       set_background_topics_count(from.background_topics_count());
     }
-    if (from.has_topics_to_regularize()) {
-      mutable_topics_to_regularize()->::artm::BoolArray::MergeFrom(from.topics_to_regularize());
+    if (from.has_topics_coefficients()) {
+      mutable_topics_coefficients()->::artm::FloatArray::MergeFrom(from.topics_coefficients());
     }
     if (from.has_dictionary_name()) {
       set_dictionary_name(from.dictionary_name());
@@ -5017,7 +5069,7 @@ bool SmoothSparsePhiConfig::IsInitialized() const {
 void SmoothSparsePhiConfig::Swap(SmoothSparsePhiConfig* other) {
   if (other != this) {
     std::swap(background_topics_count_, other->background_topics_count_);
-    std::swap(topics_to_regularize_, other->topics_to_regularize_);
+    std::swap(topics_coefficients_, other->topics_coefficients_);
     std::swap(dictionary_name_, other->dictionary_name_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);

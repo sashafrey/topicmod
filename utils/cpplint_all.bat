@@ -18,6 +18,7 @@ call cpplint.bat ../src/artm/core/node_controller_service_impl.cc
 call cpplint.bat ../src/artm/core/processor.cc
 call cpplint.bat ../src/artm/core/topic_model.cc
 
+call cpplint.bat ../src/artm/regularizer_sandbox/decorrelator_phi.cc
 call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_phi.cc
 call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_theta.cc
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.cc
@@ -66,6 +67,7 @@ call cpplint.bat ../src/artm/core/zmq_context.h
 
 call cpplint.bat ../src/artm_tests/test_mother.h
 
+call cpplint.bat ../src/artm/regularizer_sandbox/decorrelator_phi.h
 call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_phi.h
 call cpplint.bat ../src/artm/regularizer_sandbox/dirichlet_theta.h
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.h

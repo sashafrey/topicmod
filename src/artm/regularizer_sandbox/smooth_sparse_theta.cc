@@ -34,7 +34,7 @@ bool SmoothSparseTheta::RegularizeTheta(const Item& item,
       LOG(ERROR) << "Smooth/Sparse Theta: len(alpha_topic) must be equal to len(topic_size)";
       return false;
     }
-  } else { 
+  } else {
     // make default values
     for (int i = 0; i < objective_topic_size; ++i) {
       alpha_topic.add_value(-1);

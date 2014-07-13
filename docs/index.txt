@@ -1,0 +1,48 @@
+.. BigARTM documentation master file, created by
+   sphinx-quickstart on Sun Jul 13 20:00:11 2014.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+.. _index:
+
+=====================
+BigARTM documentation
+=====================
+
+.. rubric:: Everything you need to know about BigARTM.
+
+Getting help
+============
+
+Having trouble? We'd like to help!
+
+* Try the :doc:`FAQ <faq/index>` -- it's got answers to many common questions.
+
+* Looking for specific information? Try the :ref:`genindex`, :ref:`modindex` or
+  the :doc:`detailed table of contents <contents>`.
+
+* Search for information in the archives of the `artm-users`_ mailing list, or
+  `post a question`_.
+
+* Report bugs with BigARTM in our `ticket tracker`_.
+
+.. _artm-users: https://groups.google.com/group/artm-users
+.. _post a question: https://groups.google.com/d/forum/artm-users
+.. _ticket tracker: https://github.com/sashafrey/topicmod/issues
+
+First steps
+===========
+
+Are you new to BigARTM library or to topic modeling? This is the place to start!
+
+* **From scratch:**
+  :doc:`Overview <intro/overview>` |
+  :doc:`Installation <intro/install>`
+
+* **Tutorial:**
+  :doc:`Part 1 <intro/tutorial01>`
+
+* **Reference:**
+  :doc:`Messages <ref/messages>`
+
+

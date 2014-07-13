@@ -1,24 +1,29 @@
+// File messages.proto defines all messages that can be transefer in or out from BigARTM library.
 package artm;
 
-// Item is an object that represents some textual information.
-// You may think of Item just as about one document from some collection of texts.
+// Represents an array of double-precision floating point values
+message DoubleArray {
+  repeated double value = 1 [packed = true];
+}
+
+// Represents an array of single-precision floating point values
+message FloatArray {
+  repeated float value = 1 [packed = true];
+}
+
+// Represents an array of boolean values
+message BoolArray {
+  repeated bool value = 1 [packed = true];
+}
+
+// Represents a unit of textual information.
 message Item
 {
   optional int32 id = 1;
   repeated Field field = 2;
 }
 
-// Items consist of multiple fields.
-// The idea behind fields is that each item might have its
-// title, author, body, abstract, actual text, links, year of publication, etc.
-// Each of this entities should be represented as a Field.
-// The Model should define how those fields should be taken into account
-// when we infer a topic model.
-// Currently each field is represented as "bag-of-words" ---
-// Each token is listed together with the number of its occurences.
-// Note that each Field is always part of an Item,
-// Item is part of a Batch, and a batch always contains a list of tokens.
-// Therefore, each Field just lists the indexes of tokens in the Batch.
+// Represents a field withing an item.
 message Field
 {
   optional string name = 1 [default = "@body"];
@@ -26,13 +31,13 @@ message Field
   repeated int32 token_count = 3;
 }
 
-// A batch represents a set of Items.
+// Represents a set of items.
 message Batch {
   repeated string token = 1;
   repeated Item item = 2;
 }
 
-// Defines a stream in DataLoader.
+// Represents a configuration of a stream.
 message Stream {
   enum Type {
     Global = 0;
@@ -45,55 +50,39 @@ message Stream {
   repeated int32 residuals = 4;
 }
 
-// Configuration of the Master component
+// Represents a configuration of a master component
 message MasterComponentConfig {
-  // Disk location to store and load batches
-  optional string disk_path = 1;
-
-  // Set of data streams
-  repeated Stream stream = 2;
-
-  // A flag indicating whether to compact batches in AddBatch() operation
-  optional bool compact_batches = 3 [default = true];
-
-  // A flag indicating whether to cache processor output
-  optional bool cache_processor_output = 4 [default = false];
-
-  // Number of concurrent processors
-  optional int32 processors_count = 5 [default = 1];
-
-  // Max size of processor queue
-  optional int32 processor_queue_max_size = 6 [default = 10];
-
-  // Max size of merger queue
-  optional int32 merger_queue_max_size = 7 [default = 10];
-
-  // All scores, available for calculation
-  repeated ScoreConfig score_config = 8;
-
-  // ====== [Under Development fields - excluded from public API] ======
   enum ModusOperandi {
     Local = 0;
     Network = 1;
   }
 
-  // Modus operandi of the master component
-  optional ModusOperandi modus_operandi = 100 [default = Local];
-
-  // Master endpoint
-  optional string create_endpoint = 101;
-  optional string connect_endpoint = 102;
-
-  // Endpoints of all NodeControllers to connect to
-  repeated string node_connect_endpoint = 103;
+  optional ModusOperandi modus_operandi = 1 [default = Local];
+  optional string disk_path = 2;
+  repeated Stream stream = 3;
+  optional bool compact_batches = 4 [default = true];
+  optional bool cache_theta = 5 [default = false];
+  optional int32 processors_count = 6 [default = 1];
+  optional int32 processor_queue_max_size = 7 [default = 10];
+  optional int32 merger_queue_max_size = 8 [default = 10];
+  repeated ScoreConfig score_config = 9;
+  optional string create_endpoint = 10;
+  optional string connect_endpoint = 11;
+  repeated string node_connect_endpoint = 12;
 }
 
+// Represents a configuration of a NodeController
+message NodeControllerConfig {
+  optional string create_endpoint = 1;
+}
+
+// Represents a configuration of a proxy to MasterComponent.
 message MasterProxyConfig {
-  required string node_connect_endpoint = 1;
-  required MasterComponentConfig config = 2;
+  optional string node_connect_endpoint = 1;
+  optional MasterComponentConfig config = 2;
 }
 
-// Configuration of a model.
+// Represents a configuration of a topic model.
 message ModelConfig {
   optional string name = 1 [default = "@model"];
   optional int32 topics_count = 2 [default = 32];
@@ -107,7 +96,7 @@ message ModelConfig {
   repeated double regularizer_tau = 10;
 }
 
-// Configuration of a regularizer
+// Represents a configuration of a general regularizer
 message RegularizerConfig {
   enum Type {
     DirichletTheta = 0;
@@ -122,59 +111,50 @@ message RegularizerConfig {
   optional bytes config = 3;
 }
 
-// Configuration of a Dirichlet Theta regularizer
+// Represents a configuration of a Dirichlet Theta regularizer
 message DirichletThetaConfig {
   repeated DoubleArray alpha = 1;
 }
 
-// Configuration of a Dirichlet Phi regularizer
+// Represents a configuration of a Dirichlet Phi regularizer
 message DirichletPhiConfig {
   optional string dictionary_name = 1;
 }
 
-// Configuration of a SmoothSparse Theta regularizer
+// Represents a configuration of a SmoothSparse Theta regularizer
 message SmoothSparseThetaConfig {
   optional int32 background_topics_count = 1;
   optional FloatArray alpha_topic = 2;
   optional FloatArray alpha_iter = 3;
 }
 
-// Configuration of a SmoothSparse Phi regularizer
+// Represents a configuration of a SmoothSparse Phi regularizer
 message SmoothSparsePhiConfig {
   optional int32 background_topics_count = 1;
   optional FloatArray topics_coefficients = 2;
   optional string dictionary_name = 3;
 }
 
-// Configuration of a Decorrelator Phi regularizer
+// Represents a configuration of a Decorrelator Phi regularizer
 message DecorrelatorPhiConfig {
   optional BoolArray topics_to_regularize = 1;
 }
 
+// Represents a static dictionary.
 message DictionaryConfig {
-  required string name = 1;
+  optional string name = 1;
   repeated DictionaryEntry entry = 2;
 }
 
+// Represents one entry in a static dictionary.
 message DictionaryEntry {
-  required string key_token = 1;
+  optional string key_token = 1;
   optional float value = 2;
   repeated string value_tokens = 3;
   optional FloatArray values = 4;
 }
 
-message DoubleArray {
-  repeated double value = 1 [packed = true];
-}
-
-message FloatArray {
-  repeated float value = 1 [packed = true];
-}
-
-message BoolArray {
-  repeated bool value = 1 [packed = true];
-}
-
+// Represents a configuration of a general score.
 message ScoreConfig {
   enum Type {
     Perplexity = 0;
@@ -185,6 +165,7 @@ message ScoreConfig {
   optional bytes config = 3;
 }
 
+// Represents a result of score calculation.
 message ScoreData {
   enum Type {
     Perplexity = 0;
@@ -195,11 +176,13 @@ message ScoreData {
   optional bytes data = 3;
 }
 
+// Represents a configuration of a perplexity score.
 message PerplexityScoreConfig {
   optional string field_name = 1 [default = "@body"];
   optional string stream_name = 2 [default = "@global"];
 }
 
+// Represents a result of calculation of a perplexity score.
 message PerplexityScore {
   optional double value = 1;
   optional double raw = 2;
@@ -207,33 +190,25 @@ message PerplexityScore {
   optional int32 zero_words = 4;
 }
 
-// A topic model, represented by Matrix Phi
+// Represents a topic model.
 message TopicModel {
   optional string name = 1 [default = "@model"];
-  optional int32 topics_count = 2;	   // number of topics in the model
-  repeated string token = 3;              // tokens, included in the model
-  repeated FloatArray token_weights = 4;  // one vector for each token
+  optional int32 topics_count = 2;
+  repeated string token = 3;
+  repeated FloatArray token_weights = 4;
 
-  // Data structure to keep all the raw data of the model.
-  // This allows users to send a TopicModel back into BigARTM library.
   message TopicModelInternals {
     repeated FloatArray n_wt = 1;
     repeated FloatArray r_wt = 2;
     optional FloatArray n_t = 3;
   }
 
-  optional bytes internals = 5;  // serialized instance of TopicModelInternals
+  optional bytes internals = 5;
 }
 
+// Represents a theta matrix.
 message ThetaMatrix {
   optional string model_name = 1 [default = "@model"];
   repeated int32 item_id = 2;
   repeated FloatArray item_weights = 3;
-}
-
-// ====== [Under Development messages - excluded from public API] ======
-
-// Configuration of the Node Controller
-message NodeControllerConfig {
-  optional string create_endpoint = 1;
 }

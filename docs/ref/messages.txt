@@ -1,0 +1,673 @@
+========
+Messages
+========
+
+This document explains all protobuf messages that can be transefer in or out from BigARTM library.
+
+
+message DoubleArray
+===================
+
+Represents an array of double-precision floating point values.
+
+.. code-block:: bash
+
+  message DoubleArray {
+    repeated double value = 1 [packed = true];
+  }
+
+
+message BoolArray
+=================
+
+Represents an array of boolean values.
+
+.. code-block:: bash
+
+  message BoolArray {
+    repeated bool value = 1 [packed = true];
+  }
+
+
+message Item
+============
+
+Represents a unit of textual information.
+A typical example of an item is a document that belongs to some text collection.
+
+.. code-block:: bash
+
+  message Item {
+    optional int32 id = 1;
+    repeated Field field = 2;
+  }
+
+
+message Field
+=============
+
+Represents a field withing an item.
+The idea behind fields is that each item might have its
+title, author, body, abstract, actual text, links, year of publication, etc. Each of this
+entities should be represented as a Field. The topic model defines how those fields
+should be taken into account when BigARTM infers a topic model. Currently each field is
+represented as "bag-of-words" --- each token is listed together with the number of its
+occurences. Note that each Field is always part of an Item, Item is part of a Batch, and
+a batch always contains a list of tokens. Therefore, each Field just lists the indexes
+of tokens in the Batch.
+
+.. code-block:: bash
+
+  message Field {
+    optional string name = 1 [default = "@body"];
+    repeated int32 token_id = 2;
+    repeated int32 token_count = 3;
+  }
+
+message Batch
+=============
+
+Represents a set of items.
+In BigARTM a batch is never split into smaller parts. When it comes to concurrency this means
+that each batch goes to a single processor. Two batches can be processed concurrently, but
+items in one batch are always processed sequentially.
+
+.. code-block:: bash
+
+  message Batch {
+    repeated string token = 1;
+    repeated Item item = 2;
+  }
+
+
+message Stream
+==============
+
+Represents a configuration of a stream.
+Streams provide a mechanism to split the entire collection into virtual subsets (for example,
+the 'train' and 'test' streams).
+
+.. code-block:: bash
+
+  message Stream {
+    enum Type {
+      Global = 0;
+      ItemIdModulus = 1;
+    }
+
+    optional Type type = 1 [default = Global];
+    optional string name = 2 [default = "@global"];
+    optional int32 modulus = 3;
+    repeated int32 residuals = 4;
+  }
+
+.. attribute:: type
+
+   A value that defines the type of the stream.
+
+   ================= ========================================================
+   ``Global``        Defines a stream containing all items in the collection.
+
+   ``ItemIdModulus`` Defines a stream containing all items with ID that
+                     matches modulus and residuals. An item belongs to the
+                     stream iff the modulo reminder of item ID is contained
+                     in the residuals field.
+   ================= ========================================================
+
+.. attribute:: name
+
+   A value that defines the name of the stream.
+   The name must be unique across all streams defined in the master component.
+
+
+
+message MasterComponentConfig
+=============================
+
+Represents a configuration of a master component.
+
+.. code-block:: bash
+
+  message MasterComponentConfig {
+    enum ModusOperandi {
+      Local = 0;
+      Network = 1;
+    }
+
+    optional ModusOperandi modus_operandi = 1 [default = Local];
+    optional string disk_path = 2;
+    repeated Stream stream = 3;
+    optional bool compact_batches = 4 [default = true];
+    optional bool cache_theta = 5 [default = false];
+    optional int32 processors_count = 6 [default = 1];
+    optional int32 processor_queue_max_size = 7 [default = 10];
+    optional int32 merger_queue_max_size = 8 [default = 10];
+    repeated ScoreConfig score_config = 9;
+    optional string create_endpoint = 10;
+    optional string connect_endpoint = 11;
+    repeated string node_connect_endpoint = 12;
+  }
+
+.. attribute:: modus_operandi
+
+  A value that defines the modus operandi of the master component.
+
+  ================= ==============================================================
+  ``Local``         Defines a master component that operates in the local mode.
+                    In this mode master component is self-contained, and
+                    does not require any external nodes to tune topic model.
+
+  ``Network``       Defines a master component that operates in the network mode.
+                    In this mode master component delegates all heavy processing
+                    to externals nodes. The master component is then responsible
+                    only for merging the results from external nodes into a single
+                    topic model.
+  ================= ==============================================================
+
+.. attribute:: disk_path
+
+  A value that defines the disk location to store or load the collection.
+  In network modus operandi this field is required, and it must point to a network file share,
+  accessible by all nodes connected to the master component.
+
+.. attribute:: stream
+
+  A set of all data streams to configure in master component.
+  Streams can overlap if needed.
+
+.. attribute:: compact_batches
+
+  A flag indicating whether to compact batches in AddBatch() operation.
+  Compaction is a process that shrinks the dictionary of each batch by removing all
+  unused tokens.
+
+.. attribute:: cache_theta
+
+  A flag indicating whether to cache theta matrix. Theta matrix defines the discrete
+  probability distribution of each document across the topics in topic model. By default
+  BigARTM infers this distribution every time it processes the document. Option
+  'cache_theta' allows to cache this theta matrix and re-use theha values when the same
+  document is processed on the next iteration. This option must be set to 'true' before
+  calling method 'ArtmRequestThetaMatrix'.
+  This feature is currently not supported in network modus operandi.
+
+.. attribute:: processors_count
+
+  A value that defines the number of concurrent processor components.
+  In network modus operandi this value defines the processors count
+  at every remote node controller, connected to the master component.
+  The number of processors should normally not exceed the number of CPU cores.
+
+.. attribute:: processor_queue_max_size
+
+  A value that defines the maximal size of the processor queue.
+  Processor queue contains batches, prefetch from disk into memory.
+  In network modus operandi this value defines the maximal queue size
+  at every remote node controller, connected to the master component.
+  Recommendations regarding the maximal queue size are as follows:
+
+  * the queue size should be at least as large as the number of concurrent
+    processors;
+
+  * the total size of the queues across all node controllers should not
+    exceed the number of batches in the collection.
+
+.. attribute:: merger_queue_max_size
+
+  A value that defines the maximal size of the merger queue.
+  Merger queue size contains an incremental updates of topic model,
+  produced by processor components.
+  Try reducing this parameter if BigARTM consumes too much memory.
+
+.. attribute:: score_config
+
+  A set of all scores, available for calculation.
+
+.. attribute:: create_endpoint
+
+  A value that defines ZeroMQ endpoint to expose the master component service
+  (example: ``tcp://*:5555``). For further details about the format of endpoint string refer to
+  ZeroMQ documentation (http://api.zeromq.org).
+  The value is used only in the network modus operandi.
+
+.. attribute:: connect_endpoint
+
+  A value that defines ZeroMQ endpoint to expose the master component service
+  (example: ``tcp://192.168.0.1:5555``). // For further details about the format of endpoint
+  string refer to ZeroMQ documentation (http://api.zeromq.org).
+  The value is used only in the network modus operandi.
+
+.. attribute:: node_connect_endpoint
+
+  A set containing all ZeroMQ endpoints of the external node controllers
+  (example: ``tcp://192.168.0.2:5556``). For further details about the format of endpoint string
+  refer to ZeroMQ documentation (http://api.zeromq.org).
+  The value is used only in the network modus operandi.
+  A node controller component at the remote machine must be created prior to configuring
+  master component with its endpoint.
+
+
+message NodeControllerConfig
+============================
+
+Represents a configuration of a NodeController
+
+.. code-block:: bash
+
+  message NodeControllerConfig {
+    optional string create_endpoint = 1;
+  }
+
+.. attribute:: create_endpoint
+
+  A value that defines ZeroMQ endpoint to expose the node component service
+  (example: ``tcp://*:5556``). For further details about the format of endpoint string refer to
+  ZeroMQ documentation (http://api.zeromq.org).
+
+
+message MasterProxyConfig
+=========================
+
+Represents a configuration of a proxy to MasterComponent.
+The purpose of the proxy is to operate MasterComponent from a remote machine.
+There is no requirement to run MasterComponent and its proxy in the same operating system
+(MasterComponent can run on linux while the proxy can be on Windows). Any type of
+MasterComponent (either in local or in network modus operandi) can be operated by a proxy.
+
+.. code-block:: bash
+
+  message MasterProxyConfig {
+    optional string node_connect_endpoint = 1;
+    optional MasterComponentConfig config = 2;
+  }
+
+.. attribute:: node_connect_endpoint
+
+  A value that defines ZeroMQ endpoint of an external node controller.
+  (example: ``tcp://192.168.0.2:5556``). For further details about the format of endpoint string
+  refer to ZeroMQ documentation (http://api.zeromq.org).
+  A node controller component at the remote machine must be created prior to configuring
+  master component with its endpoint.
+
+
+.. attribute:: config
+
+  A message that defines MasterComponent configuration of a remote node.
+
+
+message ModelConfig
+===================
+
+Represents a configuration of a topic model.
+
+.. code-block:: bash
+
+  message ModelConfig {
+    optional string name = 1 [default = "@model"];
+    optional int32 topics_count = 2 [default = 32];
+    optional bool enabled = 3 [default = true];
+    optional int32 inner_iterations_count = 4 [default = 10];
+    optional string field_name = 5 [default = "@body"];
+    optional string stream_name = 6 [default = "@global"];
+    repeated string score_name = 7;
+    optional bool reuse_theta = 8 [default = false];
+    repeated string regularizer_name = 9;
+    repeated double regularizer_tau = 10;
+  }
+
+.. attribute:: name
+
+   A value that defines the name of the topic model.
+   The name must be unique across all models defined in the master component.
+
+.. attribute:: topics_count
+
+   A value that defines the number of topics in the topic model.
+
+.. attribute:: enabled
+
+   A flag indicating whether to update the model during iterations.
+
+.. attribute:: inner_iterations_count
+
+   A value that defines the fixed number of iterations, performed to infer the theta
+   distribution for each document.
+
+.. attribute:: field_name
+
+   A value that defines which field of an item the model should use.
+
+.. attribute:: stream_name
+
+   A value that defines which stream the model should use.
+
+.. attribute:: score_name
+
+   A set of names that defines which scores should be calculated for the model.
+
+.. attribute:: reuse_theta
+
+   A flag indicating whether the model should reuse theta values cached on the previous
+   iterations. This option require cache_theta flag to be set to 'true' in MasterComponentConfig.
+
+.. attribute:: regularizer_name
+
+   A set of names that define which regularizers should be enabled for the model.
+   This repeated field must have the same length as regularizer_tau.
+
+.. attribute:: regularizer_tau
+
+   A set of values that define the regularization coefficients of the corresponding regularizer.
+   This repeated field must have the same length as regularizer_name.
+
+
+message RegularizerConfig
+=========================
+
+Represents a configuration of a general regularizer.
+
+.. code-block:: bash
+
+  message RegularizerConfig {
+    enum Type {
+      DirichletTheta = 0;
+      DirichletPhi = 1;
+      SmoothSparseTheta = 2;
+      SmoothSparsePhi = 3;
+      DecorrelatorPhi = 4;
+    }
+
+    optional string name = 1;
+    optional Type type = 2;
+    optional bytes config = 3;
+  }
+
+
+.. attribute:: name
+
+   A value that defines the name of the regularizer.
+   The name must be unique across all names defined in the master component.
+
+.. attribute:: type
+
+   A value that defines the type of the regularizer.
+
+   ====================== =======================================================================
+   ``DirichletTheta``     Dirichlet regularizer for theta matrix
+
+   ``DirichletPhi``       Dirichlet regularizer for phi matrix
+
+   ``SmoothSparseTheta``  Smooth-sparse regularizer for theta matrix
+
+   ``SmoothSparsePhi``    Smooth-sparse regularizer for phi matrix
+
+   ``DecorrelatorPhi``    Decorrelator regularizer for phi matrix
+   ====================== =======================================================================
+
+
+.. attribute:: config
+
+   A serialized protobuf message that describes regularizer config for
+   the specific regularizer type.
+
+
+message DirichletThetaConfig
+============================
+
+Represents a configuration of a Dirichlet Theta regularizer.
+
+.. code-block:: bash
+
+  message DirichletThetaConfig {
+    repeated DoubleArray alpha = 1;
+  }
+
+
+message DirichletPhiConfig
+==========================
+
+Represents a configuration of a Dirichlet Phi regularizer.
+
+.. code-block:: bash
+
+  message DirichletPhiConfig {
+    optional string dictionary_name = 1;
+  }
+
+
+message SmoothSparseThetaConfig
+===============================
+
+Represents a configuration of a SmoothSparse Theta regularizer.
+
+.. code-block:: bash
+
+  message SmoothSparseThetaConfig {
+    optional int32 background_topics_count = 1;
+    optional FloatArray alpha_topic = 2;
+    optional FloatArray alpha_iter = 3;
+  }
+
+
+message SmoothSparsePhiConfig
+=============================
+
+Represents a configuration of a SmoothSparse Phi regularizer.
+
+.. code-block:: bash
+
+  message SmoothSparsePhiConfig {
+    optional int32 background_topics_count = 1;
+    optional FloatArray topics_coefficients = 2;
+    optional string dictionary_name = 3;
+  }
+
+message DecorrelatorPhiConfig
+=============================
+
+Represents a configuration of a Decorrelator Phi regularizer.
+
+.. code-block:: bash
+
+  message DecorrelatorPhiConfig {
+    optional BoolArray topics_to_regularize = 1;
+  }
+
+message DictionaryConfig
+========================
+
+Represents a static dictionary.
+
+.. code-block:: bash
+
+  message DictionaryConfig {
+    optional string name = 1;
+    repeated DictionaryEntry entry = 2;
+  }
+
+message DictionaryEntry
+=======================
+
+Represents one entry in a static dictionary.
+
+.. code-block:: bash
+
+  message DictionaryEntry {
+    optional string key_token = 1;
+    optional float value = 2;
+    repeated string value_tokens = 3;
+    optional FloatArray values = 4;
+  }
+
+message ScoreConfig
+===================
+
+Represents a configuration of a general score.
+
+.. code-block:: bash
+
+  message ScoreConfig {
+    enum Type {
+      Perplexity = 0;
+    }
+
+    optional string name = 1;
+    optional Type type = 2;
+    optional bytes config = 3;
+  }
+
+.. attribute:: name
+
+   A value that defines the name of the score.
+   The name must be unique across all names defined in the master component.
+
+.. attribute:: type
+
+   A value that defines the type of the score.
+
+   ============== ====================================================
+   ``Perplexity`` Defines a perplexity score config
+   ============== ====================================================
+
+.. attribute:: config
+
+   A serialized protobuf message that describes score config for the specific score type.
+
+
+message ScoreData
+=================
+
+Represents a general result of score calculation.
+
+.. code-block:: bash
+
+  message ScoreData {
+    enum Type {
+      Perplexity = 0;
+    }
+
+    optional string name = 1;
+    optional Type type = 2;
+    optional bytes data = 3;
+  }
+
+.. attribute:: name
+
+   A value that describes the name of the score.
+   This name will match the name of the corresponding score config.
+
+.. attribute:: type
+
+   A value that defines the type of the score.
+
+   ============== ================================================
+   ``Perplexity`` Defines a perplexity score
+   ============== ================================================
+
+.. attribute:: data
+
+   A serialized protobuf message that provides the specific score result.
+
+
+message PerplexityScoreConfig
+=============================
+
+Represents a configuration of a perplexity score.
+
+.. code-block:: bash
+
+  message PerplexityScoreConfig {
+    optional string field_name = 1 [default = "@body"];
+    optional string stream_name = 2 [default = "@global"];
+  }
+
+
+message PerplexityScore
+=======================
+
+Represents a result of calculation of a perplexity score.
+
+.. code-block:: bash
+
+  message PerplexityScore {
+    optional double value = 1;
+    optional double raw = 2;
+    optional double normalizer = 3;
+    optional int32 zero_words = 4;
+  }
+
+message TopicModel
+==================
+
+Represents a topic model.
+
+.. code-block:: bash
+
+  message TopicModel {
+    optional string name = 1 [default = "@model"];
+    optional int32 topics_count = 2;
+    repeated string token = 3;
+    repeated FloatArray token_weights = 4;
+
+    message TopicModelInternals {
+      repeated FloatArray n_wt = 1;
+      repeated FloatArray r_wt = 2;
+      optional FloatArray n_t = 3;
+    }
+
+    optional bytes internals = 5;
+  }
+
+.. attribute:: name
+
+   A value that describes the name of the topic model.
+   This name will match the name of the corresponding model config.
+
+.. attribute:: topics_count
+
+   A value that describes the number of topics in the topic model.
+   This value will match the value, defined in the model config.
+
+.. attribute:: token
+
+   The set of all tokens, included in the topic model.
+
+.. attribute:: token_weights
+
+   A set of token weights.
+   The length of this repeated field will match the length of the repeated field 'token'.
+   The length of each FloatArray will match the topics_count field.
+
+.. attribute:: internals
+
+   A serialized instance of TopicModelInternals message.
+
+
+
+message ThetaMatrix
+===================
+
+Represents a theta matrix.
+
+.. code-block:: bash
+
+  message ThetaMatrix {
+    optional string model_name = 1 [default = "@model"];
+    repeated int32 item_id = 2;
+    repeated FloatArray item_weights = 3;
+  }
+
+.. attribute:: model_name
+
+   A value that describes the name of the topic model.
+   This name will match the name of the corresponding model config.
+
+.. attribute:: item_id
+
+   A set of item IDs.
+
+.. attribute:: item_weights
+
+   A set of item ID weights.
+   The length of this repeated field will match the length of the repeated field 'item_id'.
+   The length of each FloatArray will match the number of topics in the model.

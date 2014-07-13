@@ -20,7 +20,7 @@ from python_interface import *
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = 2
 master_config.processor_queue_max_size = 5
-master_config.cache_processor_output = 1
+master_config.cache_theta = 1
 
 perplexity_config = messages_pb2.PerplexityScoreConfig();
 perplexity_config.stream_name = 'stream_0'

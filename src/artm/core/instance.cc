@@ -28,6 +28,7 @@
 
 #include "artm/score_calculator_interface.h"
 #include "artm/score_sandbox/perplexity.h"
+#include "artm/score_sandbox/sparsity_theta.h"
 
 #define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                  \
   ConfigType regularizer_config;                                                          \
@@ -201,6 +202,12 @@ static std::shared_ptr<ScoreCalculatorInterface> CreateScoreCalculator(const Sco
     case artm::ScoreConfig_Type_Perplexity: {
       CREATE_SCORE_CALCULATOR(::artm::PerplexityScoreConfig,
                               ::artm::score_sandbox::Perplexity);
+      break;
+    }
+
+    case artm::ScoreConfig_Type_SparsityTheta: {
+      CREATE_SCORE_CALCULATOR(::artm::SparsityThetaScoreConfig,
+                              ::artm::score_sandbox::SparsityTheta);
       break;
     }
 

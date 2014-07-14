@@ -171,6 +171,7 @@ message FloatArray {
 message ScoreConfig {
   enum Type {
     Perplexity = 0;
+    SparsityTheta = 1;
   }
 
   optional string name = 1;
@@ -181,6 +182,7 @@ message ScoreConfig {
 message ScoreData {
   enum Type {
     Perplexity = 0;
+    SparsityTheta = 1;
   }
 
   optional string name = 1;
@@ -199,6 +201,18 @@ message PerplexityScore {
   optional double normalizer = 3;
   optional int32 zero_words = 4;
 }
+
+message SparsityThetaScoreConfig {
+  optional string field_name = 1 [default = "@body"];
+  optional string stream_name = 2 [default = "@global"];
+}
+
+message SparsityThetaScore {
+  optional double value = 1;
+  optional int32 zero_topics = 2;
+  optional int32 total_topics = 3;
+}
+
 
 // A topic model, represented by Matrix Phi
 message TopicModel {

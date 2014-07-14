@@ -69,6 +69,9 @@
     <ClCompile Include="..\artm\score_sandbox\perplexity.cc">
       <Filter>score_sandbox</Filter>
     </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\sparsity_theta.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\artm\messages.pb.h" />
@@ -168,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="..\artm\score_calculator_interface.h" />
     <ClInclude Include="..\artm\score_sandbox\perplexity.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\score_sandbox\sparsity_theta.h">
       <Filter>score_sandbox</Filter>
     </ClInclude>
   </ItemGroup>

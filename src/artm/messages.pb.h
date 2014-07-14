@@ -55,6 +55,8 @@ class ScoreConfig;
 class ScoreData;
 class PerplexityScoreConfig;
 class PerplexityScore;
+class SparsityThetaScoreConfig;
+class SparsityThetaScore;
 class TopicModel;
 class TopicModel_TopicModelInternals;
 class ThetaMatrix;
@@ -121,11 +123,12 @@ inline bool RegularizerConfig_Type_Parse(
     RegularizerConfig_Type_descriptor(), name, value);
 }
 enum ScoreConfig_Type {
-  ScoreConfig_Type_Perplexity = 0
+  ScoreConfig_Type_Perplexity = 0,
+  ScoreConfig_Type_SparsityTheta = 1
 };
 bool ScoreConfig_Type_IsValid(int value);
 const ScoreConfig_Type ScoreConfig_Type_Type_MIN = ScoreConfig_Type_Perplexity;
-const ScoreConfig_Type ScoreConfig_Type_Type_MAX = ScoreConfig_Type_Perplexity;
+const ScoreConfig_Type ScoreConfig_Type_Type_MAX = ScoreConfig_Type_SparsityTheta;
 const int ScoreConfig_Type_Type_ARRAYSIZE = ScoreConfig_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ScoreConfig_Type_descriptor();
@@ -139,11 +142,12 @@ inline bool ScoreConfig_Type_Parse(
     ScoreConfig_Type_descriptor(), name, value);
 }
 enum ScoreData_Type {
-  ScoreData_Type_Perplexity = 0
+  ScoreData_Type_Perplexity = 0,
+  ScoreData_Type_SparsityTheta = 1
 };
 bool ScoreData_Type_IsValid(int value);
 const ScoreData_Type ScoreData_Type_Type_MIN = ScoreData_Type_Perplexity;
-const ScoreData_Type ScoreData_Type_Type_MAX = ScoreData_Type_Perplexity;
+const ScoreData_Type ScoreData_Type_Type_MAX = ScoreData_Type_SparsityTheta;
 const int ScoreData_Type_Type_ARRAYSIZE = ScoreData_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ScoreData_Type_descriptor();
@@ -2191,6 +2195,7 @@ class ScoreConfig : public ::google::protobuf::Message {
 
   typedef ScoreConfig_Type Type;
   static const Type Perplexity = ScoreConfig_Type_Perplexity;
+  static const Type SparsityTheta = ScoreConfig_Type_SparsityTheta;
   static inline bool Type_IsValid(int value) {
     return ScoreConfig_Type_IsValid(value);
   }
@@ -2326,6 +2331,7 @@ class ScoreData : public ::google::protobuf::Message {
 
   typedef ScoreData_Type Type;
   static const Type Perplexity = ScoreData_Type_Perplexity;
+  static const Type SparsityTheta = ScoreData_Type_SparsityTheta;
   static inline bool Type_IsValid(int value) {
     return ScoreData_Type_IsValid(value);
   }
@@ -2620,6 +2626,212 @@ class PerplexityScore : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static PerplexityScore* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SparsityThetaScoreConfig : public ::google::protobuf::Message {
+ public:
+  SparsityThetaScoreConfig();
+  virtual ~SparsityThetaScoreConfig();
+
+  SparsityThetaScoreConfig(const SparsityThetaScoreConfig& from);
+
+  inline SparsityThetaScoreConfig& operator=(const SparsityThetaScoreConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SparsityThetaScoreConfig& default_instance();
+
+  void Swap(SparsityThetaScoreConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  SparsityThetaScoreConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SparsityThetaScoreConfig& from);
+  void MergeFrom(const SparsityThetaScoreConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string field_name = 1 [default = "@body"];
+  inline bool has_field_name() const;
+  inline void clear_field_name();
+  static const int kFieldNameFieldNumber = 1;
+  inline const ::std::string& field_name() const;
+  inline void set_field_name(const ::std::string& value);
+  inline void set_field_name(const char* value);
+  inline void set_field_name(const char* value, size_t size);
+  inline ::std::string* mutable_field_name();
+  inline ::std::string* release_field_name();
+  inline void set_allocated_field_name(::std::string* field_name);
+
+  // optional string stream_name = 2 [default = "@global"];
+  inline bool has_stream_name() const;
+  inline void clear_stream_name();
+  static const int kStreamNameFieldNumber = 2;
+  inline const ::std::string& stream_name() const;
+  inline void set_stream_name(const ::std::string& value);
+  inline void set_stream_name(const char* value);
+  inline void set_stream_name(const char* value, size_t size);
+  inline ::std::string* mutable_stream_name();
+  inline ::std::string* release_stream_name();
+  inline void set_allocated_stream_name(::std::string* stream_name);
+
+  // @@protoc_insertion_point(class_scope:artm.SparsityThetaScoreConfig)
+ private:
+  inline void set_has_field_name();
+  inline void clear_has_field_name();
+  inline void set_has_stream_name();
+  inline void clear_has_stream_name();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* field_name_;
+  static ::std::string* _default_field_name_;
+  ::std::string* stream_name_;
+  static ::std::string* _default_stream_name_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static SparsityThetaScoreConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SparsityThetaScore : public ::google::protobuf::Message {
+ public:
+  SparsityThetaScore();
+  virtual ~SparsityThetaScore();
+
+  SparsityThetaScore(const SparsityThetaScore& from);
+
+  inline SparsityThetaScore& operator=(const SparsityThetaScore& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SparsityThetaScore& default_instance();
+
+  void Swap(SparsityThetaScore* other);
+
+  // implements Message ----------------------------------------------
+
+  SparsityThetaScore* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SparsityThetaScore& from);
+  void MergeFrom(const SparsityThetaScore& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional double value = 1;
+  inline bool has_value() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 1;
+  inline double value() const;
+  inline void set_value(double value);
+
+  // optional int32 zero_topics = 2;
+  inline bool has_zero_topics() const;
+  inline void clear_zero_topics();
+  static const int kZeroTopicsFieldNumber = 2;
+  inline ::google::protobuf::int32 zero_topics() const;
+  inline void set_zero_topics(::google::protobuf::int32 value);
+
+  // optional int32 total_topics = 3;
+  inline bool has_total_topics() const;
+  inline void clear_total_topics();
+  static const int kTotalTopicsFieldNumber = 3;
+  inline ::google::protobuf::int32 total_topics() const;
+  inline void set_total_topics(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:artm.SparsityThetaScore)
+ private:
+  inline void set_has_value();
+  inline void clear_has_value();
+  inline void set_has_zero_topics();
+  inline void clear_has_zero_topics();
+  inline void set_has_total_topics();
+  inline void clear_has_total_topics();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double value_;
+  ::google::protobuf::int32 zero_topics_;
+  ::google::protobuf::int32 total_topics_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static SparsityThetaScore* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -5764,6 +5976,220 @@ inline ::google::protobuf::int32 PerplexityScore::zero_words() const {
 inline void PerplexityScore::set_zero_words(::google::protobuf::int32 value) {
   set_has_zero_words();
   zero_words_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SparsityThetaScoreConfig
+
+// optional string field_name = 1 [default = "@body"];
+inline bool SparsityThetaScoreConfig::has_field_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SparsityThetaScoreConfig::set_has_field_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SparsityThetaScoreConfig::clear_has_field_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SparsityThetaScoreConfig::clear_field_name() {
+  if (field_name_ != _default_field_name_) {
+    field_name_->assign(*_default_field_name_);
+  }
+  clear_has_field_name();
+}
+inline const ::std::string& SparsityThetaScoreConfig::field_name() const {
+  return *field_name_;
+}
+inline void SparsityThetaScoreConfig::set_field_name(const ::std::string& value) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(value);
+}
+inline void SparsityThetaScoreConfig::set_field_name(const char* value) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(value);
+}
+inline void SparsityThetaScoreConfig::set_field_name(const char* value, size_t size) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SparsityThetaScoreConfig::mutable_field_name() {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string(*_default_field_name_);
+  }
+  return field_name_;
+}
+inline ::std::string* SparsityThetaScoreConfig::release_field_name() {
+  clear_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    return NULL;
+  } else {
+    ::std::string* temp = field_name_;
+    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+    return temp;
+  }
+}
+inline void SparsityThetaScoreConfig::set_allocated_field_name(::std::string* field_name) {
+  if (field_name_ != _default_field_name_) {
+    delete field_name_;
+  }
+  if (field_name) {
+    set_has_field_name();
+    field_name_ = field_name;
+  } else {
+    clear_has_field_name();
+    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+  }
+}
+
+// optional string stream_name = 2 [default = "@global"];
+inline bool SparsityThetaScoreConfig::has_stream_name() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SparsityThetaScoreConfig::set_has_stream_name() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SparsityThetaScoreConfig::clear_has_stream_name() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SparsityThetaScoreConfig::clear_stream_name() {
+  if (stream_name_ != _default_stream_name_) {
+    stream_name_->assign(*_default_stream_name_);
+  }
+  clear_has_stream_name();
+}
+inline const ::std::string& SparsityThetaScoreConfig::stream_name() const {
+  return *stream_name_;
+}
+inline void SparsityThetaScoreConfig::set_stream_name(const ::std::string& value) {
+  set_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string;
+  }
+  stream_name_->assign(value);
+}
+inline void SparsityThetaScoreConfig::set_stream_name(const char* value) {
+  set_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string;
+  }
+  stream_name_->assign(value);
+}
+inline void SparsityThetaScoreConfig::set_stream_name(const char* value, size_t size) {
+  set_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string;
+  }
+  stream_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SparsityThetaScoreConfig::mutable_stream_name() {
+  set_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    stream_name_ = new ::std::string(*_default_stream_name_);
+  }
+  return stream_name_;
+}
+inline ::std::string* SparsityThetaScoreConfig::release_stream_name() {
+  clear_has_stream_name();
+  if (stream_name_ == _default_stream_name_) {
+    return NULL;
+  } else {
+    ::std::string* temp = stream_name_;
+    stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
+    return temp;
+  }
+}
+inline void SparsityThetaScoreConfig::set_allocated_stream_name(::std::string* stream_name) {
+  if (stream_name_ != _default_stream_name_) {
+    delete stream_name_;
+  }
+  if (stream_name) {
+    set_has_stream_name();
+    stream_name_ = stream_name;
+  } else {
+    clear_has_stream_name();
+    stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// SparsityThetaScore
+
+// optional double value = 1;
+inline bool SparsityThetaScore::has_value() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SparsityThetaScore::set_has_value() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SparsityThetaScore::clear_has_value() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SparsityThetaScore::clear_value() {
+  value_ = 0;
+  clear_has_value();
+}
+inline double SparsityThetaScore::value() const {
+  return value_;
+}
+inline void SparsityThetaScore::set_value(double value) {
+  set_has_value();
+  value_ = value;
+}
+
+// optional int32 zero_topics = 2;
+inline bool SparsityThetaScore::has_zero_topics() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SparsityThetaScore::set_has_zero_topics() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SparsityThetaScore::clear_has_zero_topics() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SparsityThetaScore::clear_zero_topics() {
+  zero_topics_ = 0;
+  clear_has_zero_topics();
+}
+inline ::google::protobuf::int32 SparsityThetaScore::zero_topics() const {
+  return zero_topics_;
+}
+inline void SparsityThetaScore::set_zero_topics(::google::protobuf::int32 value) {
+  set_has_zero_topics();
+  zero_topics_ = value;
+}
+
+// optional int32 total_topics = 3;
+inline bool SparsityThetaScore::has_total_topics() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SparsityThetaScore::set_has_total_topics() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SparsityThetaScore::clear_has_total_topics() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SparsityThetaScore::clear_total_topics() {
+  total_topics_ = 0;
+  clear_has_total_topics();
+}
+inline ::google::protobuf::int32 SparsityThetaScore::total_topics() const {
+  return total_topics_;
+}
+inline void SparsityThetaScore::set_total_topics(::google::protobuf::int32 value) {
+  set_has_total_topics();
+  total_topics_ = value;
 }
 
 // -------------------------------------------------------------------

@@ -22,8 +22,9 @@ using namespace artm;
 
 double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string batches_disk_path = "batches";
-  std::string vocab_file = "";
-  std::string docword_file = "";
+  std::string vocab_file = "../../datasets/vocab.nips.txt";
+  std::string docword_file = "../../datasets/docword.nips.txt";
+  int topics_count = 16;
 
   // Recommended values for decorrelator_tau are as follows:
   // kos - 700000, nips - 2000000.
@@ -79,6 +80,18 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   score_config.set_name("train_perplexity");
   master_config.add_score_config()->CopyFrom(score_config);
 
+  ::artm::SparsityThetaScoreConfig sparsity_theta_config;
+  sparsity_theta_config.set_stream_name("test_stream");
+  score_config.set_config(sparsity_theta_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_SparsityTheta);
+  score_config.set_name("test_sparsity_theta");
+  master_config.add_score_config()->CopyFrom(score_config);
+
+  sparsity_theta_config.set_stream_name("train_stream");
+  score_config.set_config(sparsity_theta_config.SerializeAsString());
+  score_config.set_name("train_sparsity_theta");
+  master_config.add_score_config()->CopyFrom(score_config);
+
   // MasterProxyConfig master_proxy_config;
   // master_proxy_config.set_node_connect_endpoint("tcp://localhost:5556");
   // master_proxy_config.mutable_config()->CopyFrom(master_config);
@@ -110,7 +123,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   Regularizer dirichlet_phi_regularizer(master_component, regularizer_config);
 
   // Create model
-  int nTopics = atoi(argv[3]);
+  int nTopics = (topics_count == 0) ? atoi(argv[3]) : topics_count;
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
   model_config.set_inner_iterations_count(10);
@@ -121,6 +134,8 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.add_regularizer_tau(decorrelator_tau);
   model_config.add_score_name("test_perplexity");
   model_config.add_score_name("train_perplexity");
+  model_config.add_score_name("test_sparsity_theta");
+  model_config.add_score_name("train_sparsity_theta");
 
   Model model(master_component, model_config);
 
@@ -186,6 +201,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   std::shared_ptr<TopicModel> topic_model;
   std::shared_ptr<PerplexityScore> test_perplexity, train_perplexity;
+  std::shared_ptr<SparsityThetaScore> test_sparsity_theta, train_sparsity_theta;
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
@@ -194,10 +210,14 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     topic_model = master_component.GetTopicModel(model);
     test_perplexity = master_component.GetScoreAs<::artm::PerplexityScore>(model, "test_perplexity");
     train_perplexity = master_component.GetScoreAs<::artm::PerplexityScore>(model, "train_perplexity");
+    test_sparsity_theta = master_component.GetScoreAs<::artm::SparsityThetaScore>(model, "test_sparsity_theta");
+    train_sparsity_theta = master_component.GetScoreAs<::artm::SparsityThetaScore>(model, "train_sparsity_theta");
     std::cout << "Iter #" << (iter + 1) << ": "
               << "#Tokens = "  << topic_model->token_size() << ", "
               << "Test perplexity = " << test_perplexity->value() << ", "
-              << "Train perplexity = " << train_perplexity->value() << endl;
+              << "Train perplexity = " << train_perplexity->value() << ", "
+              << "Test spatsity theta = " << test_sparsity_theta->value() << ", "
+              << "Train sparsity theta = " << train_sparsity_theta->value() << endl;
   }
 
   std::cout << endl;

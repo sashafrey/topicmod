@@ -441,7 +441,7 @@ It has the following implementation details:
 \section{How to build sources?}
 \label{label:how_to_build}
 
-\subsection{Windows}
+\subsection{C++ code on Windows}
 
 \begin{enumerate}
    \item Download and install GitHub Windows from \url{http://windows.github.com/}
@@ -454,8 +454,11 @@ It has the following implementation details:
 setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"
 \end{verbatim}
    \item \st{Download and unpack protobuf 2.5.0} \\ (no longer needed, part of '3rdparty' folder)
-   \item Download and unpack libs: \\
-    \url{https://s3-eu-west-1.amazonaws.com/artm/libs_win32_v110.7z} --- for Visual Studio 2012
+   \item Download and unpack the following libs into \verb'<topicmod>/libs' folder: \\
+    \url{https://s3-eu-west-1.amazonaws.com/artm/libs_win32_v110.7z}
+    Beware that this libraries were built with Visual Studio 2012 RTM (11.0.50727.1 RTMREL),
+    and that they might be incompatible with future Service Packs for VS2012.
+    They are known to be incompatible with Visual Studio 2013.
    \item Download and install \href{http://zeromq.org/distro:microsoft-windows}{ZeroMQ 4.0.3 x86} \\
          \url{http://miru.hk/archive/ZeroMQ-4.0.3~miru1.0-x86.exe} \\
          Set environmental variable ZEROMQ32\_ROOT to ZeroMQ include folder
@@ -467,22 +470,40 @@ setx ZEROMQ32_ROOT "C:\\Program Files (x86)\\ZeroMQ 4.0.3"
     \item Build all projects (debug or release, Win32) and execute tests. 64-bit builds are not available yet.
 \end{enumerate}
 
-Note: to use python in project you need to do the following steps:
+\subsection{Python code on Windows}
+
 \begin{enumerate}
-	\item install python 2.7.
+	\item Install Python 2.7.
 
     {\bf Important:} on Windows you MUST use
     \href{https://www.python.org/ftp/python/2.7.6/python-2.7.6.msi}{Python x86},
-    which is a 32bit version of Python. The 64bit Python is incompatible with artm\_dll.dll
+    which is a 32bit version of Python. The 64bit Python is incompatible with artm.dll
     (which only compiles in 32 bits for now).
-	\item download and add to MSVS Python Tools 2.0 (all necessary instructions can be found here: \\
-	\url{https://pytools.codeplex.com/}) \\
-	\item add python folder to PATH. To do so open:
+
+	\item Download and add to MSVS Python Tools 2.0.
+
+    All necessary instructions can be found here:
+	\url{https://pytools.codeplex.com/})
+	\item Add python folder to PATH. To do so open:
 \begin{verbatim}
     Control Panel\All Control Panel Items\System
 \end{verbatim}
 	then \verb'Advanced system settings', \verb'Environment variables'.
-	\item follow the instructions in README file in directory \verb'python' in your protobuf folder.
+	\item Follow the instructions in README file in directory \verb'python'
+    in your protobuf folder.
+    In brief, this instructions ask you to run the following commands:
+\begin{verbatim}
+        python setup.py build
+        python setup.py test
+        python setup.py install
+\end{verbatim}
+    \verb'setup.py' is located under \verb'<topicmod>\3rdparty\protobuf\python'.
+On second step you fill see two failing tests:
+\begin{verbatim}
+    Ran 216 tests in 1.252s
+    FAILED (failures=2)
+\end{verbatim}
+    This 2 failures are OK to ignore.
 \end{enumerate}
 
 \subsection{Linux}
@@ -493,8 +514,7 @@ Note: to use python in project you need to do the following steps:
     \item Install boost (it is preferable to use version 1.55 or newer; \hbox{libboost-all-dev} is package name in Debian-based OS).
     \item Install protobuf (it is necessary to use version 2.5.0 or newer; \hbox{libprotobuf-dev} is package name in Debian-based OS). You can get it from ppa: \hbox{ppa:chris-lea/protobuf}
     \item Use Makefiles under /3rdparty, /src/artm/ and /src/cpp\_client/.
-    \item Python interface hasn't been used from Linux yet. Please, contribute to this documentation if you
-    found some solution to this.
+    \item Python interface hasn't been used from Linux yet. Please, contribute to this documentation if you found some solution to this.
 \end{enumerate}
 
 \section{How to submit my change to master branch?}

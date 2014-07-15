@@ -24,11 +24,11 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string batches_disk_path = "batches";
   std::string vocab_file = "../../datasets/vocab.nips.txt";
   std::string docword_file = "../../datasets/docword.nips.txt";
-  int topics_count = 16;
+  int topics_count = 100;
 
   // Recommended values for decorrelator_tau are as follows:
   // kos - 700000, nips - 2000000.
-  float decorrelator_tau = 700000;
+  float decorrelator_tau = 2000000;
 
   // instance_size = 0 stands for "connect to external node_controller process",
   // instance_size = 1 stands for "local modus operandi",
@@ -265,7 +265,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
       std::cout << "Topic" << j << ": ";
       for (int i = 0; i < min(docs_to_show, theta_matrix->item_id_size()); ++i) {
         float weight = theta_matrix->item_weights(i).value(j);
-        std::cout << std::fixed << std::setw( 6 ) << std::setprecision( 3 ) << weight << "\t";
+        std::cout << std::fixed << std::setw( 6 ) << std::setprecision( 7 ) << weight << "\t";
       }
 
       std::cout << "\n";

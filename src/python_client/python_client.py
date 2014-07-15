@@ -12,21 +12,20 @@ from python_interface import *
 import operator
 import random
 
-with open('../../datasets/vocab.kos.txt', 'r') as content_file:
-    content = content_file.read()
-
-tokens = content.split('\n')
 
 # Some configuration numbers
 batch_size = 500
 processors_count = 4
-eps = 0.00001
+eps = 1e-100
 limit_collection_size = 50000 # don't load more that this docs
-topics_count = 16
-outer_iteration_count = 13
-inner_iterations_count = 5
+topics_count = 100
+outer_iteration_count = 41
+inner_iterations_count = 1
 top_tokens_count_to_visualize = 4
-parse_collection_from_text = 0
+parse_collection_from_text = True
+
+vocab_file = 'datasets/vocab.nips.txt'
+docword_file = 'datasets/docword.nips.txt'
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 
@@ -35,6 +34,12 @@ if sys.platform.count('linux') == 1:
 else:
     os.environ['PATH'] = ';'.join([address + '\\Win32\\Release', os.environ['PATH']])
     library = ArtmLibrary(address + '\\Win32\\Release\\artm.dll')
+
+
+with open(vocab_file, 'r') as content_file:
+    content = content_file.read()
+
+tokens = content.splitlines()
 
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
@@ -45,7 +50,15 @@ perplexity_config = messages_pb2.PerplexityScoreConfig();
 score_config = master_config.score_config.add()
 score_config.config = messages_pb2.PerplexityScoreConfig().SerializeToString();
 score_config.type = ScoreConfig_Type_Perplexity;
-score_config.name = "perplexity_score"
+perplexity_score_name = "perplexity_score"
+score_config.name = perplexity_score_name
+
+sparsity_theta_config = messages_pb2.SparsityThetaScoreConfig();
+score_config = master_config.score_config.add()
+score_config.config = messages_pb2.SparsityThetaScoreConfig().SerializeToString();
+score_config.type = ScoreConfig_Type_SparsityTheta;
+sparsity_theta_score_name = "sparsity_theta_score"
+score_config.name = sparsity_theta_score_name
 
 with library.CreateMasterComponent(master_config) as master_component:
     batch = messages_pb2.Batch()
@@ -53,7 +66,7 @@ with library.CreateMasterComponent(master_config) as master_component:
     prev_item_id = -1
 
     if (parse_collection_from_text):
-        with open('../../datasets/docword.kos.txt', 'r') as docword:
+        with open(docword_file, 'r') as docword:
             items_count = int(docword.readline())
             words_count = int(docword.readline())
             num_non_zero = int(docword.readline())
@@ -86,20 +99,34 @@ with library.CreateMasterComponent(master_config) as master_component:
         if (len(batch.item) > 0):
             master_component.AddBatch(batch)
 
-    model_config = messages_pb2.ModelConfig()
-    model_config.topics_count = topics_count
-    model_config.inner_iterations_count = inner_iterations_count
-    model_config.score_name.append('perplexity_score')
-
     ################################################################################
     regularizer_config_theta = messages_pb2.DirichletThetaConfig()
     regularizer_name_theta = 'regularizer_theta'
-    model_config.regularizer_name.append(regularizer_name_theta)
-    model_config.regularizer_tau.append(0.1)
     regularizer_theta = master_component.CreateRegularizer(
       regularizer_name_theta,
       RegularizerConfig_Type_DirichletTheta,
       regularizer_config_theta)
+    
+    regularizer_config_decor = messages_pb2.DecorrelatorPhiConfig()
+#     regularizer_decor_config.background_topics_count = background_topics_count
+    regularizer_name_decor = 'regularizer_decor'
+    regularizer_decor = master_component.CreateRegularizer(
+      regularizer_name_decor, 
+      RegularizerConfig_Type_DecorrelatorPhi,
+      regularizer_config_decor)
+    
+    ################################################################################
+    model_config = messages_pb2.ModelConfig()
+    model_config.topics_count = topics_count
+    model_config.inner_iterations_count = inner_iterations_count
+    
+    model_config.score_name.append(perplexity_score_name)
+    model_config.score_name.append(sparsity_theta_score_name)
+    
+#     model_config.regularizer_name.append(regularizer_name_theta)
+#     model_config.regularizer_tau.append(0.1)
+#     model_config.regularizer_name.append(regularizer_name_decor)
+#     model_config.regularizer_tau.append(200000)
 
     model = master_component.CreateModel(model_config)
     initial_topic_model = messages_pb2.TopicModel();
@@ -108,21 +135,25 @@ with library.CreateMasterComponent(master_config) as master_component:
 
     random.seed(123)
     for token in tokens:
-      initial_topic_model.token.append(token);
-      weights = initial_topic_model.token_weights.add();
-      for topic_index in range(0, topics_count):
-        weights.value.append(random.random())
+        initial_topic_model.token.append(token);
+        weights = initial_topic_model.token_weights.add();
+        for topic_index in range(0, topics_count):
+            weights.value.append(random.random())
     model.Overwrite(initial_topic_model)
 
     for iter in range(0, outer_iteration_count):
         master_component.InvokeIteration(1)
         master_component.WaitIdle();
         topic_model = master_component.GetTopicModel(model)
-        perplexity_score = master_component.GetScore(model, 'perplexity_score')
+        perplexity_score = master_component.GetScore(model, perplexity_score_name)
+        sparsity_theta_score = master_component.GetScore(model, sparsity_theta_score_name)
+
         model.InvokePhiRegularizers();
 
         print "Iter# = " + str(iter) + \
-                ", Perplexity = " + str(perplexity_score.value)
+                ", Perplexity = " + str(perplexity_score.value) + \
+                ", SparsityTheta = " + str(sparsity_theta_score.value)
+
 
     # Log to 7 words in each topic
     tokens_size = len(topic_model.token)
@@ -144,10 +175,10 @@ with library.CreateMasterComponent(master_config) as master_component:
     print "\nThetaMatrix (first " + str(docs_to_show) + " documents):"
     theta_matrix = master_component.GetThetaMatrix(model)
     for j in range(0, topics_size):
-      print "Topic" + str(j) + ": ",
-      for i in range(0, min(docs_to_show, len(theta_matrix.item_id))):
-        weight = theta_matrix.item_weights[i].value[j]
-        print "%.3f\t" % weight,
-      print "\n",
+        print "Topic" + str(j) + ": ",
+        for i in range(0, min(docs_to_show, len(theta_matrix.item_id))):
+            weight = theta_matrix.item_weights[i].value[j]
+            print "%.3f\t" % weight,
+        print "\n",
 
     print 'Done with regularization!'

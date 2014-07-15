@@ -22,6 +22,8 @@ RegularizerConfig_Type_SmoothSparseTheta = 2
 RegularizerConfig_Type_SmoothSparsePhi = 3
 ScoreConfig_Type_Perplexity = 0
 ScoreData_Type_Perplexity = 0
+ScoreConfig_Type_SparsityTheta = 1
+ScoreData_Type_SparsityTheta = 1
 
 #################################################################################
 
@@ -182,6 +184,10 @@ class MasterComponent:
 
     if (score_data.type == ScoreData_Type_Perplexity):
       score = messages_pb2.PerplexityScore();
+      score.ParseFromString(score_data.data);
+      return score;
+    elif (score_data.type == ScoreData_Type_SparsityTheta):
+      score = messages_pb2.SparsityThetaScore();
       score.ParseFromString(score_data.data);
       return score;
 

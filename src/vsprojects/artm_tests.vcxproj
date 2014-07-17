@@ -25,6 +25,9 @@
     <ClCompile Include="..\artm_tests\batch_manager_test.cc" />
     <ClCompile Include="..\artm_tests\boost_thread_test.cc" />
     <ClCompile Include="..\artm_tests\cpp_interface_test.cc" />
+    <ClCompile Include="..\artm_tests\rpcz_canary_service.pb.cc" />
+    <ClCompile Include="..\artm_tests\rpcz_canary_service.rpcz.cc" />
+    <ClCompile Include="..\artm_tests\rpcz_canary_test.cc" />
     <ClCompile Include="..\artm_tests\template_manager_test.cc" />
     <ClCompile Include="..\artm_tests\instance_test.cc" />
     <ClCompile Include="..\artm_tests\nodes_connectivity_test.cc" />

@@ -31,6 +31,7 @@ call cpplint.bat ../src/artm_tests/cpp_interface_test.cc
 call cpplint.bat ../src/artm_tests/template_manager_test.cc
 call cpplint.bat ../src/artm_tests/nodes_connectivity_test.cc
 call cpplint.bat ../src/artm_tests/instance_test.cc
+call cpplint.bat ../src/artm_tests/rpcz_canary_test.cc
 call cpplint.bat ../src/artm_tests/test_mother.cc
 call cpplint.bat ../src/artm_tests/thread_safe_holder_test.cc
 call cpplint.bat ../src/artm_tests/topic_model_test.cc

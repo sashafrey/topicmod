@@ -5,24 +5,12 @@
 
 .. _contents:
 
-BigARTM documentation contents
-==============================
+BigARTM Reference
+=================
 
 .. toctree::
    :maxdepth: 2
 
-   intro
-   tutorial
-   faq
-   glossary
-   devguide
-   examples
-   ref/index
+   algorithm
+   messages
 
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-* :ref:`glossary`

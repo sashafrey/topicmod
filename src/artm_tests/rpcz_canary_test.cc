@@ -18,14 +18,23 @@
 // copy utils/protoc-2.5.0-win32/protoc.exe to /src folder
 // cd to /src folder and execute the following:
 // .\protoc.exe --cpp_out=. --rpcz_plugin_out=. .\artm_tests\rpcz_canary_service.proto
+
+const std::string error_message = "Some error had happend!";
+const int error_code = -999;
+bool server_will_send_error = false;
+
 class SearchServiceImpl : public SearchService {
   virtual void Search(
       const SearchRequest& request,
       rpcz::reply<SearchResponse> reply) {
-    SearchResponse response;
-    response.add_results("result1 for " + request.query());
-    response.add_results("this is result2");
-    reply.send(response);
+    if (server_will_send_error) {
+      reply.Error(error_code, error_message);
+    } else {
+      SearchResponse response;
+      response.add_results("result1 for " + request.query());
+      response.add_results("this is result2");
+      reply.send(response);
+    }
   }
 };
 
@@ -65,12 +74,11 @@ void ConnectAndQuery(int timeout = -1L) {
     if (timeout != -1L) {
       ASSERT_EQ(error.get_status(), rpcz::status::DEADLINE_EXCEEDED);
     } else {
-      // Unexpected exception
-      std::cout << "application_error_code = " << error.get_application_error_code() << std::endl;
-      std::cout << "error_message          = " << error.get_error_message() << std::endl;
-      std::cout << "status                 = " << error.get_status() << std::endl;
-      std::cout << "what                   = " << error.what() << std::endl;
-      ASSERT_TRUE(false);
+      ASSERT_EQ(server_will_send_error, true);
+      if (server_will_send_error) {
+        ASSERT_EQ(error.get_application_error_code(), error_code);
+        ASSERT_EQ(error.get_error_message(), error_message);
+      }
     }
   }
 }
@@ -79,9 +87,14 @@ void ConnectAndQuery(int timeout = -1L) {
 TEST(Rpcz, Canary) {
   boost::thread t(&RpczServerThreadFunction);
 
+  server_will_send_error = false;
   ConnectAndQuery();
 
   ASSERT_TRUE(server_application != nullptr);
+
+  server_will_send_error = true;
+  ConnectAndQuery();
+
   server_application->terminate();
   t.join();
 

@@ -1,6 +1,14 @@
 Introduction
 ============
 
+.. warning::
+
+   BigARTM library is in pre-released state.
+   You are welcome to use the library,
+   but please beware that the API of the library
+   can have major changes.
+
+
 This is the documentation for the BigARTM library.
 BigARTM is a tool to infer `topic models`_,
 based on a novel technique called

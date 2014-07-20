@@ -9,6 +9,9 @@ BigARTM/
   messages_pb2.py
   python_interface.py
 
+help/
+  index.html  
+
 about.txt
 analyzer.py
 artm_example.py

@@ -1,3 +1,4 @@
+cp ../../LICENSE .
 cp ../../src/Win32/Release/artm.dll BigARTM/
 cp ../../src/Win32/Release/node_controller.dll BigARTM/
 cp ../../src/Win32/Release/libglog.dll BigARTM/

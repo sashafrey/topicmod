@@ -22,8 +22,8 @@ using namespace artm;
 
 double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string batches_disk_path = "batches";
-  std::string vocab_file = "";
-  std::string docword_file = "";
+  std::string vocab_file = "..\\..\\datasets\\vocab.nips.txt";
+  std::string docword_file = "..\\..\\datasets\\docword.nips.txt";
 
   // Recommended values for decorrelator_tau are as follows:
   // kos - 700000, nips - 2000000.
@@ -79,12 +79,12 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   score_config.set_name("train_perplexity");
   master_config.add_score_config()->CopyFrom(score_config);
 
-  // MasterProxyConfig master_proxy_config;
-  // master_proxy_config.set_node_connect_endpoint("tcp://localhost:5556");
-  // master_proxy_config.mutable_config()->CopyFrom(master_config);
-  // MasterComponent master_component(master_proxy_config);
+   MasterProxyConfig master_proxy_config;
+   master_proxy_config.set_node_connect_endpoint("tcp://localhost:5555");
+   master_proxy_config.mutable_config()->CopyFrom(master_config);
+   MasterComponent master_component(master_proxy_config);
 
-  MasterComponent master_component(master_config);
+  //MasterComponent master_component(master_config);
 
   // Configure train and test streams
   Stream train_stream, test_stream;
@@ -110,7 +110,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   Regularizer dirichlet_phi_regularizer(master_component, regularizer_config);
 
   // Create model
-  int nTopics = atoi(argv[3]);
+  int nTopics = 16; //atoi(argv[3]);
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
   model_config.set_inner_iterations_count(10);
@@ -259,10 +259,10 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 }
 
 int main(int argc, char * argv[]) {
-  if (argc != 4) {
-    cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
-    return 0;
-  }
+  //if (argc != 4) {
+  //  cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
+  //  return 0;
+  //}
 
   int instance_size = 1;
   int processors_size = 2;

@@ -13,4 +13,5 @@ BigARTM Reference
 
    algorithm
    messages
-
+   python_interface
+   c_interface

@@ -1,0 +1,64 @@
+============================
+Plain C interface of BigARTM
+============================
+
+This document explains all methods of the low-level BigARTM interface in plain C.
+
+.. code-block:: c
+
+   int ArtmConfigureLogger(int length, const char* logger_config);
+
+   int ArtmGetRequestLength(int request_id);
+
+   int ArtmCopyRequestResult(int request_id, int length, char* address);
+
+   void ArtmDisposeRequest(int request_id);
+
+   int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob);
+
+   int ArtmCreateMasterProxy(int master_id, int length, const char* config_blob);
+
+   int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
+
+   void ArtmDisposeMasterComponent(int master_id);
+
+   int ArtmCreateNodeController(int node_controller_id, int length,
+                                const char* config_blob);
+
+   void ArtmDisposeNodeController(int node_controller_id);
+
+   int ArtmCreateModel(int master_id, int length, const char* model_config_blob);
+
+   int ArtmReconfigureModel(int master_id, int length, const char* config);
+
+   void ArtmDisposeModel(int master_id, const char* model_name);
+
+   int ArtmCreateRegularizer(int master_id, int length,
+                             const char* regularizer_config_blob);
+
+   int ArtmReconfigureRegularizer(int master_id, int length,
+                                 const char* regularizer_config_blob);
+
+   void ArtmDisposeRegularizer(int master_id, const char* regularizer_name);
+
+   int ArtmCreateDictionary(int master_id, int length, const char* dictionary_blob);
+
+   int ArtmReconfigureDictionary(int master_id, int length, const char* dictionary_blob);
+
+   void ArtmDisposeDictionary(int master_id, const char* dictionary_name);
+
+   int ArtmAddBatch(int master_id, int length, const char* batch_blob);
+
+   int ArtmInvokeIteration(int master_id, int iterations_count);
+
+   int ArtmInvokePhiRegularizers(int master_id);
+
+   int ArtmWaitIdle(int master_id);
+
+   int ArtmRequestThetaMatrix(int master_id, const char* model_name);
+
+   int ArtmRequestTopicModel(int master_id, const char* model_name);
+
+   int ArtmRequestScore(int master_id, const char* model_name, const char* score_name);
+   
+   int ArtmOverwriteTopicModel(int master_id, int length, const char* topic_model_blob);

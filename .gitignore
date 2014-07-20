@@ -48,6 +48,9 @@ collateral/*.out
 collateral/*.ps
 collateral/*.synctex
 
+docs/*.bak
+docs/*/*.bak
+
 src/Intermediate/*
 src/Win32/*
 

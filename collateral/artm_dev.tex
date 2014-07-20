@@ -12,23 +12,10 @@
 
 \tableofcontents
 
-\chapter{How to join the BigARTM project?}
-\begin{enumerate}
-\item Read about the math behind BigARTM library: \\ \url{http://www.machinelearning.ru/wiki/images/2/22/Voron-2013-ptm.pdf}
-\item Review the list of open issues: \\
-    \url{https://github.com/sashafrey/topicmod/issues?state=open}\\
-    Feel free to select some of them which sounds interesting and assign it to yourself.
-    To submit you change, follow \hyperref[label:how_to_submit]{How to submit my change} guide.
-\item Review the latest discussions here: \\
-    \url{https://groups.google.com/forum/#!forum/artm_dev}
-\end{enumerate}
-
 \chapter{BigARTM - internal documentation}
 
-\section{Intro}
-ToDo: write short gentle introduction that provide links to state of the art articles on topic models and BigARTM.
+\section{Goals}
 
-\paragraph{Main goals for the first release.}
 \begin{itemize}
     \item Implementation of core topic modeling algorithms with ARTM (Additive Regularization of Topic Models)
     \item Prefer online algorithms, that do not require storing complete doc-token matrix in memory
@@ -90,28 +77,6 @@ When codebase meets this success criteria we are free to release the library.
 \end{algorithmic}
 \end{algorithm}
 
-
-\subsection{User API}
-This chapter describes BigARTM from the user perspective, before diving into all implementation details in the next chapters.
-
-From the user perspective BigARTM library can be used either in \emph{local mode} or in \emph{network mode}.
-In local mode the user interacts with the library only through the \emph{Master component}.
-Typical usage of Master component involves the following steps:
-\begin{enumerate}
-\item Specify general parameters in \emph{MasterComponentConfig}
-\item Create definitions of topic models and their regularizers
-\item Load collection of documents to use in topic modeling
-\item Invoke iterative scans over the collection and wait until it is competed
-\item Retrieve results, including topic model, scores such as perplexity, etc.
-\end{enumerate}
-
-In network mode user interacts with the Master component in exactly the same way
-as in local mode.
-That only action to be done at remote machines is to launch
-there a \emph{Node controller} component
-and configure it with the endpoint of the Master component.
-Then master component will connect to the remote nodes and use them for calculation.
-Further details on network mode are provided in section \ref{label:network_modus_operandi}.
 
 \subsection{BigARTM internal architecture}
 
@@ -234,18 +199,6 @@ Please, familiarize yourself with the concept of a
 \href{en.wikipedia.org/wiki/Remote_procedure_call}{remote procedure call},
 and read an overview of the following two libraries:
 \href{code.google.com/p/rpcz/}{rpcz} and \href{http://zeromq.org}{ZeroMQ}.
-
-\subsection{API in C++, Python and Java}
-Currently the core ARTM functionality is only available from C++,
-but it is designed to support Python and Java.
-
-\begin{figure}[h!]
-\begin{centering}
-\includegraphics[width=90mm]{diagramm_BigARTM.eps}
-\caption{Various interfaces on top of core ARTM components.}
-\label{fig:diagramm_BigARTM}
-\end{centering}
-\end{figure}
 
 \subsection{Concurrency and thread safety}
 All interfaces of the library are not thread safe,

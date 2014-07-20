@@ -4,6 +4,7 @@ Tutorial
 This tutorial provides a basic Python programmer's introduction
 to working with BigARTM library. By walking through creating a
 simple example application, it shows you how to
+
 * Install BigARTM library on your computer
 * Configure basic BigARTM parameters
 * Load the text collection into BigARTM
@@ -21,15 +22,15 @@ Prerequisites
 Installation
 ------------
 
-* If are on Windows, download and unpack
+* If you are on Windows, and you would like to simply use BigARTM
+  from Python, then download and unpack
   `this archive <https://s3-eu-west-1.amazonaws.com/artm/BigARTM_2014_07_20_665afbb.7z>`_.
   This package provides you with all files you need to walk
   through this tutorial and use BigARTM from Python.
 
-* If you are on Linux, you have to get source code and build
+* If you are on Linux, then you have to get source code and build
   BigARTM. Please, refer to :doc:`Developer's Guide </devguide>`
   for further instructions.
-
 
 First steps
 -----------

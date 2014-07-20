@@ -24,10 +24,6 @@ master_config.cache_theta = 1
 
 perplexity_config = messages_pb2.PerplexityScoreConfig();
 perplexity_config.stream_name = 'stream_0'
-score_config = master_config.score_config.add()
-score_config.config = messages_pb2.PerplexityScoreConfig().SerializeToString();
-score_config.type = ScoreConfig_Type_Perplexity;
-score_config.name = "perplexity_score"
 
 master_proxy_config = messages_pb2.MasterProxyConfig()
 master_proxy_config.node_connect_endpoint = "tcp://localhost:5555"
@@ -72,12 +68,6 @@ model_config.regularizer_name.append('regularizer_2')
 model_config.regularizer_tau.append(2)
 model_config.score_name.append('perplexity_score')
 
-# New configs to reconfigure stuff
-master_config_new = messages_pb2.MasterComponentConfig()
-master_config_new.CopyFrom(master_config);
-master_config_new.processors_count = 1
-master_config_new.processor_queue_max_size = 2
-
 model_config_new = messages_pb2.ModelConfig()
 model_config_new.CopyFrom(model_config)
 model_config_new.inner_iterations_count = 20
@@ -110,7 +100,8 @@ else:
 
 with library.CreateMasterComponent() as master_component:
   master_component.Reconfigure(master_config)
-  master_component.AddStream(stream)
+  master_component.CreateScore('perplexity_score', ScoreConfig_Type_Perplexity, perplexity_config)
+  master_component.CreateStream(stream)
   master_component.RemoveStream(stream)
   model = master_component.CreateModel(model_config)
   master_component.RemoveModel(model)
@@ -129,16 +120,18 @@ with library.CreateMasterComponent() as master_component:
   model.Disable()
   topic_model = master_component.GetTopicModel(model)
   theta_matrix = master_component.GetThetaMatrix(model)
+  perplexity_score = master_component.GetScore(model, 'perplexity_score')
+
   model.Overwrite(topic_model);
 
   # Test all 'reconfigure' methods
   regularizer.Reconfigure(0, dirichlet_theta_config)
   model.Reconfigure(model_config_new)
+  master_config_new = master_component.config();
+  master_config_new.processors_count = 1
+  master_config_new.processor_queue_max_size = 2
   master_component.Reconfigure(master_config_new)
-
   master_component.RemoveDictionary(dictionary)
-
-  perplexity_score = master_component.GetScore(model, 'perplexity_score')
 
 with library.CreateNodeController("tcp://*:5555") as node_controller:
   with library.CreateMasterComponent(master_proxy_config) as master_component:

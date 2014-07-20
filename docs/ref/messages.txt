@@ -8,6 +8,8 @@ This document explains all protobuf messages that can be transefer in or out fro
 message DoubleArray
 ===================
 
+.. class:: messages_pb2.DoubleArray
+
 Represents an array of double-precision floating point values.
 
 .. code-block:: bash
@@ -20,6 +22,8 @@ Represents an array of double-precision floating point values.
 message BoolArray
 =================
 
+.. class:: messages_pb2.BoolArray
+
 Represents an array of boolean values.
 
 .. code-block:: bash
@@ -31,6 +35,8 @@ Represents an array of boolean values.
 
 message Item
 ============
+
+.. class:: messages_pb2.Item
 
 Represents a unit of textual information.
 A typical example of an item is a document that belongs to some text collection.
@@ -45,6 +51,8 @@ A typical example of an item is a document that belongs to some text collection.
 
 message Field
 =============
+
+.. class:: messages_pb2.Field
 
 Represents a field withing an item.
 The idea behind fields is that each item might have its
@@ -67,6 +75,8 @@ of tokens in the Batch.
 message Batch
 =============
 
+.. class:: messages_pb2.Batch
+
 Represents a set of items.
 In BigARTM a batch is never split into smaller parts. When it comes to concurrency this means
 that each batch goes to a single processor. Two batches can be processed concurrently, but
@@ -82,6 +92,8 @@ items in one batch are always processed sequentially.
 
 message Stream
 ==============
+
+.. class:: messages_pb2.Stream
 
 Represents a configuration of a stream.
 Streams provide a mechanism to split the entire collection into virtual subsets (for example,
@@ -101,7 +113,7 @@ the 'train' and 'test' streams).
     repeated int32 residuals = 4;
   }
 
-.. attribute:: type
+.. attribute:: Stream.type
 
    A value that defines the type of the stream.
 
@@ -114,15 +126,16 @@ the 'train' and 'test' streams).
                      in the residuals field.
    ================= ========================================================
 
-.. attribute:: name
+.. attribute:: Stream.name
 
    A value that defines the name of the stream.
    The name must be unique across all streams defined in the master component.
 
 
-
 message MasterComponentConfig
 =============================
+
+.. class:: messages_pb2.MasterComponentConfig
 
 Represents a configuration of a master component.
 
@@ -148,7 +161,7 @@ Represents a configuration of a master component.
     repeated string node_connect_endpoint = 12;
   }
 
-.. attribute:: modus_operandi
+.. attribute:: MasterComponentConfig.modus_operandi
 
   A value that defines the modus operandi of the master component.
 
@@ -164,24 +177,24 @@ Represents a configuration of a master component.
                     topic model.
   ================= ==============================================================
 
-.. attribute:: disk_path
+.. attribute:: MasterComponentConfig.disk_path
 
   A value that defines the disk location to store or load the collection.
   In network modus operandi this field is required, and it must point to a network file share,
   accessible by all nodes connected to the master component.
 
-.. attribute:: stream
+.. attribute:: MasterComponentConfig.stream
 
   A set of all data streams to configure in master component.
   Streams can overlap if needed.
 
-.. attribute:: compact_batches
+.. attribute:: MasterComponentConfig.compact_batches
 
   A flag indicating whether to compact batches in AddBatch() operation.
   Compaction is a process that shrinks the dictionary of each batch by removing all
   unused tokens.
 
-.. attribute:: cache_theta
+.. attribute:: MasterComponentConfig.cache_theta
 
   A flag indicating whether to cache theta matrix. Theta matrix defines the discrete
   probability distribution of each document across the topics in topic model. By default
@@ -191,14 +204,14 @@ Represents a configuration of a master component.
   calling method 'ArtmRequestThetaMatrix'.
   This feature is currently not supported in network modus operandi.
 
-.. attribute:: processors_count
+.. attribute:: MasterComponentConfig.processors_count
 
   A value that defines the number of concurrent processor components.
   In network modus operandi this value defines the processors count
   at every remote node controller, connected to the master component.
   The number of processors should normally not exceed the number of CPU cores.
 
-.. attribute:: processor_queue_max_size
+.. attribute:: MasterComponentConfig.processor_queue_max_size
 
   A value that defines the maximal size of the processor queue.
   Processor queue contains batches, prefetch from disk into memory.
@@ -212,32 +225,32 @@ Represents a configuration of a master component.
   * the total size of the queues across all node controllers should not
     exceed the number of batches in the collection.
 
-.. attribute:: merger_queue_max_size
+.. attribute:: MasterComponentConfig.merger_queue_max_size
 
   A value that defines the maximal size of the merger queue.
   Merger queue size contains an incremental updates of topic model,
   produced by processor components.
   Try reducing this parameter if BigARTM consumes too much memory.
 
-.. attribute:: score_config
+.. attribute:: MasterComponentConfig.score_config
 
   A set of all scores, available for calculation.
 
-.. attribute:: create_endpoint
+.. attribute:: MasterComponentConfig.create_endpoint
 
   A value that defines ZeroMQ endpoint to expose the master component service
   (example: ``tcp://*:5555``). For further details about the format of endpoint string refer to
   ZeroMQ documentation (http://api.zeromq.org).
   The value is used only in the network modus operandi.
 
-.. attribute:: connect_endpoint
+.. attribute:: MasterComponentConfig.connect_endpoint
 
   A value that defines ZeroMQ endpoint to expose the master component service
   (example: ``tcp://192.168.0.1:5555``). // For further details about the format of endpoint
   string refer to ZeroMQ documentation (http://api.zeromq.org).
   The value is used only in the network modus operandi.
 
-.. attribute:: node_connect_endpoint
+.. attribute:: MasterComponentConfig.node_connect_endpoint
 
   A set containing all ZeroMQ endpoints of the external node controllers
   (example: ``tcp://192.168.0.2:5556``). For further details about the format of endpoint string
@@ -250,6 +263,8 @@ Represents a configuration of a master component.
 message NodeControllerConfig
 ============================
 
+.. class:: messages_pb2.NodeControllerConfig
+
 Represents a configuration of a NodeController
 
 .. code-block:: bash
@@ -258,7 +273,7 @@ Represents a configuration of a NodeController
     optional string create_endpoint = 1;
   }
 
-.. attribute:: create_endpoint
+.. attribute:: NodeControllerConfig.create_endpoint
 
   A value that defines ZeroMQ endpoint to expose the node component service
   (example: ``tcp://*:5556``). For further details about the format of endpoint string refer to
@@ -268,11 +283,16 @@ Represents a configuration of a NodeController
 message MasterProxyConfig
 =========================
 
-Represents a configuration of a proxy to MasterComponent.
-The purpose of the proxy is to operate MasterComponent from a remote machine.
-There is no requirement to run MasterComponent and its proxy in the same operating system
-(MasterComponent can run on linux while the proxy can be on Windows). Any type of
-MasterComponent (either in local or in network modus operandi) can be operated by a proxy.
+.. class:: messages_pb2.MasterProxyConfig
+
+ Represents a configuration of a
+proxy to MasterComponent. The purpose of the proxy is to
+operate MasterComponent from a remote machine. There is no
+requirement to run MasterComponent and its proxy in the same
+operating system (MasterComponent can run on linux while the
+proxy can be on Windows). Any type of MasterComponent (either
+in local or in network modus operandi) can be operated by a
+proxy.
 
 .. code-block:: bash
 
@@ -281,7 +301,7 @@ MasterComponent (either in local or in network modus operandi) can be operated b
     optional MasterComponentConfig config = 2;
   }
 
-.. attribute:: node_connect_endpoint
+.. attribute:: MasterProxyConfig.node_connect_endpoint
 
   A value that defines ZeroMQ endpoint of an external node controller.
   (example: ``tcp://192.168.0.2:5556``). For further details about the format of endpoint string
@@ -290,13 +310,15 @@ MasterComponent (either in local or in network modus operandi) can be operated b
   master component with its endpoint.
 
 
-.. attribute:: config
+.. attribute:: MasterProxyConfig.config
 
   A message that defines MasterComponent configuration of a remote node.
 
 
 message ModelConfig
 ===================
+
+.. class:: messages_pb2.ModelConfig
 
 Represents a configuration of a topic model.
 
@@ -315,47 +337,47 @@ Represents a configuration of a topic model.
     repeated double regularizer_tau = 10;
   }
 
-.. attribute:: name
+.. attribute:: ModelConfig.name
 
    A value that defines the name of the topic model.
    The name must be unique across all models defined in the master component.
 
-.. attribute:: topics_count
+.. attribute:: ModelConfig.topics_count
 
    A value that defines the number of topics in the topic model.
 
-.. attribute:: enabled
+.. attribute:: ModelConfig.enabled
 
    A flag indicating whether to update the model during iterations.
 
-.. attribute:: inner_iterations_count
+.. attribute:: ModelConfig.inner_iterations_count
 
    A value that defines the fixed number of iterations, performed to infer the theta
    distribution for each document.
 
-.. attribute:: field_name
+.. attribute:: ModelConfig.field_name
 
    A value that defines which field of an item the model should use.
 
-.. attribute:: stream_name
+.. attribute:: ModelConfig.stream_name
 
    A value that defines which stream the model should use.
 
-.. attribute:: score_name
+.. attribute:: ModelConfig.score_name
 
    A set of names that defines which scores should be calculated for the model.
 
-.. attribute:: reuse_theta
+.. attribute:: ModelConfig.reuse_theta
 
    A flag indicating whether the model should reuse theta values cached on the previous
    iterations. This option require cache_theta flag to be set to 'true' in MasterComponentConfig.
 
-.. attribute:: regularizer_name
+.. attribute:: ModelConfig.regularizer_name
 
    A set of names that define which regularizers should be enabled for the model.
    This repeated field must have the same length as regularizer_tau.
 
-.. attribute:: regularizer_tau
+.. attribute:: ModelConfig.regularizer_tau
 
    A set of values that define the regularization coefficients of the corresponding regularizer.
    This repeated field must have the same length as regularizer_name.
@@ -363,6 +385,8 @@ Represents a configuration of a topic model.
 
 message RegularizerConfig
 =========================
+
+.. class:: messages_pb2.RegularizerConfig
 
 Represents a configuration of a general regularizer.
 
@@ -383,12 +407,12 @@ Represents a configuration of a general regularizer.
   }
 
 
-.. attribute:: name
+.. attribute:: RegularizerConfig.name
 
    A value that defines the name of the regularizer.
    The name must be unique across all names defined in the master component.
 
-.. attribute:: type
+.. attribute:: RegularizerConfig.type
 
    A value that defines the type of the regularizer.
 
@@ -405,7 +429,7 @@ Represents a configuration of a general regularizer.
    ====================== =======================================================================
 
 
-.. attribute:: config
+.. attribute:: RegularizerConfig.config
 
    A serialized protobuf message that describes regularizer config for
    the specific regularizer type.
@@ -413,6 +437,8 @@ Represents a configuration of a general regularizer.
 
 message DirichletThetaConfig
 ============================
+
+.. class:: messages_pb2.DirichletThetaConfig
 
 Represents a configuration of a Dirichlet Theta regularizer.
 
@@ -426,6 +452,8 @@ Represents a configuration of a Dirichlet Theta regularizer.
 message DirichletPhiConfig
 ==========================
 
+.. class:: messages_pb2.DirichletPhiConfig
+
 Represents a configuration of a Dirichlet Phi regularizer.
 
 .. code-block:: bash
@@ -437,6 +465,8 @@ Represents a configuration of a Dirichlet Phi regularizer.
 
 message SmoothSparseThetaConfig
 ===============================
+
+.. class:: messages_pb2.SmoothSparseThetaConfig
 
 Represents a configuration of a SmoothSparse Theta regularizer.
 
@@ -452,6 +482,8 @@ Represents a configuration of a SmoothSparse Theta regularizer.
 message SmoothSparsePhiConfig
 =============================
 
+.. class:: messages_pb2.SmoothSparsePhiConfig
+
 Represents a configuration of a SmoothSparse Phi regularizer.
 
 .. code-block:: bash
@@ -465,6 +497,8 @@ Represents a configuration of a SmoothSparse Phi regularizer.
 message DecorrelatorPhiConfig
 =============================
 
+.. class:: messages_pb2.DecorrelatorPhiConfig
+
 Represents a configuration of a Decorrelator Phi regularizer.
 
 .. code-block:: bash
@@ -475,6 +509,8 @@ Represents a configuration of a Decorrelator Phi regularizer.
 
 message DictionaryConfig
 ========================
+
+.. class:: messages_pb2.DictionaryConfig
 
 Represents a static dictionary.
 
@@ -487,6 +523,8 @@ Represents a static dictionary.
 
 message DictionaryEntry
 =======================
+
+.. class:: messages_pb2.DictionaryEntry
 
 Represents one entry in a static dictionary.
 
@@ -502,6 +540,8 @@ Represents one entry in a static dictionary.
 message ScoreConfig
 ===================
 
+.. class:: messages_pb2.ScoreConfig
+
 Represents a configuration of a general score.
 
 .. code-block:: bash
@@ -516,12 +556,12 @@ Represents a configuration of a general score.
     optional bytes config = 3;
   }
 
-.. attribute:: name
+.. attribute:: ScoreConfig.name
 
    A value that defines the name of the score.
    The name must be unique across all names defined in the master component.
 
-.. attribute:: type
+.. attribute:: ScoreConfig.type
 
    A value that defines the type of the score.
 
@@ -529,13 +569,15 @@ Represents a configuration of a general score.
    ``Perplexity`` Defines a perplexity score config
    ============== ====================================================
 
-.. attribute:: config
+.. attribute:: ScoreConfig.config
 
    A serialized protobuf message that describes score config for the specific score type.
 
 
 message ScoreData
 =================
+
+.. class:: messages_pb2.ScoreData
 
 Represents a general result of score calculation.
 
@@ -551,12 +593,12 @@ Represents a general result of score calculation.
     optional bytes data = 3;
   }
 
-.. attribute:: name
+.. attribute:: ScoreData.name
 
    A value that describes the name of the score.
    This name will match the name of the corresponding score config.
 
-.. attribute:: type
+.. attribute:: ScoreData.type
 
    A value that defines the type of the score.
 
@@ -564,13 +606,15 @@ Represents a general result of score calculation.
    ``Perplexity`` Defines a perplexity score
    ============== ================================================
 
-.. attribute:: data
+.. attribute:: ScoreData.data
 
    A serialized protobuf message that provides the specific score result.
 
 
 message PerplexityScoreConfig
 =============================
+
+.. class:: messages_pb2.PerplexityScoreConfig
 
 Represents a configuration of a perplexity score.
 
@@ -585,6 +629,8 @@ Represents a configuration of a perplexity score.
 message PerplexityScore
 =======================
 
+.. class:: messages_pb2.PerplexityScore
+
 Represents a result of calculation of a perplexity score.
 
 .. code-block:: bash
@@ -598,6 +644,8 @@ Represents a result of calculation of a perplexity score.
 
 message TopicModel
 ==================
+
+.. class:: messages_pb2.TopicModel
 
 Represents a topic model.
 
@@ -618,27 +666,27 @@ Represents a topic model.
     optional bytes internals = 5;
   }
 
-.. attribute:: name
+.. attribute:: TopicModel.name
 
    A value that describes the name of the topic model.
    This name will match the name of the corresponding model config.
 
-.. attribute:: topics_count
+.. attribute:: TopicModel.topics_count
 
    A value that describes the number of topics in the topic model.
    This value will match the value, defined in the model config.
 
-.. attribute:: token
+.. attribute:: TopicModel.token
 
    The set of all tokens, included in the topic model.
 
-.. attribute:: token_weights
+.. attribute:: TopicModel.token_weights
 
    A set of token weights.
    The length of this repeated field will match the length of the repeated field 'token'.
    The length of each FloatArray will match the topics_count field.
 
-.. attribute:: internals
+.. attribute:: TopicModel.internals
 
    A serialized instance of TopicModelInternals message.
 
@@ -646,6 +694,8 @@ Represents a topic model.
 
 message ThetaMatrix
 ===================
+
+.. class:: messages_pb2.ThetaMatrix
 
 Represents a theta matrix.
 
@@ -657,16 +707,16 @@ Represents a theta matrix.
     repeated FloatArray item_weights = 3;
   }
 
-.. attribute:: model_name
+.. attribute:: ThetaMatrix.model_name
 
    A value that describes the name of the topic model.
    This name will match the name of the corresponding model config.
 
-.. attribute:: item_id
+.. attribute:: ThetaMatrix.item_id
 
    A set of item IDs.
 
-.. attribute:: item_weights
+.. attribute:: ThetaMatrix.item_weights
 
    A set of item ID weights.
    The length of this repeated field will match the length of the repeated field 'item_id'.

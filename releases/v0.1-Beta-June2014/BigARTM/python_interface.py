@@ -12,7 +12,7 @@ ARTM_SUCCESS = 0
 ARTM_GENERAL_ERROR = -1
 ARTM_OBJECT_NOT_FOUND = -2
 ARTM_INVALID_MESSAGE = -3
-ARTM_UNSUPPORTED_RECONFIGURATION = -4
+ARTM_INVALID_OPERATION = -4
 
 Stream_Type_Global = 0
 Stream_Type_ItemIdModulus = 1
@@ -20,14 +20,16 @@ RegularizerConfig_Type_DirichletTheta = 0
 RegularizerConfig_Type_DirichletPhi = 1
 RegularizerConfig_Type_SmoothSparseTheta = 2
 RegularizerConfig_Type_SmoothSparsePhi = 3
-Score_Type_Perplexity = 0
+RegularizerConfig_Type_DecorrelatorPhi = 4
+ScoreConfig_Type_Perplexity = 0
+ScoreData_Type_Perplexity = 0
 
 #################################################################################
 
 class GeneralError(BaseException) : pass
 class ObjectNotFound(BaseException) : pass
 class InvalidMessage(BaseException) : pass
-class UnsupportedReconfiguration(BaseException) : pass
+class InvalidOperation(BaseException) : pass
 
 def HandleErrorCode(artm_error_code):
   if (artm_error_code == ARTM_SUCCESS) | (artm_error_code >= 0):
@@ -36,8 +38,8 @@ def HandleErrorCode(artm_error_code):
     raise ObjectNotFound()
   elif artm_error_code == ARTM_INVALID_MESSAGE:
     raise InvalidMessage()
-  elif artm_error_code == ARTM_UNSUPPORTED_RECONFIGURATION:
-    raise UnsupportedReconfiguration()
+  elif artm_error_code == ARTM_INVALID_OPERATION:
+    raise InvalidOperation()
   elif artm_error_code == ARTM_GENERAL_ERROR:
     raise GeneralError()
   else:
@@ -52,16 +54,32 @@ class ArtmLibrary:
   def CreateMasterComponent(self, config=messages_pb2.MasterComponentConfig()):
     return MasterComponent(config, self.lib_)
 
+  def CreateNodeController(self, endpoint):
+    config = messages_pb2.NodeControllerConfig();
+    config.create_endpoint = endpoint;
+    return NodeController(config, self.lib_)
+
 #################################################################################
 
 class MasterComponent:
   def __init__(self, config, lib):
     self.lib_ = lib
-    self.config_ = config
     master_config_blob = config.SerializeToString()
     master_config_blob_p = ctypes.create_string_buffer(master_config_blob)
-    self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
-               len(master_config_blob), master_config_blob_p))
+
+    if (isinstance(config, messages_pb2.MasterComponentConfig)):
+      self.config_ = config
+      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
+                 len(master_config_blob), master_config_blob_p))
+      return
+
+    if (isinstance(config, messages_pb2.MasterProxyConfig)):
+      self.config_ = config.config
+      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterProxy(0,
+                 len(master_config_blob), master_config_blob_p))
+      return
+
+    raise InvalidOperation()
 
   def __enter__(self):
     return self
@@ -72,6 +90,11 @@ class MasterComponent:
   def Dispose(self):
     self.lib_.ArtmDisposeMasterComponent(self.id_)
     self.id_ = -1
+
+  def config(self):
+    master_config = messages_pb2.MasterComponentConfig()
+    master_config.CopyFrom(self.config_)
+    return master_config
 
   def CreateModel(self, config):
     return Model(self, config)
@@ -88,6 +111,24 @@ class MasterComponent:
 
   def RemoveRegularizer(self, regularizer):
     regularizer.__Dispose__()
+
+  def CreateScore(self, name, type, config):
+    master_config = messages_pb2.MasterComponentConfig();
+    master_config.CopyFrom(self.config_);
+    score_config = master_config.score_config.add();
+    score_config.name = name
+    score_config.type = type;
+    score_config.config = config.SerializeToString();
+    self.Reconfigure(master_config)
+
+  def RemoveScore(self, name):
+    raise NotImplementedError
+
+  def CreateDictionary(self, config):
+    return Dictionary(self, config)
+
+  def RemoveDictionary(self, dictionary):
+    dictionary.__Dispose__()
 
   def Reconfigure(self, config):
     config_blob = config.SerializeToString()
@@ -106,7 +147,7 @@ class MasterComponent:
   def WaitIdle(self):
     HandleErrorCode(self.lib_.ArtmWaitIdle(self.id_))
 
-  def AddStream(self, stream):
+  def CreateStream(self, stream):
     s = self.config_.stream.add()
     s.CopyFrom(stream)
     self.Reconfigure(self.config_)
@@ -146,6 +187,46 @@ class MasterComponent:
     theta_matrix.ParseFromString(blob)
     return theta_matrix
 
+  def GetScore(self, model, score_name):
+    request_id = HandleErrorCode(self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
+    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+
+    blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, blob))
+    self.lib_.ArtmDisposeRequest(request_id)
+
+    score_data = messages_pb2.ScoreData()
+    score_data.ParseFromString(blob)
+
+    if (score_data.type == ScoreData_Type_Perplexity):
+      score = messages_pb2.PerplexityScore();
+      score.ParseFromString(score_data.data);
+      return score;
+
+    # Unknown score type
+    raise InvalidMessage()
+
+#################################################################################
+
+class NodeController:
+  def __init__(self, config, lib):
+    self.lib_ = lib
+    config_blob = config.SerializeToString()
+    config_blob_p = ctypes.create_string_buffer(config_blob)
+
+    self.id_ = HandleErrorCode(self.lib_.ArtmCreateNodeController(0,
+               len(config_blob), config_blob_p))
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, type, value, traceback):
+    self.Dispose()
+
+  def Dispose(self):
+    self.lib_.ArtmDisposeNodeController(self.id_)
+    self.id_ = -1
+
 #################################################################################
 
 class Model:
@@ -182,6 +263,11 @@ class Model:
 
   def InvokePhiRegularizers(self):
     HandleErrorCode(self.lib_.ArtmInvokePhiRegularizers(self.master_id_))
+
+  def Overwrite(self, topic_model):
+    blob = topic_model.SerializeToString()
+    blob_p = ctypes.create_string_buffer(blob)
+    HandleErrorCode(self.lib_.ArtmOverwriteTopicModel(self.master_id_, len(blob), blob_p))
 
   def Enable(self):
     config_copy_ = messages_pb2.ModelConfig()
@@ -232,3 +318,38 @@ class Regularizer:
     HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.master_id_,
                     len(regularizer_config_blob), regularizer_config_blob_p))
     self.config_.CopyFrom(general_config)
+
+#################################################################################
+
+class Dictionary:
+  def __init__(self, master_component, config):
+    self.lib_ = master_component.lib_
+    self.master_id_ = master_component.id_
+    self.config_ = config
+    dictionary_config_blob = config.SerializeToString()
+    dictionary_config_blob_p = ctypes.create_string_buffer(dictionary_config_blob)
+    HandleErrorCode(self.lib_.ArtmCreateDictionary(self.master_id_,
+                     len(dictionary_config_blob), dictionary_config_blob_p))
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, type, value, traceback):
+    __Dispose__(self)
+
+  def __Dispose__(self):
+    self.lib_.ArtmDisposeDictionary(self.master_id_, self.config_.name)
+    self.config_.name = ''
+    self.master_id_ = -1
+
+  def name(self):
+    return self.config_.name
+
+  def Reconfigure(self, config):
+    dictionary_config_blob = config.SerializeToString()
+    dictionary_config_blob_p = ctypes.create_string_buffer(dictionary_config_blob)
+    HandleErrorCode(self.lib_.ArtmReconfigureDictionary(self.master_id_,
+                    len(dictionary_config_blob), dictionary_config_blob_p))
+    self.config_.CopyFrom(config)
+
+#################################################################################

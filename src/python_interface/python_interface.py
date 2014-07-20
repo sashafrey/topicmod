@@ -20,6 +20,7 @@ RegularizerConfig_Type_DirichletTheta = 0
 RegularizerConfig_Type_DirichletPhi = 1
 RegularizerConfig_Type_SmoothSparseTheta = 2
 RegularizerConfig_Type_SmoothSparsePhi = 3
+RegularizerConfig_Type_DecorrelatorPhi = 4
 ScoreConfig_Type_Perplexity = 0
 ScoreData_Type_Perplexity = 0
 
@@ -90,6 +91,11 @@ class MasterComponent:
     self.lib_.ArtmDisposeMasterComponent(self.id_)
     self.id_ = -1
 
+  def config(self):
+    master_config = messages_pb2.MasterComponentConfig()
+    master_config.CopyFrom(self.config_)
+    return master_config
+
   def CreateModel(self, config):
     return Model(self, config)
 
@@ -105,6 +111,18 @@ class MasterComponent:
 
   def RemoveRegularizer(self, regularizer):
     regularizer.__Dispose__()
+
+  def CreateScore(self, name, type, config):
+    master_config = messages_pb2.MasterComponentConfig();
+    master_config.CopyFrom(self.config_);
+    score_config = master_config.score_config.add();
+    score_config.name = name
+    score_config.type = type;
+    score_config.config = config.SerializeToString();
+    self.Reconfigure(master_config)
+
+  def RemoveScore(self, name):
+    raise NotImplementedError
 
   def CreateDictionary(self, config):
     return Dictionary(self, config)
@@ -129,7 +147,7 @@ class MasterComponent:
   def WaitIdle(self):
     HandleErrorCode(self.lib_.ArtmWaitIdle(self.id_))
 
-  def AddStream(self, stream):
+  def CreateStream(self, stream):
     s = self.config_.stream.add()
     s.CopyFrom(stream)
     self.Reconfigure(self.config_)
@@ -333,3 +351,5 @@ class Dictionary:
     HandleErrorCode(self.lib_.ArtmReconfigureDictionary(self.master_id_,
                     len(dictionary_config_blob), dictionary_config_blob_p))
     self.config_.CopyFrom(config)
+
+#################################################################################

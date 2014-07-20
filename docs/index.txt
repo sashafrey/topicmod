@@ -16,7 +16,6 @@ BigARTM documentation contents
    faq
    glossary
    devguide
-   examples
    ref/index
 
 Indices and tables

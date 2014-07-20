@@ -48,12 +48,12 @@ without consuming any additional memory.
 **Distributed**.
 BigARTM is able to distribute all CPU-intensive
 processing to several machines, connected by network.
-It also supports a special ``proxy'' mode,
+It also supports a special ``proxy`` mode,
 which allows you to perform experiments on a remote cluster.
 
 **Extensible API**.
-BigARTM comes with an API in C++ and Python,
-but can be extended for all other languages
+BigARTM comes with an API in Python,
+but can be easily extended for all other languages
 that have an implementation of `Google Protocol Buffers`_.
 
 **Cross-platform**.
@@ -73,17 +73,3 @@ BigARTM depends on ZeroMQ. Please, make sure to review
 .. _Google Protocol Buffers: https://code.google.com/p/protobuf/
 .. _New BSD license: http://opensource.org/licenses/BSD-3-Clause
 .. _ZeroMQ license: http://zeromq.org/area:licensing
-
-Installation
-------------
-
-Currently BigARTM is still in active development,
-and no installer exist yet.
-You have to obtain the source code and build it yourself.
-Please, refer to :doc:`Developer's Guide </devguide>` for further instructions..
-
-
-Usage
------
-
-See :doc:`tutorial` for an introduction.

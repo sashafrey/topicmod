@@ -18,3 +18,5 @@ artm_example.py
 collection.py
 docword.kos.txt
 vocab.kos.txt
+
+Latest git commit: <PLACEHOLDER>

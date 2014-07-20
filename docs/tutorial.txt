@@ -24,7 +24,7 @@ Installation
 
 * If you are on Windows, and you would like to simply use BigARTM
   from Python, then download and unpack
-  `this archive <https://s3-eu-west-1.amazonaws.com/artm/BigARTM_2014_07_20_665afbb.7z>`_.
+  `this archive <https://s3-eu-west-1.amazonaws.com/artm/BigARTM_v1.0_beta.7z>`_.
   This package provides you with all files you need to walk
   through this tutorial and use BigARTM from Python.
 

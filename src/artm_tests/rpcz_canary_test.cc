@@ -21,13 +21,12 @@
 
 const std::string error_message = "Some error had happend!";
 const int error_code = -999;
-bool server_will_send_error = false;
 
 class SearchServiceImpl : public SearchService {
   virtual void Search(
       const SearchRequest& request,
       rpcz::reply<SearchResponse> reply) {
-    if (server_will_send_error) {
+    if (request.query() == "make_error") {
       reply.Error(error_code, error_message);
     } else {
       SearchResponse response;
@@ -51,7 +50,7 @@ void RpczServerThreadFunction() {
   server_application->run();
 }
 
-void ConnectAndQuery(int timeout = -1L) {
+void ConnectAndQuery(int timeout = -1L, bool make_error = false) {
   rpcz::application::options options(3);
   options.zeromq_context = ::artm::core::ZmqContext::singleton().get();
   rpcz::application client_application(options);
@@ -63,8 +62,12 @@ void ConnectAndQuery(int timeout = -1L) {
   SearchResponse response;
 
   try {
-    request.set_query("my query");
     request.set_page_number(10);
+    if (make_error) {
+      request.set_query("make_error");
+    } else {
+      request.set_query("my query");
+    }
     search_service_proxy.Search(request, &response, timeout);
 
     ASSERT_EQ(response.results_size(), 2);
@@ -74,8 +77,8 @@ void ConnectAndQuery(int timeout = -1L) {
     if (timeout != -1L) {
       ASSERT_EQ(error.get_status(), rpcz::status::DEADLINE_EXCEEDED);
     } else {
-      ASSERT_EQ(server_will_send_error, true);
-      if (server_will_send_error) {
+      ASSERT_TRUE(make_error);
+      if (make_error) {
         ASSERT_EQ(error.get_application_error_code(), error_code);
         ASSERT_EQ(error.get_error_message(), error_message);
       }
@@ -87,14 +90,9 @@ void ConnectAndQuery(int timeout = -1L) {
 TEST(Rpcz, Canary) {
   boost::thread t(&RpczServerThreadFunction);
 
-  server_will_send_error = false;
   ConnectAndQuery();
 
   ASSERT_TRUE(server_application != nullptr);
-
-  server_will_send_error = true;
-  ConnectAndQuery();
-
   server_application->terminate();
   t.join();
 
@@ -106,4 +104,17 @@ TEST(Rpcz, Timeout) {
   // Timeout test does not create a server to connect to, and sets the timeout for the first RPCZ call.
   // The expectation of the test is to get an exception with rpcz::status::DEADLINE_EXCEEDED being set.
   ConnectAndQuery(10);
+}
+
+// artm_tests.exe --gtest_filter=Rpcz.ErrorHandling
+TEST(Rpcz, ErrorHandling) {
+  boost::thread t(&RpczServerThreadFunction);
+
+  ConnectAndQuery(-1L, true);
+
+  ASSERT_TRUE(server_application != nullptr);
+  server_application->terminate();
+  t.join();
+
+  server_application.reset();
 }

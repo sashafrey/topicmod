@@ -40,13 +40,6 @@
 #ifndef _LOGGING_H_
 #define _LOGGING_H_
 
-#ifdef _MSC_VER
-#pragma warning( push )
-#pragma warning( disable : 4005 )  // macro redefinition
-#pragma warning( disable : 4355 )  // 'this' : used in base member initializer list
-#pragma warning( disable : 4251 )  // class needs to have dll-interface to be used by clients
-#endif
-
 #include <errno.h>
 #include <string.h>
 #include <time.h>
@@ -61,7 +54,7 @@
 
 // Annoying stuff for windows -- makes sure clients can import these functions
 #ifndef GOOGLE_GLOG_DLL_DECL
-# if defined(_WIN32) && !defined(__CYGWIN__)
+# if defined(_WIN32) && !defined(__CYGWIN__) && 0
 #   define GOOGLE_GLOG_DLL_DECL  __declspec(dllimport)
 # else
 #   define GOOGLE_GLOG_DLL_DECL
@@ -1606,9 +1599,5 @@ GOOGLE_GLOG_DLL_DECL void InstallFailureWriter(
     void (*writer)(const char* data, int size));
 
 }
-
-#ifdef _MSC_VER
-#pragma warning( pop )
-#endif
 
 #endif // _LOGGING_H_

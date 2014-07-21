@@ -10,6 +10,7 @@ protobuf_generate_cpp(RPCZ_PB_SRCS RPCZ_PB_HDRS proto/rpcz.proto)
 set(PROTO_SOURCES ${RPCZ_PB_SRCS} ${RPCZ_PB_HDRS})
 
 include_directories(${PROJECT_BINARY_DIR})
+
 set(RPCZ_SOURCES
     application.cc clock.cc connection_manager.cc
     reactor.cc rpc.cc rpc_channel_impl.cc server.cc
@@ -17,7 +18,11 @@ set(RPCZ_SOURCES
     ${PROTO_SOURCES})
 set(RPCZ_LIB_DEPS ${ZeroMQ_LIBRARIES}
                   ${PROTOBUF_LIBRARY}
-                  ${Boost_THREAD_LIBRARIES})
+                  ${Boost_THREAD_LIBRARIES}
+		  ${Boost_DATE_TIME_LIBRARIES}
+		  ${Boost_SYSTEM_LIBRARIES}
+		  ${Boost_CHRONO_LIBRARIES}
+		  )
 
 add_library(rpcz SHARED ${RPCZ_SOURCES})
 target_link_libraries(rpcz ${RPCZ_LIB_DEPS})
@@ -33,8 +38,10 @@ endif(rpcz_build_static)
 add_executable(zsendrpc zsendrpc.cc)
 target_link_libraries(zsendrpc rpcz ${Boost_PROGRAM_OPTIONS_LIBRARIES})
 
-install(TARGETS ${RPCZ_TARGET_LIBS} zsendrpc
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-)
+install(TARGETS zsendrpc
+    RUNTIME DESTINATION bin
+    )
+
+install(TARGETS ${RPCZ_TARGET_LIBS}
+    DESTINATION lib
+    )

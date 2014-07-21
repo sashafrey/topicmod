@@ -45,7 +45,7 @@
 #  if @GFLAGS_IS_A_DLL@ && defined(_MSC_VER)
 #    define GFLAGS_DLL_DECL __declspec(dllimport)
 #  else
-#    define GFLAGS_DLL_DECL
+#    define GFLAGS_DLL_DECL __declspec(dllexport)
 #  endif
 #endif
 
@@ -54,7 +54,7 @@
 #  ifdef _MSC_VER
 #    define GFLAGS_DLL_DECLARE_FLAG __declspec(dllimport)
 #  else
-#    define GFLAGS_DLL_DECLARE_FLAG
+#    define GFLAGS_DLL_DECLARE_FLAG __declspec(dllexport)
 #  endif
 #endif
 

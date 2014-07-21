@@ -23,6 +23,7 @@ if (MSVC)
   add_definitions("-DBOOST_LIB_DIAGNOSTIC")
   add_definitions("-DPROTOBUF_USE_DLLS")
   add_definitions("-DLIBPROTOBUF_DLL_EXPORT=")
+  add_definitions("/wd4251")
 endif()
 
 set(Boost_USE_MULTITHREADED ON)

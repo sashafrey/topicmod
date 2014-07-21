@@ -19,12 +19,12 @@
 std::string message;
 void EnableLogging() {
   static bool logging_enabled = false;
-  if (!logging_enabled) {
-    logging_enabled = true;
-    FLAGS_log_dir = ".";
-    FLAGS_logbufsecs = 0;
-    ::google::InitGoogleLogging(".");
-  }
+  //if (!logging_enabled) {
+  //  logging_enabled = true;
+  //  FLAGS_log_dir = ".";
+  //  FLAGS_logbufsecs = 0;
+  //  ::google::InitGoogleLogging(".");
+  //}
 }
 
 inline char* StringAsArray(std::string* str) {

@@ -1,0 +1,172 @@
+BigARTM Developer's Guide
+=========================
+
+This document describes the development process of BigARTM
+library.
+
+Since BigARTM is in pre-peleased stage, its source code is
+hosted in a private GitHub repository. If you don't have a user
+on GitHub, please register `here <https://github.com/>`_. Use the free plan.
+Then email the name of your user to artm_dev@googlegroups.com
+(please, set title of your e-mail to "BigARTM: request access").
+In few days you should receive a reply confirming that access had been
+granted.
+
+Build C++ code on Windows
+-------------------------
+
+* Download and install GitHub Windows from http://windows.github.com/.
+
+* Clone https://github.com/sashafrey/topicmod/ repository to any location on your computer.
+  This location is further refered to as ``$(BIGARTM_ROOT)``.
+
+* Download and unpack boost 1.55 from http://sourceforge.net/projects/boost/files/.
+* Set environmental variable BOOST_ROOT to the root of your boost installation.
+  To do so you may run the following command from cmd.exe:
+
+  ``setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"``
+
+* Download and unpack https://s3-eu-west-1.amazonaws.com/artm/libs_win32_v110.7z
+  into ``$(BIGARTM_ROOT)/libs/`` folder.
+  Beware that this libraries were built with Visual Studio 2012 RTM (11.0.50727.1 RTMREL),
+  and that they might be incompatible with future Service Packs for VS2012.
+  They are known to be incompatible with Visual Studio 2013.
+
+* Download and install `ZeroMQ 4.0.3 x86 <http://miru.hk/archive/ZeroMQ-4.0.3~miru1.0-x86.exe>`_.
+
+* Set environmental variable ``ZEROMQ32_ROOT`` to ZeroMQ include folder:
+
+  ``setx ZEROMQ32_ROOT "C:\\Program Files (x86)\\ZeroMQ 4.0.3"``
+
+* Install Visual Studio 2012 RTM (other visual studio versions are not supported).
+
+* Open ``$(BIGARTM_ROOT)/src/artm_vs2012.sln``
+
+* Build all projects (debug or release, Win32) and execute tests.
+  64-bit builds are not available yet.
+
+
+Python code on Windows
+----------------------
+
+* Install Python 2.7.
+
+  .. warning::
+     On Windows you must use `Python x86 <https://www.python.org/ftp/python/2.7.6/python-2.7.6.msi>`_,
+     which is a 32bit version of Python. The 64bit Python is incompatible with ``artm.dll``,
+     which only compiles in 32 bits for now.
+
+* Download and add to MSVS Python Tools 2.0.
+  All necessary instructions can be found at https://pytools.codeplex.com/.
+
+* Add python folder to ``PATH``. To do so open *Control Panel\All Control Panel Items\System*,
+  then *Advanced system settings*, *Environment variables*.
+
+* Follow the instructions in ``README`` file in directory ``$(BIGARTM_ROOT)/3rdparty/protobuf/python/``.
+  In brief, this instructions ask you to run the following commands:
+
+  .. code-block:: bash
+
+     python setup.py build
+     python setup.py test
+     python setup.py install
+
+  On second step you fill see two failing tests:
+
+  .. code-block:: bash
+
+     Ran 216 tests in 1.252s
+     FAILED (failures=2)
+
+  This 2 failures are OK to ignore.
+
+
+Build C++ code on Linux
+-----------------------
+
+* Install git.
+
+* git clone https://github.com/sashafrey/topicmod
+
+* Install boost. It is preferable to use version 1.55 or newer.
+  ``libboost-all-dev`` is package name in Debian-based OS.
+
+* Install protobuf. It is necessary to use version 2.5.0 or newer.
+  ``libprotobuf-dev`` is package name in Debian-based OS.
+  You can get it from ppa: ``ppa:chris-lea/protobuf``.
+
+* Use Makefiles under ``$(BIGARTM_ROOT)/3rdparty``,
+  ``$(BIGARTM_ROOT)/src/``,
+  ``$(BIGARTM_ROOT)/src/cpp_client/``,
+  ``$(BIGARTM_ROOT)/src/node_controller/``
+
+* Python interface hasn't been used from Linux yet,
+  but it should be possible to just run python scripts under
+  ``$(BIGARTM_ROOT)/python_client/``.
+  Please, contribute to this documentation if you had to make some special tricks.
+
+
+Submit your change
+------------------
+
+Every new feature should be developed in a separate git branch.
+Use `pull request <https://help.github.com/articles/using-pull-requests>`_
+mechanism to submit your change for integration.
+Alternatively, you may merge your change into
+`artm_integration <https://github.com/sashafrey/topicmod/tree/artm_integration>`_ branch,
+and withing one week it will be reviewed by `the integrator <https://github.com/sashafrey/>`_
+and then itegrated into
+`master <https://github.com/sashafrey/topicmod/tree/master>`_ branch.
+
+Before submiting your change please check the following:
+
+* No build failures and compiler warnings on your platform (either on Windows or on Linux)
+* All unit test passes
+* Perplexity in ``cpp_client`` and ``python_client`` looks reasonable
+* Documentation in ``$(BIGARTM_ROOT)/docs`` is updated if needed
+* Run ``$(BIGARTM_ROOT)/utils/cpplint_all.bat`` script to verify code style.
+
+Code style
+----------
+
+.. sidebar:: Configure Visual Studio
+
+      Open *Tools / Text Editor / All languages / Tabs*
+      and configure as follows:
+
+      * Indenting - smart,
+      * Tab size - 2,
+      * Indent size - 2,
+      * Select "insert spaces".
+
+      We also suggest to configure Visual Studio to
+      `show space and tab crlf characters <http://stackoverflow.com/questions/4065815/how-to-turn-off-showing-whitespace-characters-in-visual-studio-ide>`_
+      (shortcut: Ctrl+R, Ctrl+W),
+      and `enable vertical line at 100 characters <http://stackoverflow.com/questions/9894397/100-characters-line-marker-in-visual-studio>`_.
+
+In the code we follow
+`google code style <http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml>`_
+with the following changes:
+
+* Exceptions are allowed
+* Indentation must be 2 spaces. Tabs are not allowed.
+* No lines should exceed 100 characters.
+
+All .h and .cpp files under ``$(BIGARTM_ROOT)/src/artm/`` must be verified for code style with
+`cpplint.py <http://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py>`_ script.
+Files, generated by protobuf compiler, are the only exceptions from this rule.
+
+To run the script you need some version of Python installed on your machine.
+Then execute the script like this:
+
+  ``python cpplint.py --linelength=100 <filename>``
+
+On Windows you may run this master-script to check all required files:
+
+  ``$(BIGARTM_ROOT/utils/cpplint_all.bat``.
+
+
+Code review
+-----------
+
+We use pull requests mechanism on GitHub to conduct code reviews.

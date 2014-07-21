@@ -4349,9 +4349,6 @@ void CreateOrReconfigureDictionaryArgs::CopyFrom(const CreateOrReconfigureDictio
 
 bool CreateOrReconfigureDictionaryArgs::IsInitialized() const {
 
-  if (has_dictionary()) {
-    if (!this->dictionary().IsInitialized()) return false;
-  }
   return true;
 }
 

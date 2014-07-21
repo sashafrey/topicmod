@@ -63,7 +63,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     master_config.set_connect_endpoint("tcp://localhost:5555");
   } else {
     master_config.set_modus_operandi(MasterComponentConfig_ModusOperandi_Local);
-    master_config.set_cache_processor_output(true);
+    master_config.set_cache_theta(true);
   }
 
   ::artm::ScoreConfig score_config;

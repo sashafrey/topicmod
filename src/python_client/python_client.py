@@ -38,7 +38,7 @@ else:
 
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
-master_config.cache_processor_output = 1
+master_config.cache_theta = 1
 master_config.disk_path = '.'
 
 perplexity_config = messages_pb2.PerplexityScoreConfig();

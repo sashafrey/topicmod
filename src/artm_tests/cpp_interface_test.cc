@@ -48,7 +48,7 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
     master_config.set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi_Network);
   } else {
     master_config.set_modus_operandi(::artm::MasterComponentConfig_ModusOperandi_Local);
-    master_config.set_cache_processor_output(true);
+    master_config.set_cache_theta(true);
   }
 
   ::artm::ScoreConfig score_config;

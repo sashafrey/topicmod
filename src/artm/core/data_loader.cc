@@ -209,7 +209,7 @@ void LocalDataLoader::Callback(std::shared_ptr<const ModelIncrement> model_incre
   instance_->batch_manager()->Callback(model_increment);
 
   bool is_single_batch = (model_increment->batch_uuid_size() == 1);
-  if (is_single_batch && instance()->schema()->config().cache_processor_output()) {
+  if (is_single_batch && instance()->schema()->config().cache_theta()) {
     for (int batch_index = 0; batch_index < model_increment->batch_uuid_size(); ++batch_index) {
       std::string uuid_str = model_increment->batch_uuid(batch_index);
       boost::uuids::uuid uuid(boost::uuids::string_generator()(uuid_str.c_str()));

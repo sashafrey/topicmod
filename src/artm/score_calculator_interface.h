@@ -25,7 +25,7 @@ class ScoreCalculatorInterface {
   virtual ScoreData_Type score_type() const = 0;
 
   // Non-cumulative calculation (based on Phi matrix)
-  virtual void CalculateScore(const TopicModel& topic_model, Score* score) {}
+  virtual void CalculateScore(const artm::core::TopicModel& topic_model, Score* score) {}
 
   // Cumulative calculation (such as perplexity, or sparsity of Theta matrix)
   virtual bool is_cumulative() const { return false; }

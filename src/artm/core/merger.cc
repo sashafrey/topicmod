@@ -30,7 +30,7 @@ Merger::Merger(ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_q
       topic_model_inc_(),
       schema_(schema),
       master_component_service_(master_component_service),
-      scores_merger_(schema),
+      scores_merger_(schema, &topic_model_),
       is_idle_(true),
       merger_queue_(merger_queue),
       notifiable_(notifiable),
@@ -381,16 +381,24 @@ void Merger::ScoresMerger::RetrieveModelIncrement(const ModelName& model_name,
 }
 
 bool Merger::ScoresMerger::RequestScore(const ModelName& model_name, const ScoreName& score_name,
-                    ScoreData *score_data) const {
+                                        ScoreData *score_data) const {
   auto score_calculator = schema_->get()->score_calculator(score_name);
   if (score_calculator == nullptr) {
     BOOST_THROW_EXCEPTION(InvalidOperation("Score does not exist"));
   }
 
-  auto score = score_map_.get(ScoreKey(model_name, score_name));
-  if (score == nullptr) {
-    score_data->set_data(score_calculator->CreateScore()->SerializeAsString());
+  if (score_calculator->is_cumulative()) {
+    auto score = score_map_.get(ScoreKey(model_name, score_name));
+    if (score == nullptr) {
+      score_data->set_data(score_calculator->CreateScore()->SerializeAsString());
+    } else {
+      score_data->set_data(score->SerializeAsString());
+    }
   } else {
+    std::shared_ptr<Score> score = score_calculator->CreateScore();
+    std::shared_ptr<::artm::core::TopicModel> model = topic_model_->get(model_name);
+
+    score_calculator->CalculateScore(*model.get(), score.get());
     score_data->set_data(score->SerializeAsString());
   }
 

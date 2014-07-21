@@ -27,8 +27,9 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   int topics_count = 100;
 
   // Recommended values for decorrelator_tau are as follows:
-  // kos - 700000, nips - 2000000.
-  float decorrelator_tau = 2000000;
+  // kos - 700000, nips - 200000.
+  float decorrelator_tau = 200000;
+  float dirichlet_tau = -100;
 
   // instance_size = 0 stands for "connect to external node_controller process",
   // instance_size = 1 stands for "local modus operandi",
@@ -92,6 +93,12 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   score_config.set_name("train_sparsity_theta");
   master_config.add_score_config()->CopyFrom(score_config);
 
+  ::artm::SparsityPhiScoreConfig sparsity_phi_config;
+  score_config.set_config(sparsity_phi_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_SparsityPhi);
+  score_config.set_name("sparsity_phi");
+  master_config.add_score_config()->CopyFrom(score_config);
+
   // MasterProxyConfig master_proxy_config;
   // master_proxy_config.set_node_connect_endpoint("tcp://localhost:5556");
   // master_proxy_config.mutable_config()->CopyFrom(master_config);
@@ -117,9 +124,16 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   master_component.AddStream(test_stream);
 
   RegularizerConfig regularizer_config;
-  regularizer_config.set_name("regularizer_phi");
+  std::string regularizer_decor_phi_name = "regularizer_decor_phi";
+  regularizer_config.set_name(regularizer_decor_phi_name);
   regularizer_config.set_type(::artm::RegularizerConfig_Type_DecorrelatorPhi);
   regularizer_config.set_config(::artm::DecorrelatorPhiConfig().SerializeAsString());
+  Regularizer decorrelator_phi_regularizer(master_component, regularizer_config);
+
+  std::string regularizer_dirichlet_phi_name = "regularizer_dirichlet_phi";
+  regularizer_config.set_name(regularizer_dirichlet_phi_name);
+  regularizer_config.set_type(::artm::RegularizerConfig_Type_DirichletPhi);
+  regularizer_config.set_config(::artm::DirichletPhiConfig().SerializeAsString());
   Regularizer dirichlet_phi_regularizer(master_component, regularizer_config);
 
   // Create model
@@ -130,12 +144,15 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.set_stream_name("train_stream");
   model_config.set_reuse_theta(true);
   model_config.set_name("15081980-90a7-4767-ab85-7cb551c39339");
-  model_config.add_regularizer_name("regularizer_phi");
+  model_config.add_regularizer_name(regularizer_decor_phi_name);
   model_config.add_regularizer_tau(decorrelator_tau);
+  //model_config.add_regularizer_name(regularizer_dirichlet_phi_name);
+  //model_config.add_regularizer_tau(dirichlet_tau);
   model_config.add_score_name("test_perplexity");
   model_config.add_score_name("train_perplexity");
   model_config.add_score_name("test_sparsity_theta");
   model_config.add_score_name("train_sparsity_theta");
+  model_config.add_score_name("sparsity_phi");
 
   Model model(master_component, model_config);
 
@@ -202,6 +219,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::shared_ptr<TopicModel> topic_model;
   std::shared_ptr<PerplexityScore> test_perplexity, train_perplexity;
   std::shared_ptr<SparsityThetaScore> test_sparsity_theta, train_sparsity_theta;
+  std::shared_ptr<SparsityPhiScore> sparsity_phi;
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
@@ -212,12 +230,14 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     train_perplexity = master_component.GetScoreAs<::artm::PerplexityScore>(model, "train_perplexity");
     test_sparsity_theta = master_component.GetScoreAs<::artm::SparsityThetaScore>(model, "test_sparsity_theta");
     train_sparsity_theta = master_component.GetScoreAs<::artm::SparsityThetaScore>(model, "train_sparsity_theta");
+    sparsity_phi = master_component.GetScoreAs<::artm::SparsityPhiScore>(model, "sparsity_phi");
     std::cout << "Iter #" << (iter + 1) << ": "
               << "#Tokens = "  << topic_model->token_size() << ", "
               << "Test perplexity = " << test_perplexity->value() << ", "
               << "Train perplexity = " << train_perplexity->value() << ", "
               << "Test spatsity theta = " << test_sparsity_theta->value() << ", "
-              << "Train sparsity theta = " << train_sparsity_theta->value() << endl;
+              << "Train sparsity theta = " << train_sparsity_theta->value() << ", "
+              << "Spatsity phi = " << sparsity_phi->value() << endl;;
   }
 
   std::cout << endl;

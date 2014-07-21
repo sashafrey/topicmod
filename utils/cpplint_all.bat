@@ -24,6 +24,8 @@ call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.cc
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.cc
 
 call cpplint.bat ../src/artm/score_sandbox/perplexity.cc
+call cpplint.bat ../src/artm/score_sandbox/sparsity_theta.cc
+call cpplint.bat ../src/artm/score_sandbox/sparsity_phi.cc
 
 call cpplint.bat ../src/artm_tests/boost_thread_test.cc
 call cpplint.bat ../src/artm_tests/cpp_interface_test.cc
@@ -72,3 +74,5 @@ call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.h
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.h
 
 call cpplint.bat ../src/artm/score_sandbox/perplexity.h
+call cpplint.bat ../src/artm/score_sandbox/sparsity_theta.h
+call cpplint.bat ../src/artm/score_sandbox/sparsity_phi.h

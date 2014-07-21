@@ -24,6 +24,8 @@ ScoreConfig_Type_Perplexity = 0
 ScoreData_Type_Perplexity = 0
 ScoreConfig_Type_SparsityTheta = 1
 ScoreData_Type_SparsityTheta = 1
+ScoreConfig_Type_SparsityPhi = 2
+ScoreData_Type_SparsityPhi = 2
 
 #################################################################################
 
@@ -188,6 +190,10 @@ class MasterComponent:
       return score;
     elif (score_data.type == ScoreData_Type_SparsityTheta):
       score = messages_pb2.SparsityThetaScore();
+      score.ParseFromString(score_data.data);
+      return score;
+    elif (score_data.type == ScoreData_Type_SparsityPhi):
+      score = messages_pb2.SparsityPhiScore();
       score.ParseFromString(score_data.data);
       return score;
 

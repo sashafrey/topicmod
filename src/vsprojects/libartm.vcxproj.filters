@@ -72,6 +72,9 @@
     <ClCompile Include="..\artm\score_sandbox\sparsity_theta.cc">
       <Filter>score_sandbox</Filter>
     </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\sparsity_phi.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\artm\messages.pb.h" />
@@ -174,6 +177,9 @@
       <Filter>score_sandbox</Filter>
     </ClInclude>
     <ClInclude Include="..\artm\score_sandbox\sparsity_theta.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\score_sandbox\sparsity_phi.h">
       <Filter>score_sandbox</Filter>
     </ClInclude>
   </ItemGroup>

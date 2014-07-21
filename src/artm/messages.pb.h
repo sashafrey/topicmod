@@ -57,6 +57,8 @@ class PerplexityScoreConfig;
 class PerplexityScore;
 class SparsityThetaScoreConfig;
 class SparsityThetaScore;
+class SparsityPhiScoreConfig;
+class SparsityPhiScore;
 class TopicModel;
 class TopicModel_TopicModelInternals;
 class ThetaMatrix;
@@ -124,11 +126,12 @@ inline bool RegularizerConfig_Type_Parse(
 }
 enum ScoreConfig_Type {
   ScoreConfig_Type_Perplexity = 0,
-  ScoreConfig_Type_SparsityTheta = 1
+  ScoreConfig_Type_SparsityTheta = 1,
+  ScoreConfig_Type_SparsityPhi = 2
 };
 bool ScoreConfig_Type_IsValid(int value);
 const ScoreConfig_Type ScoreConfig_Type_Type_MIN = ScoreConfig_Type_Perplexity;
-const ScoreConfig_Type ScoreConfig_Type_Type_MAX = ScoreConfig_Type_SparsityTheta;
+const ScoreConfig_Type ScoreConfig_Type_Type_MAX = ScoreConfig_Type_SparsityPhi;
 const int ScoreConfig_Type_Type_ARRAYSIZE = ScoreConfig_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ScoreConfig_Type_descriptor();
@@ -143,11 +146,12 @@ inline bool ScoreConfig_Type_Parse(
 }
 enum ScoreData_Type {
   ScoreData_Type_Perplexity = 0,
-  ScoreData_Type_SparsityTheta = 1
+  ScoreData_Type_SparsityTheta = 1,
+  ScoreData_Type_SparsityPhi = 2
 };
 bool ScoreData_Type_IsValid(int value);
 const ScoreData_Type ScoreData_Type_Type_MIN = ScoreData_Type_Perplexity;
-const ScoreData_Type ScoreData_Type_Type_MAX = ScoreData_Type_SparsityTheta;
+const ScoreData_Type ScoreData_Type_Type_MAX = ScoreData_Type_SparsityPhi;
 const int ScoreData_Type_Type_ARRAYSIZE = ScoreData_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ScoreData_Type_descriptor();
@@ -2196,6 +2200,7 @@ class ScoreConfig : public ::google::protobuf::Message {
   typedef ScoreConfig_Type Type;
   static const Type Perplexity = ScoreConfig_Type_Perplexity;
   static const Type SparsityTheta = ScoreConfig_Type_SparsityTheta;
+  static const Type SparsityPhi = ScoreConfig_Type_SparsityPhi;
   static inline bool Type_IsValid(int value) {
     return ScoreConfig_Type_IsValid(value);
   }
@@ -2332,6 +2337,7 @@ class ScoreData : public ::google::protobuf::Message {
   typedef ScoreData_Type Type;
   static const Type Perplexity = ScoreData_Type_Perplexity;
   static const Type SparsityTheta = ScoreData_Type_SparsityTheta;
+  static const Type SparsityPhi = ScoreData_Type_SparsityPhi;
   static inline bool Type_IsValid(int value) {
     return ScoreData_Type_IsValid(value);
   }
@@ -2707,12 +2713,21 @@ class SparsityThetaScoreConfig : public ::google::protobuf::Message {
   inline ::std::string* release_stream_name();
   inline void set_allocated_stream_name(::std::string* stream_name);
 
+  // optional float eps = 3 [default = 1e-037];
+  inline bool has_eps() const;
+  inline void clear_eps();
+  static const int kEpsFieldNumber = 3;
+  inline float eps() const;
+  inline void set_eps(float value);
+
   // @@protoc_insertion_point(class_scope:artm.SparsityThetaScoreConfig)
  private:
   inline void set_has_field_name();
   inline void clear_has_field_name();
   inline void set_has_stream_name();
   inline void clear_has_stream_name();
+  inline void set_has_eps();
+  inline void clear_has_eps();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -2720,9 +2735,10 @@ class SparsityThetaScoreConfig : public ::google::protobuf::Message {
   static ::std::string* _default_field_name_;
   ::std::string* stream_name_;
   static ::std::string* _default_stream_name_;
+  float eps_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -2832,6 +2848,206 @@ class SparsityThetaScore : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SparsityThetaScore* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SparsityPhiScoreConfig : public ::google::protobuf::Message {
+ public:
+  SparsityPhiScoreConfig();
+  virtual ~SparsityPhiScoreConfig();
+
+  SparsityPhiScoreConfig(const SparsityPhiScoreConfig& from);
+
+  inline SparsityPhiScoreConfig& operator=(const SparsityPhiScoreConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SparsityPhiScoreConfig& default_instance();
+
+  void Swap(SparsityPhiScoreConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  SparsityPhiScoreConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SparsityPhiScoreConfig& from);
+  void MergeFrom(const SparsityPhiScoreConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string field_name = 1 [default = "@body"];
+  inline bool has_field_name() const;
+  inline void clear_field_name();
+  static const int kFieldNameFieldNumber = 1;
+  inline const ::std::string& field_name() const;
+  inline void set_field_name(const ::std::string& value);
+  inline void set_field_name(const char* value);
+  inline void set_field_name(const char* value, size_t size);
+  inline ::std::string* mutable_field_name();
+  inline ::std::string* release_field_name();
+  inline void set_allocated_field_name(::std::string* field_name);
+
+  // optional float eps = 2 [default = 1e-037];
+  inline bool has_eps() const;
+  inline void clear_eps();
+  static const int kEpsFieldNumber = 2;
+  inline float eps() const;
+  inline void set_eps(float value);
+
+  // @@protoc_insertion_point(class_scope:artm.SparsityPhiScoreConfig)
+ private:
+  inline void set_has_field_name();
+  inline void clear_has_field_name();
+  inline void set_has_eps();
+  inline void clear_has_eps();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* field_name_;
+  static ::std::string* _default_field_name_;
+  float eps_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static SparsityPhiScoreConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SparsityPhiScore : public ::google::protobuf::Message {
+ public:
+  SparsityPhiScore();
+  virtual ~SparsityPhiScore();
+
+  SparsityPhiScore(const SparsityPhiScore& from);
+
+  inline SparsityPhiScore& operator=(const SparsityPhiScore& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SparsityPhiScore& default_instance();
+
+  void Swap(SparsityPhiScore* other);
+
+  // implements Message ----------------------------------------------
+
+  SparsityPhiScore* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SparsityPhiScore& from);
+  void MergeFrom(const SparsityPhiScore& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional double value = 1;
+  inline bool has_value() const;
+  inline void clear_value();
+  static const int kValueFieldNumber = 1;
+  inline double value() const;
+  inline void set_value(double value);
+
+  // optional int32 zero_tokens = 2;
+  inline bool has_zero_tokens() const;
+  inline void clear_zero_tokens();
+  static const int kZeroTokensFieldNumber = 2;
+  inline ::google::protobuf::int32 zero_tokens() const;
+  inline void set_zero_tokens(::google::protobuf::int32 value);
+
+  // optional int32 total_tokens = 3;
+  inline bool has_total_tokens() const;
+  inline void clear_total_tokens();
+  static const int kTotalTokensFieldNumber = 3;
+  inline ::google::protobuf::int32 total_tokens() const;
+  inline void set_total_tokens(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:artm.SparsityPhiScore)
+ private:
+  inline void set_has_value();
+  inline void clear_has_value();
+  inline void set_has_zero_tokens();
+  inline void clear_has_zero_tokens();
+  inline void set_has_total_tokens();
+  inline void clear_has_total_tokens();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  double value_;
+  ::google::protobuf::int32 zero_tokens_;
+  ::google::protobuf::int32 total_tokens_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static SparsityPhiScore* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -6122,6 +6338,28 @@ inline void SparsityThetaScoreConfig::set_allocated_stream_name(::std::string* s
   }
 }
 
+// optional float eps = 3 [default = 1e-037];
+inline bool SparsityThetaScoreConfig::has_eps() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SparsityThetaScoreConfig::set_has_eps() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SparsityThetaScoreConfig::clear_has_eps() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SparsityThetaScoreConfig::clear_eps() {
+  eps_ = 1e-037f;
+  clear_has_eps();
+}
+inline float SparsityThetaScoreConfig::eps() const {
+  return eps_;
+}
+inline void SparsityThetaScoreConfig::set_eps(float value) {
+  set_has_eps();
+  eps_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // SparsityThetaScore
@@ -6190,6 +6428,172 @@ inline ::google::protobuf::int32 SparsityThetaScore::total_topics() const {
 inline void SparsityThetaScore::set_total_topics(::google::protobuf::int32 value) {
   set_has_total_topics();
   total_topics_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SparsityPhiScoreConfig
+
+// optional string field_name = 1 [default = "@body"];
+inline bool SparsityPhiScoreConfig::has_field_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SparsityPhiScoreConfig::set_has_field_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SparsityPhiScoreConfig::clear_has_field_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SparsityPhiScoreConfig::clear_field_name() {
+  if (field_name_ != _default_field_name_) {
+    field_name_->assign(*_default_field_name_);
+  }
+  clear_has_field_name();
+}
+inline const ::std::string& SparsityPhiScoreConfig::field_name() const {
+  return *field_name_;
+}
+inline void SparsityPhiScoreConfig::set_field_name(const ::std::string& value) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(value);
+}
+inline void SparsityPhiScoreConfig::set_field_name(const char* value) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(value);
+}
+inline void SparsityPhiScoreConfig::set_field_name(const char* value, size_t size) {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string;
+  }
+  field_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SparsityPhiScoreConfig::mutable_field_name() {
+  set_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    field_name_ = new ::std::string(*_default_field_name_);
+  }
+  return field_name_;
+}
+inline ::std::string* SparsityPhiScoreConfig::release_field_name() {
+  clear_has_field_name();
+  if (field_name_ == _default_field_name_) {
+    return NULL;
+  } else {
+    ::std::string* temp = field_name_;
+    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+    return temp;
+  }
+}
+inline void SparsityPhiScoreConfig::set_allocated_field_name(::std::string* field_name) {
+  if (field_name_ != _default_field_name_) {
+    delete field_name_;
+  }
+  if (field_name) {
+    set_has_field_name();
+    field_name_ = field_name;
+  } else {
+    clear_has_field_name();
+    field_name_ = const_cast< ::std::string*>(_default_field_name_);
+  }
+}
+
+// optional float eps = 2 [default = 1e-037];
+inline bool SparsityPhiScoreConfig::has_eps() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SparsityPhiScoreConfig::set_has_eps() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SparsityPhiScoreConfig::clear_has_eps() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SparsityPhiScoreConfig::clear_eps() {
+  eps_ = 1e-037f;
+  clear_has_eps();
+}
+inline float SparsityPhiScoreConfig::eps() const {
+  return eps_;
+}
+inline void SparsityPhiScoreConfig::set_eps(float value) {
+  set_has_eps();
+  eps_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// SparsityPhiScore
+
+// optional double value = 1;
+inline bool SparsityPhiScore::has_value() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void SparsityPhiScore::set_has_value() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void SparsityPhiScore::clear_has_value() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void SparsityPhiScore::clear_value() {
+  value_ = 0;
+  clear_has_value();
+}
+inline double SparsityPhiScore::value() const {
+  return value_;
+}
+inline void SparsityPhiScore::set_value(double value) {
+  set_has_value();
+  value_ = value;
+}
+
+// optional int32 zero_tokens = 2;
+inline bool SparsityPhiScore::has_zero_tokens() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SparsityPhiScore::set_has_zero_tokens() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SparsityPhiScore::clear_has_zero_tokens() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SparsityPhiScore::clear_zero_tokens() {
+  zero_tokens_ = 0;
+  clear_has_zero_tokens();
+}
+inline ::google::protobuf::int32 SparsityPhiScore::zero_tokens() const {
+  return zero_tokens_;
+}
+inline void SparsityPhiScore::set_zero_tokens(::google::protobuf::int32 value) {
+  set_has_zero_tokens();
+  zero_tokens_ = value;
+}
+
+// optional int32 total_tokens = 3;
+inline bool SparsityPhiScore::has_total_tokens() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SparsityPhiScore::set_has_total_tokens() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SparsityPhiScore::clear_has_total_tokens() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void SparsityPhiScore::clear_total_tokens() {
+  total_tokens_ = 0;
+  clear_has_total_tokens();
+}
+inline ::google::protobuf::int32 SparsityPhiScore::total_tokens() const {
+  return total_tokens_;
+}
+inline void SparsityPhiScore::set_total_tokens(::google::protobuf::int32 value) {
+  set_has_total_tokens();
+  total_tokens_ = value;
 }
 
 // -------------------------------------------------------------------

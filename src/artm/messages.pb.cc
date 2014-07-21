@@ -94,6 +94,12 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SparsityThetaScore_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SparsityThetaScore_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SparsityPhiScoreConfig_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SparsityPhiScoreConfig_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SparsityPhiScore_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SparsityPhiScore_reflection_ = NULL;
 const ::google::protobuf::Descriptor* TopicModel_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   TopicModel_reflection_ = NULL;
@@ -480,9 +486,10 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PerplexityScore));
   SparsityThetaScoreConfig_descriptor_ = file->message_type(21);
-  static const int SparsityThetaScoreConfig_offsets_[2] = {
+  static const int SparsityThetaScoreConfig_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityThetaScoreConfig, field_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityThetaScoreConfig, stream_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityThetaScoreConfig, eps_),
   };
   SparsityThetaScoreConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -512,7 +519,40 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SparsityThetaScore));
-  TopicModel_descriptor_ = file->message_type(23);
+  SparsityPhiScoreConfig_descriptor_ = file->message_type(23);
+  static const int SparsityPhiScoreConfig_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScoreConfig, field_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScoreConfig, eps_),
+  };
+  SparsityPhiScoreConfig_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SparsityPhiScoreConfig_descriptor_,
+      SparsityPhiScoreConfig::default_instance_,
+      SparsityPhiScoreConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScoreConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScoreConfig, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SparsityPhiScoreConfig));
+  SparsityPhiScore_descriptor_ = file->message_type(24);
+  static const int SparsityPhiScore_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScore, value_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScore, zero_tokens_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScore, total_tokens_),
+  };
+  SparsityPhiScore_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SparsityPhiScore_descriptor_,
+      SparsityPhiScore::default_instance_,
+      SparsityPhiScore_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScore, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScore, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SparsityPhiScore));
+  TopicModel_descriptor_ = file->message_type(25);
   static const int TopicModel_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TopicModel, name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TopicModel, topics_count_),
@@ -548,7 +588,7 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TopicModel_TopicModelInternals));
-  ThetaMatrix_descriptor_ = file->message_type(24);
+  ThetaMatrix_descriptor_ = file->message_type(26);
   static const int ThetaMatrix_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ThetaMatrix, model_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(ThetaMatrix, item_id_),
@@ -565,7 +605,7 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ThetaMatrix));
-  NodeControllerConfig_descriptor_ = file->message_type(25);
+  NodeControllerConfig_descriptor_ = file->message_type(27);
   static const int NodeControllerConfig_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(NodeControllerConfig, create_endpoint_),
   };
@@ -639,6 +679,10 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SparsityThetaScore_descriptor_, &SparsityThetaScore::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SparsityPhiScoreConfig_descriptor_, &SparsityPhiScoreConfig::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SparsityPhiScore_descriptor_, &SparsityPhiScore::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TopicModel_descriptor_, &TopicModel::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     TopicModel_TopicModelInternals_descriptor_, &TopicModel_TopicModelInternals::default_instance());
@@ -706,6 +750,11 @@ void protobuf_ShutdownFile_artm_2fmessages_2eproto() {
   delete SparsityThetaScoreConfig::_default_stream_name_;
   delete SparsityThetaScore::default_instance_;
   delete SparsityThetaScore_reflection_;
+  delete SparsityPhiScoreConfig::default_instance_;
+  delete SparsityPhiScoreConfig_reflection_;
+  delete SparsityPhiScoreConfig::_default_field_name_;
+  delete SparsityPhiScore::default_instance_;
+  delete SparsityPhiScore_reflection_;
   delete TopicModel::default_instance_;
   delete TopicModel_reflection_;
   delete TopicModel::_default_name_;
@@ -774,31 +823,36 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     " \001(\002\022\024\n\014value_tokens\030\003 \003(\t\022 \n\006values\030\004 \001"
     "(\0132\020.artm.FloatArray\" \n\013DoubleArray\022\021\n\005v"
     "alue\030\001 \003(\001B\002\020\001\"\037\n\nFloatArray\022\021\n\005value\030\001 "
-    "\003(\002B\002\020\001\"|\n\013ScoreConfig\022\014\n\004name\030\001 \001(\t\022$\n\004"
-    "type\030\002 \001(\0162\026.artm.ScoreConfig.Type\022\016\n\006co"
-    "nfig\030\003 \001(\014\")\n\004Type\022\016\n\nPerplexity\020\000\022\021\n\rSp"
-    "arsityTheta\020\001\"v\n\tScoreData\022\014\n\004name\030\001 \001(\t"
-    "\022\"\n\004type\030\002 \001(\0162\024.artm.ScoreData.Type\022\014\n\004"
-    "data\030\003 \001(\014\")\n\004Type\022\016\n\nPerplexity\020\000\022\021\n\rSp"
-    "arsityTheta\020\001\"P\n\025PerplexityScoreConfig\022\031"
-    "\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013stream_name"
-    "\030\002 \001(\t:\007@global\"U\n\017PerplexityScore\022\r\n\005va"
-    "lue\030\001 \001(\001\022\013\n\003raw\030\002 \001(\001\022\022\n\nnormalizer\030\003 \001"
-    "(\001\022\022\n\nzero_words\030\004 \001(\005\"S\n\030SparsityThetaS"
-    "coreConfig\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034\n"
-    "\013stream_name\030\002 \001(\t:\007@global\"N\n\022SparsityT"
-    "hetaScore\022\r\n\005value\030\001 \001(\001\022\023\n\013zero_topics\030"
-    "\002 \001(\005\022\024\n\014total_topics\030\003 \001(\005\"\371\001\n\nTopicMod"
-    "el\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topics_count"
-    "\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_weights\030\004"
-    " \003(\0132\020.artm.FloatArray\022\021\n\tinternals\030\005 \001("
-    "\014\032t\n\023TopicModelInternals\022\036\n\004n_wt\030\001 \003(\0132\020"
-    ".artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020.artm.Fl"
-    "oatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.FloatArray\""
-    "b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 \001(\t:\006@mod"
-    "el\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_weights\030\003 \003("
-    "\0132\020.artm.FloatArray\"/\n\024NodeControllerCon"
-    "fig\022\027\n\017create_endpoint\030\001 \001(\t", 2948);
+    "\003(\002B\002\020\001\"\215\001\n\013ScoreConfig\022\014\n\004name\030\001 \001(\t\022$\n"
+    "\004type\030\002 \001(\0162\026.artm.ScoreConfig.Type\022\016\n\006c"
+    "onfig\030\003 \001(\014\":\n\004Type\022\016\n\nPerplexity\020\000\022\021\n\rS"
+    "parsityTheta\020\001\022\017\n\013SparsityPhi\020\002\"\207\001\n\tScor"
+    "eData\022\014\n\004name\030\001 \001(\t\022\"\n\004type\030\002 \001(\0162\024.artm"
+    ".ScoreData.Type\022\014\n\004data\030\003 \001(\014\":\n\004Type\022\016\n"
+    "\nPerplexity\020\000\022\021\n\rSparsityTheta\020\001\022\017\n\013Spar"
+    "sityPhi\020\002\"P\n\025PerplexityScoreConfig\022\031\n\nfi"
+    "eld_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001"
+    "(\t:\007@global\"U\n\017PerplexityScore\022\r\n\005value\030"
+    "\001 \001(\001\022\013\n\003raw\030\002 \001(\001\022\022\n\nnormalizer\030\003 \001(\001\022\022"
+    "\n\nzero_words\030\004 \001(\005\"h\n\030SparsityThetaScore"
+    "Config\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013str"
+    "eam_name\030\002 \001(\t:\007@global\022\023\n\003eps\030\003 \001(\002:\0061e"
+    "-037\"N\n\022SparsityThetaScore\022\r\n\005value\030\001 \001("
+    "\001\022\023\n\013zero_topics\030\002 \001(\005\022\024\n\014total_topics\030\003"
+    " \001(\005\"H\n\026SparsityPhiScoreConfig\022\031\n\nfield_"
+    "name\030\001 \001(\t:\005@body\022\023\n\003eps\030\002 \001(\002:\0061e-037\"L"
+    "\n\020SparsityPhiScore\022\r\n\005value\030\001 \001(\001\022\023\n\013zer"
+    "o_tokens\030\002 \001(\005\022\024\n\014total_tokens\030\003 \001(\005\"\371\001\n"
+    "\nTopicModel\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014top"
+    "ics_count\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_"
+    "weights\030\004 \003(\0132\020.artm.FloatArray\022\021\n\tinter"
+    "nals\030\005 \001(\014\032t\n\023TopicModelInternals\022\036\n\004n_w"
+    "t\030\001 \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132"
+    "\020.artm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.Fl"
+    "oatArray\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 "
+    "\001(\t:\006@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_wei"
+    "ghts\030\003 \003(\0132\020.artm.FloatArray\"/\n\024NodeCont"
+    "rollerConfig\022\027\n\017create_endpoint\030\001 \001(\t", 3157);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -842,6 +896,10 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
       new ::std::string("@global", 7);
   SparsityThetaScoreConfig::default_instance_ = new SparsityThetaScoreConfig();
   SparsityThetaScore::default_instance_ = new SparsityThetaScore();
+  SparsityPhiScoreConfig::_default_field_name_ =
+      new ::std::string("@body", 5);
+  SparsityPhiScoreConfig::default_instance_ = new SparsityPhiScoreConfig();
+  SparsityPhiScore::default_instance_ = new SparsityPhiScore();
   TopicModel::_default_name_ =
       new ::std::string("@model", 6);
   TopicModel::default_instance_ = new TopicModel();
@@ -873,6 +931,8 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
   PerplexityScore::default_instance_->InitAsDefaultInstance();
   SparsityThetaScoreConfig::default_instance_->InitAsDefaultInstance();
   SparsityThetaScore::default_instance_->InitAsDefaultInstance();
+  SparsityPhiScoreConfig::default_instance_->InitAsDefaultInstance();
+  SparsityPhiScore::default_instance_->InitAsDefaultInstance();
   TopicModel::default_instance_->InitAsDefaultInstance();
   TopicModel_TopicModelInternals::default_instance_->InitAsDefaultInstance();
   ThetaMatrix::default_instance_->InitAsDefaultInstance();
@@ -6266,6 +6326,7 @@ bool ScoreConfig_Type_IsValid(int value) {
   switch(value) {
     case 0:
     case 1:
+    case 2:
       return true;
     default:
       return false;
@@ -6275,6 +6336,7 @@ bool ScoreConfig_Type_IsValid(int value) {
 #ifndef _MSC_VER
 const ScoreConfig_Type ScoreConfig::Perplexity;
 const ScoreConfig_Type ScoreConfig::SparsityTheta;
+const ScoreConfig_Type ScoreConfig::SparsityPhi;
 const ScoreConfig_Type ScoreConfig::Type_MIN;
 const ScoreConfig_Type ScoreConfig::Type_MAX;
 const int ScoreConfig::Type_ARRAYSIZE;
@@ -6606,6 +6668,7 @@ bool ScoreData_Type_IsValid(int value) {
   switch(value) {
     case 0:
     case 1:
+    case 2:
       return true;
     default:
       return false;
@@ -6615,6 +6678,7 @@ bool ScoreData_Type_IsValid(int value) {
 #ifndef _MSC_VER
 const ScoreData_Type ScoreData::Perplexity;
 const ScoreData_Type ScoreData::SparsityTheta;
+const ScoreData_Type ScoreData::SparsityPhi;
 const ScoreData_Type ScoreData::Type_MIN;
 const ScoreData_Type ScoreData::Type_MAX;
 const int ScoreData::Type_ARRAYSIZE;
@@ -7549,6 +7613,7 @@ void PerplexityScore::Swap(PerplexityScore* other) {
 #ifndef _MSC_VER
 const int SparsityThetaScoreConfig::kFieldNameFieldNumber;
 const int SparsityThetaScoreConfig::kStreamNameFieldNumber;
+const int SparsityThetaScoreConfig::kEpsFieldNumber;
 #endif  // !_MSC_VER
 
 SparsityThetaScoreConfig::SparsityThetaScoreConfig()
@@ -7569,6 +7634,7 @@ void SparsityThetaScoreConfig::SharedCtor() {
   _cached_size_ = 0;
   field_name_ = const_cast< ::std::string*>(_default_field_name_);
   stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
+  eps_ = 1e-037f;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -7620,6 +7686,7 @@ void SparsityThetaScoreConfig::Clear() {
         stream_name_->assign(*_default_stream_name_);
       }
     }
+    eps_ = 1e-037f;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -7657,6 +7724,22 @@ bool SparsityThetaScoreConfig::MergePartialFromCodedStream(
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->stream_name().data(), this->stream_name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(29)) goto parse_eps;
+        break;
+      }
+
+      // optional float eps = 3 [default = 1e-037];
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_eps:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &eps_)));
+          set_has_eps();
         } else {
           goto handle_uninterpreted;
         }
@@ -7700,6 +7783,11 @@ void SparsityThetaScoreConfig::SerializeWithCachedSizes(
       2, this->stream_name(), output);
   }
 
+  // optional float eps = 3 [default = 1e-037];
+  if (has_eps()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->eps(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -7728,6 +7816,11 @@ void SparsityThetaScoreConfig::SerializeWithCachedSizes(
         2, this->stream_name(), target);
   }
 
+  // optional float eps = 3 [default = 1e-037];
+  if (has_eps()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->eps(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -7751,6 +7844,11 @@ int SparsityThetaScoreConfig::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->stream_name());
+    }
+
+    // optional float eps = 3 [default = 1e-037];
+    if (has_eps()) {
+      total_size += 1 + 4;
     }
 
   }
@@ -7786,6 +7884,9 @@ void SparsityThetaScoreConfig::MergeFrom(const SparsityThetaScoreConfig& from) {
     if (from.has_stream_name()) {
       set_stream_name(from.stream_name());
     }
+    if (from.has_eps()) {
+      set_eps(from.eps());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -7811,6 +7912,7 @@ void SparsityThetaScoreConfig::Swap(SparsityThetaScoreConfig* other) {
   if (other != this) {
     std::swap(field_name_, other->field_name_);
     std::swap(stream_name_, other->stream_name_);
+    std::swap(eps_, other->eps_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -8108,6 +8210,556 @@ void SparsityThetaScore::Swap(SparsityThetaScore* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = SparsityThetaScore_descriptor_;
   metadata.reflection = SparsityThetaScore_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+::std::string* SparsityPhiScoreConfig::_default_field_name_ = NULL;
+#ifndef _MSC_VER
+const int SparsityPhiScoreConfig::kFieldNameFieldNumber;
+const int SparsityPhiScoreConfig::kEpsFieldNumber;
+#endif  // !_MSC_VER
+
+SparsityPhiScoreConfig::SparsityPhiScoreConfig()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SparsityPhiScoreConfig::InitAsDefaultInstance() {
+}
+
+SparsityPhiScoreConfig::SparsityPhiScoreConfig(const SparsityPhiScoreConfig& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SparsityPhiScoreConfig::SharedCtor() {
+  _cached_size_ = 0;
+  field_name_ = const_cast< ::std::string*>(_default_field_name_);
+  eps_ = 1e-037f;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SparsityPhiScoreConfig::~SparsityPhiScoreConfig() {
+  SharedDtor();
+}
+
+void SparsityPhiScoreConfig::SharedDtor() {
+  if (field_name_ != _default_field_name_) {
+    delete field_name_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void SparsityPhiScoreConfig::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SparsityPhiScoreConfig::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SparsityPhiScoreConfig_descriptor_;
+}
+
+const SparsityPhiScoreConfig& SparsityPhiScoreConfig::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_artm_2fmessages_2eproto();
+  return *default_instance_;
+}
+
+SparsityPhiScoreConfig* SparsityPhiScoreConfig::default_instance_ = NULL;
+
+SparsityPhiScoreConfig* SparsityPhiScoreConfig::New() const {
+  return new SparsityPhiScoreConfig;
+}
+
+void SparsityPhiScoreConfig::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_field_name()) {
+      if (field_name_ != _default_field_name_) {
+        field_name_->assign(*_default_field_name_);
+      }
+    }
+    eps_ = 1e-037f;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SparsityPhiScoreConfig::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string field_name = 1 [default = "@body"];
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_field_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->field_name().data(), this->field_name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(21)) goto parse_eps;
+        break;
+      }
+
+      // optional float eps = 2 [default = 1e-037];
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED32) {
+         parse_eps:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &eps_)));
+          set_has_eps();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SparsityPhiScoreConfig::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string field_name = 1 [default = "@body"];
+  if (has_field_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->field_name().data(), this->field_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->field_name(), output);
+  }
+
+  // optional float eps = 2 [default = 1e-037];
+  if (has_eps()) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->eps(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SparsityPhiScoreConfig::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string field_name = 1 [default = "@body"];
+  if (has_field_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->field_name().data(), this->field_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->field_name(), target);
+  }
+
+  // optional float eps = 2 [default = 1e-037];
+  if (has_eps()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->eps(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SparsityPhiScoreConfig::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string field_name = 1 [default = "@body"];
+    if (has_field_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->field_name());
+    }
+
+    // optional float eps = 2 [default = 1e-037];
+    if (has_eps()) {
+      total_size += 1 + 4;
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SparsityPhiScoreConfig::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SparsityPhiScoreConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SparsityPhiScoreConfig*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SparsityPhiScoreConfig::MergeFrom(const SparsityPhiScoreConfig& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_field_name()) {
+      set_field_name(from.field_name());
+    }
+    if (from.has_eps()) {
+      set_eps(from.eps());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SparsityPhiScoreConfig::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SparsityPhiScoreConfig::CopyFrom(const SparsityPhiScoreConfig& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SparsityPhiScoreConfig::IsInitialized() const {
+
+  return true;
+}
+
+void SparsityPhiScoreConfig::Swap(SparsityPhiScoreConfig* other) {
+  if (other != this) {
+    std::swap(field_name_, other->field_name_);
+    std::swap(eps_, other->eps_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SparsityPhiScoreConfig::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SparsityPhiScoreConfig_descriptor_;
+  metadata.reflection = SparsityPhiScoreConfig_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SparsityPhiScore::kValueFieldNumber;
+const int SparsityPhiScore::kZeroTokensFieldNumber;
+const int SparsityPhiScore::kTotalTokensFieldNumber;
+#endif  // !_MSC_VER
+
+SparsityPhiScore::SparsityPhiScore()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SparsityPhiScore::InitAsDefaultInstance() {
+}
+
+SparsityPhiScore::SparsityPhiScore(const SparsityPhiScore& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SparsityPhiScore::SharedCtor() {
+  _cached_size_ = 0;
+  value_ = 0;
+  zero_tokens_ = 0;
+  total_tokens_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SparsityPhiScore::~SparsityPhiScore() {
+  SharedDtor();
+}
+
+void SparsityPhiScore::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SparsityPhiScore::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SparsityPhiScore::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SparsityPhiScore_descriptor_;
+}
+
+const SparsityPhiScore& SparsityPhiScore::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_artm_2fmessages_2eproto();
+  return *default_instance_;
+}
+
+SparsityPhiScore* SparsityPhiScore::default_instance_ = NULL;
+
+SparsityPhiScore* SparsityPhiScore::New() const {
+  return new SparsityPhiScore;
+}
+
+void SparsityPhiScore::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    value_ = 0;
+    zero_tokens_ = 0;
+    total_tokens_ = 0;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SparsityPhiScore::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional double value = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &value_)));
+          set_has_value();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_zero_tokens;
+        break;
+      }
+
+      // optional int32 zero_tokens = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_zero_tokens:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &zero_tokens_)));
+          set_has_zero_tokens();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_total_tokens;
+        break;
+      }
+
+      // optional int32 total_tokens = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_total_tokens:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &total_tokens_)));
+          set_has_total_tokens();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SparsityPhiScore::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional double value = 1;
+  if (has_value()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(1, this->value(), output);
+  }
+
+  // optional int32 zero_tokens = 2;
+  if (has_zero_tokens()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->zero_tokens(), output);
+  }
+
+  // optional int32 total_tokens = 3;
+  if (has_total_tokens()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->total_tokens(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SparsityPhiScore::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional double value = 1;
+  if (has_value()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(1, this->value(), target);
+  }
+
+  // optional int32 zero_tokens = 2;
+  if (has_zero_tokens()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->zero_tokens(), target);
+  }
+
+  // optional int32 total_tokens = 3;
+  if (has_total_tokens()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->total_tokens(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SparsityPhiScore::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional double value = 1;
+    if (has_value()) {
+      total_size += 1 + 8;
+    }
+
+    // optional int32 zero_tokens = 2;
+    if (has_zero_tokens()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->zero_tokens());
+    }
+
+    // optional int32 total_tokens = 3;
+    if (has_total_tokens()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->total_tokens());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SparsityPhiScore::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SparsityPhiScore* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SparsityPhiScore*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SparsityPhiScore::MergeFrom(const SparsityPhiScore& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_value()) {
+      set_value(from.value());
+    }
+    if (from.has_zero_tokens()) {
+      set_zero_tokens(from.zero_tokens());
+    }
+    if (from.has_total_tokens()) {
+      set_total_tokens(from.total_tokens());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SparsityPhiScore::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SparsityPhiScore::CopyFrom(const SparsityPhiScore& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SparsityPhiScore::IsInitialized() const {
+
+  return true;
+}
+
+void SparsityPhiScore::Swap(SparsityPhiScore* other) {
+  if (other != this) {
+    std::swap(value_, other->value_);
+    std::swap(zero_tokens_, other->zero_tokens_);
+    std::swap(total_tokens_, other->total_tokens_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SparsityPhiScore::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SparsityPhiScore_descriptor_;
+  metadata.reflection = SparsityPhiScore_reflection_;
   return metadata;
 }
 

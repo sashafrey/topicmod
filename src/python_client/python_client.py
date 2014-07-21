@@ -60,6 +60,13 @@ score_config.type = ScoreConfig_Type_SparsityTheta;
 sparsity_theta_score_name = "sparsity_theta_score"
 score_config.name = sparsity_theta_score_name
 
+sparsity_phi_config = messages_pb2.SparsityPhiScoreConfig();
+score_config = master_config.score_config.add()
+score_config.config = messages_pb2.SparsityPhiScoreConfig().SerializeToString();
+score_config.type = ScoreConfig_Type_SparsityPhi;
+sparsity_phi_score_name = "sparsity_phi_score"
+score_config.name = sparsity_phi_score_name
+
 with library.CreateMasterComponent(master_config) as master_component:
     batch = messages_pb2.Batch()
     batch_tokens = {}
@@ -122,6 +129,7 @@ with library.CreateMasterComponent(master_config) as master_component:
     
     model_config.score_name.append(perplexity_score_name)
     model_config.score_name.append(sparsity_theta_score_name)
+    model_config.score_name.append(sparsity_phi_score_name)
     
 #     model_config.regularizer_name.append(regularizer_name_theta)
 #     model_config.regularizer_tau.append(0.1)
@@ -147,12 +155,14 @@ with library.CreateMasterComponent(master_config) as master_component:
         topic_model = master_component.GetTopicModel(model)
         perplexity_score = master_component.GetScore(model, perplexity_score_name)
         sparsity_theta_score = master_component.GetScore(model, sparsity_theta_score_name)
+        sparsity_phi_score = master_component.GetScore(model, sparsity_phi_score_name)
 
         model.InvokePhiRegularizers();
 
         print "Iter# = " + str(iter) + \
                 ", Perplexity = " + str(perplexity_score.value) + \
-                ", SparsityTheta = " + str(sparsity_theta_score.value)
+                ", SparsityTheta = " + str(sparsity_theta_score.value) +\
+                ", SparsityPhi = " + str(sparsity_phi_score.value)
 
 
     # Log to 7 words in each topic

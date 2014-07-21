@@ -76,7 +76,7 @@ set(SRC_LIST ${CUR_LIST}
 )
 
 # library deps
-set(ARTM_LIB_DEPS  rpcz
+set(ARTM_LIB_DEPS  rpcz_static
                    ${Boost_THREAD_LIBRARIES}
                    ${Boost_SYSTEM_LIBRARIES}
                    ${Boost_FILESYSTEM_LIBRARIES}
@@ -86,3 +86,15 @@ set(ARTM_LIB_DEPS  rpcz
 
 add_library(${LIBRARY_NAME} SHARED ${SRC_LIST})
 target_link_libraries(${LIBRARY_NAME} ${ARTM_LIB_DEPS})
+
+if(MSVC AND NOT Boost_USE_STATIC_LIBS) 
+  get_filename_component(BOOST_THREAD_PATH ${Boost_THREAD_LIBRARY_RELEASE} NAME_WE)
+  get_filename_component(BOOST_SYSTEM_PATH ${Boost_SYSTEM_LIBRARY_RELEASE} NAME_WE)
+  get_filename_component(BOOST_FILESYSTEM_PATH ${Boost_FILESYSTEM_LIBRARY_RELEASE} NAME_WE)
+  file(COPY
+    ${BOOST_LIBRARYDIR}/${BOOST_THREAD_PATH}.dll
+    ${BOOST_LIBRARYDIR}/${BOOST_SYSTEM_PATH}.dll
+    ${BOOST_LIBRARYDIR}/${BOOST_FILESYSTEM_PATH}.dll
+    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}
+  ) 
+endif()

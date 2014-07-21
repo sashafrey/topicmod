@@ -15,11 +15,11 @@
 
 namespace artm {
 
-class MasterComponent;
-class NodeController;
-class Model;
-class Regularizer;
-class Dictionary;
+class DLL_PUBLIC MasterComponent;
+class DLL_PUBLIC NodeController;
+class DLL_PUBLIC Model;
+class DLL_PUBLIC Regularizer;
+class DLL_PUBLIC Dictionary;
 
 // Exception handling in cpp_interface
 #define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
@@ -34,7 +34,7 @@ DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 
-class MasterComponent {
+class DLL_PUBLIC MasterComponent {
  public:
   explicit MasterComponent(const MasterComponentConfig& config);
   explicit MasterComponent(const MasterProxyConfig& config);
@@ -71,7 +71,7 @@ class MasterComponent {
   DISALLOW_COPY_AND_ASSIGN(MasterComponent);
 };
 
-class NodeController {
+class DLL_PUBLIC NodeController {
  public:
   explicit NodeController(const NodeControllerConfig& config);
   ~NodeController();
@@ -84,7 +84,7 @@ class NodeController {
   DISALLOW_COPY_AND_ASSIGN(NodeController);
 };
 
-class Model {
+class DLL_PUBLIC Model {
  public:
   Model(const MasterComponent& master_component, const ModelConfig& config);
   ~Model();
@@ -106,7 +106,7 @@ class Model {
   DISALLOW_COPY_AND_ASSIGN(Model);
 };
 
-class Regularizer {
+class DLL_PUBLIC Regularizer {
  public:
   Regularizer(const MasterComponent& master_component, const RegularizerConfig& config);
   ~Regularizer();

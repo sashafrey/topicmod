@@ -7,6 +7,8 @@ include(CheckCxxHashset)
 include(CheckCxxHashmap)
 include(ProtobufDownloader)
 
+set(BUILD_SHARED_LIBS ON)
+
 check_include_files("pthread.h" HAVE_PTHREAD)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

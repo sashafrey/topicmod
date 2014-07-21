@@ -48,6 +48,7 @@ endif()
 # can it be avoided?
 include_directories(${3RD_PARTY_DIR}/rpcz/include)
 include_directories(${CMAKE_BINARY_DIR}/3rdparty/rpcz/src)
+include_directories(${CMAKE_BINARY_DIR}/3rdparty/gflags/include)
 
 protobuf_generate_cpp(ARTM_PB_SRCS ARTM_PB_HEADERS
     proto/messages.proto
@@ -75,8 +76,14 @@ set(SRC_LIST ${CUR_LIST}
              ${ARTM_PROTO_SOURCES}
 )
 
+if(WIN32)
+  set(RPCZ_LIBS rpcz_static)
+else()
+  set(RPCZ_LIBS rpcz)
+endif()
+
 # library deps
-set(ARTM_LIB_DEPS  rpcz_static
+set(ARTM_LIB_DEPS  ${RPCZ_LIBS}
                    ${Boost_THREAD_LIBRARIES}
                    ${Boost_SYSTEM_LIBRARIES}
                    ${Boost_FILESYSTEM_LIBRARIES}

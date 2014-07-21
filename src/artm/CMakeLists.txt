@@ -84,6 +84,7 @@ endif()
 
 # library deps
 set(ARTM_LIB_DEPS  ${RPCZ_LIBS}
+		   gflags-shared
                    ${Boost_THREAD_LIBRARIES}
                    ${Boost_SYSTEM_LIBRARIES}
                    ${Boost_FILESYSTEM_LIBRARIES}

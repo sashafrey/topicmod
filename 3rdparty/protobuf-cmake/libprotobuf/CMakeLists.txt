@@ -45,6 +45,7 @@ if(WIN32 AND BUILD_SHARED_LIBS AND MSVC)
 endif()
 
 add_library(libprotobuf SHARED ${SOURCES} )
+
 set_target_properties(libprotobuf PROPERTIES OUTPUT_NAME "protobuf")
 set(PROTOBUF_LIBRARY libprotobuf CACHE INTERNAL "protobuf library")
 

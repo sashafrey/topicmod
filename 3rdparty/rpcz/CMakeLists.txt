@@ -11,8 +11,10 @@ option(rpcz_build_static "Build static library." OFF)
 option(rpcz_build_examples "Build rpcz's examples." OFF)
 
 find_package(Protobuf REQUIRED)
-find_package(Boost REQUIRED COMPONENTS thread program_options)
+find_package(Boost REQUIRED COMPONENTS thread program_options date_time system chrono)
 find_package(ZeroMQ REQUIRED)
+
+add_definitions("-DPROTOBUF_USE_DLLS")
 
 include_directories(${ZEROMQ_INCLUDE_DIRS})
 include_directories(${PROTOBUF_INCLUDE_DIRS})
@@ -30,6 +32,8 @@ elseif(MSVC)
 endif(CMAKE_COMPILER_IS_GNUCXX)
 set(CMAKE_OSX_ARCHITECTURES x86_64)
 
+set(rpcz_build_static ON)
+
 add_subdirectory(src)
 
 if(rpcz_build_tests)
@@ -40,6 +44,21 @@ endif(rpcz_build_tests)
 if(rpcz_build_examples)
   add_subdirectory(examples/cpp)
 endif(rpcz_build_examples)
+
+if(MSVC AND NOT Boost_USE_STATIC_LIBS) 
+  get_filename_component(BOOST_THREAD_PATH ${Boost_THREAD_LIBRARY_RELEASE} NAME_WE)
+  get_filename_component(BOOST_PROGRAM_OPTIONS_PATH ${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE} NAME_WE)
+  get_filename_component(BOOST_DATE_TIME_PATH ${Boost_DATE_TIME_LIBRARY_RELEASE} NAME_WE)
+  get_filename_component(BOOST_CHRONO_PATH ${Boost_CHRONO_LIBRARY_RELEASE} NAME_WE)
+  file(COPY
+    ${BOOST_LIBRARYDIR}/${BOOST_THREAD_PATH}.dll
+    ${BOOST_LIBRARYDIR}/${BOOST_PROGRAM_OPTIONS_PATH}.dll
+    ${BOOST_LIBRARYDIR}/${BOOST_DATE_TIME_PATH}.dll
+    ${BOOST_LIBRARYDIR}/${BOOST_CHRONO_PATH}.dll
+    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}
+  ) 
+
+endif()
 
 file(GLOB RPCZ_PUBLIC_HEADERS include/rpcz/*.h)
 install(FILES ${RPCZ_PUBLIC_HEADERS} DESTINATION include/rpcz)

@@ -48,7 +48,6 @@ mz_use_default_compiler_settings()
 mz_add_flag(GCC -fPIC)
 
 if(WIN32)
-	mz_add_definition(GOOGLE_GLOG_DLL_DECL)
 	set(SRCS
 		src/logging.cc
 		src/windows/port.cc
@@ -73,11 +72,11 @@ if(WIN32)
 
 	include_directories(
 		${CMAKE_CURRENT_SOURCE_DIR}/src/windows/
+		${CMAKE_CURRENT_BINARY_DIR}/src/
 		${GFLAGS_INCLUDE_DIRS}
 	)
 
 	mz_add_definition(GLOG_NO_ABBREVIATED_SEVERITIES)
-	mz_add_definition(GOOGLE_GLOG_DLL_DECL=)
 else()
 	set(SRCS
             src/logging.cc

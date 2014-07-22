@@ -11,6 +11,7 @@
 
 #include "rpcz/rpc.hpp"
 
+#include "artm/core/exceptions.h"
 #include "artm/core/internals.pb.h"
 
 namespace artm {
@@ -33,8 +34,8 @@ inline void make_rpcz_call(std::function<void()> f) {
   try {
     f();
   } catch(const rpcz::rpc_error&) {
-    LOG(ERROR) << "Error in rpcz service call (on client side)";
-    throw;
+    LOG(ERROR) << "Problems with connection between Proxy and NodeController";
+    throw artm::core::NetworkException("Network_error");
   }
 }
 

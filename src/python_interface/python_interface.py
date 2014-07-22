@@ -13,6 +13,7 @@ ARTM_GENERAL_ERROR = -1
 ARTM_OBJECT_NOT_FOUND = -2
 ARTM_INVALID_MESSAGE = -3
 ARTM_INVALID_OPERATION = -4
+ARTM_NETWORK_ERROR = -5
 
 Stream_Type_Global = 0
 Stream_Type_ItemIdModulus = 1
@@ -29,6 +30,7 @@ class GeneralError(BaseException) : pass
 class ObjectNotFound(BaseException) : pass
 class InvalidMessage(BaseException) : pass
 class InvalidOperation(BaseException) : pass
+class NetworkError(BaseException) : pass
 
 def HandleErrorCode(artm_error_code):
   if (artm_error_code == ARTM_SUCCESS) | (artm_error_code >= 0):
@@ -39,6 +41,8 @@ def HandleErrorCode(artm_error_code):
     raise InvalidMessage()
   elif artm_error_code == ARTM_INVALID_OPERATION:
     raise InvalidOperation()
+  elif artm_error_code == ARTM_NETWORK_ERROR:
+    raise NetworkError()
   elif artm_error_code == ARTM_GENERAL_ERROR:
     raise GeneralError()
   else:

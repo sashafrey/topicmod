@@ -934,20 +934,30 @@ class MasterProxyConfig : public ::google::protobuf::Message {
   inline ::artm::MasterComponentConfig* release_config();
   inline void set_allocated_config(::artm::MasterComponentConfig* config);
 
+  // optional int32 timeout = 3 [default = 1000];
+  inline bool has_timeout() const;
+  inline void clear_timeout();
+  static const int kTimeoutFieldNumber = 3;
+  inline ::google::protobuf::int32 timeout() const;
+  inline void set_timeout(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:artm.MasterProxyConfig)
  private:
   inline void set_has_node_connect_endpoint();
   inline void clear_has_node_connect_endpoint();
   inline void set_has_config();
   inline void clear_has_config();
+  inline void set_has_timeout();
+  inline void clear_has_timeout();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* node_connect_endpoint_;
   ::artm::MasterComponentConfig* config_;
+  ::google::protobuf::int32 timeout_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -4145,6 +4155,28 @@ inline void MasterProxyConfig::set_allocated_config(::artm::MasterComponentConfi
   } else {
     clear_has_config();
   }
+}
+
+// optional int32 timeout = 3 [default = 1000];
+inline bool MasterProxyConfig::has_timeout() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void MasterProxyConfig::set_has_timeout() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void MasterProxyConfig::clear_has_timeout() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void MasterProxyConfig::clear_timeout() {
+  timeout_ = 1000;
+  clear_has_timeout();
+}
+inline ::google::protobuf::int32 MasterProxyConfig::timeout() const {
+  return timeout_;
+}
+inline void MasterProxyConfig::set_timeout(::google::protobuf::int32 value) {
+  set_has_timeout();
+  timeout_ = value;
 }
 
 // -------------------------------------------------------------------

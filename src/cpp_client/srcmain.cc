@@ -82,6 +82,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
    MasterProxyConfig master_proxy_config;
    master_proxy_config.set_node_connect_endpoint("tcp://localhost:5555");
    master_proxy_config.mutable_config()->CopyFrom(master_config);
+   master_proxy_config.set_timeout(2000);
    MasterComponent master_component(master_proxy_config);
 
   //MasterComponent master_component(master_config);

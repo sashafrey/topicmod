@@ -91,6 +91,9 @@ message MasterComponentConfig {
 message MasterProxyConfig {
   required string node_connect_endpoint = 1;
   required MasterComponentConfig config = 2;
+
+  // timeout in ms
+  optional int32 timeout = 3 [default = 1000];
 }
 
 // Configuration of a model.

@@ -28,6 +28,8 @@ inline int HandleErrorCode(int artm_error_code) {
       throw ObjectNotFound();
     case ARTM_INVALID_MESSAGE:
       throw InvalidMessage();
+    case ARTM_NETWORK_ERROR:
+      throw NerworkException();
     case ARTM_INVALID_OPERATION:
       throw InvalidOperation();
     case ARTM_GENERAL_ERROR:

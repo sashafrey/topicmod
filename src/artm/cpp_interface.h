@@ -31,6 +31,7 @@ DEFINE_EXCEPTION_TYPE(GeneralError, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(ObjectNotFound, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidMessage, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(NerworkException, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 

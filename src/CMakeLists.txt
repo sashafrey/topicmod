@@ -1,2 +1,6 @@
+message(STATUS "Make ARTM project files.")
 add_subdirectory(artm)
+message(STATUS "Make cpp_client project files.")
 add_subdirectory(cpp_client)
+message(STATUS "Make python_client project files.")
+add_subdirectory(python_client)

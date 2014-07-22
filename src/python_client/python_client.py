@@ -30,7 +30,7 @@ parse_collection_from_text = 1
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 
 if sys.platform.count('linux') == 1:
-    library = ArtmLibrary(address + '/bin/libartm.so')
+    library = ArtmLibrary(address + '/../libs/libARTM.so')
 else:
     os.environ['PATH'] = ';'.join([address + '\\Win32\\Release', os.environ['PATH']])
     library = ArtmLibrary(address + '\\Win32\\Release\\artm.dll')

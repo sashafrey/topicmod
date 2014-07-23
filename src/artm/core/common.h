@@ -30,20 +30,22 @@ class Notifiable {
   virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment) = 0;
 };
 
-inline void make_rpcz_call(std::function<void()> f) {
+inline void make_rpcz_call(std::function<void()> f, const std::string& f_name) {
   try {
     f();
   } catch(const rpcz::rpc_error&) {
-    LOG(ERROR) << "Problems with connection between Proxy and NodeController";
-    throw artm::core::NetworkException("Network_error");
+    LOG(ERROR) << "Problems with connection between Proxy and NodeController in " << 
+      f_name << "()";
+    throw artm::core::NetworkException("Network error in function " + f_name + "()");
   }
 }
 
-inline void make_rpcz_call_no_throw(std::function<void()> f) {
+inline void make_rpcz_call_no_throw(std::function<void()> f, const std::string& f_name) {
   try {
     f();
   } catch(const rpcz::rpc_error&) {
-    LOG(ERROR) << "Error in rpcz service call (on client side)";
+    LOG(ERROR) << "Problems with connection between Proxy and NodeController in " << 
+      f_name << "()";
   }
 }
 

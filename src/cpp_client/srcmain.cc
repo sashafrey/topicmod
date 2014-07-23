@@ -79,11 +79,11 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   score_config.set_name("train_perplexity");
   master_config.add_score_config()->CopyFrom(score_config);
 
-   MasterProxyConfig master_proxy_config;
-   master_proxy_config.set_node_connect_endpoint("tcp://localhost:5555");
-   master_proxy_config.mutable_config()->CopyFrom(master_config);
-   master_proxy_config.set_timeout(2000);
-   MasterComponent master_component(master_proxy_config);
+  MasterProxyConfig master_proxy_config;
+  master_proxy_config.set_node_connect_endpoint("tcp://localhost:5555");
+  master_proxy_config.mutable_config()->CopyFrom(master_config);
+  master_proxy_config.set_communication_timeout(50000);
+  MasterComponent master_component(master_proxy_config);
 
   //MasterComponent master_component(master_config);
 
@@ -189,7 +189,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::shared_ptr<PerplexityScore> test_perplexity, train_perplexity;
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
-    master_component.WaitIdle();
+    master_component.WaitIdle(120000);
     model.InvokePhiRegularizers();
 
     topic_model = master_component.GetTopicModel(model);

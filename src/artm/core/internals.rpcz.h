@@ -156,7 +156,7 @@ class NodeControllerService : public rpcz::service {
   virtual void InvokeIteration(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void WaitIdle(const ::artm::core::Void& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
+                       ::rpcz::reply< ::artm::core::Int> response);
   virtual void InvokePhiRegularizers(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
@@ -296,10 +296,10 @@ class NodeControllerService_Stub {
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void WaitIdle(const ::artm::core::Void& request,
-                       ::artm::core::Void* response,
+                       ::artm::core::Int* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void WaitIdle(const ::artm::core::Void& request,
-                       ::artm::core::Void* response,
+                       ::artm::core::Int* response,
                        long deadline_ms = -1);
   void InvokePhiRegularizers(const ::artm::core::Void& request,
                        ::artm::core::Void* response,

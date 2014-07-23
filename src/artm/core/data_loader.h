@@ -55,7 +55,9 @@ class LocalDataLoader : public DataLoader {
   virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment);
 
   void InvokeIteration(int iterations_count);
-  void WaitIdle();
+
+  //true value == success, false means that function works
+  bool WaitIdle(int timeout = -1);
   void DisposeModel(ModelName model_name);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 

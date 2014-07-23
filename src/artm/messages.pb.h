@@ -934,12 +934,12 @@ class MasterProxyConfig : public ::google::protobuf::Message {
   inline ::artm::MasterComponentConfig* release_config();
   inline void set_allocated_config(::artm::MasterComponentConfig* config);
 
-  // optional int32 timeout = 3 [default = 1000];
-  inline bool has_timeout() const;
-  inline void clear_timeout();
-  static const int kTimeoutFieldNumber = 3;
-  inline ::google::protobuf::int32 timeout() const;
-  inline void set_timeout(::google::protobuf::int32 value);
+  // optional int32 communication_timeout = 3 [default = 1000];
+  inline bool has_communication_timeout() const;
+  inline void clear_communication_timeout();
+  static const int kCommunicationTimeoutFieldNumber = 3;
+  inline ::google::protobuf::int32 communication_timeout() const;
+  inline void set_communication_timeout(::google::protobuf::int32 value);
 
   // @@protoc_insertion_point(class_scope:artm.MasterProxyConfig)
  private:
@@ -947,14 +947,14 @@ class MasterProxyConfig : public ::google::protobuf::Message {
   inline void clear_has_node_connect_endpoint();
   inline void set_has_config();
   inline void clear_has_config();
-  inline void set_has_timeout();
-  inline void clear_has_timeout();
+  inline void set_has_communication_timeout();
+  inline void clear_has_communication_timeout();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* node_connect_endpoint_;
   ::artm::MasterComponentConfig* config_;
-  ::google::protobuf::int32 timeout_;
+  ::google::protobuf::int32 communication_timeout_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -4157,26 +4157,26 @@ inline void MasterProxyConfig::set_allocated_config(::artm::MasterComponentConfi
   }
 }
 
-// optional int32 timeout = 3 [default = 1000];
-inline bool MasterProxyConfig::has_timeout() const {
+// optional int32 communication_timeout = 3 [default = 1000];
+inline bool MasterProxyConfig::has_communication_timeout() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void MasterProxyConfig::set_has_timeout() {
+inline void MasterProxyConfig::set_has_communication_timeout() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void MasterProxyConfig::clear_has_timeout() {
+inline void MasterProxyConfig::clear_has_communication_timeout() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void MasterProxyConfig::clear_timeout() {
-  timeout_ = 1000;
-  clear_has_timeout();
+inline void MasterProxyConfig::clear_communication_timeout() {
+  communication_timeout_ = 1000;
+  clear_has_communication_timeout();
 }
-inline ::google::protobuf::int32 MasterProxyConfig::timeout() const {
-  return timeout_;
+inline ::google::protobuf::int32 MasterProxyConfig::communication_timeout() const {
+  return communication_timeout_;
 }
-inline void MasterProxyConfig::set_timeout(::google::protobuf::int32 value) {
-  set_has_timeout();
-  timeout_ = value;
+inline void MasterProxyConfig::set_communication_timeout(::google::protobuf::int32 value) {
+  set_has_communication_timeout();
+  communication_timeout_ = value;
 }
 
 // -------------------------------------------------------------------

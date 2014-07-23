@@ -72,7 +72,8 @@ class MasterComponent : boost::noncopyable, public MasterInterface {
   virtual void CreateOrReconfigureDictionary(const DictionaryConfig& config);
   virtual void DisposeDictionary(const std::string& name);
 
-  virtual void WaitIdle();
+  //true value == success, false means that function works
+  virtual bool WaitIdle(int timeout = -1);
   virtual void InvokeIteration(int iterations_count);
   virtual void AddBatch(const Batch& batch);
 

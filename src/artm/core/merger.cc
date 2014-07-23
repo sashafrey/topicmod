@@ -320,13 +320,19 @@ bool Merger::RetrieveExternalTopicModel(ModelName model_name,
   return true;
 }
 
-void Merger::WaitIdle() {
+bool Merger::WaitIdle(int timeout) {
+  auto time_start = boost::posix_time::microsec_clock::local_time();
   for (;;) {
     if (is_idle_ && merger_queue_->empty())
       break;
 
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    auto time_end = boost::posix_time::microsec_clock::local_time();
+    if ((time_end - time_start).total_milliseconds() >= timeout) {
+      return false;
+    }
   }
+  return true;
 }
 
 void Merger::ScoresMerger::Append(const ModelName& model_name, const ScoreName& score_name,

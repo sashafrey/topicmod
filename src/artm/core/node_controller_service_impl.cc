@@ -8,9 +8,9 @@
 
 #include "glog/logging.h"
 
+#include "artm/core/exceptions.h"
 #include "artm/core/instance.h"
 #include "artm/core/master_component.h"
-#include "artm/core/exceptions.h"
 #include "artm/core/merger.h"
 
 namespace artm {
@@ -33,9 +33,7 @@ void NodeControllerServiceImpl::CreateOrReconfigureInstance(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::DisposeInstance(
@@ -62,9 +60,7 @@ void NodeControllerServiceImpl::CreateOrReconfigureMasterComponent(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::DisposeMasterComponent(
@@ -96,9 +92,7 @@ void NodeControllerServiceImpl::CreateOrReconfigureModel(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::DisposeModel(
@@ -132,9 +126,7 @@ void NodeControllerServiceImpl::CreateOrReconfigureRegularizer(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::DisposeRegularizer(
@@ -164,9 +156,7 @@ void NodeControllerServiceImpl::CreateOrReconfigureDictionary(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::DisposeDictionary(
@@ -179,9 +169,7 @@ void NodeControllerServiceImpl::DisposeDictionary(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::ForcePullTopicModel(
@@ -196,9 +184,7 @@ void NodeControllerServiceImpl::ForcePullTopicModel(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::ForcePushTopicModelIncrement(
@@ -213,9 +199,7 @@ void NodeControllerServiceImpl::ForcePushTopicModelIncrement(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::OverwriteTopicModel(
@@ -230,9 +214,7 @@ void NodeControllerServiceImpl::OverwriteTopicModel(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::RequestTopicModel(
@@ -253,9 +235,7 @@ void NodeControllerServiceImpl::RequestTopicModel(
     } else {
       response.Error(-1);  // todo(alfrey): fix error handling in services
     }
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::RequestThetaMatrix(
@@ -276,9 +256,7 @@ void NodeControllerServiceImpl::RequestThetaMatrix(
     } else {
       response.Error(-1);  // todo(alfrey): fix error handling in services
     }
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::RequestScore(
@@ -299,9 +277,7 @@ void NodeControllerServiceImpl::RequestScore(
     } else {
       response.Error(-1);  // todo(alfrey): fix error handling in services
     }
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::AddBatch(
@@ -316,9 +292,7 @@ void NodeControllerServiceImpl::AddBatch(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::InvokeIteration(
@@ -333,25 +307,29 @@ void NodeControllerServiceImpl::InvokeIteration(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
+
 void NodeControllerServiceImpl::WaitIdle(
     const ::artm::core::Void& request,
-    ::rpcz::reply< ::artm::core::Void> response) {
+    ::rpcz::reply< ::artm::core::Int> response) {
+  int local_timeout = 10;
+  bool result;
+  Int retval;
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
     if (master_ != nullptr) {
-      master_->WaitIdle();
+      result = master_->WaitIdle(local_timeout);
+      if (result) {
+        retval.set_value(ARTM_SUCCESS);
+      } else {
+        retval.set_value(ARTM_STILL_WORKING);
+      }
+      response.send(retval);
     } else {
       LOG(ERROR) << "No master component exist in node controller";
     }
-
-    response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 void NodeControllerServiceImpl::InvokePhiRegularizers(
@@ -366,9 +344,7 @@ void NodeControllerServiceImpl::InvokePhiRegularizers(
     }
 
     response.send(Void());
-  } catch(...) {
-    response.Error(-1);  // todo(alfrey): fix error handling in services
-  }
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
 Instance* NodeControllerServiceImpl::instance() {

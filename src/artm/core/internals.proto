@@ -151,6 +151,6 @@ service NodeControllerService {
 
   rpc AddBatch(Batch) returns (Void);
   rpc InvokeIteration(Void) returns (Void);
-  rpc WaitIdle(Void) returns (Void);
+  rpc WaitIdle(Void) returns (Int);
   rpc InvokePhiRegularizers(Void) returns (Void);
 }

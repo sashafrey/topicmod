@@ -93,7 +93,7 @@ message MasterProxyConfig {
   required MasterComponentConfig config = 2;
 
   // timeout in ms
-  optional int32 timeout = 3 [default = 1000];
+  optional int32 communication_timeout = 3 [default = 1000];
 }
 
 // Configuration of a model.

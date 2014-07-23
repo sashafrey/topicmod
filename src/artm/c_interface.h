@@ -17,14 +17,6 @@
 #endif
 
 extern "C" {
-  DLL_PUBLIC enum ArtmErrorCodes {
-    ARTM_SUCCESS = 0,
-    ARTM_GENERAL_ERROR = -1,
-    ARTM_OBJECT_NOT_FOUND = -2,
-    ARTM_INVALID_MESSAGE = -3,
-    ARTM_INVALID_OPERATION = -4,
-    ARTM_NETWORK_ERROR = -5,
-  };
 
   // ===============================================================================================
   // Common routines
@@ -64,7 +56,7 @@ extern "C" {
   DLL_PUBLIC int ArtmAddBatch(int master_id, int length, const char* batch_blob);
   DLL_PUBLIC int ArtmInvokeIteration(int master_id, int iterations_count);
   DLL_PUBLIC int ArtmInvokePhiRegularizers(int master_id);
-  DLL_PUBLIC int ArtmWaitIdle(int master_id);
+  DLL_PUBLIC int ArtmWaitIdle(int master_id, int timeout = -1);
 
   DLL_PUBLIC int ArtmRequestThetaMatrix(int master_id, const char* model_name);
   DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_name);

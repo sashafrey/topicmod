@@ -158,16 +158,21 @@ void LocalDataLoader::InvokeIteration(int iterations_count) {
   }
 }
 
-void LocalDataLoader::WaitIdle() {
+bool LocalDataLoader::WaitIdle(int timeout) {
+  auto time_start = boost::posix_time::microsec_clock::local_time();
   for (;;) {
     if (instance_->batch_manager()->IsEverythingProcessed())
       break;
 
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+
+    auto time_end = boost::posix_time::microsec_clock::local_time();
+    if ((time_end - time_start).total_milliseconds() >= timeout) return false;
   }
 
   instance()->merger()->ForcePushTopicModelIncrement();
   instance()->merger()->ForcePullTopicModel();
+  return true;
 }
 
 void LocalDataLoader::DisposeModel(ModelName model_name) {

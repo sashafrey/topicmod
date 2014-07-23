@@ -83,7 +83,7 @@ void rpcz_protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "artm.core.String\032\020.artm.TopicModel\0225\n\016Re"
     "questBatches\022\016.artm.core.Int\032\023.artm.core"
     ".BatchIds\0225\n\rReportBatches\022\023.artm.core.B"
-    "atchIds\032\017.artm.core.Void2\302\n\n\025NodeControl"
+    "atchIds\032\017.artm.core.Void2\301\n\n\025NodeControl"
     "lerService\022K\n\033CreateOrReconfigureInstanc"
     "e\022\033.artm.MasterComponentConfig\032\017.artm.co"
     "re.Void\0223\n\017DisposeInstance\022\017.artm.core.V"
@@ -114,10 +114,10 @@ void rpcz_protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "stScore\022\033.artm.core.RequestScoreArgs\032\017.a"
     "rtm.ScoreData\022(\n\010AddBatch\022\013.artm.Batch\032\017"
     ".artm.core.Void\0223\n\017InvokeIteration\022\017.art"
-    "m.core.Void\032\017.artm.core.Void\022,\n\010WaitIdle"
-    "\022\017.artm.core.Void\032\017.artm.core.Void\0229\n\025In"
-    "vokePhiRegularizers\022\017.artm.core.Void\032\017.a"
-    "rtm.core.Void", 2813);
+    "m.core.Void\032\017.artm.core.Void\022+\n\010WaitIdle"
+    "\022\017.artm.core.Void\032\016.artm.core.Int\0229\n\025Inv"
+    "okePhiRegularizers\022\017.artm.core.Void\032\017.ar"
+    "tm.core.Void", 2812);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/core/internals.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&rpcz_protobuf_ShutdownFile_artm_2fcore_2finternals_2eproto);
@@ -448,7 +448,7 @@ void NodeControllerService::InvokeIteration(const ::artm::core::Void&,
 }
 
 void NodeControllerService::WaitIdle(const ::artm::core::Void&,
-                         ::rpcz::reply< ::artm::core::Void> reply) {
+                         ::rpcz::reply< ::artm::core::Int> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
               "Method WaitIdle() not implemented.");
 }
@@ -557,7 +557,7 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
     case 18:
       WaitIdle(
           *::google::protobuf::down_cast<const ::artm::core::Void*>(&request),
-          ::rpcz::reply< ::artm::core::Void>(channel));
+          ::rpcz::reply< ::artm::core::Int>(channel));
       break;
     case 19:
       InvokePhiRegularizers(
@@ -661,7 +661,7 @@ const ::google::protobuf::Message& NodeControllerService::GetResponsePrototype(
     case 17:
       return ::artm::core::Void::default_instance();
     case 18:
-      return ::artm::core::Void::default_instance();
+      return ::artm::core::Int::default_instance();
     case 19:
       return ::artm::core::Void::default_instance();
     default:
@@ -1062,7 +1062,7 @@ void NodeControllerService_Stub::InvokeIteration(const ::artm::core::Void& reque
   }
 }
 void NodeControllerService_Stub::WaitIdle(const ::artm::core::Void& request,
-                              ::artm::core::Void* response,
+                              ::artm::core::Int* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
@@ -1070,7 +1070,7 @@ void NodeControllerService_Stub::WaitIdle(const ::artm::core::Void& request,
                         request, response, rpc, done);
 }
 void NodeControllerService_Stub::WaitIdle(const ::artm::core::Void& request,
-                              ::artm::core::Void* response,
+                              ::artm::core::Int* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);

@@ -212,7 +212,7 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
   static const int MasterProxyConfig_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MasterProxyConfig, node_connect_endpoint_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MasterProxyConfig, config_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MasterProxyConfig, timeout_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MasterProxyConfig, communication_timeout_),
   };
   MasterProxyConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -722,60 +722,60 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "onfig.ModusOperandi:\005Local\022\027\n\017create_end"
     "point\030e \001(\t\022\030\n\020connect_endpoint\030f \001(\t\022\035\n"
     "\025node_connect_endpoint\030g \003(\t\"\'\n\rModusOpe"
-    "randi\022\t\n\005Local\020\000\022\013\n\007Network\020\001\"v\n\021MasterP"
-    "roxyConfig\022\035\n\025node_connect_endpoint\030\001 \002("
-    "\t\022+\n\006config\030\002 \002(\0132\033.artm.MasterComponent"
-    "Config\022\025\n\007timeout\030\003 \001(\005:\0041000\"\224\002\n\013ModelC"
-    "onfig\022\024\n\004name\030\001 \001(\t:\006@model\022\030\n\014topics_co"
-    "unt\030\002 \001(\005:\00232\022\025\n\007enabled\030\003 \001(\010:\004true\022\"\n\026"
-    "inner_iterations_count\030\004 \001(\005:\00210\022\031\n\nfiel"
-    "d_name\030\005 \001(\t:\005@body\022\034\n\013stream_name\030\006 \001(\t"
-    ":\007@global\022\022\n\nscore_name\030\007 \003(\t\022\032\n\013reuse_t"
-    "heta\030\010 \001(\010:\005false\022\030\n\020regularizer_name\030\t "
-    "\003(\t\022\027\n\017regularizer_tau\030\n \003(\001\"\314\001\n\021Regular"
-    "izerConfig\022\014\n\004name\030\001 \001(\t\022*\n\004type\030\002 \001(\0162\034"
-    ".artm.RegularizerConfig.Type\022\016\n\006config\030\003"
-    " \001(\014\"m\n\004Type\022\022\n\016DirichletTheta\020\000\022\020\n\014Diri"
-    "chletPhi\020\001\022\025\n\021SmoothSparseTheta\020\002\022\023\n\017Smo"
-    "othSparsePhi\020\003\022\023\n\017DecorrelatorPhi\020\004\"8\n\024D"
-    "irichletThetaConfig\022 \n\005alpha\030\001 \003(\0132\021.art"
-    "m.DoubleArray\"-\n\022DirichletPhiConfig\022\027\n\017d"
-    "ictionary_name\030\001 \001(\t\"\207\001\n\027SmoothSparseThe"
-    "taConfig\022\037\n\027background_topics_count\030\001 \001("
-    "\005\022%\n\013alpha_topic\030\002 \001(\0132\020.artm.FloatArray"
-    "\022$\n\nalpha_iter\030\003 \001(\0132\020.artm.FloatArray\"\200"
-    "\001\n\025SmoothSparsePhiConfig\022\037\n\027background_t"
-    "opics_count\030\001 \001(\005\022-\n\023topics_coefficients"
-    "\030\002 \001(\0132\020.artm.FloatArray\022\027\n\017dictionary_n"
-    "ame\030\003 \001(\t\"F\n\025DecorrelatorPhiConfig\022-\n\024to"
-    "pics_to_regularize\030\001 \001(\0132\017.artm.BoolArra"
-    "y\"F\n\020DictionaryConfig\022\014\n\004name\030\001 \002(\t\022$\n\005e"
-    "ntry\030\002 \003(\0132\025.artm.DictionaryEntry\"k\n\017Dic"
-    "tionaryEntry\022\021\n\tkey_token\030\001 \002(\t\022\r\n\005value"
-    "\030\002 \001(\002\022\024\n\014value_tokens\030\003 \003(\t\022 \n\006values\030\004"
-    " \001(\0132\020.artm.FloatArray\" \n\013DoubleArray\022\021\n"
-    "\005value\030\001 \003(\001B\002\020\001\"\037\n\nFloatArray\022\021\n\005value\030"
-    "\001 \003(\002B\002\020\001\"\036\n\tBoolArray\022\021\n\005value\030\001 \003(\010B\002\020"
-    "\001\"i\n\013ScoreConfig\022\014\n\004name\030\001 \001(\t\022$\n\004type\030\002"
-    " \001(\0162\026.artm.ScoreConfig.Type\022\016\n\006config\030\003"
-    " \001(\014\"\026\n\004Type\022\016\n\nPerplexity\020\000\"c\n\tScoreDat"
-    "a\022\014\n\004name\030\001 \001(\t\022\"\n\004type\030\002 \001(\0162\024.artm.Sco"
-    "reData.Type\022\014\n\004data\030\003 \001(\014\"\026\n\004Type\022\016\n\nPer"
-    "plexity\020\000\"P\n\025PerplexityScoreConfig\022\031\n\nfi"
-    "eld_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001"
-    "(\t:\007@global\"U\n\017PerplexityScore\022\r\n\005value\030"
-    "\001 \001(\001\022\013\n\003raw\030\002 \001(\001\022\022\n\nnormalizer\030\003 \001(\001\022\022"
-    "\n\nzero_words\030\004 \001(\005\"\371\001\n\nTopicModel\022\024\n\004nam"
-    "e\030\001 \001(\t:\006@model\022\024\n\014topics_count\030\002 \001(\005\022\r\n"
-    "\005token\030\003 \003(\t\022\'\n\rtoken_weights\030\004 \003(\0132\020.ar"
-    "tm.FloatArray\022\021\n\tinternals\030\005 \001(\014\032t\n\023Topi"
-    "cModelInternals\022\036\n\004n_wt\030\001 \003(\0132\020.artm.Flo"
-    "atArray\022\036\n\004r_wt\030\002 \003(\0132\020.artm.FloatArray\022"
-    "\035\n\003n_t\030\003 \001(\0132\020.artm.FloatArray\"b\n\013ThetaM"
-    "atrix\022\032\n\nmodel_name\030\001 \001(\t:\006@model\022\017\n\007ite"
-    "m_id\030\002 \003(\005\022&\n\014item_weights\030\003 \003(\0132\020.artm."
-    "FloatArray\"/\n\024NodeControllerConfig\022\027\n\017cr"
-    "eate_endpoint\030\001 \001(\t", 2939);
+    "randi\022\t\n\005Local\020\000\022\013\n\007Network\020\001\"\204\001\n\021Master"
+    "ProxyConfig\022\035\n\025node_connect_endpoint\030\001 \002"
+    "(\t\022+\n\006config\030\002 \002(\0132\033.artm.MasterComponen"
+    "tConfig\022#\n\025communication_timeout\030\003 \001(\005:\004"
+    "1000\"\224\002\n\013ModelConfig\022\024\n\004name\030\001 \001(\t:\006@mod"
+    "el\022\030\n\014topics_count\030\002 \001(\005:\00232\022\025\n\007enabled\030"
+    "\003 \001(\010:\004true\022\"\n\026inner_iterations_count\030\004 "
+    "\001(\005:\00210\022\031\n\nfield_name\030\005 \001(\t:\005@body\022\034\n\013st"
+    "ream_name\030\006 \001(\t:\007@global\022\022\n\nscore_name\030\007"
+    " \003(\t\022\032\n\013reuse_theta\030\010 \001(\010:\005false\022\030\n\020regu"
+    "larizer_name\030\t \003(\t\022\027\n\017regularizer_tau\030\n "
+    "\003(\001\"\314\001\n\021RegularizerConfig\022\014\n\004name\030\001 \001(\t\022"
+    "*\n\004type\030\002 \001(\0162\034.artm.RegularizerConfig.T"
+    "ype\022\016\n\006config\030\003 \001(\014\"m\n\004Type\022\022\n\016Dirichlet"
+    "Theta\020\000\022\020\n\014DirichletPhi\020\001\022\025\n\021SmoothSpars"
+    "eTheta\020\002\022\023\n\017SmoothSparsePhi\020\003\022\023\n\017Decorre"
+    "latorPhi\020\004\"8\n\024DirichletThetaConfig\022 \n\005al"
+    "pha\030\001 \003(\0132\021.artm.DoubleArray\"-\n\022Dirichle"
+    "tPhiConfig\022\027\n\017dictionary_name\030\001 \001(\t\"\207\001\n\027"
+    "SmoothSparseThetaConfig\022\037\n\027background_to"
+    "pics_count\030\001 \001(\005\022%\n\013alpha_topic\030\002 \001(\0132\020."
+    "artm.FloatArray\022$\n\nalpha_iter\030\003 \001(\0132\020.ar"
+    "tm.FloatArray\"\200\001\n\025SmoothSparsePhiConfig\022"
+    "\037\n\027background_topics_count\030\001 \001(\005\022-\n\023topi"
+    "cs_coefficients\030\002 \001(\0132\020.artm.FloatArray\022"
+    "\027\n\017dictionary_name\030\003 \001(\t\"F\n\025Decorrelator"
+    "PhiConfig\022-\n\024topics_to_regularize\030\001 \001(\0132"
+    "\017.artm.BoolArray\"F\n\020DictionaryConfig\022\014\n\004"
+    "name\030\001 \002(\t\022$\n\005entry\030\002 \003(\0132\025.artm.Diction"
+    "aryEntry\"k\n\017DictionaryEntry\022\021\n\tkey_token"
+    "\030\001 \002(\t\022\r\n\005value\030\002 \001(\002\022\024\n\014value_tokens\030\003 "
+    "\003(\t\022 \n\006values\030\004 \001(\0132\020.artm.FloatArray\" \n"
+    "\013DoubleArray\022\021\n\005value\030\001 \003(\001B\002\020\001\"\037\n\nFloat"
+    "Array\022\021\n\005value\030\001 \003(\002B\002\020\001\"\036\n\tBoolArray\022\021\n"
+    "\005value\030\001 \003(\010B\002\020\001\"i\n\013ScoreConfig\022\014\n\004name\030"
+    "\001 \001(\t\022$\n\004type\030\002 \001(\0162\026.artm.ScoreConfig.T"
+    "ype\022\016\n\006config\030\003 \001(\014\"\026\n\004Type\022\016\n\nPerplexit"
+    "y\020\000\"c\n\tScoreData\022\014\n\004name\030\001 \001(\t\022\"\n\004type\030\002"
+    " \001(\0162\024.artm.ScoreData.Type\022\014\n\004data\030\003 \001(\014"
+    "\"\026\n\004Type\022\016\n\nPerplexity\020\000\"P\n\025PerplexitySc"
+    "oreConfig\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013"
+    "stream_name\030\002 \001(\t:\007@global\"U\n\017Perplexity"
+    "Score\022\r\n\005value\030\001 \001(\001\022\013\n\003raw\030\002 \001(\001\022\022\n\nnor"
+    "malizer\030\003 \001(\001\022\022\n\nzero_words\030\004 \001(\005\"\371\001\n\nTo"
+    "picModel\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topics"
+    "_count\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_wei"
+    "ghts\030\004 \003(\0132\020.artm.FloatArray\022\021\n\tinternal"
+    "s\030\005 \001(\014\032t\n\023TopicModelInternals\022\036\n\004n_wt\030\001"
+    " \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020.a"
+    "rtm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.Float"
+    "Array\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 \001(\t"
+    ":\006@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_weight"
+    "s\030\003 \003(\0132\020.artm.FloatArray\"/\n\024NodeControl"
+    "lerConfig\022\027\n\017create_endpoint\030\001 \001(\t", 2954);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   Item::default_instance_ = new Item();
@@ -2801,7 +2801,7 @@ void MasterComponentConfig::Swap(MasterComponentConfig* other) {
 #ifndef _MSC_VER
 const int MasterProxyConfig::kNodeConnectEndpointFieldNumber;
 const int MasterProxyConfig::kConfigFieldNumber;
-const int MasterProxyConfig::kTimeoutFieldNumber;
+const int MasterProxyConfig::kCommunicationTimeoutFieldNumber;
 #endif  // !_MSC_VER
 
 MasterProxyConfig::MasterProxyConfig()
@@ -2823,7 +2823,7 @@ void MasterProxyConfig::SharedCtor() {
   _cached_size_ = 0;
   node_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   config_ = NULL;
-  timeout_ = 1000;
+  communication_timeout_ = 1000;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2871,7 +2871,7 @@ void MasterProxyConfig::Clear() {
     if (has_config()) {
       if (config_ != NULL) config_->::artm::MasterComponentConfig::Clear();
     }
-    timeout_ = 1000;
+    communication_timeout_ = 1000;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2909,19 +2909,19 @@ bool MasterProxyConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(24)) goto parse_timeout;
+        if (input->ExpectTag(24)) goto parse_communication_timeout;
         break;
       }
 
-      // optional int32 timeout = 3 [default = 1000];
+      // optional int32 communication_timeout = 3 [default = 1000];
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_timeout:
+         parse_communication_timeout:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &timeout_)));
-          set_has_timeout();
+                 input, &communication_timeout_)));
+          set_has_communication_timeout();
         } else {
           goto handle_uninterpreted;
         }
@@ -2962,9 +2962,9 @@ void MasterProxyConfig::SerializeWithCachedSizes(
       2, this->config(), output);
   }
 
-  // optional int32 timeout = 3 [default = 1000];
-  if (has_timeout()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->timeout(), output);
+  // optional int32 communication_timeout = 3 [default = 1000];
+  if (has_communication_timeout()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->communication_timeout(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -2992,9 +2992,9 @@ void MasterProxyConfig::SerializeWithCachedSizes(
         2, this->config(), target);
   }
 
-  // optional int32 timeout = 3 [default = 1000];
-  if (has_timeout()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->timeout(), target);
+  // optional int32 communication_timeout = 3 [default = 1000];
+  if (has_communication_timeout()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->communication_timeout(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3022,11 +3022,11 @@ int MasterProxyConfig::ByteSize() const {
           this->config());
     }
 
-    // optional int32 timeout = 3 [default = 1000];
-    if (has_timeout()) {
+    // optional int32 communication_timeout = 3 [default = 1000];
+    if (has_communication_timeout()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->timeout());
+          this->communication_timeout());
     }
 
   }
@@ -3062,8 +3062,8 @@ void MasterProxyConfig::MergeFrom(const MasterProxyConfig& from) {
     if (from.has_config()) {
       mutable_config()->::artm::MasterComponentConfig::MergeFrom(from.config());
     }
-    if (from.has_timeout()) {
-      set_timeout(from.timeout());
+    if (from.has_communication_timeout()) {
+      set_communication_timeout(from.communication_timeout());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -3091,7 +3091,7 @@ void MasterProxyConfig::Swap(MasterProxyConfig* other) {
   if (other != this) {
     std::swap(node_connect_endpoint_, other->node_connect_endpoint_);
     std::swap(config_, other->config_);
-    std::swap(timeout_, other->timeout_);
+    std::swap(communication_timeout_, other->communication_timeout_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

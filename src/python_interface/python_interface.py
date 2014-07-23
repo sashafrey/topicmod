@@ -14,6 +14,7 @@ ARTM_OBJECT_NOT_FOUND = -2
 ARTM_INVALID_MESSAGE = -3
 ARTM_INVALID_OPERATION = -4
 ARTM_NETWORK_ERROR = -5
+ARTM_STILL_WORKING = -6
 
 Stream_Type_Global = 0
 Stream_Type_ItemIdModulus = 1
@@ -131,7 +132,12 @@ class MasterComponent:
     HandleErrorCode(self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
 
   def WaitIdle(self):
-    HandleErrorCode(self.lib_.ArtmWaitIdle(self.id_))
+    result = self.lib_.ArtmWaitIdle(self.id_)
+    if result == ARTM_STILL_WORKING:
+        print "WaitIdle() is still working, timeout is over.";
+    else:
+        HandleErrorCode(result)
+
 
   def AddStream(self, stream):
     s = self.config_.stream.add()

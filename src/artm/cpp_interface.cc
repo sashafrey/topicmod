@@ -1,11 +1,15 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
+#include <iostream>
+
 #include "artm/cpp_interface.h"
 
 #include "boost/lexical_cast.hpp"
 #include "boost/uuid/uuid.hpp"
 #include "boost/uuid/uuid_generators.hpp"
 #include "boost/uuid/uuid_io.hpp"
+
+#include "glog/logging.h"
 
 #include "artm/core/protobuf_helpers.h"
 
@@ -224,8 +228,14 @@ void MasterComponent::InvokeIteration(int iterations_count) {
   HandleErrorCode(ArtmInvokeIteration(id(), iterations_count));
 }
 
-void MasterComponent::WaitIdle() {
-  HandleErrorCode(ArtmWaitIdle(id()));
+void MasterComponent::WaitIdle(int timeout) {
+  int result = ArtmWaitIdle(id(), timeout);
+  if (result == ARTM_STILL_WORKING) {
+    LOG(INFO) << "WaitIdle() is still working, timeout is over.";
+    std::cout << "WaitIdle() is still working, timeout is over.";
+  } else {
+    HandleErrorCode(result);
+  }
 }
 
 void MasterComponent::AddStream(const Stream& stream) {

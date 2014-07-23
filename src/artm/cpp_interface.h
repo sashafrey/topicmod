@@ -13,6 +13,16 @@
   TypeName(const TypeName&);   \
   void operator=(const TypeName&)
 
+enum ArtmErrorCodes {
+    ARTM_SUCCESS = 0,
+    ARTM_GENERAL_ERROR = -1,
+    ARTM_OBJECT_NOT_FOUND = -2,
+    ARTM_INVALID_MESSAGE = -3,
+    ARTM_INVALID_OPERATION = -4,
+    ARTM_NETWORK_ERROR = -5,
+    ARTM_STILL_WORKING = -6
+};
+
 namespace artm {
 
 class MasterComponent;
@@ -61,7 +71,7 @@ class MasterComponent {
   void AddStream(const Stream& stream);
   void RemoveStream(std::string stream_name);
   void InvokeIteration(int iterations_count);
-  void WaitIdle();
+  void WaitIdle(int timeout = -1);
 
   const MasterComponentConfig& config() const { return config_; }
   MasterComponentConfig* mutable_config() { return &config_; }

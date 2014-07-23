@@ -37,7 +37,7 @@ class MasterInterface {
 
   virtual void AddBatch(const Batch& batch) = 0;
   virtual void InvokeIteration(int iterations_count) = 0;
-  virtual bool WaitIdle(int timeout = -1) = 0;
+  virtual bool WaitIdle(long timeout = -1) = 0;
   virtual void InvokePhiRegularizers() = 0;
 };
 

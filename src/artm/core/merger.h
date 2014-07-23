@@ -46,7 +46,7 @@ class Merger : boost::noncopyable {
   void ForceResetScores(ModelName model_name);
 
   //true value == success, false means that function works
-  bool WaitIdle(int timeout = -1);
+  bool WaitIdle(long timeout = -1);
   void ForcePullTopicModel();
   void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();

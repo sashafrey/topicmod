@@ -177,21 +177,23 @@ void MasterProxy::InvokeIteration(int iterations_count) {
   }, "InvokeIteration");
 }
 
-bool MasterProxy::WaitIdle(int timeout) {
+bool MasterProxy::WaitIdle(long timeout) {
   Int response;
   auto time_start = boost::posix_time::microsec_clock::local_time();
   for (;;) {
-      make_rpcz_call([&]() {
-        node_controller_service_proxy_->WaitIdle(Void(), &response, communication_timeout_);
-      }, "WaitIdle");
-      if (response.value() == ARTM_STILL_WORKING) {
-        boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-        auto time_end = boost::posix_time::microsec_clock::local_time();
+    make_rpcz_call([&]() {
+      node_controller_service_proxy_->WaitIdle(Void(), &response, communication_timeout_);
+    }, "WaitIdle");
+    if (response.value() == ARTM_STILL_WORKING) {
+      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      auto time_end = boost::posix_time::microsec_clock::local_time();
 
+      if (timeout >= 0) {
         if ((time_end - time_start).total_milliseconds() >= timeout) return false;
-      } else { // return value is ARTM_SUCCESS
-        return true;
       }
+    } else { // return value is ARTM_SUCCESS
+      return true;
+    }
   }
 }
 

@@ -131,8 +131,8 @@ class MasterComponent:
   def InvokeIteration(self, iterations_count):
     HandleErrorCode(self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
 
-  def WaitIdle(self):
-    result = self.lib_.ArtmWaitIdle(self.id_)
+  def WaitIdle(self, timeout):
+    result = self.lib_.ArtmWaitIdle(self.id_, timeout)
     if result == ARTM_STILL_WORKING:
         print "WaitIdle() is still working, timeout is over.";
     else:

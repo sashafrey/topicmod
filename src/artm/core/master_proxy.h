@@ -42,7 +42,7 @@ class MasterProxy : boost::noncopyable, public MasterInterface {
 
   virtual void AddBatch(const Batch& batch);
   virtual void InvokeIteration(int iterations_count);
-  virtual bool WaitIdle(int timeout = -1);
+  virtual bool WaitIdle(long timeout = -1);
   virtual void InvokePhiRegularizers();
 
  private:

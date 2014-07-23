@@ -175,10 +175,9 @@ bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
 }
 
-bool MasterComponent::WaitIdle(int timeout) {
+bool MasterComponent::WaitIdle(long timeout) {
   if (isInLocalModusOperandi()) {
-    instance_->local_data_loader()->WaitIdle(timeout);
-    return true;
+    return instance_->local_data_loader()->WaitIdle(timeout);
   }
 
   if (isInNetworkModusOperandi()) {
@@ -189,9 +188,9 @@ bool MasterComponent::WaitIdle(int timeout) {
       break;
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-      auto time_end = boost::posix_time::microsec_clock::local_time();
-      if ((time_end - time_start).total_milliseconds() >= timeout) {
-        return false;
+      if (timeout >= 0) {
+        auto time_end = boost::posix_time::microsec_clock::local_time();
+        if ((time_end - time_start).total_milliseconds() >= timeout) return false;
       }
     }
 
@@ -200,14 +199,24 @@ bool MasterComponent::WaitIdle(int timeout) {
 
     // Wait merger on master to process all model increments and set them as active topic model
     auto time_end = boost::posix_time::microsec_clock::local_time();
-    bool result = instance_->merger()->WaitIdle(
-      timeout - (time_end - time_start).total_milliseconds());
+    auto local_timeout = timeout - (time_end - time_start).total_milliseconds();
+    if (timeout >= 0) {
+      if (local_timeout >= 0) {
+        bool result = instance_->merger()->WaitIdle(local_timeout);
+        if (!result) return false;
+      } else {
+        return false;
+      }
+    } else {
+      instance_->merger()->WaitIdle(timeout);
+    }
+
     instance_->merger()->ForcePushTopicModelIncrement();
     instance_->merger()->ForcePullTopicModel();
 
     // Ask all nodes to push their updates to topic model
     network_client_interface_->ForcePullTopicModel();
-    return result;
+    return true;
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));

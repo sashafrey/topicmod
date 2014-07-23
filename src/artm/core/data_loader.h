@@ -57,7 +57,7 @@ class LocalDataLoader : public DataLoader {
   void InvokeIteration(int iterations_count);
 
   //true value == success, false means that function works
-  bool WaitIdle(int timeout = -1);
+  bool WaitIdle(long timeout = -1);
   void DisposeModel(ModelName model_name);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 

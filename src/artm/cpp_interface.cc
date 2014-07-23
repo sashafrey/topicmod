@@ -228,13 +228,13 @@ void MasterComponent::InvokeIteration(int iterations_count) {
   HandleErrorCode(ArtmInvokeIteration(id(), iterations_count));
 }
 
-void MasterComponent::WaitIdle(int timeout) {
+bool MasterComponent::WaitIdle(long timeout) {
   int result = ArtmWaitIdle(id(), timeout);
   if (result == ARTM_STILL_WORKING) {
-    LOG(INFO) << "WaitIdle() is still working, timeout is over.";
-    std::cout << "WaitIdle() is still working, timeout is over.";
+    return false;
   } else {
     HandleErrorCode(result);
+    return true;
   }
 }
 

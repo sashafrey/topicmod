@@ -72,7 +72,7 @@ int ArtmInvokeIteration(int master_id, int iterations_count) {
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmWaitIdle(int master_id, int timeout) {
+int ArtmWaitIdle(int master_id, long timeout) {
   try {
     auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;

@@ -30,6 +30,10 @@
 #include "artm/score_sandbox/perplexity.h"
 #include "artm/score_sandbox/sparsity_theta.h"
 #include "artm/score_sandbox/sparsity_phi.h"
+#include "artm/score_sandbox/items_processed.h"
+#include "artm/score_sandbox/top_tokens.h"
+#include "artm/score_sandbox/theta_snippet.h"
+
 
 #define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                  \
   ConfigType regularizer_config;                                                          \
@@ -215,6 +219,24 @@ static std::shared_ptr<ScoreCalculatorInterface> CreateScoreCalculator(const Sco
     case artm::ScoreConfig_Type_SparsityPhi: {
       CREATE_SCORE_CALCULATOR(::artm::SparsityPhiScoreConfig,
                               ::artm::score_sandbox::SparsityPhi);
+      break;
+    }
+
+    case artm::ScoreConfig_Type_ItemsProcessed: {
+      CREATE_SCORE_CALCULATOR(::artm::ItemsProcessedScoreConfig,
+                              ::artm::score_sandbox::ItemsProcessed);
+      break;
+    }
+
+    case artm::ScoreConfig_Type_TopTokens: {
+      CREATE_SCORE_CALCULATOR(::artm::TopTokensScoreConfig,
+                              ::artm::score_sandbox::TopTokens);
+      break;
+    }
+
+    case artm::ScoreConfig_Type_ThetaSnippet: {
+      CREATE_SCORE_CALCULATOR(::artm::ThetaSnippetScoreConfig,
+                              ::artm::score_sandbox::ThetaSnippet);
       break;
     }
 

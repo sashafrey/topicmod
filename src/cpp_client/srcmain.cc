@@ -99,6 +99,32 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   score_config.set_name("sparsity_phi");
   master_config.add_score_config()->CopyFrom(score_config);
 
+  ::artm::ItemsProcessedScoreConfig items_processed_config;
+  items_processed_config.set_stream_name("test_stream");
+  score_config.set_config(items_processed_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_ItemsProcessed);
+  score_config.set_name("test_items_processed");
+  master_config.add_score_config()->CopyFrom(score_config);
+
+  items_processed_config.set_stream_name("train_stream");
+  score_config.set_config(items_processed_config.SerializeAsString());
+  score_config.set_name("train_items_processed");
+  master_config.add_score_config()->CopyFrom(score_config);
+
+  ::artm::TopTokensScoreConfig top_tokens_config;
+  score_config.set_config(top_tokens_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_TopTokens);
+  score_config.set_name("top_tokens");
+  master_config.add_score_config()->CopyFrom(score_config);
+
+  ::artm::ThetaSnippetScoreConfig theta_snippet_config;
+  theta_snippet_config.set_stream_name("train_stream");
+  theta_snippet_config.add_item_id(1);
+  score_config.set_config(theta_snippet_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_ThetaSnippet);
+  score_config.set_name("train_theta_snippet");
+  master_config.add_score_config()->CopyFrom(score_config);
+
   // MasterProxyConfig master_proxy_config;
   // master_proxy_config.set_node_connect_endpoint("tcp://localhost:5556");
   // master_proxy_config.mutable_config()->CopyFrom(master_config);
@@ -140,7 +166,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   int nTopics = (topics_count == 0) ? atoi(argv[3]) : topics_count;
   ModelConfig model_config;
   model_config.set_topics_count(nTopics);
-  model_config.set_inner_iterations_count(10);
+  model_config.set_inner_iterations_count(1);
   model_config.set_stream_name("train_stream");
   model_config.set_reuse_theta(true);
   model_config.set_name("15081980-90a7-4767-ab85-7cb551c39339");
@@ -153,6 +179,10 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.add_score_name("test_sparsity_theta");
   model_config.add_score_name("train_sparsity_theta");
   model_config.add_score_name("sparsity_phi");
+  model_config.add_score_name("test_items_processed");
+  model_config.add_score_name("train_items_processed");
+  model_config.add_score_name("top_tokens");
+  model_config.add_score_name("train_theta_snippet");
 
   Model model(master_component, model_config);
 
@@ -220,6 +250,10 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::shared_ptr<PerplexityScore> test_perplexity, train_perplexity;
   std::shared_ptr<SparsityThetaScore> test_sparsity_theta, train_sparsity_theta;
   std::shared_ptr<SparsityPhiScore> sparsity_phi;
+  std::shared_ptr<ItemsProcessedScore> test_items_processed, train_items_processed;
+  std::shared_ptr<TopTokensScore> top_tokens;
+  std::shared_ptr<ThetaSnippetScore> train_theta_snippet;
+
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
     master_component.WaitIdle();
@@ -231,18 +265,42 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     test_sparsity_theta = master_component.GetScoreAs<::artm::SparsityThetaScore>(model, "test_sparsity_theta");
     train_sparsity_theta = master_component.GetScoreAs<::artm::SparsityThetaScore>(model, "train_sparsity_theta");
     sparsity_phi = master_component.GetScoreAs<::artm::SparsityPhiScore>(model, "sparsity_phi");
+    test_items_processed = master_component.GetScoreAs<::artm::ItemsProcessedScore>(model, "test_items_processed");
+    train_items_processed = master_component.GetScoreAs<::artm::ItemsProcessedScore>(model, "train_items_processed");
     std::cout << "Iter #" << (iter + 1) << ": "
               << "#Tokens = "  << topic_model->token_size() << ", "
-              << "Test perplexity = " << test_perplexity->value() << ", "
+              << "\n\tTest perplexity = " << test_perplexity->value() << ", "
               << "Train perplexity = " << train_perplexity->value() << ", "
-              << "Test spatsity theta = " << test_sparsity_theta->value() << ", "
+              << "\n\tTest spatsity theta = " << test_sparsity_theta->value() << ", "
               << "Train sparsity theta = " << train_sparsity_theta->value() << ", "
-              << "Spatsity phi = " << sparsity_phi->value() << endl;;
+              << "Spatsity phi = " << sparsity_phi->value() << ", "
+              << "\n\tTest items processed = " << test_items_processed->value() << ", "
+              << "Train items processed = " << train_items_processed->value() << endl;
   }
 
   std::cout << endl;
 
   clock_t end = clock();
+
+  top_tokens = master_component.GetScoreAs<::artm::TopTokensScore>(model, "top_tokens");
+  for (int topic_index = 0; topic_index < top_tokens.get()->values_size(); topic_index++) {
+    std::cout << "#" << (topic_index+1) << ": ";
+    auto top_tokens_for_topic = top_tokens.get()->values(topic_index);
+    for (int token_index = 0; token_index < top_tokens_for_topic.value_size(); token_index++) {
+      std::cout << top_tokens_for_topic.value(token_index) << " ";
+    }
+    std::cout << endl;
+  }
+
+  train_theta_snippet = master_component.GetScoreAs<::artm::ThetaSnippetScore>(model, "train_theta_snippet");
+  for (int topic_index = 0; topic_index < nTopics; topic_index++){
+    std::cout << "Topic" << topic_index << ": ";
+    for (int item_index = 0; item_index < train_theta_snippet.get()->values_size(); item_index++) {
+      float weight = train_theta_snippet.get()->values(item_index).value(topic_index);
+      std::cout << std::fixed << std::setw( 6 ) << std::setprecision( 7 ) << weight << "\t";
+    }
+    std::cout << endl;
+  }
 
   std::set<std::string> unique_words;
 
@@ -262,14 +320,14 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
           p_w.push_back(std::pair<float, std::string>(weight, token));
       }
 
-        std::sort(p_w.begin(), p_w.end());
-        for (int word_index = (int)p_w.size() - 1;
-             (word_index >= 0) && (word_index >= (int)p_w.size() - wordsToSort);
-             word_index--)
-        {
-          unique_words.insert(p_w[word_index].second);
-          std::cout << p_w[word_index].second << " ";
-        }
+      std::sort(p_w.begin(), p_w.end());
+      for (int word_index = (int)p_w.size() - 1;
+           (word_index >= 0) && (word_index >= (int)p_w.size() - wordsToSort);
+           word_index--)
+      {
+        unique_words.insert(p_w[word_index].second);
+        std::cout << p_w[word_index].second << " ";
+      }
 
       std::cout << std::endl;
     }

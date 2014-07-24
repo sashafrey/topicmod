@@ -22,6 +22,7 @@ RegularizerConfig_Type_DirichletTheta = 0
 RegularizerConfig_Type_DirichletPhi = 1
 RegularizerConfig_Type_SmoothSparseTheta = 2
 RegularizerConfig_Type_SmoothSparsePhi = 3
+RegularizerConfig_Type_DecorrelatorPhi = 4
 ScoreConfig_Type_Perplexity = 0
 ScoreData_Type_Perplexity = 0
 

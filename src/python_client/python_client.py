@@ -40,7 +40,6 @@ master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
 master_config.cache_processor_output = 1
 master_config.disk_path = '.'
-master_config.abc = 9
 
 perplexity_config = messages_pb2.PerplexityScoreConfig();
 score_config = master_config.score_config.add()
@@ -117,7 +116,7 @@ with library.CreateMasterComponent(master_config) as master_component:
 
     for iter in range(0, outer_iteration_count):
         master_component.InvokeIteration(1)
-        master_component.WaitIdle();
+        master_component.WaitIdle(120000);
         topic_model = master_component.GetTopicModel(model)
         perplexity_score = master_component.GetScore(model, 'perplexity_score')
         model.InvokePhiRegularizers();

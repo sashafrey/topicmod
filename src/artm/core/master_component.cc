@@ -202,7 +202,7 @@ bool MasterComponent::WaitIdle(long timeout) {
     auto local_timeout = timeout - (time_end - time_start).total_milliseconds();
     if (timeout >= 0) {
       if (local_timeout >= 0) {
-        bool result = instance_->merger()->WaitIdle(local_timeout);
+        bool result = instance_->merger()->WaitIdle(static_cast<long>(local_timeout));
         if (!result) return false;
       } else {
         return false;

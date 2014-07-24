@@ -19,6 +19,11 @@ inline char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
 }
 
+inline std::string GetErrorMessage() {
+  auto error_message = ArtmGetErrorMessage();
+  return std::string(error_message);
+}
+
 inline int HandleErrorCode(int artm_error_code) {
   // All error codes are negative. Any non-negative value is a success.
   if (artm_error_code >= 0) {
@@ -29,16 +34,16 @@ inline int HandleErrorCode(int artm_error_code) {
     case ARTM_SUCCESS:
       return artm_error_code;
     case ARTM_OBJECT_NOT_FOUND:
-      throw ObjectNotFound();
+      throw ObjectNotFound(GetErrorMessage());
     case ARTM_INVALID_MESSAGE:
-      throw InvalidMessage();
+      throw InvalidMessage(GetErrorMessage());
     case ARTM_NETWORK_ERROR:
-      throw NerworkException();
+      throw NerworkException(GetErrorMessage());
     case ARTM_INVALID_OPERATION:
-      throw InvalidOperation();
+      throw InvalidOperation(GetErrorMessage());
     case ARTM_GENERAL_ERROR:
     default:
-      throw GeneralError();
+      throw GeneralError(GetErrorMessage());
   }
 }
 

@@ -16,6 +16,8 @@
 #include "artm/core/node_controller.h"
 
 std::string message;
+static std::string error_message; 
+
 void EnableLogging() {
   static bool logging_enabled = false;
   if (!logging_enabled) {
@@ -47,6 +49,10 @@ int ArtmCopyRequestResult(int request_id, int length, char* address) {
 
 int ArtmGetRequestLength(int request_id) {
   return message.size();
+}
+
+const char* ArtmGetErrorMessage() {
+  return error_message.c_str();
 }
 
 int ArtmAddBatch(int master_id, int length, const char* batch_blob) {

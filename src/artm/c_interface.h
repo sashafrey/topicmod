@@ -27,6 +27,8 @@ extern "C" {
   DLL_PUBLIC int ArtmCopyRequestResult(int request_id, int length, char* address);
   DLL_PUBLIC void ArtmDisposeRequest(int request_id);
 
+  DLL_PUBLIC const char* ArtmGetErrorMessage();
+
   // ===============================================================================================
   // MasterComponent / MasterProxy
   // ===============================================================================================

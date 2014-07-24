@@ -40,6 +40,7 @@ master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
 master_config.cache_processor_output = 1
 master_config.disk_path = '.'
+master_config.abc = 9
 
 perplexity_config = messages_pb2.PerplexityScoreConfig();
 score_config = master_config.score_config.add()

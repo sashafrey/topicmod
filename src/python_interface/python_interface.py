@@ -33,21 +33,27 @@ class InvalidMessage(BaseException) : pass
 class InvalidOperation(BaseException) : pass
 class NetworkError(BaseException) : pass
 
-def HandleErrorCode(artm_error_code):
+
+def GetErrorMessage(lib):
+  error_message = lib.ArtmGetErrorMessage()
+  return ctypes.c_char_p(error_message).value
+
+
+def HandleErrorCode(lib, artm_error_code):
   if (artm_error_code == ARTM_SUCCESS) | (artm_error_code >= 0):
     return artm_error_code
   elif artm_error_code == ARTM_OBJECT_NOT_FOUND:
-    raise ObjectNotFound()
+    raise ObjectNotFound(GetErrorMessage(lib))
   elif artm_error_code == ARTM_INVALID_MESSAGE:
-    raise InvalidMessage()
+    raise InvalidMessage(GetErrorMessage(lib))
   elif artm_error_code == ARTM_INVALID_OPERATION:
-    raise InvalidOperation()
+    raise InvalidOperation(GetErrorMessage(lib))
   elif artm_error_code == ARTM_NETWORK_ERROR:
-    raise NetworkError()
+    raise NetworkError(GetErrorMessage(lib))
   elif artm_error_code == ARTM_GENERAL_ERROR:
-    raise GeneralError()
+    raise GeneralError(GetErrorMessage(lib))
   else:
-    raise GeneralError()
+    raise GeneralError(GetErrorMessage(lib))
 
 #################################################################################
 
@@ -55,7 +61,7 @@ class ArtmLibrary:
   def __init__(self, location):
     self.lib_ = ctypes.CDLL(location)
 
-  def CreateMasterComponent(self, config=messages_pb2.MasterComponentConfig()):
+  def CreateMasterComponent(self, config = messages_pb2.MasterComponentConfig()):
     return MasterComponent(config, self.lib_)
 
   def CreateNodeController(self, endpoint):
@@ -73,17 +79,17 @@ class MasterComponent:
 
     if (isinstance(config, messages_pb2.MasterComponentConfig)):
       self.config_ = config
-      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
+      self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateMasterComponent(0,
                  len(master_config_blob), master_config_blob_p))
       return
 
     if (isinstance(config, messages_pb2.MasterProxyConfig)):
       self.config_ = config.config
-      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterProxy(0,
+      self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateMasterProxy(0,
                  len(master_config_blob), master_config_blob_p))
       return
 
-    raise InvalidOperation()
+    raise InvalidOperation(self.lib_, GetErrorMessage())
 
   def __enter__(self):
     return self
@@ -120,23 +126,23 @@ class MasterComponent:
   def Reconfigure(self, config):
     config_blob = config.SerializeToString()
     config_blob_p = ctypes.create_string_buffer(config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureMasterComponent(self.id_, len(config_blob), config_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmReconfigureMasterComponent(self.id_, len(config_blob), config_blob_p))
     self.config_.CopyFrom(config)
 
   def AddBatch(self, batch):
     batch_blob = batch.SerializeToString()
     batch_blob_p = ctypes.create_string_buffer(batch_blob)
-    HandleErrorCode(self.lib_.ArtmAddBatch(self.id_, len(batch_blob), batch_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmAddBatch(self.id_, len(batch_blob), batch_blob_p))
 
   def InvokeIteration(self, iterations_count):
-    HandleErrorCode(self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
+    HandleErrorCode(self.lib_, self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
 
   def WaitIdle(self, timeout):
     result = self.lib_.ArtmWaitIdle(self.id_, timeout)
     if result == ARTM_STILL_WORKING:
         print "WaitIdle() is still working, timeout is over.";
     else:
-        HandleErrorCode(result)
+        HandleErrorCode(self.lib_, result)
 
 
   def AddStream(self, stream):
@@ -156,11 +162,11 @@ class MasterComponent:
     self.Reconfigure(new_config_)
 
   def GetTopicModel(self, model):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestTopicModel(self.id_, model.name()))
-    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+    request_id = HandleErrorCode(self.lib_, self.lib_.ArtmRequestTopicModel(self.id_, model.name()))
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmGetRequestLength(request_id))
 
     topic_model_blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, topic_model_blob))
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(request_id, length, topic_model_blob))
     self.lib_.ArtmDisposeRequest(request_id)
 
     topic_model = messages_pb2.TopicModel()
@@ -168,11 +174,12 @@ class MasterComponent:
     return topic_model
 
   def GetThetaMatrix(self, model):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestThetaMatrix(self.id_, model.name()))
-    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+    request_id = HandleErrorCode(self.lib_, 
+                                 self.lib_.ArtmRequestThetaMatrix(self.id_, model.name()))
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmGetRequestLength(request_id))
 
     blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, blob))
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(request_id, length, blob))
     self.lib_.ArtmDisposeRequest(request_id)
 
     theta_matrix = messages_pb2.ThetaMatrix()
@@ -180,11 +187,12 @@ class MasterComponent:
     return theta_matrix
 
   def GetScore(self, model, score_name):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
-    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+    request_id = HandleErrorCode(self.lib_, 
+                                 self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmGetRequestLength(request_id))
 
     blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, blob))
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(request_id, length, blob))
     self.lib_.ArtmDisposeRequest(request_id)
 
     score_data = messages_pb2.ScoreData()
@@ -196,7 +204,7 @@ class MasterComponent:
       return score;
 
     # Unknown score type
-    raise InvalidMessage()
+    raise InvalidMessage(self.lib_, GetErrorMessage())
 
 #################################################################################
 
@@ -206,8 +214,8 @@ class NodeController:
     config_blob = config.SerializeToString()
     config_blob_p = ctypes.create_string_buffer(config_blob)
 
-    self.id_ = HandleErrorCode(self.lib_.ArtmCreateNodeController(0,
-               len(config_blob), config_blob_p))
+    self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateNodeController(0, 
+                               len(config_blob), config_blob_p))
 
   def __enter__(self):
     return self
@@ -229,7 +237,7 @@ class Model:
     self.config_.name = uuid.uuid1().urn
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateModel(self.master_id_,
+    HandleErrorCode(self.lib_, self.lib_.ArtmCreateModel(self.master_id_,
                     len(model_config_blob), model_config_blob_p))
 
   def __enter__(self):
@@ -249,17 +257,18 @@ class Model:
   def Reconfigure(self, config):
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureModel(self.master_id_,
+    HandleErrorCode(self.lib_, self.lib_.ArtmReconfigureModel(self.master_id_,
                     len(model_config_blob), model_config_blob_p))
     self.config_.CopyFrom(config)
 
   def InvokePhiRegularizers(self):
-    HandleErrorCode(self.lib_.ArtmInvokePhiRegularizers(self.master_id_))
+    HandleErrorCode(self.lib_, self.lib_.ArtmInvokePhiRegularizers(self.master_id_))
 
   def Overwrite(self, topic_model):
     blob = topic_model.SerializeToString()
     blob_p = ctypes.create_string_buffer(blob)
-    HandleErrorCode(self.lib_.ArtmOverwriteTopicModel(self.master_id_, len(blob), blob_p))
+    HandleErrorCode(self.lib_, 
+                    self.lib_.ArtmOverwriteTopicModel(self.master_id_, len(blob), blob_p))
 
   def Enable(self):
     config_copy_ = messages_pb2.ModelConfig()
@@ -282,8 +291,8 @@ class Regularizer:
     self.config_ = config
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateRegularizer(self.master_id_,
-                     len(regularizer_config_blob), regularizer_config_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmCreateRegularizer(self.master_id_,
+                    len(regularizer_config_blob), regularizer_config_blob_p))
 
   def __enter__(self):
     return self
@@ -307,7 +316,7 @@ class Regularizer:
 
     regularizer_config_blob = general_config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.master_id_,
+    HandleErrorCode(self.lib_, self.lib_.ArtmReconfigureRegularizer(self.master_id_,
                     len(regularizer_config_blob), regularizer_config_blob_p))
     self.config_.CopyFrom(general_config)
 
@@ -320,8 +329,8 @@ class Dictionary:
     self.config_ = config
     dictionary_config_blob = config.SerializeToString()
     dictionary_config_blob_p = ctypes.create_string_buffer(dictionary_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateDictionary(self.master_id_,
-                     len(dictionary_config_blob), dictionary_config_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmCreateDictionary(self.master_id_,
+                    len(dictionary_config_blob), dictionary_config_blob_p))
 
   def __enter__(self):
     return self
@@ -340,6 +349,6 @@ class Dictionary:
   def Reconfigure(self, config):
     dictionary_config_blob = config.SerializeToString()
     dictionary_config_blob_p = ctypes.create_string_buffer(dictionary_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureDictionary(self.master_id_,
+    HandleErrorCode(self.lib_, self.lib_.ArtmReconfigureDictionary(self.master_id_,
                     len(dictionary_config_blob), dictionary_config_blob_p))
     self.config_.CopyFrom(config)

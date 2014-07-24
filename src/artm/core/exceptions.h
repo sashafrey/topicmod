@@ -41,26 +41,31 @@ class Type : public BaseType { public:  /*NOLINT*/     \
   explicit Type(const char* what) : BaseType(what) {}  \
 };
 
-#define CATCH_EXCEPTIONS                                    \
-  catch (const rpcz::rpc_error& e) {                        \
-  LOG(ERROR) << "rpc_error: " << e.what();                  \
-  return ARTM_NETWORK_ERROR;                                \
-} catch (const artm::core::NetworkException& e) {           \
-  LOG(ERROR) << "NetworkException: " << e.what();           \
-  return ARTM_NETWORK_ERROR;                                \
-}  catch (const artm::core::InvalidOperation& e) {          \
-  LOG(ERROR) << "InvalidOperation: " << e.what();           \
-  return ARTM_INVALID_OPERATION;                            \
-} catch (const std::runtime_error& e) {                     \
-  LOG(ERROR) << "runtime_error: " << e.what();              \
-  return ARTM_GENERAL_ERROR;                                \
-} catch (...) {                                             \
-  LOG(ERROR) << "unknown error.";                           \
-  return ARTM_GENERAL_ERROR;                                \
+#define CATCH_EXCEPTIONS                                                       \
+catch (const rpcz::rpc_error& e) {                                             \
+  LOG(ERROR) << "rpc_error: " << e.what();                                     \
+  error_message = "Rpc error :  " + static_cast<std::string>(e.what());        \
+  return ARTM_NETWORK_ERROR;                                                   \
+} catch (const artm::core::NetworkException& e) {                              \
+  LOG(ERROR) << "NetworkException: " << e.what();                              \
+  error_message = "Network error :  " + static_cast<std::string>(e.what());    \
+  return ARTM_NETWORK_ERROR;                                                   \
+}  catch (const artm::core::InvalidOperation& e) {                             \
+  LOG(ERROR) << "InvalidOperation: " << e.what();                              \
+  error_message = "Invalid Operation :  " + static_cast<std::string>(e.what());\
+  return ARTM_INVALID_OPERATION;                                               \
+} catch (const std::runtime_error& e) {                                        \
+  LOG(ERROR) << "runtime_error: " << e.what();                                 \
+  error_message = "Runtime error :  " + static_cast<std::string>(e.what());    \
+  return ARTM_GENERAL_ERROR;                                                   \
+} catch (...) {                                                                \
+  LOG(ERROR) << "unknown error.";                                              \
+  error_message = "Unknown error. ";                                           \
+  return ARTM_GENERAL_ERROR;                                                   \
 }
 
 #define CATCH_EXCEPTIONS_AND_SEND_ERROR                     \
-  catch (const rpcz::rpc_error& e) {                        \
+catch (const rpcz::rpc_error& e) {                          \
   LOG(ERROR) << "rpc_error: " << e.what();                  \
   response.Error(ARTM_NETWORK_ERROR);                       \
 } catch (const artm::core::NetworkException& e) {           \

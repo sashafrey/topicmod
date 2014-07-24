@@ -32,10 +32,10 @@ class Regularizer;
 class Dictionary;
 
 // Exception handling in cpp_interface
-#define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
-class Type : public BaseType { public:  /*NOLINT*/     \
-  explicit Type() : BaseType("") {}                    \
-  explicit Type(std::string mes) : BaseType(mes) {}    \
+#define DEFINE_EXCEPTION_TYPE(Type, BaseType)                  \
+class Type : public BaseType { public:  /*NOLINT*/             \
+  explicit Type() : BaseType("") {}                            \
+  explicit Type(std::string message) : BaseType(message) {}    \
 };
 
 DEFINE_EXCEPTION_TYPE(GeneralError, std::runtime_error);

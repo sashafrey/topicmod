@@ -128,11 +128,6 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
     }
   }
 
-  master_component->InvokeIteration(2);
-  if (is_network_mode || !is_proxy_mode) {
-    EXPECT_FALSE(master_component->WaitIdle(0));
-  }
-  
   master_component->InvokeIteration(1);
   EXPECT_TRUE(master_component->WaitIdle());
   model.Disable();
@@ -231,8 +226,16 @@ TEST(CppInterface, ProxyExceptions) {
   artm::MasterProxyConfig master_proxy_config;
   master_proxy_config.set_node_connect_endpoint("tcp://localhost:5557");
   master_proxy_config.mutable_config()->CopyFrom(master_config);
-  master_proxy_config.set_communication_timeout(10000);
+  master_proxy_config.set_communication_timeout(10);
 
   ASSERT_THROW(artm::MasterComponent master_component(master_proxy_config), 
     artm::NerworkException);
+}
+
+TEST(CppInterface, WaitIdleTimeout) {
+  ::artm::MasterComponentConfig master_config;
+  ::artm::MasterComponent master(master_config);
+  master.AddBatch(::artm::Batch());
+  master.InvokeIteration(10000);
+  EXPECT_FALSE(master.WaitIdle(1));
 }

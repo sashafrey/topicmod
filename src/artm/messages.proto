@@ -16,6 +16,11 @@ message BoolArray {
   repeated bool value = 1 [packed = true];
 }
 
+// Represents an array of string values
+message StringArray {
+  repeated string value = 1;
+}
+
 // Represents a unit of textual information.
 message Item
 {
@@ -159,6 +164,11 @@ message DictionaryEntry {
 message ScoreConfig {
   enum Type {
     Perplexity = 0;
+    SparsityTheta = 1;
+    SparsityPhi = 2;
+    ItemsProcessed = 3;
+    TopTokens = 4;
+    ThetaSnippet = 5;
   }
 
   optional string name = 1;
@@ -170,6 +180,11 @@ message ScoreConfig {
 message ScoreData {
   enum Type {
     Perplexity = 0;
+    SparsityTheta = 1;
+    SparsityPhi = 2;
+    ItemsProcessed = 3;
+    TopTokens = 4;
+    ThetaSnippet = 5;
   }
 
   optional string name = 1;
@@ -191,7 +206,69 @@ message PerplexityScore {
   optional int32 zero_words = 4;
 }
 
-// Represents a topic model.
+// Represents a configuration of a theta sparsity score.
+message SparsityThetaScoreConfig {
+  optional string field_name = 1 [default = "@body"];
+  optional string stream_name = 2 [default = "@global"];
+  optional float eps = 3 [default = 1e-37];
+}
+
+// Represents a result of calculation of a theta sparsity score.
+message SparsityThetaScore {
+  optional double value = 1;
+  optional int32 zero_topics = 2;
+  optional int32 total_topics = 3;
+}
+
+// Represents a configuration of a sparsity phi score.
+message SparsityPhiScoreConfig {
+  optional float eps = 1 [default = 1e-37];
+}
+
+// Represents a result of calculation of a phi sparsity score
+message SparsityPhiScore {
+  optional double value = 1;
+  optional int32 zero_tokens = 2;
+  optional int32 total_tokens = 3;
+}
+
+// Represents a configuration of an items processed score
+message ItemsProcessedScoreConfig {
+  optional string field_name = 1 [default = "@body"];
+  optional string stream_name = 2 [default = "@global"];
+}
+
+// Represents a result of calculation of an items processed score
+message ItemsProcessedScore {
+  optional int32 value = 1;
+}
+
+// Represents a configuration of a top tokens score
+message TopTokensScoreConfig {
+  optional int32 num_tokens = 1 [default = 10];
+  repeated int32 topic_id = 2 [packed = true];
+}
+
+// Represents a result of calculation of a top tokens score
+message TopTokensScore {
+  repeated StringArray values = 1;
+}
+
+// Represents a configuration of a theta snippet score
+message ThetaSnippetScoreConfig {
+  optional string field_name = 1 [default = "@body"];
+  optional string stream_name = 2 [default = "@global"];
+  repeated int32 item_id = 3 [packed = true];
+}
+
+
+// Represents a result of calculation of a theta snippet score
+message ThetaSnippetScore {
+  repeated int32 item_id = 1;
+  repeated FloatArray values = 2;
+}
+
+// Represents a topic model
 message TopicModel {
   optional string name = 1 [default = "@model"];
   optional int32 topics_count = 2;

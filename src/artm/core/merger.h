@@ -60,8 +60,9 @@ class Merger : boost::noncopyable {
  private:
   class ScoresMerger {
    public:
-    explicit ScoresMerger(ThreadSafeHolder<InstanceSchema>* schema)
-        : schema_(schema), score_map_() {}
+    explicit ScoresMerger(ThreadSafeHolder<InstanceSchema>* schema,
+                          ThreadSafeCollectionHolder<ModelName, TopicModel>* topic_model)
+        : schema_(schema), topic_model_(topic_model), score_map_() {}
 
     void Append(const ModelName& model_name, const ScoreName& score_name,
                 const std::string& score_blob);
@@ -73,6 +74,7 @@ class Merger : boost::noncopyable {
 
    private:
     ThreadSafeHolder<InstanceSchema>* schema_;
+    ThreadSafeCollectionHolder<ModelName, TopicModel>* topic_model_;
 
     // Map from model name and score name to the score
     typedef std::pair<ModelName, ScoreName> ScoreKey;

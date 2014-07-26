@@ -20,12 +20,19 @@ RegularizerConfig_Type_DirichletTheta = 0
 RegularizerConfig_Type_DirichletPhi = 1
 RegularizerConfig_Type_SmoothSparseTheta = 2
 RegularizerConfig_Type_SmoothSparsePhi = 3
+RegularizerConfig_Type_DecorrelatorPhi = 4
 ScoreConfig_Type_Perplexity = 0
 ScoreData_Type_Perplexity = 0
 ScoreConfig_Type_SparsityTheta = 1
 ScoreData_Type_SparsityTheta = 1
 ScoreConfig_Type_SparsityPhi = 2
 ScoreData_Type_SparsityPhi = 2
+ScoreConfig_Type_ItemsProcessed = 3
+ScoreData_Type_ItemsProcessed = 3
+ScoreConfig_Type_TopTokens = 4
+ScoreData_Type_TopTokens = 4
+ScoreConfig_Type_ThetaSnippet = 5
+ScoreData_Type_ThetaSnippet = 5
 
 #################################################################################
 

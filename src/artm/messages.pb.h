@@ -3013,40 +3013,24 @@ class SparsityPhiScoreConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string field_name = 1 [default = "@body"];
-  inline bool has_field_name() const;
-  inline void clear_field_name();
-  static const int kFieldNameFieldNumber = 1;
-  inline const ::std::string& field_name() const;
-  inline void set_field_name(const ::std::string& value);
-  inline void set_field_name(const char* value);
-  inline void set_field_name(const char* value, size_t size);
-  inline ::std::string* mutable_field_name();
-  inline ::std::string* release_field_name();
-  inline void set_allocated_field_name(::std::string* field_name);
-
-  // optional float eps = 2 [default = 1e-037];
+  // optional float eps = 1 [default = 1e-037];
   inline bool has_eps() const;
   inline void clear_eps();
-  static const int kEpsFieldNumber = 2;
+  static const int kEpsFieldNumber = 1;
   inline float eps() const;
   inline void set_eps(float value);
 
   // @@protoc_insertion_point(class_scope:artm.SparsityPhiScoreConfig)
  private:
-  inline void set_has_field_name();
-  inline void clear_has_field_name();
   inline void set_has_eps();
   inline void clear_has_eps();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* field_name_;
-  static ::std::string* _default_field_name_;
   float eps_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -3399,29 +3383,17 @@ class TopTokensScoreConfig : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string field_name = 1 [default = "@body"];
-  inline bool has_field_name() const;
-  inline void clear_field_name();
-  static const int kFieldNameFieldNumber = 1;
-  inline const ::std::string& field_name() const;
-  inline void set_field_name(const ::std::string& value);
-  inline void set_field_name(const char* value);
-  inline void set_field_name(const char* value, size_t size);
-  inline ::std::string* mutable_field_name();
-  inline ::std::string* release_field_name();
-  inline void set_allocated_field_name(::std::string* field_name);
-
-  // optional int32 num_tokens = 2 [default = 10];
+  // optional int32 num_tokens = 1 [default = 10];
   inline bool has_num_tokens() const;
   inline void clear_num_tokens();
-  static const int kNumTokensFieldNumber = 2;
+  static const int kNumTokensFieldNumber = 1;
   inline ::google::protobuf::int32 num_tokens() const;
   inline void set_num_tokens(::google::protobuf::int32 value);
 
-  // repeated int32 topic_id = 3 [packed = true];
+  // repeated int32 topic_id = 2 [packed = true];
   inline int topic_id_size() const;
   inline void clear_topic_id();
-  static const int kTopicIdFieldNumber = 3;
+  static const int kTopicIdFieldNumber = 2;
   inline ::google::protobuf::int32 topic_id(int index) const;
   inline void set_topic_id(int index, ::google::protobuf::int32 value);
   inline void add_topic_id(::google::protobuf::int32 value);
@@ -3432,21 +3404,17 @@ class TopTokensScoreConfig : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:artm.TopTokensScoreConfig)
  private:
-  inline void set_has_field_name();
-  inline void clear_has_field_name();
   inline void set_has_num_tokens();
   inline void clear_has_num_tokens();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* field_name_;
-  static ::std::string* _default_field_name_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > topic_id_;
   mutable int _topic_id_cached_byte_size_;
   ::google::protobuf::int32 num_tokens_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -7189,85 +7157,15 @@ inline void SparsityThetaScore::set_total_topics(::google::protobuf::int32 value
 
 // SparsityPhiScoreConfig
 
-// optional string field_name = 1 [default = "@body"];
-inline bool SparsityPhiScoreConfig::has_field_name() const {
+// optional float eps = 1 [default = 1e-037];
+inline bool SparsityPhiScoreConfig::has_eps() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SparsityPhiScoreConfig::set_has_field_name() {
+inline void SparsityPhiScoreConfig::set_has_eps() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SparsityPhiScoreConfig::clear_has_field_name() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void SparsityPhiScoreConfig::clear_field_name() {
-  if (field_name_ != _default_field_name_) {
-    field_name_->assign(*_default_field_name_);
-  }
-  clear_has_field_name();
-}
-inline const ::std::string& SparsityPhiScoreConfig::field_name() const {
-  return *field_name_;
-}
-inline void SparsityPhiScoreConfig::set_field_name(const ::std::string& value) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
-  }
-  field_name_->assign(value);
-}
-inline void SparsityPhiScoreConfig::set_field_name(const char* value) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
-  }
-  field_name_->assign(value);
-}
-inline void SparsityPhiScoreConfig::set_field_name(const char* value, size_t size) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
-  }
-  field_name_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SparsityPhiScoreConfig::mutable_field_name() {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string(*_default_field_name_);
-  }
-  return field_name_;
-}
-inline ::std::string* SparsityPhiScoreConfig::release_field_name() {
-  clear_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    return NULL;
-  } else {
-    ::std::string* temp = field_name_;
-    field_name_ = const_cast< ::std::string*>(_default_field_name_);
-    return temp;
-  }
-}
-inline void SparsityPhiScoreConfig::set_allocated_field_name(::std::string* field_name) {
-  if (field_name_ != _default_field_name_) {
-    delete field_name_;
-  }
-  if (field_name) {
-    set_has_field_name();
-    field_name_ = field_name;
-  } else {
-    clear_has_field_name();
-    field_name_ = const_cast< ::std::string*>(_default_field_name_);
-  }
-}
-
-// optional float eps = 2 [default = 1e-037];
-inline bool SparsityPhiScoreConfig::has_eps() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void SparsityPhiScoreConfig::set_has_eps() {
-  _has_bits_[0] |= 0x00000002u;
-}
 inline void SparsityPhiScoreConfig::clear_has_eps() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void SparsityPhiScoreConfig::clear_eps() {
   eps_ = 1e-037f;
@@ -7525,85 +7423,15 @@ inline void ItemsProcessedScore::set_value(::google::protobuf::int32 value) {
 
 // TopTokensScoreConfig
 
-// optional string field_name = 1 [default = "@body"];
-inline bool TopTokensScoreConfig::has_field_name() const {
+// optional int32 num_tokens = 1 [default = 10];
+inline bool TopTokensScoreConfig::has_num_tokens() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void TopTokensScoreConfig::set_has_field_name() {
+inline void TopTokensScoreConfig::set_has_num_tokens() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void TopTokensScoreConfig::clear_has_field_name() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void TopTokensScoreConfig::clear_field_name() {
-  if (field_name_ != _default_field_name_) {
-    field_name_->assign(*_default_field_name_);
-  }
-  clear_has_field_name();
-}
-inline const ::std::string& TopTokensScoreConfig::field_name() const {
-  return *field_name_;
-}
-inline void TopTokensScoreConfig::set_field_name(const ::std::string& value) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
-  }
-  field_name_->assign(value);
-}
-inline void TopTokensScoreConfig::set_field_name(const char* value) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
-  }
-  field_name_->assign(value);
-}
-inline void TopTokensScoreConfig::set_field_name(const char* value, size_t size) {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string;
-  }
-  field_name_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* TopTokensScoreConfig::mutable_field_name() {
-  set_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    field_name_ = new ::std::string(*_default_field_name_);
-  }
-  return field_name_;
-}
-inline ::std::string* TopTokensScoreConfig::release_field_name() {
-  clear_has_field_name();
-  if (field_name_ == _default_field_name_) {
-    return NULL;
-  } else {
-    ::std::string* temp = field_name_;
-    field_name_ = const_cast< ::std::string*>(_default_field_name_);
-    return temp;
-  }
-}
-inline void TopTokensScoreConfig::set_allocated_field_name(::std::string* field_name) {
-  if (field_name_ != _default_field_name_) {
-    delete field_name_;
-  }
-  if (field_name) {
-    set_has_field_name();
-    field_name_ = field_name;
-  } else {
-    clear_has_field_name();
-    field_name_ = const_cast< ::std::string*>(_default_field_name_);
-  }
-}
-
-// optional int32 num_tokens = 2 [default = 10];
-inline bool TopTokensScoreConfig::has_num_tokens() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void TopTokensScoreConfig::set_has_num_tokens() {
-  _has_bits_[0] |= 0x00000002u;
-}
 inline void TopTokensScoreConfig::clear_has_num_tokens() {
-  _has_bits_[0] &= ~0x00000002u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void TopTokensScoreConfig::clear_num_tokens() {
   num_tokens_ = 10;
@@ -7617,7 +7445,7 @@ inline void TopTokensScoreConfig::set_num_tokens(::google::protobuf::int32 value
   num_tokens_ = value;
 }
 
-// repeated int32 topic_id = 3 [packed = true];
+// repeated int32 topic_id = 2 [packed = true];
 inline int TopTokensScoreConfig::topic_id_size() const {
   return topic_id_.size();
 }

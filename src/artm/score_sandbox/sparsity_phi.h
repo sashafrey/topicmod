@@ -17,13 +17,9 @@ class SparsityPhi : public ScoreCalculatorInterface {
   explicit SparsityPhi(const SparsityPhiScoreConfig& config)
     : config_(config) {}
 
-  void CalculateScore(const artm::core::TopicModel& topic_model, Score* score);
+  std::shared_ptr<Score> CalculateScore(const artm::core::TopicModel& topic_model);
 
   virtual bool is_cumulative() const { return false; }
-
-  virtual std::shared_ptr<Score> CreateScore();
-
-  virtual void AppendScore(const Score& score, Score* target);
 
   virtual ScoreData_Type score_type() const { return ::artm::ScoreData_Type_SparsityPhi; }
 

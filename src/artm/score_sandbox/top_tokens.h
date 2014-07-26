@@ -17,13 +17,9 @@ class TopTokens : public ScoreCalculatorInterface {
   explicit TopTokens(const TopTokensScoreConfig& config)
     : config_(config) {}
 
-  void CalculateScore(const artm::core::TopicModel& topic_model, Score* score);
+  virtual std::shared_ptr<Score> CalculateScore(const artm::core::TopicModel& topic_model);
 
   virtual bool is_cumulative() const { return false; }
-
-  virtual std::shared_ptr<Score> CreateScore();
-
-  virtual void AppendScore(const Score& score, Score* target);
 
   virtual ScoreData_Type score_type() const { return ::artm::ScoreData_Type_TopTokens; }
 

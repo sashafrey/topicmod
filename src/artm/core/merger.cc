@@ -395,10 +395,8 @@ bool Merger::ScoresMerger::RequestScore(const ModelName& model_name, const Score
       score_data->set_data(score->SerializeAsString());
     }
   } else {
-    std::shared_ptr<Score> score = score_calculator->CreateScore();
     std::shared_ptr<::artm::core::TopicModel> model = topic_model_->get(model_name);
-
-    score_calculator->CalculateScore(*model.get(), score.get());
+    std::shared_ptr<Score> score = score_calculator->CalculateScore(*model);
     score_data->set_data(score->SerializeAsString());
   }
 

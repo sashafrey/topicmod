@@ -18,14 +18,14 @@ batch_size = 500
 processors_count = 4
 eps = 1e-100
 limit_collection_size = 50000 # don't load more that this docs
-topics_count = 100
-outer_iteration_count = 41
-inner_iterations_count = 1
+topics_count = 20
+outer_iteration_count = 10
+inner_iterations_count = 10
 top_tokens_count_to_visualize = 4
-parse_collection_from_text = True
+parse_collection_from_text = False
 
-vocab_file = 'datasets/vocab.nips.txt'
-docword_file = 'datasets/docword.nips.txt'
+vocab_file = '../../datasets/vocab.kos.txt'
+docword_file = '../../datasets/docword.kos.txt'
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 

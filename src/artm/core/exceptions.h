@@ -44,19 +44,19 @@ class Type : public BaseType { public:  /*NOLINT*/     \
 #define CATCH_EXCEPTIONS                                                       \
 catch (const rpcz::rpc_error& e) {                                             \
   LOG(ERROR) << "rpc_error: " << e.what();                                     \
-  error_message = "Rpc error :  " + static_cast<std::string>(e.what());        \
+  error_message = "Rpc error :  " + std::string(e.what());                     \
   return ARTM_NETWORK_ERROR;                                                   \
 } catch (const artm::core::NetworkException& e) {                              \
   LOG(ERROR) << "NetworkException: " << e.what();                              \
-  error_message = "Network error :  " + static_cast<std::string>(e.what());    \
+  error_message = "Network error :  " + std::string(e.what());                 \
   return ARTM_NETWORK_ERROR;                                                   \
 }  catch (const artm::core::InvalidOperation& e) {                             \
   LOG(ERROR) << "InvalidOperation: " << e.what();                              \
-  error_message = "Invalid Operation :  " + static_cast<std::string>(e.what());\
+  error_message = "Invalid Operation :  " + std::string(e.what());             \
   return ARTM_INVALID_OPERATION;                                               \
 } catch (const std::runtime_error& e) {                                        \
   LOG(ERROR) << "runtime_error: " << e.what();                                 \
-  error_message = "Runtime error :  " + static_cast<std::string>(e.what());    \
+  error_message = "Runtime error :  " + std::string(e.what());                 \
   return ARTM_GENERAL_ERROR;                                                   \
 } catch (...) {                                                                \
   LOG(ERROR) << "unknown error.";                                              \

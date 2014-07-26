@@ -35,8 +35,8 @@ class InvalidOperation(BaseException) : pass
 class NetworkError(BaseException) : pass
 
 
-def GetErrorMessage(lib):
-  error_message = lib.ArtmGetErrorMessage()
+def GetLastErrorMessage(lib):
+  error_message = lib.ArtmGetLastErrorMessage()
   return ctypes.c_char_p(error_message).value
 
 
@@ -44,17 +44,17 @@ def HandleErrorCode(lib, artm_error_code):
   if (artm_error_code == ARTM_SUCCESS) | (artm_error_code >= 0):
     return artm_error_code
   elif artm_error_code == ARTM_OBJECT_NOT_FOUND:
-    raise ObjectNotFound(GetErrorMessage(lib))
+    raise ObjectNotFound(GetLastErrorMessage(lib))
   elif artm_error_code == ARTM_INVALID_MESSAGE:
-    raise InvalidMessage(GetErrorMessage(lib))
+    raise InvalidMessage(GetLastErrorMessage(lib))
   elif artm_error_code == ARTM_INVALID_OPERATION:
-    raise InvalidOperation(GetErrorMessage(lib))
+    raise InvalidOperation(GetLastErrorMessage(lib))
   elif artm_error_code == ARTM_NETWORK_ERROR:
-    raise NetworkError(GetErrorMessage(lib))
+    raise NetworkError(GetLastErrorMessage(lib))
   elif artm_error_code == ARTM_GENERAL_ERROR:
-    raise GeneralError(GetErrorMessage(lib))
+    raise GeneralError(GetLastErrorMessage(lib))
   else:
-    raise GeneralError(GetErrorMessage(lib))
+    raise GeneralError(GetLastErrorMessage(lib))
 
 #################################################################################
 
@@ -90,7 +90,7 @@ class MasterComponent:
                  len(master_config_blob), master_config_blob_p))
       return
 
-    raise InvalidOperation(self.lib_, GetErrorMessage())
+    raise InvalidOperation(self.lib_, GetLastErrorMessage())
 
   def __enter__(self):
     return self
@@ -205,7 +205,7 @@ class MasterComponent:
       return score;
 
     # Unknown score type
-    raise InvalidMessage(self.lib_, GetErrorMessage())
+    raise InvalidMessage(self.lib_, GetLastErrorMessage())
 
 #################################################################################
 

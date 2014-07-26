@@ -51,7 +51,7 @@ int ArtmGetRequestLength(int request_id) {
   return message.size();
 }
 
-const char* ArtmGetErrorMessage() {
+const char* ArtmGetLastErrorMessage() {
   return error_message.c_str();
 }
 

@@ -25,14 +25,14 @@ MasterProxy::MasterProxy(int id, const MasterProxyConfig& config) : id_(id) {
 
     // Reset the state of the remote node controller
     node_controller_service_proxy_->DisposeInstance(Void(), &response, communication_timeout_);
-  }, "DisposeInstance");
+  }, "(within CreateOrReconfigureMasterComponent) DisposeInstance");
 
   make_rpcz_call([&]() {
     Void response;
 
     // Reset the state of the remote node controller
     node_controller_service_proxy_->DisposeMasterComponent(Void(), &response, communication_timeout_);
-  }, "DisposeMasterComponent");
+  }, "(within CreateOrReconfigureMasterComponent) DisposeMasterComponent");
 
   make_rpcz_call([&]() {
     Void response;

@@ -128,8 +128,13 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
     }
   }
 
-  master_component->InvokeIteration(3);
-  master_component->WaitIdle();
+  master_component->InvokeIteration(2);
+  if (is_network_mode || !is_proxy_mode) {
+    EXPECT_FALSE(master_component->WaitIdle(0));
+  }
+  
+  master_component->InvokeIteration(1);
+  EXPECT_TRUE(master_component->WaitIdle());
   model.Disable();
 
   int nUniqueTokens = nTokens;
@@ -205,8 +210,8 @@ TEST(CppInterface, BasicTest_NetworkProxyMode) {
   BasicTest(true, true);
 }
 
-// artm_tests.exe --gtest_filter=CppInterface.Exceptions
-TEST(CppInterface, Exceptions) {
+// artm_tests.exe --gtest_filter=CppInterface.ModelExceptions
+TEST(CppInterface, ModelExceptions) {
   // Create instance
   artm::MasterComponentConfig master_config;
   artm::MasterComponent master_component(master_config);
@@ -218,4 +223,16 @@ TEST(CppInterface, Exceptions) {
 
   model.mutable_config()->set_topics_count(20);
   ASSERT_THROW(model.Reconfigure(model.config()), artm::InvalidOperation);
+}
+
+// artm_tests.exe --gtest_filter=CppInterface.ProxyExceptions
+TEST(CppInterface, ProxyExceptions) {
+  artm::MasterComponentConfig master_config;
+  artm::MasterProxyConfig master_proxy_config;
+  master_proxy_config.set_node_connect_endpoint("tcp://localhost:5557");
+  master_proxy_config.mutable_config()->CopyFrom(master_config);
+  master_proxy_config.set_communication_timeout(10000);
+
+  ASSERT_THROW(artm::MasterComponent master_component(master_proxy_config), 
+    artm::NerworkException);
 }

@@ -45,7 +45,7 @@ class Merger : boost::noncopyable {
   void CreateOrReconfigureModel(const ModelConfig& model);
   void ForceResetScores(ModelName model_name);
 
-  //true value == success, false means that function works
+  // Returns false if BigARTM is still processing the collection, otherwise true.
   bool WaitIdle(long timeout = -1);
   void ForcePullTopicModel();
   void ForcePushTopicModelIncrement();

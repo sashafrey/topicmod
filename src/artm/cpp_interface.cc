@@ -19,8 +19,8 @@ inline char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
 }
 
-inline std::string GetErrorMessage() {
-  auto error_message = ArtmGetErrorMessage();
+inline std::string GetLastErrorMessage() {
+  auto error_message = ArtmGetLastErrorMessage();
   return std::string(error_message);
 }
 
@@ -34,16 +34,16 @@ inline int HandleErrorCode(int artm_error_code) {
     case ARTM_SUCCESS:
       return artm_error_code;
     case ARTM_OBJECT_NOT_FOUND:
-      throw ObjectNotFound(GetErrorMessage());
+      throw ObjectNotFound(GetLastErrorMessage());
     case ARTM_INVALID_MESSAGE:
-      throw InvalidMessage(GetErrorMessage());
+      throw InvalidMessage(GetLastErrorMessage());
     case ARTM_NETWORK_ERROR:
-      throw NerworkException(GetErrorMessage());
+      throw NerworkException(GetLastErrorMessage());
     case ARTM_INVALID_OPERATION:
-      throw InvalidOperation(GetErrorMessage());
+      throw InvalidOperation(GetLastErrorMessage());
     case ARTM_GENERAL_ERROR:
     default:
-      throw GeneralError(GetErrorMessage());
+      throw GeneralError(GetLastErrorMessage());
   }
 }
 

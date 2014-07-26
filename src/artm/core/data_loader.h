@@ -55,7 +55,9 @@ class LocalDataLoader : public DataLoader {
   virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment);
 
   void InvokeIteration(int iterations_count);
-  void WaitIdle();
+
+  // Returns false if BigARTM is still processing the collection, otherwise true.
+  bool WaitIdle(long timeout = -1);
   void DisposeModel(ModelName model_name);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 

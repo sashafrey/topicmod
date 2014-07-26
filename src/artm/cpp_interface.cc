@@ -1,5 +1,7 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
+#include <iostream>
+
 #include "artm/cpp_interface.h"
 
 #include "boost/lexical_cast.hpp"
@@ -7,12 +9,19 @@
 #include "boost/uuid/uuid_generators.hpp"
 #include "boost/uuid/uuid_io.hpp"
 
+#include "glog/logging.h"
+
 #include "artm/core/protobuf_helpers.h"
 
 namespace artm {
 
 inline char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
+}
+
+inline std::string GetLastErrorMessage() {
+  auto error_message = ArtmGetLastErrorMessage();
+  return std::string(error_message);
 }
 
 inline int HandleErrorCode(int artm_error_code) {
@@ -25,14 +34,16 @@ inline int HandleErrorCode(int artm_error_code) {
     case ARTM_SUCCESS:
       return artm_error_code;
     case ARTM_OBJECT_NOT_FOUND:
-      throw ObjectNotFound();
+      throw ObjectNotFound(GetLastErrorMessage());
     case ARTM_INVALID_MESSAGE:
-      throw InvalidMessage();
+      throw InvalidMessage(GetLastErrorMessage());
+    case ARTM_NETWORK_ERROR:
+      throw NerworkException(GetLastErrorMessage());
     case ARTM_INVALID_OPERATION:
-      throw InvalidOperation();
+      throw InvalidOperation(GetLastErrorMessage());
     case ARTM_GENERAL_ERROR:
     default:
-      throw GeneralError();
+      throw GeneralError(GetLastErrorMessage());
   }
 }
 
@@ -229,8 +240,14 @@ void MasterComponent::InvokeIteration(int iterations_count) {
   HandleErrorCode(ArtmInvokeIteration(id(), iterations_count));
 }
 
-void MasterComponent::WaitIdle() {
-  HandleErrorCode(ArtmWaitIdle(id()));
+bool MasterComponent::WaitIdle(long timeout) {
+  int result = ArtmWaitIdle(id(), timeout);
+  if (result == ARTM_STILL_WORKING) {
+    return false;
+  } else {
+    HandleErrorCode(result);
+    return true;
+  }
 }
 
 void MasterComponent::AddStream(const Stream& stream) {

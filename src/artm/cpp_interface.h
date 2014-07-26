@@ -13,6 +13,16 @@
   TypeName(const TypeName&);   \
   void operator=(const TypeName&)
 
+enum ArtmErrorCodes {
+    ARTM_SUCCESS = 0,
+    ARTM_GENERAL_ERROR = -1,
+    ARTM_OBJECT_NOT_FOUND = -2,
+    ARTM_INVALID_MESSAGE = -3,
+    ARTM_INVALID_OPERATION = -4,
+    ARTM_NETWORK_ERROR = -5,
+    ARTM_STILL_WORKING = -6
+};
+
 namespace artm {
 
 class MasterComponent;
@@ -22,15 +32,17 @@ class Regularizer;
 class Dictionary;
 
 // Exception handling in cpp_interface
-#define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
-class Type : public BaseType { public:  /*NOLINT*/     \
-  explicit Type() : BaseType("") {}                    \
+#define DEFINE_EXCEPTION_TYPE(Type, BaseType)                  \
+class Type : public BaseType { public:  /*NOLINT*/             \
+  explicit Type() : BaseType("") {}                            \
+  explicit Type(std::string message) : BaseType(message) {}    \
 };
 
 DEFINE_EXCEPTION_TYPE(GeneralError, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(ObjectNotFound, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidMessage, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(NerworkException, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 
@@ -62,7 +74,7 @@ class MasterComponent {
   void AddStream(const Stream& stream);
   void RemoveStream(std::string stream_name);
   void InvokeIteration(int iterations_count);
-  void WaitIdle();
+  bool WaitIdle(long timeout = -1);
 
   const MasterComponentConfig& config() const { return config_; }
   MasterComponentConfig* mutable_config() { return &config_; }

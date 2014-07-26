@@ -122,7 +122,7 @@ with library.CreateMasterComponent(master_config) as master_component:
 
     for iter in range(0, outer_iteration_count):
         master_component.InvokeIteration(1)
-        master_component.WaitIdle();
+        master_component.WaitIdle(120000);
         topic_model = master_component.GetTopicModel(model)
         perplexity_score = master_component.GetScore(model, 'perplexity_score')
         model.InvokePhiRegularizers();

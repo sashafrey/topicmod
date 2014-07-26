@@ -80,6 +80,7 @@ message NodeControllerConfig {
 message MasterProxyConfig {
   optional string node_connect_endpoint = 1;
   optional MasterComponentConfig config = 2;
+  optional int32 communication_timeout = 3 [default = 1000];
 }
 
 // Represents a configuration of a topic model.

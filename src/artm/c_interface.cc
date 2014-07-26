@@ -11,6 +11,7 @@
 #include "artm/messages.pb.h"
 #include "artm/score_calculator_interface.h"
 #include "artm/core/common.h"
+#include "artm/core/helpers.h"
 #include "artm/core/master_component.h"
 #include "artm/core/master_proxy.h"
 #include "artm/core/node_controller.h"
@@ -64,6 +65,20 @@ int ArtmCopyRequestResult(int request_id, int length, char* address) {
 
 int ArtmGetRequestLength(int request_id) {
   return message.size();
+}
+
+int ArtmSaveBatch(const char* disk_path, int length, const char* batch_blob) {
+  try {
+    artm::Batch batch;
+    if (!batch.ParseFromArray(batch_blob, length)) {
+      return ARTM_INVALID_MESSAGE;
+    }
+
+    artm::Batch compacted_batch;
+    artm::core::BatchHelpers::CompactBatch(batch, &compacted_batch);
+    artm::core::BatchHelpers::SaveBatch(compacted_batch, std::string(disk_path));
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }
 
 int ArtmAddBatch(int master_id, int length, const char* batch_blob) {

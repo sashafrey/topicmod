@@ -36,6 +36,13 @@ inline int HandleErrorCode(int artm_error_code) {
   }
 }
 
+void SaveBatch(const Batch& batch, const std::string& disk_path) {
+  std::string config_blob;
+  batch.SerializeToString(&config_blob);
+  HandleErrorCode(ArtmSaveBatch(disk_path.c_str(), config_blob.size(),
+    StringAsArray(&config_blob)));
+}
+
 MasterComponent::MasterComponent(const MasterComponentConfig& config) : id_(0), config_(config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);

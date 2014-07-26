@@ -34,6 +34,8 @@ DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 
+void SaveBatch(const Batch& batch, const std::string& disk_path);
+
 class MasterComponent {
  public:
   explicit MasterComponent(const MasterComponentConfig& config);

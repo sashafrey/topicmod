@@ -8,6 +8,7 @@
 
 #include "boost/lexical_cast.hpp"
 #include "boost/uuid/uuid_io.hpp"
+#include "boost/uuid/uuid_generators.hpp"
 
 #include "glog/logging.h"
 
@@ -68,10 +69,17 @@ void DataLoader::PopulateDataStreams(const Batch& batch, ProcessorInput* pi) {
 
 LocalDataLoader::LocalDataLoader(Instance* instance)
     : DataLoader(instance),
-      generation_(std::make_shared<Generation>(instance->schema()->config().disk_path())),
+      generation_(nullptr),
       cache_(),
       is_stopping(false),
       thread_() {
+  std::string disk_path = instance->schema()->config().disk_path();
+  if (disk_path.empty()) {
+    generation_.set(std::shared_ptr<Generation>(new MemoryGeneration()));
+  } else {
+    generation_.set(std::shared_ptr<Generation>(new DiskGeneration(disk_path)));
+  }
+
   // Keep this at the last action in constructor.
   // http://stackoverflow.com/questions/15751618/initialize-boost-thread-in-object-constructor
   boost::thread t(&LocalDataLoader::ThreadFunction, this);
@@ -87,50 +95,20 @@ LocalDataLoader::~LocalDataLoader() {
 
 void LocalDataLoader::AddBatch(const Batch& batch) {
   MasterComponentConfig config = instance()->schema()->config();
-  std::shared_ptr<Generation> next_gen = generation_.get_copy();
+  std::shared_ptr<Generation> next_gen = generation_.get()->Clone();
   if (config.compact_batches()) {
-    Batch compacted_batch;
-    CompactBatch(batch, &compacted_batch);
-    next_gen->AddBatch(std::make_shared<Batch>(compacted_batch), config.disk_path());
+    auto compacted_batch = std::make_shared<Batch>();
+    BatchHelpers::CompactBatch(batch, compacted_batch.get());
+    next_gen->AddBatch(compacted_batch);
   } else {
-    next_gen->AddBatch(std::make_shared<Batch>(batch), config.disk_path());
+    next_gen->AddBatch(std::make_shared<Batch>(batch));
   }
 
   generation_.set(next_gen);
 }
 
-void LocalDataLoader::CompactBatch(const Batch& batch, Batch* compacted_batch) {
-  std::vector<int> orig_to_compacted_id_map(batch.token_size(), -1);
-  int compacted_dictionary_size = 0;
-
-  for (int item_index = 0; item_index < batch.item_size(); ++item_index) {
-    auto item = batch.item(item_index);
-    auto compacted_item = compacted_batch->add_item();
-    compacted_item->CopyFrom(item);
-
-    for (int field_index = 0; field_index < item.field_size(); ++field_index) {
-      auto field = item.field(field_index);
-      auto compacted_field = compacted_item->mutable_field(field_index);
-
-      for (int token_index = 0; token_index < field.token_id_size(); ++token_index) {
-        int token_id = field.token_id(token_index);
-        if (token_id < 0 || token_id >= batch.token_size())
-          BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("field.token_id"));
-
-        if (orig_to_compacted_id_map[token_id] == -1) {
-          orig_to_compacted_id_map[token_id] = compacted_dictionary_size++;
-          compacted_batch->add_token(batch.token(token_id));
-        }
-
-        compacted_field->set_token_id(token_index, orig_to_compacted_id_map[token_id]);
-      }
-    }
-  }
-}
-
 int LocalDataLoader::GetTotalItemsCount() const {
-  auto ptr = generation_.get();
-  return ptr->GetTotalItemsCount();
+  return generation_.get()->GetTotalItemsCount();
 }
 
 void LocalDataLoader::InvokeIteration(int iterations_count) {
@@ -150,11 +128,11 @@ void LocalDataLoader::InvokeIteration(int iterations_count) {
     return;
   }
 
+  std::vector<boost::uuids::uuid> uuids = latest_generation->batch_uuids();
   for (int iter = 0; iter < iterations_count; ++iter) {
-    latest_generation->InvokeOnEachPartition(
-      [&](boost::uuids::uuid uuid, std::shared_ptr<const Batch> batch) {
-        instance_->batch_manager()->Add(uuid);
-      });
+    for (auto &uuid : uuids) {
+      instance_->batch_manager()->Add(uuid);
+    }
   }
 }
 
@@ -254,8 +232,7 @@ void LocalDataLoader::ThreadFunction() {
         continue;
 
       auto latest_generation = generation_.get();
-      std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid,
-                                                                    config.disk_path());
+      std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid);
       if (batch == nullptr) {
         instance_->batch_manager()->Done(next_batch_uuid, ModelName());
         continue;
@@ -360,7 +337,7 @@ void RemoteDataLoader::ThreadFunction() {
         std::string batch_id = response.batch_id(batch_index);
         boost::uuids::uuid next_batch_uuid(boost::uuids::string_generator()(batch_id.c_str()));
         std::shared_ptr<const Batch> batch =
-          Generation::LoadBatch(next_batch_uuid, config.disk_path());
+          BatchHelpers::LoadBatch(next_batch_uuid, config.disk_path());
 
         if (batch == nullptr) {
           LOG(ERROR) << "Unable to load batch '" << batch_id << "' from " << config.disk_path();

@@ -34,6 +34,7 @@ extern "C" {
   DLL_PUBLIC int ArtmGetRequestLength(int request_id);
   DLL_PUBLIC int ArtmCopyRequestResult(int request_id, int length, char* address);
   DLL_PUBLIC void ArtmDisposeRequest(int request_id);
+  DLL_PUBLIC int ArtmSaveBatch(const char* disk_path, int length, const char* batch_blob);
 
   // ===============================================================================================
   // MasterComponent / MasterProxy

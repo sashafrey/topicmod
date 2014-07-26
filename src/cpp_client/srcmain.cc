@@ -55,6 +55,48 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   master_config.set_processors_count(processors_count);
   batches_disk_path = (current_path() / path(batches_disk_path)).string();
+
+  int batch_files_count = countFilesInDirectory(batches_disk_path, ".batch");
+  if (batch_files_count == 0) {
+    std::cout << "No batches found, parsing collection from text files... ";
+    // Load doc-word matrix
+    auto doc_word_ptr = loadMatrixFileUCI(docword_file.empty() ? argv[1] : docword_file);
+    VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
+    int no_words = vocab_ptr->size();
+    int no_docs = doc_word_ptr->getD();
+
+    int no_docs_per_part = 1000;
+    int no_parts = no_docs / no_docs_per_part + 1;
+    int doc_index = 0;
+    for (int part_index = 1; part_index <= no_parts; part_index++)
+    {
+      Batch batch;
+      for (int i = 0; i < no_words; i++) {
+        batch.add_token((*vocab_ptr)[i]);
+      }
+
+      for (; doc_index < (no_docs_per_part * part_index) && (doc_index < no_docs); doc_index++) {
+        auto term_ids = doc_word_ptr->getTermId(doc_index);
+        auto term_counts = doc_word_ptr->getFreq(doc_index);
+
+        Item* item = batch.add_item();
+        item->set_id(doc_index);
+        Field* field = item->add_field();
+        for (int word_index = 0; word_index < (int)term_ids.size(); ++word_index) {
+          field->add_token_id(term_ids[word_index]);
+          field->add_token_count((google::protobuf::int32) term_counts[word_index]);
+        }
+      }
+
+      // Index doc-word matrix
+      ::artm::SaveBatch(batch, batches_disk_path);
+    }
+
+    std::cout << "OK.\n";
+  } else {
+    std::cout << "Found " << batch_files_count << " batches in folder '"
+              << batches_disk_path << "', will use them.\n";
+  }
   
   master_config.set_disk_path(batches_disk_path);
   if (is_network_mode) {
@@ -139,48 +181,6 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
   }
 
   model.Overwrite(initial_topic_model);
-
-  int batch_files_count = countFilesInDirectory(batches_disk_path, ".batch");
-  if (batch_files_count == 0) {
-    std::cout << "No batches found, parsing collection from text files... ";
-    // Load doc-word matrix
-    auto doc_word_ptr = loadMatrixFileUCI(docword_file.empty() ? argv[1] : docword_file);
-    VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
-    int no_words = vocab_ptr->size();
-    int no_docs = doc_word_ptr->getD();
-
-    int no_docs_per_part = 1000;
-    int no_parts = no_docs / no_docs_per_part + 1;
-    int doc_index = 0;
-    for (int part_index = 1; part_index <= no_parts; part_index++)
-    {
-      Batch batch;
-      for (int i = 0; i < no_words; i++) {
-        batch.add_token((*vocab_ptr)[i]);
-      }
-
-      for (; doc_index < (no_docs_per_part * part_index) && (doc_index < no_docs); doc_index++) {
-        auto term_ids = doc_word_ptr->getTermId(doc_index);
-        auto term_counts = doc_word_ptr->getFreq(doc_index);
-
-        Item* item = batch.add_item();
-        item->set_id(doc_index);
-        Field* field = item->add_field();
-        for (int word_index = 0; word_index < (int)term_ids.size(); ++word_index) {
-          field->add_token_id(term_ids[word_index]);
-          field->add_token_count((google::protobuf::int32) term_counts[word_index]);
-        }
-      }
-
-      // Index doc-word matrix
-      master_component.AddBatch(batch);
-    }
-
-    std::cout << "OK.\n";
-  } else {
-    std::cout << "Found " << batch_files_count << " batches in folder '"
-              << batches_disk_path << "', will use them.\n";
-  }
 
   clock_t begin = clock();
 

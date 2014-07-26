@@ -14,7 +14,6 @@
 #include "artm/core/exceptions.h"
 #include "artm/core/helpers.h"
 #include "artm/core/zmq_context.h"
-#include "artm/core/generation.h"
 #include "artm/core/data_loader.h"
 #include "artm/core/batch_manager.h"
 #include "artm/core/instance.h"
@@ -213,7 +212,7 @@ void MasterComponent::InvokeIteration(int iterations_count) {
   }
 
   if (isInNetworkModusOperandi()) {
-    auto uuids = Generation::ListAllBatches(config_.get()->disk_path());
+    auto uuids = BatchHelpers::ListAllBatches(config_.get()->disk_path());
     for (int iter = 0; iter < iterations_count; ++iter) {
       for (auto &uuid : uuids) {
         instance_->batch_manager()->Add(uuid);
@@ -232,7 +231,7 @@ void MasterComponent::AddBatch(const Batch& batch) {
   }
 
   if (isInNetworkModusOperandi()) {
-    Generation::SaveBatch(batch, config_.get()->disk_path());
+    BatchHelpers::SaveBatch(batch, config_.get()->disk_path());
     return;
   }
 
@@ -302,6 +301,11 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
 
     if (current_config->connect_endpoint() != config.connect_endpoint()) {
       std::string message = "Unable to change master component connect endpoint";
+      BOOST_THROW_EXCEPTION(InvalidOperation(message));
+    }
+
+    if (current_config->disk_path() != config.disk_path()) {
+      std::string message = "Changing disk_path is not supported.";
       BOOST_THROW_EXCEPTION(InvalidOperation(message));
     }
   }

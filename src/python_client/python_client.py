@@ -11,6 +11,7 @@ import messages_pb2
 from python_interface import *
 import operator
 import random
+import glob
 
 with open('../../datasets/vocab.kos.txt', 'r') as content_file:
     content = content_file.read()
@@ -26,7 +27,6 @@ topics_count = 16
 outer_iteration_count = 13
 inner_iterations_count = 5
 top_tokens_count_to_visualize = 4
-parse_collection_from_text = 0
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 
@@ -47,45 +47,51 @@ score_config.config = messages_pb2.PerplexityScoreConfig().SerializeToString();
 score_config.type = ScoreConfig_Type_Perplexity;
 score_config.name = "perplexity_score"
 
-with library.CreateMasterComponent(master_config) as master_component:
+batches_found = len(glob.glob("*.batch"))
+if batches_found == 0:
+    print "No batches found, parsing them from textual collection ",
     batch = messages_pb2.Batch()
     batch_tokens = {}
     prev_item_id = -1
 
-    if (parse_collection_from_text):
-        with open('../../datasets/docword.kos.txt', 'r') as docword:
-            items_count = int(docword.readline())
-            words_count = int(docword.readline())
-            num_non_zero = int(docword.readline())
-            for line in docword:
-                item_id, global_token_id, frequency = [int(x) for x in line.split()]
-                token = tokens[global_token_id - 1]
+    with open('../../datasets/docword.kos.txt', 'r') as docword:
+        items_count = int(docword.readline())
+        words_count = int(docword.readline())
+        num_non_zero = int(docword.readline())
+        for line in docword:
+            item_id, global_token_id, frequency = [int(x) for x in line.split()]
+            token = tokens[global_token_id - 1]
 
-                if (item_id != prev_item_id):
-                    prev_item_id = item_id
+            if (item_id != prev_item_id):
+                prev_item_id = item_id
 
-                    if (item_id > limit_collection_size):
-                        break
+                if (item_id > limit_collection_size):
+                    break
 
-                    if (len(batch.item) >= batch_size):
-                        master_component.AddBatch(batch)
-                        batch = messages_pb2.Batch()
-                        batch_tokens = {}
+                if (len(batch.item) >= batch_size):
+                    print ".",
+                    library.SaveBatch(batch, master_config.disk_path)
+                    batch = messages_pb2.Batch()
+                    batch_tokens = {}
 
-                    item = batch.item.add()
-                    item.id = item_id
-                    field = item.field.add()
+                item = batch.item.add()
+                item.id = item_id
+                field = item.field.add()
 
-                if (not batch_tokens.has_key(token)):
-                    batch_tokens[token] = len(batch.token)
-                    batch.token.append(token)
+            if (not batch_tokens.has_key(token)):
+                batch_tokens[token] = len(batch.token)
+                batch.token.append(token)
 
-                local_token_id = batch_tokens[token]
-                field.token_id.append(local_token_id)
-                field.token_count.append(frequency)
-        if (len(batch.item) > 0):
-            master_component.AddBatch(batch)
+            local_token_id = batch_tokens[token]
+            field.token_id.append(local_token_id)
+            field.token_count.append(frequency)
+    if (len(batch.item) > 0):
+        library.SaveBatch(batch, master_config.disk_path)
+    print " OK."
+else:
+    print "Found " + str(batches_found) + " batches, using them."
 
+with library.CreateMasterComponent(master_config) as master_component:
     model_config = messages_pb2.ModelConfig()
     model_config.topics_count = topics_count
     model_config.inner_iterations_count = inner_iterations_count

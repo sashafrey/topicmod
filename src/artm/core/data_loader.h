@@ -60,8 +60,6 @@ class LocalDataLoader : public DataLoader {
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
  private:
-  static void CompactBatch(const Batch& batch, Batch* compacted_batch);
-
   ThreadSafeHolder<Generation> generation_;
 
   typedef std::pair<boost::uuids::uuid, ModelName> CacheKey;

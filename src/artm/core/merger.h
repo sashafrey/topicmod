@@ -46,7 +46,7 @@ class Merger : boost::noncopyable {
   void ForceResetScores(ModelName model_name);
 
   // Returns false if BigARTM is still processing the collection, otherwise true.
-  bool WaitIdle(long timeout = -1);
+  bool WaitIdle(int timeout = -1);
   void ForcePullTopicModel();
   void ForcePushTopicModelIncrement();
   void InvokePhiRegularizers();

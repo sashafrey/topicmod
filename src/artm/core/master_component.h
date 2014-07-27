@@ -73,7 +73,7 @@ class MasterComponent : boost::noncopyable, public MasterInterface {
   virtual void DisposeDictionary(const std::string& name);
 
   // Returns false if BigARTM is still processing the collection, otherwise true.
-  virtual bool WaitIdle(long timeout = -1);
+  virtual bool WaitIdle(int timeout = -1);
   virtual void InvokeIteration(int iterations_count);
   virtual void AddBatch(const Batch& batch);
 

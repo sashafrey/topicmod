@@ -177,7 +177,7 @@ void MasterProxy::InvokeIteration(int iterations_count) {
   }, "InvokeIteration");
 }
 
-bool MasterProxy::WaitIdle(long timeout) {
+bool MasterProxy::WaitIdle(int timeout) {
   Int response;
   auto time_start = boost::posix_time::microsec_clock::local_time();
   for (;;) {
@@ -191,7 +191,7 @@ bool MasterProxy::WaitIdle(long timeout) {
       if (timeout >= 0) {
         if ((time_end - time_start).total_milliseconds() >= timeout) return false;
       }
-    } else { // return value is ARTM_SUCCESS
+    } else {  // return value is ARTM_SUCCESS
       return true;
     }
   }

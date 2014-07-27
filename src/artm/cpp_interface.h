@@ -74,7 +74,7 @@ class MasterComponent {
   void AddStream(const Stream& stream);
   void RemoveStream(std::string stream_name);
   void InvokeIteration(int iterations_count);
-  bool WaitIdle(long timeout = -1);
+  bool WaitIdle(int timeout = -1);
 
   const MasterComponentConfig& config() const { return config_; }
   MasterComponentConfig* mutable_config() { return &config_; }

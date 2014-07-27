@@ -1,6 +1,6 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
-#include <iostream>
+#include <iostream>  // NOLINT
 
 #include "artm/cpp_interface.h"
 
@@ -240,7 +240,7 @@ void MasterComponent::InvokeIteration(int iterations_count) {
   HandleErrorCode(ArtmInvokeIteration(id(), iterations_count));
 }
 
-bool MasterComponent::WaitIdle(long timeout) {
+bool MasterComponent::WaitIdle(int timeout) {
   int result = ArtmWaitIdle(id(), timeout);
   if (result == ARTM_STILL_WORKING) {
     return false;

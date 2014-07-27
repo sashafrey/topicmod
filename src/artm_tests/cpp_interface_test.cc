@@ -228,7 +228,7 @@ TEST(CppInterface, ProxyExceptions) {
   master_proxy_config.mutable_config()->CopyFrom(master_config);
   master_proxy_config.set_communication_timeout(10);
 
-  ASSERT_THROW(artm::MasterComponent master_component(master_proxy_config), 
+  ASSERT_THROW(artm::MasterComponent master_component(master_proxy_config),
     artm::NerworkException);
 }
 

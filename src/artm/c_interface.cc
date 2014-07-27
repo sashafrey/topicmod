@@ -17,7 +17,7 @@
 #include "artm/core/node_controller.h"
 
 std::string message;
-static std::string error_message; 
+static std::string error_message;
 
 void EnableLogging() {
   static bool logging_enabled = false;
@@ -87,13 +87,13 @@ int ArtmInvokeIteration(int master_id, int iterations_count) {
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmWaitIdle(int master_id, long timeout) {
+int ArtmWaitIdle(int master_id, int timeout) {
   try {
     auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
     bool result = master_component->WaitIdle(timeout);
-    
-    if (result) { 
+
+    if (result) {
       return ARTM_SUCCESS;
     } else {
       return ARTM_STILL_WORKING;

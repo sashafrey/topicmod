@@ -34,7 +34,7 @@ inline void make_rpcz_call(std::function<void()> f, const std::string& f_name) {
   try {
     f();
   } catch(const rpcz::rpc_error&) {
-    LOG(ERROR) << "Problems with connection between Proxy and NodeController in " << 
+    LOG(ERROR) << "Problems with connection between Proxy and NodeController in " <<
       f_name << "()";
     throw artm::core::NetworkException("Network error in function " + f_name + "()");
   }
@@ -44,7 +44,7 @@ inline void make_rpcz_call_no_throw(std::function<void()> f, const std::string& 
   try {
     f();
   } catch(const rpcz::rpc_error&) {
-    LOG(ERROR) << "Problems with connection between Proxy and NodeController in " << 
+    LOG(ERROR) << "Problems with connection between Proxy and NodeController in " <<
       f_name << "()";
   }
 }

@@ -17,7 +17,6 @@
 #endif
 
 extern "C" {
-
   // ===============================================================================================
   // Common routines
   // ===============================================================================================
@@ -57,7 +56,7 @@ extern "C" {
   DLL_PUBLIC int ArtmAddBatch(int master_id, int length, const char* batch_blob);
   DLL_PUBLIC int ArtmInvokeIteration(int master_id, int iterations_count);
   DLL_PUBLIC int ArtmInvokePhiRegularizers(int master_id);
-  DLL_PUBLIC int ArtmWaitIdle(int master_id, long timeout = -1);
+  DLL_PUBLIC int ArtmWaitIdle(int master_id, int timeout = -1);
 
   DLL_PUBLIC int ArtmRequestThetaMatrix(int master_id, const char* model_name);
   DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_name);

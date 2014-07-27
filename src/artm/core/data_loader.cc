@@ -136,7 +136,7 @@ void LocalDataLoader::InvokeIteration(int iterations_count) {
   }
 }
 
-bool LocalDataLoader::WaitIdle(long timeout) {
+bool LocalDataLoader::WaitIdle(int timeout) {
   auto time_start = boost::posix_time::microsec_clock::local_time();
   for (;;) {
     if (instance_->batch_manager()->IsEverythingProcessed())

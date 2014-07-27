@@ -174,7 +174,7 @@ bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
 }
 
-bool MasterComponent::WaitIdle(long timeout) {
+bool MasterComponent::WaitIdle(int timeout) {
   if (isInLocalModusOperandi()) {
     return instance_->local_data_loader()->WaitIdle(timeout);
   }
@@ -201,7 +201,7 @@ bool MasterComponent::WaitIdle(long timeout) {
     auto local_timeout = timeout - (time_end - time_start).total_milliseconds();
     if (timeout >= 0) {
       if (local_timeout >= 0) {
-        bool result = instance_->merger()->WaitIdle(static_cast<long>(local_timeout));
+        bool result = instance_->merger()->WaitIdle(static_cast<int>(local_timeout));
         if (!result) return false;
       } else {
         return false;
@@ -427,7 +427,7 @@ bool NetworkClientCollection::ConnectClient(std::string endpoint) {
     LOG(ERROR) << "Unable to clear the state of the remote node controller.";
     return false;
   }
- 
+
   clients_.set(endpoint, client);
   return true;
 }

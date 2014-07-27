@@ -321,7 +321,7 @@ bool Merger::RetrieveExternalTopicModel(ModelName model_name,
   return true;
 }
 
-bool Merger::WaitIdle(long timeout) {
+bool Merger::WaitIdle(int timeout) {
   auto time_start = boost::posix_time::microsec_clock::local_time();
   for (;;) {
     if (is_idle_ && merger_queue_->empty())

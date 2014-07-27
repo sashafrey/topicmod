@@ -57,7 +57,7 @@ class LocalDataLoader : public DataLoader {
   void InvokeIteration(int iterations_count);
 
   // Returns false if BigARTM is still processing the collection, otherwise true.
-  bool WaitIdle(long timeout = -1);
+  bool WaitIdle(int timeout = -1);
   void DisposeModel(ModelName model_name);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 

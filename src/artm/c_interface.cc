@@ -37,10 +37,6 @@ inline char* StringAsArray(std::string* str) {
 // Common routines
 // =========================================================================
 
-int ArtmConfigureLogger(int length, const char* logger_config) {
-  return ARTM_SUCCESS;
-}
-
 int ArtmCopyRequestResult(int request_id, int length, char* address) {
   memcpy(address, StringAsArray(&message), length);
   return ARTM_SUCCESS;

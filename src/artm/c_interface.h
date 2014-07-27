@@ -21,8 +21,6 @@ extern "C" {
   // ===============================================================================================
   // Common routines
   // ===============================================================================================
-  DLL_PUBLIC int ArtmConfigureLogger(int length, const char* logger_config);
-
   DLL_PUBLIC int ArtmGetRequestLength(int request_id);
   DLL_PUBLIC int ArtmCopyRequestResult(int request_id, int length, char* address);
   DLL_PUBLIC void ArtmDisposeRequest(int request_id);

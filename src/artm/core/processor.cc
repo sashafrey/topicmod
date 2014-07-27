@@ -331,8 +331,11 @@ void Processor::ThreadFunction() {
   try {
     Helpers::SetThreadName(-1, "Processor thread");
     LOG(INFO) << "Processor thread started";
+    int pop_retries = 0;
+    const int pop_retries_max = 20;
     for (;;) {
       if (is_stopping) {
+        LOG(INFO) << "Processor thread stopped";
         break;
       }
 
@@ -344,8 +347,13 @@ void Processor::ThreadFunction() {
 
       std::shared_ptr<const ProcessorInput> part;
       if (!processor_queue_->try_pop(&part)) {
+        pop_retries++;
+        LOG_IF(INFO, pop_retries == pop_retries_max) << "No data in processing queue, waiting...";
         continue;
       }
+
+      LOG_IF(INFO, pop_retries >= pop_retries_max) << "Processing queue has data, processing started";
+      pop_retries = 0;
 
       std::shared_ptr<InstanceSchema> schema = schema_.get();
       std::vector<ModelName> model_names = schema->GetModelNames();
@@ -470,12 +478,20 @@ void Processor::ThreadFunction() {
 
       // Wait until merger queue has space for a new element
       int merger_queue_max_size = schema_.get()->config().merger_queue_max_size();
+
+      int push_retries = 0;
+      const int push_retries_max = 50;
+
       for (;;) {
         if (merger_queue_->size() < merger_queue_max_size)
           break;
 
+        push_retries++;
+        LOG_IF(WARNING, push_retries == push_retries_max) << "Merger queue is full, waiting...";
         boost::this_thread::sleep(boost::posix_time::milliseconds(1));
       }
+
+      LOG_IF(WARNING, push_retries >= push_retries_max) << "Merger queue is healthy again";
 
       // Here call_in_destruction will enqueue processor output into the merger queue.
     }

@@ -219,6 +219,7 @@ void LocalDataLoader::ThreadFunction() {
     LOG(INFO) << "DataLoader thread started";
     for (;;) {
       if (is_stopping) {
+        LOG(INFO) << "DataLoader thread stopped";
         break;
       }
 
@@ -312,6 +313,7 @@ void RemoteDataLoader::ThreadFunction() {
     LOG(INFO) << "DataLoader thread started";
     for (;;) {
       if (is_stopping) {
+        LOG(INFO) << "DataLoader thread stopped";
         break;
       }
 

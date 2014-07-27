@@ -27,8 +27,10 @@ void NodeControllerServiceImpl::CreateOrReconfigureInstance(
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
     if (instance_ != nullptr) {
+        LOG(INFO) << "Reconfigure an existing instance";
         instance_->Reconfigure(request);
     } else {
+      LOG(INFO) << "Create a new instance";
       instance_.reset(new Instance(request, NodeControllerInstance));
     }
 
@@ -40,7 +42,11 @@ void NodeControllerServiceImpl::DisposeInstance(
     const ::artm::core::Void& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
-  instance_.reset();
+  if (instance_ != nullptr) {
+    LOG(INFO) << "Dispose the instance";
+    instance_.reset();
+  }
+
   response.send(Void());
 }
 
@@ -51,8 +57,10 @@ void NodeControllerServiceImpl::CreateOrReconfigureMasterComponent(
   try {
     boost::lock_guard<boost::mutex> guard(lock_);
     if (master_ != nullptr) {
+      LOG(INFO) << "Reconfigure an existing master component";
       master_->Reconfigure(request);
     } else {
+      LOG(INFO) << "Create a new master component";
       auto& mcm = artm::core::MasterComponentManager::singleton();
       int master_id = mcm.Create<MasterComponent, MasterComponentConfig>(request);
       assert(master_id > 0);
@@ -68,6 +76,7 @@ void NodeControllerServiceImpl::DisposeMasterComponent(
     ::rpcz::reply< ::artm::core::Void> response) {
   boost::lock_guard<boost::mutex> guard(lock_);
   if (master_ != nullptr) {
+    LOG(INFO) << "Dispose the master component";
     auto& mcm = artm::core::MasterComponentManager::singleton();
     mcm.Erase(master_->id());
     master_.reset();
@@ -299,6 +308,7 @@ void NodeControllerServiceImpl::InvokeIteration(
     const ::artm::core::Void& request,
     ::rpcz::reply< ::artm::core::Void> response) {
   try {
+    LOG(INFO) << "Invoke a new iteration";
     boost::lock_guard<boost::mutex> guard(lock_);
     if (master_ != nullptr) {
       master_->InvokeIteration(1);
@@ -322,6 +332,7 @@ void NodeControllerServiceImpl::WaitIdle(
       result = master_->WaitIdle(local_timeout);
       if (result) {
         retval.set_value(ARTM_SUCCESS);
+        LOG(INFO) << "WaitIdle() succeeded";
       } else {
         retval.set_value(ARTM_STILL_WORKING);
       }

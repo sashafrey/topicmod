@@ -155,6 +155,7 @@ void Merger::ThreadFunction() {
     LOG(INFO) << "Merger thread started";
     for (;;) {
       if (is_stopping) {
+        LOG(INFO) << "Merger thread stopped";
         break;
       }
 

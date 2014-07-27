@@ -84,7 +84,7 @@ class ArtmLibrary:
     batch_blob = batch.SerializeToString()
     batch_blob_p = ctypes.create_string_buffer(batch_blob)
     disk_path_p = ctypes.create_string_buffer(disk_path)
-    HandleErrorCode(self.lib_.ArtmSaveBatch(disk_path_p, len(batch_blob), batch_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmSaveBatch(disk_path_p, len(batch_blob), batch_blob_p))
 
 #################################################################################
 

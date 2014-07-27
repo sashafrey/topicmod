@@ -8,4 +8,4 @@ clean:
 
 run:
 	export LD_LIBRARY_PATH=$(LD_LIBRARY_PATH):$$(pwd)/$(OUT_DIR); \
-	$(OUT_DIR)node_controller tcp://*:5556
+	GLOG_logtostderr=1 $(OUT_DIR)node_controller tcp://*:5555

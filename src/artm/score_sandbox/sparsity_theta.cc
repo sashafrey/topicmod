@@ -20,7 +20,7 @@ void SparsityTheta::AppendScore(
 
   int zero_topics_count = 0;
   for (int topic_index = 0; topic_index < topics_size; ++topic_index) {
-    if (abs(theta[topic_index]) < config_.eps()) {
+    if (fabs(theta[topic_index]) < config_.eps()) {
       ++zero_topics_count;
     }
   }

@@ -106,7 +106,7 @@ class MasterComponent:
                  len(master_config_blob), master_config_blob_p))
       return
 
-    raise InvalidOperation(self.lib_, GetLastErrorMessage())
+    raise InvalidOperation(GetLastErrorMessage(self.lib_))
 
   def __enter__(self):
     return self
@@ -244,9 +244,21 @@ class MasterComponent:
       score = messages_pb2.SparsityPhiScore();
       score.ParseFromString(score_data.data);
       return score;
-
+    elif (score_data.type == ScoreData_Type_ItemsProcessed):
+      score = messages_pb2.ItemsProcessedScore()
+      score.ParseFromString(score_data.data)
+      return score
+    elif (score_data.type == ScoreData_Type_TopTokens):
+      score = messages_pb2.TopTokensScore()
+      score.ParseFromString(score_data.data)
+      return score
+    elif (score_data.type == ScoreData_Type_ThetaSnippet):
+      score = messages_pb2.ThetaSnippetScore()
+      score.ParseFromString(score_data.data)
+      return score
+	  
     # Unknown score type
-    raise InvalidMessage(self.lib_, GetLastErrorMessage())
+    raise InvalidMessage(GetLastErrorMessage(self.lib_))
 
 #################################################################################
 

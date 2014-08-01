@@ -256,7 +256,7 @@ class MasterComponent:
       score = messages_pb2.ThetaSnippetScore()
       score.ParseFromString(score_data.data)
       return score
-	  
+
     # Unknown score type
     raise InvalidMessage(GetLastErrorMessage(self.lib_))
 

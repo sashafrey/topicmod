@@ -14,6 +14,7 @@
 #include "glog/logging.h"
 
 #include "artm/core/exceptions.h"
+#include "artm/core/helpers.h"
 
 namespace artm {
 namespace core {
@@ -254,7 +255,7 @@ int TopicModel::AddToken(const std::string& token, bool random_init) {
     float sum = 0.0f;
 
     for (int i = 0; i < topic_size(); ++i) {
-      float val = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+      float val = ThreadSafeRandom::singleton().GenerateFloat();
       values[i] = val;
       sum += val;
     }

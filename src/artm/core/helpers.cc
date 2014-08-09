@@ -1,5 +1,7 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
+#include <stdlib.h>
+
 #include <fstream>  // NOLINT
 
 #include "boost/filesystem.hpp"
@@ -67,6 +69,31 @@ void Helpers::SetThreadName(int thread_id, const char* thread_name) {
 }
 
 #endif
+
+
+ThreadSafeRandom& ThreadSafeRandom::singleton() {
+  static ThreadSafeRandom instance;
+  return instance;
+}
+
+float ThreadSafeRandom::GenerateFloat() {
+  if (!tss_seed_.get()) {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    srand(seed_);
+
+    tss_seed_.reset(new unsigned int);
+    *tss_seed_ = seed_;
+    seed_++;
+  }
+
+#if defined(_WIN32) || defined(_WIN64)
+  // http://msdn.microsoft.com/en-us/library/aa272875(v=vs.60).aspx
+  // rand() is thread-safe on Windows when linked with LIBCMT.LIB
+  return static_cast<float>(rand()) / static_cast<float>(RAND_MAX);  // NOLINT
+#else
+  return static_cast<float>(rand_r(tss_seed_.get())) / static_cast<float>(RAND_MAX);
+#endif
+}
 
 // Return the filenames of all files that have the specified extension
 // in the specified directory.

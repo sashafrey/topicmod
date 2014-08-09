@@ -9,6 +9,8 @@ using namespace std;
 #include "boost/filesystem.hpp"
 using namespace boost::filesystem;
 
+#include "boost/timer/timer.hpp"
+
 #include "doc_token_matrix.h"
 #include "token_topic_matrix.h"
 #include "doc_topic_matrix.h"
@@ -20,7 +22,7 @@ using namespace boost::filesystem;
 #include "glog/logging.h"
 using namespace artm;
 
-double proc(int argc, char * argv[], int processors_count, int instance_size) {
+void proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string batches_disk_path = "batches";
   std::string vocab_file = "";
   std::string docword_file = "";
@@ -246,7 +248,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   model.Overwrite(initial_topic_model);
 
-  clock_t begin = clock();
+  boost::timer::cpu_timer timer;
 
   std::shared_ptr<TopicModel> topic_model;
   std::shared_ptr<PerplexityScore> test_perplexity, train_perplexity;
@@ -282,7 +284,7 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
 
   std::cout << endl;
 
-  clock_t end = clock();
+  boost::timer::cpu_times elapsed = timer.elapsed();
 
   top_tokens = master_component.GetScoreAs<::artm::TopTokensScore>(model, "top_tokens");
   for (int topic_index = 0; topic_index < top_tokens.get()->values_size(); topic_index++) {
@@ -306,8 +308,9 @@ double proc(int argc, char * argv[], int processors_count, int instance_size) {
     std::cout << endl;
   }
 
-  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-  return elapsed_secs;
+  std::cout << "\nCPU TIME: " << (elapsed.user + elapsed.system) / 1e9 << " seconds"
+            << "\nWALLCLOCK TIME: " << elapsed.wall / 1e9 << " seconds"
+            << std::endl << std::endl;
 }
 
 int main(int argc, char * argv[]) {
@@ -319,8 +322,7 @@ int main(int argc, char * argv[]) {
   int instance_size = 1;
   int processors_size = 2;
   try {
-    cout << proc(argc, argv, processors_size, instance_size)
-         << " sec. ================= " << endl << endl;
+    proc(argc, argv, processors_size, instance_size);
   } catch (std::runtime_error& error) {
     cout << "Exception occured: " << error.what() << "\n";
   } catch (...) {

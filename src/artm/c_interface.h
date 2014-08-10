@@ -7,7 +7,7 @@
 #define SRC_ARTM_C_INTERFACE_H_
 
 #if defined(_WIN32) || defined(_WIN64)
-  #ifdef ARTM_DLL_EXPORTS
+  #ifdef artm_shared_EXPORTS
     #define DLL_PUBLIC __declspec(dllexport)
   #else
     #define DLL_PUBLIC __declspec(dllimport)

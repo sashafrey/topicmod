@@ -18,9 +18,9 @@
 #include "rpcz/service.hpp"
 
 #include "artm/messages.pb.h"
-#include "artm/internals.pb.h"
 
 #include "artm/core/common.h"
+#include "artm/core/internals.pb.h"
 #include "artm/core/master_interface.h"
 #include "artm/core/master_component_service_impl.h"
 #include "artm/core/template_manager.h"

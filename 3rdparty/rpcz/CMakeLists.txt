@@ -43,20 +43,5 @@ if(rpcz_build_examples)
   add_subdirectory(examples/cpp)
 endif(rpcz_build_examples)
 
-if(MSVC AND NOT Boost_USE_STATIC_LIBS) 
-  get_filename_component(BOOST_THREAD_PATH ${Boost_THREAD_LIBRARY_RELEASE} NAME_WE)
-  get_filename_component(BOOST_PROGRAM_OPTIONS_PATH ${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE} NAME_WE)
-  get_filename_component(BOOST_DATE_TIME_PATH ${Boost_DATE_TIME_LIBRARY_RELEASE} NAME_WE)
-  get_filename_component(BOOST_CHRONO_PATH ${Boost_CHRONO_LIBRARY_RELEASE} NAME_WE)
-  file(COPY
-    ${BOOST_LIBRARYDIR}/${BOOST_THREAD_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_PROGRAM_OPTIONS_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_DATE_TIME_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_CHRONO_PATH}.dll
-    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${CMAKE_BUILD_TYPE}
-  ) 
-
-endif()
-
 file(GLOB RPCZ_PUBLIC_HEADERS include/rpcz/*.h)
 install(FILES ${RPCZ_PUBLIC_HEADERS} DESTINATION include/rpcz)

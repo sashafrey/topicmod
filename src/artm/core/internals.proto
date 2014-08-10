@@ -1,6 +1,6 @@
 package artm.core;
 
-import "messages.proto";
+import "artm/messages.proto";
 
 // ======= General messages =========
 

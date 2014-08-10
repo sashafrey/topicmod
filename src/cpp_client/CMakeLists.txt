@@ -1,50 +1,14 @@
-cmake_minimum_required(VERSION 2.8)
-
-set(EXEC_NAME cpp_client)
-project(${EXEC_NAME})
-
-# compiler oprions
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Werror")
-endif(CMAKE_COMPILER_IS_GNUCXX)
-
-# find Boost
-find_package(Boost COMPONENTS filesystem system REQUIRED)
-if(NOT Boost_FOUND)
-  message(SEND_ERROR "Failed to find boost::filesystem or boost::system.")
-  return()
-else()
-  include_directories(${Boost_INCLUDE_DIRS})
-endif()
-
-# find Protobuf
-find_package(ProtobufPlugin REQUIRED)
-if(NOT PROTOBUF_FOUND)
-  message(SEND_ERROR "Failed to find protobuf.")
-  return()
-else()
-  include_directories(${PROTOBUF_INCLUDE_DIRS})
-endif()
-
-# find Glog
-find_package(Glog REQUIRED)
-if(NOT GLOG_FOUND)
-  message(SEND_ERROR "Failed to find glog.")
-  return()
-else()
-  include_directories(${GLOG_INCLUDE_DIRS})
-endif()
+project(cpp_client)
 
 # can it be avoided?
-include_directories(${3RD_PARTY_DIR}/rpcz/include)
-include_directories(${3RD_PARTY_DIR}/rpcz/src)
-include_directories(${CMAKE_BINARY_DIR}/3rdparty/gflags/include)
+#include_directories(${3RD_PARTY_DIR}/rpcz/include)
+#include_directories(${3RD_PARTY_DIR}/rpcz/src)
+#include_directories(${CMAKE_BINARY_DIR}/3rdparty/gflags/include)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../)
 
 # make source list
 include_directories(${CMAKE_CURRENT_LIST_DIR})
-include_directories(${CMAKE_BINARY_DIR}/src)
+#include_directories(${CMAKE_BINARY_DIR}/src)
 aux_source_directory(. SRC_LIST)
 
 if(WIN32)
@@ -54,7 +18,7 @@ else()
 endif()
 
 # library deps
-set(CPP_CLIENT_LIB_DEPS  ARTM
+set(CPP_CLIENT_LIB_DEPS  artm_shared
                          ${RPCZ_LIBS}
                          ${Boost_FILESYSTEM_LIBRARIES}
                          ${Boost_SYSTEM_LIBRARIES}
@@ -62,5 +26,5 @@ set(CPP_CLIENT_LIB_DEPS  ARTM
                          ${GLOG_LIBRARIES}
                          ${ZeroMQ_LIBRARIES})
 
-add_executable(${EXEC_NAME} ${SRC_LIST})
-target_link_libraries(${EXEC_NAME} ${CPP_CLIENT_LIB_DEPS})
+add_executable(cpp_client ${SRC_LIST})
+target_link_libraries(cpp_client ${CPP_CLIENT_LIB_DEPS})

@@ -16,12 +16,7 @@ if( UNIX )
   target_link_libraries( protoc -lpthread )
 endif()
 
-if (UNIX) 
-  set(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_CURRENT_BINARY_DIR}/protoc CACHE INTERNAL "protoc build")
-else()
-  set(PROTOBUF_PROTOC_EXECUTABLE ${CMAKE_BINARY_DIR}/bin/${CMAKE_BUILD_TYPE}/protoc.exe CACHE INTERNAL "protoc build")
-endif()
-  
+set(PROTOBUF_PROTOC_EXECUTABLE protoc CACHE INTERNAL "protoc build")
 
 install(TARGETS protoc
     RUNTIME DESTINATION ${BIN_DIR}

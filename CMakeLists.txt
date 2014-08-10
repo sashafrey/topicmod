@@ -22,6 +22,7 @@ if (MSVC)
   add_definitions("-DBOOST_ALL_DYN_LINK")
   add_definitions("-DBOOST_LIB_DIAGNOSTIC")
   add_definitions("/wd4251")
+  add_definitions("/MP")
 endif()
 
 set(Boost_USE_MULTITHREADED ON)

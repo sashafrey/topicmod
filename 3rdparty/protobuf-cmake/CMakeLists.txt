@@ -7,8 +7,6 @@ include(CheckCxxHashset)
 include(CheckCxxHashmap)
 include(ProtobufDownloader)
 
-set(BUILD_SHARED_LIBS ON)
-
 check_include_files("pthread.h" HAVE_PTHREAD)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
@@ -90,9 +88,6 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 endif()
 
 
-if(WIN32 AND BUILD_SHARED_LIBS AND MSVC)
-    add_definitions("-DPROTOBUF_USE_DLLS")
-endif()
 add_definitions("-D_GNU_SOURCE=1")
 configure_file("config.h.in" "config.h")
 

@@ -1,7 +1,2 @@
-add_definitions("-DLIBPROTOBUF_DLL_EXPORT=__declspec(dllexport)")
-add_definitions("-DARTM_DLL_EXPORTS")
 add_subdirectory(artm)
-remove_definitions("-DARTM_DLL_EXPORTS")
-add_definitions("-DLIBPROTOBUF_DLL_EXPORT=__declspec(dllimport)")
 add_subdirectory(cpp_client)
-add_definitions("-DLIBPROTOBUF_DLL_EXPORT=")

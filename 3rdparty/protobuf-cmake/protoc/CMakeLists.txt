@@ -11,7 +11,7 @@ add_definitions(
 )
 
 add_executable(protoc ${SOURCES})
-target_link_libraries( protoc libprotoc )
+target_link_libraries( protoc libprotoc libprotobuf )
 if( UNIX )
   target_link_libraries( protoc -lpthread )
 endif()

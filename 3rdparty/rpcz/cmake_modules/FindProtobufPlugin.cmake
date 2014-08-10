@@ -153,11 +153,7 @@ function(PROTOBUF_GENERATE_SINGLE)
     set(OPTIONS_PLUGIN_NAME ${OPTIONS_PLUGIN})
   endif(NOT OPTIONS_PLUGIN_NAME)
   get_filename_component(ABS_FILE ${OPTIONS_FILE} ABSOLUTE)
-  if(WIN32)
-    set(_OPTION "--${OPTIONS_PLUGIN}_out=dllexport_decl=LIBPROTOBUF_DLL_EXPORT:")
-  else()
-    set(_OPTION "--${OPTIONS_PLUGIN}_out=")
-  endif()
+  set(_OPTION "--${OPTIONS_PLUGIN}_out=")
   add_custom_command(
     OUTPUT ${OPTIONS_OUTPUTS}
     COMMAND  ${PROTOBUF_PROTOC_EXECUTABLE}

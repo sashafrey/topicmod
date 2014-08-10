@@ -14,8 +14,6 @@ find_package(Protobuf REQUIRED)
 find_package(Boost REQUIRED COMPONENTS thread program_options date_time system chrono)
 find_package(ZeroMQ REQUIRED)
 
-add_definitions("-DPROTOBUF_USE_DLLS")
-
 include_directories(${ZEROMQ_INCLUDE_DIRS})
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(${Boost_INCLUDE_DIRS})

@@ -21,8 +21,6 @@ if (MSVC)
   add_definitions("-D_VARIADIC_MAX=10")
   add_definitions("-DBOOST_ALL_DYN_LINK")
   add_definitions("-DBOOST_LIB_DIAGNOSTIC")
-  add_definitions("-DPROTOBUF_USE_DLLS")
-  add_definitions("-DLIBPROTOBUF_DLL_EXPORT=")
   add_definitions("/wd4251")
 endif()
 

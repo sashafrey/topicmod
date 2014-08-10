@@ -48,6 +48,9 @@ collateral/*.out
 collateral/*.ps
 collateral/*.synctex
 
+docs/*.bak
+docs/*/*.bak
+
 src/Intermediate/*
 src/Win32/*
 
@@ -79,3 +82,7 @@ src/Win32/*
 /libs/libboost*
 /libs/v100/*
 /libs/v110/*
+
+docs/_build/*
+
+build/*

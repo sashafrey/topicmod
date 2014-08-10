@@ -3,6 +3,7 @@
 #ifndef SRC_ARTM_CORE_ZMQ_CONTEXT_H_
 #define SRC_ARTM_CORE_ZMQ_CONTEXT_H_
 
+#include <memory>
 #include "boost/utility.hpp"
 #include "glog/logging.h"
 #include "zmq.hpp"

@@ -11,9 +11,7 @@
 #include "rpcz/rpc.hpp"
 
 #include "artm/regularizer_interface.h"
-#include "artm/core/common.h"
 #include "artm/core/call_on_destruction.h"
-#include "artm/core/data_loader.h"
 #include "artm/core/exceptions.h"
 #include "artm/core/helpers.h"
 #include "artm/core/topic_model.h"
@@ -24,17 +22,18 @@ using ::artm::core::MasterComponentService_Stub;
 namespace artm {
 namespace core {
 
-Merger::Merger(boost::mutex* merger_queue_lock,
-               std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
+Merger::Merger(ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
                ThreadSafeHolder<InstanceSchema>* schema,
-               ThreadSafeHolder<artm::core::MasterComponentService_Stub>* master_component_service)
-    : lock_(),
-      topic_model_(lock_),
-      new_topic_model_(),
+               artm::core::MasterComponentService_Stub* master_component_service,
+               Notifiable* notifiable)
+    : topic_model_(),
+      topic_model_inc_(),
       schema_(schema),
       master_component_service_(master_component_service),
-      merger_queue_lock_(merger_queue_lock),
+      scores_merger_(schema, &topic_model_),
+      is_idle_(true),
       merger_queue_(merger_queue),
+      notifiable_(notifiable),
       is_stopping(false),
       thread_() {
   // Keep this at the last action in constructor.
@@ -55,19 +54,39 @@ void Merger::DisposeModel(ModelName model_name) {
   internal_task_queue_.push(MergerTask(kDisposeModel, model_name));
 }
 
-void Merger::UpdateModel(const ModelConfig& model) {
+void Merger::CreateOrReconfigureModel(const ModelConfig& model) {
   if (!topic_model_.has_key(model.name())) {
     // Handle more type of reconfigs - for example, changing the number of topics;
-    auto ttm = std::make_shared<TopicModel>(model.name(), model.topics_count(),
-                                            model.score_size());
+    auto ttm = std::make_shared<TopicModel>(model.name(), model.topics_count());
     topic_model_.set(model.name(), ttm);
   }
 
   auto ttm = topic_model_.get(model.name());
   if (ttm->topic_size() != model.topics_count()) {
     std::string message("Unable to change the number of topics in topic model");
-    BOOST_THROW_EXCEPTION(UnsupportedReconfiguration(message));
+    BOOST_THROW_EXCEPTION(InvalidOperation(message));
   }
+}
+
+void Merger::OverwriteTopicModel(const ::artm::TopicModel& topic_model) {
+  auto ttm = topic_model_.get(topic_model.name());
+  if (ttm == nullptr) {
+    std::stringstream ss;
+    ss << "Model '" << topic_model.name();
+    ss << "' can not be overwritten because it has no ModelConfig.";
+    BOOST_THROW_EXCEPTION(InvalidOperation(ss.str()));
+  }
+
+  if (ttm->topic_size() != topic_model.topics_count()) {
+    std::stringstream ss;
+    ss << "Unable to overwrite model '" << topic_model.name();
+    ss << "' with " << topic_model.topics_count() << " topics. ";
+    ss << "According to ModelConfig it must have " << ttm->topic_size() << " topics.";
+    BOOST_THROW_EXCEPTION(InvalidOperation(ss.str()));
+  }
+
+  std::shared_ptr<::artm::core::TopicModel> new_ttm(new ::artm::core::TopicModel(topic_model));
+  topic_model_.set(topic_model.name(), new_ttm);
 }
 
 void Merger::ForceResetScores(ModelName model_name) {
@@ -76,9 +95,15 @@ void Merger::ForceResetScores(ModelName model_name) {
   sync_event.wait();
 }
 
-void Merger::ForceSyncWithMemcached(ModelName model_name) {
+void Merger::ForcePullTopicModel() {
   rpcz::sync_event sync_event;
-  internal_task_queue_.push(MergerTask(kForceSyncWithMemcached, model_name, &sync_event));
+  internal_task_queue_.push(MergerTask(kForcePullTopicModel, ModelName(), &sync_event));
+  sync_event.wait();
+}
+
+void Merger::ForcePushTopicModelIncrement() {
+  rpcz::sync_event sync_event;
+  internal_task_queue_.push(MergerTask(kForcePushTopicModelIncrement, ModelName(), &sync_event));
   sync_event.wait();
 }
 
@@ -116,7 +141,7 @@ void Merger::InvokePhiRegularizers() {
           }
         } else {
           LOG(ERROR) << "Phi Regularizer with name <" <<
-            reg_name_iterator->c_str() << "> does not exist.";
+            reg_name_iterator->c_str() << "> does not exist.\n";
         }
       }
       topic_model_.set(model_name, new_ttm);
@@ -130,6 +155,7 @@ void Merger::ThreadFunction() {
     LOG(INFO) << "Merger thread started";
     for (;;) {
       if (is_stopping) {
+        LOG(INFO) << "Merger thread stopped";
         break;
       }
 
@@ -137,7 +163,9 @@ void Merger::ThreadFunction() {
       // To check for interrupt without sleep,
       // use boost::this_thread::interruption_point()
       // which also throws boost::thread_interrupted
+      is_idle_ = true;
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      is_idle_ = false;
 
       for (;;) {  // MAIN FOR LOOP
         // First, handle priority tasks in the internal_task_queue.
@@ -145,10 +173,13 @@ void Merger::ThreadFunction() {
         if (internal_task_queue_.try_pop(&merger_task)) {
           switch (merger_task.task_type) {
             case kDisposeModel:
-              new_topic_model_.erase(merger_task.model_name);
+              topic_model_inc_.erase(merger_task.model_name);
               break;
-            case kForceSyncWithMemcached:
-              SyncWithMemcached(merger_task.model_name);
+            case kForcePullTopicModel:
+              PullTopicModel();
+              break;
+            case kForcePushTopicModelIncrement:
+              PushTopicModelIncrement();
               break;
             case kForceResetScores:
               ResetScores(merger_task.model_name);
@@ -162,46 +193,38 @@ void Merger::ThreadFunction() {
         }
 
         // Second, merge everything from the queue and update topic model.
-        std::shared_ptr<const ProcessorOutput> processor_output;
-        {
-          boost::lock_guard<boost::mutex> guard(*merger_queue_lock_);
-          if (merger_queue_->empty()) {
-            break;  // MAIN FOR LOOP
-          }
-
-          processor_output = merger_queue_->front();
-          merger_queue_->pop();
+        std::shared_ptr<const ModelIncrement> model_increment;
+        if (!merger_queue_->try_pop(&model_increment)) {
+          break;  // MAIN FOR LOOP
         }
 
         call_on_destruction c([&]() {
-          // Callback to DataLoader
-          auto data_loader = DataLoaderManager::singleton().Get(
-            processor_output->data_loader_id());
-
-          if (data_loader != nullptr) {
-            data_loader->Callback(processor_output);
+          if (notifiable_ != nullptr) {
+            notifiable_->Callback(model_increment);
           }
         });
 
-        for (int modex_index = 0;
-             modex_index < processor_output->model_increment_size();
-             modex_index++) {
-          auto model_increment = processor_output->model_increment(modex_index);
-          ModelName model_name = model_increment.model_name();
-          auto cur_ttm = topic_model_.get(model_name);
-          if (cur_ttm.get() == nullptr) {
-            // model had been disposed during ongoing processing;
-            continue;  // for (int modex_index = 0; ...
-          }
+        ModelName model_name = model_increment->model_name();
+        auto cur_ttm = topic_model_.get(model_name);
+        if (cur_ttm.get() == nullptr) {
+          // model had been disposed during ongoing processing;
+          continue;  // for (int model_index = 0; ...
+        }
 
-          auto iter = new_topic_model_.find(model_name);
-          if (iter == new_topic_model_.end()) {
-            new_topic_model_.insert(std::make_pair(
-              model_name, std::make_shared<::artm::core::TopicModel>(*cur_ttm)));
-            iter = new_topic_model_.find(model_name);
-          }
+        auto iter = topic_model_inc_.find(model_name);
+        if (iter == topic_model_inc_.end()) {
+          topic_model_inc_.insert(std::make_pair(
+            model_name, std::make_shared<::artm::core::TopicModel>(cur_ttm->model_name(),
+                                                                   cur_ttm->topic_size())));
+          iter = topic_model_inc_.find(model_name);
+        }
 
-          iter->second->ApplyDiff(model_increment);
+        iter->second->ApplyDiff(*model_increment);
+        for (int score_index = 0;
+             score_index < model_increment->score_name_size();
+             ++score_index) {
+          scores_merger_.Append(model_name, model_increment->score_name(score_index),
+                                model_increment->score(score_index));
         }
       }  // MAIN FOR LOOP
     }
@@ -215,74 +238,183 @@ void Merger::ThreadFunction() {
   }
 }
 
-void Merger::SyncWithMemcached(ModelName model_name) {
-  std::vector<ModelName> model_names;
-  if (model_name.empty()) {
-    for (auto iter = new_topic_model_.begin(); iter != new_topic_model_.end(); ++iter) {
-      model_names.push_back(iter->first);
-    }
-  }
-
+void Merger::PullTopicModel() {
+  auto model_names = topic_model_.keys();
   for (auto &model_name : model_names) {
-    // This method (SyncWithMemcached) calculates a diff between new_ttm and old_ttm,
-    // and then sends it to MemcachedService as ModelIncrement.
     auto old_ttm = topic_model_.get(model_name);
     if (old_ttm.get() == nullptr)
       return;  // model had been disposed during ongoing processing;
 
-    auto new_ttm = new_topic_model_.find(model_name);
-    if (new_ttm == new_topic_model_.end())
-      return;  // model had been disposed during ongoing processing;
+    if (master_component_service_ == nullptr) {
+      auto inc_ttm = topic_model_inc_.find(model_name);
+      if (inc_ttm == topic_model_inc_.end())
+       return;  // model had been disposed during ongoing processing;
 
-    std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
-    if (master_component_service == nullptr) {
-      topic_model_.set(model_name, new_ttm->second);
-      new_topic_model_.erase(model_name);
+      // Old mode: accumulate counters in topic model forever
+      // auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
+
+      // New mode: accumulate counters only accross one iteration, then re-calculate Phi from scratch.
+      auto new_ttm = std::make_shared<::artm::core::TopicModel>(old_ttm->model_name(),
+                                                                old_ttm->topic_size());
+      new_ttm->ApplyDiff(*inc_ttm->second);
+      topic_model_.set(model_name, new_ttm);
+      topic_model_inc_.erase(model_name);
     } else {
-      ModelIncrement model_increment;
-      new_ttm->second->CalculateDiff(*old_ttm, &model_increment);
-
       try {
+        ::artm::core::String request;
+        request.set_value(model_name);
         ::artm::TopicModel reply;
-        master_component_service->UpdateModel(model_increment, &reply);
+        master_component_service_->RetrieveModel(request, &reply);
         std::shared_ptr<::artm::core::TopicModel> new_global_ttm(
           new ::artm::core::TopicModel(reply));
 
         topic_model_.set(model_name, new_global_ttm);
-        new_topic_model_.erase(model_name);
+        topic_model_inc_.erase(model_name);
       } catch(const rpcz::rpc_error&) {
-        LOG(ERROR) << "Merger failed to send updates to master component service.";
+        LOG(ERROR) << "Merger failed to pull topic model from the master component service.";
         throw;
       }
     }
   }
 }
 
-void Merger::ResetScores(ModelName model_name) {
-  std::vector<ModelName> model_names;
-  if (model_name.empty()) {
-    model_names = topic_model_.keys();
+void Merger::PushTopicModelIncrement() {
+  if (master_component_service_ == nullptr) {
+    return;  // no-op in local modus operandi
   }
 
-  std::shared_ptr<MasterComponentService_Stub> master_component_service = master_component_service_->get();
+  std::vector<ModelName> model_names;
+  for (auto iter = topic_model_inc_.begin(); iter != topic_model_inc_.end(); ++iter) {
+    model_names.push_back(iter->first);
+  }
+
   for (auto &model_name : model_names) {
-    if (master_component_service == nullptr) {
-      auto old_ttm = GetLatestTopicModel(model_name);
-      if (old_ttm == nullptr)
-        return;  // model had been disposed during ongoing processing;
+    auto inc_ttm = topic_model_inc_.find(model_name);
+    if (inc_ttm == topic_model_inc_.end())
+      return;  // model had been disposed during ongoing processing;
 
-      auto new_ttm = std::make_shared<::artm::core::TopicModel>(*old_ttm);
-      for (int score_index = 0; score_index < new_ttm->score_size(); ++score_index) {
-        new_ttm->SetScores(score_index, 0.0, 0.0);
-      }
+    ModelIncrement model_increment;
+    inc_ttm->second->RetrieveModelIncrement(&model_increment);
+    scores_merger_.RetrieveModelIncrement(model_name, &model_increment);
 
-      topic_model_.set(model_name, new_ttm);
-    } else {
-      // TODO(alfrey) to this on master
-      std::string message("In Network mode ResetScores should happen on Master.");
-      LOG(WARNING) << message;
+    try {
+      ::artm::core::Void reply;
+      master_component_service_->UpdateModel(model_increment, &reply);
+      topic_model_inc_.erase(model_name);
+      scores_merger_.ResetScores(model_name);
+    } catch(const rpcz::rpc_error&) {
+      LOG(ERROR) << "Merger failed to send updates to master component service.";
+      throw;
     }
   }
+}
+
+void Merger::ResetScores(ModelName model_name) {
+  scores_merger_.ResetScores(model_name);
+}
+
+bool Merger::RetrieveExternalTopicModel(ModelName model_name,
+                                        ::artm::TopicModel* topic_model) const {
+  auto ttm = this->GetLatestTopicModel(model_name);
+  if (ttm == nullptr) return false;
+  ttm->RetrieveExternalTopicModel(topic_model);
+  return true;
+}
+
+bool Merger::WaitIdle(int timeout) {
+  auto time_start = boost::posix_time::microsec_clock::local_time();
+  for (;;) {
+    if (is_idle_ && merger_queue_->empty())
+      break;
+
+    boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    auto time_end = boost::posix_time::microsec_clock::local_time();
+    if (timeout >= 0) {
+      if ((time_end - time_start).total_milliseconds() >= timeout) return false;
+    }
+  }
+  return true;
+}
+
+void Merger::ScoresMerger::Append(const ModelName& model_name, const ScoreName& score_name,
+                                  const std::string& score_blob) {
+  auto key = std::make_pair(model_name, score_name);
+  auto score_calculator = schema_->get()->score_calculator(score_name);
+  if (score_calculator == nullptr) {
+    LOG(ERROR) << "Unable to find score calculator: " << score_name;
+    return;
+  }
+
+  auto score_inc = score_calculator->CreateScore();
+  if (!score_inc->ParseFromString(score_blob)) {
+    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse score blob"));
+  }
+
+  auto score = score_map_.get(key);
+  if (score != nullptr) {
+    score_calculator->AppendScore(*score, score_inc.get());
+  }
+
+  score_map_.set(key, score_inc);
+}
+
+void Merger::ScoresMerger::ResetScores(const ModelName& model_name) {
+  if (model_name.empty()) {
+    score_map_.clear();
+    return;
+  }
+
+  auto keys = score_map_.keys();
+  for (auto &key : keys) {
+    if (key.first == model_name) {
+      score_map_.erase(key);
+    }
+  }
+}
+
+void Merger::ScoresMerger::RetrieveModelIncrement(const ModelName& model_name,
+                                                  ModelIncrement* model_increment) {
+  auto keys = score_map_.keys();
+  for (auto &key : keys) {
+    if (key.first == model_name) {
+      auto score = score_map_.get(key);
+      if (score == nullptr)
+        continue;
+
+      model_increment->add_score_name(key.second);
+      model_increment->add_score(score->SerializeAsString());
+    }
+  }
+}
+
+bool Merger::ScoresMerger::RequestScore(const ModelName& model_name, const ScoreName& score_name,
+                                        ScoreData *score_data) const {
+  auto score_calculator = schema_->get()->score_calculator(score_name);
+  if (score_calculator == nullptr) {
+    BOOST_THROW_EXCEPTION(InvalidOperation("Score does not exist"));
+  }
+
+  if (score_calculator->is_cumulative()) {
+    auto score = score_map_.get(ScoreKey(model_name, score_name));
+    if (score == nullptr) {
+      score_data->set_data(score_calculator->CreateScore()->SerializeAsString());
+    } else {
+      score_data->set_data(score->SerializeAsString());
+    }
+  } else {
+    std::shared_ptr<::artm::core::TopicModel> model = topic_model_->get(model_name);
+    std::shared_ptr<Score> score = score_calculator->CalculateScore(*model);
+    score_data->set_data(score->SerializeAsString());
+  }
+
+  score_data->set_type(score_calculator->score_type());
+  score_data->set_name(score_name);
+  return true;
+}
+
+bool Merger::RequestScore(const ModelName& model_name, const ScoreName& score_name,
+                          ScoreData *score_data) const {
+  return scores_merger_.RequestScore(model_name, score_name, score_data);
 }
 
 }  // namespace core

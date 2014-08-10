@@ -17,32 +17,26 @@
 #endif
 
 extern "C" {
-  DLL_PUBLIC enum ArtmErrorCodes {
-    ARTM_SUCCESS = 0,
-    ARTM_GENERAL_ERROR = -1,
-    ARTM_OBJECT_NOT_FOUND = -2,
-    ARTM_INVALID_MESSAGE = -3,
-    ARTM_UNSUPPORTED_RECONFIGURATION = -4,
-    ARTM_NETWORK_ERROR = -5,
-  };
-
   // ===============================================================================================
   // Common routines
   // ===============================================================================================
-  DLL_PUBLIC int ArtmConfigureLogger(int length, const char* logger_config);
-
   DLL_PUBLIC int ArtmGetRequestLength(int request_id);
   DLL_PUBLIC int ArtmCopyRequestResult(int request_id, int length, char* address);
   DLL_PUBLIC void ArtmDisposeRequest(int request_id);
+  DLL_PUBLIC int ArtmSaveBatch(const char* disk_path, int length, const char* batch_blob);
+
+  DLL_PUBLIC const char* ArtmGetLastErrorMessage();
 
   // ===============================================================================================
-  // MasterComponent interface
+  // MasterComponent / MasterProxy
   // ===============================================================================================
   DLL_PUBLIC int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob);
+  DLL_PUBLIC int ArtmCreateMasterProxy(int master_id, int length, const char* config_blob);
   DLL_PUBLIC int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
   DLL_PUBLIC void ArtmDisposeMasterComponent(int master_id);
 
-  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length, const char* config_blob);
+  DLL_PUBLIC int ArtmCreateNodeController(int node_controller_id, int length,
+                                          const char* config_blob);
   DLL_PUBLIC void ArtmDisposeNodeController(int node_controller_id);
 
   DLL_PUBLIC int ArtmCreateModel(int master_id, int length, const char* model_config_blob);
@@ -55,13 +49,19 @@ extern "C" {
                                             const char* regularizer_config_blob);
   DLL_PUBLIC void ArtmDisposeRegularizer(int master_id, const char* regularizer_name);
 
+  DLL_PUBLIC int ArtmCreateDictionary(int master_id, int length, const char* dictionary_blob);
+  DLL_PUBLIC int ArtmReconfigureDictionary(int master_id, int length, const char* dictionary_blob);
+  DLL_PUBLIC void ArtmDisposeDictionary(int master_id, const char* dictionary_name);
+
   DLL_PUBLIC int ArtmAddBatch(int master_id, int length, const char* batch_blob);
   DLL_PUBLIC int ArtmInvokeIteration(int master_id, int iterations_count);
   DLL_PUBLIC int ArtmInvokePhiRegularizers(int master_id);
-  DLL_PUBLIC int ArtmWaitIdle(int master_id);
+  DLL_PUBLIC int ArtmWaitIdle(int master_id, int timeout = -1);
 
   DLL_PUBLIC int ArtmRequestThetaMatrix(int master_id, const char* model_name);
   DLL_PUBLIC int ArtmRequestTopicModel(int master_id, const char* model_name);
+  DLL_PUBLIC int ArtmRequestScore(int master_id, const char* model_name, const char* score_name);
+  DLL_PUBLIC int ArtmOverwriteTopicModel(int master_id, int length, const char* topic_model_blob);
 }
 
 #endif  // SRC_ARTM_C_INTERFACE_H_

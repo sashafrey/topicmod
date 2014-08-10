@@ -13,12 +13,11 @@ using ::artm::core::ThreadSafeCollectionHolder;
 // To run this particular test:
 // artm_tests.exe --gtest_filter=ThreadSafeHolder.*
 TEST(ThreadSafeHolder, Basic) {
-  boost::mutex lock_;
-  ThreadSafeHolder<double> int_holder(lock_);
+  ThreadSafeHolder<double> int_holder;
   int_holder.set(std::make_shared<double>(5.0));
   EXPECT_EQ(*int_holder.get(), 5.0);
 
-  ThreadSafeCollectionHolder<int, double> collection_holder(lock_);
+  ThreadSafeCollectionHolder<int, double> collection_holder;
   int key1 = 2, key2 = 3, key3 = 4;
   collection_holder.set(key1, std::make_shared<double>(7.0));
   collection_holder.set(key2, std::make_shared<double>(8.0));

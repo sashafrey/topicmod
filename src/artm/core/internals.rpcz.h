@@ -40,16 +40,12 @@ class MasterComponentService : public rpcz::service {
   static const ::google::protobuf::ServiceDescriptor* descriptor();
 
   virtual void UpdateModel(const ::artm::core::ModelIncrement& request,
-                       ::rpcz::reply< ::artm::TopicModel> response);
+                       ::rpcz::reply< ::artm::core::Void> response);
   virtual void RetrieveModel(const ::artm::core::String& request,
                        ::rpcz::reply< ::artm::TopicModel> response);
   virtual void RequestBatches(const ::artm::core::Int& request,
                        ::rpcz::reply< ::artm::core::BatchIds> response);
   virtual void ReportBatches(const ::artm::core::BatchIds& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
-  virtual void ConnectClient(const ::artm::core::String& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
-  virtual void DisconnectClient(const ::artm::core::String& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
   // implements Service ----------------------------------------------
@@ -80,10 +76,10 @@ class MasterComponentService_Stub {
 
 
   void UpdateModel(const ::artm::core::ModelIncrement& request,
-                       ::artm::TopicModel* response,
+                       ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void UpdateModel(const ::artm::core::ModelIncrement& request,
-                       ::artm::TopicModel* response,
+                       ::artm::core::Void* response,
                        long deadline_ms = -1);
   void RetrieveModel(const ::artm::core::String& request,
                        ::artm::TopicModel* response,
@@ -101,18 +97,6 @@ class MasterComponentService_Stub {
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
   void ReportBatches(const ::artm::core::BatchIds& request,
-                       ::artm::core::Void* response,
-                       long deadline_ms = -1);
-  void ConnectClient(const ::artm::core::String& request,
-                       ::artm::core::Void* response,
-                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void ConnectClient(const ::artm::core::String& request,
-                       ::artm::core::Void* response,
-                       long deadline_ms = -1);
-  void DisconnectClient(const ::artm::core::String& request,
-                       ::artm::core::Void* response,
-                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void DisconnectClient(const ::artm::core::String& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
  private:
@@ -135,13 +119,13 @@ class NodeControllerService : public rpcz::service {
 
   static const ::google::protobuf::ServiceDescriptor* descriptor();
 
-  virtual void CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
+  virtual void CreateOrReconfigureInstance(const ::artm::MasterComponentConfig& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeInstance(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
+  virtual void CreateOrReconfigureMasterComponent(const ::artm::MasterComponentConfig& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void DisposeDataLoader(const ::artm::core::Void& request,
+  virtual void DisposeMasterComponent(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
@@ -151,7 +135,29 @@ class NodeControllerService : public rpcz::service {
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void ForceSyncWithMemcached(const ::artm::core::Void& request,
+  virtual void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void ForcePullTopicModel(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void ForcePushTopicModelIncrement(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void OverwriteTopicModel(const ::artm::TopicModel& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void RequestTopicModel(const ::artm::core::String& request,
+                       ::rpcz::reply< ::artm::TopicModel> response);
+  virtual void RequestThetaMatrix(const ::artm::core::String& request,
+                       ::rpcz::reply< ::artm::ThetaMatrix> response);
+  virtual void RequestScore(const ::artm::core::RequestScoreArgs& request,
+                       ::rpcz::reply< ::artm::ScoreData> response);
+  virtual void AddBatch(const ::artm::Batch& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void InvokeIteration(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void WaitIdle(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Int> response);
+  virtual void InvokePhiRegularizers(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
   // implements Service ----------------------------------------------
@@ -181,10 +187,10 @@ class NodeControllerService_Stub {
   inline ::rpcz::rpc_channel* channel() { return channel_; }
 
 
-  void CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
+  void CreateOrReconfigureInstance(const ::artm::MasterComponentConfig& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
+  void CreateOrReconfigureInstance(const ::artm::MasterComponentConfig& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void DisposeInstance(const ::artm::core::Void& request,
@@ -193,16 +199,16 @@ class NodeControllerService_Stub {
   void DisposeInstance(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
-  void CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
+  void CreateOrReconfigureMasterComponent(const ::artm::MasterComponentConfig& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
+  void CreateOrReconfigureMasterComponent(const ::artm::MasterComponentConfig& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
-  void DisposeDataLoader(const ::artm::core::Void& request,
+  void DisposeMasterComponent(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void DisposeDataLoader(const ::artm::core::Void& request,
+  void DisposeMasterComponent(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
   void CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
@@ -229,10 +235,76 @@ class NodeControllerService_Stub {
   void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
-  void ForceSyncWithMemcached(const ::artm::core::Void& request,
+  void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
                        ::artm::core::Void* response,
                        ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
-  void ForceSyncWithMemcached(const ::artm::core::Void& request,
+  void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void ForcePullTopicModel(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void ForcePullTopicModel(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void ForcePushTopicModelIncrement(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void ForcePushTopicModelIncrement(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void OverwriteTopicModel(const ::artm::TopicModel& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void OverwriteTopicModel(const ::artm::TopicModel& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void RequestTopicModel(const ::artm::core::String& request,
+                       ::artm::TopicModel* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void RequestTopicModel(const ::artm::core::String& request,
+                       ::artm::TopicModel* response,
+                       long deadline_ms = -1);
+  void RequestThetaMatrix(const ::artm::core::String& request,
+                       ::artm::ThetaMatrix* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void RequestThetaMatrix(const ::artm::core::String& request,
+                       ::artm::ThetaMatrix* response,
+                       long deadline_ms = -1);
+  void RequestScore(const ::artm::core::RequestScoreArgs& request,
+                       ::artm::ScoreData* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void RequestScore(const ::artm::core::RequestScoreArgs& request,
+                       ::artm::ScoreData* response,
+                       long deadline_ms = -1);
+  void AddBatch(const ::artm::Batch& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void AddBatch(const ::artm::Batch& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void InvokeIteration(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void InvokeIteration(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       long deadline_ms = -1);
+  void WaitIdle(const ::artm::core::Void& request,
+                       ::artm::core::Int* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void WaitIdle(const ::artm::core::Void& request,
+                       ::artm::core::Int* response,
+                       long deadline_ms = -1);
+  void InvokePhiRegularizers(const ::artm::core::Void& request,
+                       ::artm::core::Void* response,
+                       ::rpcz::rpc* rpc,                     ::rpcz::closure* done);
+  void InvokePhiRegularizers(const ::artm::core::Void& request,
                        ::artm::core::Void* response,
                        long deadline_ms = -1);
  private:

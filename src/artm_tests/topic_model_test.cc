@@ -9,10 +9,9 @@ TEST(TopicModelTest, Basic) {
   const float kTolerance = 1e-5f;
 
   int no_topics = 3;
-  int scores_count = 4;
   int no_tokens = 5;
 
-  artm::core::TopicModel topic_model(::artm::core::ModelName(), no_topics, scores_count);
+  artm::core::TopicModel topic_model(::artm::core::ModelName(), no_topics);
   topic_model.AddToken("token_1");
   topic_model.AddToken("token_2");
   topic_model.AddToken("token_3");
@@ -120,7 +119,7 @@ TEST(TopicModelTest, Basic) {
   //  test 8
   no_topics = 1;
   for (int i = 1; i < 10; ++i) {
-    artm::core::TopicModel topic_model_1(::artm::core::ModelName(), no_topics, scores_count);
+    artm::core::TopicModel topic_model_1(::artm::core::ModelName(), no_topics);
     topic_model_1.AddToken("token_1");
     topic_model_1.AddToken("token_2");
     topic_model_1.AddToken("token_3");
@@ -129,7 +128,7 @@ TEST(TopicModelTest, Basic) {
 
     for (int j = 0; j < 100; ++j) {
       int index = 0 + rand() % 5;  // NOLINT
-      int func = 0 + rand() % 3;   // NOLINT
+      int func = 0 + rand() % 4;   // NOLINT
       float value = -1.0f + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / 2));  // NOLINT
       switch (func) {
       case 0:
@@ -140,6 +139,9 @@ TEST(TopicModelTest, Basic) {
         break;
       case 2:
         topic_model_1.IncreaseTokenWeight(index, 0, value);
+        break;
+      case 4:
+        topic_model_1.IncreaseRegularizerWeight(index, 0, value);
         break;
       }
 

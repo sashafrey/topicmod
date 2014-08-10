@@ -11,11 +11,14 @@
 #include <string>
 
 #include "boost/utility.hpp"
+#include "boost/uuid/uuid.hpp"
 
 #include "artm/messages.pb.h"
 #include "artm/internals.pb.h"
 
 #include "artm/core/common.h"
+#include "artm/core/internals.pb.h"
+#include "artm/core/regularizable.h"
 
 namespace artm {
 namespace core {
@@ -49,7 +52,7 @@ class TopicWeightIterator {
   // It is caller responsibility to verify this condition.
   inline float Weight() {
     assert(current_topic_ < topics_count_);
-    return std::max(n_w_[current_topic_] + r_w_[current_topic_], 0.0f) / n_t_[current_topic_];
+    return std::max<float>(n_w_[current_topic_] + r_w_[current_topic_], 0.0f) / n_t_[current_topic_];
   }
 
   // Not normalized weight.
@@ -92,6 +95,7 @@ class TopicWeightIterator {
   }
 
   friend class ::artm::core::TopicModel;
+  friend class ::artm::core::Regularizable;
 };
 
 // A class representing a topic model.
@@ -102,27 +106,24 @@ class TopicWeightIterator {
 // - ::artm::core::ModelIncrement is very similar to the model, but it used to represent
 //   an increment to the model. This representation is used to transfer an updates from
 //   processor to Merger, and from Merger to MemcachedService.
-class TopicModel {
+class TopicModel : public Regularizable {
  public:
-  explicit TopicModel(ModelName model_name, int topics_count, int scores_count);
+  explicit TopicModel(ModelName model_name, int topics_count);
   explicit TopicModel(const TopicModel& rhs);
   explicit TopicModel(const ::artm::TopicModel& external_topic_model);
   explicit TopicModel(const ::artm::core::ModelIncrement& model_increment);
 
-  void Clear(ModelName model_name, int topics_count, int scores_count);
+  void Clear(ModelName model_name, int topics_count);
   ~TopicModel();
 
   void RetrieveExternalTopicModel(::artm::TopicModel* topic_model) const;
   void CopyFromExternalTopicModel(const ::artm::TopicModel& topic_model);
 
-  // Calculates a diff between this model and rhs, assuming that this model is newer.
-  // The output is stored as ModelIncrement in the diff object.
-  // This operation can be summarized as "diff = this - rhs"
-  void CalculateDiff(const ::artm::core::TopicModel& rhs,
-                     ::artm::core::ModelIncrement* diff) const;
+  void RetrieveModelIncrement(::artm::core::ModelIncrement* diff) const;
 
   // Applies model increment to this TopicModel.
   void ApplyDiff(const ::artm::core::ModelIncrement& diff);
+  void ApplyDiff(const ::artm::core::TopicModel& diff);
 
   int  AddToken(const std::string& token, bool random_init = true);
   void IncreaseTokenWeight(const std::string& token, int topic_id, float value);
@@ -130,27 +131,18 @@ class TopicModel {
   void SetTokenWeight(const std::string& token, int topic_id, float value);
   void SetTokenWeight(int token_id, int topic_id, float value);
 
+  void IncreaseRegularizerWeight(const std::string& token, int topic_id, float value);
+  void IncreaseRegularizerWeight(int token_id, int topic_id, float value);
   void SetRegularizerWeight(const std::string& token, int topic_id, float value);
   void SetRegularizerWeight(int token_id, int topic_id, float value);
 
-  void IncreaseItemsProcessed(int value);
-  void SetItemsProcessed(int value);
-
-  void IncreaseScores(int iScore, double value, double score_norm);
-  void SetScores(int iScore, double value, double score_norm);
   TopicWeightIterator GetTopicWeightIterator(const std::string& token) const;
   TopicWeightIterator GetTopicWeightIterator(int token_id) const;
 
   ModelName model_name() const;
 
-  int items_processed() const;
-  int score_size() const;
   int token_size() const;
   int topic_size() const;
-
-  double score(int score_index) const;
-  double score_not_normalized(int score_index) const;
-  double score_normalizer(int score_index) const;
 
   bool has_token(const std::string& token) const;
   int token_id(const std::string& token) const;
@@ -163,17 +155,11 @@ class TopicModel {
   std::vector<std::string> token_id_to_token_;
   int topics_count_;
 
-  // Statistics: how many documents in total
-  // have made a contribution into this topic model.
-  int items_processed_;
-
-  // Scores (such as perplexity), defined by ModelConfig.
-  std::vector<double> scores_;
-  std::vector<double> scores_norm_;
-
   std::vector<float*> n_wt_;  // vector of length tokens_count
   std::vector<float*> r_wt_;  // regularizer's additions
   std::vector<float> n_t_;  // normalization constant for each topic
+
+  std::vector<boost::uuids::uuid> batch_uuid_;  // batches contributing to this model
 };
 
 }  // namespace core

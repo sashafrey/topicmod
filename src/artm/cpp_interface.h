@@ -13,40 +13,68 @@
   TypeName(const TypeName&);   \
   void operator=(const TypeName&)
 
+enum ArtmErrorCodes {
+    ARTM_SUCCESS = 0,
+    ARTM_GENERAL_ERROR = -1,
+    ARTM_OBJECT_NOT_FOUND = -2,
+    ARTM_INVALID_MESSAGE = -3,
+    ARTM_INVALID_OPERATION = -4,
+    ARTM_NETWORK_ERROR = -5,
+    ARTM_STILL_WORKING = -6
+};
+
 namespace artm {
 
-class DLL_PUBLIC MasterComponent;
-class DLL_PUBLIC NodeController;
-class DLL_PUBLIC Model;
-class DLL_PUBLIC Regularizer;
+class MasterComponent;
+class NodeController;
+class Model;
+class Regularizer;
+class Dictionary;
 
 // Exception handling in cpp_interface
-#define DEFINE_EXCEPTION_TYPE(Type, BaseType)          \
-class Type : public BaseType { public:  /*NOLINT*/     \
-  explicit Type() : BaseType("") {}                    \
+#define DEFINE_EXCEPTION_TYPE(Type, BaseType)                  \
+class Type : public BaseType { public:  /*NOLINT*/             \
+  explicit Type() : BaseType("") {}                            \
+  explicit Type(std::string message) : BaseType(message) {}    \
 };
 
 DEFINE_EXCEPTION_TYPE(GeneralError, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(ObjectNotFound, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidMessage, std::runtime_error);
-DEFINE_EXCEPTION_TYPE(UnsupportedReconfiguration, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(NerworkException, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 
-class DLL_PUBLIC MasterComponent {
+void SaveBatch(const Batch& batch, const std::string& disk_path);
+
+class MasterComponent {
  public:
   explicit MasterComponent(const MasterComponentConfig& config);
+  explicit MasterComponent(const MasterProxyConfig& config);
   ~MasterComponent();
 
   int id() const { return id_; }
   std::shared_ptr<TopicModel> GetTopicModel(const Model& model);
   std::shared_ptr<ThetaMatrix> GetThetaMatrix(const Model& model);
+  std::shared_ptr<ScoreData> GetScore(const Model& model,
+                                      const std::string& score_name);
+
+  template <typename T>
+  std::shared_ptr<T> GetScoreAs(const Model& model,
+                                const std::string& score_name) {
+    auto score_data = GetScore(model, score_name);
+    auto score = std::make_shared<T>();
+    score->ParseFromString(score_data->data());
+    return score;
+  }
+
   void Reconfigure(const MasterComponentConfig& config);
   void AddBatch(const Batch& batch);
   void AddStream(const Stream& stream);
   void RemoveStream(std::string stream_name);
   void InvokeIteration(int iterations_count);
-  void WaitIdle();
+  bool WaitIdle(int timeout = -1);
 
   const MasterComponentConfig& config() const { return config_; }
   MasterComponentConfig* mutable_config() { return &config_; }
@@ -57,7 +85,7 @@ class DLL_PUBLIC MasterComponent {
   DISALLOW_COPY_AND_ASSIGN(MasterComponent);
 };
 
-class DLL_PUBLIC NodeController {
+class NodeController {
  public:
   explicit NodeController(const NodeControllerConfig& config);
   ~NodeController();
@@ -70,12 +98,13 @@ class DLL_PUBLIC NodeController {
   DISALLOW_COPY_AND_ASSIGN(NodeController);
 };
 
-class DLL_PUBLIC Model {
+class Model {
  public:
   Model(const MasterComponent& master_component, const ModelConfig& config);
   ~Model();
 
   void Reconfigure(const ModelConfig& config);
+  void Overwrite(const TopicModel& topic_model);
   void Enable();
   void Disable();
   void InvokePhiRegularizers();
@@ -91,7 +120,7 @@ class DLL_PUBLIC Model {
   DISALLOW_COPY_AND_ASSIGN(Model);
 };
 
-class DLL_PUBLIC Regularizer {
+class Regularizer {
  public:
   Regularizer(const MasterComponent& master_component, const RegularizerConfig& config);
   ~Regularizer();
@@ -106,6 +135,22 @@ class DLL_PUBLIC Regularizer {
   int master_id_;
   RegularizerConfig config_;
   DISALLOW_COPY_AND_ASSIGN(Regularizer);
+};
+
+class Dictionary {
+ public:
+  Dictionary(const MasterComponent& master_component, const DictionaryConfig& config);
+  ~Dictionary();
+
+  void Reconfigure(const DictionaryConfig& config);
+
+  int master_id() const { return master_id_; }
+  const DictionaryConfig& config() const { return config_; }
+
+ private:
+  int master_id_;
+  DictionaryConfig config_;
+  DISALLOW_COPY_AND_ASSIGN(Dictionary);
 };
 
 }  // namespace artm

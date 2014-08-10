@@ -5,8 +5,6 @@
 #ifndef SRC_ARTM_REGULARIZER_SANDBOX_DIRICHLET_PHI_H_
 #define SRC_ARTM_REGULARIZER_SANDBOX_DIRICHLET_PHI_H_
 
-#include <vector>
-
 #include "artm/messages.pb.h"
 #include "artm/regularizer_interface.h"
 
@@ -18,7 +16,7 @@ class DirichletPhi : public RegularizerInterface {
   explicit DirichletPhi(const DirichletPhiConfig& config)
     : config_(config) {}
 
-  virtual bool RegularizePhi(::artm::core::TopicModel* topic_model, double tau);
+  virtual bool RegularizePhi(::artm::core::Regularizable* topic_model, double tau);
 
  private:
   DirichletPhiConfig config_;

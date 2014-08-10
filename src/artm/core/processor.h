@@ -5,7 +5,6 @@
 
 #include <atomic>
 #include <memory>
-#include <queue>
 #include <string>
 
 #include "boost/thread.hpp"
@@ -29,33 +28,39 @@ class TopicWeightIterator;
 
 class Processor : boost::noncopyable {
  public:
-  Processor(boost::mutex* processor_queue_lock,
-      std::queue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
-      boost::mutex* merger_queue_lock,
-      std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue,
-      const Merger& merger,
-      const ThreadSafeHolder<InstanceSchema>& schema);
+  Processor(ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >*  processor_queue,
+            ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue,
+            const Merger& merger,
+            const ThreadSafeHolder<InstanceSchema>& schema);
 
   ~Processor();
 
  private:
-  boost::mutex* processor_queue_lock_;
-  std::queue<std::shared_ptr<const ProcessorInput> >* processor_queue_;
-  boost::mutex* merger_queue_lock_;
-  std::queue<std::shared_ptr<const ProcessorOutput> >* merger_queue_;
+  ThreadSafeQueue<std::shared_ptr<const ProcessorInput> >* processor_queue_;
+  ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_queue_;
   const Merger& merger_;
   const ThreadSafeHolder<InstanceSchema>& schema_;
 
   mutable std::atomic<bool> is_stopping;
   boost::thread thread_;
+
   void ThreadFunction();
 
   // Helper class to iterate on stream
   class StreamIterator : boost::noncopyable {
    public:
-    StreamIterator(const ProcessorInput& processor_input, const std::string stream_name);
+    // Iterates on a global stream (all items in the batch)
+    explicit StreamIterator(const ProcessorInput& processor_input);
+
+    // Iterates on items from a specific stream
+    explicit StreamIterator(const ProcessorInput& processor_input, const std::string& stream_name);
+
     const Item* Next();
     const Item* Current() const;
+
+    // Checks whether Current() item belongs to a specific stream
+    bool InStream(const std::string& stream_name);
+    bool InStream(int stream_index);
 
    private:
     int items_count_;
@@ -68,22 +73,15 @@ class Processor : boost::noncopyable {
   // (inferring theta distribution or perplexity calculation)
   class ItemProcessor : boost::noncopyable {
    public:
-    ItemProcessor(const TopicModel& topic_model,
-                  const google::protobuf::RepeatedPtrField<std::string>& token_dict,
-                  std::shared_ptr<InstanceSchema> schema);
+    explicit ItemProcessor(const TopicModel& topic_model,
+                           const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+                           std::shared_ptr<InstanceSchema> schema);
 
     void InferTheta(const ModelConfig& model,
                     const Item& item,
                     ModelIncrement* model_increment,
-                    bool update_token_counters,
-                    bool update_theta_cache,
+                    bool update_model,
                     float* theta);
-
-    void CalculateScore(const Score& score,
-                        const Item& item,
-                        const float* theta,
-                        double* perplexity,
-                        double* normalizer);
 
    private:
     const TopicModel& topic_model_;

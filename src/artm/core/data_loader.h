@@ -14,8 +14,6 @@
 #include "boost/uuid/uuid.hpp"
 
 #include "artm/messages.pb.h"
-#include "artm/internals.pb.h"
-#include "artm/core/batch_manager.h"
 #include "artm/core/common.h"
 #include "artm/core/template_manager.h"
 #include "artm/core/thread_safe_holder.h"
@@ -27,58 +25,46 @@ namespace rpcz {
 namespace artm {
 namespace core {
 
+class Instance;
 class MasterComponentService_Stub;
 class Generation;
 
-class DataLoader : boost::noncopyable {
+class DataLoader : boost::noncopyable, public Notifiable {
  public:
-  DataLoader(int id, const DataLoaderConfig& config);
+  explicit DataLoader(Instance* instance);
   virtual ~DataLoader() {}
 
-  int id() const;
-  static void PopulateDataStreams(const DataLoaderConfig& config, const Batch& batch,
-                                  ProcessorInput* pi);
-
-  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache) = 0;
-  virtual void Reconfigure(const DataLoaderConfig& config);
+  virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment) = 0;
+  Instance* instance();
 
  protected:
-  boost::mutex lock_;
-  ThreadSafeHolder<DataLoaderConfig> config_;
+  void PopulateDataStreams(const Batch& batch, ProcessorInput* pi);
 
- private:
-  int data_loader_id_;
+  Instance* instance_;
 };
 
 // DataLoader for local modus operandi
 class LocalDataLoader : public DataLoader {
  public:
+  explicit LocalDataLoader(Instance* instance);
   virtual ~LocalDataLoader();
 
   int GetTotalItemsCount() const;
   void AddBatch(const Batch& batch);
-  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
+  virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment);
 
   void InvokeIteration(int iterations_count);
-  void WaitIdle();
+
+  // Returns false if BigARTM is still processing the collection, otherwise true.
+  bool WaitIdle(int timeout = -1);
   void DisposeModel(ModelName model_name);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
  private:
-  friend class TemplateManager<DataLoader, DataLoaderConfig>;
-
-  // All instances of DataLoader should be created via DataLoaderManager
-  LocalDataLoader(int id, const DataLoaderConfig& config);
-  static void CompactBatch(const Batch& batch, Batch* compacted_batch);
-
   ThreadSafeHolder<Generation> generation_;
 
   typedef std::pair<boost::uuids::uuid, ModelName> CacheKey;
-  boost::mutex cache_lock_;
   ThreadSafeCollectionHolder<CacheKey, DataLoaderCacheEntry> cache_;
-
-  boost::mutex batch_manager_lock_;
-  BatchManager batch_manager_;
 
   mutable std::atomic<bool> is_stopping;
 
@@ -93,19 +79,11 @@ class LocalDataLoader : public DataLoader {
 // DataLoader for network modus operandi
 class RemoteDataLoader : public DataLoader {
  public:
+  explicit RemoteDataLoader(Instance* instance);
   virtual ~RemoteDataLoader();
-  virtual void Reconfigure(const DataLoaderConfig& config);
-  virtual void Callback(std::shared_ptr<const ProcessorOutput> cache);
+  virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment);
 
  private:
-  friend class TemplateManager<DataLoader, DataLoaderConfig>;
-
-  // All instances of DataLoader should be created via NetworkLoaderManager
-  RemoteDataLoader(int id, const DataLoaderConfig& config);
-
-  std::unique_ptr<rpcz::application> application_;
-  std::shared_ptr<artm::core::MasterComponentService_Stub> master_component_service_proxy_;
-
   mutable std::atomic<bool> is_stopping;
 
   // Keep all threads at the end of class members
@@ -115,8 +93,6 @@ class RemoteDataLoader : public DataLoader {
 
   void ThreadFunction();
 };
-
-typedef TemplateManager<DataLoader, DataLoaderConfig> DataLoaderManager;
 
 }  // namespace core
 }  // namespace artm

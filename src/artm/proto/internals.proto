@@ -26,24 +26,6 @@ message Void {
 
 // ======= Specific messages =========
 
-// Configuration of DataLoader component.
-message DataLoaderConfig {
-  optional int32 instance_id = 2;
-  optional string disk_path = 3;
-  optional int32 queue_size = 4 [default = 10];
-  repeated Stream stream = 5;
-  optional bool compact_batches = 6 [default = true];
-  optional bool cache_processor_output = 7 [default = false];
-  optional string master_component_endpoint = 8;
-}
-
-// Configuration of Instance component.
-message InstanceConfig {
-  optional int32 processors_count = 2 [default = 1];
-  optional string master_component_endpoint = 3;
-  optional int32 merger_queue_max_size = 4 [default = 10];
-}
-
 message DataLoaderCacheEntry {
   optional string model_name = 1;
   optional string batch_uuid = 2;
@@ -59,9 +41,6 @@ message ProcessorInput
   // Identificator of the batch
   required string batch_uuid = 2;
 
-  // Id of DataLoader
-  required int32 data_loader_id = 3;
-
   // Information about streams (for example, training and testing items).
   // Withing each stream the length of flags vector
   // is the same as number of items in the batch.
@@ -72,43 +51,31 @@ message ProcessorInput
   repeated DataLoaderCacheEntry cached_theta = 6;
 }
 
-// A massage to pass from Processor to Merger
-message ProcessorOutput
-{
-  // Identificator of the batch.
-  required string batch_uuid = 1;
-
-  // Id of DataLoader
-  required int32 data_loader_id = 2;
-
-  // One entry per model
-  repeated ModelIncrement model_increment = 3;
-}
-
 // All information, gathered by Processor for a particular batch and model.
 message ModelIncrement {
   required string model_name = 1;
   required int32 topics_count = 2;
-  optional int32 items_processed = 3;
 
   // Newly discovered tokens, not yet included in matrix Phi.
-  repeated string discovered_token = 4;
+  repeated string discovered_token = 3;
 
   // Known tokens
-  repeated string token = 5;
+  repeated string token = 4;
 
   // n_wt values for this batch; the length of this repeated field
   // equals the number of known tokens.
   // For each token, the length of Counters array equals topics_count.
-  repeated FloatArray token_increment = 6;
+  repeated FloatArray token_increment = 5;
 
-  // Messages related to scores such as perplexity.
-  repeated double score = 7;      // cumulative part of perplexity
-  repeated double score_norm = 8;  // total 'n' (accumulated number of tokens)
+  repeated string score_name = 6;
+  repeated bytes score = 7;
 
   // Cached thetas from previous iteration
-  repeated int32 item_id = 9;
-  repeated FloatArray theta = 10;
+  repeated int32 item_id = 8;
+  repeated FloatArray theta = 9;
+
+  // Identificators of all batches, contributing to this model increment.
+  repeated string batch_uuid = 10;
 }
 
 // ======== MasterComponentService ========
@@ -118,14 +85,11 @@ message BatchIds {
 }
 
 service MasterComponentService {
-  rpc UpdateModel(ModelIncrement) returns (TopicModel);
+  rpc UpdateModel(ModelIncrement) returns (Void);
   rpc RetrieveModel(String) returns (TopicModel);
 
   rpc RequestBatches(Int) returns (BatchIds);
   rpc ReportBatches(BatchIds) returns (Void);
-
-  rpc ConnectClient(String) returns (Void);
-  rpc DisconnectClient(String) returns (Void);
 }
 
 // ===== NodeControllerService ======
@@ -148,12 +112,25 @@ message DisposeRegularizerArgs {
   optional string regularizer_name = 2;
 }
 
+message CreateOrReconfigureDictionaryArgs {
+  optional DictionaryConfig dictionary = 2;
+}
+
+message DisposeDictionaryArgs {
+  optional string dictionary_name = 2;
+}
+
+message RequestScoreArgs {
+  optional string model_name = 1;
+  optional string score_name = 2;
+}
+
 service NodeControllerService {
-  rpc CreateOrReconfigureInstance(InstanceConfig) returns (Void);
+  rpc CreateOrReconfigureInstance(MasterComponentConfig) returns (Void);
   rpc DisposeInstance(Void) returns (Void);
 
-  rpc CreateOrReconfigureDataLoader(DataLoaderConfig) returns (Void);
-  rpc DisposeDataLoader(Void) returns (Void);
+  rpc CreateOrReconfigureMasterComponent(MasterComponentConfig) returns (Void);
+  rpc DisposeMasterComponent(Void) returns (Void);
 
   rpc CreateOrReconfigureModel(CreateOrReconfigureModelArgs) returns (Void);
   rpc DisposeModel(DisposeModelArgs) returns (Void);
@@ -161,5 +138,19 @@ service NodeControllerService {
   rpc CreateOrReconfigureRegularizer(CreateOrReconfigureRegularizerArgs) returns (Void);
   rpc DisposeRegularizer(DisposeRegularizerArgs) returns (Void);
 
-  rpc ForceSyncWithMemcached(Void) returns (Void);
+  rpc CreateOrReconfigureDictionary(CreateOrReconfigureDictionaryArgs) returns (Void);
+  rpc DisposeDictionary(DisposeDictionaryArgs) returns (Void);
+
+  rpc ForcePullTopicModel(Void) returns (Void);
+  rpc ForcePushTopicModelIncrement(Void) returns (Void);
+
+  rpc OverwriteTopicModel(TopicModel) returns (Void);
+  rpc RequestTopicModel(String) returns (TopicModel);
+  rpc RequestThetaMatrix(String) returns (ThetaMatrix);
+  rpc RequestScore(RequestScoreArgs) returns (ScoreData);
+
+  rpc AddBatch(Batch) returns (Void);
+  rpc InvokeIteration(Void) returns (Void);
+  rpc WaitIdle(Void) returns (Int);
+  rpc InvokePhiRegularizers(Void) returns (Void);
 }

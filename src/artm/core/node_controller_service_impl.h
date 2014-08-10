@@ -3,7 +3,6 @@
 #ifndef SRC_ARTM_CORE_NODE_CONTROLLER_SERVICE_IMPL_H_
 #define SRC_ARTM_CORE_NODE_CONTROLLER_SERVICE_IMPL_H_
 
-#include <map>
 #include <memory>
 
 #include "boost/thread/mutex.hpp"
@@ -18,19 +17,48 @@
 namespace artm {
 namespace core {
 
+class Instance;
+class MasterInterface;
+
 class NodeControllerServiceImpl : public NodeControllerService {
  public:
-  NodeControllerServiceImpl() : lock_(), instance_id_(kUndefinedId), data_loader_id_(kUndefinedId) { ; }
+  NodeControllerServiceImpl();
   ~NodeControllerServiceImpl();
+  Instance* instance();
 
-  virtual void CreateOrReconfigureInstance(const ::artm::core::InstanceConfig& request,
+  // The following methods talks to instance_
+  virtual void CreateOrReconfigureInstance(const ::artm::MasterComponentConfig& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeInstance(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void CreateOrReconfigureDataLoader(const ::artm::core::DataLoaderConfig& request,
+  virtual void ForcePullTopicModel(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void DisposeDataLoader(const ::artm::core::Void& request,
+  virtual void ForcePushTopicModelIncrement(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
+
+  // The following methods talks to master_
+  virtual void CreateOrReconfigureMasterComponent(const ::artm::MasterComponentConfig& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeMasterComponent(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void OverwriteTopicModel(const ::artm::TopicModel& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void RequestTopicModel(const ::artm::core::String& request,
+                       ::rpcz::reply< ::artm::TopicModel> response);
+  virtual void RequestThetaMatrix(const ::artm::core::String& request,
+                       ::rpcz::reply< ::artm::ThetaMatrix> response);
+  virtual void RequestScore(const ::artm::core::RequestScoreArgs& request,
+                       ::rpcz::reply< ::artm::ScoreData> response);
+  virtual void AddBatch(const ::artm::Batch& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void InvokeIteration(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void WaitIdle(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Int> response);
+  virtual void InvokePhiRegularizers(const ::artm::core::Void& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+
+  // The following methods talks to instance_ or master_
   virtual void CreateOrReconfigureModel(const ::artm::core::CreateOrReconfigureModelArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeModel(const ::artm::core::DisposeModelArgs& request,
@@ -39,18 +67,19 @@ class NodeControllerServiceImpl : public NodeControllerService {
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void DisposeRegularizer(const ::artm::core::DisposeRegularizerArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
-  virtual void ForceSyncWithMemcached(const ::artm::core::Void& request,
+  virtual void CreateOrReconfigureDictionary(const ::artm::core::CreateOrReconfigureDictionaryArgs& request,
+                       ::rpcz::reply< ::artm::core::Void> response);
+  virtual void DisposeDictionary(const ::artm::core::DisposeDictionaryArgs& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 
  private:
-  static const int kUndefinedId = -1;
+  void VerifyCurrentState();
+
   mutable boost::mutex lock_;
 
-  // Currently node controller supports only one Instance and one DataLoader per node.
-  // This makes it simpler to implement MasterComponent --- it doesn't have to keep track
-  // of instance_id and data_loader_id for each of its clients.
-  int instance_id_;
-  int data_loader_id_;
+  // Currently node controller supports only one Instance or MasterComponent per node.
+  std::shared_ptr<Instance> instance_;
+  std::shared_ptr<MasterInterface> master_;
 };
 
 }  // namespace core

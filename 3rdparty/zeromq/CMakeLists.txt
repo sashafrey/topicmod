@@ -577,6 +577,7 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug") # Why?
   endforeach()
 endif()
 
+if (ZEROMQ_TESTING)
 enable_testing()
 set(tests
         test_system
@@ -621,6 +622,7 @@ list(APPEND tests
         test_pair_ipc
         test_reqrep_ipc
         test_stream)
+endif()
 endif()
 
 foreach(test ${tests})

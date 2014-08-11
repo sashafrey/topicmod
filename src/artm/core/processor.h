@@ -13,7 +13,7 @@
 #include "boost/utility.hpp"
 
 #include "artm/messages.pb.h"
-#include "artm/internals.pb.h"
+#include "artm/core/internals.pb.h"
 
 #include "artm/core/common.h"
 #include "artm/core/thread_safe_holder.h"

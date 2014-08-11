@@ -8,7 +8,7 @@
 #include <vector>
 #include <string>
 
-#include "artm/internals.pb.h"
+#include "artm/core/internals.pb.h"
 #include "artm/core/common.h"
 
 namespace artm {

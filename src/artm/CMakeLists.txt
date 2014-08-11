@@ -51,9 +51,10 @@ include_directories(${CMAKE_BINARY_DIR}/3rdparty/rpcz/src)
 include_directories(${CMAKE_BINARY_DIR}/3rdparty/gflags/include)
 
 protobuf_generate_cpp(ARTM_PB_SRCS ARTM_PB_HEADERS
-    proto/messages.proto
-    proto/internals.proto
+    messages.proto
+    core/internals.proto
 )
+
 set(ARTM_PROTO_SOURCES ${ARTM_PB_SRCS} ${ARTM_PB_HEADERS})
 
 # make source list
@@ -65,15 +66,20 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/..)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/core)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/regularizer) # which one?
 include_directories(${CMAKE_CURRENT_LIST_DIR}/regularizer_sandbox) # ??
+include_directories(${CMAKE_CURRENT_LIST_DIR}/score_sandbox) # ??
 aux_source_directory(. CUR_LIST)
 aux_source_directory(./core CORE_SRC_LIST)
 aux_source_directory(./regularizer REG_SRC_LIST)
 aux_source_directory(./regularizer_sandbox REG2_SRC_LIST)
+aux_source_directory(./score_sandbox SCORE_SRC_LIST)
+
 set(SRC_LIST ${CUR_LIST} 
              ${CORE_SRC_LIST} 
              ${REG_SRC_LIST} 
              ${REG2_SRC_LIST}
+             ${SCORE_SRC_LIST}
              ${ARTM_PROTO_SOURCES}
+             ${ARTM_CORE_PROTO_SOURCES}
 )
 
 if(WIN32)
@@ -84,7 +90,7 @@ endif()
 
 # library deps
 set(ARTM_LIB_DEPS  ${RPCZ_LIBS}
-		   gflags-shared
+		           gflags-shared
                    ${Boost_THREAD_LIBRARIES}
                    ${Boost_SYSTEM_LIBRARIES}
                    ${Boost_FILESYSTEM_LIBRARIES}

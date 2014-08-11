@@ -25,12 +25,18 @@ call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.cc
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.cc
 
 call cpplint.bat ../src/artm/score_sandbox/perplexity.cc
+call cpplint.bat ../src/artm/score_sandbox/sparsity_theta.cc
+call cpplint.bat ../src/artm/score_sandbox/sparsity_phi.cc
+call cpplint.bat ../src/artm/score_sandbox/items_processed.cc
+call cpplint.bat ../src/artm/score_sandbox/top_tokens.cc
+call cpplint.bat ../src/artm/score_sandbox/theta_snippet.cc
 
 call cpplint.bat ../src/artm_tests/boost_thread_test.cc
 call cpplint.bat ../src/artm_tests/cpp_interface_test.cc
 call cpplint.bat ../src/artm_tests/template_manager_test.cc
 call cpplint.bat ../src/artm_tests/nodes_connectivity_test.cc
 call cpplint.bat ../src/artm_tests/instance_test.cc
+call cpplint.bat ../src/artm_tests/rpcz_canary_test.cc
 call cpplint.bat ../src/artm_tests/test_mother.cc
 call cpplint.bat ../src/artm_tests/thread_safe_holder_test.cc
 call cpplint.bat ../src/artm_tests/topic_model_test.cc
@@ -74,3 +80,8 @@ call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_phi.h
 call cpplint.bat ../src/artm/regularizer_sandbox/smooth_sparse_theta.h
 
 call cpplint.bat ../src/artm/score_sandbox/perplexity.h
+call cpplint.bat ../src/artm/score_sandbox/sparsity_theta.h
+call cpplint.bat ../src/artm/score_sandbox/sparsity_phi.h
+call cpplint.bat ../src/artm/score_sandbox/items_processed.h
+call cpplint.bat ../src/artm/score_sandbox/top_tokens.h
+call cpplint.bat ../src/artm/score_sandbox/theta_snippet.h

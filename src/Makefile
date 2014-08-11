@@ -60,7 +60,12 @@ SRCS_LIB      = artm/cpp_interface.cc \
 		artm/regularizer_sandbox/dirichlet_theta.cc \
 		artm/regularizer_sandbox/smooth_sparse_phi.cc \
 		artm/regularizer_sandbox/smooth_sparse_theta.cc \
+		artm/score_sandbox/items_processed.cc \
 		artm/score_sandbox/perplexity.cc \
+		artm/score_sandbox/sparsity_phi.cc \
+		artm/score_sandbox/sparsity_theta.cc \
+		artm/score_sandbox/theta_snippet.cc \
+		artm/score_sandbox/top_tokens.cc \
 
 OBJS_LIB      = $(SRCS_LIB:.cc=.o)
 DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
@@ -69,6 +74,9 @@ DEPS_LIB      = $(SRCS_LIB:.cc=.depends)
 TARGET_TEST   = $(OUT_DIR)unittests
 SRCS_TEST     = artm_tests/boost_thread_test.cc \
 		artm_tests/batch_manager_test.cc \
+		artm_tests/rpcz_canary_service.pb.cc \
+		artm_tests/rpcz_canary_service.rpcz.cc \
+		artm_tests/rpcz_canary_test.cc \
 		artm_tests/cpp_interface_test.cc \
 		artm_tests/template_manager_test.cc \
 		artm_tests/instance_test.cc \

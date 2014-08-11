@@ -54,7 +54,7 @@ class NodeControllerServiceImpl : public NodeControllerService {
   virtual void InvokeIteration(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void WaitIdle(const ::artm::core::Void& request,
-                       ::rpcz::reply< ::artm::core::Void> response);
+                       ::rpcz::reply< ::artm::core::Int> response);
   virtual void InvokePhiRegularizers(const ::artm::core::Void& request,
                        ::rpcz::reply< ::artm::core::Void> response);
 

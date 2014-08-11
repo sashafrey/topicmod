@@ -30,7 +30,7 @@ Merger::Merger(ThreadSafeQueue<std::shared_ptr<const ModelIncrement> >* merger_q
       topic_model_inc_(),
       schema_(schema),
       master_component_service_(master_component_service),
-      scores_merger_(schema),
+      scores_merger_(schema, &topic_model_),
       is_idle_(true),
       merger_queue_(merger_queue),
       notifiable_(notifiable),
@@ -155,6 +155,7 @@ void Merger::ThreadFunction() {
     LOG(INFO) << "Merger thread started";
     for (;;) {
       if (is_stopping) {
+        LOG(INFO) << "Merger thread stopped";
         break;
       }
 
@@ -320,13 +321,19 @@ bool Merger::RetrieveExternalTopicModel(ModelName model_name,
   return true;
 }
 
-void Merger::WaitIdle() {
+bool Merger::WaitIdle(int timeout) {
+  auto time_start = boost::posix_time::microsec_clock::local_time();
   for (;;) {
     if (is_idle_ && merger_queue_->empty())
       break;
 
     boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    auto time_end = boost::posix_time::microsec_clock::local_time();
+    if (timeout >= 0) {
+      if ((time_end - time_start).total_milliseconds() >= timeout) return false;
+    }
   }
+  return true;
 }
 
 void Merger::ScoresMerger::Append(const ModelName& model_name, const ScoreName& score_name,
@@ -381,16 +388,22 @@ void Merger::ScoresMerger::RetrieveModelIncrement(const ModelName& model_name,
 }
 
 bool Merger::ScoresMerger::RequestScore(const ModelName& model_name, const ScoreName& score_name,
-                    ScoreData *score_data) const {
+                                        ScoreData *score_data) const {
   auto score_calculator = schema_->get()->score_calculator(score_name);
   if (score_calculator == nullptr) {
     BOOST_THROW_EXCEPTION(InvalidOperation("Score does not exist"));
   }
 
-  auto score = score_map_.get(ScoreKey(model_name, score_name));
-  if (score == nullptr) {
-    score_data->set_data(score_calculator->CreateScore()->SerializeAsString());
+  if (score_calculator->is_cumulative()) {
+    auto score = score_map_.get(ScoreKey(model_name, score_name));
+    if (score == nullptr) {
+      score_data->set_data(score_calculator->CreateScore()->SerializeAsString());
+    } else {
+      score_data->set_data(score->SerializeAsString());
+    }
   } else {
+    std::shared_ptr<::artm::core::TopicModel> model = topic_model_->get(model_name);
+    std::shared_ptr<Score> score = score_calculator->CalculateScore(*model);
     score_data->set_data(score->SerializeAsString());
   }
 

@@ -14,7 +14,6 @@
 #include "artm/core/exceptions.h"
 #include "artm/core/helpers.h"
 #include "artm/core/zmq_context.h"
-#include "artm/core/generation.h"
 #include "artm/core/data_loader.h"
 #include "artm/core/batch_manager.h"
 #include "artm/core/instance.h"
@@ -175,32 +174,48 @@ bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
 }
 
-void MasterComponent::WaitIdle() {
+bool MasterComponent::WaitIdle(int timeout) {
   if (isInLocalModusOperandi()) {
-    instance_->local_data_loader()->WaitIdle();
-    return;
+    return instance_->local_data_loader()->WaitIdle(timeout);
   }
 
   if (isInNetworkModusOperandi()) {
+    auto time_start = boost::posix_time::microsec_clock::local_time();
     // Wait for all nodes to process all the batches.
     for (;;) {
       if (instance_->batch_manager()->IsEverythingProcessed())
       break;
 
       boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      if (timeout >= 0) {
+        auto time_end = boost::posix_time::microsec_clock::local_time();
+        if ((time_end - time_start).total_milliseconds() >= timeout) return false;
+      }
     }
 
     // Ask all nodes to pull the new model
     network_client_interface_->ForcePushTopicModelIncrement();
 
     // Wait merger on master to process all model increments and set them as active topic model
-    instance_->merger()->WaitIdle();
+    auto time_end = boost::posix_time::microsec_clock::local_time();
+    auto local_timeout = timeout - (time_end - time_start).total_milliseconds();
+    if (timeout >= 0) {
+      if (local_timeout >= 0) {
+        bool result = instance_->merger()->WaitIdle(static_cast<int>(local_timeout));
+        if (!result) return false;
+      } else {
+        return false;
+      }
+    } else {
+      instance_->merger()->WaitIdle(timeout);
+    }
+
     instance_->merger()->ForcePushTopicModelIncrement();
     instance_->merger()->ForcePullTopicModel();
 
     // Ask all nodes to push their updates to topic model
     network_client_interface_->ForcePullTopicModel();
-    return;
+    return true;
   }
 
   BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
@@ -213,7 +228,7 @@ void MasterComponent::InvokeIteration(int iterations_count) {
   }
 
   if (isInNetworkModusOperandi()) {
-    auto uuids = Generation::ListAllBatches(config_.get()->disk_path());
+    auto uuids = BatchHelpers::ListAllBatches(config_.get()->disk_path());
     for (int iter = 0; iter < iterations_count; ++iter) {
       for (auto &uuid : uuids) {
         instance_->batch_manager()->Add(uuid);
@@ -232,7 +247,7 @@ void MasterComponent::AddBatch(const Batch& batch) {
   }
 
   if (isInNetworkModusOperandi()) {
-    Generation::SaveBatch(batch, config_.get()->disk_path());
+    BatchHelpers::SaveBatch(batch, config_.get()->disk_path());
     return;
   }
 
@@ -302,6 +317,11 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
 
     if (current_config->connect_endpoint() != config.connect_endpoint()) {
       std::string message = "Unable to change master component connect endpoint";
+      BOOST_THROW_EXCEPTION(InvalidOperation(message));
+    }
+
+    if (current_config->disk_path() != config.disk_path()) {
+      std::string message = "Changing disk_path is not supported.";
       BOOST_THROW_EXCEPTION(InvalidOperation(message));
     }
   }
@@ -396,6 +416,18 @@ bool NetworkClientCollection::ConnectClient(std::string endpoint) {
   std::shared_ptr<NodeControllerService_Stub> client(
     new artm::core::NodeControllerService_Stub(
       application_->create_rpc_channel(endpoint), true));
+
+
+  try {
+    // Reset the state of the remote node controller
+    Void response;
+    client->DisposeInstance(Void(), &response);
+    client->DisposeMasterComponent(Void(), &response);
+  } catch(...) {
+    LOG(ERROR) << "Unable to clear the state of the remote node controller.";
+    return false;
+  }
+
   clients_.set(endpoint, client);
   return true;
 }

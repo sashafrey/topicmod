@@ -128,12 +128,13 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
        ++token_index) {
     const FloatArray& counters = diff.token_increment(token_index);
     const std::string& token = diff.token(token_index);
-    if (!has_token(token)) {
-      this->AddToken(token, false);
+    int current_token_id = token_id(token);
+    if (current_token_id == -1) {
+      current_token_id = this->AddToken(token, false);
     }
 
     for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
-      this->IncreaseTokenWeight(token, topic_index, counters.value(topic_index));
+      this->IncreaseTokenWeight(current_token_id, topic_index, counters.value(topic_index));
     }
   }
 
@@ -403,8 +404,8 @@ bool TopicModel::has_token(const std::string& token) const {
 }
 
 int TopicModel::token_id(const std::string& token) const {
-  assert(has_token(token));
-  return token_to_token_id_.find(token)->second;
+  auto iter = token_to_token_id_.find(token);
+  return (iter != token_to_token_id_.end()) ? iter->second : -1;
 }
 
 std::string TopicModel::token(int index) const {

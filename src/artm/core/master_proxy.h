@@ -5,6 +5,7 @@
 
 #include <string>
 
+#include "boost/thread.hpp"
 #include "rpcz/application.hpp"
 
 #include "artm/messages.pb.h"
@@ -41,7 +42,7 @@ class MasterProxy : boost::noncopyable, public MasterInterface {
 
   virtual void AddBatch(const Batch& batch);
   virtual void InvokeIteration(int iterations_count);
-  virtual void WaitIdle();
+  virtual bool WaitIdle(int timeout = -1);
   virtual void InvokePhiRegularizers();
 
  private:
@@ -52,6 +53,7 @@ class MasterProxy : boost::noncopyable, public MasterInterface {
 
   int id_;
 
+  int communication_timeout_;
   std::unique_ptr<rpcz::application> application_;
   std::shared_ptr<artm::core::NodeControllerService_Stub> node_controller_service_proxy_;
 };

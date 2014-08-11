@@ -11,12 +11,14 @@
 #include "artm/messages.pb.h"
 #include "artm/score_calculator_interface.h"
 #include "artm/core/common.h"
+#include "artm/core/helpers.h"
 #include "artm/core/master_component.h"
 #include "artm/core/master_proxy.h"
 #include "artm/core/node_controller.h"
-#include "artm/core/exceptions.h"
 
 std::string message;
+static std::string error_message;
+
 void EnableLogging() {
   static bool logging_enabled = false;
   //if (!logging_enabled) {
@@ -31,31 +33,9 @@ inline char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
 }
 
-#define CATCH_EXCEPTIONS                                    \
-catch (const rpcz::rpc_error& e) {                          \
-  LOG(ERROR) << "rpc_error: " << e.what();                  \
-  return ARTM_NETWORK_ERROR;                                \
-} catch (const artm::core::NetworkException& e) {           \
-  LOG(ERROR) << "NetworkException: " << e.what();           \
-  return ARTM_NETWORK_ERROR;                                \
-} catch (const artm::core::InvalidOperation& e) {           \
-  LOG(ERROR) << "InvalidOperation: " << e.what();           \
-  return ARTM_INVALID_OPERATION;                            \
-} catch (const std::runtime_error& e) {                     \
-  LOG(ERROR) << "runtime_error: " << e.what();              \
-  return ARTM_GENERAL_ERROR;                                \
-} catch (...) {                                             \
-  LOG(ERROR) << "unknown error.";                           \
-  return ARTM_GENERAL_ERROR;                                \
-}
-
 // =========================================================================
 // Common routines
 // =========================================================================
-
-int ArtmConfigureLogger(int length, const char* logger_config) {
-  return ARTM_SUCCESS;
-}
 
 int ArtmCopyRequestResult(int request_id, int length, char* address) {
   memcpy(address, StringAsArray(&message), length);
@@ -64,6 +44,24 @@ int ArtmCopyRequestResult(int request_id, int length, char* address) {
 
 int ArtmGetRequestLength(int request_id) {
   return message.size();
+}
+
+const char* ArtmGetLastErrorMessage() {
+  return error_message.c_str();
+}
+
+int ArtmSaveBatch(const char* disk_path, int length, const char* batch_blob) {
+  try {
+    artm::Batch batch;
+    if (!batch.ParseFromArray(batch_blob, length)) {
+      return ARTM_INVALID_MESSAGE;
+    }
+
+    artm::Batch compacted_batch;
+    artm::core::BatchHelpers::CompactBatch(batch, &compacted_batch);
+    artm::core::BatchHelpers::SaveBatch(compacted_batch, std::string(disk_path));
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }
 
 int ArtmAddBatch(int master_id, int length, const char* batch_blob) {
@@ -89,12 +87,17 @@ int ArtmInvokeIteration(int master_id, int iterations_count) {
   } CATCH_EXCEPTIONS;
 }
 
-int ArtmWaitIdle(int master_id) {
+int ArtmWaitIdle(int master_id, int timeout) {
   try {
     auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    master_component->WaitIdle();
-    return ARTM_SUCCESS;
+    bool result = master_component->WaitIdle(timeout);
+
+    if (result) {
+      return ARTM_SUCCESS;
+    } else {
+      return ARTM_STILL_WORKING;
+    }
   } CATCH_EXCEPTIONS;
 }
 

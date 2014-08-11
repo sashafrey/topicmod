@@ -4,6 +4,7 @@
 \usepackage{soul}
 \usepackage{algorithm}
 \usepackage[noend]{algorithmic}
+\usepackage{epstopdf}
 
 \newcommand{\Csharp}{%
   {\settoheight{\dimen0}{C}C\kern-.05em \resizebox{!}{\dimen0}{\raisebox{\depth}{\#}}}}
@@ -12,30 +13,10 @@
 
 \tableofcontents
 
-\chapter{How to join the BigARTM project?}
-\begin{enumerate}
-\item Source code is hosted in a private github repository.
-    If you don't have a user on github, please register a free user \href{https://github.com/}{here}.
-    Then send the name of your github user to \href{mailto:sashafrey@gmail.com}{sashafrey@gmail.com},
-    using ``BigARTM: request access'' in the title of your e-mail.
-    In few days you will receive a reply confirming that access had been granted.
-\item To clone the repository and build sources, please refer to paragraph
-    \hyperref[label:how_to_build]{How to build sources}.
-\item Read about the math behind BigARTM library: \\ \url{http://www.machinelearning.ru/wiki/images/2/22/Voron-2013-ptm.pdf}
-\item Review the list of open issues: \\
-    \url{https://github.com/sashafrey/topicmod/issues?state=open}\\
-    Feel free to select some of them which sounds interesting and assign it to yourself.
-    To submit you change, follow \hyperref[label:how_to_submit]{How to submit my change} guide.
-\item Review the latest discussions here: \\
-    \url{https://groups.google.com/forum/#!forum/artm_dev}
-\end{enumerate}
-
 \chapter{BigARTM - internal documentation}
 
-\section{Intro}
-ToDo: write short gentle introduction that provide links to state of the art articles on topic models and BigARTM.
+\section{Goals}
 
-\paragraph{Main goals for the first release.}
 \begin{itemize}
     \item Implementation of core topic modeling algorithms with ARTM (Additive Regularization of Topic Models)
     \item Prefer online algorithms, that do not require storing complete doc-token matrix in memory
@@ -45,10 +26,10 @@ ToDo: write short gentle introduction that provide links to state of the art art
     \item Be portable (written in C/C++, tested with gcc, intel and cl.exe)
     \item Have an interface in Python, Java and $\Csharp$
     \item Be open-source (MIT license)
+    \item Distributed cluster solution
 \end{itemize}
 First version we release to public may not have the following features:
 \begin{itemize}
-    \item Distributed cluster solution
     \item CUDA and Intel Xeon Phi support
 \end{itemize}
 This is likely to be added in later versions.
@@ -69,11 +50,8 @@ When codebase meets this success criteria we are free to release the library.
 
 \subsection{Online Batch PLSA algorithm}
 
-Design of the BigARTM library is driven by Online Batch PLSA algorithm,
-(Fig. \ref{fig:plsa_alg}).
-
 \begin{algorithm}
-\caption{Online Batch PLSA algorithm}
+\caption{BigARTM's algorithm}
 \label{fig:plsa_alg}
 \begin{algorithmic}[1]
 \STATE Initialize $\phi^0_{wt}$ for all $w \in W$ and $t \in T$;
@@ -100,54 +78,6 @@ Design of the BigARTM library is driven by Online Batch PLSA algorithm,
 \end{algorithmic}
 \end{algorithm}
 
-In this algorithm most CPU resources are consumed on steps $8$~--~$11$
-to infer the $\theta_{td}$ distribution for each document.
-This operation can be executed concurrently across documents or batches.
-In BigARTM this parallelization is done across batches to avoid splitting the work into too small junks.
-
-Processing each batch produces counters $\tilde n_{wt}$ and $\tilde n_{t}$,
-which should be then merged with the corresponding counters coming from other batches.
-Since this information is produced by multiple concurrent threads
-the merging process should be thread-safe and properly synchronised.
-Our solution is to store all counters $\tilde n_{wt}$ and $\tilde n_{t}$ into a single queue,
-from where they can be picked up by a single \emph{merger thread}.
-This thread will then accumulate the counters without any locking.
-
-Further in this text the term \emph {outer iteration loop} stands for the loop at the step $2$,
-and the term \emph{inner iteration loop} stands for the loop at step $8$.
-Instead of 'repeat until it converges' criteria
-current implementation uses a fixed number of iterations,
-which is configured manually by the user.
-
-Step $15$ is incorporated into all steps that require $\phi_{wt}$
-(e.g. into steps $9$, $10$ and $11$).
-These steps utilize counters from the previous iteration ($n^{i-1}_wt$ and $n^{i-1}_t$),
-which are no longer updated by the merger thread, hence they represent read-only data
-and can be accessed from multiple threads without any synchronization.
-At the same time the merger thread will accumulate counters for $n^i_{wt}$ and $n^i_t$
-for the current iteration, again in a lock-free manner.
-
-\subsection{User API}
-This chapter describes BigARTM from the user perspective, before diving into all implementation details in the next chapters.
-
-From the user perspective BigARTM library can be used either in \emph{local mode} or in \emph{network mode}.
-In local mode the user interacts with the library only through the \emph{Master component}.
-Typical usage of Master component involves the following steps:
-\begin{enumerate}
-\item Specify general parameters in \emph{MasterComponentConfig}
-\item Create definitions of topic models and their regularizers
-\item Load collection of documents to use in topic modeling
-\item Invoke iterative scans over the collection and wait until it is competed
-\item Retrieve results, including topic model, scores such as perplexity, etc.
-\end{enumerate}
-
-In network mode user interacts with the Master component in exactly the same way
-as in local mode.
-That only action to be done at remote machines is to launch
-there a \emph{Node controller} component
-and configure it with the endpoint of the Master component.
-Then master component will connect to the remote nodes and use them for calculation.
-Further details on network mode are provided in section \ref{label:network_modus_operandi}.
 
 \subsection{BigARTM internal architecture}
 
@@ -270,18 +200,6 @@ Please, familiarize yourself with the concept of a
 \href{en.wikipedia.org/wiki/Remote_procedure_call}{remote procedure call},
 and read an overview of the following two libraries:
 \href{code.google.com/p/rpcz/}{rpcz} and \href{http://zeromq.org}{ZeroMQ}.
-
-\subsection{API in C++, Python and Java}
-Currently the core ARTM functionality is only available from C++,
-but it is designed to support Python and Java.
-
-\begin{figure}[h!]
-\begin{centering}
-\includegraphics[width=90mm]{diagramm_BigARTM.eps}
-\caption{Various interfaces on top of core ARTM components.}
-\label{fig:diagramm_BigARTM}
-\end{centering}
-\end{figure}
 
 \subsection{Concurrency and thread safety}
 All interfaces of the library are not thread safe,
@@ -437,153 +355,5 @@ It has the following implementation details:
           Each item from the testing set is used to both infer theta, and evaluate perplexity.
           An alternative is to randomly split each testing document into two halves.
 \end{enumerate}
-
-\section{How to build sources?}
-\label{label:how_to_build}
-
-\subsection{Windows}
-
-\begin{enumerate}
-   \item Download and install GitHub Windows from \url{http://windows.github.com/}
-   \item Clone \url{https://github.com/sashafrey/topicmod/} repository
-   \item Download and unpack boost 1.55  \\
-         \url{http://sourceforge.net/projects/boost/files/} \\
-         Set environmental variable BOOST\_ROOT to the root of your boost installation.
-         To do so you may use cmd.exe:
-\begin{verbatim}
-setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"
-\end{verbatim}
-   \item \st{Download and unpack protobuf 2.5.0} \\ (no longer needed, part of '3rdparty' folder)
-   \item Download and unpack libs: \\
-    \url{https://s3-eu-west-1.amazonaws.com/artm/libs_win32_v110.7z} --- for Visual Studio 2012
-   \item Download and install \href{http://zeromq.org/distro:microsoft-windows}{ZeroMQ 4.0.3 x86} \\
-         \url{http://miru.hk/archive/ZeroMQ-4.0.3~miru1.0-x86.exe} \\
-         Set environmental variable ZEROMQ32\_ROOT to ZeroMQ include folder
-\begin{verbatim}
-setx ZEROMQ32_ROOT "C:\\Program Files (x86)\\ZeroMQ 4.0.3"
-\end{verbatim}
-    \item Install Visual Studio 2012 (other visual studio versions are not supported). \\
-    \item Open /src/artm\_vs2012.sln
-    \item Build all projects (debug or release, Win32) and execute tests. 64-bit builds are not available yet.
-\end{enumerate}
-
-Note: to use python in project you need to do the following steps:
-\begin{enumerate}
-	\item install python 2.7.
-
-    {\bf Important:} on Windows you MUST use
-    \href{https://www.python.org/ftp/python/2.7.6/python-2.7.6.msi}{Python x86},
-    which is a 32bit version of Python. The 64bit Python is incompatible with artm\_dll.dll
-    (which only compiles in 32 bits for now).
-	\item download and add to MSVS Python Tools 2.0 (all necessary instructions can be found here: \\
-	\url{https://pytools.codeplex.com/}) \\
-	\item add python folder to PATH. To do so open:
-\begin{verbatim}
-    Control Panel\All Control Panel Items\System
-\end{verbatim}
-	then \verb'Advanced system settings', \verb'Environment variables'.
-	\item follow the instructions in README file in directory \verb'python' in your protobuf folder.
-\end{enumerate}
-
-\subsection{Linux}
-
-\begin{enumerate}
-    \item Install git.
-    \item git clone https://github.com/sashafrey/topicmod
-    \item Install boost (it is preferable to use version 1.55 or newer; \hbox{libboost-all-dev} is package name in Debian-based OS).
-    \item Install protobuf (it is necessary to use version 2.5.0 or newer; \hbox{libprotobuf-dev} is package name in Debian-based OS). You can get it from ppa: \hbox{ppa:chris-lea/protobuf}
-    \item Use Makefiles under /3rdparty, /src/artm/ and /src/cpp\_client/.
-    \item Python interface hasn't been used from Linux yet. Please, contribute to this documentation if you
-    found some solution to this.
-\end{enumerate}
-
-\section{How to submit my change to master branch?}
-\label{label:how_to_submit}
-Every new feature should be developed in a separate git branch.
-Usually the integrator (currently \href{mailto:sashafrey@gmail.com}{sashafrey@gmail.com})
-merges this feature branches into the master branch.
-The key responsibility of the integrator is to ensure stability of the master branch:
-\begin{itemize}
-    \item No build failures on Windows and on Linux
-    \item No new compiler warnings
-    \item All unit test passes
-    \item Perplexity in cpp\_client looks reasonable
-    \item Documentation is updated and compiles in LaTeX
-    \item The change passed code review
-    \item The change follows our code style
-\end{itemize}
-Everyone should periodically ``git pull master'' and merge master branch
-into their feature branches.
-
-In case if you are absolutely sure you change is safe, feel free to submit the change yourself.
-Technically you do have write permissions, so no one can stop you :).
-But please do the following:
-verify your \hyperref[label:code_style]{code style},
-perform \hyperref[label:code_review]{code review},
-and make sure everything builds in both Linux and Windows, and unit test passes.
-
-\subsection{Code style}
-\label{label:code_style}
-In the code we follow
-\href{http://google-styleguide.googlecode.com/svn/trunk/cppguide.xml}{google code style},
-with the following changes:
-\begin{enumerate}
-    \item Exceptions are allowed
-    \item Indentation must be 2 spaces. Tabs are not allowed.
-
-      If you use Visual Studio,
-      please open ``Tools / Text Editor / All languages / Tabs''
-      and configure as follows:
-      \begin{itemize}
-          \item Indenting "--- smart,
-          \item Tab size "--- 2,
-          \item Indent size "--- 2,
-          \item Select "insert spaces".
-      \end{itemize}
-
-      We also suggest to show space and tab crlf characters (shortcut: Ctrl+R, Ctrl+W).
-      \url{http://stackoverflow.com/questions/4065815/how-to-turn-off-showing-whitespace-characters-in-visual-studio-ide}
-
-\item No lines should exceed 100 characters.
-
-      If you use Visual Studio, please \href{http://stackoverflow.com/questions/9894397/100-characters-line-marker-in-visual-studio}{enable
-       vertical line at 100 characters}.
-
-\item All .h and .cpp files under /src/artm/ must be verified for code style with
-      \href{http://google-styleguide.googlecode.com/svn/trunk/cpplint/cpplint.py}{cpplint.py} script.
-      It is very easy to use the script; just install
-      \href{http://www.python.org/downloads/}{Python 2.7.6}, and run
-
-\begin{verbatim}
-python cpplint.py --linelength=100 <filename>
-\end{verbatim}
-      Files, generated by protobuf compiler, are the only exceptions from this rule.
-
-\end{enumerate}
-
-\subsection{Code review}
-\label{label:code_review}
-We use
-\href{https://code.google.com/p/rietveld/wiki/UploadPyUsage}{rietveld}
-tool for code review.
-When you have your first change, please learn how to use the
-\href{http://codereview.appspot.com/static/upload.py}{unload.py} script.
-For example, to upload all changes in between two git revisions you may use this command:
-\begin{verbatim}
-code review:
-python upload.py --server=http://codereview.appspot.com/
- --email=<your_email> -t <review_title> -m <review_description>
- --rev=<from_revision>:<to_revision>
-\end{verbatim}
-where ``from\_revision'' and ``to\_revision'' may look as follows:
-\begin{verbatim}
-e26b8107520e219cac89f3cb6ed83b5680240a79
-\end{verbatim}
-
-\subsection{Language -- english or russian?}
-Feel free to use either English or Russin in all e-mail conversations, including \url{https://groups.google.com/forum/#!forum/artm_dev}.
-
-In the code everything should be in English only, including comments.
-It is also preferable to keep this documentation in English.
 
 \end{document}  

@@ -56,13 +56,13 @@ class LocalDataLoader : public DataLoader {
   virtual void Callback(std::shared_ptr<const ModelIncrement> model_increment);
 
   void InvokeIteration(int iterations_count);
-  void WaitIdle();
+
+  // Returns false if BigARTM is still processing the collection, otherwise true.
+  bool WaitIdle(int timeout = -1);
   void DisposeModel(ModelName model_name);
   bool RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix);
 
  private:
-  static void CompactBatch(const Batch& batch, Batch* compacted_batch);
-
   ThreadSafeHolder<Generation> generation_;
 
   typedef std::pair<boost::uuids::uuid, ModelName> CacheKey;

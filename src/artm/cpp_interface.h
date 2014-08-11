@@ -46,7 +46,7 @@ DEFINE_EXCEPTION_TYPE(NerworkException, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 
-void SaveBatch(const Batch& batch, const std::string& disk_path);
+void DLL_PUBLIC SaveBatch(const Batch& batch, const std::string& disk_path);
 
 class DLL_PUBLIC MasterComponent {
  public:

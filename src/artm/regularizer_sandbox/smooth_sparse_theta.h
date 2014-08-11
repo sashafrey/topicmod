@@ -23,6 +23,7 @@ class SmoothSparseTheta : public RegularizerInterface {
                                int topic_size,
                                int inner_iter,
                                double tau);
+  virtual bool Reconfigure(const RegularizerConfig& config);
 
  private:
   SmoothSparseThetaConfig config_;

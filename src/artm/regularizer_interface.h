@@ -37,6 +37,11 @@ class RegularizerInterface {
 
   virtual bool RegularizePhi(::artm::core::Regularizable* topic_model, double tau) { return true; }
 
+  // Attempt to reconfigure an existing regularizer.
+  // Returns true if succeeded, and false if the caller must recreate the regularizer from scratch
+  // via constructor.
+  virtual bool Reconfigure(const RegularizerConfig& config) { return false; } 
+
   std::shared_ptr<::artm::core::DictionaryMap> dictionary(const std::string& dictionary_name);
   void set_dictionaries(const ::artm::core::ThreadSafeDictionaryCollection* dictionaries);
 

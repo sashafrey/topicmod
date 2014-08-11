@@ -35,13 +35,18 @@
 #include "artm/score_sandbox/theta_snippet.h"
 
 
-#define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                  \
-  ConfigType regularizer_config;                                                          \
-  if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {    \
-    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));  \
-  }                                                                                       \
-  regularizer.reset(new RegularizerType(regularizer_config));                             \
-}                                                                                         \
+#define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                      \
+  ConfigType regularizer_config;                                                              \
+  if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {        \
+    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));      \
+  }                                                                                           \
+  if (need_hot_reconfigure) {                                                                 \
+    need_hot_reconfigure = regularizer->Reconfigure(config);                                  \
+  }                                                                                           \
+  if (!need_hot_reconfigure) {                                                                \
+    regularizer.reset(new RegularizerType(regularizer_config));                               \
+  }                                                                                           \
+}                                                                                             \
 
 #define CREATE_SCORE_CALCULATOR(ConfigType, ScoreType) {                                  \
   ConfigType score_config;                                                                \
@@ -142,12 +147,16 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   std::string regularizer_name = config.name();
   artm::RegularizerConfig_Type regularizer_type = config.type();
 
+  std::shared_ptr<artm::RegularizerInterface> regularizer;
+  bool need_hot_reconfigure = schema_.get()->has_regularizer(regularizer_name);
+  if (need_hot_reconfigure) {
+    regularizer = schema_.get()->regularizer(regularizer_name);
+  }
+
   std::string config_blob;  // Used by CREATE_OR_RECONFIGURE_REGULARIZER marco
   if (config.has_config()) {
     config_blob = config.config();
   }
-
-  std::shared_ptr<artm::RegularizerInterface> regularizer;
 
   // add here new case if adding new regularizer
   switch (regularizer_type) {

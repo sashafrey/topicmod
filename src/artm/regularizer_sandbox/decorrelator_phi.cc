@@ -49,5 +49,13 @@ bool DecorrelatorPhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
   return true;
 }
 
+bool DecorrelatorPhi::Reconfigure(const RegularizerConfig& config) {
+  std::string config_blob = config.config();
+  DecorrelatorPhiConfig regularizer_config;                         
+  regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length());
+  config_.CopyFrom(regularizer_config);
+  return true;
+}
+
 }  // namespace regularizer_sandbox
 }  // namespace artm

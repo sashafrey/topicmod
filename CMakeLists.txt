@@ -33,6 +33,8 @@ set(BUILD_SHARED_LIBS OFF)
 set(BUILD_gflags_LIB ON)
 set(BUILD_gflags_nothreads_LIB OFF)
 
+set(rpcz_build_static ON)
+
 set(3RD_PARTY_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
 
 if (NOT CMAKE_BUILD_TYPE)

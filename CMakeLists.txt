@@ -28,6 +28,11 @@ endif()
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_LIBS OFF)
 
+set(BUILD_STATIC_LIBS ON)
+set(BUILD_SHARED_LIBS OFF)
+set(BUILD_gflags_LIB ON)
+set(BUILD_gflags_nothreads_LIB OFF)
+
 set(3RD_PARTY_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
 
 if (NOT CMAKE_BUILD_TYPE)

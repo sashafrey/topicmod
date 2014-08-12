@@ -16,7 +16,7 @@ endif()
 
 set(ARTM_LIB_DEPS  artm
                    ${RPCZ_LIBS}
-		   gflags-shared
+		   gflags-static
                    ${Boost_THREAD_LIBRARIES}
                    ${Boost_SYSTEM_LIBRARIES}
                    ${Boost_FILESYSTEM_LIBRARIES}

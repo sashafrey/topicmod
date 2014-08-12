@@ -119,7 +119,7 @@ else()
 endif()
 
 mz_add_flag(GCC -Wall -Wwrite-strings -Woverloaded-virtual -Wno-sign-compare)
-add_library(google-glog SHARED ${SRCS} ${HDRS})
+add_library(google-glog STATIC ${SRCS} ${HDRS})
 target_link_libraries(google-glog ${GFLAGS_LIBRARY} ${GLOG_3LIBS})
 set_property(TARGET google-glog PROPERTY VERSION 0.3.3)
 set_property(TARGET google-glog PROPERTY SOVERSION 0.3.3)

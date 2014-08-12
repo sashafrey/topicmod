@@ -551,7 +551,7 @@ set(perf-tools local_lat
                inproc_lat
                inproc_thr)
 
-if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug") # Why?
+if(ZEROMQ_TESTING)
   foreach(perf-tool ${perf-tools})
     add_executable(${perf-tool} perf/${perf-tool}.cpp)
     target_link_libraries(${perf-tool} libzmq)

@@ -138,6 +138,16 @@ bool MasterProxy::RequestTopicModel(ModelName model_name, ::artm::TopicModel* to
   return true;
 }
 
+void MasterProxy::RequestRegularizerState(RegularizerName regularizer_name, 
+                                       ::artm::RegularizerInternalState* regularizer_state) {
+  make_rpcz_call([&]() {
+    String request;
+    request.set_value(regularizer_name);
+    node_controller_service_proxy_->RequestRegularizerState(
+      request, regularizer_state, communication_timeout_);
+  }, "RequestRegularizerState");
+}
+
 bool MasterProxy::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatrix* theta_matrix) {
   make_rpcz_call([&]() {
     String request;

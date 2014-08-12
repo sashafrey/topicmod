@@ -52,6 +52,7 @@ class DirichletPhiConfig;
 class SmoothSparseThetaConfig;
 class SmoothSparsePhiConfig;
 class DecorrelatorPhiConfig;
+class RegularizerInternalState;
 class DictionaryConfig;
 class DictionaryEntry;
 class ScoreConfig;
@@ -2237,6 +2238,93 @@ class DecorrelatorPhiConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DecorrelatorPhiConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class RegularizerInternalState : public ::google::protobuf::Message {
+ public:
+  RegularizerInternalState();
+  virtual ~RegularizerInternalState();
+
+  RegularizerInternalState(const RegularizerInternalState& from);
+
+  inline RegularizerInternalState& operator=(const RegularizerInternalState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RegularizerInternalState& default_instance();
+
+  void Swap(RegularizerInternalState* other);
+
+  // implements Message ----------------------------------------------
+
+  RegularizerInternalState* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const RegularizerInternalState& from);
+  void MergeFrom(const RegularizerInternalState& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bytes state = 1;
+  inline bool has_state() const;
+  inline void clear_state();
+  static const int kStateFieldNumber = 1;
+  inline const ::std::string& state() const;
+  inline void set_state(const ::std::string& value);
+  inline void set_state(const char* value);
+  inline void set_state(const void* value, size_t size);
+  inline ::std::string* mutable_state();
+  inline ::std::string* release_state();
+  inline void set_allocated_state(::std::string* state);
+
+  // @@protoc_insertion_point(class_scope:artm.RegularizerInternalState)
+ private:
+  inline void set_has_state();
+  inline void clear_has_state();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* state_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static RegularizerInternalState* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -6451,6 +6539,80 @@ inline void DecorrelatorPhiConfig::set_allocated_topics_to_regularize(::artm::Bo
     set_has_topics_to_regularize();
   } else {
     clear_has_topics_to_regularize();
+  }
+}
+
+// -------------------------------------------------------------------
+
+// RegularizerInternalState
+
+// optional bytes state = 1;
+inline bool RegularizerInternalState::has_state() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void RegularizerInternalState::set_has_state() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void RegularizerInternalState::clear_has_state() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void RegularizerInternalState::clear_state() {
+  if (state_ != &::google::protobuf::internal::kEmptyString) {
+    state_->clear();
+  }
+  clear_has_state();
+}
+inline const ::std::string& RegularizerInternalState::state() const {
+  return *state_;
+}
+inline void RegularizerInternalState::set_state(const ::std::string& value) {
+  set_has_state();
+  if (state_ == &::google::protobuf::internal::kEmptyString) {
+    state_ = new ::std::string;
+  }
+  state_->assign(value);
+}
+inline void RegularizerInternalState::set_state(const char* value) {
+  set_has_state();
+  if (state_ == &::google::protobuf::internal::kEmptyString) {
+    state_ = new ::std::string;
+  }
+  state_->assign(value);
+}
+inline void RegularizerInternalState::set_state(const void* value, size_t size) {
+  set_has_state();
+  if (state_ == &::google::protobuf::internal::kEmptyString) {
+    state_ = new ::std::string;
+  }
+  state_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RegularizerInternalState::mutable_state() {
+  set_has_state();
+  if (state_ == &::google::protobuf::internal::kEmptyString) {
+    state_ = new ::std::string;
+  }
+  return state_;
+}
+inline ::std::string* RegularizerInternalState::release_state() {
+  clear_has_state();
+  if (state_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = state_;
+    state_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RegularizerInternalState::set_allocated_state(::std::string* state) {
+  if (state_ != &::google::protobuf::internal::kEmptyString) {
+    delete state_;
+  }
+  if (state) {
+    set_has_state();
+    state_ = state;
+  } else {
+    clear_has_state();
+    state_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
 }
 

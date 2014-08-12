@@ -22,6 +22,8 @@ try {
 #include "boost/exception/get_error_info.hpp"
 #include "boost/throw_exception.hpp"
 
+#ifndef ARTM_ERROR_CODES_EXIST
+#define ARTM_ERROR_CODES_EXIST
 enum ArtmErrorCodes {
     ARTM_SUCCESS = 0,
     ARTM_GENERAL_ERROR = -1,
@@ -31,6 +33,7 @@ enum ArtmErrorCodes {
     ARTM_NETWORK_ERROR = -5,
     ARTM_STILL_WORKING = -6
 };
+#endif
 
 namespace artm {
 namespace core {

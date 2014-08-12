@@ -247,6 +247,22 @@ void NodeControllerServiceImpl::RequestTopicModel(
   } CATCH_EXCEPTIONS_AND_SEND_ERROR;
 }
 
+void NodeControllerServiceImpl::RequestRegularizerState(
+    const ::artm::core::String& request,
+    ::rpcz::reply< ::artm::RegularizerInternalState> response) {
+  try {
+    boost::lock_guard<boost::mutex> guard(lock_);
+    artm::RegularizerInternalState regularizer_state;
+    if (master_ != nullptr) {
+      master_->RequestRegularizerState(request.value(), &regularizer_state);
+    } else {
+      LOG(ERROR) << "No master component exist in node controller";
+    }
+
+    response.send(regularizer_state);
+  } CATCH_EXCEPTIONS_AND_SEND_ERROR;
+}
+
 void NodeControllerServiceImpl::RequestThetaMatrix(
     const ::artm::core::String& request,
     ::rpcz::reply< ::artm::ThetaMatrix> response) {

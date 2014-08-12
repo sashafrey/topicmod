@@ -44,6 +44,8 @@ class NodeControllerServiceImpl : public NodeControllerService {
                        ::rpcz::reply< ::artm::core::Void> response);
   virtual void RequestTopicModel(const ::artm::core::String& request,
                        ::rpcz::reply< ::artm::TopicModel> response);
+  virtual void RequestRegularizerState(const ::artm::core::String& request,
+                       ::rpcz::reply< ::artm::RegularizerInternalState> response);
   virtual void RequestThetaMatrix(const ::artm::core::String& request,
                        ::rpcz::reply< ::artm::ThetaMatrix> response);
   virtual void RequestScore(const ::artm::core::RequestScoreArgs& request,

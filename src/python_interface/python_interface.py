@@ -207,6 +207,18 @@ class MasterComponent:
     topic_model.ParseFromString(topic_model_blob)
     return topic_model
 
+  def GetRegularizerState(self, regularizer_name):
+    request_id = HandleErrorCode(self.lib_, self.lib_.ArtmRequestRegularizerState(self.id_, regularizer_name))
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmGetRequestLength(request_id))
+
+    state_blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(request_id, length, state_blob))
+    self.lib_.ArtmDisposeRequest(request_id)
+
+    regularizer_state = messages_pb2.RegularizerInternalState()
+    regularizer_state.ParseFromString(state_blob)
+    return regularizer_state
+
   def GetThetaMatrix(self, model):
     request_id = HandleErrorCode(self.lib_, 
                                  self.lib_.ArtmRequestThetaMatrix(self.id_, model.name()))
@@ -256,7 +268,7 @@ class MasterComponent:
       score = messages_pb2.ThetaSnippetScore()
       score.ParseFromString(score_data.data)
       return score
-	  
+
     # Unknown score type
     raise InvalidMessage(GetLastErrorMessage(self.lib_))
 

@@ -146,6 +146,10 @@ message DecorrelatorPhiConfig {
   optional BoolArray topics_to_regularize = 1;
 }
 
+message RegularizerInternalState {
+  optional bytes state = 1;
+}
+
 // Represents a static dictionary.
 message DictionaryConfig {
   optional string name = 1;

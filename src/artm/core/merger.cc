@@ -321,6 +321,18 @@ bool Merger::RetrieveExternalTopicModel(ModelName model_name,
   return true;
 }
 
+void Merger::RequestRegularizerState(RegularizerName regularizer_name, 
+                             ::artm::RegularizerInternalState* regularizer_state) const {
+  auto schema = schema_->get();
+  if (schema->has_regularizer(regularizer_name)) {
+    auto regularizer = schema->regularizer(regularizer_name);
+    regularizer->SerializeInternalState(regularizer_state);
+  }
+
+  LOG(ERROR) << "Requested internal state of non-exists regularizer.";
+  BOOST_THROW_EXCEPTION(InvalidOperation("State from non-exists regularizer!"));
+}
+
 bool Merger::WaitIdle(int timeout) {
   auto time_start = boost::posix_time::microsec_clock::local_time();
   for (;;) {

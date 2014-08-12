@@ -6,6 +6,7 @@
 #include "boost/filesystem.hpp"
 
 #include "artm/cpp_interface.h"
+#include "artm/core/exceptions.h"
 #include "artm/messages.pb.h"
 
 #include "artm/core/internals.pb.h"
@@ -72,6 +73,16 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
     master_component.reset(new ::artm::MasterComponent(master_proxy_config));
   }
 
+  // Create regularizer
+  std::string reg_name = "decorrelator";
+  artm::DecorrelatorPhiConfig decor_config;
+  artm::RegularizerConfig reg_config;
+  reg_config.set_name(reg_name);
+  reg_config.set_type(artm::RegularizerConfig_Type_DecorrelatorPhi);
+  reg_config.set_config(decor_config.SerializeAsString());
+  std::shared_ptr<artm::Regularizer> regularizer(
+    new artm::Regularizer(*(master_component.get()), reg_config));
+
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(nTopics);
@@ -119,6 +130,15 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
     if (iter == 1) {
       expected_normalizer = perplexity->normalizer();
       EXPECT_GT(expected_normalizer, 0);
+
+      try {
+      master_component->GetRegularizerState(reg_name);
+      EXPECT_FALSE(true);
+      } catch (std::runtime_error& err_obj) {
+        std::cout << err_obj.what() << std::endl;
+        EXPECT_TRUE(true);
+      }
+
     } else if (iter >= 2) {
       if (!is_network_mode) {
         // Verify that normalizer does not grow starting from second iteration.

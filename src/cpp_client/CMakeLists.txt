@@ -3,20 +3,5 @@ project(cpp_client)
 include_directories(${CMAKE_CURRENT_LIST_DIR}/../)
 aux_source_directory(. SRC_LIST)
 
-if(WIN32)
-  set(RPCZ_LIBS rpcz_static)
-else()
-  set(RPCZ_LIBS rpcz)
-endif()
-
-# library deps
-set(CPP_CLIENT_LIB_DEPS  artm_shared
-                         ${RPCZ_LIBS}
-                         ${Boost_FILESYSTEM_LIBRARIES}
-                         ${Boost_SYSTEM_LIBRARIES}
-                         ${PROTOBUF_LIBRARIES}
-                         ${GLOG_LIBRARIES}
-                         ${ZeroMQ_LIBRARIES})
-
 add_executable(cpp_client ${SRC_LIST})
-target_link_libraries(cpp_client ${CPP_CLIENT_LIB_DEPS})
+target_link_libraries(cpp_client artm)

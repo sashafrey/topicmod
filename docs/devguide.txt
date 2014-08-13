@@ -20,41 +20,55 @@ Build C++ code on Windows
 * Clone https://github.com/sashafrey/topicmod/ repository to any location on your computer.
   This location is further refered to as ``$(BIGARTM_ROOT)``.
 
-* Download and unpack boost 1.55 from http://sourceforge.net/projects/boost/files/.
-* Set environmental variable BOOST_ROOT to the root of your boost installation.
-  To do so you may run the following command from cmd.exe:
+* Download and install Visual Studio 2012 (any version and service pack)
 
-  ``setx BOOST_ROOT "C:\\Program Files\\boost\\boost_1_55_0"``
+* Install `CMake <http://www.cmake.org/cmake/resources/software.html>`_
+  (tested with cmake-3.0.1, Win32 Installer).
 
-* Download and unpack https://s3-eu-west-1.amazonaws.com/artm/libs_win32_v110.7z
-  into ``$(BIGARTM_ROOT)/libs/`` folder.
-  Beware that this libraries were built with Visual Studio 2012 RTM (11.0.50727.1 RTMREL),
-  and that they might be incompatible with future Service Packs for VS2012.
-  They are known to be incompatible with Visual Studio 2013.
+* Download and install Boost, preferably
+  `Prefer Prebuilt Windows Binaries <http://sourceforge.net/projects/boost/files/boost-binaries/>`_.
+  Tested with `boost_1_55_0-msvc-11.0-32.exe <http://sourceforge.net/projects/boost/files/boost-binaries/1.55.0/boost_1_55_0-msvc-11.0-32.exe/download>`_
 
-* Download and install `ZeroMQ 4.0.3 x86 <http://miru.hk/archive/ZeroMQ-4.0.3~miru1.0-x86.exe>`_.
+  .. warning::
+     Beware of https://github.com/sashafrey/topicmod/issues/89, and
+     keep the default installation folder (C:\local\boost_1_55_0).
 
-* Set environmental variable ``ZEROMQ32_ROOT`` to ZeroMQ include folder:
-
-  ``setx ZEROMQ32_ROOT "C:\\Program Files (x86)\\ZeroMQ 4.0.3"``
-
-* Install Visual Studio 2012 RTM (other visual studio versions are not supported).
-
-* Open ``$(BIGARTM_ROOT)/src/artm_vs2012.sln``
-
-* Build all projects (debug or release, Win32) and execute tests.
-  64-bit builds are not available yet.
-
-
-Python code on Windows
-----------------------
-
-* Install Python 2.7.
+* Install Python x86 (32 bits).
 
   .. warning::
      On Windows you must use `Python x86 <https://www.python.org/ftp/python/2.7.6/python-2.7.6.msi>`_,
      which is a 32bit version of Python. The 64bit Python is incompatible with ``artm.dll``,
      which only compiles in 32 bits for now.
+
+* Open VS2012 x86 Native Tools Command Prompt, change working directory to ``$(BIGARTM_ROOT)`` 
+  and execute the following commands:
+
+  .. code-block:: bash
+
+     mkdir build
+     cd build
+     cmake ..
+     msbuild ALL_BUILD.vcxproj /p:Configuration=Debug
+     msbuild ALL_BUILD.vcxproj /p:Configuration=Release
+
+  Step 'cmake ..' will generate Visual Studio solution, located under ``$(BIGARTM_ROOT)/build/``.
+  You may open it in Visual Studio and build as usually.
+  The ``msbuild`` commands are simply command line alternatives to building from Visual Studio user interface.
+
+  The build outputs result into the following folders:
+
+  * ``$(BIGARTM_ROOT)/build/bin/[Debug|Release]`` --- binaries (.dll and .exe)
+
+  * ``$(BIGARTM_ROOT)/build/lib/[Debug|Release]`` --- static libraries
+
+  .. warning::
+
+     Potentially you may have to run "cmake .." twice.
+
+Python code on Windows
+----------------------
+
+* Install Python 2.7 (this step is already done if you are following the instructions above)
 
 * Download and add to MSVS Python Tools 2.0.
   All necessary instructions can be found at https://pytools.codeplex.com/.
@@ -80,31 +94,52 @@ Python code on Windows
 
   This 2 failures are OK to ignore.
 
+* Use ``$(BIGARTM_ROOT)/src/artm_vs2012.sln``.
 
 Build C++ code on Linux
 -----------------------
 
-* Install git.
+Simply run CMake on from the root of the project.
 
-* git clone https://github.com/sashafrey/topicmod
+The following script had been tested in Ubuntu.
 
-* Install boost. It is preferable to use version 1.55 or newer.
-  ``libboost-all-dev`` is package name in Debian-based OS.
+.. code-block:: bash
 
-* Install protobuf. It is necessary to use version 2.5.0 or newer.
-  ``libprotobuf-dev`` is package name in Debian-based OS.
-  You can get it from ppa: ``ppa:chris-lea/protobuf``.
+   sudo apt-get install git make cmake build-essential libboost-all-dev -q -y
+   git clone https://github.com/sashafrey/topicmod
+   cd ~/topicmod
+   mkdir build
+   cd build
+   cmake ..
+   make -j8
 
-* Use Makefiles under ``$(BIGARTM_ROOT)/3rdparty``,
-  ``$(BIGARTM_ROOT)/src/``,
-  ``$(BIGARTM_ROOT)/src/cpp_client/``,
-  ``$(BIGARTM_ROOT)/src/node_controller/``
+   ~/topicmode/build/src/artm_tests/artm_tests
 
-* Python interface hasn't been used from Linux yet,
-  but it should be possible to just run python scripts under
-  ``$(BIGARTM_ROOT)/python_client/``.
-  Please, contribute to this documentation if you had to make some special tricks.
+Python interface hasn't been used from Linux yet,
+but it should be possible to just run python scripts under
+``$(BIGARTM_ROOT)/python_client/``.
+Please, contribute to this documentation if you had to make some special tricks.
 
+Compiling .proto files on Windows
+---------------------------------
+
+1. Open a new command prompt
+
+2. Copy the following two files into ``$(BIGARTM_ROOT)/src/``
+
+   * ``$(BIGARTM_ROOT)/build/bin/CONFIG/protoc.exe``
+   * ``$(BIGARTM_ROOT)/build/bin/CONFIG/protoc-gen-cpp_rpcz.exe``
+
+   Here CONFIG can be either Debug or Release (both options will work equally well).
+
+3. Change working directory to ``$(BIGARTM_ROOT)/src/``
+
+4. Run the following commands
+
+   .. code-block:: bash
+
+      .\protoc.exe --cpp_out=. --python_out=. .\artm\messages.proto
+      .\protoc.exe --cpp_out=. --rpcz_plugin_out=. .\artm\core\internals.proto
 
 Submit your change
 ------------------

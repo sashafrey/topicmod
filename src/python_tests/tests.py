@@ -95,8 +95,8 @@ address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 if sys.platform.count('linux') == 1:
   library = ArtmLibrary(address + '/bin/libartm.so')
 else:
-  os.environ['PATH'] = ';'.join([address + '\\Win32\\Debug', os.environ['PATH']])
-  library = ArtmLibrary(address + '\\Win32\\Debug\\artm.dll')
+  os.environ['PATH'] = ';'.join([address + '..\\..\\build\\bin\\Debug', os.environ['PATH']])
+  library = ArtmLibrary(address + '..\\..\\build\\bin\\Debug\\artm.dll')
 
 with library.CreateMasterComponent() as master_component:
   master_component.Reconfigure(master_config)

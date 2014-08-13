@@ -1,9 +1,0 @@
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="DisplayMessages">
-    <Message CText="Project File Name = $(MSBuildProjectFile), Repository Root = $(RepositoryRoot)" />
-  </Target>
-  <Import Project="$(RepositoryRoot)\utils\targets\Artm.FolderStructure.props" />
-  <Import Project="$(RepositoryRoot)\utils\targets\Artm.DebugAndRelease.props" />
-  <Import Project="$(RepositoryRoot)\utils\targets\Artm.CompilerAndLinker.props" />
-  <Import Project="$(RepositoryRoot)\utils\targets\Artm.Libs.props" />
-</Project>

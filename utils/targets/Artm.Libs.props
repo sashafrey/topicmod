@@ -1,8 +1,0 @@
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LIBZEROMQ>libzmq-$(PlatformToolset)-mt-gd-4_0_3.lib</LIBZEROMQ>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LIBZEROMQ>libzmq-$(PlatformToolset)-mt-4_0_3.lib</LIBZEROMQ>
-  </PropertyGroup>
-</Project>

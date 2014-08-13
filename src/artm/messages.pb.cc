@@ -83,6 +83,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* RegularizerInternalState_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   RegularizerInternalState_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* RegularizerInternalState_Type_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* MultiLanguagePhiInternalState_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   MultiLanguagePhiInternalState_reflection_ = NULL;
@@ -478,8 +479,10 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(MultiLanguagePhiConfig));
   RegularizerInternalState_descriptor_ = file->message_type(19);
-  static const int RegularizerInternalState_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RegularizerInternalState, state_),
+  static const int RegularizerInternalState_offsets_[3] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RegularizerInternalState, name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RegularizerInternalState, type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(RegularizerInternalState, data_),
   };
   RegularizerInternalState_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -492,6 +495,7 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(RegularizerInternalState));
+  RegularizerInternalState_Type_descriptor_ = RegularizerInternalState_descriptor_->enum_type(0);
   MultiLanguagePhiInternalState_descriptor_ = file->message_type(20);
   static const int MultiLanguagePhiInternalState_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(MultiLanguagePhiInternalState, no_regularization_calls_),
@@ -1078,56 +1082,58 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "ients\030\002 \001(\0132\020.artm.FloatArray\022\027\n\017diction"
     "ary_name\030\003 \001(\t\"F\n\025DecorrelatorPhiConfig\022"
     "-\n\024topics_to_regularize\030\001 \001(\0132\017.artm.Boo"
-    "lArray\"\030\n\026MultiLanguagePhiConfig\")\n\030Regu"
-    "larizerInternalState\022\r\n\005state\030\001 \001(\014\"C\n\035M"
-    "ultiLanguagePhiInternalState\022\"\n\027no_regul"
-    "arization_calls\030\001 \001(\005:\0010\"F\n\020DictionaryCo"
-    "nfig\022\014\n\004name\030\001 \001(\t\022$\n\005entry\030\002 \003(\0132\025.artm"
-    ".DictionaryEntry\"k\n\017DictionaryEntry\022\021\n\tk"
-    "ey_token\030\001 \001(\t\022\r\n\005value\030\002 \001(\002\022\024\n\014value_t"
-    "okens\030\003 \003(\t\022 \n\006values\030\004 \001(\0132\020.artm.Float"
-    "Array\"\302\001\n\013ScoreConfig\022\014\n\004name\030\001 \001(\t\022$\n\004t"
-    "ype\030\002 \001(\0162\026.artm.ScoreConfig.Type\022\016\n\006con"
-    "fig\030\003 \001(\014\"o\n\004Type\022\016\n\nPerplexity\020\000\022\021\n\rSpa"
-    "rsityTheta\020\001\022\017\n\013SparsityPhi\020\002\022\022\n\016ItemsPr"
-    "ocessed\020\003\022\r\n\tTopTokens\020\004\022\020\n\014ThetaSnippet"
-    "\020\005\"\274\001\n\tScoreData\022\014\n\004name\030\001 \001(\t\022\"\n\004type\030\002"
-    " \001(\0162\024.artm.ScoreData.Type\022\014\n\004data\030\003 \001(\014"
-    "\"o\n\004Type\022\016\n\nPerplexity\020\000\022\021\n\rSparsityThet"
-    "a\020\001\022\017\n\013SparsityPhi\020\002\022\022\n\016ItemsProcessed\020\003"
-    "\022\r\n\tTopTokens\020\004\022\020\n\014ThetaSnippet\020\005\"P\n\025Per"
-    "plexityScoreConfig\022\031\n\nfield_name\030\001 \001(\t:\005"
-    "@body\022\034\n\013stream_name\030\002 \001(\t:\007@global\"U\n\017P"
-    "erplexityScore\022\r\n\005value\030\001 \001(\001\022\013\n\003raw\030\002 \001"
-    "(\001\022\022\n\nnormalizer\030\003 \001(\001\022\022\n\nzero_words\030\004 \001"
-    "(\005\"h\n\030SparsityThetaScoreConfig\022\031\n\nfield_"
-    "name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007"
-    "@global\022\023\n\003eps\030\003 \001(\002:\0061e-037\"N\n\022Sparsity"
-    "ThetaScore\022\r\n\005value\030\001 \001(\001\022\023\n\013zero_topics"
-    "\030\002 \001(\005\022\024\n\014total_topics\030\003 \001(\005\"-\n\026Sparsity"
-    "PhiScoreConfig\022\023\n\003eps\030\001 \001(\002:\0061e-037\"L\n\020S"
-    "parsityPhiScore\022\r\n\005value\030\001 \001(\001\022\023\n\013zero_t"
-    "okens\030\002 \001(\005\022\024\n\014total_tokens\030\003 \001(\005\"T\n\031Ite"
-    "msProcessedScoreConfig\022\031\n\nfield_name\030\001 \001"
-    "(\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007@global\""
-    "$\n\023ItemsProcessedScore\022\r\n\005value\030\001 \001(\005\"D\n"
-    "\024TopTokensScoreConfig\022\026\n\nnum_tokens\030\001 \001("
-    "\005:\00210\022\024\n\010topic_id\030\002 \003(\005B\002\020\001\"3\n\016TopTokens"
-    "Score\022!\n\006values\030\001 \003(\0132\021.artm.StringArray"
-    "\"g\n\027ThetaSnippetScoreConfig\022\031\n\nfield_nam"
-    "e\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007@gl"
-    "obal\022\023\n\007item_id\030\003 \003(\005B\002\020\001\"F\n\021ThetaSnippe"
-    "tScore\022\017\n\007item_id\030\001 \003(\005\022 \n\006values\030\002 \003(\0132"
-    "\020.artm.FloatArray\"\371\001\n\nTopicModel\022\024\n\004name"
-    "\030\001 \001(\t:\006@model\022\024\n\014topics_count\030\002 \001(\005\022\r\n\005"
-    "token\030\003 \003(\t\022\'\n\rtoken_weights\030\004 \003(\0132\020.art"
-    "m.FloatArray\022\021\n\tinternals\030\005 \001(\014\032t\n\023Topic"
-    "ModelInternals\022\036\n\004n_wt\030\001 \003(\0132\020.artm.Floa"
-    "tArray\022\036\n\004r_wt\030\002 \003(\0132\020.artm.FloatArray\022\035"
-    "\n\003n_t\030\003 \001(\0132\020.artm.FloatArray\"b\n\013ThetaMa"
-    "trix\022\032\n\nmodel_name\030\001 \001(\t:\006@model\022\017\n\007item"
-    "_id\030\002 \003(\005\022&\n\014item_weights\030\003 \003(\0132\020.artm.F"
-    "loatArray", 4049);
+    "lArray\"\030\n\026MultiLanguagePhiConfig\"\207\001\n\030Reg"
+    "ularizerInternalState\022\014\n\004name\030\001 \001(\t\0221\n\004t"
+    "ype\030\002 \001(\0162#.artm.RegularizerInternalStat"
+    "e.Type\022\014\n\004data\030\003 \001(\014\"\034\n\004Type\022\024\n\020MultiLan"
+    "guagePhi\020\005\"C\n\035MultiLanguagePhiInternalSt"
+    "ate\022\"\n\027no_regularization_calls\030\001 \001(\005:\0010\""
+    "F\n\020DictionaryConfig\022\014\n\004name\030\001 \001(\t\022$\n\005ent"
+    "ry\030\002 \003(\0132\025.artm.DictionaryEntry\"k\n\017Dicti"
+    "onaryEntry\022\021\n\tkey_token\030\001 \001(\t\022\r\n\005value\030\002"
+    " \001(\002\022\024\n\014value_tokens\030\003 \003(\t\022 \n\006values\030\004 \001"
+    "(\0132\020.artm.FloatArray\"\302\001\n\013ScoreConfig\022\014\n\004"
+    "name\030\001 \001(\t\022$\n\004type\030\002 \001(\0162\026.artm.ScoreCon"
+    "fig.Type\022\016\n\006config\030\003 \001(\014\"o\n\004Type\022\016\n\nPerp"
+    "lexity\020\000\022\021\n\rSparsityTheta\020\001\022\017\n\013SparsityP"
+    "hi\020\002\022\022\n\016ItemsProcessed\020\003\022\r\n\tTopTokens\020\004\022"
+    "\020\n\014ThetaSnippet\020\005\"\274\001\n\tScoreData\022\014\n\004name\030"
+    "\001 \001(\t\022\"\n\004type\030\002 \001(\0162\024.artm.ScoreData.Typ"
+    "e\022\014\n\004data\030\003 \001(\014\"o\n\004Type\022\016\n\nPerplexity\020\000\022"
+    "\021\n\rSparsityTheta\020\001\022\017\n\013SparsityPhi\020\002\022\022\n\016I"
+    "temsProcessed\020\003\022\r\n\tTopTokens\020\004\022\020\n\014ThetaS"
+    "nippet\020\005\"P\n\025PerplexityScoreConfig\022\031\n\nfie"
+    "ld_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001("
+    "\t:\007@global\"U\n\017PerplexityScore\022\r\n\005value\030\001"
+    " \001(\001\022\013\n\003raw\030\002 \001(\001\022\022\n\nnormalizer\030\003 \001(\001\022\022\n"
+    "\nzero_words\030\004 \001(\005\"h\n\030SparsityThetaScoreC"
+    "onfig\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013stre"
+    "am_name\030\002 \001(\t:\007@global\022\023\n\003eps\030\003 \001(\002:\0061e-"
+    "037\"N\n\022SparsityThetaScore\022\r\n\005value\030\001 \001(\001"
+    "\022\023\n\013zero_topics\030\002 \001(\005\022\024\n\014total_topics\030\003 "
+    "\001(\005\"-\n\026SparsityPhiScoreConfig\022\023\n\003eps\030\001 \001"
+    "(\002:\0061e-037\"L\n\020SparsityPhiScore\022\r\n\005value\030"
+    "\001 \001(\001\022\023\n\013zero_tokens\030\002 \001(\005\022\024\n\014total_toke"
+    "ns\030\003 \001(\005\"T\n\031ItemsProcessedScoreConfig\022\031\n"
+    "\nfield_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030"
+    "\002 \001(\t:\007@global\"$\n\023ItemsProcessedScore\022\r\n"
+    "\005value\030\001 \001(\005\"D\n\024TopTokensScoreConfig\022\026\n\n"
+    "num_tokens\030\001 \001(\005:\00210\022\024\n\010topic_id\030\002 \003(\005B\002"
+    "\020\001\"3\n\016TopTokensScore\022!\n\006values\030\001 \003(\0132\021.a"
+    "rtm.StringArray\"g\n\027ThetaSnippetScoreConf"
+    "ig\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013stream_"
+    "name\030\002 \001(\t:\007@global\022\023\n\007item_id\030\003 \003(\005B\002\020\001"
+    "\"F\n\021ThetaSnippetScore\022\017\n\007item_id\030\001 \003(\005\022 "
+    "\n\006values\030\002 \003(\0132\020.artm.FloatArray\"\371\001\n\nTop"
+    "icModel\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topics_"
+    "count\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_weig"
+    "hts\030\004 \003(\0132\020.artm.FloatArray\022\021\n\tinternals"
+    "\030\005 \001(\014\032t\n\023TopicModelInternals\022\036\n\004n_wt\030\001 "
+    "\003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020.ar"
+    "tm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.FloatA"
+    "rray\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 \001(\t:"
+    "\006@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_weights"
+    "\030\003 \003(\0132\020.artm.FloatArray", 4144);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   DoubleArray::default_instance_ = new DoubleArray();
@@ -7003,8 +7009,29 @@ void MultiLanguagePhiConfig::Swap(MultiLanguagePhiConfig* other) {
 
 // ===================================================================
 
+const ::google::protobuf::EnumDescriptor* RegularizerInternalState_Type_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return RegularizerInternalState_Type_descriptor_;
+}
+bool RegularizerInternalState_Type_IsValid(int value) {
+  switch(value) {
+    case 5:
+      return true;
+    default:
+      return false;
+  }
+}
+
 #ifndef _MSC_VER
-const int RegularizerInternalState::kStateFieldNumber;
+const RegularizerInternalState_Type RegularizerInternalState::MultiLanguagePhi;
+const RegularizerInternalState_Type RegularizerInternalState::Type_MIN;
+const RegularizerInternalState_Type RegularizerInternalState::Type_MAX;
+const int RegularizerInternalState::Type_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int RegularizerInternalState::kNameFieldNumber;
+const int RegularizerInternalState::kTypeFieldNumber;
+const int RegularizerInternalState::kDataFieldNumber;
 #endif  // !_MSC_VER
 
 RegularizerInternalState::RegularizerInternalState()
@@ -7023,7 +7050,9 @@ RegularizerInternalState::RegularizerInternalState(const RegularizerInternalStat
 
 void RegularizerInternalState::SharedCtor() {
   _cached_size_ = 0;
-  state_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  type_ = 5;
+  data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -7032,8 +7061,11 @@ RegularizerInternalState::~RegularizerInternalState() {
 }
 
 void RegularizerInternalState::SharedDtor() {
-  if (state_ != &::google::protobuf::internal::kEmptyString) {
-    delete state_;
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    delete data_;
   }
   if (this != default_instance_) {
   }
@@ -7062,9 +7094,15 @@ RegularizerInternalState* RegularizerInternalState::New() const {
 
 void RegularizerInternalState::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_state()) {
-      if (state_ != &::google::protobuf::internal::kEmptyString) {
-        state_->clear();
+    if (has_name()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
+        name_->clear();
+      }
+    }
+    type_ = 5;
+    if (has_data()) {
+      if (data_ != &::google::protobuf::internal::kEmptyString) {
+        data_->clear();
       }
     }
   }
@@ -7078,12 +7116,50 @@ bool RegularizerInternalState::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional bytes state = 1;
+      // optional string name = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_type;
+        break;
+      }
+
+      // optional .artm.RegularizerInternalState.Type type = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::artm::RegularizerInternalState_Type_IsValid(value)) {
+            set_type(static_cast< ::artm::RegularizerInternalState_Type >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(2, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_data;
+        break;
+      }
+
+      // optional bytes data = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_data:
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
-                input, this->mutable_state()));
+                input, this->mutable_data()));
         } else {
           goto handle_uninterpreted;
         }
@@ -7109,10 +7185,25 @@ bool RegularizerInternalState::MergePartialFromCodedStream(
 
 void RegularizerInternalState::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional bytes state = 1;
-  if (has_state()) {
+  // optional string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->name(), output);
+  }
+
+  // optional .artm.RegularizerInternalState.Type type = 2;
+  if (has_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      2, this->type(), output);
+  }
+
+  // optional bytes data = 3;
+  if (has_data()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      1, this->state(), output);
+      3, this->data(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -7123,11 +7214,27 @@ void RegularizerInternalState::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* RegularizerInternalState::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional bytes state = 1;
-  if (has_state()) {
+  // optional string name = 1;
+  if (has_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->name(), target);
+  }
+
+  // optional .artm.RegularizerInternalState.Type type = 2;
+  if (has_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      2, this->type(), target);
+  }
+
+  // optional bytes data = 3;
+  if (has_data()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        1, this->state(), target);
+        3, this->data(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -7141,11 +7248,24 @@ int RegularizerInternalState::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional bytes state = 1;
-    if (has_state()) {
+    // optional string name = 1;
+    if (has_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->name());
+    }
+
+    // optional .artm.RegularizerInternalState.Type type = 2;
+    if (has_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
+    }
+
+    // optional bytes data = 3;
+    if (has_data()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->state());
+          this->data());
     }
 
   }
@@ -7175,8 +7295,14 @@ void RegularizerInternalState::MergeFrom(const ::google::protobuf::Message& from
 void RegularizerInternalState::MergeFrom(const RegularizerInternalState& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_state()) {
-      set_state(from.state());
+    if (from.has_name()) {
+      set_name(from.name());
+    }
+    if (from.has_type()) {
+      set_type(from.type());
+    }
+    if (from.has_data()) {
+      set_data(from.data());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -7201,7 +7327,9 @@ bool RegularizerInternalState::IsInitialized() const {
 
 void RegularizerInternalState::Swap(RegularizerInternalState* other) {
   if (other != this) {
-    std::swap(state_, other->state_);
+    std::swap(name_, other->name_);
+    std::swap(type_, other->type_);
+    std::swap(data_, other->data_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

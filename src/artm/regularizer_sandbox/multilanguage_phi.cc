@@ -1,7 +1,5 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
-// Author: Murat Apishev (great-mel@yandex.ru)
-
 #include "artm/regularizer_sandbox/multilanguage_phi.h"
 #include "artm/core/regularizable.h"
 #include "artm/core/topic_model.h"
@@ -25,9 +23,10 @@ bool MultiLanguagePhi::Reconfigure(const RegularizerConfig& config) {
 }
 
 void MultiLanguagePhi::SerializeInternalState(RegularizerInternalState* regularizer_state) {
-  MultiLanguagePhiInternalState state;
-  state.set_no_regularization_calls(no_regularization_calls_);
-  regularizer_state->set_state(state.SerializeAsString());
+  MultiLanguagePhiInternalState data;
+  data.set_no_regularization_calls(no_regularization_calls_);
+  regularizer_state->set_type(RegularizerInternalState_Type_MultiLanguagePhi);
+  regularizer_state->set_data(data.SerializeAsString());
 }
 
 }  // namespace regularizer_sandbox

@@ -33,10 +33,10 @@
     <ClCompile Include="..\artm\core\master_component_service_impl.cc" />
     <ClCompile Include="..\artm\core\master_proxy.cc" />
     <ClCompile Include="..\artm\core\merger.cc" />
-    <ClCompile Include="..\artm\messages.pb.cc" />
     <ClCompile Include="..\artm\core\node_controller.cc" />
     <ClCompile Include="..\artm\core\node_controller_service_impl.cc" />
     <ClCompile Include="..\artm\core\processor.cc" />
+    <ClCompile Include="..\artm\messages.pb.cc" />
     <ClCompile Include="..\artm\regularizer_sandbox\decorrelator_phi.cc" />
     <ClCompile Include="..\artm\regularizer_sandbox\dirichlet_phi.cc" />
     <ClCompile Include="..\artm\regularizer_sandbox\dirichlet_theta.cc" />

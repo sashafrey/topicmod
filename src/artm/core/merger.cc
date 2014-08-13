@@ -327,6 +327,7 @@ void Merger::RequestRegularizerState(RegularizerName regularizer_name,
   if (schema->has_regularizer(regularizer_name)) {
     auto regularizer = schema->regularizer(regularizer_name);
     regularizer->SerializeInternalState(regularizer_state);
+    regularizer_state->set_name(regularizer_name);
   } else {
     LOG(ERROR) << "Requested internal state of non-exists regularizer.";
     BOOST_THROW_EXCEPTION(InvalidOperation("State from non-exists regularizer!"));

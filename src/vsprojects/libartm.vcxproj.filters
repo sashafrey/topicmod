@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="..\artm\messages.pb.cc" />
     <ClCompile Include="..\artm\regularizer_sandbox\dirichlet_phi.cc">
       <Filter>regularizer_sandbox</Filter>
     </ClCompile>
@@ -87,9 +86,9 @@
     <ClCompile Include="..\artm\regularizer_sandbox\multilanguage_phi.cc">
       <Filter>regularizer_sandbox</Filter>
     </ClCompile>
+    <ClCompile Include="..\artm\messages.pb.cc" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\artm\messages.pb.h" />
     <ClInclude Include="..\artm\regularizer_interface.h" />
     <ClInclude Include="..\artm\regularizer_sandbox\dirichlet_phi.h">
       <Filter>regularizer_sandbox</Filter>
@@ -206,6 +205,7 @@
     <ClInclude Include="..\artm\regularizer_sandbox\multilanguage_phi.h">
       <Filter>regularizer_sandbox</Filter>
     </ClInclude>
+    <ClInclude Include="..\artm\messages.pb.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />

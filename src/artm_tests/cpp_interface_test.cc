@@ -170,15 +170,15 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
 
   artm::MultiLanguagePhiInternalState old_state;
   artm::MultiLanguagePhiInternalState new_state;
-  old_state.ParseFromString(old_state_wrapper->state());
-  new_state.ParseFromString(new_state_wrapper->state());
+  old_state.ParseFromString(old_state_wrapper->data());
+  new_state.ParseFromString(new_state_wrapper->data());
 
   int saved_value = new_state.no_regularization_calls();
   EXPECT_EQ(saved_value - old_state.no_regularization_calls(), 1);
 
   multilanguage_reg->Reconfigure(reg_multilang_config);
   new_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
-  new_state.ParseFromString(new_state_wrapper->state());
+  new_state.ParseFromString(new_state_wrapper->data());
   EXPECT_EQ(new_state.no_regularization_calls(), saved_value);
 
 

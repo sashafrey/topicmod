@@ -1,11 +1,5 @@
 project(artm)
 
-# set compiler flags
-if(CMAKE_COMPILER_IS_GNUCXX)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -fPIC -std=c++11")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Werror")
-endif(CMAKE_COMPILER_IS_GNUCXX)
-
 # find Boost
 find_package(Boost COMPONENTS thread system filesystem REQUIRED)
 if(NOT Boost_FOUND)

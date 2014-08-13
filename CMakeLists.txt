@@ -23,11 +23,19 @@ if (MSVC)
   add_definitions("/MP")
 endif()
 
+# set compiler flags
+if(CMAKE_COMPILER_IS_GNUCXX)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pthread -fPIC -std=c++11")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -g -Werror")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
 set(BUILD_STATIC_LIBS ON)
 set(BUILD_SHARED_LIBS OFF)
 
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_LIBS ON)
+if (MSVC)
+  set(Boost_USE_MULTITHREADED ON)
+  set(Boost_USE_STATIC_LIBS ON)
+endif()
 
 set(BUILD_gflags_LIB ON)
 set(BUILD_gflags_nothreads_LIB OFF)

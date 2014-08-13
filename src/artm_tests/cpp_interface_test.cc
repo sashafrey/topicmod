@@ -144,13 +144,13 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
       expected_normalizer = perplexity->normalizer();
       EXPECT_GT(expected_normalizer, 0);
 
-      //try {
-      //master_component->GetRegularizerState(reg_decor_name);
-      //EXPECT_FALSE(true);
-      //} catch (std::runtime_error& err_obj) {
-      //  std::cout << err_obj.what() << std::endl;
-      //  EXPECT_TRUE(true);
-      //}
+      try {
+      master_component->GetRegularizerState(reg_decor_name);
+      EXPECT_FALSE(true);
+      } catch (std::runtime_error& err_obj) {
+        std::cout << err_obj.what() << std::endl;
+        EXPECT_TRUE(true);
+      }
 
     } else if (iter >= 2) {
       if (!is_network_mode) {
@@ -164,22 +164,22 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
   master_component->InvokeIteration(1);
   EXPECT_TRUE(master_component->WaitIdle());
 
-  //auto old_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
-  //model.InvokePhiRegularizers();
-  //auto new_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
+  auto old_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
+  model.InvokePhiRegularizers();
+  auto new_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
 
-  //artm::MultiLanguagePhiInternalState old_state;
-  //artm::MultiLanguagePhiInternalState new_state;
-  //old_state.ParseFromString(old_state_wrapper->state());
-  //new_state.ParseFromString(new_state_wrapper->state());
+  artm::MultiLanguagePhiInternalState old_state;
+  artm::MultiLanguagePhiInternalState new_state;
+  old_state.ParseFromString(old_state_wrapper->state());
+  new_state.ParseFromString(new_state_wrapper->state());
 
-  //int saved_value = new_state.no_regularization_calls();
-  //EXPECT_EQ(saved_value - old_state.no_regularization_calls(), 1);
+  int saved_value = new_state.no_regularization_calls();
+  EXPECT_EQ(saved_value - old_state.no_regularization_calls(), 1);
 
-  //multilanguage_reg->Reconfigure(reg_multilang_config);
-  //new_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
-  //new_state.ParseFromString(new_state_wrapper->state());
-  //EXPECT_EQ(new_state.no_regularization_calls(), saved_value);
+  multilanguage_reg->Reconfigure(reg_multilang_config);
+  new_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
+  new_state.ParseFromString(new_state_wrapper->state());
+  EXPECT_EQ(new_state.no_regularization_calls(), saved_value);
 
 
   model.Disable();

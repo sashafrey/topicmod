@@ -44,3 +44,5 @@ add_subdirectory(artm)
 add_subdirectory(artm_tests)
 add_subdirectory(cpp_client)
 add_subdirectory(node_controller)
+
+add_dependencies(artm-static rpcz)

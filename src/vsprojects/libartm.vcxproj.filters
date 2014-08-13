@@ -84,6 +84,9 @@
     <ClCompile Include="..\artm\score_sandbox\top_tokens.cc">
       <Filter>score_sandbox</Filter>
     </ClCompile>
+    <ClCompile Include="..\artm\regularizer_sandbox\multilanguage_phi.cc">
+      <Filter>regularizer_sandbox</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\artm\messages.pb.h" />
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="..\artm\score_sandbox\top_tokens.h">
       <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\regularizer_sandbox\multilanguage_phi.h">
+      <Filter>regularizer_sandbox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

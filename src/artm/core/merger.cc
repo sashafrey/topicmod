@@ -327,10 +327,10 @@ void Merger::RequestRegularizerState(RegularizerName regularizer_name,
   if (schema->has_regularizer(regularizer_name)) {
     auto regularizer = schema->regularizer(regularizer_name);
     regularizer->SerializeInternalState(regularizer_state);
+  } else {
+    LOG(ERROR) << "Requested internal state of non-exists regularizer.";
+    BOOST_THROW_EXCEPTION(InvalidOperation("State from non-exists regularizer!"));
   }
-
-  LOG(ERROR) << "Requested internal state of non-exists regularizer.";
-  BOOST_THROW_EXCEPTION(InvalidOperation("State from non-exists regularizer!"));
 }
 
 bool Merger::WaitIdle(int timeout) {

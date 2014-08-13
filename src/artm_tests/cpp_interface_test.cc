@@ -73,20 +73,33 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
     master_component.reset(new ::artm::MasterComponent(master_proxy_config));
   }
 
-  // Create regularizer
-  std::string reg_name = "decorrelator";
+  // Create regularizers
+  std::string reg_decor_name = "decorrelator";
   artm::DecorrelatorPhiConfig decor_config;
-  artm::RegularizerConfig reg_config;
-  reg_config.set_name(reg_name);
-  reg_config.set_type(artm::RegularizerConfig_Type_DecorrelatorPhi);
-  reg_config.set_config(decor_config.SerializeAsString());
-  std::shared_ptr<artm::Regularizer> regularizer(
-    new artm::Regularizer(*(master_component.get()), reg_config));
+  artm::RegularizerConfig reg_decor_config;
+  reg_decor_config.set_name(reg_decor_name);
+  reg_decor_config.set_type(artm::RegularizerConfig_Type_DecorrelatorPhi);
+  reg_decor_config.set_config(decor_config.SerializeAsString());
+  std::shared_ptr<artm::Regularizer> decorrelator_reg(
+    new artm::Regularizer(*(master_component.get()), reg_decor_config));
+
+  std::string reg_multilang_name = "multilanguage";
+  artm::MultiLanguagePhiConfig multilang_config;
+  artm::RegularizerConfig reg_multilang_config;
+  reg_multilang_config.set_name(reg_multilang_name);
+  reg_multilang_config.set_type(artm::RegularizerConfig_Type_MultiLanguagePhi);
+  reg_multilang_config.set_config(multilang_config.SerializeAsString());
+  std::shared_ptr<artm::Regularizer> multilanguage_reg(
+    new artm::Regularizer(*(master_component.get()), reg_multilang_config));
 
   // Create model
   artm::ModelConfig model_config;
   model_config.set_topics_count(nTopics);
   model_config.add_score_name("PerplexityScore");
+  model_config.add_regularizer_name(reg_decor_name);
+  model_config.add_regularizer_tau(1);
+  model_config.add_regularizer_name(reg_multilang_name);
+  model_config.add_regularizer_tau(1);
   artm::Model model(*master_component, model_config);
 
   // Load doc-token matrix
@@ -131,13 +144,13 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
       expected_normalizer = perplexity->normalizer();
       EXPECT_GT(expected_normalizer, 0);
 
-      try {
-      master_component->GetRegularizerState(reg_name);
-      EXPECT_FALSE(true);
-      } catch (std::runtime_error& err_obj) {
-        std::cout << err_obj.what() << std::endl;
-        EXPECT_TRUE(true);
-      }
+      //try {
+      //master_component->GetRegularizerState(reg_decor_name);
+      //EXPECT_FALSE(true);
+      //} catch (std::runtime_error& err_obj) {
+      //  std::cout << err_obj.what() << std::endl;
+      //  EXPECT_TRUE(true);
+      //}
 
     } else if (iter >= 2) {
       if (!is_network_mode) {
@@ -150,6 +163,25 @@ void BasicTest(bool is_network_mode, bool is_proxy_mode) {
 
   master_component->InvokeIteration(1);
   EXPECT_TRUE(master_component->WaitIdle());
+
+  //auto old_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
+  //model.InvokePhiRegularizers();
+  //auto new_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
+
+  //artm::MultiLanguagePhiInternalState old_state;
+  //artm::MultiLanguagePhiInternalState new_state;
+  //old_state.ParseFromString(old_state_wrapper->state());
+  //new_state.ParseFromString(new_state_wrapper->state());
+
+  //int saved_value = new_state.no_regularization_calls();
+  //EXPECT_EQ(saved_value - old_state.no_regularization_calls(), 1);
+
+  //multilanguage_reg->Reconfigure(reg_multilang_config);
+  //new_state_wrapper = master_component->GetRegularizerState(reg_multilang_name);
+  //new_state.ParseFromString(new_state_wrapper->state());
+  //EXPECT_EQ(new_state.no_regularization_calls(), saved_value);
+
+
   model.Disable();
 
   int nUniqueTokens = nTokens;

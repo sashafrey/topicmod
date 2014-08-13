@@ -23,17 +23,18 @@
 #include "artm/regularizer_sandbox/decorrelator_phi.h"
 #include "artm/regularizer_sandbox/dirichlet_theta.h"
 #include "artm/regularizer_sandbox/dirichlet_phi.h"
+#include "artm/regularizer_sandbox/multilanguage_phi.h"
 #include "artm/regularizer_sandbox/smooth_sparse_theta.h"
 #include "artm/regularizer_sandbox/smooth_sparse_phi.h"
 
+
 #include "artm/score_calculator_interface.h"
-#include "artm/score_sandbox/perplexity.h"
+#include "artm/score_sandbox/items_processed.h"
 #include "artm/score_sandbox/sparsity_theta.h"
 #include "artm/score_sandbox/sparsity_phi.h"
-#include "artm/score_sandbox/items_processed.h"
 #include "artm/score_sandbox/top_tokens.h"
 #include "artm/score_sandbox/theta_snippet.h"
-
+#include "artm/score_sandbox/perplexity.h"
 
 #define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                      \
   ConfigType regularizer_config;                                                              \
@@ -187,6 +188,12 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
     case artm::RegularizerConfig_Type_DecorrelatorPhi: {
       CREATE_OR_RECONFIGURE_REGULARIZER(::artm::DecorrelatorPhiConfig,
                                         ::artm::regularizer_sandbox::DecorrelatorPhi);
+      break;
+    }
+
+    case artm::RegularizerConfig_Type_MultiLanguagePhi: {
+      CREATE_OR_RECONFIGURE_REGULARIZER(::artm::MultiLanguagePhiConfig,
+                                        ::artm::regularizer_sandbox::MultiLanguagePhi);
       break;
     }
 

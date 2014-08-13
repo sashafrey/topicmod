@@ -110,6 +110,7 @@ message RegularizerConfig {
     SmoothSparseTheta = 2;
     SmoothSparsePhi = 3;
     DecorrelatorPhi = 4;
+    MultiLanguagePhi = 5;
   }
 
   optional string name = 1;
@@ -146,8 +147,18 @@ message DecorrelatorPhiConfig {
   optional BoolArray topics_to_regularize = 1;
 }
 
+// Represents a configuration of a MultiLanguage Phi regularizer
+message MultiLanguagePhiConfig {
+}
+
+// Represents wrapper over concrete internal states
 message RegularizerInternalState {
   optional bytes state = 1;
+}
+
+// Represents internal state of a MultiLanguage Phi regularizer
+message MultiLanguagePhiInternalState {
+  optional int32 no_regularization_calls = 1 [default = 0];
 }
 
 // Represents a static dictionary.

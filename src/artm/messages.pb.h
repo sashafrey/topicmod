@@ -52,7 +52,9 @@ class DirichletPhiConfig;
 class SmoothSparseThetaConfig;
 class SmoothSparsePhiConfig;
 class DecorrelatorPhiConfig;
+class MultiLanguagePhiConfig;
 class RegularizerInternalState;
+class MultiLanguagePhiInternalState;
 class DictionaryConfig;
 class DictionaryEntry;
 class ScoreConfig;
@@ -116,11 +118,12 @@ enum RegularizerConfig_Type {
   RegularizerConfig_Type_DirichletPhi = 1,
   RegularizerConfig_Type_SmoothSparseTheta = 2,
   RegularizerConfig_Type_SmoothSparsePhi = 3,
-  RegularizerConfig_Type_DecorrelatorPhi = 4
+  RegularizerConfig_Type_DecorrelatorPhi = 4,
+  RegularizerConfig_Type_MultiLanguagePhi = 5
 };
 bool RegularizerConfig_Type_IsValid(int value);
 const RegularizerConfig_Type RegularizerConfig_Type_Type_MIN = RegularizerConfig_Type_DirichletTheta;
-const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_DecorrelatorPhi;
+const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_MultiLanguagePhi;
 const int RegularizerConfig_Type_Type_ARRAYSIZE = RegularizerConfig_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor();
@@ -1689,6 +1692,7 @@ class RegularizerConfig : public ::google::protobuf::Message {
   static const Type SmoothSparseTheta = RegularizerConfig_Type_SmoothSparseTheta;
   static const Type SmoothSparsePhi = RegularizerConfig_Type_SmoothSparsePhi;
   static const Type DecorrelatorPhi = RegularizerConfig_Type_DecorrelatorPhi;
+  static const Type MultiLanguagePhi = RegularizerConfig_Type_MultiLanguagePhi;
   static inline bool Type_IsValid(int value) {
     return RegularizerConfig_Type_IsValid(value);
   }
@@ -2241,6 +2245,78 @@ class DecorrelatorPhiConfig : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class MultiLanguagePhiConfig : public ::google::protobuf::Message {
+ public:
+  MultiLanguagePhiConfig();
+  virtual ~MultiLanguagePhiConfig();
+
+  MultiLanguagePhiConfig(const MultiLanguagePhiConfig& from);
+
+  inline MultiLanguagePhiConfig& operator=(const MultiLanguagePhiConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MultiLanguagePhiConfig& default_instance();
+
+  void Swap(MultiLanguagePhiConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  MultiLanguagePhiConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MultiLanguagePhiConfig& from);
+  void MergeFrom(const MultiLanguagePhiConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:artm.MultiLanguagePhiConfig)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[1];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static MultiLanguagePhiConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class RegularizerInternalState : public ::google::protobuf::Message {
  public:
   RegularizerInternalState();
@@ -2325,6 +2401,88 @@ class RegularizerInternalState : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static RegularizerInternalState* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class MultiLanguagePhiInternalState : public ::google::protobuf::Message {
+ public:
+  MultiLanguagePhiInternalState();
+  virtual ~MultiLanguagePhiInternalState();
+
+  MultiLanguagePhiInternalState(const MultiLanguagePhiInternalState& from);
+
+  inline MultiLanguagePhiInternalState& operator=(const MultiLanguagePhiInternalState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MultiLanguagePhiInternalState& default_instance();
+
+  void Swap(MultiLanguagePhiInternalState* other);
+
+  // implements Message ----------------------------------------------
+
+  MultiLanguagePhiInternalState* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MultiLanguagePhiInternalState& from);
+  void MergeFrom(const MultiLanguagePhiInternalState& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 no_regularization_calls = 1 [default = 0];
+  inline bool has_no_regularization_calls() const;
+  inline void clear_no_regularization_calls();
+  static const int kNoRegularizationCallsFieldNumber = 1;
+  inline ::google::protobuf::int32 no_regularization_calls() const;
+  inline void set_no_regularization_calls(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:artm.MultiLanguagePhiInternalState)
+ private:
+  inline void set_has_no_regularization_calls();
+  inline void clear_has_no_regularization_calls();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 no_regularization_calls_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static MultiLanguagePhiInternalState* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -6544,6 +6702,10 @@ inline void DecorrelatorPhiConfig::set_allocated_topics_to_regularize(::artm::Bo
 
 // -------------------------------------------------------------------
 
+// MultiLanguagePhiConfig
+
+// -------------------------------------------------------------------
+
 // RegularizerInternalState
 
 // optional bytes state = 1;
@@ -6614,6 +6776,32 @@ inline void RegularizerInternalState::set_allocated_state(::std::string* state) 
     clear_has_state();
     state_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   }
+}
+
+// -------------------------------------------------------------------
+
+// MultiLanguagePhiInternalState
+
+// optional int32 no_regularization_calls = 1 [default = 0];
+inline bool MultiLanguagePhiInternalState::has_no_regularization_calls() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void MultiLanguagePhiInternalState::set_has_no_regularization_calls() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void MultiLanguagePhiInternalState::clear_has_no_regularization_calls() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void MultiLanguagePhiInternalState::clear_no_regularization_calls() {
+  no_regularization_calls_ = 0;
+  clear_has_no_regularization_calls();
+}
+inline ::google::protobuf::int32 MultiLanguagePhiInternalState::no_regularization_calls() const {
+  return no_regularization_calls_;
+}
+inline void MultiLanguagePhiInternalState::set_no_regularization_calls(::google::protobuf::int32 value) {
+  set_has_no_regularization_calls();
+  no_regularization_calls_ = value;
 }
 
 // -------------------------------------------------------------------

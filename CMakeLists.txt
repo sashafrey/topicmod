@@ -19,21 +19,20 @@ endif()
 
 if (MSVC)
   add_definitions("-D_VARIADIC_MAX=10")
-  add_definitions("-DBOOST_ALL_DYN_LINK")
-  add_definitions("-DBOOST_LIB_DIAGNOSTIC")
   add_definitions("/wd4251")
   add_definitions("/MP")
 endif()
 
-set(Boost_USE_MULTITHREADED ON)
-set(Boost_USE_STATIC_LIBS OFF)
-
 set(BUILD_STATIC_LIBS ON)
 set(BUILD_SHARED_LIBS OFF)
+
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_LIBS ON)
+
 set(BUILD_gflags_LIB ON)
 set(BUILD_gflags_nothreads_LIB OFF)
-
 set(rpcz_build_static ON)
+set(rpcz_build_shared ON)
 
 set(3RD_PARTY_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
 
@@ -45,37 +44,3 @@ message("-- Build type: ${CMAKE_BUILD_TYPE}")
 add_subdirectory(3rdparty)
 add_subdirectory(src)
 
-# =============== INSTALL BOOST =================
-if(MSVC AND NOT Boost_USE_STATIC_LIBS)
-  get_filename_component(BOOST_DATE_TIME_PATH ${Boost_DATE_TIME_LIBRARY_DEBUG} NAME_WE)
-  get_filename_component(BOOST_PROGRAM_OPTIONS_PATH ${Boost_PROGRAM_OPTIONS_LIBRARY_DEBUG} NAME_WE)
-  get_filename_component(BOOST_CHRONO_PATH ${Boost_CHRONO_LIBRARY_DEBUG} NAME_WE)
-  get_filename_component(BOOST_THREAD_PATH ${Boost_THREAD_LIBRARY_DEBUG} NAME_WE)
-  get_filename_component(BOOST_SYSTEM_PATH ${Boost_SYSTEM_LIBRARY_DEBUG} NAME_WE)
-  get_filename_component(BOOST_FILESYSTEM_PATH ${Boost_FILESYSTEM_LIBRARY_DEBUG} NAME_WE)
-  file(COPY
-    ${BOOST_LIBRARYDIR}/${BOOST_DATE_TIME_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_PROGRAM_OPTIONS_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_CHRONO_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_THREAD_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_SYSTEM_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_FILESYSTEM_PATH}.dll
-    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
-  )
-
-  get_filename_component(BOOST_DATE_TIME_PATH ${Boost_DATE_TIME_LIBRARY_RELEASE} NAME_WE)
-  get_filename_component(BOOST_PROGRAM_OPTIONS_PATH ${Boost_PROGRAM_OPTIONS_LIBRARY_RELEASE} NAME_WE)
-  get_filename_component(BOOST_CHRONO_PATH ${Boost_CHRONO_LIBRARY_RELEASE} NAME_WE)
-  get_filename_component(BOOST_THREAD_PATH ${Boost_THREAD_LIBRARY_RELEASE} NAME_WE)
-  get_filename_component(BOOST_SYSTEM_PATH ${Boost_SYSTEM_LIBRARY_RELEASE} NAME_WE)
-  get_filename_component(BOOST_FILESYSTEM_PATH ${Boost_FILESYSTEM_LIBRARY_RELEASE} NAME_WE)
-  file(COPY
-    ${BOOST_LIBRARYDIR}/${BOOST_DATE_TIME_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_PROGRAM_OPTIONS_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_CHRONO_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_THREAD_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_SYSTEM_PATH}.dll
-    ${BOOST_LIBRARYDIR}/${BOOST_FILESYSTEM_PATH}.dll
-    DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release
-  )
-endif()

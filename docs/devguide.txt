@@ -32,6 +32,7 @@ Build C++ code on Windows
   .. warning::
      Beware of https://github.com/sashafrey/topicmod/issues/89, and
      keep the default installation folder (C:\local\boost_1_55_0).
+     Use ``cmake .. -G "Visual Studio 11"`` to force build with Visual Studio 2012.
 
 * Install Python x86 (32 bits).
 
@@ -132,9 +133,11 @@ Compiling .proto files on Windows
 
    Here CONFIG can be either Debug or Release (both options will work equally well).
 
-3. Change working directory to ``$(BIGARTM_ROOT)/src/``
+3. Rename ``protoc-gen-cpp_rpcz.exe`` to ``protoc-gen-rpcz_plugin.exe``.
 
-4. Run the following commands
+4. Change working directory to ``$(BIGARTM_ROOT)/src/``
+
+5. Run the following commands
 
    .. code-block:: bash
 

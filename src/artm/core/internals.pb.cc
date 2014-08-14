@@ -464,7 +464,7 @@ void protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     "artm.core.String\032\020.artm.TopicModel\0225\n\016Re"
     "questBatches\022\016.artm.core.Int\032\023.artm.core"
     ".BatchIds\0225\n\rReportBatches\022\023.artm.core.B"
-    "atchIds\032\017.artm.core.Void2\301\n\n\025NodeControl"
+    "atchIds\032\017.artm.core.Void2\217\013\n\025NodeControl"
     "lerService\022K\n\033CreateOrReconfigureInstanc"
     "e\022\033.artm.MasterComponentConfig\032\017.artm.co"
     "re.Void\0223\n\017DisposeInstance\022\017.artm.core.V"
@@ -491,14 +491,16 @@ void protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     ".artm.TopicModel\032\017.artm.core.Void\0228\n\021Req"
     "uestTopicModel\022\021.artm.core.String\032\020.artm"
     ".TopicModel\022:\n\022RequestThetaMatrix\022\021.artm"
-    ".core.String\032\021.artm.ThetaMatrix\022<\n\014Reque"
-    "stScore\022\033.artm.core.RequestScoreArgs\032\017.a"
-    "rtm.ScoreData\022(\n\010AddBatch\022\013.artm.Batch\032\017"
-    ".artm.core.Void\0223\n\017InvokeIteration\022\017.art"
-    "m.core.Void\032\017.artm.core.Void\022+\n\010WaitIdle"
-    "\022\017.artm.core.Void\032\016.artm.core.Int\0229\n\025Inv"
-    "okePhiRegularizers\022\017.artm.core.Void\032\017.ar"
-    "tm.core.Void", 2812);
+    ".core.String\032\021.artm.ThetaMatrix\022L\n\027Reque"
+    "stRegularizerState\022\021.artm.core.String\032\036."
+    "artm.RegularizerInternalState\022<\n\014Request"
+    "Score\022\033.artm.core.RequestScoreArgs\032\017.art"
+    "m.ScoreData\022(\n\010AddBatch\022\013.artm.Batch\032\017.a"
+    "rtm.core.Void\0223\n\017InvokeIteration\022\017.artm."
+    "core.Void\032\017.artm.core.Void\022+\n\010WaitIdle\022\017"
+    ".artm.core.Void\032\016.artm.core.Int\0229\n\025Invok"
+    "ePhiRegularizers\022\017.artm.core.Void\032\017.artm"
+    ".core.Void", 2890);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/core/internals.proto", &protobuf_RegisterTypes);
   Mask::default_instance_ = new Mask();

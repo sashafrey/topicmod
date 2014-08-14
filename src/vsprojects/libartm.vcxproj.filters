@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\artm\regularizer_sandbox\dirichlet_phi.cc">
+      <Filter>regularizer_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\regularizer_sandbox\dirichlet_theta.cc">
+      <Filter>regularizer_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\regularizer_sandbox\smooth_sparse_phi.cc">
+      <Filter>regularizer_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\regularizer_sandbox\smooth_sparse_theta.cc">
+      <Filter>regularizer_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\batch_manager.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\data_loader.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\generation.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\helpers.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\instance.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\instance_schema.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\internals.pb.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\internals.rpcz.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\master_component.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\master_component_service_impl.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\merger.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\node_controller.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\node_controller_service_impl.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\processor.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\topic_model.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\regularizer_interface.cc" />
+    <ClCompile Include="..\artm\regularizer_sandbox\decorrelator_phi.cc">
+      <Filter>regularizer_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\core\master_proxy.cc">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\perplexity.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\sparsity_theta.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\sparsity_phi.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\items_processed.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\theta_snippet.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\score_sandbox\top_tokens.cc">
+      <Filter>score_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\regularizer_sandbox\multilanguage_phi.cc">
+      <Filter>regularizer_sandbox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\artm\messages.pb.cc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\artm\regularizer_interface.h" />
+    <ClInclude Include="..\artm\regularizer_sandbox\dirichlet_phi.h">
+      <Filter>regularizer_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\regularizer_sandbox\dirichlet_theta.h">
+      <Filter>regularizer_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\regularizer_sandbox\smooth_sparse_theta.h">
+      <Filter>regularizer_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\regularizer_sandbox\smooth_sparse_phi.h">
+      <Filter>regularizer_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\batch_manager.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\call_on_destruction.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\common.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\data_loader.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\exceptions.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\generation.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\helpers.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\instance.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\instance_schema.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\internals.pb.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\internals.rpcz.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\master_component.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\master_component_service_impl.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\merger.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\node_controller.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\node_controller_service_impl.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\processor.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\protobuf_helpers.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\template_manager.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\thread_safe_holder.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\topic_model.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\zmq_context.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\dictionary.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\regularizable.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\regularizer_sandbox\decorrelator_phi.h">
+      <Filter>regularizer_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\master_proxy.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\core\master_interface.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\score_calculator_interface.h" />
+    <ClInclude Include="..\artm\score_sandbox\perplexity.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\score_sandbox\sparsity_theta.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\score_sandbox\sparsity_phi.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\score_sandbox\items_processed.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\score_sandbox\theta_snippet.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\score_sandbox\top_tokens.h">
+      <Filter>score_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\regularizer_sandbox\multilanguage_phi.h">
+      <Filter>regularizer_sandbox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\artm\messages.pb.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SolutionDir)..\collateral\artm_dev.tex" />
+    <None Include="..\artm\messages.proto" />
+    <None Include="..\artm\core\internals.proto">
+      <Filter>core</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="core">
+      <UniqueIdentifier>{012398be-2ab7-4e6d-9af9-7c26d9bd4410}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="regularizer_sandbox">
+      <UniqueIdentifier>{988f6989-44b9-43c5-b92b-968415dc6295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="score_sandbox">
+      <UniqueIdentifier>{589d3151-6522-494d-967f-43c6097446c9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

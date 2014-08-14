@@ -23,25 +23,34 @@
 #include "artm/regularizer_sandbox/decorrelator_phi.h"
 #include "artm/regularizer_sandbox/dirichlet_theta.h"
 #include "artm/regularizer_sandbox/dirichlet_phi.h"
+#include "artm/regularizer_sandbox/multilanguage_phi.h"
 #include "artm/regularizer_sandbox/smooth_sparse_theta.h"
 #include "artm/regularizer_sandbox/smooth_sparse_phi.h"
 
+
 #include "artm/score_calculator_interface.h"
-#include "artm/score_sandbox/perplexity.h"
+#include "artm/score_sandbox/items_processed.h"
 #include "artm/score_sandbox/sparsity_theta.h"
 #include "artm/score_sandbox/sparsity_phi.h"
-#include "artm/score_sandbox/items_processed.h"
 #include "artm/score_sandbox/top_tokens.h"
 #include "artm/score_sandbox/theta_snippet.h"
+#include "artm/score_sandbox/perplexity.h"
 
-
-#define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                  \
-  ConfigType regularizer_config;                                                          \
-  if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {    \
-    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));  \
-  }                                                                                       \
-  regularizer.reset(new RegularizerType(regularizer_config));                             \
-}                                                                                         \
+#define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                      \
+  ConfigType regularizer_config;                                                              \
+  if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {        \
+    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));      \
+  }                                                                                           \
+  if (need_hot_reconfigure) {                                                                 \
+    need_hot_reconfigure = regularizer->Reconfigure(config);                                  \
+  }                                                                                           \
+  if (!need_hot_reconfigure) {                                                                \
+    regularizer.reset(new RegularizerType(regularizer_config));                               \
+    LOG(INFO) << "Regularizer '" + regularizer_name + "' was cold-reconfigured!";             \
+  } else {                                                                                    \
+    LOG(INFO) << "Regularizer '" + regularizer_name + "' was hot-reconfigured!";              \
+  }                                                                                           \
+}                                                                                             \
 
 #define CREATE_SCORE_CALCULATOR(ConfigType, ScoreType) {                                  \
   ConfigType score_config;                                                                \
@@ -142,12 +151,18 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   std::string regularizer_name = config.name();
   artm::RegularizerConfig_Type regularizer_type = config.type();
 
+  std::shared_ptr<artm::RegularizerInterface> regularizer;
+  bool need_hot_reconfigure = schema_.get()->has_regularizer(regularizer_name);
+  if (need_hot_reconfigure) {
+    regularizer = schema_.get()->regularizer(regularizer_name);
+  } else {
+    LOG(INFO) << "Regularizer '" + regularizer_name + "' was be created!";
+  }
+
   std::string config_blob;  // Used by CREATE_OR_RECONFIGURE_REGULARIZER marco
   if (config.has_config()) {
     config_blob = config.config();
   }
-
-  std::shared_ptr<artm::RegularizerInterface> regularizer;
 
   // add here new case if adding new regularizer
   switch (regularizer_type) {
@@ -178,6 +193,12 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
     case artm::RegularizerConfig_Type_DecorrelatorPhi: {
       CREATE_OR_RECONFIGURE_REGULARIZER(::artm::DecorrelatorPhiConfig,
                                         ::artm::regularizer_sandbox::DecorrelatorPhi);
+      break;
+    }
+
+    case artm::RegularizerConfig_Type_MultiLanguagePhi: {
+      CREATE_OR_RECONFIGURE_REGULARIZER(::artm::MultiLanguagePhiConfig,
+                                        ::artm::regularizer_sandbox::MultiLanguagePhi);
       break;
     }
 

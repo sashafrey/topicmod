@@ -209,6 +209,18 @@ int ArtmRequestTopicModel(int master_id, const char* model_name) {
   } CATCH_EXCEPTIONS;
 }
 
+int ArtmRequestRegularizerState(int master_id, const char* regularizer_name) {
+  try {
+    artm::RegularizerInternalState regularizer_state;
+    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
+
+    master_component->RequestRegularizerState(regularizer_name, &regularizer_state);
+    regularizer_state.SerializeToString(&message);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
+}
+
 int ArtmRequestScore(int master_id, const char* model_name, const char* score_name) {
   try {
     auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);

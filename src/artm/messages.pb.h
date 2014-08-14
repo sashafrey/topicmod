@@ -52,6 +52,9 @@ class DirichletPhiConfig;
 class SmoothSparseThetaConfig;
 class SmoothSparsePhiConfig;
 class DecorrelatorPhiConfig;
+class MultiLanguagePhiConfig;
+class RegularizerInternalState;
+class MultiLanguagePhiInternalState;
 class DictionaryConfig;
 class DictionaryEntry;
 class ScoreConfig;
@@ -115,11 +118,12 @@ enum RegularizerConfig_Type {
   RegularizerConfig_Type_DirichletPhi = 1,
   RegularizerConfig_Type_SmoothSparseTheta = 2,
   RegularizerConfig_Type_SmoothSparsePhi = 3,
-  RegularizerConfig_Type_DecorrelatorPhi = 4
+  RegularizerConfig_Type_DecorrelatorPhi = 4,
+  RegularizerConfig_Type_MultiLanguagePhi = 5
 };
 bool RegularizerConfig_Type_IsValid(int value);
 const RegularizerConfig_Type RegularizerConfig_Type_Type_MIN = RegularizerConfig_Type_DirichletTheta;
-const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_DecorrelatorPhi;
+const RegularizerConfig_Type RegularizerConfig_Type_Type_MAX = RegularizerConfig_Type_MultiLanguagePhi;
 const int RegularizerConfig_Type_Type_ARRAYSIZE = RegularizerConfig_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* RegularizerConfig_Type_descriptor();
@@ -131,6 +135,24 @@ inline bool RegularizerConfig_Type_Parse(
     const ::std::string& name, RegularizerConfig_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<RegularizerConfig_Type>(
     RegularizerConfig_Type_descriptor(), name, value);
+}
+enum RegularizerInternalState_Type {
+  RegularizerInternalState_Type_MultiLanguagePhi = 5
+};
+bool RegularizerInternalState_Type_IsValid(int value);
+const RegularizerInternalState_Type RegularizerInternalState_Type_Type_MIN = RegularizerInternalState_Type_MultiLanguagePhi;
+const RegularizerInternalState_Type RegularizerInternalState_Type_Type_MAX = RegularizerInternalState_Type_MultiLanguagePhi;
+const int RegularizerInternalState_Type_Type_ARRAYSIZE = RegularizerInternalState_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* RegularizerInternalState_Type_descriptor();
+inline const ::std::string& RegularizerInternalState_Type_Name(RegularizerInternalState_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    RegularizerInternalState_Type_descriptor(), value);
+}
+inline bool RegularizerInternalState_Type_Parse(
+    const ::std::string& name, RegularizerInternalState_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<RegularizerInternalState_Type>(
+    RegularizerInternalState_Type_descriptor(), name, value);
 }
 enum ScoreConfig_Type {
   ScoreConfig_Type_Perplexity = 0,
@@ -1688,6 +1710,7 @@ class RegularizerConfig : public ::google::protobuf::Message {
   static const Type SmoothSparseTheta = RegularizerConfig_Type_SmoothSparseTheta;
   static const Type SmoothSparsePhi = RegularizerConfig_Type_SmoothSparsePhi;
   static const Type DecorrelatorPhi = RegularizerConfig_Type_DecorrelatorPhi;
+  static const Type MultiLanguagePhi = RegularizerConfig_Type_MultiLanguagePhi;
   static inline bool Type_IsValid(int value) {
     return RegularizerConfig_Type_IsValid(value);
   }
@@ -2237,6 +2260,295 @@ class DecorrelatorPhiConfig : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static DecorrelatorPhiConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class MultiLanguagePhiConfig : public ::google::protobuf::Message {
+ public:
+  MultiLanguagePhiConfig();
+  virtual ~MultiLanguagePhiConfig();
+
+  MultiLanguagePhiConfig(const MultiLanguagePhiConfig& from);
+
+  inline MultiLanguagePhiConfig& operator=(const MultiLanguagePhiConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MultiLanguagePhiConfig& default_instance();
+
+  void Swap(MultiLanguagePhiConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  MultiLanguagePhiConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MultiLanguagePhiConfig& from);
+  void MergeFrom(const MultiLanguagePhiConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:artm.MultiLanguagePhiConfig)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[1];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static MultiLanguagePhiConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class RegularizerInternalState : public ::google::protobuf::Message {
+ public:
+  RegularizerInternalState();
+  virtual ~RegularizerInternalState();
+
+  RegularizerInternalState(const RegularizerInternalState& from);
+
+  inline RegularizerInternalState& operator=(const RegularizerInternalState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const RegularizerInternalState& default_instance();
+
+  void Swap(RegularizerInternalState* other);
+
+  // implements Message ----------------------------------------------
+
+  RegularizerInternalState* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const RegularizerInternalState& from);
+  void MergeFrom(const RegularizerInternalState& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef RegularizerInternalState_Type Type;
+  static const Type MultiLanguagePhi = RegularizerInternalState_Type_MultiLanguagePhi;
+  static inline bool Type_IsValid(int value) {
+    return RegularizerInternalState_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    RegularizerInternalState_Type_Type_MIN;
+  static const Type Type_MAX =
+    RegularizerInternalState_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    RegularizerInternalState_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return RegularizerInternalState_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return RegularizerInternalState_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return RegularizerInternalState_Type_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional string name = 1;
+  inline bool has_name() const;
+  inline void clear_name();
+  static const int kNameFieldNumber = 1;
+  inline const ::std::string& name() const;
+  inline void set_name(const ::std::string& value);
+  inline void set_name(const char* value);
+  inline void set_name(const char* value, size_t size);
+  inline ::std::string* mutable_name();
+  inline ::std::string* release_name();
+  inline void set_allocated_name(::std::string* name);
+
+  // optional .artm.RegularizerInternalState.Type type = 2;
+  inline bool has_type() const;
+  inline void clear_type();
+  static const int kTypeFieldNumber = 2;
+  inline ::artm::RegularizerInternalState_Type type() const;
+  inline void set_type(::artm::RegularizerInternalState_Type value);
+
+  // optional bytes data = 3;
+  inline bool has_data() const;
+  inline void clear_data();
+  static const int kDataFieldNumber = 3;
+  inline const ::std::string& data() const;
+  inline void set_data(const ::std::string& value);
+  inline void set_data(const char* value);
+  inline void set_data(const void* value, size_t size);
+  inline ::std::string* mutable_data();
+  inline ::std::string* release_data();
+  inline void set_allocated_data(::std::string* data);
+
+  // @@protoc_insertion_point(class_scope:artm.RegularizerInternalState)
+ private:
+  inline void set_has_name();
+  inline void clear_has_name();
+  inline void set_has_type();
+  inline void clear_has_type();
+  inline void set_has_data();
+  inline void clear_has_data();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* name_;
+  ::std::string* data_;
+  int type_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static RegularizerInternalState* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class MultiLanguagePhiInternalState : public ::google::protobuf::Message {
+ public:
+  MultiLanguagePhiInternalState();
+  virtual ~MultiLanguagePhiInternalState();
+
+  MultiLanguagePhiInternalState(const MultiLanguagePhiInternalState& from);
+
+  inline MultiLanguagePhiInternalState& operator=(const MultiLanguagePhiInternalState& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const MultiLanguagePhiInternalState& default_instance();
+
+  void Swap(MultiLanguagePhiInternalState* other);
+
+  // implements Message ----------------------------------------------
+
+  MultiLanguagePhiInternalState* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const MultiLanguagePhiInternalState& from);
+  void MergeFrom(const MultiLanguagePhiInternalState& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 no_regularization_calls = 1 [default = 0];
+  inline bool has_no_regularization_calls() const;
+  inline void clear_no_regularization_calls();
+  static const int kNoRegularizationCallsFieldNumber = 1;
+  inline ::google::protobuf::int32 no_regularization_calls() const;
+  inline void set_no_regularization_calls(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:artm.MultiLanguagePhiInternalState)
+ private:
+  inline void set_has_no_regularization_calls();
+  inline void clear_has_no_regularization_calls();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::int32 no_regularization_calls_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static MultiLanguagePhiInternalState* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -6480,6 +6792,203 @@ inline void DecorrelatorPhiConfig::set_allocated_topics_to_regularize(::artm::Bo
 
 // -------------------------------------------------------------------
 
+// MultiLanguagePhiConfig
+
+// -------------------------------------------------------------------
+
+// RegularizerInternalState
+
+// optional string name = 1;
+inline bool RegularizerInternalState::has_name() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void RegularizerInternalState::set_has_name() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void RegularizerInternalState::clear_has_name() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void RegularizerInternalState::clear_name() {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    name_->clear();
+  }
+  clear_has_name();
+}
+inline const ::std::string& RegularizerInternalState::name() const {
+  return *name_;
+}
+inline void RegularizerInternalState::set_name(const ::std::string& value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void RegularizerInternalState::set_name(const char* value) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(value);
+}
+inline void RegularizerInternalState::set_name(const char* value, size_t size) {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RegularizerInternalState::mutable_name() {
+  set_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    name_ = new ::std::string;
+  }
+  return name_;
+}
+inline ::std::string* RegularizerInternalState::release_name() {
+  clear_has_name();
+  if (name_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = name_;
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RegularizerInternalState::set_allocated_name(::std::string* name) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
+    delete name_;
+  }
+  if (name) {
+    set_has_name();
+    name_ = name;
+  } else {
+    clear_has_name();
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional .artm.RegularizerInternalState.Type type = 2;
+inline bool RegularizerInternalState::has_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void RegularizerInternalState::set_has_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void RegularizerInternalState::clear_has_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void RegularizerInternalState::clear_type() {
+  type_ = 5;
+  clear_has_type();
+}
+inline ::artm::RegularizerInternalState_Type RegularizerInternalState::type() const {
+  return static_cast< ::artm::RegularizerInternalState_Type >(type_);
+}
+inline void RegularizerInternalState::set_type(::artm::RegularizerInternalState_Type value) {
+  assert(::artm::RegularizerInternalState_Type_IsValid(value));
+  set_has_type();
+  type_ = value;
+}
+
+// optional bytes data = 3;
+inline bool RegularizerInternalState::has_data() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void RegularizerInternalState::set_has_data() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void RegularizerInternalState::clear_has_data() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void RegularizerInternalState::clear_data() {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    data_->clear();
+  }
+  clear_has_data();
+}
+inline const ::std::string& RegularizerInternalState::data() const {
+  return *data_;
+}
+inline void RegularizerInternalState::set_data(const ::std::string& value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void RegularizerInternalState::set_data(const char* value) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(value);
+}
+inline void RegularizerInternalState::set_data(const void* value, size_t size) {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  data_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* RegularizerInternalState::mutable_data() {
+  set_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    data_ = new ::std::string;
+  }
+  return data_;
+}
+inline ::std::string* RegularizerInternalState::release_data() {
+  clear_has_data();
+  if (data_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = data_;
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void RegularizerInternalState::set_allocated_data(::std::string* data) {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
+    delete data_;
+  }
+  if (data) {
+    set_has_data();
+    data_ = data;
+  } else {
+    clear_has_data();
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// -------------------------------------------------------------------
+
+// MultiLanguagePhiInternalState
+
+// optional int32 no_regularization_calls = 1 [default = 0];
+inline bool MultiLanguagePhiInternalState::has_no_regularization_calls() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void MultiLanguagePhiInternalState::set_has_no_regularization_calls() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void MultiLanguagePhiInternalState::clear_has_no_regularization_calls() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void MultiLanguagePhiInternalState::clear_no_regularization_calls() {
+  no_regularization_calls_ = 0;
+  clear_has_no_regularization_calls();
+}
+inline ::google::protobuf::int32 MultiLanguagePhiInternalState::no_regularization_calls() const {
+  return no_regularization_calls_;
+}
+inline void MultiLanguagePhiInternalState::set_no_regularization_calls(::google::protobuf::int32 value) {
+  set_has_no_regularization_calls();
+  no_regularization_calls_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // DictionaryConfig
 
 // optional string name = 1;
@@ -8677,6 +9186,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::artm::MasterComponentConfig_Mo
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::RegularizerConfig_Type>() {
   return ::artm::RegularizerConfig_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::RegularizerInternalState_Type>() {
+  return ::artm::RegularizerInternalState_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::ScoreConfig_Type>() {

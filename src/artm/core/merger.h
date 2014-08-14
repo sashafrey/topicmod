@@ -52,6 +52,8 @@ class Merger : boost::noncopyable {
 
   std::shared_ptr<const ::artm::core::TopicModel> GetLatestTopicModel(ModelName model_name) const;
   bool RetrieveExternalTopicModel(ModelName model_name, ::artm::TopicModel* topic_model) const;
+  void RequestRegularizerState(RegularizerName regularizer_name, 
+                               ::artm::RegularizerInternalState* regularizer_state) const;
   bool RequestScore(const ModelName& model_name, const ScoreName& score_name,
                     ScoreData *score_data) const;
 

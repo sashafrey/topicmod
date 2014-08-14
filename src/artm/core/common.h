@@ -19,6 +19,7 @@ namespace core {
 
 typedef std::string ModelName;
 typedef std::string ScoreName;
+typedef std::string RegularizerName;
 
 const int UnknownId = -1;
 

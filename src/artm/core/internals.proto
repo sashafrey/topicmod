@@ -146,6 +146,7 @@ service NodeControllerService {
 
   rpc OverwriteTopicModel(TopicModel) returns (Void);
   rpc RequestTopicModel(String) returns (TopicModel);
+  rpc RequestRegularizerState(String) returns (RegularizerInternalState);
   rpc RequestThetaMatrix(String) returns (ThetaMatrix);
   rpc RequestScore(RequestScoreArgs) returns (ScoreData);
 

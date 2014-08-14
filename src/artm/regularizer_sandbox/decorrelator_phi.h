@@ -17,6 +17,7 @@ class DecorrelatorPhi : public RegularizerInterface {
     : config_(config) {}
 
   virtual bool RegularizePhi(::artm::core::Regularizable* topic_model, double tau);
+  virtual bool Reconfigure(const RegularizerConfig& config);
 
  private:
   DecorrelatorPhiConfig config_;

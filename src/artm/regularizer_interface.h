@@ -11,6 +11,7 @@
 #include <string>
 
 #include "artm/messages.pb.h"
+#include "artm/core/exceptions.h"
 
 #include "glog/logging.h"
 
@@ -36,6 +37,16 @@ class RegularizerInterface {
                                double tau) { return true; }
 
   virtual bool RegularizePhi(::artm::core::Regularizable* topic_model, double tau) { return true; }
+
+  // Attempt to reconfigure an existing regularizer.
+  // Returns true if succeeded, and false if the caller must recreate the regularizer from scratch
+  // via constructor.
+  virtual bool Reconfigure(const RegularizerConfig& config) { return false; } 
+
+  virtual void SerializeInternalState(RegularizerInternalState* regularizer_state) { 
+    BOOST_THROW_EXCEPTION(artm::core::InvalidOperation(
+      "This regularizer has no internal state!")); 
+  }
 
   std::shared_ptr<::artm::core::DictionaryMap> dictionary(const std::string& dictionary_name);
   void set_dictionaries(const ::artm::core::ThreadSafeDictionaryCollection* dictionaries);

@@ -97,6 +97,23 @@ std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
   return topic_model;
 }
 
+std::shared_ptr<RegularizerInternalState> MasterComponent::GetRegularizerState(
+  const std::string& regularizer_name) {
+  int request_id = HandleErrorCode(ArtmRequestRegularizerState(
+    id(), regularizer_name.c_str()));
+
+  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  std::string state_blob;
+  state_blob.resize(length);
+  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&state_blob)));
+
+  ArtmDisposeRequest(request_id);
+
+  std::shared_ptr<RegularizerInternalState> regularizer_state(new RegularizerInternalState());
+  regularizer_state->ParseFromString(state_blob);
+  return regularizer_state;
+}
+
 std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model) {
   int request_id = HandleErrorCode(ArtmRequestThetaMatrix(
     id(), model.name().c_str()));

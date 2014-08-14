@@ -13,6 +13,8 @@
   TypeName(const TypeName&);   \
   void operator=(const TypeName&)
 
+#ifndef ARTM_ERROR_CODES_EXIST
+#define ARTM_ERROR_CODES_EXIST
 enum ArtmErrorCodes {
     ARTM_SUCCESS = 0,
     ARTM_GENERAL_ERROR = -1,
@@ -22,6 +24,7 @@ enum ArtmErrorCodes {
     ARTM_NETWORK_ERROR = -5,
     ARTM_STILL_WORKING = -6
 };
+#endif
 
 namespace artm {
 
@@ -56,6 +59,8 @@ class MasterComponent {
 
   int id() const { return id_; }
   std::shared_ptr<TopicModel> GetTopicModel(const Model& model);
+  std::shared_ptr<RegularizerInternalState> GetRegularizerState(
+    const std::string& regularizer_name);
   std::shared_ptr<ThetaMatrix> GetThetaMatrix(const Model& model);
   std::shared_ptr<ScoreData> GetScore(const Model& model,
                                       const std::string& score_name);

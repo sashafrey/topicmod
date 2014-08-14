@@ -1,9 +1,9 @@
 project(artm)
 
 # find Boost
-find_package(Boost COMPONENTS thread system filesystem REQUIRED)
+find_package(Boost COMPONENTS thread system filesystem timer REQUIRED)
 if(NOT Boost_FOUND)
-  message(SEND_ERROR "Failed to find boost::thread, boost::system or boost::filesystem.")
+  message(SEND_ERROR "Failed to find boost::thread, boost::systemm, boost::filesystem or boost::timer.")
   return()
 else()
   include_directories(${Boost_INCLUDE_DIRS})

@@ -6809,7 +6809,7 @@ inline void RegularizerInternalState::clear_has_name() {
   _has_bits_[0] &= ~0x00000001u;
 }
 inline void RegularizerInternalState::clear_name() {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
+  if (name_ != &::google::protobuf::internal::GetEmptyString()) {
     name_->clear();
   }
   clear_has_name();
@@ -6819,44 +6819,44 @@ inline const ::std::string& RegularizerInternalState::name() const {
 }
 inline void RegularizerInternalState::set_name(const ::std::string& value) {
   set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
+  if (name_ == &::google::protobuf::internal::GetEmptyString()) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
 inline void RegularizerInternalState::set_name(const char* value) {
   set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
+  if (name_ == &::google::protobuf::internal::GetEmptyString()) {
     name_ = new ::std::string;
   }
   name_->assign(value);
 }
 inline void RegularizerInternalState::set_name(const char* value, size_t size) {
   set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
+  if (name_ == &::google::protobuf::internal::GetEmptyString()) {
     name_ = new ::std::string;
   }
   name_->assign(reinterpret_cast<const char*>(value), size);
 }
 inline ::std::string* RegularizerInternalState::mutable_name() {
   set_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
+  if (name_ == &::google::protobuf::internal::GetEmptyString()) {
     name_ = new ::std::string;
   }
   return name_;
 }
 inline ::std::string* RegularizerInternalState::release_name() {
   clear_has_name();
-  if (name_ == &::google::protobuf::internal::kEmptyString) {
+  if (name_ == &::google::protobuf::internal::GetEmptyString()) {
     return NULL;
   } else {
     ::std::string* temp = name_;
-    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
     return temp;
   }
 }
 inline void RegularizerInternalState::set_allocated_name(::std::string* name) {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
+  if (name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete name_;
   }
   if (name) {
@@ -6864,7 +6864,7 @@ inline void RegularizerInternalState::set_allocated_name(::std::string* name) {
     name_ = name;
   } else {
     clear_has_name();
-    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   }
 }
 
@@ -6902,7 +6902,7 @@ inline void RegularizerInternalState::clear_has_data() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void RegularizerInternalState::clear_data() {
-  if (data_ != &::google::protobuf::internal::kEmptyString) {
+  if (data_ != &::google::protobuf::internal::GetEmptyString()) {
     data_->clear();
   }
   clear_has_data();
@@ -6912,44 +6912,44 @@ inline const ::std::string& RegularizerInternalState::data() const {
 }
 inline void RegularizerInternalState::set_data(const ::std::string& value) {
   set_has_data();
-  if (data_ == &::google::protobuf::internal::kEmptyString) {
+  if (data_ == &::google::protobuf::internal::GetEmptyString()) {
     data_ = new ::std::string;
   }
   data_->assign(value);
 }
 inline void RegularizerInternalState::set_data(const char* value) {
   set_has_data();
-  if (data_ == &::google::protobuf::internal::kEmptyString) {
+  if (data_ == &::google::protobuf::internal::GetEmptyString()) {
     data_ = new ::std::string;
   }
   data_->assign(value);
 }
 inline void RegularizerInternalState::set_data(const void* value, size_t size) {
   set_has_data();
-  if (data_ == &::google::protobuf::internal::kEmptyString) {
+  if (data_ == &::google::protobuf::internal::GetEmptyString()) {
     data_ = new ::std::string;
   }
   data_->assign(reinterpret_cast<const char*>(value), size);
 }
 inline ::std::string* RegularizerInternalState::mutable_data() {
   set_has_data();
-  if (data_ == &::google::protobuf::internal::kEmptyString) {
+  if (data_ == &::google::protobuf::internal::GetEmptyString()) {
     data_ = new ::std::string;
   }
   return data_;
 }
 inline ::std::string* RegularizerInternalState::release_data() {
   clear_has_data();
-  if (data_ == &::google::protobuf::internal::kEmptyString) {
+  if (data_ == &::google::protobuf::internal::GetEmptyString()) {
     return NULL;
   } else {
     ::std::string* temp = data_;
-    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
     return temp;
   }
 }
 inline void RegularizerInternalState::set_allocated_data(::std::string* data) {
-  if (data_ != &::google::protobuf::internal::kEmptyString) {
+  if (data_ != &::google::protobuf::internal::GetEmptyString()) {
     delete data_;
   }
   if (data) {
@@ -6957,7 +6957,7 @@ inline void RegularizerInternalState::set_allocated_data(::std::string* data) {
     data_ = data;
   } else {
     clear_has_data();
-    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    data_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   }
 }
 

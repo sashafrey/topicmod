@@ -109,10 +109,10 @@ void rpcz_protobuf_AddDesc_artm_2fcore_2finternals_2eproto() {
     ".artm.core.Void\0228\n\023OverwriteTopicModel\022\020"
     ".artm.TopicModel\032\017.artm.core.Void\0228\n\021Req"
     "uestTopicModel\022\021.artm.core.String\032\020.artm"
-    ".TopicModel\022:\n\022RequestThetaMatrix\022\021.artm"
-    ".core.String\032\021.artm.ThetaMatrix\022L\n\027Reque"
-    "stRegularizerState\022\021.artm.core.String\032\036."
-    "artm.RegularizerInternalState\022<\n\014Request"
+    ".TopicModel\022L\n\027RequestRegularizerState\022\021"
+    ".artm.core.String\032\036.artm.RegularizerInte"
+    "rnalState\022:\n\022RequestThetaMatrix\022\021.artm.c"
+    "ore.String\032\021.artm.ThetaMatrix\022<\n\014Request"
     "Score\022\033.artm.core.RequestScoreArgs\032\017.art"
     "m.ScoreData\022(\n\010AddBatch\022\013.artm.Batch\032\017.a"
     "rtm.core.Void\0223\n\017InvokeIteration\022\017.artm."
@@ -425,16 +425,16 @@ void NodeControllerService::RequestTopicModel(const ::artm::core::String&,
               "Method RequestTopicModel() not implemented.");
 }
 
-void NodeControllerService::RequestThetaMatrix(const ::artm::core::String&,
-                         ::rpcz::reply< ::artm::ThetaMatrix> reply) {
-  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
-              "Method RequestThetaMatrix() not implemented.");
-}
-
 void NodeControllerService::RequestRegularizerState(const ::artm::core::String&,
                          ::rpcz::reply< ::artm::RegularizerInternalState> reply) {
   reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
               "Method RequestRegularizerState() not implemented.");
+}
+
+void NodeControllerService::RequestThetaMatrix(const ::artm::core::String&,
+                         ::rpcz::reply< ::artm::ThetaMatrix> reply) {
+  reply.Error(::rpcz::application_error::METHOD_NOT_IMPLEMENTED,
+              "Method RequestThetaMatrix() not implemented.");
 }
 
 void NodeControllerService::RequestScore(const ::artm::core::RequestScoreArgs&,
@@ -543,14 +543,14 @@ void NodeControllerService::call_method(const ::google::protobuf::MethodDescript
           ::rpcz::reply< ::artm::TopicModel>(channel));
       break;
     case 14:
-      RequestThetaMatrix(
-          *::google::protobuf::down_cast<const ::artm::core::String*>(&request),
-          ::rpcz::reply< ::artm::ThetaMatrix>(channel));
-      break;
-    case 15:
       RequestRegularizerState(
           *::google::protobuf::down_cast<const ::artm::core::String*>(&request),
           ::rpcz::reply< ::artm::RegularizerInternalState>(channel));
+      break;
+    case 15:
+      RequestThetaMatrix(
+          *::google::protobuf::down_cast<const ::artm::core::String*>(&request),
+          ::rpcz::reply< ::artm::ThetaMatrix>(channel));
       break;
     case 16:
       RequestScore(
@@ -668,9 +668,9 @@ const ::google::protobuf::Message& NodeControllerService::GetResponsePrototype(
     case 13:
       return ::artm::TopicModel::default_instance();
     case 14:
-      return ::artm::ThetaMatrix::default_instance();
-    case 15:
       return ::artm::RegularizerInternalState::default_instance();
+    case 15:
+      return ::artm::ThetaMatrix::default_instance();
     case 16:
       return ::artm::ScoreData::default_instance();
     case 17:
@@ -994,16 +994,16 @@ void NodeControllerService_Stub::RequestTopicModel(const ::artm::core::String& r
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::RequestThetaMatrix(const ::artm::core::String& request,
-                              ::artm::ThetaMatrix* response,
+void NodeControllerService_Stub::RequestRegularizerState(const ::artm::core::String& request,
+                              ::artm::RegularizerInternalState* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
                         NodeControllerService::descriptor()->method(14),
                         request, response, rpc, done);
 }
-void NodeControllerService_Stub::RequestThetaMatrix(const ::artm::core::String& request,
-                              ::artm::ThetaMatrix* response,
+void NodeControllerService_Stub::RequestRegularizerState(const ::artm::core::String& request,
+                              ::artm::RegularizerInternalState* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);
@@ -1015,16 +1015,16 @@ void NodeControllerService_Stub::RequestThetaMatrix(const ::artm::core::String& 
     throw ::rpcz::rpc_error(rpc);
   }
 }
-void NodeControllerService_Stub::RequestRegularizerState(const ::artm::core::String& request,
-                              ::artm::RegularizerInternalState* response,
+void NodeControllerService_Stub::RequestThetaMatrix(const ::artm::core::String& request,
+                              ::artm::ThetaMatrix* response,
                               ::rpcz::rpc* rpc,
                               ::rpcz::closure* done) {
   channel_->call_method(service_name_,
                         NodeControllerService::descriptor()->method(15),
                         request, response, rpc, done);
 }
-void NodeControllerService_Stub::RequestRegularizerState(const ::artm::core::String& request,
-                              ::artm::RegularizerInternalState* response,
+void NodeControllerService_Stub::RequestThetaMatrix(const ::artm::core::String& request,
+                              ::artm::ThetaMatrix* response,
                               long deadline_ms) {
   ::rpcz::rpc rpc;
   rpc.set_deadline_ms(deadline_ms);

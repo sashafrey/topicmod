@@ -3047,6 +3047,15 @@ class SparsityThetaScoreConfig : public ::google::protobuf::Message {
   inline float eps() const;
   inline void set_eps(float value);
 
+  // optional .artm.BoolArray topics_to_score = 4;
+  inline bool has_topics_to_score() const;
+  inline void clear_topics_to_score();
+  static const int kTopicsToScoreFieldNumber = 4;
+  inline const ::artm::BoolArray& topics_to_score() const;
+  inline ::artm::BoolArray* mutable_topics_to_score();
+  inline ::artm::BoolArray* release_topics_to_score();
+  inline void set_allocated_topics_to_score(::artm::BoolArray* topics_to_score);
+
   // @@protoc_insertion_point(class_scope:artm.SparsityThetaScoreConfig)
  private:
   inline void set_has_field_name();
@@ -3055,6 +3064,8 @@ class SparsityThetaScoreConfig : public ::google::protobuf::Message {
   inline void clear_has_stream_name();
   inline void set_has_eps();
   inline void clear_has_eps();
+  inline void set_has_topics_to_score();
+  inline void clear_has_topics_to_score();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -3062,10 +3073,11 @@ class SparsityThetaScoreConfig : public ::google::protobuf::Message {
   static ::std::string* _default_field_name_;
   ::std::string* stream_name_;
   static ::std::string* _default_stream_name_;
+  ::artm::BoolArray* topics_to_score_;
   float eps_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -3239,17 +3251,29 @@ class SparsityPhiScoreConfig : public ::google::protobuf::Message {
   inline float eps() const;
   inline void set_eps(float value);
 
+  // optional .artm.BoolArray topics_to_score = 2;
+  inline bool has_topics_to_score() const;
+  inline void clear_topics_to_score();
+  static const int kTopicsToScoreFieldNumber = 2;
+  inline const ::artm::BoolArray& topics_to_score() const;
+  inline ::artm::BoolArray* mutable_topics_to_score();
+  inline ::artm::BoolArray* release_topics_to_score();
+  inline void set_allocated_topics_to_score(::artm::BoolArray* topics_to_score);
+
   // @@protoc_insertion_point(class_scope:artm.SparsityPhiScoreConfig)
  private:
   inline void set_has_eps();
   inline void clear_has_eps();
+  inline void set_has_topics_to_score();
+  inline void clear_has_topics_to_score();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
+  ::artm::BoolArray* topics_to_score_;
   float eps_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -7467,6 +7491,44 @@ inline void SparsityThetaScoreConfig::set_eps(float value) {
   eps_ = value;
 }
 
+// optional .artm.BoolArray topics_to_score = 4;
+inline bool SparsityThetaScoreConfig::has_topics_to_score() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void SparsityThetaScoreConfig::set_has_topics_to_score() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void SparsityThetaScoreConfig::clear_has_topics_to_score() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void SparsityThetaScoreConfig::clear_topics_to_score() {
+  if (topics_to_score_ != NULL) topics_to_score_->::artm::BoolArray::Clear();
+  clear_has_topics_to_score();
+}
+inline const ::artm::BoolArray& SparsityThetaScoreConfig::topics_to_score() const {
+  return topics_to_score_ != NULL ? *topics_to_score_ : *default_instance_->topics_to_score_;
+}
+inline ::artm::BoolArray* SparsityThetaScoreConfig::mutable_topics_to_score() {
+  set_has_topics_to_score();
+  if (topics_to_score_ == NULL) topics_to_score_ = new ::artm::BoolArray;
+  return topics_to_score_;
+}
+inline ::artm::BoolArray* SparsityThetaScoreConfig::release_topics_to_score() {
+  clear_has_topics_to_score();
+  ::artm::BoolArray* temp = topics_to_score_;
+  topics_to_score_ = NULL;
+  return temp;
+}
+inline void SparsityThetaScoreConfig::set_allocated_topics_to_score(::artm::BoolArray* topics_to_score) {
+  delete topics_to_score_;
+  topics_to_score_ = topics_to_score;
+  if (topics_to_score) {
+    set_has_topics_to_score();
+  } else {
+    clear_has_topics_to_score();
+  }
+}
+
 // -------------------------------------------------------------------
 
 // SparsityThetaScore
@@ -7561,6 +7623,44 @@ inline float SparsityPhiScoreConfig::eps() const {
 inline void SparsityPhiScoreConfig::set_eps(float value) {
   set_has_eps();
   eps_ = value;
+}
+
+// optional .artm.BoolArray topics_to_score = 2;
+inline bool SparsityPhiScoreConfig::has_topics_to_score() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void SparsityPhiScoreConfig::set_has_topics_to_score() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void SparsityPhiScoreConfig::clear_has_topics_to_score() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void SparsityPhiScoreConfig::clear_topics_to_score() {
+  if (topics_to_score_ != NULL) topics_to_score_->::artm::BoolArray::Clear();
+  clear_has_topics_to_score();
+}
+inline const ::artm::BoolArray& SparsityPhiScoreConfig::topics_to_score() const {
+  return topics_to_score_ != NULL ? *topics_to_score_ : *default_instance_->topics_to_score_;
+}
+inline ::artm::BoolArray* SparsityPhiScoreConfig::mutable_topics_to_score() {
+  set_has_topics_to_score();
+  if (topics_to_score_ == NULL) topics_to_score_ = new ::artm::BoolArray;
+  return topics_to_score_;
+}
+inline ::artm::BoolArray* SparsityPhiScoreConfig::release_topics_to_score() {
+  clear_has_topics_to_score();
+  ::artm::BoolArray* temp = topics_to_score_;
+  topics_to_score_ = NULL;
+  return temp;
+}
+inline void SparsityPhiScoreConfig::set_allocated_topics_to_score(::artm::BoolArray* topics_to_score) {
+  delete topics_to_score_;
+  topics_to_score_ = topics_to_score;
+  if (topics_to_score) {
+    set_has_topics_to_score();
+  } else {
+    clear_has_topics_to_score();
+  }
 }
 
 // -------------------------------------------------------------------

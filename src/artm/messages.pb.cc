@@ -559,10 +559,11 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PerplexityScore));
   SparsityThetaScoreConfig_descriptor_ = file->message_type(24);
-  static const int SparsityThetaScoreConfig_offsets_[3] = {
+  static const int SparsityThetaScoreConfig_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityThetaScoreConfig, field_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityThetaScoreConfig, stream_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityThetaScoreConfig, eps_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityThetaScoreConfig, topics_to_score_),
   };
   SparsityThetaScoreConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -593,8 +594,9 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SparsityThetaScore));
   SparsityPhiScoreConfig_descriptor_ = file->message_type(26);
-  static const int SparsityPhiScoreConfig_offsets_[1] = {
+  static const int SparsityPhiScoreConfig_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScoreConfig, eps_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SparsityPhiScoreConfig, topics_to_score_),
   };
   SparsityPhiScoreConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1031,34 +1033,36 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "body\022\034\n\013stream_name\030\002 \001(\t:\007@global\"U\n\017Pe"
     "rplexityScore\022\r\n\005value\030\001 \001(\001\022\013\n\003raw\030\002 \001("
     "\001\022\022\n\nnormalizer\030\003 \001(\001\022\022\n\nzero_words\030\004 \001("
-    "\005\"h\n\030SparsityThetaScoreConfig\022\031\n\nfield_n"
-    "ame\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007@"
-    "global\022\023\n\003eps\030\003 \001(\002:\0061e-037\"N\n\022SparsityT"
-    "hetaScore\022\r\n\005value\030\001 \001(\001\022\023\n\013zero_topics\030"
-    "\002 \001(\005\022\024\n\014total_topics\030\003 \001(\005\"-\n\026SparsityP"
-    "hiScoreConfig\022\023\n\003eps\030\001 \001(\002:\0061e-037\"L\n\020Sp"
-    "arsityPhiScore\022\r\n\005value\030\001 \001(\001\022\023\n\013zero_to"
-    "kens\030\002 \001(\005\022\024\n\014total_tokens\030\003 \001(\005\"T\n\031Item"
-    "sProcessedScoreConfig\022\031\n\nfield_name\030\001 \001("
-    "\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007@global\"$"
-    "\n\023ItemsProcessedScore\022\r\n\005value\030\001 \001(\005\"D\n\024"
-    "TopTokensScoreConfig\022\026\n\nnum_tokens\030\001 \001(\005"
-    ":\00210\022\024\n\010topic_id\030\002 \003(\005B\002\020\001\"3\n\016TopTokensS"
-    "core\022!\n\006values\030\001 \003(\0132\021.artm.StringArray\""
-    "g\n\027ThetaSnippetScoreConfig\022\031\n\nfield_name"
+    "\005\"\222\001\n\030SparsityThetaScoreConfig\022\031\n\nfield_"
+    "name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007"
+    "@global\022\023\n\003eps\030\003 \001(\002:\0061e-037\022(\n\017topics_t"
+    "o_score\030\004 \001(\0132\017.artm.BoolArray\"N\n\022Sparsi"
+    "tyThetaScore\022\r\n\005value\030\001 \001(\001\022\023\n\013zero_topi"
+    "cs\030\002 \001(\005\022\024\n\014total_topics\030\003 \001(\005\"W\n\026Sparsi"
+    "tyPhiScoreConfig\022\023\n\003eps\030\001 \001(\002:\0061e-037\022(\n"
+    "\017topics_to_score\030\002 \001(\0132\017.artm.BoolArray\""
+    "L\n\020SparsityPhiScore\022\r\n\005value\030\001 \001(\001\022\023\n\013ze"
+    "ro_tokens\030\002 \001(\005\022\024\n\014total_tokens\030\003 \001(\005\"T\n"
+    "\031ItemsProcessedScoreConfig\022\031\n\nfield_name"
     "\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007@glo"
-    "bal\022\023\n\007item_id\030\003 \003(\005B\002\020\001\"F\n\021ThetaSnippet"
-    "Score\022\017\n\007item_id\030\001 \003(\005\022 \n\006values\030\002 \003(\0132\020"
-    ".artm.FloatArray\"\371\001\n\nTopicModel\022\024\n\004name\030"
-    "\001 \001(\t:\006@model\022\024\n\014topics_count\030\002 \001(\005\022\r\n\005t"
-    "oken\030\003 \003(\t\022\'\n\rtoken_weights\030\004 \003(\0132\020.artm"
-    ".FloatArray\022\021\n\tinternals\030\005 \001(\014\032t\n\023TopicM"
-    "odelInternals\022\036\n\004n_wt\030\001 \003(\0132\020.artm.Float"
-    "Array\022\036\n\004r_wt\030\002 \003(\0132\020.artm.FloatArray\022\035\n"
-    "\003n_t\030\003 \001(\0132\020.artm.FloatArray\"b\n\013ThetaMat"
-    "rix\022\032\n\nmodel_name\030\001 \001(\t:\006@model\022\017\n\007item_"
-    "id\030\002 \003(\005\022&\n\014item_weights\030\003 \003(\0132\020.artm.Fl"
-    "oatArray", 3888);
+    "bal\"$\n\023ItemsProcessedScore\022\r\n\005value\030\001 \001("
+    "\005\"D\n\024TopTokensScoreConfig\022\026\n\nnum_tokens\030"
+    "\001 \001(\005:\00210\022\024\n\010topic_id\030\002 \003(\005B\002\020\001\"3\n\016TopTo"
+    "kensScore\022!\n\006values\030\001 \003(\0132\021.artm.StringA"
+    "rray\"g\n\027ThetaSnippetScoreConfig\022\031\n\nfield"
+    "_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:"
+    "\007@global\022\023\n\007item_id\030\003 \003(\005B\002\020\001\"F\n\021ThetaSn"
+    "ippetScore\022\017\n\007item_id\030\001 \003(\005\022 \n\006values\030\002 "
+    "\003(\0132\020.artm.FloatArray\"\371\001\n\nTopicModel\022\024\n\004"
+    "name\030\001 \001(\t:\006@model\022\024\n\014topics_count\030\002 \001(\005"
+    "\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_weights\030\004 \003(\0132\020"
+    ".artm.FloatArray\022\021\n\tinternals\030\005 \001(\014\032t\n\023T"
+    "opicModelInternals\022\036\n\004n_wt\030\001 \003(\0132\020.artm."
+    "FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020.artm.FloatArr"
+    "ay\022\035\n\003n_t\030\003 \001(\0132\020.artm.FloatArray\"b\n\013The"
+    "taMatrix\022\032\n\nmodel_name\030\001 \001(\t:\006@model\022\017\n\007"
+    "item_id\030\002 \003(\005\022&\n\014item_weights\030\003 \003(\0132\020.ar"
+    "tm.FloatArray", 3973);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   DoubleArray::default_instance_ = new DoubleArray();
@@ -8699,6 +8703,7 @@ void PerplexityScore::Swap(PerplexityScore* other) {
 const int SparsityThetaScoreConfig::kFieldNameFieldNumber;
 const int SparsityThetaScoreConfig::kStreamNameFieldNumber;
 const int SparsityThetaScoreConfig::kEpsFieldNumber;
+const int SparsityThetaScoreConfig::kTopicsToScoreFieldNumber;
 #endif  // !_MSC_VER
 
 SparsityThetaScoreConfig::SparsityThetaScoreConfig()
@@ -8707,6 +8712,7 @@ SparsityThetaScoreConfig::SparsityThetaScoreConfig()
 }
 
 void SparsityThetaScoreConfig::InitAsDefaultInstance() {
+  topics_to_score_ = const_cast< ::artm::BoolArray*>(&::artm::BoolArray::default_instance());
 }
 
 SparsityThetaScoreConfig::SparsityThetaScoreConfig(const SparsityThetaScoreConfig& from)
@@ -8720,6 +8726,7 @@ void SparsityThetaScoreConfig::SharedCtor() {
   field_name_ = const_cast< ::std::string*>(_default_field_name_);
   stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
   eps_ = 1e-037f;
+  topics_to_score_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -8735,6 +8742,7 @@ void SparsityThetaScoreConfig::SharedDtor() {
     delete stream_name_;
   }
   if (this != default_instance_) {
+    delete topics_to_score_;
   }
 }
 
@@ -8772,6 +8780,9 @@ void SparsityThetaScoreConfig::Clear() {
       }
     }
     eps_ = 1e-037f;
+    if (has_topics_to_score()) {
+      if (topics_to_score_ != NULL) topics_to_score_->::artm::BoolArray::Clear();
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -8828,6 +8839,20 @@ bool SparsityThetaScoreConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(34)) goto parse_topics_to_score;
+        break;
+      }
+
+      // optional .artm.BoolArray topics_to_score = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_topics_to_score:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_topics_to_score()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -8873,6 +8898,12 @@ void SparsityThetaScoreConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->eps(), output);
   }
 
+  // optional .artm.BoolArray topics_to_score = 4;
+  if (has_topics_to_score()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, this->topics_to_score(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -8906,6 +8937,13 @@ void SparsityThetaScoreConfig::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->eps(), target);
   }
 
+  // optional .artm.BoolArray topics_to_score = 4;
+  if (has_topics_to_score()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, this->topics_to_score(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -8934,6 +8972,13 @@ int SparsityThetaScoreConfig::ByteSize() const {
     // optional float eps = 3 [default = 1e-037];
     if (has_eps()) {
       total_size += 1 + 4;
+    }
+
+    // optional .artm.BoolArray topics_to_score = 4;
+    if (has_topics_to_score()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->topics_to_score());
     }
 
   }
@@ -8972,6 +9017,9 @@ void SparsityThetaScoreConfig::MergeFrom(const SparsityThetaScoreConfig& from) {
     if (from.has_eps()) {
       set_eps(from.eps());
     }
+    if (from.has_topics_to_score()) {
+      mutable_topics_to_score()->::artm::BoolArray::MergeFrom(from.topics_to_score());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -8998,6 +9046,7 @@ void SparsityThetaScoreConfig::Swap(SparsityThetaScoreConfig* other) {
     std::swap(field_name_, other->field_name_);
     std::swap(stream_name_, other->stream_name_);
     std::swap(eps_, other->eps_);
+    std::swap(topics_to_score_, other->topics_to_score_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -9303,6 +9352,7 @@ void SparsityThetaScore::Swap(SparsityThetaScore* other) {
 
 #ifndef _MSC_VER
 const int SparsityPhiScoreConfig::kEpsFieldNumber;
+const int SparsityPhiScoreConfig::kTopicsToScoreFieldNumber;
 #endif  // !_MSC_VER
 
 SparsityPhiScoreConfig::SparsityPhiScoreConfig()
@@ -9311,6 +9361,7 @@ SparsityPhiScoreConfig::SparsityPhiScoreConfig()
 }
 
 void SparsityPhiScoreConfig::InitAsDefaultInstance() {
+  topics_to_score_ = const_cast< ::artm::BoolArray*>(&::artm::BoolArray::default_instance());
 }
 
 SparsityPhiScoreConfig::SparsityPhiScoreConfig(const SparsityPhiScoreConfig& from)
@@ -9322,6 +9373,7 @@ SparsityPhiScoreConfig::SparsityPhiScoreConfig(const SparsityPhiScoreConfig& fro
 void SparsityPhiScoreConfig::SharedCtor() {
   _cached_size_ = 0;
   eps_ = 1e-037f;
+  topics_to_score_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -9331,6 +9383,7 @@ SparsityPhiScoreConfig::~SparsityPhiScoreConfig() {
 
 void SparsityPhiScoreConfig::SharedDtor() {
   if (this != default_instance_) {
+    delete topics_to_score_;
   }
 }
 
@@ -9358,6 +9411,9 @@ SparsityPhiScoreConfig* SparsityPhiScoreConfig::New() const {
 void SparsityPhiScoreConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     eps_ = 1e-037f;
+    if (has_topics_to_score()) {
+      if (topics_to_score_ != NULL) topics_to_score_->::artm::BoolArray::Clear();
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -9377,6 +9433,20 @@ bool SparsityPhiScoreConfig::MergePartialFromCodedStream(
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
                  input, &eps_)));
           set_has_eps();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_topics_to_score;
+        break;
+      }
+
+      // optional .artm.BoolArray topics_to_score = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_topics_to_score:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_topics_to_score()));
         } else {
           goto handle_uninterpreted;
         }
@@ -9407,6 +9477,12 @@ void SparsityPhiScoreConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->eps(), output);
   }
 
+  // optional .artm.BoolArray topics_to_score = 2;
+  if (has_topics_to_score()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->topics_to_score(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -9418,6 +9494,13 @@ void SparsityPhiScoreConfig::SerializeWithCachedSizes(
   // optional float eps = 1 [default = 1e-037];
   if (has_eps()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->eps(), target);
+  }
+
+  // optional .artm.BoolArray topics_to_score = 2;
+  if (has_topics_to_score()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->topics_to_score(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -9434,6 +9517,13 @@ int SparsityPhiScoreConfig::ByteSize() const {
     // optional float eps = 1 [default = 1e-037];
     if (has_eps()) {
       total_size += 1 + 4;
+    }
+
+    // optional .artm.BoolArray topics_to_score = 2;
+    if (has_topics_to_score()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->topics_to_score());
     }
 
   }
@@ -9466,6 +9556,9 @@ void SparsityPhiScoreConfig::MergeFrom(const SparsityPhiScoreConfig& from) {
     if (from.has_eps()) {
       set_eps(from.eps());
     }
+    if (from.has_topics_to_score()) {
+      mutable_topics_to_score()->::artm::BoolArray::MergeFrom(from.topics_to_score());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -9490,6 +9583,7 @@ bool SparsityPhiScoreConfig::IsInitialized() const {
 void SparsityPhiScoreConfig::Swap(SparsityPhiScoreConfig* other) {
   if (other != this) {
     std::swap(eps_, other->eps_);
+    std::swap(topics_to_score_, other->topics_to_score_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

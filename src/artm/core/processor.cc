@@ -439,7 +439,7 @@ void Processor::ThreadFunction() {
             }
           } else {
             for (int iTopic = 0; iTopic < topic_size; ++iTopic) {
-              theta[iTopic] = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+              theta[iTopic] = ThreadSafeRandom::singleton().GenerateFloat();
             }
           }
 

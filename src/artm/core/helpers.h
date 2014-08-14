@@ -9,6 +9,8 @@
 
 #include "boost/uuid/uuid.hpp"             // uuid class
 #include "boost/filesystem.hpp"
+#include "boost/thread.hpp"
+#include "boost/thread/tss.hpp"
 
 namespace artm {
 
@@ -21,6 +23,25 @@ class Helpers {
   // Usage: SetThreadName (-1, "MainThread");
   // (thread_id == -1 stands for the current thread)
   static void SetThreadName(int thread_id, const char* thread_name);
+};
+
+// This class provides a thread-safe source of float-point random numbers.
+// It wraps standard rand_r() function, and calls it with thread-specific seed.
+// To store the seed we use boost::thread_specific_ptr.
+// For each thread the seed is initialized with an incremental seed (0, 1, 2, etc).
+// The initialization is protected with a lock.
+// Code example:
+//   float random = ThreadSafeRandom::singleton().GenerateFloat();
+class ThreadSafeRandom {
+ public:
+  ThreadSafeRandom() : lock_(), tss_seed_(), seed_(0) {}
+  static ThreadSafeRandom& singleton();
+  float GenerateFloat();
+
+ private:
+  mutable boost::mutex lock_;
+  boost::thread_specific_ptr<unsigned int> tss_seed_;
+  int seed_;
 };
 
 class BatchHelpers {

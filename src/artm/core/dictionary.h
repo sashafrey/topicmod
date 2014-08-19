@@ -7,12 +7,13 @@
 #include <map>
 
 #include "artm/messages.pb.h"
+#include "artm/core/common.h"
 #include "artm/core/thread_safe_holder.h"
 
 namespace artm {
 namespace core {
 
-typedef std::map<std::string, ::artm::DictionaryEntry> DictionaryMap;
+typedef std::map<Token, ::artm::DictionaryEntry> DictionaryMap;
 typedef ThreadSafeCollectionHolder<std::string, DictionaryMap> ThreadSafeDictionaryCollection;
 
 }  // namespace core

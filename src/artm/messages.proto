@@ -40,6 +40,7 @@ message Field
 message Batch {
   repeated string token = 1;
   repeated Item item = 2;
+  repeated string class_id = 3;
 }
 
 // Represents a configuration of a stream.
@@ -100,6 +101,8 @@ message ModelConfig {
   optional bool reuse_theta = 8 [default = false];
   repeated string regularizer_name = 9;
   repeated double regularizer_tau = 10;
+  repeated string class_id = 11;
+  repeated float class_weight = 12;  
 }
 
 // Represents a configuration of a general regularizer
@@ -176,9 +179,10 @@ message DictionaryConfig {
 // Represents one entry in a static dictionary.
 message DictionaryEntry {
   optional string key_token = 1;
-  optional float value = 2;
-  repeated string value_tokens = 3;
-  optional FloatArray values = 4;
+  optional string class_id = 2;
+  optional float value = 3;
+  repeated string value_tokens = 4;
+  optional FloatArray values = 5;
 }
 
 // Represents a configuration of a general score.
@@ -297,14 +301,16 @@ message TopicModel {
   optional int32 topics_count = 2;
   repeated string token = 3;
   repeated FloatArray token_weights = 4;
+  repeated string class_id = 5;
 
   message TopicModelInternals {
     repeated FloatArray n_wt = 1;
     repeated FloatArray r_wt = 2;
-    optional FloatArray n_t = 3;
+    repeated FloatArray n_t = 3;
+	repeated string n_t_class_id = 4;
   }
 
-  optional bytes internals = 5;
+  optional bytes internals = 6;
 }
 
 // Represents a theta matrix.

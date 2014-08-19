@@ -74,7 +74,7 @@ class Processor : boost::noncopyable {
   class ItemProcessor : boost::noncopyable {
    public:
     explicit ItemProcessor(const TopicModel& topic_model,
-                           const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+                           const std::vector<Token> token_dict,
                            std::shared_ptr<InstanceSchema> schema);
 
     void InferTheta(const ModelConfig& model,
@@ -85,7 +85,7 @@ class Processor : boost::noncopyable {
 
    private:
     const TopicModel& topic_model_;
-    const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
+    const std::vector<Token> token_dict_;
     std::shared_ptr<InstanceSchema> schema_;
   };
 
@@ -98,7 +98,7 @@ class Processor : boost::noncopyable {
       Mode_KnownAndUnknown = 3
     };
 
-    TokenIterator(const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+    TokenIterator(const std::vector<Token> token_dict,
                   const TopicModel& topic_model,
                   const Item& item,
                   const std::string& field_name,
@@ -108,13 +108,14 @@ class Processor : boost::noncopyable {
     void Reset();
 
     const std::string& token() const { return token_; }
+    const ClassId& class_id() const { return class_id_; }
     int id_in_model() const { return id_in_model_; }
     int id_in_batch() const { return id_in_batch_; }
     int count() const { return count_; }
     TopicWeightIterator GetTopicWeightIterator() const;
 
    private:
-    const google::protobuf::RepeatedPtrField<std::string>& token_dict_;
+    const std::vector<Token> token_dict_;
     const TopicModel& topic_model_;
     const Field* field_;
     int token_size_;
@@ -124,6 +125,7 @@ class Processor : boost::noncopyable {
     // Current state of the iterator
     int token_index_;
     std::string token_;
+    ClassId class_id_;
     int id_in_model_;
     int id_in_batch_;
     int count_;

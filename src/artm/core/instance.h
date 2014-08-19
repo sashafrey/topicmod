@@ -30,7 +30,7 @@ class BatchManager;
 class Processor;
 class Merger;
 class InstanceSchema;
-typedef std::map<std::string, ::artm::DictionaryEntry> DictionaryMap;
+typedef std::map<Token, ::artm::DictionaryEntry> DictionaryMap;
 typedef ThreadSafeCollectionHolder<std::string, DictionaryMap> ThreadSafeDictionaryCollection;
 typedef ThreadSafeQueue<std::shared_ptr<const ProcessorInput>> ProcessorQueue;
 typedef ThreadSafeQueue<std::shared_ptr<const ModelIncrement>> MergerQueue;

@@ -278,7 +278,14 @@ void Instance::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
   auto dictionary = std::make_shared<DictionaryMap>();
   for (int index = 0; index < config.entry_size(); ++index) {
     const ::artm::DictionaryEntry& entry = config.entry(index);
-    dictionary->insert(std::pair<std::string, DictionaryEntry>(entry.key_token(), entry));
+    ClassId class_id;
+    if (entry.has_class_id()) {
+      class_id = entry.class_id();
+    } else {
+      class_id = DefaultClass;
+    }
+    dictionary->insert(std::pair<Token, DictionaryEntry>(
+      std::pair<ClassId, std::string>(class_id, entry.key_token()), entry));
   }
 
   dictionaries_.set(config.name(), dictionary);

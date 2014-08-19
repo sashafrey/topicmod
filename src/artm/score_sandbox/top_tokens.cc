@@ -21,13 +21,13 @@ std::shared_ptr<Score> TopTokens::CalculateScore(const artm::core::TopicModel& t
     }
   }
 
-  std::vector<std::vector<std::pair<float, std::string>>> p_wt;
+  std::vector<std::vector<std::pair<float, artm::core::Token>>> p_wt;
   for (int topic_index = 0; topic_index < config_.topic_id_size(); topic_index++) {
-    p_wt.push_back(std::vector<std::pair<float, std::string>>());
+    p_wt.push_back(std::vector<std::pair<float, artm::core::Token>>());
   }
 
   for (int token_index = 0; token_index < tokens_size; token_index++) {
-    std::string token = topic_model.token(token_index);
+    auto token = topic_model.token(token_index);
     ::artm::core::TopicWeightIterator topic_iter = topic_model.GetTopicWeightIterator(token);
     int topic_index = 0;
     while (topic_iter.NextTopic() < topics_size && topic_index < config_.topic_id_size()) {
@@ -35,7 +35,7 @@ std::shared_ptr<Score> TopTokens::CalculateScore(const artm::core::TopicModel& t
         continue;
       }
       float weight = topic_iter.Weight();
-      p_wt[topic_index].push_back(std::pair<float, std::string>(weight, token));
+      p_wt[topic_index].push_back(std::pair<float, artm::core::Token>(weight, token));
       ++topic_index;
     }
   }
@@ -49,7 +49,7 @@ std::shared_ptr<Score> TopTokens::CalculateScore(const artm::core::TopicModel& t
     for (size_t token_index = p_wt[topic_index].size() - 1;
          (token_index >= 0) && (token_index >= p_wt[topic_index].size() - config_.num_tokens());
          token_index--) {
-      top_tokens->add_value(p_wt[topic_index][token_index].second);
+      top_tokens->add_value(p_wt[topic_index][token_index].second.second);
     }
   }
 

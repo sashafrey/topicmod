@@ -11,11 +11,11 @@ namespace artm {
 namespace score_sandbox {
 
 void Perplexity::AppendScore(
-    const Item& item,
-    const google::protobuf::RepeatedPtrField<std::string>& token_dict,
-    const artm::core::TopicModel& topic_model,
-    const std::vector<float>& theta,
-    Score* score) {
+      const Item& item,
+      const std::vector<artm::core::Token> token_dict,
+      const artm::core::TopicModel& topic_model,
+      const std::vector<float>& theta,
+      Score* score) {
   int topics_size = topic_model.topic_size();
 
   const Field* field = nullptr;
@@ -41,7 +41,7 @@ void Perplexity::AppendScore(
 
   for (int token_index = 0; token_index < field->token_count_size(); ++token_index) {
     double sum = 0.0;
-    const std::string& token = token_dict.Get(field->token_id(token_index));
+    const artm::core::Token& token = *(token_dict.begin() + token_index);
     double token_count = static_cast<double>(field->token_count(token_index));
 
     if (topic_model.has_token(token)) {

@@ -122,10 +122,14 @@ TEST(Instance, Basic) {
   artm::TopicModel topic_model;
   instance->merger()->RetrieveExternalTopicModel(model_name, &topic_model);
   EXPECT_EQ(topic_model.token_size(), 3);
-  EXPECT_TRUE(artm::core::model_has_token(topic_model, "first token"));
-  EXPECT_TRUE(artm::core::model_has_token(topic_model, "second"));
-  EXPECT_TRUE(artm::core::model_has_token(topic_model, "last"));
-  EXPECT_FALSE(artm::core::model_has_token(topic_model, "of cource!"));
+  EXPECT_TRUE(artm::core::model_has_token(topic_model, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "first token")));
+  EXPECT_TRUE(artm::core::model_has_token(topic_model, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "second")));
+  EXPECT_TRUE(artm::core::model_has_token(topic_model, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "last")));
+  EXPECT_FALSE(artm::core::model_has_token(topic_model, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "of cource!")));
 }
 
 // artm_tests.exe --gtest_filter=Instance.MultipleStreamsAndModels
@@ -196,9 +200,12 @@ TEST(Instance, MultipleStreamsAndModels) {
   perplexity_score.ParseFromString(m1score_data.data());
 
   // Verification for m1t (the first model)
-  EXPECT_TRUE(artm::core::model_has_token(m1t, "token0"));
-  EXPECT_TRUE(artm::core::model_has_token(m1t, "token2"));
-  EXPECT_TRUE(artm::core::model_has_token(m1t, "token4"));
+  EXPECT_TRUE(artm::core::model_has_token(m1t, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "token0")));
+  EXPECT_TRUE(artm::core::model_has_token(m1t, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "token2")));
+  EXPECT_TRUE(artm::core::model_has_token(m1t, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "token4")));
 
   // if model has other tokens, their Phi weight should be at zero.
   for (int token_index = 0; token_index < m1t.token_size(); ++token_index) {
@@ -212,9 +219,12 @@ TEST(Instance, MultipleStreamsAndModels) {
   }
 
   // Verification for m2t (the second model)
-  EXPECT_TRUE(artm::core::model_has_token(m2t, "token1"));
-  EXPECT_TRUE(artm::core::model_has_token(m2t, "token3"));
-  EXPECT_TRUE(artm::core::model_has_token(m2t, "token5"));
+  EXPECT_TRUE(artm::core::model_has_token(m1t, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "token1")));
+  EXPECT_TRUE(artm::core::model_has_token(m1t, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "token3")));
+  EXPECT_TRUE(artm::core::model_has_token(m1t, std::pair<artm::core::ClassId, std::string>
+    (artm::core::DefaultClass, "token5")));
 
   // if model has other tokens, their Phi weight should be at zero.
   for (int token_index = 0; token_index < m2t.token_size(); ++token_index) {

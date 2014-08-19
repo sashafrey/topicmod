@@ -822,10 +822,26 @@ class ModelIncrement : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& discovered_token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_discovered_token();
 
-  // repeated string token = 4;
+  // repeated string discovered_token_class_id = 4;
+  inline int discovered_token_class_id_size() const;
+  inline void clear_discovered_token_class_id();
+  static const int kDiscoveredTokenClassIdFieldNumber = 4;
+  inline const ::std::string& discovered_token_class_id(int index) const;
+  inline ::std::string* mutable_discovered_token_class_id(int index);
+  inline void set_discovered_token_class_id(int index, const ::std::string& value);
+  inline void set_discovered_token_class_id(int index, const char* value);
+  inline void set_discovered_token_class_id(int index, const char* value, size_t size);
+  inline ::std::string* add_discovered_token_class_id();
+  inline void add_discovered_token_class_id(const ::std::string& value);
+  inline void add_discovered_token_class_id(const char* value);
+  inline void add_discovered_token_class_id(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& discovered_token_class_id() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_discovered_token_class_id();
+
+  // repeated string token = 5;
   inline int token_size() const;
   inline void clear_token();
-  static const int kTokenFieldNumber = 4;
+  static const int kTokenFieldNumber = 5;
   inline const ::std::string& token(int index) const;
   inline ::std::string* mutable_token(int index);
   inline void set_token(int index, const ::std::string& value);
@@ -838,10 +854,26 @@ class ModelIncrement : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_token();
 
-  // repeated .artm.FloatArray token_increment = 5;
+  // repeated string class_id = 6;
+  inline int class_id_size() const;
+  inline void clear_class_id();
+  static const int kClassIdFieldNumber = 6;
+  inline const ::std::string& class_id(int index) const;
+  inline ::std::string* mutable_class_id(int index);
+  inline void set_class_id(int index, const ::std::string& value);
+  inline void set_class_id(int index, const char* value);
+  inline void set_class_id(int index, const char* value, size_t size);
+  inline ::std::string* add_class_id();
+  inline void add_class_id(const ::std::string& value);
+  inline void add_class_id(const char* value);
+  inline void add_class_id(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& class_id() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_class_id();
+
+  // repeated .artm.FloatArray token_increment = 7;
   inline int token_increment_size() const;
   inline void clear_token_increment();
-  static const int kTokenIncrementFieldNumber = 5;
+  static const int kTokenIncrementFieldNumber = 7;
   inline const ::artm::FloatArray& token_increment(int index) const;
   inline ::artm::FloatArray* mutable_token_increment(int index);
   inline ::artm::FloatArray* add_token_increment();
@@ -850,10 +882,10 @@ class ModelIncrement : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
       mutable_token_increment();
 
-  // repeated string score_name = 6;
+  // repeated string score_name = 8;
   inline int score_name_size() const;
   inline void clear_score_name();
-  static const int kScoreNameFieldNumber = 6;
+  static const int kScoreNameFieldNumber = 8;
   inline const ::std::string& score_name(int index) const;
   inline ::std::string* mutable_score_name(int index);
   inline void set_score_name(int index, const ::std::string& value);
@@ -866,10 +898,10 @@ class ModelIncrement : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& score_name() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_score_name();
 
-  // repeated bytes score = 7;
+  // repeated bytes score = 9;
   inline int score_size() const;
   inline void clear_score();
-  static const int kScoreFieldNumber = 7;
+  static const int kScoreFieldNumber = 9;
   inline const ::std::string& score(int index) const;
   inline ::std::string* mutable_score(int index);
   inline void set_score(int index, const ::std::string& value);
@@ -882,10 +914,10 @@ class ModelIncrement : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& score() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_score();
 
-  // repeated int32 item_id = 8;
+  // repeated int32 item_id = 10;
   inline int item_id_size() const;
   inline void clear_item_id();
-  static const int kItemIdFieldNumber = 8;
+  static const int kItemIdFieldNumber = 10;
   inline ::google::protobuf::int32 item_id(int index) const;
   inline void set_item_id(int index, ::google::protobuf::int32 value);
   inline void add_item_id(::google::protobuf::int32 value);
@@ -894,10 +926,10 @@ class ModelIncrement : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
       mutable_item_id();
 
-  // repeated .artm.FloatArray theta = 9;
+  // repeated .artm.FloatArray theta = 11;
   inline int theta_size() const;
   inline void clear_theta();
-  static const int kThetaFieldNumber = 9;
+  static const int kThetaFieldNumber = 11;
   inline const ::artm::FloatArray& theta(int index) const;
   inline ::artm::FloatArray* mutable_theta(int index);
   inline ::artm::FloatArray* add_theta();
@@ -906,10 +938,10 @@ class ModelIncrement : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
       mutable_theta();
 
-  // repeated string batch_uuid = 10;
+  // repeated string batch_uuid = 12;
   inline int batch_uuid_size() const;
   inline void clear_batch_uuid();
-  static const int kBatchUuidFieldNumber = 10;
+  static const int kBatchUuidFieldNumber = 12;
   inline const ::std::string& batch_uuid(int index) const;
   inline ::std::string* mutable_batch_uuid(int index);
   inline void set_batch_uuid(int index, const ::std::string& value);
@@ -933,7 +965,9 @@ class ModelIncrement : public ::google::protobuf::Message {
 
   ::std::string* model_name_;
   ::google::protobuf::RepeatedPtrField< ::std::string> discovered_token_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> discovered_token_class_id_;
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> class_id_;
   ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > token_increment_;
   ::google::protobuf::RepeatedPtrField< ::std::string> score_name_;
   ::google::protobuf::RepeatedPtrField< ::std::string> score_;
@@ -943,7 +977,7 @@ class ModelIncrement : public ::google::protobuf::Message {
   ::google::protobuf::int32 topics_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fcore_2finternals_2eproto();
   friend void protobuf_AssignDesc_artm_2fcore_2finternals_2eproto();
@@ -2388,7 +2422,51 @@ ModelIncrement::mutable_discovered_token() {
   return &discovered_token_;
 }
 
-// repeated string token = 4;
+// repeated string discovered_token_class_id = 4;
+inline int ModelIncrement::discovered_token_class_id_size() const {
+  return discovered_token_class_id_.size();
+}
+inline void ModelIncrement::clear_discovered_token_class_id() {
+  discovered_token_class_id_.Clear();
+}
+inline const ::std::string& ModelIncrement::discovered_token_class_id(int index) const {
+  return discovered_token_class_id_.Get(index);
+}
+inline ::std::string* ModelIncrement::mutable_discovered_token_class_id(int index) {
+  return discovered_token_class_id_.Mutable(index);
+}
+inline void ModelIncrement::set_discovered_token_class_id(int index, const ::std::string& value) {
+  discovered_token_class_id_.Mutable(index)->assign(value);
+}
+inline void ModelIncrement::set_discovered_token_class_id(int index, const char* value) {
+  discovered_token_class_id_.Mutable(index)->assign(value);
+}
+inline void ModelIncrement::set_discovered_token_class_id(int index, const char* value, size_t size) {
+  discovered_token_class_id_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ModelIncrement::add_discovered_token_class_id() {
+  return discovered_token_class_id_.Add();
+}
+inline void ModelIncrement::add_discovered_token_class_id(const ::std::string& value) {
+  discovered_token_class_id_.Add()->assign(value);
+}
+inline void ModelIncrement::add_discovered_token_class_id(const char* value) {
+  discovered_token_class_id_.Add()->assign(value);
+}
+inline void ModelIncrement::add_discovered_token_class_id(const char* value, size_t size) {
+  discovered_token_class_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ModelIncrement::discovered_token_class_id() const {
+  return discovered_token_class_id_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ModelIncrement::mutable_discovered_token_class_id() {
+  return &discovered_token_class_id_;
+}
+
+// repeated string token = 5;
 inline int ModelIncrement::token_size() const {
   return token_.size();
 }
@@ -2432,7 +2510,51 @@ ModelIncrement::mutable_token() {
   return &token_;
 }
 
-// repeated .artm.FloatArray token_increment = 5;
+// repeated string class_id = 6;
+inline int ModelIncrement::class_id_size() const {
+  return class_id_.size();
+}
+inline void ModelIncrement::clear_class_id() {
+  class_id_.Clear();
+}
+inline const ::std::string& ModelIncrement::class_id(int index) const {
+  return class_id_.Get(index);
+}
+inline ::std::string* ModelIncrement::mutable_class_id(int index) {
+  return class_id_.Mutable(index);
+}
+inline void ModelIncrement::set_class_id(int index, const ::std::string& value) {
+  class_id_.Mutable(index)->assign(value);
+}
+inline void ModelIncrement::set_class_id(int index, const char* value) {
+  class_id_.Mutable(index)->assign(value);
+}
+inline void ModelIncrement::set_class_id(int index, const char* value, size_t size) {
+  class_id_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* ModelIncrement::add_class_id() {
+  return class_id_.Add();
+}
+inline void ModelIncrement::add_class_id(const ::std::string& value) {
+  class_id_.Add()->assign(value);
+}
+inline void ModelIncrement::add_class_id(const char* value) {
+  class_id_.Add()->assign(value);
+}
+inline void ModelIncrement::add_class_id(const char* value, size_t size) {
+  class_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+ModelIncrement::class_id() const {
+  return class_id_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+ModelIncrement::mutable_class_id() {
+  return &class_id_;
+}
+
+// repeated .artm.FloatArray token_increment = 7;
 inline int ModelIncrement::token_increment_size() const {
   return token_increment_.size();
 }
@@ -2457,7 +2579,7 @@ ModelIncrement::mutable_token_increment() {
   return &token_increment_;
 }
 
-// repeated string score_name = 6;
+// repeated string score_name = 8;
 inline int ModelIncrement::score_name_size() const {
   return score_name_.size();
 }
@@ -2501,7 +2623,7 @@ ModelIncrement::mutable_score_name() {
   return &score_name_;
 }
 
-// repeated bytes score = 7;
+// repeated bytes score = 9;
 inline int ModelIncrement::score_size() const {
   return score_.size();
 }
@@ -2545,7 +2667,7 @@ ModelIncrement::mutable_score() {
   return &score_;
 }
 
-// repeated int32 item_id = 8;
+// repeated int32 item_id = 10;
 inline int ModelIncrement::item_id_size() const {
   return item_id_.size();
 }
@@ -2570,7 +2692,7 @@ ModelIncrement::mutable_item_id() {
   return &item_id_;
 }
 
-// repeated .artm.FloatArray theta = 9;
+// repeated .artm.FloatArray theta = 11;
 inline int ModelIncrement::theta_size() const {
   return theta_.size();
 }
@@ -2595,7 +2717,7 @@ ModelIncrement::mutable_theta() {
   return &theta_;
 }
 
-// repeated string batch_uuid = 10;
+// repeated string batch_uuid = 12;
 inline int ModelIncrement::batch_uuid_size() const {
   return batch_uuid_.size();
 }

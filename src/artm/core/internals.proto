@@ -58,24 +58,26 @@ message ModelIncrement {
 
   // Newly discovered tokens, not yet included in matrix Phi.
   repeated string discovered_token = 3;
+  repeated string discovered_token_class_id = 4;
 
   // Known tokens
-  repeated string token = 4;
+  repeated string token = 5;
+  repeated string class_id = 6;
 
   // n_wt values for this batch; the length of this repeated field
   // equals the number of known tokens.
   // For each token, the length of Counters array equals topics_count.
-  repeated FloatArray token_increment = 5;
+  repeated FloatArray token_increment = 7;
 
-  repeated string score_name = 6;
-  repeated bytes score = 7;
+  repeated string score_name = 8;
+  repeated bytes score = 9;
 
   // Cached thetas from previous iteration
-  repeated int32 item_id = 8;
-  repeated FloatArray theta = 9;
+  repeated int32 item_id = 10;
+  repeated FloatArray theta = 11;
 
   // Identificators of all batches, contributing to this model increment.
-  repeated string batch_uuid = 10;
+  repeated string batch_uuid = 12;
 }
 
 // ======== MasterComponentService ========

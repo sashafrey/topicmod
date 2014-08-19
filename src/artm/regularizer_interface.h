@@ -11,6 +11,7 @@
 #include <string>
 
 #include "artm/messages.pb.h"
+#include "artm/core/common.h"
 #include "artm/core/exceptions.h"
 
 #include "glog/logging.h"
@@ -21,7 +22,7 @@ namespace core {
   // Forward declarations
   class Regularizable;
   template<typename K, typename T> class ThreadSafeCollectionHolder;
-  typedef std::map<std::string, ::artm::DictionaryEntry> DictionaryMap;
+  typedef std::map<artm::core::Token, ::artm::DictionaryEntry> DictionaryMap;
   typedef ThreadSafeCollectionHolder<std::string, DictionaryMap> ThreadSafeDictionaryCollection;
 }
 

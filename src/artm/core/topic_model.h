@@ -124,18 +124,18 @@ class TopicModel : public Regularizable {
   void ApplyDiff(const ::artm::core::ModelIncrement& diff);
   void ApplyDiff(const ::artm::core::TopicModel& diff);
 
-  int  AddToken(const std::string& token, bool random_init = true);
-  void IncreaseTokenWeight(const std::string& token, int topic_id, float value);
+  int  AddToken(const Token& token, bool random_init = true);
+  void IncreaseTokenWeight(const Token& token, int topic_id, float value);
   void IncreaseTokenWeight(int token_id, int topic_id, float value);
-  void SetTokenWeight(const std::string& token, int topic_id, float value);
+  void SetTokenWeight(const Token& token, int topic_id, float value);
   void SetTokenWeight(int token_id, int topic_id, float value);
 
-  void IncreaseRegularizerWeight(const std::string& token, int topic_id, float value);
+  void IncreaseRegularizerWeight(const Token& token, int topic_id, float value);
   void IncreaseRegularizerWeight(int token_id, int topic_id, float value);
-  void SetRegularizerWeight(const std::string& token, int topic_id, float value);
+  void SetRegularizerWeight(const Token& token, int topic_id, float value);
   void SetRegularizerWeight(int token_id, int topic_id, float value);
 
-  TopicWeightIterator GetTopicWeightIterator(const std::string& token) const;
+  TopicWeightIterator GetTopicWeightIterator(const Token& token) const;
   TopicWeightIterator GetTopicWeightIterator(int token_id) const;
 
   ModelName model_name() const;
@@ -143,20 +143,21 @@ class TopicModel : public Regularizable {
   int token_size() const;
   int topic_size() const;
 
-  bool has_token(const std::string& token) const;
-  int token_id(const std::string& token) const;
-  std::string token(int index) const;
+  bool has_token(const Token& token) const;
+  int token_id(const Token& token) const;
+  Token token(int index) const;
 
  private:
   ModelName model_name_;
 
-  std::map<std::string, int> token_to_token_id_;
-  std::vector<std::string> token_id_to_token_;
+  std::map<Token, int> token_to_token_id_;
+  std::vector<Token> token_id_to_token_;
   int topics_count_;
 
   std::vector<float*> n_wt_;  // vector of length tokens_count
   std::vector<float*> r_wt_;  // regularizer's additions
-  std::vector<float> n_t_;  // normalization constant for each topic
+  // normalization constant for each topic in each Phi
+  std::map<ClassId, std::vector<float> > n_t_;  
 
   std::vector<boost::uuids::uuid> batch_uuid_;  // batches contributing to this model
 };

@@ -5,6 +5,7 @@
 
 #include <string>
 
+#include "artm/core/common.h"
 #include "artm/messages.pb.h"
 
 namespace artm {
@@ -32,9 +33,10 @@ int repeated_field_index_of(const T& field, V value) {
   return -1;
 }
 
-inline bool model_has_token(const ::artm::TopicModel& topic_model, std::string token) {
+inline bool model_has_token(const ::artm::TopicModel& topic_model, artm::core::Token token) {
   for (int i = 0; i < topic_model.token_size(); ++i) {
-    if (topic_model.token(i) == token) return true;
+    if (topic_model.token(i) == token.second &
+      topic_model.class_id(i) == token.first) return true;
   }
 
   return false;

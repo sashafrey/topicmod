@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "artm/core/common.h"
 #include "artm/messages.pb.h"
 
 namespace artm {
@@ -38,7 +39,7 @@ class ScoreCalculatorInterface {
 
   virtual void AppendScore(
       const Item& item,
-      const google::protobuf::RepeatedPtrField<std::string>& token_dict,
+      const std::vector<artm::core::Token> token_dict_,
       const artm::core::TopicModel& topic_model,
       const std::vector<float>& theta,
       Score* score) { }

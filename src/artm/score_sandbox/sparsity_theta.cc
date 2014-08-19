@@ -11,11 +11,11 @@ namespace artm {
 namespace score_sandbox {
 
 void SparsityTheta::AppendScore(
-    const Item& item,
-    const google::protobuf::RepeatedPtrField<std::string>& token_dict,
-    const artm::core::TopicModel& topic_model,
-    const std::vector<float>& theta,
-    Score* score) {
+      const Item& item,
+      const std::vector<artm::core::Token> token_dict,
+      const artm::core::TopicModel& topic_model,
+      const std::vector<float>& theta,
+      Score* score) {
   int topics_size = topic_model.topic_size();
   int topics_to_score_size = 0;
 

@@ -71,7 +71,7 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
       // objective topics
       if (topic_id < objective_topic_size) {
         for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
-          std::string token = topic_model->token(token_id);
+          auto token = topic_model->token(token_id);
 
           float coef = 0;
           if (dictionary_ptr->find(token) != dictionary_ptr->end()) {
@@ -83,7 +83,7 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
         }
       } else {  // background topics
         for (int token_id = 0; token_id < topic_model->token_size(); ++token_id) {
-          std::string token = topic_model->token(token_id);
+          auto token = topic_model->token(token_id);
 
           float coef = 0;
           if (dictionary_ptr->find(token) != dictionary_ptr->end()) {

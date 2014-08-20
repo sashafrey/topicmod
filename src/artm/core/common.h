@@ -24,7 +24,7 @@ typedef std::string RegularizerName;
 typedef std::string ClassId;
 typedef std::pair<ClassId, std::string> Token;
 
-const std::string DefaultClass = "default_class";
+const std::string DefaultClass = "@default_class";
 
 const int UnknownId = -1;
 

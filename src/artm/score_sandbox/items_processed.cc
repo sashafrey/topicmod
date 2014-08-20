@@ -9,11 +9,11 @@ namespace artm {
 namespace score_sandbox {
 
 void ItemsProcessed::AppendScore(
-      const Item& item,
-      const std::vector<artm::core::Token> token_dict,
-      const artm::core::TopicModel& topic_model,
-      const std::vector<float>& theta,
-      Score* score) {
+    const Item& item,
+    const std::vector<artm::core::Token>& token_dict,
+    const artm::core::TopicModel& topic_model,
+    const std::vector<float>& theta,
+    Score* score) {
   ItemsProcessedScore items_processed_score;
   items_processed_score.set_value(items_processed_score.value() + 1);
   AppendScore(items_processed_score, score);

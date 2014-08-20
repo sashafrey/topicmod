@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <map>
 #include <memory>
+#include <unordered_map>
 #include <string>
 #include <vector>
 
@@ -47,7 +48,7 @@ Processor::~Processor() {
 }
 
 Processor::TokenIterator::TokenIterator(
-    const std::vector<Token> token_dict,
+    const std::vector<Token>& token_dict,
     const TopicModel& topic_model,
     const Item& item, const std::string& field_name,
     Mode mode)
@@ -101,7 +102,7 @@ bool Processor::TokenIterator::Next() {
     }
 
     id_in_batch_ = field_->token_id(token_index_);
-    auto current_token = *(token_dict_.begin() + id_in_batch_);
+    auto current_token = token_dict_[id_in_batch_];
     token_ = current_token.second;
     class_id_ = current_token.first;
     count_ = field_->token_count(token_index_);
@@ -126,11 +127,11 @@ TopicWeightIterator Processor::TokenIterator::GetTopicWeightIterator() const {
 
 Processor::ItemProcessor::ItemProcessor(
     const TopicModel& topic_model,
-    const std::vector<Token> token_dict,
+    const std::vector<Token>& token_dict,
     std::shared_ptr<InstanceSchema> schema)
-  : topic_model_(topic_model),
-    token_dict_(token_dict),
-    schema_(schema) {}
+     : topic_model_(topic_model),
+       token_dict_(token_dict),
+       schema_(schema) {}
 
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
@@ -158,7 +159,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
   std::vector<ClassId> class_id;
   std::vector<float> token_count;
   std::vector<TopicWeightIterator> token_weights;
-  std::map<ClassId, std::map<int, float> > z_normalizer;
+  std::vector<float> z_normalizer;
   int known_tokens_count = 0;
   TokenIterator iter(token_dict_, topic_model_, 
     item, model.field_name(), TokenIterator::Mode_Known);
@@ -173,12 +174,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
       token_count.push_back(static_cast<float>(iter.count()));
       token_weights.push_back(iter.GetTopicWeightIterator());
      
-      if (z_normalizer.find(current_class) == z_normalizer.end()) {
-        z_normalizer.insert(std::pair<ClassId, std::map<int, float> >
-          (current_class, std::map<int, float>()));
-      }
-      z_normalizer.find(current_class)->second.insert(
-        std::pair<int, float>(iter.id_in_batch(), 0.0f));
+      z_normalizer.push_back(0.0f);
       known_tokens_count++;
     }
   }
@@ -200,7 +196,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
         cur_z += topic_iter.Weight() * theta[topic_iter.TopicIndex()];
       }
 
-      z_normalizer.find(class_id[token_index])->second.find(token_id[token_index])->second = cur_z;
+      z_normalizer[token_index] = cur_z;
     }
 
     // 2. Find new theta (or store results if on the last iteration)
@@ -212,8 +208,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
           ++token_index) {
       float n_dw = token_count[token_index];
       TopicWeightIterator topic_iter = token_weights[token_index];
-      float curZ = z_normalizer.find(class_id[token_index])->
-        second.find(token_id[token_index])->second;
+      float curZ = z_normalizer[token_index];
 
       if (curZ > 0) {
         // updating theta_next
@@ -449,43 +444,43 @@ void Processor::ThreadFunction() {
         model_increment->set_topics_count(topic_size);
 
         bool use_default_class = false;
+        std::vector<Token> token_dict;
+
         if (part->batch().class_id_size() != part->batch().token_size()) {
           use_default_class = true;
-          LOG(INFO) << "Batch's field class_id mast have the same length, as token!";
+          LOG(INFO) << "Batch's field class_id must have the same length, as token!";
         }
 
         for (int token_index = 0; token_index < part->batch().token_size(); ++token_index) {
           std::string token = part->batch().token(token_index);
           ClassId class_id;
+          bool not_use_this_token = false;
           if (use_default_class) {
-            class_id.assign(DefaultClass);
+            class_id = DefaultClass;
           } else {
-            class_id.assign(part->batch().class_id(token_index));
+            auto temp_class_id = part->batch().class_id(token_index);
+            if ((std::find(model.class_id().begin(), model.class_id().end(), temp_class_id) != 
+                model.class_id().end()) || (model.class_id_size() == 0)) {
+                  class_id = temp_class_id;
+            } else {
+              not_use_this_token = true;
+            }
           }
-          Token current_token = std::pair<ClassId, std::string>(class_id, token);
-          model_increment->add_token(token);
-          model_increment->add_class_id(class_id);
-          FloatArray* counters = model_increment->add_token_increment();
-          for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-            counters->add_value(0.0f);
-          }
+          if (!not_use_this_token) {
+            Token current_token = Token(class_id, token);
+            model_increment->add_token(token);
+            model_increment->add_class_id(class_id);
+            FloatArray* counters = model_increment->add_token_increment();
+            for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
+              counters->add_value(0.0f);
+            }
 
-          if (!topic_model->has_token(current_token)) {
-            model_increment->add_discovered_token(token);
-            model_increment->add_discovered_token_class_id(class_id);
-          }
-        }
+            if (!topic_model->has_token(current_token)) {
+              model_increment->add_discovered_token(token);
+              model_increment->add_discovered_token_class_id(class_id);
+            }
 
-        std::vector<Token> token_dict;
-        if (use_default_class) {
-          for (int i = 0; i < part->batch().token_size(); ++i) {
-            token_dict.push_back(std::pair<ClassId, std::string>(DefaultClass, 
-              part->batch().token().Get(i)));
-          }
-        } else {
-          for (int i = 0; i < part->batch().token_size(); ++i) {
-            token_dict.push_back(std::pair<ClassId, std::string>(part->batch().class_id().Get(i), 
-              part->batch().token().Get(i)));
+            token_dict.push_back(Token(class_id, part->batch().token().Get(token_index)));
           }
         }
 

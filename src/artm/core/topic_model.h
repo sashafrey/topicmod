@@ -160,6 +160,8 @@ class TopicModel : public Regularizable {
   std::map<ClassId, std::vector<float> > n_t_;  
 
   std::vector<boost::uuids::uuid> batch_uuid_;  // batches contributing to this model
+
+  static void NewNormalizerVector(TopicModel* model, ClassId class_id, int no_topics);
 };
 
 }  // namespace core

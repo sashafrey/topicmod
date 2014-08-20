@@ -20,13 +20,6 @@
 namespace artm {
 namespace core {
 
-#define ADD_NEW_CLASS_NORMILIZERS_VECTOR(ClassName, NoTopics)            \
-  std::vector<float> vect;                                               \
-  vect.resize(NoTopics);                                                 \
-  n_t_.insert(std::pair<ClassId, std::vector<float> >(ClassName, vect)); \
-  iter = n_t_.find(ClassName);                                           \
-  memset(&(iter->second[0]), 0, sizeof(float) * NoTopics);               \
-
 TopicModel::TopicModel(ModelName model_name, int topics_count)
     : model_name_(model_name),
       token_to_token_id_(),
@@ -37,8 +30,7 @@ TopicModel::TopicModel(ModelName model_name, int topics_count)
       n_t_(),
       batch_uuid_() {
   assert(topics_count_ > 0);
-  auto iter = n_t_.find(DefaultClass);
-  ADD_NEW_CLASS_NORMILIZERS_VECTOR(DefaultClass, topics_count_);
+  NewNormalizerVector(this, DefaultClass, topics_count_);
 }
 
 TopicModel::TopicModel(const TopicModel& rhs)
@@ -137,7 +129,7 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
        ++token_index) {
     std::string new_token = diff.discovered_token(token_index);
     ClassId new_class_id = diff.discovered_token_class_id(token_index);
-    auto current_token = Token(std::pair<ClassId, std::string>(new_class_id, new_token));
+    auto current_token = Token(new_class_id, new_token);
     if (!this->has_token(current_token)) {
       this->AddToken(current_token);
     }
@@ -149,13 +141,11 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
        token_index < diff.token_increment_size();
        ++token_index) {
     const FloatArray& counters = diff.token_increment(token_index);
-    const std::string& token = diff.token(token_index);
-    const ClassId& class_id = diff.class_id(token_index);
 
-    auto current_token = Token(std::pair<ClassId, std::string>(class_id, token));
-    int current_token_id = token_id(current_token);
+    auto token = Token(diff.class_id(token_index), diff.token(token_index));
+    int current_token_id = token_id(token);
     if (current_token_id == -1) {
-      current_token_id = this->AddToken(current_token, false);
+      current_token_id = this->AddToken(token, false);
     }
 
     for (int topic_index = 0; topic_index < topics_count; ++topic_index) {
@@ -244,7 +234,7 @@ void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_t
       if (class_size == external_topic_model.token().size()) {
        class_id = external_topic_model.class_id(token_index);
       }
-      int token_id = AddToken(Token(std::pair<ClassId, std::string>(class_id, token)), false);
+      int token_id = AddToken(Token(class_id, token), false);
       const ::artm::FloatArray& weights = external_topic_model.token_weights(token_index);
       for (int topic_index = 0; topic_index < topics_count_; ++topic_index) {
         SetTokenWeight(token_id, topic_index, weights.value(topic_index));
@@ -267,7 +257,7 @@ void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_t
       auto n_wt = topic_model_internals.n_wt(token_index);
       auto r_wt = topic_model_internals.r_wt(token_index);
 
-      int token_id = AddToken(Token(std::pair<ClassId, std::string>(class_id, token)), false);
+      int token_id = AddToken(Token(class_id, token), false);
       for (int topic_index = 0; topic_index < topics_count_; ++topic_index) {
         SetTokenWeight(token_id, topic_index, n_wt.value(topic_index));
         SetRegularizerWeight(token_id, topic_index, r_wt.value(topic_index));
@@ -301,7 +291,8 @@ int TopicModel::AddToken(const Token& token, bool random_init) {
     auto class_id = token.first;
     auto iter = n_t_.find(class_id);
     if (iter == n_t_.end()) {
-      ADD_NEW_CLASS_NORMILIZERS_VECTOR(class_id, topic_size());
+      NewNormalizerVector(this, class_id, topic_size());
+      iter = n_t_.find(class_id);
     }
     for (int i = 0; i < topic_size(); ++i) {
       values[i] /= sum;
@@ -313,7 +304,7 @@ int TopicModel::AddToken(const Token& token, bool random_init) {
     auto class_id = token.first;
     auto iter = n_t_.find(class_id);
     if (iter == n_t_.end()) {
-      ADD_NEW_CLASS_NORMILIZERS_VECTOR(class_id, topic_size());
+      NewNormalizerVector(this, class_id, topic_size());
     }
   }
 
@@ -460,6 +451,14 @@ bool TopicModel::has_token(const Token& token) const {
 int TopicModel::token_id(const Token& token) const {
   auto iter = token_to_token_id_.find(token);
   return (iter != token_to_token_id_.end()) ? iter->second : -1;
+}
+
+void TopicModel::NewNormalizerVector(TopicModel* model, ClassId class_id, int no_topics) {
+  std::vector<float> vect;
+  vect.resize(no_topics);
+  model->n_t_.insert(std::pair<ClassId, std::vector<float> >(class_id, vect));
+  auto iter = model->n_t_.find(class_id);
+  memset(&(iter->second[0]), 0, sizeof(float) * no_topics);
 }
 
 artm::core::Token TopicModel::token(int index) const {

@@ -9,11 +9,11 @@ namespace artm {
 namespace score_sandbox {
 
 void ThetaSnippet::AppendScore(
-      const Item& item,
-      const std::vector<artm::core::Token> token_dict,
-      const artm::core::TopicModel& topic_model,
-      const std::vector<float>& theta,
-      Score* score) {
+    const Item& item,
+    const std::vector<artm::core::Token> token_dict,
+    const artm::core::TopicModel& topic_model,
+    const std::vector<float>& theta,
+    Score* score) {
   int topics_size = topic_model.topic_size();
 
   ThetaSnippetScore theta_snippet_score;

@@ -74,7 +74,7 @@ class Processor : boost::noncopyable {
   class ItemProcessor : boost::noncopyable {
    public:
     explicit ItemProcessor(const TopicModel& topic_model,
-                           const std::vector<Token> token_dict,
+                           const std::vector<Token>& token_dict,
                            std::shared_ptr<InstanceSchema> schema);
 
     void InferTheta(const ModelConfig& model,
@@ -98,7 +98,7 @@ class Processor : boost::noncopyable {
       Mode_KnownAndUnknown = 3
     };
 
-    TokenIterator(const std::vector<Token> token_dict,
+    TokenIterator(const std::vector<Token>& token_dict,
                   const TopicModel& topic_model,
                   const Item& item,
                   const std::string& field_name,

@@ -2,7 +2,7 @@
 Messages
 ========
 
-This document explains all protobuf messages that can be transefer in or out from BigARTM library.
+This document explains all protobuf messages that can be transfered between the user code and BigARTM library.
 
 
 message DoubleArray

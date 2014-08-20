@@ -4,17 +4,19 @@ Plain C interface of BigARTM
 
 This document explains all methods of the low-level BigARTM interface in plain C.
 
-.. code-block:: c
+.. method:: int ArtmCopyRequestResult(int length, char* address);
 
-   int ArtmGetRequestLength(int request_id);
+.. class:: .
 
-   int ArtmCopyRequestResult(int request_id, int length, char* address);
+   const char* ArtmGetLastErrorMessage();
 
-   void ArtmDisposeRequest(int request_id);
+   :meth:`ArtmCopyRequestResult`
+
+   int ArtmSaveBatch(const char* disk_path, int length, const char* batch_blob);
 
    int ArtmCreateMasterComponent(int master_id, int length, const char* config_blob);
 
-   int ArtmCreateMasterProxy(int master_id, int length, const char* config_blob);
+   int ArtmCreateMastePrroxy(int master_id, int length, const char* config_blob);
 
    int ArtmReconfigureMasterComponent(int master_id, int length, const char* config);
 

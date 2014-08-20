@@ -75,6 +75,7 @@ class Processor : boost::noncopyable {
    public:
     explicit ItemProcessor(const TopicModel& topic_model,
                            const std::vector<Token>& token_dict,
+                           const std::vector<float>& token_weight_dict,
                            std::shared_ptr<InstanceSchema> schema);
 
     void InferTheta(const ModelConfig& model,
@@ -85,7 +86,8 @@ class Processor : boost::noncopyable {
 
    private:
     const TopicModel& topic_model_;
-    const std::vector<Token> token_dict_;
+    const std::vector<Token>& token_dict_;
+     const std::vector<float>& token_weight_dict_;
     std::shared_ptr<InstanceSchema> schema_;
   };
 

@@ -39,7 +39,7 @@ class ScoreCalculatorInterface {
 
   virtual void AppendScore(
       const Item& item,
-      const std::vector<artm::core::Token> token_dict_,
+      const std::vector<artm::core::Token>& token_dict_,
       const artm::core::TopicModel& topic_model,
       const std::vector<float>& theta,
       Score* score) { }

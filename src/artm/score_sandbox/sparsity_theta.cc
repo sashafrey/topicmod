@@ -12,7 +12,7 @@ namespace score_sandbox {
 
 void SparsityTheta::AppendScore(
     const Item& item,
-    const std::vector<artm::core::Token> token_dict,
+    const std::vector<artm::core::Token>& token_dict,
     const artm::core::TopicModel& topic_model,
     const std::vector<float>& theta,
     Score* score) {

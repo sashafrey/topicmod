@@ -134,18 +134,6 @@ Processor::ItemProcessor::ItemProcessor(
        token_weight_dict_(token_weight_dict),
        schema_(schema) {}
 
-
-
-
-
-
-
-
-
-
-
-
-
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
                                           ModelIncrement* model_increment,
@@ -232,24 +220,6 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
         }
       }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     if (inner_iter == inner_iters_count) {
       // inner_iter goes from 0 to inner_iters_count inclusively.
@@ -450,16 +420,6 @@ void Processor::ThreadFunction() {
         model_increment->set_model_name(model_name);
         model_increment->set_topics_count(topic_size);
 
-
-
-
-
-
-
-
-
-
-
         bool use_default_class = false;
         bool use_model_class_id = true;
         bool use_model_class_weight = true;
@@ -556,24 +516,6 @@ void Processor::ThreadFunction() {
         }
 
         ItemProcessor item_processor(*topic_model, token_dict, token_weight_dict, schema_.get());
-        
-        
-        
- 
-
-
-
-
-
-
-
-
-
-
-
-        
-        
-  
         StreamIterator iter(*part);
 
         while (iter.Next() != nullptr) {

@@ -321,8 +321,8 @@ bool Merger::RetrieveExternalTopicModel(ModelName model_name,
   return true;
 }
 
-void Merger::RequestRegularizerState(RegularizerName regularizer_name, 
-                             ::artm::RegularizerInternalState* regularizer_state) const {
+void Merger::RequestRegularizerState(RegularizerName regularizer_name,
+                                     ::artm::RegularizerInternalState* regularizer_state) const {
   auto schema = schema_->get();
   if (schema->has_regularizer(regularizer_name)) {
     auto regularizer = schema->regularizer(regularizer_name);

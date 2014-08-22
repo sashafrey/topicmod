@@ -3,6 +3,9 @@
 // Author: Murat Apishev (great-mel@yandex.ru)
 
 #include "artm/regularizer_sandbox/decorrelator_phi.h"
+
+#include <string>
+
 #include "artm/core/regularizable.h"
 #include "artm/core/topic_model.h"
 
@@ -51,7 +54,7 @@ bool DecorrelatorPhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
 
 bool DecorrelatorPhi::Reconfigure(const RegularizerConfig& config) {
   std::string config_blob = config.config();
-  DecorrelatorPhiConfig regularizer_config;                         
+  DecorrelatorPhiConfig regularizer_config;
   regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length());
   config_.CopyFrom(regularizer_config);
   return true;

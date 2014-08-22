@@ -16,7 +16,7 @@ bool MultiLanguagePhi::RegularizePhi(::artm::core::Regularizable* topic_model, d
 
 bool MultiLanguagePhi::Reconfigure(const RegularizerConfig& config) {
   std::string config_blob = config.config();
-  MultiLanguagePhiConfig regularizer_config;                         
+  MultiLanguagePhiConfig regularizer_config;
   regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length());
   config_.CopyFrom(regularizer_config);
   return true;

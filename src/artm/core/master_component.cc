@@ -148,9 +148,9 @@ bool MasterComponent::RequestTopicModel(ModelName model_name, ::artm::TopicModel
   return instance_->merger()->RetrieveExternalTopicModel(model_name, topic_model);
 }
 
-void MasterComponent::RequestRegularizerState(RegularizerName regularizer_name, 
+void MasterComponent::RequestRegularizerState(RegularizerName regularizer_name,
                                               ::artm::RegularizerInternalState* regularizer_state) {
- instance_->merger()->RequestRegularizerState(regularizer_name, regularizer_state);
+  instance_->merger()->RequestRegularizerState(regularizer_name, regularizer_state);
 }
 
 bool MasterComponent::RequestScore(const ModelName& model_name,

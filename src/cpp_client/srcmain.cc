@@ -315,7 +315,7 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
 
 int main(int argc, char * argv[]) {
   if (argc != 4) {
-    cout << "Usage: ./PlsaBatchEM <docword> <vocab> nTopics" << endl;
+    cout << "Usage: cpp_client <docword> <vocab> nTopics" << endl;
     return 0;
   }
 

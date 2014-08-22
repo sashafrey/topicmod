@@ -196,50 +196,39 @@ class MasterComponent:
     self.Reconfigure(new_config_)
 
   def GetTopicModel(self, model):
-    request_id = HandleErrorCode(self.lib_, self.lib_.ArtmRequestTopicModel(self.id_, model.name()))
-    length = HandleErrorCode(self.lib_, self.lib_.ArtmGetRequestLength(request_id))
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmRequestTopicModel(self.id_, model.name()))
 
     topic_model_blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(request_id, length, topic_model_blob))
-    self.lib_.ArtmDisposeRequest(request_id)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, topic_model_blob))
 
     topic_model = messages_pb2.TopicModel()
     topic_model.ParseFromString(topic_model_blob)
     return topic_model
 
   def GetRegularizerState(self, regularizer_name):
-    request_id = HandleErrorCode(self.lib_, self.lib_.ArtmRequestRegularizerState(self.id_, regularizer_name))
-    length = HandleErrorCode(self.lib_, self.lib_.ArtmGetRequestLength(request_id))
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmRequestRegularizerState(self.id_, regularizer_name))
 
     state_blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(request_id, length, state_blob))
-    self.lib_.ArtmDisposeRequest(request_id)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, state_blob))
 
     regularizer_state = messages_pb2.RegularizerInternalState()
     regularizer_state.ParseFromString(state_blob)
     return regularizer_state
 
   def GetThetaMatrix(self, model):
-    request_id = HandleErrorCode(self.lib_, 
-                                 self.lib_.ArtmRequestThetaMatrix(self.id_, model.name()))
-    length = HandleErrorCode(self.lib_, self.lib_.ArtmGetRequestLength(request_id))
-
+    length = HandleErrorCode(self.lib_,  self.lib_.ArtmRequestThetaMatrix(self.id_, model.name()))
     blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(request_id, length, blob))
-    self.lib_.ArtmDisposeRequest(request_id)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, blob))
 
     theta_matrix = messages_pb2.ThetaMatrix()
     theta_matrix.ParseFromString(blob)
     return theta_matrix
 
   def GetScore(self, model, score_name):
-    request_id = HandleErrorCode(self.lib_, 
-                                 self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
-    length = HandleErrorCode(self.lib_, self.lib_.ArtmGetRequestLength(request_id))
-
+    length = HandleErrorCode(self.lib_,
+                             self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
     blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(request_id, length, blob))
-    self.lib_.ArtmDisposeRequest(request_id)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, blob))
 
     score_data = messages_pb2.ScoreData()
     score_data.ParseFromString(blob)

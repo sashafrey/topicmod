@@ -4,6 +4,8 @@
 
 #include <string>
 
+#include "boost/thread/tss.hpp"
+
 #include "glog/logging.h"
 
 #include "rpcz/rpc.hpp"
@@ -16,10 +18,29 @@
 #include "artm/core/master_proxy.h"
 #include "artm/core/node_controller.h"
 
-std::string message;
-static std::string error_message;
+// Never use the following variables explicitly (only through the corresponding methods).
+// It might be good idea to make them a private members of a new singleton class.
+static boost::thread_specific_ptr<std::string> last_message_;
+static boost::thread_specific_ptr<std::string> last_error_;
 
-void EnableLogging() {
+static std::string* last_message() {
+  if (last_message_.get() == nullptr) {
+    last_message_.reset(new std::string());
+  }
+
+  return last_message_.get();
+}
+
+static void set_last_error(const std::string& error) {
+  if (last_error_.get() == nullptr) {
+    last_error_.reset(new std::string());
+  }
+
+  last_error_->assign(error);
+}
+
+
+static void EnableLogging() {
   static bool logging_enabled = false;
   if (!logging_enabled) {
     logging_enabled = true;
@@ -37,17 +58,22 @@ inline char* StringAsArray(std::string* str) {
 // Common routines
 // =========================================================================
 
-int ArtmCopyRequestResult(int request_id, int length, char* address) {
-  memcpy(address, StringAsArray(&message), length);
+int ArtmCopyRequestResult(int length, char* address) {
+  if (length != last_message()->size()) {
+    set_last_error("ArtmCopyRequestResult() called with invalid 'length' parameter.");
+    return ARTM_INVALID_OPERATION;
+  }
+
+  memcpy(address, StringAsArray(last_message()), length);
   return ARTM_SUCCESS;
 }
 
-int ArtmGetRequestLength(int request_id) {
-  return message.size();
-}
-
 const char* ArtmGetLastErrorMessage() {
-  return error_message.c_str();
+  if (last_error_.get() == nullptr) {
+    return nullptr;
+  }
+
+  return last_error_->c_str();
 }
 
 int ArtmSaveBatch(const char* disk_path, int length, const char* batch_blob) {
@@ -192,8 +218,8 @@ int ArtmRequestThetaMatrix(int master_id, const char* model_name) {
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
 
     master_component->RequestThetaMatrix(model_name, &theta_matrix);
-    theta_matrix.SerializeToString(&message);
-    return ARTM_SUCCESS;
+    theta_matrix.SerializeToString(last_message());
+    return last_message()->size();
   } CATCH_EXCEPTIONS;
 }
 
@@ -204,8 +230,8 @@ int ArtmRequestTopicModel(int master_id, const char* model_name) {
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
 
     master_component->RequestTopicModel(model_name, &topic_model);
-    topic_model.SerializeToString(&message);
-    return ARTM_SUCCESS;
+    topic_model.SerializeToString(last_message());
+    return last_message()->size();
   } CATCH_EXCEPTIONS;
 }
 
@@ -216,8 +242,8 @@ int ArtmRequestRegularizerState(int master_id, const char* regularizer_name) {
     if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
 
     master_component->RequestRegularizerState(regularizer_name, &regularizer_state);
-    regularizer_state.SerializeToString(&message);
-    return ARTM_SUCCESS;
+    regularizer_state.SerializeToString(last_message());
+    return last_message()->size();
   } CATCH_EXCEPTIONS;
 }
 
@@ -228,8 +254,8 @@ int ArtmRequestScore(int master_id, const char* model_name, const char* score_na
 
     ::artm::ScoreData score_data;
     master_component->RequestScore(model_name, score_name, &score_data);
-    score_data.SerializeToString(&message);
-    return ARTM_SUCCESS;
+    score_data.SerializeToString(last_message());
+    return last_message()->size();
   } CATCH_EXCEPTIONS;
 }
 
@@ -284,8 +310,6 @@ void ArtmDisposeModel(int master_id, const char* model_name) {
   if (master_component == nullptr) return;
   master_component->DisposeModel(model_name);
 }
-
-void ArtmDisposeRequest(int request_id) {}
 
 int ArtmCreateRegularizer(int master_id, int length,
                           const char* regularizer_config_blob) {

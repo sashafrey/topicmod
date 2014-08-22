@@ -82,15 +82,10 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
 
 std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
   // Request model topics
-  int request_id = HandleErrorCode(ArtmRequestTopicModel(
-    id(), model.name().c_str()));
-
-  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  int length = HandleErrorCode(ArtmRequestTopicModel(id(), model.name().c_str()));
   std::string topic_model_blob;
   topic_model_blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&topic_model_blob)));
-
-  ArtmDisposeRequest(request_id);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&topic_model_blob)));
 
   std::shared_ptr<TopicModel> topic_model(new TopicModel());
   topic_model->ParseFromString(topic_model_blob);
@@ -99,15 +94,10 @@ std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
 
 std::shared_ptr<RegularizerInternalState> MasterComponent::GetRegularizerState(
   const std::string& regularizer_name) {
-  int request_id = HandleErrorCode(ArtmRequestRegularizerState(
-    id(), regularizer_name.c_str()));
-
-  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  int length = HandleErrorCode(ArtmRequestRegularizerState(id(), regularizer_name.c_str()));
   std::string state_blob;
   state_blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&state_blob)));
-
-  ArtmDisposeRequest(request_id);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&state_blob)));
 
   std::shared_ptr<RegularizerInternalState> regularizer_state(new RegularizerInternalState());
   regularizer_state->ParseFromString(state_blob);
@@ -115,15 +105,10 @@ std::shared_ptr<RegularizerInternalState> MasterComponent::GetRegularizerState(
 }
 
 std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model) {
-  int request_id = HandleErrorCode(ArtmRequestThetaMatrix(
-    id(), model.name().c_str()));
-
-  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  int length = HandleErrorCode(ArtmRequestThetaMatrix(id(), model.name().c_str()));
   std::string blob;
   blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&blob)));
-
-  ArtmDisposeRequest(request_id);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&blob)));
 
   std::shared_ptr<ThetaMatrix> theta_matrix(new ThetaMatrix());
   theta_matrix->ParseFromString(blob);
@@ -132,15 +117,10 @@ std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model)
 
 std::shared_ptr<ScoreData> MasterComponent::GetScore(const Model& model,
                                                      const std::string& score_name) {
-  int request_id = HandleErrorCode(ArtmRequestScore(
-    id(), model.name().c_str(), score_name.c_str()));
-
-  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  int length = HandleErrorCode(ArtmRequestScore(id(), model.name().c_str(), score_name.c_str()));
   std::string blob;
   blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&blob)));
-
-  ArtmDisposeRequest(request_id);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&blob)));
 
   std::shared_ptr<ScoreData> score_data(new ScoreData());
   score_data->ParseFromString(blob);

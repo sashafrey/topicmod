@@ -17,7 +17,7 @@
 #define ARTM_ERROR_CODES_EXIST
 enum ArtmErrorCodes {
     ARTM_SUCCESS = 0,
-    ARTM_GENERAL_ERROR = -1,
+    ARTM_INTERNAL_ERROR = -1,
     ARTM_OBJECT_NOT_FOUND = -2,
     ARTM_INVALID_MESSAGE = -3,
     ARTM_INVALID_OPERATION = -4,
@@ -41,7 +41,7 @@ class Type : public BaseType { public:  /*NOLINT*/             \
   explicit Type(std::string message) : BaseType(message) {}    \
 };
 
-DEFINE_EXCEPTION_TYPE(GeneralError, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(InternalError, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(ObjectNotFound, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidMessage, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);

@@ -41,9 +41,9 @@ inline int HandleErrorCode(int artm_error_code) {
       throw NerworkException(GetLastErrorMessage());
     case ARTM_INVALID_OPERATION:
       throw InvalidOperation(GetLastErrorMessage());
-    case ARTM_GENERAL_ERROR:
+    case ARTM_INTERNAL_ERROR:
     default:
-      throw GeneralError(GetLastErrorMessage());
+      throw InternalError(GetLastErrorMessage());
   }
 }
 
@@ -57,16 +57,15 @@ void SaveBatch(const Batch& batch, const std::string& disk_path) {
 MasterComponent::MasterComponent(const MasterComponentConfig& config) : id_(0), config_(config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  id_ = HandleErrorCode(ArtmCreateMasterComponent(0, config_blob.size(),
-    StringAsArray(&config_blob)));
+  id_ = HandleErrorCode(ArtmCreateMasterComponent(
+    config_blob.size(), StringAsArray(&config_blob)));
 }
 
 MasterComponent::MasterComponent(const MasterProxyConfig& config)
     : id_(0), config_(config.config()) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  id_ = HandleErrorCode(ArtmCreateMasterProxy(0, config_blob.size(),
-    StringAsArray(&config_blob)));
+  id_ = HandleErrorCode(ArtmCreateMasterProxy(config_blob.size(), StringAsArray(&config_blob)));
 }
 
 MasterComponent::~MasterComponent() {
@@ -130,8 +129,7 @@ std::shared_ptr<ScoreData> MasterComponent::GetScore(const Model& model,
 NodeController::NodeController(const NodeControllerConfig& config) : id_(0), config_(config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  id_ = HandleErrorCode(ArtmCreateNodeController(0, config_blob.size(),
-    StringAsArray(&config_blob)));
+  id_ = HandleErrorCode(ArtmCreateNodeController(config_blob.size(), StringAsArray(&config_blob)));
 }
 
 NodeController::~NodeController() {

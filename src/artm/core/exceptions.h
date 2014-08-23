@@ -26,7 +26,7 @@ try {
 #define ARTM_ERROR_CODES_EXIST
 enum ArtmErrorCodes {
     ARTM_SUCCESS = 0,
-    ARTM_GENERAL_ERROR = -1,
+    ARTM_INTERNAL_ERROR = -1,
     ARTM_OBJECT_NOT_FOUND = -2,
     ARTM_INVALID_MESSAGE = -3,
     ARTM_INVALID_OPERATION = -4,
@@ -60,11 +60,11 @@ catch (const rpcz::rpc_error& e) {                                             \
 } catch (const std::runtime_error& e) {                                        \
   LOG(ERROR) << "runtime_error: " << e.what();                                 \
   set_last_error("Runtime error :  " + std::string(e.what()));                 \
-  return ARTM_GENERAL_ERROR;                                                   \
+  return ARTM_INTERNAL_ERROR;                                                  \
 } catch (...) {                                                                \
   LOG(ERROR) << "unknown error.";                                              \
   set_last_error("Unknown error. ");                                           \
-  return ARTM_GENERAL_ERROR;                                                   \
+  return ARTM_INTERNAL_ERROR;                                                  \
 }
 
 #define CATCH_EXCEPTIONS_AND_SEND_ERROR                     \
@@ -79,10 +79,10 @@ catch (const rpcz::rpc_error& e) {                          \
   response.Error(ARTM_INVALID_OPERATION);                   \
 } catch (const std::runtime_error& e) {                     \
   LOG(ERROR) << "runtime_error: " << e.what();              \
-  response.Error(ARTM_GENERAL_ERROR);                       \
+  response.Error(ARTM_INTERNAL_ERROR);                      \
 } catch (...) {                                             \
   LOG(ERROR) << "unknown error.";                           \
-  response.Error(ARTM_GENERAL_ERROR);                       \
+  response.Error(ARTM_INTERNAL_ERROR);                      \
 }
 
 DEFINE_EXCEPTION_TYPE(ArgumentOutOfRangeException, std::runtime_error);

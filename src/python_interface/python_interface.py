@@ -9,7 +9,7 @@ from ctypes import *
 #################################################################################
 
 ARTM_SUCCESS = 0
-ARTM_GENERAL_ERROR = -1
+ARTM_INTERNAL_ERROR = -1
 ARTM_OBJECT_NOT_FOUND = -2
 ARTM_INVALID_MESSAGE = -3
 ARTM_INVALID_OPERATION = -4
@@ -38,7 +38,7 @@ ScoreData_Type_ThetaSnippet = 5
 
 #################################################################################
 
-class GeneralError(BaseException) : pass
+class InternalError(BaseException) : pass
 class ObjectNotFound(BaseException) : pass
 class InvalidMessage(BaseException) : pass
 class InvalidOperation(BaseException) : pass
@@ -61,10 +61,10 @@ def HandleErrorCode(lib, artm_error_code):
     raise InvalidOperation(GetLastErrorMessage(lib))
   elif artm_error_code == ARTM_NETWORK_ERROR:
     raise NetworkError(GetLastErrorMessage(lib))
-  elif artm_error_code == ARTM_GENERAL_ERROR:
-    raise GeneralError(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_INTERNAL_ERROR:
+    raise InternalError(GetLastErrorMessage(lib))
   else:
-    raise GeneralError(GetLastErrorMessage(lib))
+    raise InternalError(GetLastErrorMessage(lib))
 
 #################################################################################
 
@@ -96,13 +96,13 @@ class MasterComponent:
 
     if (isinstance(config, messages_pb2.MasterComponentConfig)):
       self.config_ = config
-      self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateMasterComponent(0,
+      self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateMasterComponent(
                  len(master_config_blob), master_config_blob_p))
       return
 
     if (isinstance(config, messages_pb2.MasterProxyConfig)):
       self.config_ = config.config
-      self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateMasterProxy(0,
+      self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateMasterProxy(
                  len(master_config_blob), master_config_blob_p))
       return
 
@@ -171,7 +171,7 @@ class MasterComponent:
   def InvokeIteration(self, iterations_count):
     HandleErrorCode(self.lib_, self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
 
-  def WaitIdle(self, timeout):
+  def WaitIdle(self, timeout = -1):
     result = self.lib_.ArtmWaitIdle(self.id_, timeout)
     if result == ARTM_STILL_WORKING:
         print "WaitIdle() is still working, timeout is over.";
@@ -269,7 +269,7 @@ class NodeController:
     config_blob = config.SerializeToString()
     config_blob_p = ctypes.create_string_buffer(config_blob)
 
-    self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateNodeController(0, 
+    self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateNodeController(
                                len(config_blob), config_blob_p))
 
   def __enter__(self):

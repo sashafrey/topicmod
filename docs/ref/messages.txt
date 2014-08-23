@@ -5,10 +5,12 @@ Messages
 This document explains all protobuf messages that can be transfered between the user code and BigARTM library.
 
 
-message DoubleArray
-===================
+.. _DoubleArray:
 
-.. class:: messages_pb2.DoubleArray
+DoubleArray
+===========
+
+.. _DoubleArray:
 
 Represents an array of double-precision floating point values.
 
@@ -19,8 +21,10 @@ Represents an array of double-precision floating point values.
   }
 
 
-message BoolArray
-=================
+.. _BoolArray:
+
+BoolArray
+=========
 
 .. class:: messages_pb2.BoolArray
 
@@ -33,8 +37,10 @@ Represents an array of boolean values.
   }
 
 
-message Item
-============
+.. _Item:
+
+Item
+====
 
 .. class:: messages_pb2.Item
 
@@ -49,8 +55,10 @@ A typical example of an item is a document that belongs to some text collection.
   }
 
 
-message Field
-=============
+.. _Field:
+
+Field
+=====
 
 .. class:: messages_pb2.Field
 
@@ -72,8 +80,11 @@ of tokens in the Batch.
     repeated int32 token_count = 3;
   }
 
-message Batch
-=============
+
+.. _Batch:
+
+Batch
+=====
 
 .. class:: messages_pb2.Batch
 
@@ -90,8 +101,10 @@ items in one batch are always processed sequentially.
   }
 
 
-message Stream
-==============
+.. _Stream:
+
+Stream
+======
 
 .. class:: messages_pb2.Stream
 
@@ -132,8 +145,10 @@ the 'train' and 'test' streams).
    The name must be unique across all streams defined in the master component.
 
 
-message MasterComponentConfig
-=============================
+.. _MasterComponentConfig:
+
+MasterComponentConfig
+=====================
 
 .. class:: messages_pb2.MasterComponentConfig
 
@@ -260,8 +275,10 @@ Represents a configuration of a master component.
   master component with its endpoint.
 
 
-message NodeControllerConfig
-============================
+.. _NodeControllerConfig:
+
+NodeControllerConfig
+====================
 
 .. class:: messages_pb2.NodeControllerConfig
 
@@ -280,8 +297,10 @@ Represents a configuration of a NodeController
   ZeroMQ documentation (http://api.zeromq.org).
 
 
-message MasterProxyConfig
-=========================
+.. _MasterProxyConfig:
+
+MasterProxyConfig
+=================
 
 .. class:: messages_pb2.MasterProxyConfig
 
@@ -315,8 +334,10 @@ proxy.
   A message that defines MasterComponent configuration of a remote node.
 
 
-message ModelConfig
-===================
+.. _ModelConfig:
+
+ModelConfig
+===========
 
 .. class:: messages_pb2.ModelConfig
 
@@ -383,8 +404,10 @@ Represents a configuration of a topic model.
    This repeated field must have the same length as regularizer_name.
 
 
-message RegularizerConfig
-=========================
+.. _RegularizerConfig:
+
+RegularizerConfig
+=================
 
 .. class:: messages_pb2.RegularizerConfig
 
@@ -435,8 +458,10 @@ Represents a configuration of a general regularizer.
    the specific regularizer type.
 
 
-message DirichletThetaConfig
-============================
+.. _DirichletThetaConfig:
+
+DirichletThetaConfig
+====================
 
 .. class:: messages_pb2.DirichletThetaConfig
 
@@ -449,8 +474,10 @@ Represents a configuration of a Dirichlet Theta regularizer.
   }
 
 
-message DirichletPhiConfig
-==========================
+.. _DirichletPhiConfig:
+
+DirichletPhiConfig
+==================
 
 .. class:: messages_pb2.DirichletPhiConfig
 
@@ -463,8 +490,10 @@ Represents a configuration of a Dirichlet Phi regularizer.
   }
 
 
-message SmoothSparseThetaConfig
-===============================
+.. _SmoothSparseThetaConfig:
+
+SmoothSparseThetaConfig
+=======================
 
 .. class:: messages_pb2.SmoothSparseThetaConfig
 
@@ -479,8 +508,10 @@ Represents a configuration of a SmoothSparse Theta regularizer.
   }
 
 
-message SmoothSparsePhiConfig
-=============================
+.. _SmoothSparsePhiConfig:
+
+SmoothSparsePhiConfig
+=====================
 
 .. class:: messages_pb2.SmoothSparsePhiConfig
 
@@ -494,8 +525,10 @@ Represents a configuration of a SmoothSparse Phi regularizer.
     optional string dictionary_name = 3;
   }
 
-message DecorrelatorPhiConfig
-=============================
+.. _DecorrelatorPhiConfig:
+
+DecorrelatorPhiConfig
+=====================
 
 .. class:: messages_pb2.DecorrelatorPhiConfig
 
@@ -507,8 +540,11 @@ Represents a configuration of a Decorrelator Phi regularizer.
     optional BoolArray topics_to_regularize = 1;
   }
 
-message DictionaryConfig
-========================
+
+.. _DictionaryConfig:
+
+DictionaryConfig
+================
 
 .. class:: messages_pb2.DictionaryConfig
 
@@ -521,8 +557,11 @@ Represents a static dictionary.
     repeated DictionaryEntry entry = 2;
   }
 
-message DictionaryEntry
-=======================
+
+.. _DictionaryEntry:
+
+DictionaryEntry
+===============
 
 .. class:: messages_pb2.DictionaryEntry
 
@@ -537,8 +576,11 @@ Represents one entry in a static dictionary.
     optional FloatArray values = 4;
   }
 
-message ScoreConfig
-===================
+
+.. _ScoreConfig:
+
+ScoreConfig
+===========
 
 .. class:: messages_pb2.ScoreConfig
 
@@ -574,8 +616,10 @@ Represents a configuration of a general score.
    A serialized protobuf message that describes score config for the specific score type.
 
 
-message ScoreData
-=================
+.. _ScoreData:
+
+ScoreData
+=========
 
 .. class:: messages_pb2.ScoreData
 
@@ -611,8 +655,10 @@ Represents a general result of score calculation.
    A serialized protobuf message that provides the specific score result.
 
 
-message PerplexityScoreConfig
-=============================
+.. _PerplexityScoreConfig:
+
+PerplexityScoreConfig
+=====================
 
 .. class:: messages_pb2.PerplexityScoreConfig
 
@@ -626,8 +672,10 @@ Represents a configuration of a perplexity score.
   }
 
 
-message PerplexityScore
-=======================
+.. _PerplexityScore:
+
+PerplexityScore
+===============
 
 .. class:: messages_pb2.PerplexityScore
 
@@ -642,8 +690,11 @@ Represents a result of calculation of a perplexity score.
     optional int32 zero_words = 4;
   }
 
-message TopicModel
-==================
+
+.. _TopicModel:
+
+TopicModel
+==========
 
 .. class:: messages_pb2.TopicModel
 
@@ -691,9 +742,10 @@ Represents a topic model.
    A serialized instance of TopicModelInternals message.
 
 
+.. _ThetaMatrix:
 
-message ThetaMatrix
-===================
+ThetaMatrix
+===========
 
 .. class:: messages_pb2.ThetaMatrix
 

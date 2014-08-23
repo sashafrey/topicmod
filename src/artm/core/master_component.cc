@@ -173,10 +173,12 @@ bool MasterComponent::RequestThetaMatrix(ModelName model_name, ::artm::ThetaMatr
   }
 
   if (isInNetworkModusOperandi()) {
-    BOOST_THROW_EXCEPTION(NotImplementedException("MasterComponent - network modus operandi"));
+    BOOST_THROW_EXCEPTION(InvalidOperation(
+      "RequestThetaMatrix is not supported in Network modus operandi"));
   }
 
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException(
+    "MasterComponentConfig.modus_operandi", config_.get()->modus_operandi()));
 }
 
 bool MasterComponent::WaitIdle(int timeout) {
@@ -223,7 +225,8 @@ bool MasterComponent::WaitIdle(int timeout) {
     return true;
   }
 
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException(
+    "MasterComponentConfig.modus_operandi", config_.get()->modus_operandi()));
 }
 
 void MasterComponent::InvokeIteration(int iterations_count) {
@@ -243,7 +246,8 @@ void MasterComponent::InvokeIteration(int iterations_count) {
     return;
   }
 
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException(
+    "MasterComponentConfig.modus_operandi", config_.get()->modus_operandi()));
 }
 
 void MasterComponent::AddBatch(const Batch& batch) {
@@ -256,7 +260,8 @@ void MasterComponent::AddBatch(const Batch& batch) {
     return;
   }
 
-  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+  BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException(
+    "MasterComponentConfig.modus_operandi", config_.get()->modus_operandi()));
 }
 
 MasterComponent::ServiceEndpoint::~ServiceEndpoint() {
@@ -294,7 +299,8 @@ void MasterComponent::ValidateConfig(const MasterComponentConfig& config) {
   if (!is_configured_) {
     if ((config.modus_operandi() != MasterComponentConfig_ModusOperandi_Local) &&
         (config.modus_operandi() != MasterComponentConfig_ModusOperandi_Network)) {
-      BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("MasterComponent::modus_operandi"));
+      BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException(
+        "MasterComponentConfig.modus_operandi", config_.get()->modus_operandi()));
     }
     if (config.modus_operandi() == MasterComponentConfig_ModusOperandi_Network) {
       if (!config.has_create_endpoint() ||

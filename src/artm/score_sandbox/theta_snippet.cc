@@ -44,12 +44,12 @@ void ThetaSnippet::AppendScore(const Score& score, Score* target) {
   std::string error_message = "Unable downcast Score to SparsityThetaScore";
   const ThetaSnippetScore* theta_snippet_score = dynamic_cast<const ThetaSnippetScore*>(&score);
   if (theta_snippet_score == nullptr) {
-    BOOST_THROW_EXCEPTION(::artm::core::InvalidOperation(error_message));
+    BOOST_THROW_EXCEPTION(::artm::core::InternalError(error_message));
   }
 
   ThetaSnippetScore* theta_snippet_target = dynamic_cast<ThetaSnippetScore*>(target);
   if (theta_snippet_target == nullptr) {
-    BOOST_THROW_EXCEPTION(::artm::core::InvalidOperation(error_message));
+    BOOST_THROW_EXCEPTION(::artm::core::InternalError(error_message));
   }
 
   for (int item_index = 0; item_index < theta_snippet_score->item_id_size(); item_index++) {

@@ -221,7 +221,7 @@ void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_t
       std::stringstream error_message;
       error_message << "Unable to deserialize internals of topic model, model_name="
                     << external_topic_model.name();
-      BOOST_THROW_EXCEPTION(SerializationException(error_message.str()));
+      BOOST_THROW_EXCEPTION(CorruptedMessageException(error_message.str()));
     }
 
     for (int token_index = 0; token_index < external_topic_model.token_size(); ++token_index) {

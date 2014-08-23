@@ -8,13 +8,16 @@ from ctypes import *
 
 #################################################################################
 
-ARTM_SUCCESS = 0
-ARTM_INTERNAL_ERROR = -1
-ARTM_OBJECT_NOT_FOUND = -2
-ARTM_INVALID_MESSAGE = -3
-ARTM_INVALID_OPERATION = -4
-ARTM_NETWORK_ERROR = -5
-ARTM_STILL_WORKING = -6
+ARTM_SUCCESS = 0,                   # Has no corresponding exception type.
+ARTM_STILL_WORKING = -1,            # Has no corresponding exception type.
+ARTM_INTERNAL_ERROR = -2,
+ARTM_ARGUMENT_OUT_OF_RANGE = -3,
+ARTM_INVALID_MASTER_ID = -4,
+ARTM_CORRUPTED_MESSAGE = -5,
+ARTM_INVALID_OPERATION = -6,
+ARTM_DISK_READ_ERROR = -7,
+ARTM_DISK_WRITE_ERROR = -8,
+ARTM_NETWORK_ERROR = -9,
 
 Stream_Type_Global = 0
 Stream_Type_ItemIdModulus = 1
@@ -39,10 +42,13 @@ ScoreData_Type_ThetaSnippet = 5
 #################################################################################
 
 class InternalError(BaseException) : pass
-class ObjectNotFound(BaseException) : pass
-class InvalidMessage(BaseException) : pass
-class InvalidOperation(BaseException) : pass
-class NetworkError(BaseException) : pass
+class ArgumentOutOfRangeException(BaseException) : pass
+class InvalidMasterIdException(BaseException) : pass
+class CorruptedMessageException(BaseException) : pass
+class InvalidOperationException(BaseException) : pass
+class DiskReadException(BaseException) : pass
+class DiskWriteException(BaseException) : pass
+class NetworkException(BaseException) : pass
 
 
 def GetLastErrorMessage(lib):
@@ -53,18 +59,24 @@ def GetLastErrorMessage(lib):
 def HandleErrorCode(lib, artm_error_code):
   if (artm_error_code == ARTM_SUCCESS) | (artm_error_code >= 0):
     return artm_error_code
-  elif artm_error_code == ARTM_OBJECT_NOT_FOUND:
-    raise ObjectNotFound(GetLastErrorMessage(lib))
-  elif artm_error_code == ARTM_INVALID_MESSAGE:
-    raise InvalidMessage(GetLastErrorMessage(lib))
-  elif artm_error_code == ARTM_INVALID_OPERATION:
-    raise InvalidOperation(GetLastErrorMessage(lib))
-  elif artm_error_code == ARTM_NETWORK_ERROR:
-    raise NetworkError(GetLastErrorMessage(lib))
   elif artm_error_code == ARTM_INTERNAL_ERROR:
     raise InternalError(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_ARGUMENT_OUT_OF_RANGE:
+    raise ArgumentOutOfRangeException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_INVALID_MASTER_ID:
+      raise InvalidMasterIdException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_CORRUPTED_MESSAGE:
+      raise CorruptedMessageException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_INVALID_OPERATION:
+      raise InvalidOperationException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_DISK_READ_ERROR:
+      raise DiskReadException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_DISK_WRITE_ERROR:
+      raise DiskWriteException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_NETWORK_ERROR:
+      raise NetworkException(GetLastErrorMessage(lib))
   else:
-    raise InternalError(GetLastErrorMessage(lib))
+    raise InternalError("Unknown error code: " + str(artm_error_code))
 
 #################################################################################
 

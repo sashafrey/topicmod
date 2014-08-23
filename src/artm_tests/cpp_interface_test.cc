@@ -269,7 +269,7 @@ TEST(CppInterface, ModelExceptions) {
   artm::Model model(master_component, model_config);
 
   model.mutable_config()->set_topics_count(20);
-  ASSERT_THROW(model.Reconfigure(model.config()), artm::InvalidOperation);
+  ASSERT_THROW(model.Reconfigure(model.config()), artm::InvalidOperationException);
 }
 
 // artm_tests.exe --gtest_filter=CppInterface.ProxyExceptions
@@ -281,7 +281,7 @@ TEST(CppInterface, ProxyExceptions) {
   master_proxy_config.set_communication_timeout(10);
 
   ASSERT_THROW(artm::MasterComponent master_component(master_proxy_config),
-    artm::NerworkException);
+    artm::NetworkException);
 }
 
 TEST(CppInterface, WaitIdleTimeout) {

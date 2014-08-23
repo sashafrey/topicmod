@@ -162,7 +162,7 @@ boost::uuids::uuid BatchHelpers::SaveBatch(const Batch& batch,
   if (fout.is_open()) {
     bool is_serialized = batch.SerializeToOstream(&fout);
     if (!is_serialized) {
-      BOOST_THROW_EXCEPTION(SerializationException("Batch has not been serialized to disk."));
+      BOOST_THROW_EXCEPTION(DiskWriteException("Batch has not been serialized to disk."));
     }
 
     fout.close();
@@ -187,7 +187,7 @@ void BatchHelpers::CompactBatch(const Batch& batch, Batch* compacted_batch) {
       for (int token_index = 0; token_index < field.token_id_size(); ++token_index) {
         int token_id = field.token_id(token_index);
         if (token_id < 0 || token_id >= batch.token_size())
-          BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("field.token_id"));
+          BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("field.token_id", token_id));
 
         if (orig_to_compacted_id_map[token_id] == -1) {
           orig_to_compacted_id_map[token_id] = compacted_dictionary_size++;

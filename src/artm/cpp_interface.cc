@@ -20,8 +20,7 @@ inline char* StringAsArray(std::string* str) {
 }
 
 inline std::string GetLastErrorMessage() {
-  auto error_message = ArtmGetLastErrorMessage();
-  return std::string(error_message);
+  return std::string(ArtmGetLastErrorMessage());
 }
 
 inline int HandleErrorCode(int artm_error_code) {
@@ -31,19 +30,24 @@ inline int HandleErrorCode(int artm_error_code) {
   }
 
   switch (artm_error_code) {
-    case ARTM_SUCCESS:
-      return artm_error_code;
-    case ARTM_OBJECT_NOT_FOUND:
-      throw ObjectNotFound(GetLastErrorMessage());
-    case ARTM_INVALID_MESSAGE:
-      throw InvalidMessage(GetLastErrorMessage());
-    case ARTM_NETWORK_ERROR:
-      throw NerworkException(GetLastErrorMessage());
-    case ARTM_INVALID_OPERATION:
-      throw InvalidOperation(GetLastErrorMessage());
     case ARTM_INTERNAL_ERROR:
-    default:
       throw InternalError(GetLastErrorMessage());
+    case ARTM_ARGUMENT_OUT_OF_RANGE:
+      throw ArgumentOutOfRangeException(GetLastErrorMessage());
+    case ARTM_INVALID_MASTER_ID:
+      throw InvalidMasterIdException(GetLastErrorMessage());
+    case ARTM_CORRUPTED_MESSAGE:
+      throw CorruptedMessageException(GetLastErrorMessage());
+    case ARTM_INVALID_OPERATION:
+      throw InvalidOperationException(GetLastErrorMessage());
+    case ARTM_DISK_READ_ERROR:
+      throw DiskReadException(GetLastErrorMessage());
+    case ARTM_DISK_WRITE_ERROR:
+      throw DiskWriteException(GetLastErrorMessage());
+    case ARTM_NETWORK_ERROR:
+      throw NetworkException(GetLastErrorMessage());
+    default:
+      throw InternalError("Unknown error code");
   }
 }
 

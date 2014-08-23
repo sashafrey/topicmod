@@ -16,13 +16,16 @@
 #ifndef ARTM_ERROR_CODES_EXIST
 #define ARTM_ERROR_CODES_EXIST
 enum ArtmErrorCodes {
-    ARTM_SUCCESS = 0,
-    ARTM_INTERNAL_ERROR = -1,
-    ARTM_OBJECT_NOT_FOUND = -2,
-    ARTM_INVALID_MESSAGE = -3,
-    ARTM_INVALID_OPERATION = -4,
-    ARTM_NETWORK_ERROR = -5,
-    ARTM_STILL_WORKING = -6
+  ARTM_SUCCESS = 0,                   // Has no corresponding exception type.
+  ARTM_STILL_WORKING = -1,            // Has no corresponding exception type.
+  ARTM_INTERNAL_ERROR = -2,
+  ARTM_ARGUMENT_OUT_OF_RANGE = -3,
+  ARTM_INVALID_MASTER_ID = -4,
+  ARTM_CORRUPTED_MESSAGE = -5,
+  ARTM_INVALID_OPERATION = -6,
+  ARTM_DISK_READ_ERROR = -7,
+  ARTM_DISK_WRITE_ERROR = -8,
+  ARTM_NETWORK_ERROR = -9,
 };
 #endif
 
@@ -42,10 +45,13 @@ class Type : public BaseType { public:  /*NOLINT*/             \
 };
 
 DEFINE_EXCEPTION_TYPE(InternalError, std::runtime_error);
-DEFINE_EXCEPTION_TYPE(ObjectNotFound, std::runtime_error);
-DEFINE_EXCEPTION_TYPE(InvalidMessage, std::runtime_error);
-DEFINE_EXCEPTION_TYPE(InvalidOperation, std::runtime_error);
-DEFINE_EXCEPTION_TYPE(NerworkException, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(ArgumentOutOfRangeException, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(InvalidMasterIdException, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(CorruptedMessageException, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(InvalidOperationException, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(DiskReadException, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(DiskWriteException, std::runtime_error);
+DEFINE_EXCEPTION_TYPE(NetworkException, std::runtime_error);
 
 #undef DEFINE_EXCEPTION_TYPE
 

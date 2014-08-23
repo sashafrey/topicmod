@@ -13,6 +13,7 @@
 #include "artm/messages.pb.h"
 #include "artm/score_calculator_interface.h"
 #include "artm/core/common.h"
+#include "artm/core/exceptions.h"
 #include "artm/core/helpers.h"
 #include "artm/core/master_component.h"
 #include "artm/core/master_proxy.h"
@@ -39,7 +40,6 @@ static void set_last_error(const std::string& error) {
   last_error_->assign(error);
 }
 
-
 static void EnableLogging() {
   static bool logging_enabled = false;
   if (!logging_enabled) {
@@ -50,8 +50,22 @@ static void EnableLogging() {
   }
 }
 
-inline char* StringAsArray(std::string* str) {
+static std::shared_ptr<::artm::core::MasterInterface> master_component(int master_id) {
+  auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
+  if (master_component == nullptr) {
+    BOOST_THROW_EXCEPTION(::artm::core::InvalidMasterIdException(boost::lexical_cast<std::string>(master_id)));
+  }
+
+  return master_component;
+}
+
+static char* StringAsArray(std::string* str) {
   return str->empty() ? NULL : &*str->begin();
+}
+
+static void ParseFromArray(const char* buffer, int length, google::protobuf::Message* message) {
+  if (!message->ParseFromArray(buffer, length))
+    BOOST_THROW_EXCEPTION(::artm::core::CorruptedMessageException("Unable to parse the message"));
 }
 
 // =========================================================================
@@ -79,9 +93,7 @@ const char* ArtmGetLastErrorMessage() {
 int ArtmSaveBatch(const char* disk_path, int length, const char* batch) {
   try {
     artm::Batch batch_object;
-    if (!batch_object.ParseFromArray(batch, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
+    ParseFromArray(batch, length, &batch_object);
 
     artm::Batch compacted_batch;
     artm::core::BatchHelpers::CompactBatch(batch_object, &compacted_batch);
@@ -93,35 +105,27 @@ int ArtmSaveBatch(const char* disk_path, int length, const char* batch) {
 int ArtmAddBatch(int master_id, int length, const char* batch) {
   try {
     artm::Batch batch_object;
-    if (!batch_object.ParseFromArray(batch, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    master_component->AddBatch(batch_object);
+    ParseFromArray(batch, length, &batch_object);
+    master_component(master_id)->AddBatch(batch_object);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
 int ArtmInvokeIteration(int master_id, int iterations_count) {
   try {
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    master_component->InvokeIteration(iterations_count);
+    master_component(master_id)->InvokeIteration(iterations_count);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
 int ArtmWaitIdle(int master_id, int timeout_milliseconds) {
   try {
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    bool result = master_component->WaitIdle(timeout_milliseconds);
+    bool result = master_component(master_id)->WaitIdle(timeout_milliseconds);
 
     if (result) {
       return ARTM_SUCCESS;
     } else {
+      set_last_error("Artm is still processing the collection. Call ArtmWaitIdle() later.");
       return ARTM_STILL_WORKING;
     }
   } CATCH_EXCEPTIONS;
@@ -136,10 +140,7 @@ int ArtmCreateMasterProxy(int length, const char* master_proxy_config) {
     EnableLogging();
 
     artm::MasterProxyConfig config;
-    if (!config.ParseFromArray(master_proxy_config, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
+    ParseFromArray(master_proxy_config, length, &config);
     auto& mcm = artm::core::MasterComponentManager::singleton();
     int retval = mcm.Create<::artm::core::MasterProxy, ::artm::MasterProxyConfig>(config);
     assert(retval > 0);
@@ -152,10 +153,7 @@ int ArtmCreateMasterComponent(int length, const char* master_component_config) {
     EnableLogging();
 
     artm::MasterComponentConfig config;
-    if (!config.ParseFromArray(master_component_config, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
+    ParseFromArray(master_component_config, length, &config);
     auto& mcm = artm::core::MasterComponentManager::singleton();
     int retval = mcm.Create<::artm::core::MasterComponent, ::artm::MasterComponentConfig>(config);
     assert(retval > 0);
@@ -170,13 +168,8 @@ int ArtmCreateModel(int master_id, int length, const char* model_config) {
 int ArtmReconfigureMasterComponent(int master_id, int length, const char* master_component_config) {
   try {
     artm::MasterComponentConfig config;
-    if (!config.ParseFromArray(master_component_config, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    master_component->Reconfigure(config);
+    ParseFromArray(master_component_config, length, &config);
+    master_component(master_id)->Reconfigure(config);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
@@ -184,13 +177,8 @@ int ArtmReconfigureMasterComponent(int master_id, int length, const char* master
 int ArtmReconfigureModel(int master_id, int length, const char* model_config) {
   try {
     artm::ModelConfig config;
-    if (!config.ParseFromArray(model_config, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-    master_component->CreateOrReconfigureModel(config);
+    ParseFromArray(model_config, length, &config);
+    master_component(master_id)->CreateOrReconfigureModel(config);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
@@ -198,10 +186,7 @@ int ArtmReconfigureModel(int master_id, int length, const char* model_config) {
 int ArtmRequestThetaMatrix(int master_id, const char* model_name) {
   try {
     artm::ThetaMatrix theta_matrix;
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-    master_component->RequestThetaMatrix(model_name, &theta_matrix);
+    master_component(master_id)->RequestThetaMatrix(model_name, &theta_matrix);
     theta_matrix.SerializeToString(last_message());
     return last_message()->size();
   } CATCH_EXCEPTIONS;
@@ -210,10 +195,7 @@ int ArtmRequestThetaMatrix(int master_id, const char* model_name) {
 int ArtmRequestTopicModel(int master_id, const char* model_name) {
   try {
     artm::TopicModel topic_model;
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-    master_component->RequestTopicModel(model_name, &topic_model);
+    master_component(master_id)->RequestTopicModel(model_name, &topic_model);
     topic_model.SerializeToString(last_message());
     return last_message()->size();
   } CATCH_EXCEPTIONS;
@@ -222,10 +204,7 @@ int ArtmRequestTopicModel(int master_id, const char* model_name) {
 int ArtmRequestRegularizerState(int master_id, const char* regularizer_name) {
   try {
     artm::RegularizerInternalState regularizer_state;
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
-    master_component->RequestRegularizerState(regularizer_name, &regularizer_state);
+    master_component(master_id)->RequestRegularizerState(regularizer_name, &regularizer_state);
     regularizer_state.SerializeToString(last_message());
     return last_message()->size();
   } CATCH_EXCEPTIONS;
@@ -233,11 +212,8 @@ int ArtmRequestRegularizerState(int master_id, const char* regularizer_name) {
 
 int ArtmRequestScore(int master_id, const char* model_name, const char* score_name) {
   try {
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
     ::artm::ScoreData score_data;
-    master_component->RequestScore(model_name, score_name, &score_data);
+    master_component(master_id)->RequestScore(model_name, score_name, &score_data);
     score_data.SerializeToString(last_message());
     return last_message()->size();
   } CATCH_EXCEPTIONS;
@@ -245,22 +221,18 @@ int ArtmRequestScore(int master_id, const char* model_name, const char* score_na
 
 int ArtmOverwriteTopicModel(int master_id, int length, const char* topic_model) {
   try {
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component == nullptr) return ARTM_OBJECT_NOT_FOUND;
-
     artm::TopicModel topic_model_object;
-    if (!topic_model_object.ParseFromArray(topic_model, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
-    master_component->OverwriteTopicModel(topic_model_object);
+    ParseFromArray(topic_model, length, &topic_model_object);
+    master_component(master_id)->OverwriteTopicModel(topic_model_object);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
 int ArtmDisposeMasterComponent(int master_id) {
-  artm::core::MasterComponentManager::singleton().Erase(master_id);
-  return ARTM_SUCCESS;
+  try {
+    artm::core::MasterComponentManager::singleton().Erase(master_id);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }
 
 int ArtmCreateNodeController(int length, const char* node_controller_config) {
@@ -268,10 +240,7 @@ int ArtmCreateNodeController(int length, const char* node_controller_config) {
     EnableLogging();
 
     artm::NodeControllerConfig config;
-    if (!config.ParseFromArray(node_controller_config, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
+    ParseFromArray(node_controller_config, length, &config);
     auto& ncm = artm::core::NodeControllerManager::singleton();
     int retval = ncm.Create<::artm::core::NodeController, ::artm::NodeControllerConfig>(config);
     assert(retval > 0);
@@ -280,15 +249,17 @@ int ArtmCreateNodeController(int length, const char* node_controller_config) {
 }
 
 int ArtmDisposeNodeController(int node_controller_id) {
-  artm::core::NodeControllerManager::singleton().Erase(node_controller_id);
-  return ARTM_SUCCESS;
+  try {
+    artm::core::NodeControllerManager::singleton().Erase(node_controller_id);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }
 
 int ArtmDisposeModel(int master_id, const char* model_name) {
-  auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-  if (master_component == nullptr) return ARTM_SUCCESS;
-  master_component->DisposeModel(model_name);
-  return ARTM_SUCCESS;
+  try {
+    master_component(master_id)->DisposeModel(model_name);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }
 
 int ArtmCreateRegularizer(int master_id, int length, const char* regularizer_config) {
@@ -297,31 +268,23 @@ int ArtmCreateRegularizer(int master_id, int length, const char* regularizer_con
 
 int ArtmReconfigureRegularizer(int master_id, int length, const char* regularizer_config) {
   try {
-    artm::RegularizerConfig config;
-    if (!config.ParseFromArray(regularizer_config, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    master_component->CreateOrReconfigureRegularizer(config);
+    ::artm::RegularizerConfig config;
+    ParseFromArray(regularizer_config, length, &config);
+    master_component(master_id)->CreateOrReconfigureRegularizer(config);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
 int ArtmDisposeRegularizer(int master_id, const char* regularizer_name) {
-  auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-  if (master_component == nullptr) return ARTM_SUCCESS;
-  master_component->DisposeRegularizer(regularizer_name);
-  return ARTM_SUCCESS;
+  try {
+    master_component(master_id)->DisposeRegularizer(regularizer_name);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }
 
 int ArtmInvokePhiRegularizers(int master_id) {
   try {
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    if (master_component != nullptr) {
-      master_component->InvokePhiRegularizers();
-    }
-
+    master_component(master_id)->InvokePhiRegularizers();
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
@@ -333,19 +296,15 @@ int ArtmCreateDictionary(int master_id, int length, const char* dictionary_confi
 int ArtmReconfigureDictionary(int master_id, int length, const char* dictionary_config) {
   try {
     artm::DictionaryConfig config;
-    if (!config.ParseFromArray(dictionary_config, length)) {
-      return ARTM_INVALID_MESSAGE;
-    }
-
-    auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-    master_component->CreateOrReconfigureDictionary(config);
+    ParseFromArray(dictionary_config, length, &config);
+    master_component(master_id)->CreateOrReconfigureDictionary(config);
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;
 }
 
 int ArtmDisposeDictionary(int master_id, const char* dictionary_name) {
-  auto master_component = artm::core::MasterComponentManager::singleton().Get(master_id);
-  if (master_component == nullptr) return ARTM_SUCCESS;
-  master_component->DisposeDictionary(dictionary_name);
-  return ARTM_SUCCESS;
+  try {
+    master_component(master_id)->DisposeDictionary(dictionary_name);
+    return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
 }

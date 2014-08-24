@@ -32,6 +32,12 @@ std::shared_ptr<DictionaryConfig> CollectionParser::JustLoadDictionary() {
 }
 
 std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
+  if (!boost::filesystem::exists(config_.vocab_file_path()))
+    BOOST_THROW_EXCEPTION(DiskReadException("File " + config_.vocab_file_path() + " does not exist."));
+
+  if (!boost::filesystem::exists(config_.docword_file_path()))
+    BOOST_THROW_EXCEPTION(DiskReadException("File " + config_.docword_file_path() + " does not exist."));
+
   boost::iostreams::stream<mapped_file_source> vocab(config_.vocab_file_path());
   boost::iostreams::stream<mapped_file_source> docword(config_.docword_file_path());
 

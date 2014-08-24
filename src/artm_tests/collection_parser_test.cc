@@ -29,7 +29,7 @@ TEST(CollectionParser, Basic) {
   config.set_num_items_per_batch(1);
   config.set_vocab_file_path("../../../test_data/vocab.parser_test.txt");
   config.set_docword_file_path("../../../test_data/docword.parser_test.txt");
-  
+
   std::shared_ptr<::artm::DictionaryConfig> dictionary_parsed = ::artm::ParseCollection(config);
   ASSERT_EQ(dictionary_parsed->entry_size(), 3);
 
@@ -45,5 +45,22 @@ TEST(CollectionParser, Basic) {
     ++it;
   }
 
-  ASSERT_EQ(batches_count, 2);  
+  ASSERT_EQ(batches_count, 2);
+}
+
+TEST(CollectionParser, ErrorHandling) {
+  ::artm::CollectionParserConfig config;
+  config.set_format(::artm::CollectionParserConfig_Format_BagOfWordsUci);
+  config.set_vocab_file_path("no_such_file.txt");
+  config.set_docword_file_path("../../../test_data/docword.parser_test.txt");
+  ASSERT_THROW(::artm::ParseCollection(config), artm::DiskReadException);
+
+  config.set_vocab_file_path("../../../test_data/vocab.parser_test.txt");
+  config.set_docword_file_path("no_such_file");
+  ASSERT_THROW(::artm::ParseCollection(config), artm::DiskReadException);
+
+  config.set_format(::artm::CollectionParserConfig_Format_JustLoadDictionary);
+  config.set_target_folder("no_such_folder");
+  config.set_dictionary_file_name("no_such_file.dictionary");
+  ASSERT_THROW(::artm::ParseCollection(config), artm::DiskReadException);
 }

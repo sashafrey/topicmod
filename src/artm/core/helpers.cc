@@ -173,7 +173,7 @@ void BatchHelpers::LoadMessage(const std::string& filename, const std::string& d
 
   std::ifstream fin(full_path.c_str(), std::ifstream::binary);
   if (!fin.is_open())
-    BOOST_THROW_EXCEPTION(DiskReadException("Unable to find file " + full_path.string()));
+    BOOST_THROW_EXCEPTION(DiskReadException("Unable to open file " + full_path.string()));
 
   if (!message->ParseFromIstream(&fin)) {
     BOOST_THROW_EXCEPTION(DiskReadException(

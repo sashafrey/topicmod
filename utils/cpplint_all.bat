@@ -33,6 +33,7 @@ call cpplint.bat ../src/artm/score_sandbox/top_tokens.cc
 call cpplint.bat ../src/artm/score_sandbox/theta_snippet.cc
 
 call cpplint.bat ../src/artm_tests/boost_thread_test.cc
+call cpplint.bat ../src/artm_tests/collection_parser_test.cc
 call cpplint.bat ../src/artm_tests/cpp_interface_test.cc
 call cpplint.bat ../src/artm_tests/template_manager_test.cc
 call cpplint.bat ../src/artm_tests/nodes_connectivity_test.cc

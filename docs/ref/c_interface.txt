@@ -433,6 +433,15 @@ Returns a :ref:`DictionaryConfig` message that lists all tokens, occured in the 
 
 See the description of :ref:`CollectionParserConfig` message for more details about this operation.
 
+.. warning::
+
+   The following error most likelly indicate that you are trying to parse a very large file
+   in 32 bit version of BigARTM.
+
+   ``InternalError :  failed mapping view: The parameter is incorrect``
+
+   Try to compile BigARTM as 64 bit to workaround this issue.
+
 ArtmCopyRequestResult
 ---------------------
 

@@ -32,7 +32,7 @@ dictionary_file = 'kos.dictionary'
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 
 if sys.platform.count('linux') == 1:
-    library = ArtmLibrary(address + '/bin/libartm.so')
+    library = ArtmLibrary(address + '/../build/src/artm/libartm.so')
 else:
     os.environ['PATH'] = ';'.join([address + '..\\..\\build\\bin\\Release', os.environ['PATH']])
     library = ArtmLibrary(address + '..\\..\\build\\bin\\Release\\artm.dll')

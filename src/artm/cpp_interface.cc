@@ -20,8 +20,7 @@ inline char* StringAsArray(std::string* str) {
 }
 
 inline std::string GetLastErrorMessage() {
-  auto error_message = ArtmGetLastErrorMessage();
-  return std::string(error_message);
+  return std::string(ArtmGetLastErrorMessage());
 }
 
 inline int HandleErrorCode(int artm_error_code) {
@@ -31,19 +30,24 @@ inline int HandleErrorCode(int artm_error_code) {
   }
 
   switch (artm_error_code) {
-    case ARTM_SUCCESS:
-      return artm_error_code;
-    case ARTM_OBJECT_NOT_FOUND:
-      throw ObjectNotFound(GetLastErrorMessage());
-    case ARTM_INVALID_MESSAGE:
-      throw InvalidMessage(GetLastErrorMessage());
-    case ARTM_NETWORK_ERROR:
-      throw NerworkException(GetLastErrorMessage());
+    case ARTM_INTERNAL_ERROR:
+      throw InternalError(GetLastErrorMessage());
+    case ARTM_ARGUMENT_OUT_OF_RANGE:
+      throw ArgumentOutOfRangeException(GetLastErrorMessage());
+    case ARTM_INVALID_MASTER_ID:
+      throw InvalidMasterIdException(GetLastErrorMessage());
+    case ARTM_CORRUPTED_MESSAGE:
+      throw CorruptedMessageException(GetLastErrorMessage());
     case ARTM_INVALID_OPERATION:
-      throw InvalidOperation(GetLastErrorMessage());
-    case ARTM_GENERAL_ERROR:
+      throw InvalidOperationException(GetLastErrorMessage());
+    case ARTM_DISK_READ_ERROR:
+      throw DiskReadException(GetLastErrorMessage());
+    case ARTM_DISK_WRITE_ERROR:
+      throw DiskWriteException(GetLastErrorMessage());
+    case ARTM_NETWORK_ERROR:
+      throw NetworkException(GetLastErrorMessage());
     default:
-      throw GeneralError(GetLastErrorMessage());
+      throw InternalError("Unknown error code");
   }
 }
 
@@ -54,19 +58,34 @@ void SaveBatch(const Batch& batch, const std::string& disk_path) {
     StringAsArray(&config_blob)));
 }
 
+
+std::shared_ptr<DictionaryConfig> ParseCollection(const CollectionParserConfig& config) {
+  std::string config_blob;
+  config.SerializeToString(&config_blob);
+  int length = HandleErrorCode(ArtmRequestParseCollection(config_blob.size(),
+    StringAsArray(&config_blob)));
+
+  std::string dictionary_blob;
+  dictionary_blob.resize(length);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&dictionary_blob)));
+
+  std::shared_ptr<DictionaryConfig> dictionary(new DictionaryConfig());
+  dictionary->ParseFromString(dictionary_blob);
+  return dictionary;
+}
+
 MasterComponent::MasterComponent(const MasterComponentConfig& config) : id_(0), config_(config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  id_ = HandleErrorCode(ArtmCreateMasterComponent(0, config_blob.size(),
-    StringAsArray(&config_blob)));
+  id_ = HandleErrorCode(ArtmCreateMasterComponent(
+    config_blob.size(), StringAsArray(&config_blob)));
 }
 
 MasterComponent::MasterComponent(const MasterProxyConfig& config)
     : id_(0), config_(config.config()) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  id_ = HandleErrorCode(ArtmCreateMasterProxy(0, config_blob.size(),
-    StringAsArray(&config_blob)));
+  id_ = HandleErrorCode(ArtmCreateMasterProxy(config_blob.size(), StringAsArray(&config_blob)));
 }
 
 MasterComponent::~MasterComponent() {
@@ -82,15 +101,10 @@ void MasterComponent::Reconfigure(const MasterComponentConfig& config) {
 
 std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
   // Request model topics
-  int request_id = HandleErrorCode(ArtmRequestTopicModel(
-    id(), model.name().c_str()));
-
-  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  int length = HandleErrorCode(ArtmRequestTopicModel(id(), model.name().c_str()));
   std::string topic_model_blob;
   topic_model_blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&topic_model_blob)));
-
-  ArtmDisposeRequest(request_id);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&topic_model_blob)));
 
   std::shared_ptr<TopicModel> topic_model(new TopicModel());
   topic_model->ParseFromString(topic_model_blob);
@@ -99,15 +113,10 @@ std::shared_ptr<TopicModel> MasterComponent::GetTopicModel(const Model& model) {
 
 std::shared_ptr<RegularizerInternalState> MasterComponent::GetRegularizerState(
   const std::string& regularizer_name) {
-  int request_id = HandleErrorCode(ArtmRequestRegularizerState(
-    id(), regularizer_name.c_str()));
-
-  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  int length = HandleErrorCode(ArtmRequestRegularizerState(id(), regularizer_name.c_str()));
   std::string state_blob;
   state_blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&state_blob)));
-
-  ArtmDisposeRequest(request_id);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&state_blob)));
 
   std::shared_ptr<RegularizerInternalState> regularizer_state(new RegularizerInternalState());
   regularizer_state->ParseFromString(state_blob);
@@ -115,15 +124,10 @@ std::shared_ptr<RegularizerInternalState> MasterComponent::GetRegularizerState(
 }
 
 std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model) {
-  int request_id = HandleErrorCode(ArtmRequestThetaMatrix(
-    id(), model.name().c_str()));
-
-  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  int length = HandleErrorCode(ArtmRequestThetaMatrix(id(), model.name().c_str()));
   std::string blob;
   blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&blob)));
-
-  ArtmDisposeRequest(request_id);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&blob)));
 
   std::shared_ptr<ThetaMatrix> theta_matrix(new ThetaMatrix());
   theta_matrix->ParseFromString(blob);
@@ -132,15 +136,10 @@ std::shared_ptr<ThetaMatrix> MasterComponent::GetThetaMatrix(const Model& model)
 
 std::shared_ptr<ScoreData> MasterComponent::GetScore(const Model& model,
                                                      const std::string& score_name) {
-  int request_id = HandleErrorCode(ArtmRequestScore(
-    id(), model.name().c_str(), score_name.c_str()));
-
-  int length = HandleErrorCode(ArtmGetRequestLength(request_id));
+  int length = HandleErrorCode(ArtmRequestScore(id(), model.name().c_str(), score_name.c_str()));
   std::string blob;
   blob.resize(length);
-  HandleErrorCode(ArtmCopyRequestResult(request_id, length, StringAsArray(&blob)));
-
-  ArtmDisposeRequest(request_id);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&blob)));
 
   std::shared_ptr<ScoreData> score_data(new ScoreData());
   score_data->ParseFromString(blob);
@@ -150,8 +149,7 @@ std::shared_ptr<ScoreData> MasterComponent::GetScore(const Model& model,
 NodeController::NodeController(const NodeControllerConfig& config) : id_(0), config_(config) {
   std::string config_blob;
   config.SerializeToString(&config_blob);
-  id_ = HandleErrorCode(ArtmCreateNodeController(0, config_blob.size(),
-    StringAsArray(&config_blob)));
+  id_ = HandleErrorCode(ArtmCreateNodeController(config_blob.size(), StringAsArray(&config_blob)));
 }
 
 NodeController::~NodeController() {

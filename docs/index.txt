@@ -5,8 +5,8 @@
 
 .. _contents:
 
-BigARTM documentation contents
-==============================
+Welcome to BigARTM's documentation!
+===================================
 
 .. toctree::
    :maxdepth: 2

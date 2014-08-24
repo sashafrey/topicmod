@@ -59,7 +59,7 @@ void DataLoader::PopulateDataStreams(const Batch& batch, ProcessorInput* pi) {
         }
 
         default:
-          BOOST_THROW_EXCEPTION(NotImplementedException("Stream_Type_ItemHashModulus"));
+          BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("stream.type", stream.type()));
       }
 
       mask->add_value(value);

@@ -382,13 +382,13 @@ void NodeControllerServiceImpl::VerifyCurrentState() {
   if ((instance_ == nullptr) && (master_ == nullptr)) {
     std::string message = "Neither Instance nor MasterComponent had been found";
     LOG(ERROR) << message;
-    BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException(message));
+    BOOST_THROW_EXCEPTION(InvalidOperation(message));
   }
 
   if ((instance_ != nullptr) && (master_ != nullptr)) {
     std::string message = "Instance and MasterComponent exist together in on node controller";
     LOG(ERROR) << message;
-    BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException(message));
+    BOOST_THROW_EXCEPTION(InvalidOperation(message));
   }
 }
 

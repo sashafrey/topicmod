@@ -321,8 +321,8 @@ bool Merger::RetrieveExternalTopicModel(ModelName model_name,
   return true;
 }
 
-void Merger::RequestRegularizerState(RegularizerName regularizer_name, 
-                             ::artm::RegularizerInternalState* regularizer_state) const {
+void Merger::RequestRegularizerState(RegularizerName regularizer_name,
+                                     ::artm::RegularizerInternalState* regularizer_state) const {
   auto schema = schema_->get();
   if (schema->has_regularizer(regularizer_name)) {
     auto regularizer = schema->regularizer(regularizer_name);
@@ -330,7 +330,8 @@ void Merger::RequestRegularizerState(RegularizerName regularizer_name,
     regularizer_state->set_name(regularizer_name);
   } else {
     LOG(ERROR) << "Requested internal state of non-exists regularizer.";
-    BOOST_THROW_EXCEPTION(InvalidOperation("State from non-exists regularizer!"));
+    BOOST_THROW_EXCEPTION(InvalidOperation(
+      "Attemp to request a state from non-exists regularizer"));
   }
 }
 
@@ -360,7 +361,8 @@ void Merger::ScoresMerger::Append(const ModelName& model_name, const ScoreName& 
 
   auto score_inc = score_calculator->CreateScore();
   if (!score_inc->ParseFromString(score_blob)) {
-    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse score blob"));
+    LOG(ERROR) << "Merger was unable to parse score blob. The scores might be inacurate.";
+    return;
   }
 
   auto score = score_map_.get(key);
@@ -404,7 +406,7 @@ bool Merger::ScoresMerger::RequestScore(const ModelName& model_name, const Score
                                         ScoreData *score_data) const {
   auto score_calculator = schema_->get()->score_calculator(score_name);
   if (score_calculator == nullptr) {
-    BOOST_THROW_EXCEPTION(InvalidOperation("Score does not exist"));
+    BOOST_THROW_EXCEPTION(InvalidOperation("Attempt to request non-existing score"));
   }
 
   if (score_calculator->is_cumulative()) {

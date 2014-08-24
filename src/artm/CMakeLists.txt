@@ -14,6 +14,7 @@ set(ARTM_LIB_DEPS  artm-static
                    ${Boost_THREAD_LIBRARIES}
                    ${Boost_SYSTEM_LIBRARIES}
                    ${Boost_FILESYSTEM_LIBRARIES}
+                   ${Boost_IOSTREAMS_LIBRARIES}
                    ${PROTOBUF_LIBRARIES}
                    ${GLOG_LIBRARIES}
                    ${ZEROMQ_LIBRARIES})

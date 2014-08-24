@@ -313,3 +313,18 @@ message ThetaMatrix {
   repeated int32 item_id = 2;
   repeated FloatArray item_weights = 3;
 }
+
+// Represents a configuration of a collection parser.
+message CollectionParserConfig {
+  enum Format {
+    BagOfWordsUci = 0;
+    JustLoadDictionary = 1;
+  }
+
+  optional Format format = 1 [default = BagOfWordsUci];
+  optional string docword_file_path = 2;
+  optional string vocab_file_path = 3;
+  optional string target_folder = 4;
+  optional string dictionary_file_name = 5;
+  optional int32 num_items_per_batch = 6 [default = 1000];
+}

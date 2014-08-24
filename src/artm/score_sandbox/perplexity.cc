@@ -80,12 +80,12 @@ void Perplexity::AppendScore(const Score& score, Score* target) {
   std::string error_message = "Unable downcast Score to PerplexityScore";
   const PerplexityScore* perplexity_score = dynamic_cast<const PerplexityScore*>(&score);
   if (perplexity_score == nullptr) {
-    BOOST_THROW_EXCEPTION(::artm::core::InvalidOperation(error_message));
+    BOOST_THROW_EXCEPTION(::artm::core::InternalError(error_message));
   }
 
   PerplexityScore* perplexity_target = dynamic_cast<PerplexityScore*>(target);
   if (perplexity_target == nullptr) {
-    BOOST_THROW_EXCEPTION(::artm::core::InvalidOperation(error_message));
+    BOOST_THROW_EXCEPTION(::artm::core::InternalError(error_message));
   }
 
   perplexity_target->set_normalizer(perplexity_target->normalizer() +

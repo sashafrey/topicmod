@@ -26,6 +26,8 @@ top_tokens_count_to_visualize = 4
 
 vocab_file = '../../datasets/vocab.kos.txt'
 docword_file = '../../datasets/docword.kos.txt'
+target_folder = 'batches'
+dictionary_file = 'kos.dictionary'
 
 address = os.path.abspath(os.path.join(os.curdir, os.pardir))
 
@@ -35,16 +37,29 @@ else:
     os.environ['PATH'] = ';'.join([address + '..\\..\\build\\bin\\Release', os.environ['PATH']])
     library = ArtmLibrary(address + '..\\..\\build\\bin\\Release\\artm.dll')
 
-
-with open(vocab_file, 'r') as content_file:
-    content = content_file.read()
-
-tokens = content.splitlines()
+batches_found = len(glob.glob(target_folder + "/*.batch"))
+if batches_found == 0:
+    print "No batches found, parsing them from textual collection ",
+    collection_parser_config = messages_pb2.CollectionParserConfig();
+    collection_parser_config.format = CollectionParserConfig_Format_BagOfWordsUci
+    collection_parser_config.docword_file_path = docword_file
+    collection_parser_config.vocab_file_path = vocab_file
+    collection_parser_config.target_folder = target_folder
+    collection_parser_config.dictionary_file_name = dictionary_file
+    unique_tokens = library.ParseCollection(collection_parser_config);
+    print " OK."
+else:
+    print "Found " + str(batches_found) + " batches, using them."
+    collection_parser_config = messages_pb2.CollectionParserConfig();
+    collection_parser_config.format = CollectionParserConfig_Format_JustLoadDictionary
+    collection_parser_config.target_folder = target_folder
+    collection_parser_config.dictionary_file_name = dictionary_file
+    unique_tokens = library.ParseCollection(collection_parser_config);
 
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count
 master_config.cache_theta = 1
-master_config.disk_path = '.'
+master_config.disk_path = target_folder
 
 perplexity_config = messages_pb2.PerplexityScoreConfig();
 score_config = master_config.score_config.add()
@@ -66,50 +81,6 @@ score_config.config = messages_pb2.SparsityPhiScoreConfig().SerializeToString();
 score_config.type = ScoreConfig_Type_SparsityPhi;
 sparsity_phi_score_name = "sparsity_phi_score"
 score_config.name = sparsity_phi_score_name
-
-batches_found = len(glob.glob("*.batch"))
-if batches_found == 0:
-    print "No batches found, parsing them from textual collection ",
-    batch = messages_pb2.Batch()
-    batch_tokens = {}
-    prev_item_id = -1
-
-    with open('../../datasets/docword.kos.txt', 'r') as docword:
-        items_count = int(docword.readline())
-        words_count = int(docword.readline())
-        num_non_zero = int(docword.readline())
-        for line in docword:
-            item_id, global_token_id, frequency = [int(x) for x in line.split()]
-            token = tokens[global_token_id - 1]
-
-            if (item_id != prev_item_id):
-                prev_item_id = item_id
-
-                if (item_id > limit_collection_size):
-                    break
-
-                if (len(batch.item) >= batch_size):
-                    print ".",
-                    library.SaveBatch(batch, master_config.disk_path)
-                    batch = messages_pb2.Batch()
-                    batch_tokens = {}
-
-                item = batch.item.add()
-                item.id = item_id
-                field = item.field.add()
-
-            if (not batch_tokens.has_key(token)):
-                batch_tokens[token] = len(batch.token)
-                batch.token.append(token)
-
-            local_token_id = batch_tokens[token]
-            field.token_id.append(local_token_id)
-            field.token_count.append(frequency)
-    if (len(batch.item) > 0):
-        library.SaveBatch(batch, master_config.disk_path)
-    print " OK."
-else:
-    print "Found " + str(batches_found) + " batches, using them."
 
 with library.CreateMasterComponent(master_config) as master_component:
     model_config = messages_pb2.ModelConfig()
@@ -153,7 +124,8 @@ with library.CreateMasterComponent(master_config) as master_component:
     initial_topic_model.name = model.name()
 
     random.seed(123)
-    for token in tokens:
+    for i in range(0, len(unique_tokens.entry)):
+        token = unique_tokens.entry[i].key_token
         initial_topic_model.token.append(token);
         weights = initial_topic_model.token_weights.add();
         for topic_index in range(0, topics_count):

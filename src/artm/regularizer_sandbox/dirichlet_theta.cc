@@ -2,9 +2,10 @@
 
 // Author: Murat Apishev (great-mel@yandex.ru)
 
-#include <vector>
-
 #include "artm/regularizer_sandbox/dirichlet_theta.h"
+
+#include <string>
+#include <vector>
 
 namespace artm {
 namespace regularizer_sandbox {
@@ -37,8 +38,12 @@ bool DirichletTheta::RegularizeTheta(const Item& item,
 
 bool DirichletTheta::Reconfigure(const RegularizerConfig& config) {
   std::string config_blob = config.config();
-  DirichletThetaConfig regularizer_config;                         
-  regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length());
+  DirichletThetaConfig regularizer_config;
+  if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
+    BOOST_THROW_EXCEPTION(::artm::core::CorruptedMessageException(
+      "Unable to parse DecorrelatorThetaConfig from RegularizerConfig.config"));
+  }
+
   config_.CopyFrom(regularizer_config);
   return true;
 }

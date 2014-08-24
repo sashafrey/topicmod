@@ -146,6 +146,10 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* ThetaMatrix_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   ThetaMatrix_reflection_ = NULL;
+const ::google::protobuf::Descriptor* CollectionParserConfig_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  CollectionParserConfig_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* CollectionParserConfig_Format_descriptor_ = NULL;
 
 }  // namespace
 
@@ -831,6 +835,27 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ThetaMatrix));
+  CollectionParserConfig_descriptor_ = file->message_type(39);
+  static const int CollectionParserConfig_offsets_[6] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, format_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, docword_file_path_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, vocab_file_path_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, target_folder_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, dictionary_file_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, num_items_per_batch_),
+  };
+  CollectionParserConfig_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      CollectionParserConfig_descriptor_,
+      CollectionParserConfig::default_instance_,
+      CollectionParserConfig_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(CollectionParserConfig));
+  CollectionParserConfig_Format_descriptor_ = CollectionParserConfig_descriptor_->enum_type(0);
 }
 
 namespace {
@@ -923,6 +948,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     TopicModel_TopicModelInternals_descriptor_, &TopicModel_TopicModelInternals::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     ThetaMatrix_descriptor_, &ThetaMatrix::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    CollectionParserConfig_descriptor_, &CollectionParserConfig::default_instance());
 }
 
 }  // namespace
@@ -1023,6 +1050,8 @@ void protobuf_ShutdownFile_artm_2fmessages_2eproto() {
   delete ThetaMatrix::default_instance_;
   delete ThetaMatrix_reflection_;
   delete ThetaMatrix::_default_model_name_;
+  delete CollectionParserConfig::default_instance_;
+  delete CollectionParserConfig_reflection_;
 }
 
 void protobuf_AddDesc_artm_2fmessages_2eproto() {
@@ -1137,7 +1166,14 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "2\020.artm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.F"
     "loatArray\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001"
     " \001(\t:\006@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_we"
-    "ights\030\003 \003(\0132\020.artm.FloatArray", 4229);
+    "ights\030\003 \003(\0132\020.artm.FloatArray\"\235\002\n\026Collec"
+    "tionParserConfig\022B\n\006format\030\001 \001(\0162#.artm."
+    "CollectionParserConfig.Format:\rBagOfWord"
+    "sUci\022\031\n\021docword_file_path\030\002 \001(\t\022\027\n\017vocab"
+    "_file_path\030\003 \001(\t\022\025\n\rtarget_folder\030\004 \001(\t\022"
+    "\034\n\024dictionary_file_name\030\005 \001(\t\022!\n\023num_ite"
+    "ms_per_batch\030\006 \001(\005:\0041000\"3\n\006Format\022\021\n\rBa"
+    "gOfWordsUci\020\000\022\026\n\022JustLoadDictionary\020\001", 4517);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   DoubleArray::default_instance_ = new DoubleArray();
@@ -1210,6 +1246,7 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
   ThetaMatrix::_default_model_name_ =
       new ::std::string("@model", 6);
   ThetaMatrix::default_instance_ = new ThetaMatrix();
+  CollectionParserConfig::default_instance_ = new CollectionParserConfig();
   DoubleArray::default_instance_->InitAsDefaultInstance();
   FloatArray::default_instance_->InitAsDefaultInstance();
   BoolArray::default_instance_->InitAsDefaultInstance();
@@ -1250,6 +1287,7 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
   TopicModel::default_instance_->InitAsDefaultInstance();
   TopicModel_TopicModelInternals::default_instance_->InitAsDefaultInstance();
   ThetaMatrix::default_instance_->InitAsDefaultInstance();
+  CollectionParserConfig::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_artm_2fmessages_2eproto);
 }
 
@@ -13246,6 +13284,509 @@ void ThetaMatrix::Swap(ThetaMatrix* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = ThetaMatrix_descriptor_;
   metadata.reflection = ThetaMatrix_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+const ::google::protobuf::EnumDescriptor* CollectionParserConfig_Format_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CollectionParserConfig_Format_descriptor_;
+}
+bool CollectionParserConfig_Format_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const CollectionParserConfig_Format CollectionParserConfig::BagOfWordsUci;
+const CollectionParserConfig_Format CollectionParserConfig::JustLoadDictionary;
+const CollectionParserConfig_Format CollectionParserConfig::Format_MIN;
+const CollectionParserConfig_Format CollectionParserConfig::Format_MAX;
+const int CollectionParserConfig::Format_ARRAYSIZE;
+#endif  // _MSC_VER
+#ifndef _MSC_VER
+const int CollectionParserConfig::kFormatFieldNumber;
+const int CollectionParserConfig::kDocwordFilePathFieldNumber;
+const int CollectionParserConfig::kVocabFilePathFieldNumber;
+const int CollectionParserConfig::kTargetFolderFieldNumber;
+const int CollectionParserConfig::kDictionaryFileNameFieldNumber;
+const int CollectionParserConfig::kNumItemsPerBatchFieldNumber;
+#endif  // !_MSC_VER
+
+CollectionParserConfig::CollectionParserConfig()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void CollectionParserConfig::InitAsDefaultInstance() {
+}
+
+CollectionParserConfig::CollectionParserConfig(const CollectionParserConfig& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void CollectionParserConfig::SharedCtor() {
+  _cached_size_ = 0;
+  format_ = 0;
+  docword_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  vocab_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  target_folder_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  dictionary_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  num_items_per_batch_ = 1000;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+CollectionParserConfig::~CollectionParserConfig() {
+  SharedDtor();
+}
+
+void CollectionParserConfig::SharedDtor() {
+  if (docword_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete docword_file_path_;
+  }
+  if (vocab_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete vocab_file_path_;
+  }
+  if (target_folder_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete target_folder_;
+  }
+  if (dictionary_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete dictionary_file_name_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void CollectionParserConfig::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CollectionParserConfig::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CollectionParserConfig_descriptor_;
+}
+
+const CollectionParserConfig& CollectionParserConfig::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_artm_2fmessages_2eproto();
+  return *default_instance_;
+}
+
+CollectionParserConfig* CollectionParserConfig::default_instance_ = NULL;
+
+CollectionParserConfig* CollectionParserConfig::New() const {
+  return new CollectionParserConfig;
+}
+
+void CollectionParserConfig::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    format_ = 0;
+    if (has_docword_file_path()) {
+      if (docword_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+        docword_file_path_->clear();
+      }
+    }
+    if (has_vocab_file_path()) {
+      if (vocab_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+        vocab_file_path_->clear();
+      }
+    }
+    if (has_target_folder()) {
+      if (target_folder_ != &::google::protobuf::internal::GetEmptyString()) {
+        target_folder_->clear();
+      }
+    }
+    if (has_dictionary_file_name()) {
+      if (dictionary_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
+        dictionary_file_name_->clear();
+      }
+    }
+    num_items_per_batch_ = 1000;
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool CollectionParserConfig::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional .artm.CollectionParserConfig.Format format = 1 [default = BagOfWordsUci];
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::artm::CollectionParserConfig_Format_IsValid(value)) {
+            set_format(static_cast< ::artm::CollectionParserConfig_Format >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(1, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_docword_file_path;
+        break;
+      }
+
+      // optional string docword_file_path = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_docword_file_path:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_docword_file_path()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->docword_file_path().data(), this->docword_file_path().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_vocab_file_path;
+        break;
+      }
+
+      // optional string vocab_file_path = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_vocab_file_path:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_vocab_file_path()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->vocab_file_path().data(), this->vocab_file_path().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_target_folder;
+        break;
+      }
+
+      // optional string target_folder = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_target_folder:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_target_folder()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->target_folder().data(), this->target_folder().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(42)) goto parse_dictionary_file_name;
+        break;
+      }
+
+      // optional string dictionary_file_name = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_dictionary_file_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_dictionary_file_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->dictionary_file_name().data(), this->dictionary_file_name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(48)) goto parse_num_items_per_batch;
+        break;
+      }
+
+      // optional int32 num_items_per_batch = 6 [default = 1000];
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_num_items_per_batch:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &num_items_per_batch_)));
+          set_has_num_items_per_batch();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void CollectionParserConfig::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional .artm.CollectionParserConfig.Format format = 1 [default = BagOfWordsUci];
+  if (has_format()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      1, this->format(), output);
+  }
+
+  // optional string docword_file_path = 2;
+  if (has_docword_file_path()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->docword_file_path().data(), this->docword_file_path().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->docword_file_path(), output);
+  }
+
+  // optional string vocab_file_path = 3;
+  if (has_vocab_file_path()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->vocab_file_path().data(), this->vocab_file_path().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      3, this->vocab_file_path(), output);
+  }
+
+  // optional string target_folder = 4;
+  if (has_target_folder()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->target_folder().data(), this->target_folder().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->target_folder(), output);
+  }
+
+  // optional string dictionary_file_name = 5;
+  if (has_dictionary_file_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->dictionary_file_name().data(), this->dictionary_file_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      5, this->dictionary_file_name(), output);
+  }
+
+  // optional int32 num_items_per_batch = 6 [default = 1000];
+  if (has_num_items_per_batch()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->num_items_per_batch(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* CollectionParserConfig::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional .artm.CollectionParserConfig.Format format = 1 [default = BagOfWordsUci];
+  if (has_format()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->format(), target);
+  }
+
+  // optional string docword_file_path = 2;
+  if (has_docword_file_path()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->docword_file_path().data(), this->docword_file_path().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->docword_file_path(), target);
+  }
+
+  // optional string vocab_file_path = 3;
+  if (has_vocab_file_path()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->vocab_file_path().data(), this->vocab_file_path().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->vocab_file_path(), target);
+  }
+
+  // optional string target_folder = 4;
+  if (has_target_folder()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->target_folder().data(), this->target_folder().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->target_folder(), target);
+  }
+
+  // optional string dictionary_file_name = 5;
+  if (has_dictionary_file_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->dictionary_file_name().data(), this->dictionary_file_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->dictionary_file_name(), target);
+  }
+
+  // optional int32 num_items_per_batch = 6 [default = 1000];
+  if (has_num_items_per_batch()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->num_items_per_batch(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int CollectionParserConfig::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional .artm.CollectionParserConfig.Format format = 1 [default = BagOfWordsUci];
+    if (has_format()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->format());
+    }
+
+    // optional string docword_file_path = 2;
+    if (has_docword_file_path()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->docword_file_path());
+    }
+
+    // optional string vocab_file_path = 3;
+    if (has_vocab_file_path()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->vocab_file_path());
+    }
+
+    // optional string target_folder = 4;
+    if (has_target_folder()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->target_folder());
+    }
+
+    // optional string dictionary_file_name = 5;
+    if (has_dictionary_file_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->dictionary_file_name());
+    }
+
+    // optional int32 num_items_per_batch = 6 [default = 1000];
+    if (has_num_items_per_batch()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->num_items_per_batch());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CollectionParserConfig::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const CollectionParserConfig* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const CollectionParserConfig*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void CollectionParserConfig::MergeFrom(const CollectionParserConfig& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_format()) {
+      set_format(from.format());
+    }
+    if (from.has_docword_file_path()) {
+      set_docword_file_path(from.docword_file_path());
+    }
+    if (from.has_vocab_file_path()) {
+      set_vocab_file_path(from.vocab_file_path());
+    }
+    if (from.has_target_folder()) {
+      set_target_folder(from.target_folder());
+    }
+    if (from.has_dictionary_file_name()) {
+      set_dictionary_file_name(from.dictionary_file_name());
+    }
+    if (from.has_num_items_per_batch()) {
+      set_num_items_per_batch(from.num_items_per_batch());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void CollectionParserConfig::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CollectionParserConfig::CopyFrom(const CollectionParserConfig& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CollectionParserConfig::IsInitialized() const {
+
+  return true;
+}
+
+void CollectionParserConfig::Swap(CollectionParserConfig* other) {
+  if (other != this) {
+    std::swap(format_, other->format_);
+    std::swap(docword_file_path_, other->docword_file_path_);
+    std::swap(vocab_file_path_, other->vocab_file_path_);
+    std::swap(target_folder_, other->target_folder_);
+    std::swap(dictionary_file_name_, other->dictionary_file_name_);
+    std::swap(num_items_per_batch_, other->num_items_per_batch_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata CollectionParserConfig::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = CollectionParserConfig_descriptor_;
+  metadata.reflection = CollectionParserConfig_reflection_;
   return metadata;
 }
 

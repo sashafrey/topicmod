@@ -18,6 +18,7 @@
 #include "artm/core/master_component.h"
 #include "artm/core/master_proxy.h"
 #include "artm/core/node_controller.h"
+#include "artm/core/collection_parser.h"
 
 // Never use the following variables explicitly (only through the corresponding methods).
 // It might be good idea to make them a private members of a new singleton class.
@@ -306,5 +307,16 @@ int ArtmDisposeDictionary(int master_id, const char* dictionary_name) {
   try {
     master_component(master_id)->DisposeDictionary(dictionary_name);
     return ARTM_SUCCESS;
+  } CATCH_EXCEPTIONS;
+}
+
+int ArtmRequestParseCollection(int length, const char* collection_parser_config) {
+  try {
+    artm::CollectionParserConfig config;
+    ParseFromArray(collection_parser_config, length, &config);
+    ::artm::core::CollectionParser collection_parser(config);
+    std::shared_ptr<::artm::DictionaryConfig> dictionary = collection_parser.Parse();
+    dictionary->SerializeToString(last_message());
+    return last_message()->size();
   } CATCH_EXCEPTIONS;
 }

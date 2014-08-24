@@ -120,54 +120,20 @@ std::vector<boost::uuids::uuid> BatchHelpers::ListAllBatches(const boost::filesy
   return uuids;
 }
 
-// Return the full path of the file where the batch with uuid number will be stored.
-std::string BatchHelpers::MakeBatchPath(const std::string& disk_path,
-                                        const boost::uuids::uuid& uuid) {
-  boost::filesystem::path dir(disk_path);
-  if (!boost::filesystem::is_directory(dir)) {
-    bool is_created = boost::filesystem::create_directory(dir);
-    if (!is_created) {
-      LOG(ERROR) << "Unable to create folder '" << dir << "'";
-    }
-  }
-
-  boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + kBatchExtension);
-  boost::filesystem::path batch_path = dir / file;
-  std::string batch_file = batch_path.string();
-  return batch_file;
-}
-
 std::shared_ptr<const Batch> BatchHelpers::LoadBatch(const boost::uuids::uuid& uuid,
-                                                   const std::string& disk_path) {
-  std::shared_ptr<const Batch> batch_ptr = nullptr;
-  std::string batch_file = MakeBatchPath(disk_path, uuid);
-  std::ifstream fin(batch_file.c_str(), std::ifstream::binary);
-  if (fin.is_open()) {
-    std::shared_ptr<Batch> batch_loaded(new Batch());
-    bool is_parsed = batch_loaded->ParseFromIstream(&fin);
-    if (is_parsed) {
-      batch_ptr = batch_loaded;
-    }
-    fin.close();
-  }
-
+                                                     const std::string& disk_path) {
+  Batch* batch = new Batch();
+  std::shared_ptr<const Batch> batch_ptr(batch);
+  boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + kBatchExtension);
+  LoadMessage(file.string(), disk_path, batch);
   return batch_ptr;
 }
 
 boost::uuids::uuid BatchHelpers::SaveBatch(const Batch& batch,
-                                         const std::string& disk_path) {
+                                           const std::string& disk_path) {
   boost::uuids::uuid uuid = boost::uuids::random_generator()();
-  std::string batch_file = MakeBatchPath(disk_path, uuid);
-  std::ofstream fout(batch_file.c_str(), std::ofstream::binary);
-  if (fout.is_open()) {
-    bool is_serialized = batch.SerializeToOstream(&fout);
-    if (!is_serialized) {
-      BOOST_THROW_EXCEPTION(DiskWriteException("Batch has not been serialized to disk."));
-    }
-
-    fout.close();
-  }
-
+  boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + kBatchExtension);
+  SaveMessage(file.string(), disk_path, batch);
   return uuid;
 }
 
@@ -198,6 +164,46 @@ void BatchHelpers::CompactBatch(const Batch& batch, Batch* compacted_batch) {
       }
     }
   }
+}
+
+void BatchHelpers::LoadMessage(const std::string& filename, const std::string& disk_path,
+                               ::google::protobuf::Message* message) {
+  boost::filesystem::path full_path =
+    boost::filesystem::path(disk_path) / boost::filesystem::path(filename);
+
+  std::ifstream fin(full_path.c_str(), std::ifstream::binary);
+  if (!fin.is_open())
+    BOOST_THROW_EXCEPTION(DiskReadException("Unable to find file " + full_path.string()));
+
+  if (!message->ParseFromIstream(&fin)) {
+    BOOST_THROW_EXCEPTION(DiskReadException(
+      "Unable to parse protobuf message from " + full_path.string()));
+  }
+
+  fin.close();
+}
+
+void BatchHelpers::SaveMessage(const std::string& filename, const std::string& disk_path,
+                               const ::google::protobuf::Message& message) {
+  boost::filesystem::path dir(disk_path);
+  if (!boost::filesystem::is_directory(dir)) {
+    if (!boost::filesystem::create_directory(dir))
+      BOOST_THROW_EXCEPTION(DiskWriteException("Unable to create folder '" + disk_path + "'"));
+  }
+
+  boost::filesystem::path full_filename = dir / boost::filesystem::path(filename);
+  if (boost::filesystem::exists(full_filename))
+    BOOST_THROW_EXCEPTION(DiskWriteException("File already exists: " + full_filename.string()));
+
+  std::ofstream fout(full_filename.c_str(), std::ofstream::binary);
+  if (!fout.is_open())
+    BOOST_THROW_EXCEPTION(DiskReadException("Unable to create file " + full_filename.string()));
+
+  if (!message.SerializeToOstream(&fout)) {
+    BOOST_THROW_EXCEPTION(DiskWriteException("Batch has not been serialized to disk."));
+  }
+
+  fout.close();
 }
 
 }  // namespace core

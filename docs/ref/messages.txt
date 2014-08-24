@@ -773,3 +773,91 @@ Represents a theta matrix.
    A set of item ID weights.
    The length of this repeated field will match the length of the repeated field 'item_id'.
    The length of each FloatArray will match the number of topics in the model.
+
+
+.. _CollectionParserConfig:
+
+CollectionParserConfig
+======================
+
+Represents a configuration of a collection parser.
+
+.. code-block:: bash
+
+  message CollectionParserConfig {
+    enum Format {
+      BagOfWordsUci = 1;
+      JustLoadDictionary = 2;
+    }
+
+    optional Format format = 1 [default = BagOfWordsUci];
+    optional string docword_file_path = 2;
+    optional string vocab_file_path = 3;
+    optional string target_folder = 4;
+    optional string dictionary_file_name = 5;
+    optional int32 num_items_per_batch = 6 [default = 1000];
+  }
+
+.. attribute:: CollectionParserConfig.format
+
+   A value that defines the format of a collection to be parsed.
+
+   ====================== =======================================================================
+   ``BagOfWordsUci``      A bag-of-words collection, stored in UCI format.
+                          UCI format must have two files - `vocab.*.txt`
+                          and `docword.*.txt`, defined by
+                          :attr:`docword_file_path <CollectionParserConfig.docword_file_path>`
+                          and :attr:`vocab_file_path <CollectionParserConfig.vocab_file_path>`.
+                          The format of the docword.*.txt file is 3 header
+                          lines, followed by NNZ triples:
+
+                          .. code-block:: bash
+
+                            D
+                            W
+                            NNZ
+                            docID wordID count
+                            docID wordID count
+                            ...
+                            docID wordID count
+
+                          The file must be sorted on docID.
+                          The format of the vocab.*.txt file is line
+                          contains wordID=n.
+
+   ``JustLoadDictionary`` A value indicating that the collection parser should only load the
+                          :ref:`DictionaryConfig` from
+                          :attr:`target folder <CollectionParserConfig.target_folder>`.
+                          Values of
+                          :attr:`docword_file_path <CollectionParserConfig.docword_file_path>`
+                          and :attr:`vocab_file_path <CollectionParserConfig.vocab_file_path>`
+                          are not used when format is ``JustLoadDictionary``.
+   ====================== =======================================================================
+
+.. attribute:: CollectionParserConfig.docword_file_path
+
+   A value that defines the disk location of a ``docword.*.txt`` file
+   (the bag of words file in sparse format).
+
+.. attribute:: CollectionParserConfig.vocab_file_path
+
+   A value that defines the disk location of a ``vocab.*.txt`` file
+   (the file with the vocabulary of the collection).
+
+
+.. attribute:: CollectionParserConfig.target_folder
+
+   A value that defines the disk location where to stores all the results after parsing the colleciton.
+   Usually the resulting location will contain a set of :ref:`batches <Batch>`,
+   and a :ref:`DictionaryConfig` that contains all unique tokens occured in the collection.
+   Such location can be further passed MasterComponent via :attr:`MasterComponentConfig.disk_path`.
+
+.. attribute:: CollectionParserConfig.dictionary_file_name
+
+   A file name where to save the :ref:`DictionaryConfig` message
+   that contains all unique tokens occured in the collection.
+   The file will be created in :attr:`target_folder <CollectionParserConfig.target_folder>`.
+
+.. attribute:: CollectionParserConfig.num_items_per_batch
+
+   A value indicating the desired number of items per batch.

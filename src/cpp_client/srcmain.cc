@@ -11,21 +11,31 @@ using namespace boost::filesystem;
 
 #include "boost/timer/timer.hpp"
 
-#include "doc_token_matrix.h"
-#include "token_topic_matrix.h"
-#include "doc_topic_matrix.h"
-#include "vocab.h"
-#include "helpers.h"
-
 #include "artm/cpp_interface.h"
 #include "artm/messages.pb.h"
 #include "glog/logging.h"
 using namespace artm;
 
+int countFilesInDirectory(std::string root, std::string ext) {
+  int retval = 0;
+  if (boost::filesystem::exists(root) && boost::filesystem::is_directory(root)) {
+    boost::filesystem::recursive_directory_iterator it(root);
+    boost::filesystem::recursive_directory_iterator endit;
+    while(it != endit) {
+      if (boost::filesystem::is_regular_file(*it) && it->path().extension() == ext) {
+        retval++;
+      }
+      ++it;
+    }
+  }
+  return retval;
+}
+
 void proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string batches_disk_path = "batches";
-  std::string vocab_file = "";
-  std::string docword_file = "";
+  std::string docword_file = "../../../datasets/docword.kos.txt";
+  std::string vocab_file = "../../../datasets/vocab.kos.txt";
+  std::string dictionary_file = "kos.dictionary";
   int topics_count = 16;
 
   // Recommended values for decorrelator_tau are as follows:
@@ -61,45 +71,26 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
   batches_disk_path = (current_path() / path(batches_disk_path)).string();
 
   int batch_files_count = countFilesInDirectory(batches_disk_path, ".batch");
+  std::shared_ptr<DictionaryConfig> unique_tokens;
   if (batch_files_count == 0) {
-    std::cout << "No batches found, parsing collection from text files... ";
-    // Load doc-word matrix
-    auto doc_word_ptr = loadMatrixFileUCI(docword_file.empty() ? argv[1] : docword_file);
-    VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
-    int no_words = vocab_ptr->size();
-    int no_docs = doc_word_ptr->getD();
-
-    int no_docs_per_part = 1000;
-    int no_parts = no_docs / no_docs_per_part + 1;
-    int doc_index = 0;
-    for (int part_index = 1; part_index <= no_parts; part_index++)
-    {
-      Batch batch;
-      for (int i = 0; i < no_words; i++) {
-        batch.add_token((*vocab_ptr)[i]);
-      }
-
-      for (; doc_index < (no_docs_per_part * part_index) && (doc_index < no_docs); doc_index++) {
-        auto term_ids = doc_word_ptr->getTermId(doc_index);
-        auto term_counts = doc_word_ptr->getFreq(doc_index);
-
-        Item* item = batch.add_item();
-        item->set_id(doc_index);
-        Field* field = item->add_field();
-        for (int word_index = 0; word_index < (int)term_ids.size(); ++word_index) {
-          field->add_token_id(term_ids[word_index]);
-          field->add_token_count((google::protobuf::int32) term_counts[word_index]);
-        }
-      }
-
-      // Index doc-word matrix
-      ::artm::SaveBatch(batch, batches_disk_path);
-    }
+    ::artm::CollectionParserConfig collection_parser_config;
+    collection_parser_config.set_format(CollectionParserConfig_Format_BagOfWordsUci);
+    collection_parser_config.set_docword_file_path(docword_file);
+    collection_parser_config.set_vocab_file_path(vocab_file);
+    collection_parser_config.set_dictionary_file_name(dictionary_file);
+    collection_parser_config.set_target_folder(batches_disk_path);
+    unique_tokens = ::artm::ParseCollection(collection_parser_config);
 
     std::cout << "OK.\n";
   } else {
     std::cout << "Found " << batch_files_count << " batches in folder '"
               << batches_disk_path << "', will use them.\n";
+
+    ::artm::CollectionParserConfig collection_parser_config;
+    collection_parser_config.set_format(CollectionParserConfig_Format_JustLoadDictionary);
+    collection_parser_config.set_dictionary_file_name(dictionary_file);
+    collection_parser_config.set_target_folder(batches_disk_path);
+    unique_tokens = ::artm::ParseCollection(collection_parser_config);
   }
   
   master_config.set_disk_path(batches_disk_path);
@@ -236,9 +227,8 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
   TopicModel initial_topic_model;
   initial_topic_model.set_name(model_config.name());
   initial_topic_model.set_topics_count(nTopics);
-  VocabPtr vocab_ptr = loadVocab(vocab_file.empty() ? argv[2] : vocab_file);
-  for (int token_index = 0; token_index < (int)vocab_ptr->size(); ++token_index) {
-    std::string token = (*vocab_ptr)[token_index];
+  for (int token_index = 0; token_index < unique_tokens->entry_size(); ++token_index) {
+    std::string token = unique_tokens->entry(token_index).key_token();
     initial_topic_model.add_token(token);
     artm::FloatArray* weights = initial_topic_model.add_token_weights();
     for (int topic_index = 0; topic_index < nTopics; ++topic_index) {

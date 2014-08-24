@@ -4,6 +4,7 @@ call cpplint.bat ../src/artm/cpp_interface.cc
 call cpplint.bat ../src/artm/c_interface.cc
 
 REM call cpplint.bat ../src/artm/core/batch_manager.сс
+call cpplint.bat ../src/artm/core/collection_parser.cc
 call cpplint.bat ../src/artm/core/data_loader.cc
 call cpplint.bat ../src/artm/core/generation.cc
 call cpplint.bat ../src/artm/core/helpers.cc
@@ -49,6 +50,7 @@ call cpplint.bat ../src/artm/c_interface.h
 
 REM call cpplint.bat ../src/artm/core/batch_manager.h
 call cpplint.bat ../src/artm/core/call_on_destruction.h
+call cpplint.bat ../src/artm/core/collection_parser.h
 call cpplint.bat ../src/artm/core/common.h
 call cpplint.bat ../src/artm/core/data_loader.h
 call cpplint.bat ../src/artm/core/dictionary.h

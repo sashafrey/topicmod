@@ -8,16 +8,16 @@ from ctypes import *
 
 #################################################################################
 
-ARTM_SUCCESS = 0,                   # Has no corresponding exception type.
-ARTM_STILL_WORKING = -1,            # Has no corresponding exception type.
-ARTM_INTERNAL_ERROR = -2,
-ARTM_ARGUMENT_OUT_OF_RANGE = -3,
-ARTM_INVALID_MASTER_ID = -4,
-ARTM_CORRUPTED_MESSAGE = -5,
-ARTM_INVALID_OPERATION = -6,
-ARTM_DISK_READ_ERROR = -7,
-ARTM_DISK_WRITE_ERROR = -8,
-ARTM_NETWORK_ERROR = -9,
+ARTM_SUCCESS = 0                   # Has no corresponding exception type.
+ARTM_STILL_WORKING = -1            # Has no corresponding exception type.
+ARTM_INTERNAL_ERROR = -2
+ARTM_ARGUMENT_OUT_OF_RANGE = -3
+ARTM_INVALID_MASTER_ID = -4
+ARTM_CORRUPTED_MESSAGE = -5
+ARTM_INVALID_OPERATION = -6
+ARTM_DISK_READ_ERROR = -7
+ARTM_DISK_WRITE_ERROR = -8
+ARTM_NETWORK_ERROR = -9
 
 Stream_Type_Global = 0
 Stream_Type_ItemIdModulus = 1
@@ -38,6 +38,8 @@ ScoreConfig_Type_TopTokens = 4
 ScoreData_Type_TopTokens = 4
 ScoreConfig_Type_ThetaSnippet = 5
 ScoreData_Type_ThetaSnippet = 5
+CollectionParserConfig_Format_BagOfWordsUci = 0
+CollectionParserConfig_Format_JustLoadDictionary = 1
 
 #################################################################################
 
@@ -97,6 +99,19 @@ class ArtmLibrary:
     batch_blob_p = ctypes.create_string_buffer(batch_blob)
     disk_path_p = ctypes.create_string_buffer(disk_path)
     HandleErrorCode(self.lib_, self.lib_.ArtmSaveBatch(disk_path_p, len(batch_blob), batch_blob_p))
+
+  def ParseCollection(self, collection_parser_config):
+    config_blob = collection_parser_config.SerializeToString()
+    config_blob_p = ctypes.create_string_buffer(config_blob)
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmRequestParseCollection(
+                             len(config_blob), config_blob_p))
+
+    dictionary_blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, dictionary_blob))
+
+    dictionary = messages_pb2.DictionaryConfig()
+    dictionary.ParseFromString(dictionary_blob)
+    return dictionary
 
 #################################################################################
 

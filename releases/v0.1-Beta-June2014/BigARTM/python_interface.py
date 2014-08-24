@@ -8,11 +8,16 @@ from ctypes import *
 
 #################################################################################
 
-ARTM_SUCCESS = 0
-ARTM_GENERAL_ERROR = -1
-ARTM_OBJECT_NOT_FOUND = -2
-ARTM_INVALID_MESSAGE = -3
-ARTM_INVALID_OPERATION = -4
+ARTM_SUCCESS = 0                   # Has no corresponding exception type.
+ARTM_STILL_WORKING = -1            # Has no corresponding exception type.
+ARTM_INTERNAL_ERROR = -2
+ARTM_ARGUMENT_OUT_OF_RANGE = -3
+ARTM_INVALID_MASTER_ID = -4
+ARTM_CORRUPTED_MESSAGE = -5
+ARTM_INVALID_OPERATION = -6
+ARTM_DISK_READ_ERROR = -7
+ARTM_DISK_WRITE_ERROR = -8
+ARTM_NETWORK_ERROR = -9
 
 Stream_Type_Global = 0
 Stream_Type_ItemIdModulus = 1
@@ -23,27 +28,57 @@ RegularizerConfig_Type_SmoothSparsePhi = 3
 RegularizerConfig_Type_DecorrelatorPhi = 4
 ScoreConfig_Type_Perplexity = 0
 ScoreData_Type_Perplexity = 0
+ScoreConfig_Type_SparsityTheta = 1
+ScoreData_Type_SparsityTheta = 1
+ScoreConfig_Type_SparsityPhi = 2
+ScoreData_Type_SparsityPhi = 2
+ScoreConfig_Type_ItemsProcessed = 3
+ScoreData_Type_ItemsProcessed = 3
+ScoreConfig_Type_TopTokens = 4
+ScoreData_Type_TopTokens = 4
+ScoreConfig_Type_ThetaSnippet = 5
+ScoreData_Type_ThetaSnippet = 5
+CollectionParserConfig_Format_BagOfWordsUci = 0
+CollectionParserConfig_Format_JustLoadDictionary = 1
 
 #################################################################################
 
-class GeneralError(BaseException) : pass
-class ObjectNotFound(BaseException) : pass
-class InvalidMessage(BaseException) : pass
-class InvalidOperation(BaseException) : pass
+class InternalError(BaseException) : pass
+class ArgumentOutOfRangeException(BaseException) : pass
+class InvalidMasterIdException(BaseException) : pass
+class CorruptedMessageException(BaseException) : pass
+class InvalidOperationException(BaseException) : pass
+class DiskReadException(BaseException) : pass
+class DiskWriteException(BaseException) : pass
+class NetworkException(BaseException) : pass
 
-def HandleErrorCode(artm_error_code):
+
+def GetLastErrorMessage(lib):
+  error_message = lib.ArtmGetLastErrorMessage()
+  return ctypes.c_char_p(error_message).value
+
+
+def HandleErrorCode(lib, artm_error_code):
   if (artm_error_code == ARTM_SUCCESS) | (artm_error_code >= 0):
     return artm_error_code
-  elif artm_error_code == ARTM_OBJECT_NOT_FOUND:
-    raise ObjectNotFound()
-  elif artm_error_code == ARTM_INVALID_MESSAGE:
-    raise InvalidMessage()
+  elif artm_error_code == ARTM_INTERNAL_ERROR:
+    raise InternalError(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_ARGUMENT_OUT_OF_RANGE:
+    raise ArgumentOutOfRangeException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_INVALID_MASTER_ID:
+      raise InvalidMasterIdException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_CORRUPTED_MESSAGE:
+      raise CorruptedMessageException(GetLastErrorMessage(lib))
   elif artm_error_code == ARTM_INVALID_OPERATION:
-    raise InvalidOperation()
-  elif artm_error_code == ARTM_GENERAL_ERROR:
-    raise GeneralError()
+      raise InvalidOperationException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_DISK_READ_ERROR:
+      raise DiskReadException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_DISK_WRITE_ERROR:
+      raise DiskWriteException(GetLastErrorMessage(lib))
+  elif artm_error_code == ARTM_NETWORK_ERROR:
+      raise NetworkException(GetLastErrorMessage(lib))
   else:
-    raise GeneralError()
+    raise InternalError("Unknown error code: " + str(artm_error_code))
 
 #################################################################################
 
@@ -51,7 +86,7 @@ class ArtmLibrary:
   def __init__(self, location):
     self.lib_ = ctypes.CDLL(location)
 
-  def CreateMasterComponent(self, config=messages_pb2.MasterComponentConfig()):
+  def CreateMasterComponent(self, config = messages_pb2.MasterComponentConfig()):
     return MasterComponent(config, self.lib_)
 
   def CreateNodeController(self, endpoint):
@@ -63,7 +98,20 @@ class ArtmLibrary:
     batch_blob = batch.SerializeToString()
     batch_blob_p = ctypes.create_string_buffer(batch_blob)
     disk_path_p = ctypes.create_string_buffer(disk_path)
-    HandleErrorCode(self.lib_.ArtmSaveBatch(disk_path_p, len(batch_blob), batch_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmSaveBatch(disk_path_p, len(batch_blob), batch_blob_p))
+
+  def ParseCollection(self, collection_parser_config):
+    config_blob = collection_parser_config.SerializeToString()
+    config_blob_p = ctypes.create_string_buffer(config_blob)
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmRequestParseCollection(
+                             len(config_blob), config_blob_p))
+
+    dictionary_blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, dictionary_blob))
+
+    dictionary = messages_pb2.DictionaryConfig()
+    dictionary.ParseFromString(dictionary_blob)
+    return dictionary
 
 #################################################################################
 
@@ -75,17 +123,17 @@ class MasterComponent:
 
     if (isinstance(config, messages_pb2.MasterComponentConfig)):
       self.config_ = config
-      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterComponent(0,
+      self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateMasterComponent(
                  len(master_config_blob), master_config_blob_p))
       return
 
     if (isinstance(config, messages_pb2.MasterProxyConfig)):
       self.config_ = config.config
-      self.id_ = HandleErrorCode(self.lib_.ArtmCreateMasterProxy(0,
+      self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateMasterProxy(
                  len(master_config_blob), master_config_blob_p))
       return
 
-    raise InvalidOperation()
+    raise InvalidOperation(GetLastErrorMessage(self.lib_))
 
   def __enter__(self):
     return self
@@ -139,19 +187,24 @@ class MasterComponent:
   def Reconfigure(self, config):
     config_blob = config.SerializeToString()
     config_blob_p = ctypes.create_string_buffer(config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureMasterComponent(self.id_, len(config_blob), config_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmReconfigureMasterComponent(self.id_, len(config_blob), config_blob_p))
     self.config_.CopyFrom(config)
 
   def AddBatch(self, batch):
     batch_blob = batch.SerializeToString()
     batch_blob_p = ctypes.create_string_buffer(batch_blob)
-    HandleErrorCode(self.lib_.ArtmAddBatch(self.id_, len(batch_blob), batch_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmAddBatch(self.id_, len(batch_blob), batch_blob_p))
 
   def InvokeIteration(self, iterations_count):
-    HandleErrorCode(self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
+    HandleErrorCode(self.lib_, self.lib_.ArtmInvokeIteration(self.id_, iterations_count))
 
-  def WaitIdle(self):
-    HandleErrorCode(self.lib_.ArtmWaitIdle(self.id_))
+  def WaitIdle(self, timeout = -1):
+    result = self.lib_.ArtmWaitIdle(self.id_, timeout)
+    if result == ARTM_STILL_WORKING:
+        print "WaitIdle() is still working, timeout is over.";
+    else:
+        HandleErrorCode(self.lib_, result)
+
 
   def CreateStream(self, stream):
     s = self.config_.stream.add()
@@ -170,36 +223,39 @@ class MasterComponent:
     self.Reconfigure(new_config_)
 
   def GetTopicModel(self, model):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestTopicModel(self.id_, model.name()))
-    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmRequestTopicModel(self.id_, model.name()))
 
     topic_model_blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, topic_model_blob))
-    self.lib_.ArtmDisposeRequest(request_id)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, topic_model_blob))
 
     topic_model = messages_pb2.TopicModel()
     topic_model.ParseFromString(topic_model_blob)
     return topic_model
 
-  def GetThetaMatrix(self, model):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestThetaMatrix(self.id_, model.name()))
-    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
+  def GetRegularizerState(self, regularizer_name):
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmRequestRegularizerState(self.id_, regularizer_name))
 
+    state_blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, state_blob))
+
+    regularizer_state = messages_pb2.RegularizerInternalState()
+    regularizer_state.ParseFromString(state_blob)
+    return regularizer_state
+
+  def GetThetaMatrix(self, model):
+    length = HandleErrorCode(self.lib_,  self.lib_.ArtmRequestThetaMatrix(self.id_, model.name()))
     blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, blob))
-    self.lib_.ArtmDisposeRequest(request_id)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, blob))
 
     theta_matrix = messages_pb2.ThetaMatrix()
     theta_matrix.ParseFromString(blob)
     return theta_matrix
 
   def GetScore(self, model, score_name):
-    request_id = HandleErrorCode(self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
-    length = HandleErrorCode(self.lib_.ArtmGetRequestLength(request_id))
-
+    length = HandleErrorCode(self.lib_,
+                             self.lib_.ArtmRequestScore(self.id_, model.name(), score_name))
     blob = ctypes.create_string_buffer(length)
-    HandleErrorCode(self.lib_.ArtmCopyRequestResult(request_id, length, blob))
-    self.lib_.ArtmDisposeRequest(request_id)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, blob))
 
     score_data = messages_pb2.ScoreData()
     score_data.ParseFromString(blob)
@@ -208,9 +264,29 @@ class MasterComponent:
       score = messages_pb2.PerplexityScore();
       score.ParseFromString(score_data.data);
       return score;
+    elif (score_data.type == ScoreData_Type_SparsityTheta):
+      score = messages_pb2.SparsityThetaScore();
+      score.ParseFromString(score_data.data);
+      return score;
+    elif (score_data.type == ScoreData_Type_SparsityPhi):
+      score = messages_pb2.SparsityPhiScore();
+      score.ParseFromString(score_data.data);
+      return score;
+    elif (score_data.type == ScoreData_Type_ItemsProcessed):
+      score = messages_pb2.ItemsProcessedScore()
+      score.ParseFromString(score_data.data)
+      return score
+    elif (score_data.type == ScoreData_Type_TopTokens):
+      score = messages_pb2.TopTokensScore()
+      score.ParseFromString(score_data.data)
+      return score
+    elif (score_data.type == ScoreData_Type_ThetaSnippet):
+      score = messages_pb2.ThetaSnippetScore()
+      score.ParseFromString(score_data.data)
+      return score
 
     # Unknown score type
-    raise InvalidMessage()
+    raise InvalidMessage(GetLastErrorMessage(self.lib_))
 
 #################################################################################
 
@@ -220,8 +296,8 @@ class NodeController:
     config_blob = config.SerializeToString()
     config_blob_p = ctypes.create_string_buffer(config_blob)
 
-    self.id_ = HandleErrorCode(self.lib_.ArtmCreateNodeController(0,
-               len(config_blob), config_blob_p))
+    self.id_ = HandleErrorCode(self.lib_, self.lib_.ArtmCreateNodeController(
+                               len(config_blob), config_blob_p))
 
   def __enter__(self):
     return self
@@ -243,7 +319,7 @@ class Model:
     self.config_.name = uuid.uuid1().urn
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateModel(self.master_id_,
+    HandleErrorCode(self.lib_, self.lib_.ArtmCreateModel(self.master_id_,
                     len(model_config_blob), model_config_blob_p))
 
   def __enter__(self):
@@ -263,17 +339,18 @@ class Model:
   def Reconfigure(self, config):
     model_config_blob = config.SerializeToString()
     model_config_blob_p = ctypes.create_string_buffer(model_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureModel(self.master_id_,
+    HandleErrorCode(self.lib_, self.lib_.ArtmReconfigureModel(self.master_id_,
                     len(model_config_blob), model_config_blob_p))
     self.config_.CopyFrom(config)
 
   def InvokePhiRegularizers(self):
-    HandleErrorCode(self.lib_.ArtmInvokePhiRegularizers(self.master_id_))
+    HandleErrorCode(self.lib_, self.lib_.ArtmInvokePhiRegularizers(self.master_id_))
 
   def Overwrite(self, topic_model):
     blob = topic_model.SerializeToString()
     blob_p = ctypes.create_string_buffer(blob)
-    HandleErrorCode(self.lib_.ArtmOverwriteTopicModel(self.master_id_, len(blob), blob_p))
+    HandleErrorCode(self.lib_, 
+                    self.lib_.ArtmOverwriteTopicModel(self.master_id_, len(blob), blob_p))
 
   def Enable(self):
     config_copy_ = messages_pb2.ModelConfig()
@@ -296,8 +373,8 @@ class Regularizer:
     self.config_ = config
     regularizer_config_blob = config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateRegularizer(self.master_id_,
-                     len(regularizer_config_blob), regularizer_config_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmCreateRegularizer(self.master_id_,
+                    len(regularizer_config_blob), regularizer_config_blob_p))
 
   def __enter__(self):
     return self
@@ -321,7 +398,7 @@ class Regularizer:
 
     regularizer_config_blob = general_config.SerializeToString()
     regularizer_config_blob_p = ctypes.create_string_buffer(regularizer_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureRegularizer(self.master_id_,
+    HandleErrorCode(self.lib_, self.lib_.ArtmReconfigureRegularizer(self.master_id_,
                     len(regularizer_config_blob), regularizer_config_blob_p))
     self.config_.CopyFrom(general_config)
 
@@ -334,8 +411,8 @@ class Dictionary:
     self.config_ = config
     dictionary_config_blob = config.SerializeToString()
     dictionary_config_blob_p = ctypes.create_string_buffer(dictionary_config_blob)
-    HandleErrorCode(self.lib_.ArtmCreateDictionary(self.master_id_,
-                     len(dictionary_config_blob), dictionary_config_blob_p))
+    HandleErrorCode(self.lib_, self.lib_.ArtmCreateDictionary(self.master_id_,
+                    len(dictionary_config_blob), dictionary_config_blob_p))
 
   def __enter__(self):
     return self
@@ -354,7 +431,7 @@ class Dictionary:
   def Reconfigure(self, config):
     dictionary_config_blob = config.SerializeToString()
     dictionary_config_blob_p = ctypes.create_string_buffer(dictionary_config_blob)
-    HandleErrorCode(self.lib_.ArtmReconfigureDictionary(self.master_id_,
+    HandleErrorCode(self.lib_, self.lib_.ArtmReconfigureDictionary(self.master_id_,
                     len(dictionary_config_blob), dictionary_config_blob_p))
     self.config_.CopyFrom(config)
 

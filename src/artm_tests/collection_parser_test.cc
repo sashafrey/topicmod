@@ -11,15 +11,17 @@
 // artm_tests.exe --gtest_filter=CollectionParser.*
 TEST(CollectionParser, Basic) {
   // Clean all .batches files
-  boost::filesystem::recursive_directory_iterator it("collection_parser_test");
-  boost::filesystem::recursive_directory_iterator endit;
-  while (it != endit) {
-    if (boost::filesystem::is_regular_file(*it)) {
-      if (it->path().extension() == ".batch" || it->path().extension() == ".dictionary")
-        boost::filesystem::remove(*it);
-    }
+  if (boost::filesystem::exists("collection_parser_test")) {
+    boost::filesystem::recursive_directory_iterator it("collection_parser_test");
+    boost::filesystem::recursive_directory_iterator endit;
+    while (it != endit) {
+      if (boost::filesystem::is_regular_file(*it)) {
+        if (it->path().extension() == ".batch" || it->path().extension() == ".dictionary")
+          boost::filesystem::remove(*it);
+      }
 
-    ++it;
+      ++it;
+    }
   }
 
   ::artm::CollectionParserConfig config;
@@ -37,7 +39,8 @@ TEST(CollectionParser, Basic) {
   std::shared_ptr<::artm::DictionaryConfig> dictionary_loaded = ::artm::ParseCollection(config);
   ASSERT_EQ(dictionary_parsed->entry_size(), dictionary_loaded->entry_size());
 
-  it = boost::filesystem::recursive_directory_iterator("collection_parser_test");
+  boost::filesystem::recursive_directory_iterator it("collection_parser_test");
+  boost::filesystem::recursive_directory_iterator endit;
   int batches_count = 0;
   while (it != endit) {
     if (boost::filesystem::is_regular_file(*it) && it->path().extension() == ".batch")

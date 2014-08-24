@@ -822,6 +822,7 @@ Represents a configuration of a collection parser.
                             docID wordID count
 
                           The file must be sorted on docID.
+                          Values of wordID must be unity-based (not zero-based).
                           The format of the vocab.*.txt file is line
                           contains wordID=n.
 

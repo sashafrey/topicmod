@@ -55,6 +55,10 @@ class ArgumentOutOfRangeException : public std::runtime_error {
   explicit ArgumentOutOfRangeException(std::string argument, T actual)
       : std::runtime_error(argument + " == " +
         boost::lexical_cast<std::string>(actual) + ", out of range.") {}
+  template<class T>
+  explicit ArgumentOutOfRangeException(std::string argument, T actual, std::string message)
+      : std::runtime_error(argument + " == " +
+        boost::lexical_cast<std::string>(actual) + ", out of range. " + message) {}
 };
 DEFINE_EXCEPTION_TYPE(InvalidMasterIdException, std::runtime_error);
 DEFINE_EXCEPTION_TYPE(CorruptedMessageException, std::runtime_error);

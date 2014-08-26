@@ -161,7 +161,7 @@ class TopicModel : public Regularizable {
 
   std::vector<boost::uuids::uuid> batch_uuid_;  // batches contributing to this model
 
-  static void NewNormalizerVector(TopicModel* model, ClassId class_id, int no_topics);
+  void CreateNormalizerVector(ClassId class_id, int no_topics);
 };
 
 }  // namespace core

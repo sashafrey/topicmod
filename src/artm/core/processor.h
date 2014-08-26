@@ -87,7 +87,7 @@ class Processor : boost::noncopyable {
    private:
     const TopicModel& topic_model_;
     const std::vector<Token>& token_dict_;
-     const std::vector<float>& token_weight_dict_;
+    const std::vector<float>& token_weight_dict_;
     std::shared_ptr<InstanceSchema> schema_;
   };
 

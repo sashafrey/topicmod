@@ -102,8 +102,8 @@ bool Processor::TokenIterator::Next() {
 
     id_in_batch_ = field_->token_id(token_index_);
     auto current_token = token_dict_[id_in_batch_];
-    token_ = current_token.second;
-    class_id_ = current_token.first;
+    token_ = current_token.keyword;
+    class_id_ = current_token.class_id;
     count_ = field_->token_count(token_index_);
     id_in_model_ = topic_model_.has_token(current_token) ? 
       topic_model_.token_id(current_token) : -1;
@@ -152,13 +152,12 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
     item, model.field_name(), TokenIterator::Mode_Known);
 
   while (iter.Next()) {
-    ClassId current_class = (token_dict_[iter.id_in_batch()]).first; 
+    ClassId current_class = (token_dict_[iter.id_in_batch()]).class_id; 
     token_id.push_back(iter.id_in_batch());
     class_id.push_back(current_class);
 
     token_count.push_back(static_cast<float>(iter.count()));
     token_weights.push_back(iter.GetTopicWeightIterator());
-     
     z_normalizer.push_back(0.0f);
     known_tokens_count++;
   }

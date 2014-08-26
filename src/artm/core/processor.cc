@@ -424,11 +424,11 @@ void Processor::ThreadFunction() {
         bool use_model_class_id = true;
         bool use_model_class_weight = true;
         
-        // vectors with len = no_tokens
+        // vectors with length == no_tokens
         std::vector<Token> token_dict; 
         std::vector<float> token_weight_dict; 
 
-        // vectors with len = no_classes
+        // vectors with length == no_classes
         std::vector<ClassId> class_id;
         std::vector<float> class_weight;
 

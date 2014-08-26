@@ -117,7 +117,7 @@ class Processor : boost::noncopyable {
     TopicWeightIterator GetTopicWeightIterator() const;
 
    private:
-    const std::vector<Token> token_dict_;
+    const std::vector<Token>& token_dict_;
     const TopicModel& topic_model_;
     const Field* field_;
     int token_size_;

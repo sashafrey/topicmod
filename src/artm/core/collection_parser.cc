@@ -64,7 +64,7 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
   auto retval = std::make_shared<DictionaryConfig>();
 
   for (std::string token; vocab >> token;) {
-    if (dictionary.size() >= num_unique_tokens) {
+    if (static_cast<int>(dictionary.size()) >= num_unique_tokens) {
       std::stringstream ss;
       ss << config_.vocab_file_path() << " contains too many tokens. "
          << "Expected number is " << num_unique_tokens

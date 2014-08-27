@@ -3,6 +3,7 @@ include_directories(${CMAKE_CURRENT_LIST_DIR}/..)
 # Static 'artm' library
 FILE(GLOB_RECURSE SRC_LIST *.cc)
 list(REMOVE_ITEM SRC_LIST c_interface.cc cpp_interface.cc)
+add_definitions("-Dartm_EXPORTS")
 add_library(artm-static STATIC ${SRC_LIST})
 
 # Shared 'artm' library

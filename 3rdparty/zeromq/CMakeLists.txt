@@ -252,12 +252,6 @@ endif()
 #-----------------------------------------------------------------------------
 # default to Release build
 
-if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release CACHE STRING
-      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-      FORCE)
-endif()
-
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH  ${CMAKE_CURRENT_BINARY_DIR}/lib)
 
@@ -269,8 +263,7 @@ if(MSVC)
     -DWIN32
     -DDLL_EXPORT
     # NB: May require tweaking for highly connected applications.
-    -DFD_SETSIZE=1024
-    -D_CRT_SECURE_NO_WARNINGS)
+    -DFD_SETSIZE=1024)
 
   # Parallel make.
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")

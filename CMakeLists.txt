@@ -21,6 +21,13 @@ if (MSVC)
   add_definitions("-D_VARIADIC_MAX=10")
   add_definitions("/wd4251")
   add_definitions("/MP")
+  add_definitions("-D_CRT_SECURE_NO_WARNINGS")
+  add_definitions("-D_SCL_SECURE_NO_WARNINGS")
+else()
+  if (NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release")
+  endif()
+  message("-- Build type: ${CMAKE_BUILD_TYPE}")
 endif()
 
 # set compiler flags
@@ -43,11 +50,6 @@ set(rpcz_build_static ON)
 set(rpcz_build_shared ON)
 
 set(3RD_PARTY_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
-
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release")
-endif()
-message("-- Build type: ${CMAKE_BUILD_TYPE}")
 
 add_subdirectory(3rdparty)
 add_subdirectory(src)

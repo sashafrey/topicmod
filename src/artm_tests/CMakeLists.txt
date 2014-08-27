@@ -10,6 +10,7 @@ set(SRC_LIST ${SRC_LIST} ${3RD_PARTY_DIR}/gtest/src/gtest_main.cc
                          ${CMAKE_SOURCE_DIR}/src/artm/cpp_interface.cc
                          ${CMAKE_SOURCE_DIR}/src/artm/messages.pb.cc)
 
+add_definitions("-Dartm_EXPORTS")
 add_executable(artm_tests ${SRC_LIST})
 target_link_libraries(artm_tests artm-static
                                  rpcz_static

@@ -6,6 +6,8 @@
 #include <list>
 #include <map>
 #include <set>
+#include <string>
+#include <vector>
 
 #include "boost/thread.hpp"
 #include "boost/thread/mutex.hpp"
@@ -28,7 +30,7 @@ class InstanceSchema;
 class BatchManager : boost::noncopyable, public Notifiable {
  public:
   explicit BatchManager(ThreadSafeHolder<InstanceSchema>* schema);
-  virtual ~BatchManager() {};
+  virtual ~BatchManager() {}
 
   // Add batch to the task queue.
   // OK to add the same uuid multiple times.

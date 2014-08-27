@@ -1,6 +1,9 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
 #include "artm/regularizer_sandbox/multilanguage_phi.h"
+
+#include <string>
+
 #include "artm/core/regularizable.h"
 #include "artm/core/topic_model.h"
 

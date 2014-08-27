@@ -12,7 +12,7 @@ namespace regularizer_sandbox {
 class MultiLanguagePhi : public RegularizerInterface {
  public:
   explicit MultiLanguagePhi(const MultiLanguagePhiConfig& config)
-    : config_(config) 
+    : config_(config)
     , no_regularization_calls_(0) {}
 
   virtual bool RegularizePhi(::artm::core::Regularizable* topic_model, double tau);

@@ -74,7 +74,7 @@ static void ParseFromArray(const char* buffer, int length, google::protobuf::Mes
 // =========================================================================
 
 int ArtmCopyRequestResult(int length, char* address) {
-  if (length != last_message()->size()) {
+  if (length != static_cast<int>(last_message()->size())) {
     set_last_error("ArtmCopyRequestResult() called with invalid 'length' parameter.");
     return ARTM_INVALID_OPERATION;
   }

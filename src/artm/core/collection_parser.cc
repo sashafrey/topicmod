@@ -80,7 +80,7 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
     entry->set_key_token(token);
   }
 
-  if (dictionary.size() != num_unique_tokens) {
+  if (static_cast<int>(dictionary.size()) != num_unique_tokens) {
     std::stringstream ss;
     ss << config_.vocab_file_path() << " contains not enough tokens. "
          << "Expected number is " << num_unique_tokens
@@ -93,8 +93,8 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
 
   std::map<int, int> batch_dictionary;
   ::artm::Batch batch;
-  ::artm::Item* item;
-  ::artm::Field* field;
+  ::artm::Item* item = nullptr;
+  ::artm::Field* field = nullptr;
   int prev_item_id = -1;
 
   int item_id, token_id, token_count;

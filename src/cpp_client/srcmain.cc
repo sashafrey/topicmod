@@ -41,7 +41,7 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
   // Recommended values for decorrelator_tau are as follows:
   // kos - 700000, nips - 200000.
   float decorrelator_tau = 200000;
-  float dirichlet_tau = -100;
+  // float dirichlet_tau = -100;
 
   // instance_size = 0 stands for "connect to external node_controller process",
   // instance_size = 1 stands for "local modus operandi",

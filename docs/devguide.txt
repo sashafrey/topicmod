@@ -15,6 +15,8 @@ granted.
 Build C++ code on Windows
 -------------------------
 
+The following steps describe the procedure to build BigARTM's C++ code on Windows.
+
 * Download and install GitHub Windows from http://windows.github.com/.
 
 * Clone https://github.com/sashafrey/topicmod/ repository to any location on your computer.
@@ -66,16 +68,17 @@ Build C++ code on Windows
 
      Potentially you may have to run "cmake .." twice.
 
+At this point you should be able to run BigARTM tests, located here:
+``$(BIGARTM_ROOT)/build/bin/*/artm_tests.exe``.
+
 Python code on Windows
 ----------------------
 
-* Install Python 2.7 (this step is already done if you are following the instructions above)
+* Install Python 2.7 (this step is already done if you are following the instructions above),
 
-* Download and add to MSVS Python Tools 2.0.
-  All necessary instructions can be found at https://pytools.codeplex.com/.
+* Add Python to the ``PATH`` environmental variable
 
-* Add python folder to ``PATH``. To do so open *Control Panel\All Control Panel Items\System*,
-  then *Advanced system settings*, *Environment variables*.
+  http://stackoverflow.com/questions/6318156/adding-python-path-on-windows-7
 
 * Follow the instructions in ``README`` file in directory ``$(BIGARTM_ROOT)/3rdparty/protobuf/python/``.
   In brief, this instructions ask you to run the following commands:
@@ -95,7 +98,13 @@ Python code on Windows
 
   This 2 failures are OK to ignore.
 
-* Use ``$(BIGARTM_ROOT)/src/artm_vs2012.sln``.
+At this point you should be able to run BigARTM tests for Python, located here:
+``$(BIGARTM_ROOT)/src/python_tests/python_tests.py``.
+
+* [Optional] Download and add to MSVS Python Tools 2.0.
+  All necessary instructions can be found at https://pytools.codeplex.com/.
+  This will allow you debug you Python scripts using Visual Studio.
+  You may start with the following solution: ``$(BIGARTM_ROOT)/src/artm_vs2012.sln``.
 
 Build C++ code on Linux
 -----------------------
@@ -116,10 +125,12 @@ The following script had been tested in Ubuntu.
 
    ~/topicmode/build/src/artm_tests/artm_tests
 
-Python interface hasn't been used from Linux yet,
-but it should be possible to just run python scripts under
-``$(BIGARTM_ROOT)/python_client/``.
-Please, contribute to this documentation if you had to make some special tricks.
+It is also possible to use BigARTM from Python on Linux.
+Just make sure to setup protobuf library as described
+``$(BIGARTM_ROOT)/3rdparty/protobuf/python/README``,
+and then you can simply run python scripts under ``$(BIGARTM_ROOT)/python_tests/``
+or ``$(BIGARTM_ROOT)/python_client/``.
+
 
 Compiling .proto files on Windows
 ---------------------------------

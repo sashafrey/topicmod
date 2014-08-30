@@ -6,14 +6,4 @@ Glossary
 
 .. glossary::
 
-    master component
-        An attribute on a :term:`model`; a given field usually maps directly to
-        a single database column.
 
-        See :doc:`/topics/master_component`.
-
-    node controller
-        A higher-order :term:`view` function that provides an abstract/generic
-        implementation of a common idiom or pattern found in view development.
-
-        See :doc:`/topics/node_controller`.

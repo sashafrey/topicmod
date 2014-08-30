@@ -13,16 +13,11 @@ TEST(TopicModelTest, Basic) {
   int no_tokens = 5;
 
   artm::core::TopicModel topic_model(::artm::core::ModelName(), no_topics);
-  topic_model.AddToken(std::pair<artm::core::ClassId, std::string>(
-    artm::core::DefaultClass, "token_1"));
-  topic_model.AddToken(std::pair<artm::core::ClassId, std::string>(
-    artm::core::DefaultClass, "token_2"));
-  topic_model.AddToken(std::pair<artm::core::ClassId, std::string>(
-    artm::core::DefaultClass, "token_3"));
-  topic_model.AddToken(std::pair<artm::core::ClassId, std::string>(
-    artm::core::DefaultClass, "token_4"));
-  topic_model.AddToken(std::pair<artm::core::ClassId, std::string>(
-    artm::core::DefaultClass, "token_5"));
+  topic_model.AddToken(artm::core::Token(artm::core::DefaultClass, "token_1"));
+  topic_model.AddToken(artm::core::Token(artm::core::DefaultClass, "token_2"));
+  topic_model.AddToken(artm::core::Token(artm::core::DefaultClass, "token_3"));
+  topic_model.AddToken(artm::core::Token(artm::core::DefaultClass, "token_4"));
+  topic_model.AddToken(artm::core::Token(artm::core::DefaultClass, "token_5"));
 
   //  test 1
   float real_normalizer = 0;
@@ -126,16 +121,11 @@ TEST(TopicModelTest, Basic) {
   no_topics = 1;
   for (int i = 1; i < 10; ++i) {
     artm::core::TopicModel topic_model_1(::artm::core::ModelName(), no_topics);
-    topic_model_1.AddToken(std::pair<artm::core::ClassId, std::string>(
-      artm::core::DefaultClass, "token_1"));
-    topic_model_1.AddToken(std::pair<artm::core::ClassId, std::string>(
-      artm::core::DefaultClass, "token_2"));
-    topic_model_1.AddToken(std::pair<artm::core::ClassId, std::string>(
-      artm::core::DefaultClass, "token_3"));
-    topic_model_1.AddToken(std::pair<artm::core::ClassId, std::string>(
-      artm::core::DefaultClass, "token_4"));
-    topic_model_1.AddToken(std::pair<artm::core::ClassId, std::string>(
-      artm::core::DefaultClass, "token_5"));
+    topic_model_1.AddToken(artm::core::Token(artm::core::DefaultClass, "token_1"));
+    topic_model_1.AddToken(artm::core::Token(artm::core::DefaultClass, "token_2"));
+    topic_model_1.AddToken(artm::core::Token(artm::core::DefaultClass, "token_3"));
+    topic_model_1.AddToken(artm::core::Token(artm::core::DefaultClass, "token_4"));
+    topic_model_1.AddToken(artm::core::Token(artm::core::DefaultClass, "token_5"));
 
     for (int j = 0; j < 100; ++j) {
       int index = 0 + rand() % 5;  // NOLINT

@@ -125,6 +125,7 @@ class TopicModel : public Regularizable {
   void ApplyDiff(const ::artm::core::TopicModel& diff);
 
   int  AddToken(const Token& token, bool random_init = true);
+  int  AddToken(ClassId class_id, std::string keyword, bool random_init);
   void IncreaseTokenWeight(const Token& token, int topic_id, float value);
   void IncreaseTokenWeight(int token_id, int topic_id, float value);
   void SetTokenWeight(const Token& token, int topic_id, float value);
@@ -149,8 +150,7 @@ class TopicModel : public Regularizable {
 
  private:
   ModelName model_name_;
-  int n_t_default_class_;
-
+  
   std::map<Token, int> token_to_token_id_;
   std::vector<Token> token_id_to_token_;
   int topics_count_;
@@ -160,13 +160,13 @@ class TopicModel : public Regularizable {
   // normalization constant for each topic in each Phi
   std::map<ClassId, std::vector<float> > n_t_;  
   // pointer to the vector of default_class
-  /*std::vector<float>*/ 
+  std::vector<float>* n_t_default_class_;
 
   std::vector<boost::uuids::uuid> batch_uuid_;  // batches contributing to this model
 
   void CreateNormalizerVector(ClassId class_id, int no_topics);
-  const std::vector<float>& GetNormalizerVector(const ClassId& class_id) const;
-  std::vector<float>& GetNormalizerVector(const ClassId& class_id);
+  const std::vector<float>* GetNormalizerVector(const ClassId& class_id) const;
+  std::vector<float>* GetNormalizerVector(const ClassId& class_id);
 };
 
 }  // namespace core

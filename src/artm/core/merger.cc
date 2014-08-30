@@ -164,7 +164,7 @@ void Merger::ThreadFunction() {
       // use boost::this_thread::interruption_point()
       // which also throws boost::thread_interrupted
       is_idle_ = true;
-      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
       is_idle_ = false;
 
       for (;;) {  // MAIN FOR LOOP
@@ -341,7 +341,7 @@ bool Merger::WaitIdle(int timeout) {
     if (is_idle_ && merger_queue_->empty())
       break;
 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
     auto time_end = boost::posix_time::microsec_clock::local_time();
     if (timeout >= 0) {
       if ((time_end - time_start).total_milliseconds() >= timeout) return false;

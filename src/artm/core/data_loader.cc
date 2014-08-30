@@ -142,7 +142,7 @@ bool LocalDataLoader::WaitIdle(int timeout) {
     if (instance_->batch_manager()->IsEverythingProcessed())
       break;
 
-    boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+    boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
 
     if (timeout >= 0) {
       auto time_end = boost::posix_time::microsec_clock::local_time();
@@ -223,21 +223,19 @@ void LocalDataLoader::ThreadFunction() {
         break;
       }
 
-      // Sleep and check for interrupt.
-      // To check for interrupt without sleep,
-      // use boost::this_thread::interruption_point()
-      // which also throws boost::thread_interrupted
-      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-
       auto schema = instance()->schema();
       auto config = schema->config();
 
-      if (instance()->processor_queue()->size() >= config.processor_queue_max_size())
+      if (instance()->processor_queue()->size() >= config.processor_queue_max_size()) {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
         continue;
+      }
 
       boost::uuids::uuid next_batch_uuid = instance_->batch_manager()->Next();
-      if (next_batch_uuid.is_nil())
+      if (next_batch_uuid.is_nil()) {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
         continue;
+      }
 
       auto latest_generation = generation_.get();
       std::shared_ptr<const Batch> batch = latest_generation->batch(next_batch_uuid);
@@ -317,17 +315,14 @@ void RemoteDataLoader::ThreadFunction() {
         break;
       }
 
-      // Sleep and check for interrupt.
-      // To check for interrupt without sleep,
-      // use boost::this_thread::interruption_point()
-      // which also throws boost::thread_interrupted
-      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-
       MasterComponentConfig config = instance()->schema()->config();
       int processor_queue_size = instance()->processor_queue()->size();
       int max_queue_size = config.processor_queue_max_size();
-      if (processor_queue_size >= max_queue_size)
+      if (processor_queue_size >= max_queue_size) {
+        // Sleep and check for interrupt.
+        boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
         continue;
+      }
 
       Int request;  // desired number of batches
       BatchIds response;
@@ -339,6 +334,11 @@ void RemoteDataLoader::ThreadFunction() {
       } catch(...) {
         LOG(ERROR) << "Unable to request batches from master.";
         return;
+      }
+
+      if (response.batch_id_size() == 0) {
+        boost::this_thread::sleep(boost::posix_time::milliseconds(kNetworkPollingFrequency));
+        continue;
       }
 
       BatchIds failed_batches;

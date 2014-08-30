@@ -339,16 +339,17 @@ void Processor::ThreadFunction() {
         break;
       }
 
-      // Sleep and check for interrupt.
-      // To check for interrupt without sleep,
-      // use boost::this_thread::interruption_point()
-      // which also throws boost::thread_interrupted
-      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
-
       std::shared_ptr<const ProcessorInput> part;
       if (!processor_queue_->try_pop(&part)) {
         pop_retries++;
         LOG_IF(INFO, pop_retries == pop_retries_max) << "No data in processing queue, waiting...";
+
+        // Sleep and check for interrupt.
+        // To check for interrupt without sleep,
+        // use boost::this_thread::interruption_point()
+        // which also throws boost::thread_interrupted
+        boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
+
         continue;
       }
 
@@ -488,7 +489,7 @@ void Processor::ThreadFunction() {
 
         push_retries++;
         LOG_IF(WARNING, push_retries == push_retries_max) << "Merger queue is full, waiting...";
-        boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+        boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
       }
 
       LOG_IF(WARNING, push_retries >= push_retries_max) << "Merger queue is healthy again";

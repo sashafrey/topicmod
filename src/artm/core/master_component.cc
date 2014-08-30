@@ -191,9 +191,9 @@ bool MasterComponent::WaitIdle(int timeout) {
     // Wait for all nodes to process all the batches.
     for (;;) {
       if (instance_->batch_manager()->IsEverythingProcessed())
-      break;
+        break;
 
-      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      boost::this_thread::sleep(boost::posix_time::milliseconds(kIdleLoopFrequency));
       if (timeout >= 0) {
         auto time_end = boost::posix_time::microsec_clock::local_time();
         if ((time_end - time_start).total_milliseconds() >= timeout) return false;

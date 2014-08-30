@@ -86,6 +86,7 @@ message MasterProxyConfig {
   optional string node_connect_endpoint = 1;
   optional MasterComponentConfig config = 2;
   optional int32 communication_timeout = 3 [default = 1000];
+  optional int32 polling_frequency = 4 [default = 50];
 }
 
 // Represents a configuration of a topic model.
@@ -151,7 +152,7 @@ message DecorrelatorPhiConfig {
 message MultiLanguagePhiConfig {
 }
 
-// Represents wrapper over specific internal states
+// Represents an internal state of a general regularizer
 message RegularizerInternalState {
   enum Type {
     MultiLanguagePhi = 5;
@@ -162,7 +163,7 @@ message RegularizerInternalState {
   optional bytes data = 3;
 }
 
-// Represents internal state of a MultiLanguage Phi regularizer
+// Represents an internal state of a MultiLanguage Phi regularizer
 message MultiLanguagePhiInternalState {
   optional int32 no_regularization_calls = 1 [default = 0];
 }

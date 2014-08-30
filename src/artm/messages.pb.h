@@ -1438,6 +1438,13 @@ class MasterProxyConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 communication_timeout() const;
   inline void set_communication_timeout(::google::protobuf::int32 value);
 
+  // optional int32 polling_frequency = 4 [default = 50];
+  inline bool has_polling_frequency() const;
+  inline void clear_polling_frequency();
+  static const int kPollingFrequencyFieldNumber = 4;
+  inline ::google::protobuf::int32 polling_frequency() const;
+  inline void set_polling_frequency(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:artm.MasterProxyConfig)
  private:
   inline void set_has_node_connect_endpoint();
@@ -1446,15 +1453,18 @@ class MasterProxyConfig : public ::google::protobuf::Message {
   inline void clear_has_config();
   inline void set_has_communication_timeout();
   inline void clear_has_communication_timeout();
+  inline void set_has_polling_frequency();
+  inline void clear_has_polling_frequency();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* node_connect_endpoint_;
   ::artm::MasterComponentConfig* config_;
   ::google::protobuf::int32 communication_timeout_;
+  ::google::protobuf::int32 polling_frequency_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -6021,6 +6031,28 @@ inline ::google::protobuf::int32 MasterProxyConfig::communication_timeout() cons
 inline void MasterProxyConfig::set_communication_timeout(::google::protobuf::int32 value) {
   set_has_communication_timeout();
   communication_timeout_ = value;
+}
+
+// optional int32 polling_frequency = 4 [default = 50];
+inline bool MasterProxyConfig::has_polling_frequency() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void MasterProxyConfig::set_has_polling_frequency() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void MasterProxyConfig::clear_has_polling_frequency() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void MasterProxyConfig::clear_polling_frequency() {
+  polling_frequency_ = 50;
+  clear_has_polling_frequency();
+}
+inline ::google::protobuf::int32 MasterProxyConfig::polling_frequency() const {
+  return polling_frequency_;
+}
+inline void MasterProxyConfig::set_polling_frequency(::google::protobuf::int32 value) {
+  set_has_polling_frequency();
+  polling_frequency_ = value;
 }
 
 // -------------------------------------------------------------------

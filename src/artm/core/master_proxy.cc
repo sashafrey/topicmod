@@ -10,12 +10,14 @@
 namespace artm {
 namespace core {
 
-MasterProxy::MasterProxy(int id, const MasterProxyConfig& config) : id_(id) {
+MasterProxy::MasterProxy(int id, const MasterProxyConfig& config)
+    : id_(id),
+      communication_timeout_(config.communication_timeout()),
+      polling_frequency_(config.polling_frequency()) {
   rpcz::application::options options(3);
   options.zeromq_context = ZmqContext::singleton().get();
   application_.reset(new rpcz::application(options));
 
-  communication_timeout_ = config.communication_timeout();
   node_controller_service_proxy_.reset(
     new artm::core::NodeControllerService_Stub(
       application_->create_rpc_channel(config.node_connect_endpoint()), true));
@@ -195,7 +197,7 @@ bool MasterProxy::WaitIdle(int timeout) {
       node_controller_service_proxy_->WaitIdle(Void(), &response, communication_timeout_);
     }, "WaitIdle");
     if (response.value() == ARTM_STILL_WORKING) {
-      boost::this_thread::sleep(boost::posix_time::milliseconds(1));
+      boost::this_thread::sleep(boost::posix_time::milliseconds(polling_frequency_));
       auto time_end = boost::posix_time::microsec_clock::local_time();
 
       if (timeout >= 0) {

@@ -117,6 +117,7 @@ with library.CreateMasterComponent() as master_component:
   master_component.AddBatch(batch)
   model.Enable()
   master_component.InvokeIteration(10)
+  master_component.WaitIdle()
   model.Disable()
   topic_model = master_component.GetTopicModel(model)
   theta_matrix = master_component.GetThetaMatrix(model)

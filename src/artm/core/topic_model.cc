@@ -22,6 +22,7 @@ namespace core {
 
 TopicModel::TopicModel(ModelName model_name, int topics_count)
     : model_name_(model_name),
+      n_t_default_class_(topics_count),
       token_to_token_id_(),
       token_id_to_token_(),
       topics_count_(topics_count),
@@ -30,11 +31,11 @@ TopicModel::TopicModel(ModelName model_name, int topics_count)
       n_t_(),
       batch_uuid_() {
   assert(topics_count_ > 0);
-  CreateNormalizerVector(DefaultClass, topics_count_);
 }
 
 TopicModel::TopicModel(const TopicModel& rhs)
     : model_name_(rhs.model_name_),
+      n_t_default_class_(rhs.topics_count_),
       token_to_token_id_(rhs.token_to_token_id_),
       token_id_to_token_(rhs.token_id_to_token_),
       topics_count_(rhs.topics_count_),
@@ -53,6 +54,8 @@ TopicModel::TopicModel(const TopicModel& rhs)
     r_wt_.push_back(values);
     memcpy(values, rhs.r_wt_[i], sizeof(float) * topics_count_);
   }
+
+  //n_t_default_class_ = &(n_t_.find(DefaultClass)->second);
 }
 
 TopicModel::TopicModel(const ::artm::TopicModel& external_topic_model) {
@@ -62,6 +65,7 @@ TopicModel::TopicModel(const ::artm::TopicModel& external_topic_model) {
 TopicModel::TopicModel(const ::artm::core::ModelIncrement& model_increment) {
   model_name_ = model_increment.model_name();
   topics_count_ = model_increment.topics_count();
+  n_t_default_class_ = model_increment.topics_count();
 
   ApplyDiff(model_increment);
 }
@@ -80,6 +84,7 @@ void TopicModel::Clear(ModelName model_name, int topics_count) {
   });
 
   model_name_ = model_name;
+  n_t_default_class_ = topics_count;
   topics_count_ = topics_count;
 
   token_to_token_id_.clear();
@@ -277,24 +282,16 @@ int TopicModel::AddToken(const Token& token, bool random_init) {
       sum += val;
     }
 
-    auto class_id = token.class_id;
-    auto iter = n_t_.find(class_id);
-    if (iter == n_t_.end()) {
-      CreateNormalizerVector(class_id, topic_size());
-      iter = n_t_.find(class_id);
-    }
+    auto this_class_n_t = GetNormalizerVector(token.class_id);
     for (int i = 0; i < topic_size(); ++i) {
       values[i] /= sum;
-      iter->second[i] += values[i];
+      this_class_n_t[i] += values[i];
     }      
   } else {
     memset(values, 0, sizeof(float) * topic_size());
 
-    auto class_id = token.class_id;
-    auto iter = n_t_.find(class_id);
-    if (iter == n_t_.end()) {
-      CreateNormalizerVector(class_id, topic_size());
-    }
+    // this call will create the corresponding vector if need
+    GetNormalizerVector(token.class_id);
   }
 
   float* regularizer_values = new float[topic_size()];
@@ -320,19 +317,19 @@ void TopicModel::IncreaseTokenWeight(const Token& token, int topic_id, float val
 }
 
 void TopicModel::IncreaseTokenWeight(int token_id, int topic_id, float value) {
-  auto iter = n_t_.find(token(token_id).class_id);
+  std::vector<float>& this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   float old_data_value = n_wt_[token_id][topic_id];
   n_wt_[token_id][topic_id] += value;
-
+  
   if (old_data_value + r_wt_[token_id][topic_id] < 0) {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
-      iter->second[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
+      this_class_n_t[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
     }
   } else {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
-      iter->second[topic_id] += value;
+      this_class_n_t[topic_id] += value;
     } else {
-      iter->second[topic_id] -= (old_data_value + r_wt_[token_id][topic_id]);
+      this_class_n_t[topic_id] -= (old_data_value + r_wt_[token_id][topic_id]);
     }
   }
 }
@@ -347,19 +344,20 @@ void TopicModel::SetTokenWeight(const Token& token, int topic_id, float value) {
 }
 
 void TopicModel::SetTokenWeight(int token_id, int topic_id, float value) {
+  std::vector<float>& this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   auto iter = n_t_.find(token(token_id).class_id);
   float old_data_value = n_wt_[token_id][topic_id];
   n_wt_[token_id][topic_id] = value;
 
   if (old_data_value + r_wt_[token_id][topic_id] < 0) {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
-      iter->second[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
+      this_class_n_t[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
     }
   } else {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
-      iter->second[topic_id] += (n_wt_[token_id][topic_id] - old_data_value);
+      this_class_n_t[topic_id] += (n_wt_[token_id][topic_id] - old_data_value);
     } else {
-      iter->second[topic_id] -= (old_data_value + r_wt_[token_id][topic_id]);
+      this_class_n_t[topic_id] -= (old_data_value + r_wt_[token_id][topic_id]);
     }
   }
 }
@@ -374,19 +372,20 @@ void TopicModel::SetRegularizerWeight(const Token& token, int topic_id, float va
 }
 
 void TopicModel::SetRegularizerWeight(int token_id, int topic_id, float value) {
+  std::vector<float>& this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   auto iter = n_t_.find(token(token_id).class_id);
   float old_regularizer_value = r_wt_[token_id][topic_id];
   r_wt_[token_id][topic_id] = value;
 
   if (n_wt_[token_id][topic_id] + old_regularizer_value < 0) {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
-      iter->second[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
+      this_class_n_t[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
     }
   } else {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
-      iter->second[topic_id] += (r_wt_[token_id][topic_id] - old_regularizer_value);
+      this_class_n_t[topic_id] += (r_wt_[token_id][topic_id] - old_regularizer_value);
     } else {
-      iter->second[topic_id] -= (n_wt_[token_id][topic_id] + old_regularizer_value);
+      this_class_n_t[topic_id] -= (n_wt_[token_id][topic_id] + old_regularizer_value);
     }
   }
 }
@@ -404,19 +403,20 @@ void TopicModel::IncreaseRegularizerWeight(const Token& token, int topic_id, flo
 }
 
 void TopicModel::IncreaseRegularizerWeight(int token_id, int topic_id, float value) {
+  std::vector<float>& this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   auto iter = n_t_.find(token(token_id).class_id);
   float old_regularizer_value = r_wt_[token_id][topic_id];
   r_wt_[token_id][topic_id] += value;
 
   if (n_wt_[token_id][topic_id] + old_regularizer_value < 0) {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
-      iter->second[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
+      this_class_n_t[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
     }
   } else {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
-      iter->second[topic_id] += value;
+      this_class_n_t[topic_id] += value;
     } else {
-      iter->second[topic_id] -= (n_wt_[token_id][topic_id] + old_regularizer_value);
+      this_class_n_t[topic_id] -= (n_wt_[token_id][topic_id] + old_regularizer_value);
     }
   }
 }
@@ -448,6 +448,30 @@ void TopicModel::CreateNormalizerVector(ClassId class_id, int no_topics) {
   n_t_.insert(std::pair<ClassId, std::vector<float> >(class_id, vect));
   auto iter = n_t_.find(class_id);
   memset(&(iter->second[0]), 0, sizeof(float) * no_topics);
+}
+
+ const std::vector<float>& TopicModel::GetNormalizerVector(const ClassId& class_id) const {
+  // here expected that iter always != n_t_.end()
+  auto iter = n_t_.find(class_id);
+  return iter->second;
+}
+
+ std::vector<float>& TopicModel::GetNormalizerVector(const ClassId& class_id) {
+  //if (class_id == DefaultClass) {
+  //  if (n_t_default_class_ == nullptr) {
+  //    // the vector n_t for DefaultClass doesn't exist
+  //    CreateNormalizerVector(DefaultClass, topics_count_);
+  //    n_t_default_class_ = &(n_t_.find(DefaultClass)->second);
+  //  }
+  //  return *n_t_default_class_;
+  //}
+
+  auto iter = n_t_.find(class_id);
+  if (iter == n_t_.end()) {
+    CreateNormalizerVector(class_id, topics_count_);
+    return n_t_.find(class_id)->second;
+  }
+  return iter->second;
 }
 
 artm::core::Token TopicModel::token(int index) const {

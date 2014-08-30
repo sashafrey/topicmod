@@ -149,6 +149,7 @@ class TopicModel : public Regularizable {
 
  private:
   ModelName model_name_;
+  int n_t_default_class_;
 
   std::map<Token, int> token_to_token_id_;
   std::vector<Token> token_id_to_token_;
@@ -158,10 +159,14 @@ class TopicModel : public Regularizable {
   std::vector<float*> r_wt_;  // regularizer's additions
   // normalization constant for each topic in each Phi
   std::map<ClassId, std::vector<float> > n_t_;  
+  // pointer to the vector of default_class
+  /*std::vector<float>*/ 
 
   std::vector<boost::uuids::uuid> batch_uuid_;  // batches contributing to this model
 
   void CreateNormalizerVector(ClassId class_id, int no_topics);
+  const std::vector<float>& GetNormalizerVector(const ClassId& class_id) const;
+  std::vector<float>& GetNormalizerVector(const ClassId& class_id);
 };
 
 }  // namespace core

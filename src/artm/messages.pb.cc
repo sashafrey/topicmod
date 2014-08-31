@@ -1147,7 +1147,6 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "\022\013\n\003raw\030\002 \001(\001\022\022\n\nnormalizer\030\003 \001(\001\022\022\n\nzer"
     "o_words\030\004 \001(\005\"\222\001\n\030SparsityThetaScoreConf"
     "ig\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013stream_"
-<<<<<<< HEAD
     "name\030\002 \001(\t:\007@global\022\023\n\003eps\030\003 \001(\002:\0061e-037"
     "\022(\n\017topics_to_score\030\004 \001(\0132\017.artm.BoolArr"
     "ay\"N\n\022SparsityThetaScore\022\r\n\005value\030\001 \001(\001\022"
@@ -1176,34 +1175,14 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "\030\003 \003(\0132\020.artm.FloatArray\022\024\n\014n_t_class_id"
     "\030\004 \003(\t\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 \001("
     "\t:\006@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_weigh"
-    "ts\030\003 \003(\0132\020.artm.FloatArray", 4346);
-=======
-    "name\030\002 \001(\t:\007@global\"$\n\023ItemsProcessedSco"
-    "re\022\r\n\005value\030\001 \001(\005\"D\n\024TopTokensScoreConfi"
-    "g\022\026\n\nnum_tokens\030\001 \001(\005:\00210\022\024\n\010topic_id\030\002 "
-    "\003(\005B\002\020\001\"3\n\016TopTokensScore\022!\n\006values\030\001 \003("
-    "\0132\021.artm.StringArray\"g\n\027ThetaSnippetScor"
-    "eConfig\022\031\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013st"
-    "ream_name\030\002 \001(\t:\007@global\022\023\n\007item_id\030\003 \003("
-    "\005B\002\020\001\"F\n\021ThetaSnippetScore\022\017\n\007item_id\030\001 "
-    "\003(\005\022 \n\006values\030\002 \003(\0132\020.artm.FloatArray\"\371\001"
-    "\n\nTopicModel\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014to"
-    "pics_count\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken"
-    "_weights\030\004 \003(\0132\020.artm.FloatArray\022\021\n\tinte"
-    "rnals\030\005 \001(\014\032t\n\023TopicModelInternals\022\036\n\004n_"
-    "wt\030\001 \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\013"
-    "2\020.artm.FloatArray\022\035\n\003n_t\030\003 \001(\0132\020.artm.F"
-    "loatArray\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001"
-    " \001(\t:\006@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_we"
-    "ights\030\003 \003(\0132\020.artm.FloatArray\"\235\002\n\026Collec"
-    "tionParserConfig\022B\n\006format\030\001 \001(\0162#.artm."
-    "CollectionParserConfig.Format:\rBagOfWord"
-    "sUci\022\031\n\021docword_file_path\030\002 \001(\t\022\027\n\017vocab"
-    "_file_path\030\003 \001(\t\022\025\n\rtarget_folder\030\004 \001(\t\022"
-    "\034\n\024dictionary_file_name\030\005 \001(\t\022!\n\023num_ite"
-    "ms_per_batch\030\006 \001(\005:\0041000\"3\n\006Format\022\021\n\rBa"
-    "gOfWordsUci\020\000\022\026\n\022JustLoadDictionary\020\001", 4517);
->>>>>>> master
+    "ts\030\003 \003(\0132\020.artm.FloatArray\"\235\002\n\026Collectio"
+    "nParserConfig\022B\n\006format\030\001 \001(\0162#.artm.Col"
+    "lectionParserConfig.Format:\rBagOfWordsUc"
+    "i\022\031\n\021docword_file_path\030\002 \001(\t\022\027\n\017vocab_fi"
+    "le_path\030\003 \001(\t\022\025\n\rtarget_folder\030\004 \001(\t\022\034\n\024"
+    "dictionary_file_name\030\005 \001(\t\022!\n\023num_items_"
+    "per_batch\030\006 \001(\005:\0041000\"3\n\006Format\022\021\n\rBagOf"
+    "WordsUci\020\000\022\026\n\022JustLoadDictionary\020\001", 4634);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   DoubleArray::default_instance_ = new DoubleArray();
@@ -3519,14 +3498,14 @@ MasterComponentConfig::MasterComponentConfig(const MasterComponentConfig& from)
 void MasterComponentConfig::SharedCtor() {
   _cached_size_ = 0;
   modus_operandi_ = 0;
-  disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  disk_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   compact_batches_ = true;
   cache_theta_ = false;
   processors_count_ = 1;
   processor_queue_max_size_ = 10;
   merger_queue_max_size_ = 10;
-  create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
-  connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3535,13 +3514,13 @@ MasterComponentConfig::~MasterComponentConfig() {
 }
 
 void MasterComponentConfig::SharedDtor() {
-  if (disk_path_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (disk_path_ != &::google::protobuf::internal::kEmptyString) {
     delete disk_path_;
   }
-  if (create_endpoint_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
     delete create_endpoint_;
   }
-  if (connect_endpoint_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
     delete connect_endpoint_;
   }
   if (this != default_instance_) {
@@ -3573,7 +3552,7 @@ void MasterComponentConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     modus_operandi_ = 0;
     if (has_disk_path()) {
-      if (disk_path_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (disk_path_ != &::google::protobuf::internal::kEmptyString) {
         disk_path_->clear();
       }
     }
@@ -3585,12 +3564,12 @@ void MasterComponentConfig::Clear() {
   }
   if (_has_bits_[9 / 32] & (0xffu << (9 % 32))) {
     if (has_create_endpoint()) {
-      if (create_endpoint_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
         create_endpoint_->clear();
       }
     }
     if (has_connect_endpoint()) {
-      if (connect_endpoint_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
         connect_endpoint_->clear();
       }
     }
@@ -4222,7 +4201,7 @@ NodeControllerConfig::NodeControllerConfig(const NodeControllerConfig& from)
 
 void NodeControllerConfig::SharedCtor() {
   _cached_size_ = 0;
-  create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  create_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4231,7 +4210,7 @@ NodeControllerConfig::~NodeControllerConfig() {
 }
 
 void NodeControllerConfig::SharedDtor() {
-  if (create_endpoint_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
     delete create_endpoint_;
   }
   if (this != default_instance_) {
@@ -4262,7 +4241,7 @@ NodeControllerConfig* NodeControllerConfig::New() const {
 void NodeControllerConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_create_endpoint()) {
-      if (create_endpoint_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (create_endpoint_ != &::google::protobuf::internal::kEmptyString) {
         create_endpoint_->clear();
       }
     }
@@ -4450,7 +4429,7 @@ MasterProxyConfig::MasterProxyConfig(const MasterProxyConfig& from)
 
 void MasterProxyConfig::SharedCtor() {
   _cached_size_ = 0;
-  node_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  node_connect_endpoint_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   config_ = NULL;
   communication_timeout_ = 1000;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -4461,7 +4440,7 @@ MasterProxyConfig::~MasterProxyConfig() {
 }
 
 void MasterProxyConfig::SharedDtor() {
-  if (node_connect_endpoint_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (node_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
     delete node_connect_endpoint_;
   }
   if (this != default_instance_) {
@@ -4493,7 +4472,7 @@ MasterProxyConfig* MasterProxyConfig::New() const {
 void MasterProxyConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_node_connect_endpoint()) {
-      if (node_connect_endpoint_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (node_connect_endpoint_ != &::google::protobuf::internal::kEmptyString) {
         node_connect_endpoint_->clear();
       }
     }
@@ -5520,9 +5499,9 @@ RegularizerConfig::RegularizerConfig(const RegularizerConfig& from)
 
 void RegularizerConfig::SharedCtor() {
   _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   type_ = 0;
-  config_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -5531,10 +5510,10 @@ RegularizerConfig::~RegularizerConfig() {
 }
 
 void RegularizerConfig::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
-  if (config_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (config_ != &::google::protobuf::internal::kEmptyString) {
     delete config_;
   }
   if (this != default_instance_) {
@@ -5565,13 +5544,13 @@ RegularizerConfig* RegularizerConfig::New() const {
 void RegularizerConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_name()) {
-      if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
         name_->clear();
       }
     }
     type_ = 0;
     if (has_config()) {
-      if (config_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (config_ != &::google::protobuf::internal::kEmptyString) {
         config_->clear();
       }
     }
@@ -6040,7 +6019,7 @@ DirichletPhiConfig::DirichletPhiConfig(const DirichletPhiConfig& from)
 
 void DirichletPhiConfig::SharedCtor() {
   _cached_size_ = 0;
-  dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -6049,7 +6028,7 @@ DirichletPhiConfig::~DirichletPhiConfig() {
 }
 
 void DirichletPhiConfig::SharedDtor() {
-  if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
     delete dictionary_name_;
   }
   if (this != default_instance_) {
@@ -6080,7 +6059,7 @@ DirichletPhiConfig* DirichletPhiConfig::New() const {
 void DirichletPhiConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_dictionary_name()) {
-      if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
         dictionary_name_->clear();
       }
     }
@@ -6568,7 +6547,7 @@ void SmoothSparsePhiConfig::SharedCtor() {
   _cached_size_ = 0;
   background_topics_count_ = 0;
   topics_coefficients_ = NULL;
-  dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -6577,7 +6556,7 @@ SmoothSparsePhiConfig::~SmoothSparsePhiConfig() {
 }
 
 void SmoothSparsePhiConfig::SharedDtor() {
-  if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
     delete dictionary_name_;
   }
   if (this != default_instance_) {
@@ -6613,7 +6592,7 @@ void SmoothSparsePhiConfig::Clear() {
       if (topics_coefficients_ != NULL) topics_coefficients_->::artm::FloatArray::Clear();
     }
     if (has_dictionary_name()) {
-      if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
         dictionary_name_->clear();
       }
     }
@@ -7263,9 +7242,9 @@ RegularizerInternalState::RegularizerInternalState(const RegularizerInternalStat
 
 void RegularizerInternalState::SharedCtor() {
   _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   type_ = 5;
-  data_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -7274,10 +7253,10 @@ RegularizerInternalState::~RegularizerInternalState() {
 }
 
 void RegularizerInternalState::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
-  if (data_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
     delete data_;
   }
   if (this != default_instance_) {
@@ -7308,13 +7287,13 @@ RegularizerInternalState* RegularizerInternalState::New() const {
 void RegularizerInternalState::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_name()) {
-      if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
         name_->clear();
       }
     }
     type_ = 5;
     if (has_data()) {
-      if (data_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (data_ != &::google::protobuf::internal::kEmptyString) {
         data_->clear();
       }
     }
@@ -7789,7 +7768,7 @@ DictionaryConfig::DictionaryConfig(const DictionaryConfig& from)
 
 void DictionaryConfig::SharedCtor() {
   _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -7798,7 +7777,7 @@ DictionaryConfig::~DictionaryConfig() {
 }
 
 void DictionaryConfig::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
   if (this != default_instance_) {
@@ -7829,7 +7808,7 @@ DictionaryConfig* DictionaryConfig::New() const {
 void DictionaryConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_name()) {
-      if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
         name_->clear();
       }
     }
@@ -8058,8 +8037,8 @@ DictionaryEntry::DictionaryEntry(const DictionaryEntry& from)
 
 void DictionaryEntry::SharedCtor() {
   _cached_size_ = 0;
-  key_token_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
-  class_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  key_token_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  class_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   value_ = 0;
   values_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -8070,10 +8049,10 @@ DictionaryEntry::~DictionaryEntry() {
 }
 
 void DictionaryEntry::SharedDtor() {
-  if (key_token_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (key_token_ != &::google::protobuf::internal::kEmptyString) {
     delete key_token_;
   }
-  if (class_id_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (class_id_ != &::google::protobuf::internal::kEmptyString) {
     delete class_id_;
   }
   if (this != default_instance_) {
@@ -8105,12 +8084,12 @@ DictionaryEntry* DictionaryEntry::New() const {
 void DictionaryEntry::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_key_token()) {
-      if (key_token_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (key_token_ != &::google::protobuf::internal::kEmptyString) {
         key_token_->clear();
       }
     }
     if (has_class_id()) {
-      if (class_id_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (class_id_ != &::google::protobuf::internal::kEmptyString) {
         class_id_->clear();
       }
     }
@@ -8497,9 +8476,9 @@ ScoreConfig::ScoreConfig(const ScoreConfig& from)
 
 void ScoreConfig::SharedCtor() {
   _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   type_ = 0;
-  config_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -8508,10 +8487,10 @@ ScoreConfig::~ScoreConfig() {
 }
 
 void ScoreConfig::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
-  if (config_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (config_ != &::google::protobuf::internal::kEmptyString) {
     delete config_;
   }
   if (this != default_instance_) {
@@ -8542,13 +8521,13 @@ ScoreConfig* ScoreConfig::New() const {
 void ScoreConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_name()) {
-      if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
         name_->clear();
       }
     }
     type_ = 0;
     if (has_config()) {
-      if (config_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (config_ != &::google::protobuf::internal::kEmptyString) {
         config_->clear();
       }
     }
@@ -8845,9 +8824,9 @@ ScoreData::ScoreData(const ScoreData& from)
 
 void ScoreData::SharedCtor() {
   _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   type_ = 0;
-  data_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -8856,10 +8835,10 @@ ScoreData::~ScoreData() {
 }
 
 void ScoreData::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (name_ != &::google::protobuf::internal::kEmptyString) {
     delete name_;
   }
-  if (data_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (data_ != &::google::protobuf::internal::kEmptyString) {
     delete data_;
   }
   if (this != default_instance_) {
@@ -8890,13 +8869,13 @@ ScoreData* ScoreData::New() const {
 void ScoreData::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_name()) {
-      if (name_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (name_ != &::google::protobuf::internal::kEmptyString) {
         name_->clear();
       }
     }
     type_ = 0;
     if (has_data()) {
-      if (data_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (data_ != &::google::protobuf::internal::kEmptyString) {
         data_->clear();
       }
     }
@@ -12867,7 +12846,7 @@ void TopicModel::SharedCtor() {
   _cached_size_ = 0;
   name_ = const_cast< ::std::string*>(_default_name_);
   topics_count_ = 0;
-  internals_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  internals_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -12879,7 +12858,7 @@ void TopicModel::SharedDtor() {
   if (name_ != _default_name_) {
     delete name_;
   }
-  if (internals_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (internals_ != &::google::protobuf::internal::kEmptyString) {
     delete internals_;
   }
   if (this != default_instance_) {
@@ -12916,7 +12895,7 @@ void TopicModel::Clear() {
     }
     topics_count_ = 0;
     if (has_internals()) {
-      if (internals_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (internals_ != &::google::protobuf::internal::kEmptyString) {
         internals_->clear();
       }
     }
@@ -13650,10 +13629,10 @@ CollectionParserConfig::CollectionParserConfig(const CollectionParserConfig& fro
 void CollectionParserConfig::SharedCtor() {
   _cached_size_ = 0;
   format_ = 0;
-  docword_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
-  vocab_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
-  target_folder_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
-  dictionary_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  docword_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  vocab_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  target_folder_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  dictionary_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   num_items_per_batch_ = 1000;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -13663,16 +13642,16 @@ CollectionParserConfig::~CollectionParserConfig() {
 }
 
 void CollectionParserConfig::SharedDtor() {
-  if (docword_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (docword_file_path_ != &::google::protobuf::internal::kEmptyString) {
     delete docword_file_path_;
   }
-  if (vocab_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (vocab_file_path_ != &::google::protobuf::internal::kEmptyString) {
     delete vocab_file_path_;
   }
-  if (target_folder_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (target_folder_ != &::google::protobuf::internal::kEmptyString) {
     delete target_folder_;
   }
-  if (dictionary_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
+  if (dictionary_file_name_ != &::google::protobuf::internal::kEmptyString) {
     delete dictionary_file_name_;
   }
   if (this != default_instance_) {
@@ -13704,22 +13683,22 @@ void CollectionParserConfig::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     format_ = 0;
     if (has_docword_file_path()) {
-      if (docword_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (docword_file_path_ != &::google::protobuf::internal::kEmptyString) {
         docword_file_path_->clear();
       }
     }
     if (has_vocab_file_path()) {
-      if (vocab_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (vocab_file_path_ != &::google::protobuf::internal::kEmptyString) {
         vocab_file_path_->clear();
       }
     }
     if (has_target_folder()) {
-      if (target_folder_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (target_folder_ != &::google::protobuf::internal::kEmptyString) {
         target_folder_->clear();
       }
     }
     if (has_dictionary_file_name()) {
-      if (dictionary_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
+      if (dictionary_file_name_ != &::google::protobuf::internal::kEmptyString) {
         dictionary_file_name_->clear();
       }
     }

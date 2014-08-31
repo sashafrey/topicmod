@@ -51,7 +51,11 @@ class BatchHelpers {
   static std::shared_ptr<const Batch> LoadBatch(const boost::uuids::uuid& uuid,
                                                 const std::string& disk_path);
   static boost::uuids::uuid SaveBatch(const Batch& batch, const std::string& disk_path);
-  static std::string MakeBatchPath(const std::string& disk_path, const boost::uuids::uuid& uuid);
+
+  static void LoadMessage(const std::string& filename, const std::string& disk_path,
+                          ::google::protobuf::Message* message);
+  static void SaveMessage(const std::string& filename, const std::string& disk_path,
+                          const ::google::protobuf::Message& message);
 };
 
 }  // namespace core

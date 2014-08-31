@@ -1,6 +1,9 @@
 // Copyright 2014, Additive Regularization of Topic Models.
 
 #include "artm/regularizer_sandbox/multilanguage_phi.h"
+
+#include <string>
+
 #include "artm/core/regularizable.h"
 #include "artm/core/topic_model.h"
 
@@ -16,8 +19,12 @@ bool MultiLanguagePhi::RegularizePhi(::artm::core::Regularizable* topic_model, d
 
 bool MultiLanguagePhi::Reconfigure(const RegularizerConfig& config) {
   std::string config_blob = config.config();
-  MultiLanguagePhiConfig regularizer_config;                         
-  regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length());
+  MultiLanguagePhiConfig regularizer_config;
+  if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
+    BOOST_THROW_EXCEPTION(::artm::core::CorruptedMessageException(
+      "Unable to parse MultiLanguagePhiConfig from RegularizerConfig.config"));
+  }
+
   config_.CopyFrom(regularizer_config);
   return true;
 }

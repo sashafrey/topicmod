@@ -20,10 +20,10 @@ DiskGeneration::DiskGeneration(const std::string& disk_path)
 }
 
 void DiskGeneration::AddBatch(const std::shared_ptr<const Batch>& batch) {
-  std::string message = "AddBatch() is not allowed with current configuration. ";
-  message += "Please, set the configuration parameter MasterComponentConfig::disk_path ";
-  message += "to an empty string in order to enable AddBatch() operation. ";
-  message += "Use SaveBatch() operation to save batches to disk.";
+  std::string message = "ArtmAddBatch() is not allowed with current configuration. ";
+  message += "Please, set the configuration parameter MasterComponentConfig.disk_path ";
+  message += "to an empty string in order to enable ArtmAddBatch() operation. ";
+  message += "Use ArtmSaveBatch() operation to save batches to disk.";
   BOOST_THROW_EXCEPTION(InvalidOperation(message));
 }
 

@@ -102,8 +102,12 @@ bool SmoothSparsePhi::RegularizePhi(::artm::core::Regularizable* topic_model, do
 
 bool SmoothSparsePhi::Reconfigure(const RegularizerConfig& config) {
   std::string config_blob = config.config();
-  SmoothSparsePhiConfig regularizer_config;                         
-  regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length());
+  SmoothSparsePhiConfig regularizer_config;
+  if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {
+    BOOST_THROW_EXCEPTION(::artm::core::CorruptedMessageException(
+      "Unable to parse SmoothSparsePhiConfig from RegularizerConfig.config"));
+  }
+
   config_.CopyFrom(regularizer_config);
   return true;
 }

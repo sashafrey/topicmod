@@ -1,11 +1,6 @@
 project(RPCZ_GENERIC)
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake_modules)
 
-if (NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE "Release")
-endif()
-message("-- Build type: ${CMAKE_BUILD_TYPE}")
-
 option(rpcz_build_tests "Build rpcz's tests." OFF)
 option(rpcz_build_static "Build static library." OFF)
 option(rpcz_build_examples "Build rpcz's examples." OFF)

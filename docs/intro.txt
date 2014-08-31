@@ -3,11 +3,11 @@ Introduction
 
 .. warning::
 
-   BigARTM library is in pre-released state.
-   You are welcome to use the library,
-   but please beware that the API of the library
-   can have major changes.
-
+   Please note that this is a beta version of the BigARTM library
+   which is still undergoing final testing before its official release.
+   Should you encounter any bugs, lack of functionality or
+   other problems with our library, please let us know immediately.
+   Your help in this regard is greatly appreciated.
 
 This is the documentation for the BigARTM library.
 BigARTM is a tool to infer `topic models`_,
@@ -16,9 +16,9 @@ based on a novel technique called
 This technique effectively builds multi-objective models
 by adding the weighted sums of regularizers to the optimization criterion.
 BigARTM is known to combine well
-very different objectives, including sparsing, smoothing and topics decorrelation.
-Such combination of regularizers significantly improves
-several quality measures almost without any loss of the perplexity.
+very different objectives, including sparsing, smoothing, topics decorrelation and many others.
+Such combinations of regularizers significantly improves
+several quality measures at once almost without any loss of the perplexity.
 
 .. sidebar:: Getting help
 
@@ -43,21 +43,21 @@ Let's list the key features of the library.
 **Online**.
 BigARTM never stores the entire text collection
 in the main memory. Instead the collection is split into
-small subsets called 'batches', and loads a limited
-number of batches at a time.
+small chunks called 'batches', and loads a limited
+number of batches into memory at any time.
 
 **Parallel**.
 BigARTM can concurrently process several batches,
 and by doing so it substantially improves the throughput
-on multi-core machines. By placing all processing into
-a single process BigARTM achieves high level of concurrency
-without consuming any additional memory.
+on multi-core machines. The library hosts all computation
+in several threads withing a single process,
+which enables efficient usage of shared memory across application threads.
 
 **Distributed**.
 BigARTM is able to distribute all CPU-intensive
-processing to several machines, connected by network.
-It also supports a special ``proxy`` mode,
-which allows you to perform experiments on a remote cluster.
+processing onto several machines, interconnected by network.
+We aim to scale up to hundreds of machines,
+but the real scalability have not been fully tested yet.
 
 **Extensible API**.
 BigARTM comes with an API in Python,

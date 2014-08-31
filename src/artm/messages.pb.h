@@ -74,6 +74,7 @@ class ThetaSnippetScore;
 class TopicModel;
 class TopicModel_TopicModelInternals;
 class ThetaMatrix;
+class CollectionParserConfig;
 
 enum Stream_Type {
   Stream_Type_Global = 0,
@@ -199,6 +200,25 @@ inline bool ScoreData_Type_Parse(
     const ::std::string& name, ScoreData_Type* value) {
   return ::google::protobuf::internal::ParseNamedEnum<ScoreData_Type>(
     ScoreData_Type_descriptor(), name, value);
+}
+enum CollectionParserConfig_Format {
+  CollectionParserConfig_Format_BagOfWordsUci = 0,
+  CollectionParserConfig_Format_JustLoadDictionary = 1
+};
+bool CollectionParserConfig_Format_IsValid(int value);
+const CollectionParserConfig_Format CollectionParserConfig_Format_Format_MIN = CollectionParserConfig_Format_BagOfWordsUci;
+const CollectionParserConfig_Format CollectionParserConfig_Format_Format_MAX = CollectionParserConfig_Format_JustLoadDictionary;
+const int CollectionParserConfig_Format_Format_ARRAYSIZE = CollectionParserConfig_Format_Format_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* CollectionParserConfig_Format_descriptor();
+inline const ::std::string& CollectionParserConfig_Format_Name(CollectionParserConfig_Format value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    CollectionParserConfig_Format_descriptor(), value);
+}
+inline bool CollectionParserConfig_Format_Parse(
+    const ::std::string& name, CollectionParserConfig_Format* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<CollectionParserConfig_Format>(
+    CollectionParserConfig_Format_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -4744,6 +4764,182 @@ class ThetaMatrix : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ThetaMatrix* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class CollectionParserConfig : public ::google::protobuf::Message {
+ public:
+  CollectionParserConfig();
+  virtual ~CollectionParserConfig();
+
+  CollectionParserConfig(const CollectionParserConfig& from);
+
+  inline CollectionParserConfig& operator=(const CollectionParserConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CollectionParserConfig& default_instance();
+
+  void Swap(CollectionParserConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  CollectionParserConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CollectionParserConfig& from);
+  void MergeFrom(const CollectionParserConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  typedef CollectionParserConfig_Format Format;
+  static const Format BagOfWordsUci = CollectionParserConfig_Format_BagOfWordsUci;
+  static const Format JustLoadDictionary = CollectionParserConfig_Format_JustLoadDictionary;
+  static inline bool Format_IsValid(int value) {
+    return CollectionParserConfig_Format_IsValid(value);
+  }
+  static const Format Format_MIN =
+    CollectionParserConfig_Format_Format_MIN;
+  static const Format Format_MAX =
+    CollectionParserConfig_Format_Format_MAX;
+  static const int Format_ARRAYSIZE =
+    CollectionParserConfig_Format_Format_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Format_descriptor() {
+    return CollectionParserConfig_Format_descriptor();
+  }
+  static inline const ::std::string& Format_Name(Format value) {
+    return CollectionParserConfig_Format_Name(value);
+  }
+  static inline bool Format_Parse(const ::std::string& name,
+      Format* value) {
+    return CollectionParserConfig_Format_Parse(name, value);
+  }
+
+  // accessors -------------------------------------------------------
+
+  // optional .artm.CollectionParserConfig.Format format = 1 [default = BagOfWordsUci];
+  inline bool has_format() const;
+  inline void clear_format();
+  static const int kFormatFieldNumber = 1;
+  inline ::artm::CollectionParserConfig_Format format() const;
+  inline void set_format(::artm::CollectionParserConfig_Format value);
+
+  // optional string docword_file_path = 2;
+  inline bool has_docword_file_path() const;
+  inline void clear_docword_file_path();
+  static const int kDocwordFilePathFieldNumber = 2;
+  inline const ::std::string& docword_file_path() const;
+  inline void set_docword_file_path(const ::std::string& value);
+  inline void set_docword_file_path(const char* value);
+  inline void set_docword_file_path(const char* value, size_t size);
+  inline ::std::string* mutable_docword_file_path();
+  inline ::std::string* release_docword_file_path();
+  inline void set_allocated_docword_file_path(::std::string* docword_file_path);
+
+  // optional string vocab_file_path = 3;
+  inline bool has_vocab_file_path() const;
+  inline void clear_vocab_file_path();
+  static const int kVocabFilePathFieldNumber = 3;
+  inline const ::std::string& vocab_file_path() const;
+  inline void set_vocab_file_path(const ::std::string& value);
+  inline void set_vocab_file_path(const char* value);
+  inline void set_vocab_file_path(const char* value, size_t size);
+  inline ::std::string* mutable_vocab_file_path();
+  inline ::std::string* release_vocab_file_path();
+  inline void set_allocated_vocab_file_path(::std::string* vocab_file_path);
+
+  // optional string target_folder = 4;
+  inline bool has_target_folder() const;
+  inline void clear_target_folder();
+  static const int kTargetFolderFieldNumber = 4;
+  inline const ::std::string& target_folder() const;
+  inline void set_target_folder(const ::std::string& value);
+  inline void set_target_folder(const char* value);
+  inline void set_target_folder(const char* value, size_t size);
+  inline ::std::string* mutable_target_folder();
+  inline ::std::string* release_target_folder();
+  inline void set_allocated_target_folder(::std::string* target_folder);
+
+  // optional string dictionary_file_name = 5;
+  inline bool has_dictionary_file_name() const;
+  inline void clear_dictionary_file_name();
+  static const int kDictionaryFileNameFieldNumber = 5;
+  inline const ::std::string& dictionary_file_name() const;
+  inline void set_dictionary_file_name(const ::std::string& value);
+  inline void set_dictionary_file_name(const char* value);
+  inline void set_dictionary_file_name(const char* value, size_t size);
+  inline ::std::string* mutable_dictionary_file_name();
+  inline ::std::string* release_dictionary_file_name();
+  inline void set_allocated_dictionary_file_name(::std::string* dictionary_file_name);
+
+  // optional int32 num_items_per_batch = 6 [default = 1000];
+  inline bool has_num_items_per_batch() const;
+  inline void clear_num_items_per_batch();
+  static const int kNumItemsPerBatchFieldNumber = 6;
+  inline ::google::protobuf::int32 num_items_per_batch() const;
+  inline void set_num_items_per_batch(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:artm.CollectionParserConfig)
+ private:
+  inline void set_has_format();
+  inline void clear_has_format();
+  inline void set_has_docword_file_path();
+  inline void clear_has_docword_file_path();
+  inline void set_has_vocab_file_path();
+  inline void clear_has_vocab_file_path();
+  inline void set_has_target_folder();
+  inline void clear_has_target_folder();
+  inline void set_has_dictionary_file_name();
+  inline void clear_has_dictionary_file_name();
+  inline void set_has_num_items_per_batch();
+  inline void clear_has_num_items_per_batch();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::std::string* docword_file_path_;
+  ::std::string* vocab_file_path_;
+  int format_;
+  ::google::protobuf::int32 num_items_per_batch_;
+  ::std::string* target_folder_;
+  ::std::string* dictionary_file_name_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static CollectionParserConfig* default_instance_;
 };
 // ===================================================================
 
@@ -9521,6 +9717,335 @@ ThetaMatrix::mutable_item_weights() {
   return &item_weights_;
 }
 
+// -------------------------------------------------------------------
+
+// CollectionParserConfig
+
+// optional .artm.CollectionParserConfig.Format format = 1 [default = BagOfWordsUci];
+inline bool CollectionParserConfig::has_format() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void CollectionParserConfig::set_has_format() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void CollectionParserConfig::clear_has_format() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void CollectionParserConfig::clear_format() {
+  format_ = 0;
+  clear_has_format();
+}
+inline ::artm::CollectionParserConfig_Format CollectionParserConfig::format() const {
+  return static_cast< ::artm::CollectionParserConfig_Format >(format_);
+}
+inline void CollectionParserConfig::set_format(::artm::CollectionParserConfig_Format value) {
+  assert(::artm::CollectionParserConfig_Format_IsValid(value));
+  set_has_format();
+  format_ = value;
+}
+
+// optional string docword_file_path = 2;
+inline bool CollectionParserConfig::has_docword_file_path() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void CollectionParserConfig::set_has_docword_file_path() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void CollectionParserConfig::clear_has_docword_file_path() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void CollectionParserConfig::clear_docword_file_path() {
+  if (docword_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+    docword_file_path_->clear();
+  }
+  clear_has_docword_file_path();
+}
+inline const ::std::string& CollectionParserConfig::docword_file_path() const {
+  return *docword_file_path_;
+}
+inline void CollectionParserConfig::set_docword_file_path(const ::std::string& value) {
+  set_has_docword_file_path();
+  if (docword_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    docword_file_path_ = new ::std::string;
+  }
+  docword_file_path_->assign(value);
+}
+inline void CollectionParserConfig::set_docword_file_path(const char* value) {
+  set_has_docword_file_path();
+  if (docword_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    docword_file_path_ = new ::std::string;
+  }
+  docword_file_path_->assign(value);
+}
+inline void CollectionParserConfig::set_docword_file_path(const char* value, size_t size) {
+  set_has_docword_file_path();
+  if (docword_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    docword_file_path_ = new ::std::string;
+  }
+  docword_file_path_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CollectionParserConfig::mutable_docword_file_path() {
+  set_has_docword_file_path();
+  if (docword_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    docword_file_path_ = new ::std::string;
+  }
+  return docword_file_path_;
+}
+inline ::std::string* CollectionParserConfig::release_docword_file_path() {
+  clear_has_docword_file_path();
+  if (docword_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    return NULL;
+  } else {
+    ::std::string* temp = docword_file_path_;
+    docword_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+    return temp;
+  }
+}
+inline void CollectionParserConfig::set_allocated_docword_file_path(::std::string* docword_file_path) {
+  if (docword_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete docword_file_path_;
+  }
+  if (docword_file_path) {
+    set_has_docword_file_path();
+    docword_file_path_ = docword_file_path;
+  } else {
+    clear_has_docword_file_path();
+    docword_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  }
+}
+
+// optional string vocab_file_path = 3;
+inline bool CollectionParserConfig::has_vocab_file_path() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void CollectionParserConfig::set_has_vocab_file_path() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void CollectionParserConfig::clear_has_vocab_file_path() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void CollectionParserConfig::clear_vocab_file_path() {
+  if (vocab_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+    vocab_file_path_->clear();
+  }
+  clear_has_vocab_file_path();
+}
+inline const ::std::string& CollectionParserConfig::vocab_file_path() const {
+  return *vocab_file_path_;
+}
+inline void CollectionParserConfig::set_vocab_file_path(const ::std::string& value) {
+  set_has_vocab_file_path();
+  if (vocab_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    vocab_file_path_ = new ::std::string;
+  }
+  vocab_file_path_->assign(value);
+}
+inline void CollectionParserConfig::set_vocab_file_path(const char* value) {
+  set_has_vocab_file_path();
+  if (vocab_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    vocab_file_path_ = new ::std::string;
+  }
+  vocab_file_path_->assign(value);
+}
+inline void CollectionParserConfig::set_vocab_file_path(const char* value, size_t size) {
+  set_has_vocab_file_path();
+  if (vocab_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    vocab_file_path_ = new ::std::string;
+  }
+  vocab_file_path_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CollectionParserConfig::mutable_vocab_file_path() {
+  set_has_vocab_file_path();
+  if (vocab_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    vocab_file_path_ = new ::std::string;
+  }
+  return vocab_file_path_;
+}
+inline ::std::string* CollectionParserConfig::release_vocab_file_path() {
+  clear_has_vocab_file_path();
+  if (vocab_file_path_ == &::google::protobuf::internal::GetEmptyString()) {
+    return NULL;
+  } else {
+    ::std::string* temp = vocab_file_path_;
+    vocab_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+    return temp;
+  }
+}
+inline void CollectionParserConfig::set_allocated_vocab_file_path(::std::string* vocab_file_path) {
+  if (vocab_file_path_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete vocab_file_path_;
+  }
+  if (vocab_file_path) {
+    set_has_vocab_file_path();
+    vocab_file_path_ = vocab_file_path;
+  } else {
+    clear_has_vocab_file_path();
+    vocab_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  }
+}
+
+// optional string target_folder = 4;
+inline bool CollectionParserConfig::has_target_folder() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void CollectionParserConfig::set_has_target_folder() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void CollectionParserConfig::clear_has_target_folder() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void CollectionParserConfig::clear_target_folder() {
+  if (target_folder_ != &::google::protobuf::internal::GetEmptyString()) {
+    target_folder_->clear();
+  }
+  clear_has_target_folder();
+}
+inline const ::std::string& CollectionParserConfig::target_folder() const {
+  return *target_folder_;
+}
+inline void CollectionParserConfig::set_target_folder(const ::std::string& value) {
+  set_has_target_folder();
+  if (target_folder_ == &::google::protobuf::internal::GetEmptyString()) {
+    target_folder_ = new ::std::string;
+  }
+  target_folder_->assign(value);
+}
+inline void CollectionParserConfig::set_target_folder(const char* value) {
+  set_has_target_folder();
+  if (target_folder_ == &::google::protobuf::internal::GetEmptyString()) {
+    target_folder_ = new ::std::string;
+  }
+  target_folder_->assign(value);
+}
+inline void CollectionParserConfig::set_target_folder(const char* value, size_t size) {
+  set_has_target_folder();
+  if (target_folder_ == &::google::protobuf::internal::GetEmptyString()) {
+    target_folder_ = new ::std::string;
+  }
+  target_folder_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CollectionParserConfig::mutable_target_folder() {
+  set_has_target_folder();
+  if (target_folder_ == &::google::protobuf::internal::GetEmptyString()) {
+    target_folder_ = new ::std::string;
+  }
+  return target_folder_;
+}
+inline ::std::string* CollectionParserConfig::release_target_folder() {
+  clear_has_target_folder();
+  if (target_folder_ == &::google::protobuf::internal::GetEmptyString()) {
+    return NULL;
+  } else {
+    ::std::string* temp = target_folder_;
+    target_folder_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+    return temp;
+  }
+}
+inline void CollectionParserConfig::set_allocated_target_folder(::std::string* target_folder) {
+  if (target_folder_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete target_folder_;
+  }
+  if (target_folder) {
+    set_has_target_folder();
+    target_folder_ = target_folder;
+  } else {
+    clear_has_target_folder();
+    target_folder_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  }
+}
+
+// optional string dictionary_file_name = 5;
+inline bool CollectionParserConfig::has_dictionary_file_name() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void CollectionParserConfig::set_has_dictionary_file_name() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void CollectionParserConfig::clear_has_dictionary_file_name() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void CollectionParserConfig::clear_dictionary_file_name() {
+  if (dictionary_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_file_name_->clear();
+  }
+  clear_has_dictionary_file_name();
+}
+inline const ::std::string& CollectionParserConfig::dictionary_file_name() const {
+  return *dictionary_file_name_;
+}
+inline void CollectionParserConfig::set_dictionary_file_name(const ::std::string& value) {
+  set_has_dictionary_file_name();
+  if (dictionary_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_file_name_ = new ::std::string;
+  }
+  dictionary_file_name_->assign(value);
+}
+inline void CollectionParserConfig::set_dictionary_file_name(const char* value) {
+  set_has_dictionary_file_name();
+  if (dictionary_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_file_name_ = new ::std::string;
+  }
+  dictionary_file_name_->assign(value);
+}
+inline void CollectionParserConfig::set_dictionary_file_name(const char* value, size_t size) {
+  set_has_dictionary_file_name();
+  if (dictionary_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_file_name_ = new ::std::string;
+  }
+  dictionary_file_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CollectionParserConfig::mutable_dictionary_file_name() {
+  set_has_dictionary_file_name();
+  if (dictionary_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_file_name_ = new ::std::string;
+  }
+  return dictionary_file_name_;
+}
+inline ::std::string* CollectionParserConfig::release_dictionary_file_name() {
+  clear_has_dictionary_file_name();
+  if (dictionary_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    return NULL;
+  } else {
+    ::std::string* temp = dictionary_file_name_;
+    dictionary_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+    return temp;
+  }
+}
+inline void CollectionParserConfig::set_allocated_dictionary_file_name(::std::string* dictionary_file_name) {
+  if (dictionary_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete dictionary_file_name_;
+  }
+  if (dictionary_file_name) {
+    set_has_dictionary_file_name();
+    dictionary_file_name_ = dictionary_file_name;
+  } else {
+    clear_has_dictionary_file_name();
+    dictionary_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  }
+}
+
+// optional int32 num_items_per_batch = 6 [default = 1000];
+inline bool CollectionParserConfig::has_num_items_per_batch() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void CollectionParserConfig::set_has_num_items_per_batch() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void CollectionParserConfig::clear_has_num_items_per_batch() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void CollectionParserConfig::clear_num_items_per_batch() {
+  num_items_per_batch_ = 1000;
+  clear_has_num_items_per_batch();
+}
+inline ::google::protobuf::int32 CollectionParserConfig::num_items_per_batch() const {
+  return num_items_per_batch_;
+}
+inline void CollectionParserConfig::set_num_items_per_batch(::google::protobuf::int32 value) {
+  set_has_num_items_per_batch();
+  num_items_per_batch_ = value;
+}
+
 
 // @@protoc_insertion_point(namespace_scope)
 
@@ -9553,6 +10078,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::artm::ScoreConfig_Type>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::ScoreData_Type>() {
   return ::artm::ScoreData_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::CollectionParserConfig_Format>() {
+  return ::artm::CollectionParserConfig_Format_descriptor();
 }
 
 }  // namespace google

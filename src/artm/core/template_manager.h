@@ -103,7 +103,7 @@ class TemplateManager : boost::noncopyable {
     return (iter == map_.end()) ? nullptr : std::dynamic_pointer_cast<Derrived>(iter->second);
   }
 
-  const std::shared_ptr<Type> Get(int id) {
+  std::shared_ptr<Type> Get(int id) {
     return Get<Type>(id);
   }
 

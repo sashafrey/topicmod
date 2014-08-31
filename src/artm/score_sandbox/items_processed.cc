@@ -31,12 +31,12 @@ void ItemsProcessed::AppendScore(const Score& score, Score* target) {
   std::string error_message = "Unable downcast Score to SparsityThetaScore";
   const ItemsProcessedScore* items_processed_score = dynamic_cast<const ItemsProcessedScore*>(&score);
   if (items_processed_score == nullptr) {
-    BOOST_THROW_EXCEPTION(::artm::core::InvalidOperation(error_message));
+    BOOST_THROW_EXCEPTION(::artm::core::InternalError(error_message));
   }
 
   ItemsProcessedScore* items_processed_target = dynamic_cast<ItemsProcessedScore*>(target);
   if (items_processed_target == nullptr) {
-    BOOST_THROW_EXCEPTION(::artm::core::InvalidOperation(error_message));
+    BOOST_THROW_EXCEPTION(::artm::core::InternalError(error_message));
   }
 
   items_processed_target->set_value(items_processed_target->value() +

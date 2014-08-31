@@ -39,7 +39,7 @@
 #define CREATE_OR_RECONFIGURE_REGULARIZER(ConfigType, RegularizerType) {                      \
   ConfigType regularizer_config;                                                              \
   if (!regularizer_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {        \
-    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));      \
+    BOOST_THROW_EXCEPTION(CorruptedMessageException("Unable to parse regularizer config"));   \
   }                                                                                           \
   if (need_hot_reconfigure) {                                                                 \
     need_hot_reconfigure = regularizer->Reconfigure(config);                                  \
@@ -55,7 +55,7 @@
 #define CREATE_SCORE_CALCULATOR(ConfigType, ScoreType) {                                  \
   ConfigType score_config;                                                                \
   if (!score_config.ParseFromArray(config_blob.c_str(), config_blob.length())) {          \
-    BOOST_THROW_EXCEPTION(SerializationException("Unable to parse score config"));        \
+    BOOST_THROW_EXCEPTION(CorruptedMessageException("Unable to parse score config"));     \
   }                                                                                       \
   score_calculator.reset(new ScoreType(score_config));                                    \
 }                                                                                         \
@@ -203,7 +203,8 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
     }
 
     default:
-      BOOST_THROW_EXCEPTION(SerializationException("Unable to parse regularizer config"));
+      BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException(
+        "RegularizerConfig.type", regularizer_type));
   }
 
   regularizer->set_dictionaries(&dictionaries_);
@@ -262,7 +263,7 @@ static std::shared_ptr<ScoreCalculatorInterface> CreateScoreCalculator(const Sco
     }
 
     default:
-      BOOST_THROW_EXCEPTION(SerializationException("Unable to parse score config"));
+      BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("ScoreConfig.type", score_type));
   }
 
   return score_calculator;
@@ -352,7 +353,8 @@ void Instance::Reconfigure(const MasterComponentConfig& master_config) {
         break;
 
       default:
-        BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("instance_type_"));
+        BOOST_THROW_EXCEPTION(InternalError(
+          "Instance::Reconfigure() failed because instance_type_ is out of range "));
     }
 
     merger_.reset(new Merger(&merger_queue_, &schema_,
@@ -363,7 +365,7 @@ void Instance::Reconfigure(const MasterComponentConfig& master_config) {
     // Second and subsequent reconfiguration - some restrictions apply
     if (old_config.connect_endpoint() !=
         master_config.connect_endpoint()) {
-      BOOST_THROW_EXCEPTION(InvalidOperation("Changing master endpoint is not supported"));
+      BOOST_THROW_EXCEPTION(InvalidOperation("Changing master endpoint is not allowed"));
     }
   }
 

@@ -138,8 +138,8 @@ bool MasterProxy::RequestTopicModel(ModelName model_name, ::artm::TopicModel* to
   return true;
 }
 
-void MasterProxy::RequestRegularizerState(RegularizerName regularizer_name, 
-                                       ::artm::RegularizerInternalState* regularizer_state) {
+void MasterProxy::RequestRegularizerState(RegularizerName regularizer_name,
+                                          ::artm::RegularizerInternalState* regularizer_state) {
   make_rpcz_call([&]() {
     String request;
     request.set_value(regularizer_name);

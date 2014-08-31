@@ -65,10 +65,6 @@ if (NOT BUILD_gflags_LIB AND NOT BUILD_gflags_nothreads_LIB)
  message (FATAL_ERROR "At least one of BUILD_gflags_LIB and BUILD_gflags_nothreads_LIB must be ON.")
 endif ()
 
-if (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CXX_FLAGS)
-  set_property (CACHE CMAKE_BUILD_TYPE PROPERTY VALUE Release)
-endif ()
-
 # ----------------------------------------------------------------------------
 # system checks
 include (CheckTypeSize)

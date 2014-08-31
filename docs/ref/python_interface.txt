@@ -20,7 +20,7 @@ Creates :class:`python_interface.ArtmLibrary` and wraps the binary at specified 
 .. function:: def CreateMasterComponent(self, config = messages_pb2.MasterComponentConfig())
 
 Creates :class:`python_interface.MasterComponent`
-and configures it with provided :class:`messages_pb2.MasterComponentConfig`.
+and configures it with provided :ref:`MasterComponentConfig`.
 
 .. function:: def CreateNodeController(self, endpoint)
 

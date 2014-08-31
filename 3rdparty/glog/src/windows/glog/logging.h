@@ -138,7 +138,12 @@ typedef unsigned __int64 uint64;
 #else
 #define GOOGLE_PREDICT_BRANCH_NOT_TAKEN(x) x
 #define GOOGLE_PREDICT_FALSE(x) x
+
+// Workaround https://code.google.com/p/google-glog/issues/detail?id=179
+#ifndef GOOGLE_PREDICT_TRUE
 #define GOOGLE_PREDICT_TRUE(x) x
+#endif
+
 #endif
 #endif
 

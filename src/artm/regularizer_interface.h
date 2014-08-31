@@ -42,11 +42,11 @@ class RegularizerInterface {
   // Attempt to reconfigure an existing regularizer.
   // Returns true if succeeded, and false if the caller must recreate the regularizer from scratch
   // via constructor.
-  virtual bool Reconfigure(const RegularizerConfig& config) { return false; } 
+  virtual bool Reconfigure(const RegularizerConfig& config) { return false; }
 
-  virtual void SerializeInternalState(RegularizerInternalState* regularizer_state) { 
+  virtual void SerializeInternalState(RegularizerInternalState* regularizer_state) {
     BOOST_THROW_EXCEPTION(artm::core::InvalidOperation(
-      "This regularizer has no internal state!")); 
+      "This regularizer has no internal state that can be retrieved."));
   }
 
   std::shared_ptr<::artm::core::DictionaryMap> dictionary(const std::string& dictionary_name);

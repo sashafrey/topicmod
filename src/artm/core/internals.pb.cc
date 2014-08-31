@@ -1209,7 +1209,7 @@ String::String(const String& from)
 
 void String::SharedCtor() {
   _cached_size_ = 0;
-  value_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  value_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1218,7 +1218,7 @@ String::~String() {
 }
 
 void String::SharedDtor() {
-  if (value_ != &::google::protobuf::internal::kEmptyString) {
+  if (value_ != &::google::protobuf::internal::GetEmptyString()) {
     delete value_;
   }
   if (this != default_instance_) {
@@ -1249,7 +1249,7 @@ String* String::New() const {
 void String::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_value()) {
-      if (value_ != &::google::protobuf::internal::kEmptyString) {
+      if (value_ != &::google::protobuf::internal::GetEmptyString()) {
         value_->clear();
       }
     }
@@ -1593,8 +1593,8 @@ DataLoaderCacheEntry::DataLoaderCacheEntry(const DataLoaderCacheEntry& from)
 
 void DataLoaderCacheEntry::SharedCtor() {
   _cached_size_ = 0;
-  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  batch_uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  batch_uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1603,10 +1603,10 @@ DataLoaderCacheEntry::~DataLoaderCacheEntry() {
 }
 
 void DataLoaderCacheEntry::SharedDtor() {
-  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete model_name_;
   }
-  if (batch_uuid_ != &::google::protobuf::internal::kEmptyString) {
+  if (batch_uuid_ != &::google::protobuf::internal::GetEmptyString()) {
     delete batch_uuid_;
   }
   if (this != default_instance_) {
@@ -1637,12 +1637,12 @@ DataLoaderCacheEntry* DataLoaderCacheEntry::New() const {
 void DataLoaderCacheEntry::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_model_name()) {
-      if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
         model_name_->clear();
       }
     }
     if (has_batch_uuid()) {
-      if (batch_uuid_ != &::google::protobuf::internal::kEmptyString) {
+      if (batch_uuid_ != &::google::protobuf::internal::GetEmptyString()) {
         batch_uuid_->clear();
       }
     }
@@ -1966,7 +1966,7 @@ ProcessorInput::ProcessorInput(const ProcessorInput& from)
 void ProcessorInput::SharedCtor() {
   _cached_size_ = 0;
   batch_ = NULL;
-  batch_uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  batch_uuid_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -1975,7 +1975,7 @@ ProcessorInput::~ProcessorInput() {
 }
 
 void ProcessorInput::SharedDtor() {
-  if (batch_uuid_ != &::google::protobuf::internal::kEmptyString) {
+  if (batch_uuid_ != &::google::protobuf::internal::GetEmptyString()) {
     delete batch_uuid_;
   }
   if (this != default_instance_) {
@@ -2010,7 +2010,7 @@ void ProcessorInput::Clear() {
       if (batch_ != NULL) batch_->::artm::Batch::Clear();
     }
     if (has_batch_uuid()) {
-      if (batch_uuid_ != &::google::protobuf::internal::kEmptyString) {
+      if (batch_uuid_ != &::google::protobuf::internal::GetEmptyString()) {
         batch_uuid_->clear();
       }
     }
@@ -2370,7 +2370,7 @@ ModelIncrement::ModelIncrement(const ModelIncrement& from)
 
 void ModelIncrement::SharedCtor() {
   _cached_size_ = 0;
-  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   topics_count_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -2380,7 +2380,7 @@ ModelIncrement::~ModelIncrement() {
 }
 
 void ModelIncrement::SharedDtor() {
-  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete model_name_;
   }
   if (this != default_instance_) {
@@ -2411,7 +2411,7 @@ ModelIncrement* ModelIncrement::New() const {
 void ModelIncrement::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_model_name()) {
-      if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
         model_name_->clear();
       }
     }
@@ -3292,7 +3292,7 @@ CreateOrReconfigureModelArgs::CreateOrReconfigureModelArgs(const CreateOrReconfi
 
 void CreateOrReconfigureModelArgs::SharedCtor() {
   _cached_size_ = 0;
-  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   config_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -3302,7 +3302,7 @@ CreateOrReconfigureModelArgs::~CreateOrReconfigureModelArgs() {
 }
 
 void CreateOrReconfigureModelArgs::SharedDtor() {
-  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete model_name_;
   }
   if (this != default_instance_) {
@@ -3334,7 +3334,7 @@ CreateOrReconfigureModelArgs* CreateOrReconfigureModelArgs::New() const {
 void CreateOrReconfigureModelArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_model_name()) {
-      if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
         model_name_->clear();
       }
     }
@@ -3560,7 +3560,7 @@ DisposeModelArgs::DisposeModelArgs(const DisposeModelArgs& from)
 
 void DisposeModelArgs::SharedCtor() {
   _cached_size_ = 0;
-  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -3569,7 +3569,7 @@ DisposeModelArgs::~DisposeModelArgs() {
 }
 
 void DisposeModelArgs::SharedDtor() {
-  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete model_name_;
   }
   if (this != default_instance_) {
@@ -3600,7 +3600,7 @@ DisposeModelArgs* DisposeModelArgs::New() const {
 void DisposeModelArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_model_name()) {
-      if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
         model_name_->clear();
       }
     }
@@ -3787,7 +3787,7 @@ CreateOrReconfigureRegularizerArgs::CreateOrReconfigureRegularizerArgs(const Cre
 
 void CreateOrReconfigureRegularizerArgs::SharedCtor() {
   _cached_size_ = 0;
-  regularizer_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  regularizer_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   config_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -3797,7 +3797,7 @@ CreateOrReconfigureRegularizerArgs::~CreateOrReconfigureRegularizerArgs() {
 }
 
 void CreateOrReconfigureRegularizerArgs::SharedDtor() {
-  if (regularizer_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (regularizer_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete regularizer_name_;
   }
   if (this != default_instance_) {
@@ -3829,7 +3829,7 @@ CreateOrReconfigureRegularizerArgs* CreateOrReconfigureRegularizerArgs::New() co
 void CreateOrReconfigureRegularizerArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_regularizer_name()) {
-      if (regularizer_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (regularizer_name_ != &::google::protobuf::internal::GetEmptyString()) {
         regularizer_name_->clear();
       }
     }
@@ -4055,7 +4055,7 @@ DisposeRegularizerArgs::DisposeRegularizerArgs(const DisposeRegularizerArgs& fro
 
 void DisposeRegularizerArgs::SharedCtor() {
   _cached_size_ = 0;
-  regularizer_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  regularizer_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4064,7 +4064,7 @@ DisposeRegularizerArgs::~DisposeRegularizerArgs() {
 }
 
 void DisposeRegularizerArgs::SharedDtor() {
-  if (regularizer_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (regularizer_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete regularizer_name_;
   }
   if (this != default_instance_) {
@@ -4095,7 +4095,7 @@ DisposeRegularizerArgs* DisposeRegularizerArgs::New() const {
 void DisposeRegularizerArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_regularizer_name()) {
-      if (regularizer_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (regularizer_name_ != &::google::protobuf::internal::GetEmptyString()) {
         regularizer_name_->clear();
       }
     }
@@ -4493,7 +4493,7 @@ DisposeDictionaryArgs::DisposeDictionaryArgs(const DisposeDictionaryArgs& from)
 
 void DisposeDictionaryArgs::SharedCtor() {
   _cached_size_ = 0;
-  dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4502,7 +4502,7 @@ DisposeDictionaryArgs::~DisposeDictionaryArgs() {
 }
 
 void DisposeDictionaryArgs::SharedDtor() {
-  if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete dictionary_name_;
   }
   if (this != default_instance_) {
@@ -4533,7 +4533,7 @@ DisposeDictionaryArgs* DisposeDictionaryArgs::New() const {
 void DisposeDictionaryArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_dictionary_name()) {
-      if (dictionary_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
         dictionary_name_->clear();
       }
     }
@@ -4719,8 +4719,8 @@ RequestScoreArgs::RequestScoreArgs(const RequestScoreArgs& from)
 
 void RequestScoreArgs::SharedCtor() {
   _cached_size_ = 0;
-  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  score_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  model_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  score_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4729,10 +4729,10 @@ RequestScoreArgs::~RequestScoreArgs() {
 }
 
 void RequestScoreArgs::SharedDtor() {
-  if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete model_name_;
   }
-  if (score_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (score_name_ != &::google::protobuf::internal::GetEmptyString()) {
     delete score_name_;
   }
   if (this != default_instance_) {
@@ -4763,12 +4763,12 @@ RequestScoreArgs* RequestScoreArgs::New() const {
 void RequestScoreArgs::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (has_model_name()) {
-      if (model_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (model_name_ != &::google::protobuf::internal::GetEmptyString()) {
         model_name_->clear();
       }
     }
     if (has_score_name()) {
-      if (score_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (score_name_ != &::google::protobuf::internal::GetEmptyString()) {
         score_name_->clear();
       }
     }

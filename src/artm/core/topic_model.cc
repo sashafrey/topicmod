@@ -290,7 +290,6 @@ int TopicModel::AddToken(const Token& token, bool random_init) {
 
     std::vector<float>* this_class_n_t = GetNormalizerVector(token.class_id);
     if (this_class_n_t == nullptr) {
-      std::cout << "Create --- AddToken\n";
       CreateNormalizerVector(token.class_id, topic_size());
       this_class_n_t = GetNormalizerVector(token.class_id);
     }
@@ -303,7 +302,6 @@ int TopicModel::AddToken(const Token& token, bool random_init) {
     memset(values, 0, sizeof(float) * topic_size());
 
     if (GetNormalizerVector(token.class_id) == nullptr) {
-      std::cout << "Create --- AddToken2\n";
       CreateNormalizerVector(token.class_id, topic_size());
     }
   }
@@ -333,7 +331,6 @@ void TopicModel::IncreaseTokenWeight(const Token& token, int topic_id, float val
 void TopicModel::IncreaseTokenWeight(int token_id, int topic_id, float value) {
   std::vector<float>* this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   if (this_class_n_t == nullptr) {
-    std::cout << "nullptr --- ITW\n";
     return;
   }
 
@@ -365,7 +362,6 @@ void TopicModel::SetTokenWeight(const Token& token, int topic_id, float value) {
 void TopicModel::SetTokenWeight(int token_id, int topic_id, float value) {
   std::vector<float>* this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   if (this_class_n_t == nullptr) {
-    std::cout << "nullptr --- STW\n";
     return;
   }
 
@@ -398,7 +394,6 @@ void TopicModel::SetRegularizerWeight(const Token& token, int topic_id, float va
 void TopicModel::SetRegularizerWeight(int token_id, int topic_id, float value) {
   std::vector<float>* this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   if (this_class_n_t == nullptr) {
-    std::cout << "nullptr --- SRW\n";
     return;
   }
 
@@ -434,7 +429,6 @@ void TopicModel::IncreaseRegularizerWeight(const Token& token, int topic_id, flo
 void TopicModel::IncreaseRegularizerWeight(int token_id, int topic_id, float value) {
   std::vector<float>* this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   if (this_class_n_t == nullptr) {
-    std::cout << "nullptr --- IRW\n";
     return;
   }
 
@@ -491,7 +485,6 @@ const std::vector<float>* TopicModel::GetNormalizerVector(const ClassId& class_i
   
   auto iter = n_t_.find(class_id);
   if (iter == n_t_.end()) {
-    std::cout << "iter == n_t_.end() --- const\n";
     return nullptr;
   }
   return &(iter->second);
@@ -504,7 +497,6 @@ std::vector<float>* TopicModel::GetNormalizerVector(const ClassId& class_id) {
 
   auto iter = n_t_.find(class_id);
   if (iter == n_t_.end()) {
-    std::cout << "iter == n_t_.end()\n";
     return nullptr;
   }
   return &(iter->second);

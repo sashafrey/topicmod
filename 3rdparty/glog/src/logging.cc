@@ -54,6 +54,7 @@
 #ifdef HAVE_SYSLOG_H
 # include <syslog.h>
 #endif
+#include <algorithm>
 #include <vector>
 #include <errno.h>                   // for errno
 #include <sstream>

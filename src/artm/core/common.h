@@ -25,13 +25,24 @@ typedef std::string ClassId;
 
 struct Token {
   Token(ClassId _class_id, std::string _keyword)
-    : class_id(_class_id)
-    , keyword(_keyword) {}
+    : class_id(_class_id),
+      keyword(_keyword) {}
 
-bool operator<(const Token& token) const {
-  if (class_id != token.class_id) return class_id < token.class_id;
-  return keyword < token.keyword;
-}
+  Token()
+    : class_id(),
+      keyword() {}
+
+  void clear() {
+    class_id.clear();
+    keyword.clear();
+  }
+
+  bool operator<(const Token& token) const {
+    if (class_id != token.class_id) {
+      return class_id < token.class_id;
+    }
+    return keyword < token.keyword;
+  }
 
   ClassId class_id;
   std::string keyword;

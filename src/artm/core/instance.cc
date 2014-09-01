@@ -285,8 +285,7 @@ void Instance::CreateOrReconfigureDictionary(const DictionaryConfig& config) {
     } else {
       class_id = DefaultClass;
     }
-    dictionary->insert(std::pair<Token, DictionaryEntry>(
-      Token(class_id, entry.key_token()), entry));
+    dictionary->insert(std::make_pair(Token(class_id, entry.key_token()), entry));
   }
 
   dictionaries_.set(config.name(), dictionary);

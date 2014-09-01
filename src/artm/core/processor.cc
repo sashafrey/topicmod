@@ -81,7 +81,6 @@ void Processor::TokenIterator::Reset() {
   // Reset all other data.
   // This makes it less confusing if somebody access this data after Reset() but before Next().
   token_.clear();
-  class_id_.clear();
   id_in_model_ = -1;
   id_in_batch_ = -1;
   count_ = 0;
@@ -101,12 +100,10 @@ bool Processor::TokenIterator::Next() {
     }
 
     id_in_batch_ = field_->token_id(token_index_);
-    auto current_token = token_dict_[id_in_batch_];
-    token_ = current_token.keyword;
-    class_id_ = current_token.class_id;
+    auto token_ = token_dict_[id_in_batch_];
     count_ = field_->token_count(token_index_);
-    id_in_model_ = topic_model_.has_token(current_token) ? 
-      topic_model_.token_id(current_token) : -1;
+    id_in_model_ = topic_model_.has_token(token_) ?
+      topic_model_.token_id(token_) : -1;
 
     if (iterate_known_ && (id_in_model_ >= 0)) {
       return true;
@@ -148,11 +145,13 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
   std::vector<TopicWeightIterator> token_weights;
   std::vector<float> z_normalizer;
   int known_tokens_count = 0;
-  TokenIterator iter(token_dict_, topic_model_, 
-    item, model.field_name(), TokenIterator::Mode_Known);
+  TokenIterator iter(token_dict_, 
+                     topic_model_, item, 
+                     model.field_name(), 
+                     TokenIterator::Mode_Known);
 
   while (iter.Next()) {
-    ClassId current_class = (token_dict_[iter.id_in_batch()]).class_id; 
+    ClassId current_class = (token_dict_[iter.id_in_batch()]).class_id;
     token_id.push_back(iter.id_in_batch());
     class_id.push_back(current_class);
 
@@ -173,10 +172,11 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
           token_index < known_tokens_count;
           ++token_index) {
       float cur_z = 0.0f;
+      float current_class_weight = token_weight_dict_[token_index];
       TopicWeightIterator topic_iter = token_weights[token_index];
       topic_iter.Reset();
       while (topic_iter.NextNonZeroTopic() < topic_size) {
-        cur_z += topic_iter.Weight() * theta[topic_iter.TopicIndex()];
+        cur_z += current_class_weight * topic_iter.Weight() * theta[topic_iter.TopicIndex()];
       }
 
       z_normalizer[token_index] = cur_z;
@@ -211,7 +211,8 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
           topic_iter.Reset();
           while (topic_iter.NextNonZeroTopic() < topic_size) {
-            float val = n_dw * topic_iter.Weight() * theta[topic_iter.TopicIndex()] / curZ;
+            float val = current_class_weight * 
+              n_dw * topic_iter.Weight() * theta[topic_iter.TopicIndex()] / curZ;
             hat_n_wt_cur->set_value(
               topic_iter.TopicIndex(),
               hat_n_wt_cur->value(topic_iter.TopicIndex()) + val);
@@ -422,10 +423,10 @@ void Processor::ThreadFunction() {
         bool use_default_class = false;
         bool use_model_class_id = true;
         bool use_model_class_weight = true;
-        
+
         // vectors with length == no_tokens
-        std::vector<Token> token_dict; 
-        std::vector<float> token_weight_dict; 
+        std::vector<Token> token_dict;
+        std::vector<float> token_weight_dict;
 
         // vectors with length == no_classes
         std::vector<ClassId> class_id;
@@ -455,7 +456,7 @@ void Processor::ThreadFunction() {
                 class_id.push_back(model.class_id(i));
               }
 
-              LOG(INFO) << "ModelConfig's field class_weight has incorect size, default " << 
+              LOG(INFO) << "ModelConfig's field class_weight has incorect size, default " <<
                 "weight '1' will be used!";
             } else {
               // presents classes weights list case
@@ -476,14 +477,14 @@ void Processor::ThreadFunction() {
             token_class_id = DefaultClass;
           } else {
             auto temp_class_id = part->batch().class_id(token_index);
-            if ((std::find(class_id.begin(), class_id.end(), temp_class_id) != class_id.end()) 
+            if ((std::find(class_id.begin(), class_id.end(), temp_class_id) != class_id.end())
                 || !use_model_class_id) {
               token_class_id = temp_class_id;
             } else {
               not_use_this_token = true;
             }
-          }        
-          
+          }
+
           if (!not_use_this_token) {
             Token current_token = Token(token_class_id, token);
             model_increment->add_token(token);
@@ -539,7 +540,7 @@ void Processor::ThreadFunction() {
           }
 
           bool update_model = iter.InStream(model_stream_index);
-          item_processor.InferTheta(model, *item, model_increment.get(), 
+          item_processor.InferTheta(model, *item, model_increment.get(),
             update_model, &theta[0]);
 
           // Update theta cache
@@ -559,7 +560,7 @@ void Processor::ThreadFunction() {
 
             if (!iter.InStream(score_calc->stream_name())) continue;
 
-            score_calc->AppendScore(*item, token_dict, *topic_model, theta, 
+            score_calc->AppendScore(*item, token_dict, *topic_model, theta,
               score.get());
           }
         }

@@ -5,8 +5,9 @@
 #include <assert.h>
 
 #include <algorithm>
-#include <vector>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include "boost/lexical_cast.hpp"
 #include "boost/uuid/string_generator.hpp"
@@ -32,7 +33,6 @@ TopicModel::TopicModel(ModelName model_name, int topics_count)
       batch_uuid_() {
   assert(topics_count_ > 0);
   CreateNormalizerVector(DefaultClass, topics_count_);
-  n_t_default_class_ = &(n_t_.find(DefaultClass)->second);
 }
 
 TopicModel::TopicModel(const TopicModel& rhs)
@@ -67,7 +67,7 @@ TopicModel::TopicModel(const ::artm::TopicModel& external_topic_model) {
 TopicModel::TopicModel(const ::artm::core::ModelIncrement& model_increment) {
   model_name_ = model_increment.model_name();
   topics_count_ = model_increment.topics_count();
-  
+
   ApplyDiff(model_increment);
 }
 
@@ -93,7 +93,6 @@ void TopicModel::Clear(ModelName model_name, int topics_count) {
   r_wt_.clear();
   n_t_.clear();
   CreateNormalizerVector(DefaultClass, topics_count_);
-  n_t_default_class_ = &(n_t_.find(DefaultClass)->second);
 
   batch_uuid_.clear();
 }
@@ -125,9 +124,9 @@ void TopicModel::ApplyDiff(const ::artm::core::ModelIncrement& diff) {
        ++token_index) {
     std::string new_token = diff.discovered_token(token_index);
     ClassId new_class_id = diff.discovered_token_class_id(token_index);
-    auto current_token = Token(new_class_id, new_token);
-    if (!this->has_token(current_token)) {
-      this->AddToken(current_token);
+    auto token = Token(new_class_id, new_token);
+    if (!this->has_token(token)) {
+      this->AddToken(token);
     }
   }
 
@@ -207,8 +206,7 @@ void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) con
   }
   for (auto iter = n_t_.begin(); iter != n_t_.end(); ++iter) {
     ::artm::FloatArray* n_t = topic_model_internals.add_n_t();
-    auto n_t_class_id = topic_model_internals.add_n_t_class_id();
-    n_t_class_id->assign(iter->first);
+    topic_model_internals.add_n_t_class_id(iter->first);
     for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
       n_t->add_value(iter->second[topic_index]);
     }
@@ -224,7 +222,7 @@ void TopicModel::CopyFromExternalTopicModel(const ::artm::TopicModel& external_t
     // Creating a model based on weights
     for (int token_index = 0; token_index < external_topic_model.token_size(); ++token_index) {
       const std::string& token = external_topic_model.token(token_index);
-      
+
       auto class_size = external_topic_model.class_id().size();
       ClassId class_id = DefaultClass;
       if (class_size == external_topic_model.token().size()) {
@@ -279,6 +277,12 @@ int TopicModel::AddToken(const Token& token, bool random_init) {
   float* values = new float[topic_size()];
   n_wt_.push_back(values);
 
+  std::vector<float>* this_class_n_t = GetNormalizerVector(token.class_id);
+  if (this_class_n_t == nullptr) {
+    CreateNormalizerVector(token.class_id, topic_size());
+    this_class_n_t = GetNormalizerVector(token.class_id);
+  }
+
   if (random_init) {
     float sum = 0.0f;
 
@@ -288,22 +292,12 @@ int TopicModel::AddToken(const Token& token, bool random_init) {
       sum += val;
     }
 
-    std::vector<float>* this_class_n_t = GetNormalizerVector(token.class_id);
-    if (this_class_n_t == nullptr) {
-      CreateNormalizerVector(token.class_id, topic_size());
-      this_class_n_t = GetNormalizerVector(token.class_id);
-    }
-
     for (int i = 0; i < topic_size(); ++i) {
       values[i] /= sum;
       (*this_class_n_t)[i] += values[i];
-    }      
+    }
   } else {
     memset(values, 0, sizeof(float) * topic_size());
-
-    if (GetNormalizerVector(token.class_id) == nullptr) {
-      CreateNormalizerVector(token.class_id, topic_size());
-    }
   }
 
   float* regularizer_values = new float[topic_size()];
@@ -319,7 +313,8 @@ int TopicModel::AddToken(const Token& token, bool random_init) {
 void TopicModel::IncreaseTokenWeight(const Token& token, int topic_id, float value) {
   if (!has_token(token)) {
     if (value != 0.0f) {
-      LOG(ERROR) << "Token '" << token.keyword << "' not found in the model";
+      LOG(ERROR) << "Token (" << token.class_id << ", " << token.keyword <<
+        ") not found in the model";
     }
 
     return;
@@ -331,12 +326,14 @@ void TopicModel::IncreaseTokenWeight(const Token& token, int topic_id, float val
 void TopicModel::IncreaseTokenWeight(int token_id, int topic_id, float value) {
   std::vector<float>* this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   if (this_class_n_t == nullptr) {
+    LOG(WARNING) << "Unknown class of token (" << token(token_id).class_id <<
+      ") was found in IncreaseTokenWeight() call.";
     return;
   }
 
   float old_data_value = n_wt_[token_id][topic_id];
   n_wt_[token_id][topic_id] += value;
-  
+
   if (old_data_value + r_wt_[token_id][topic_id] < 0) {
     if (n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id] > 0) {
       (*this_class_n_t)[topic_id] += n_wt_[token_id][topic_id] + r_wt_[token_id][topic_id];
@@ -362,10 +359,11 @@ void TopicModel::SetTokenWeight(const Token& token, int topic_id, float value) {
 void TopicModel::SetTokenWeight(int token_id, int topic_id, float value) {
   std::vector<float>* this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   if (this_class_n_t == nullptr) {
+    LOG(WARNING) << "Unknown class of token (" << token(token_id).class_id <<
+      ") was found in SetTokenWeight() call.";
     return;
   }
 
-  auto iter = n_t_.find(token(token_id).class_id);
   float old_data_value = n_wt_[token_id][topic_id];
   n_wt_[token_id][topic_id] = value;
 
@@ -394,10 +392,11 @@ void TopicModel::SetRegularizerWeight(const Token& token, int topic_id, float va
 void TopicModel::SetRegularizerWeight(int token_id, int topic_id, float value) {
   std::vector<float>* this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   if (this_class_n_t == nullptr) {
+    LOG(WARNING) << "Unknown class of token (" << token(token_id).class_id <<
+      ") was found in SetRegularizerWeight() call.";
     return;
   }
 
-  auto iter = n_t_.find(token(token_id).class_id);
   float old_regularizer_value = r_wt_[token_id][topic_id];
   r_wt_[token_id][topic_id] = value;
 
@@ -429,10 +428,11 @@ void TopicModel::IncreaseRegularizerWeight(const Token& token, int topic_id, flo
 void TopicModel::IncreaseRegularizerWeight(int token_id, int topic_id, float value) {
   std::vector<float>* this_class_n_t = GetNormalizerVector(token(token_id).class_id);
   if (this_class_n_t == nullptr) {
+    LOG(WARNING) << "Unknown class of token (" << token(token_id).class_id <<
+      ") was found in IncreaseRegularizerWeight() call.";
     return;
   }
 
-  auto iter = n_t_.find(token(token_id).class_id);
   float old_regularizer_value = r_wt_[token_id][topic_id];
   r_wt_[token_id][topic_id] += value;
 
@@ -470,19 +470,21 @@ int TopicModel::token_id(const Token& token) const {
   return (iter != token_to_token_id_.end()) ? iter->second : -1;
 }
 
-void TopicModel::CreateNormalizerVector(ClassId class_id, int no_topics) {
-  std::vector<float> vect;
-  vect.resize(no_topics);
-  n_t_.insert(std::pair<ClassId, std::vector<float> >(class_id, vect));
+void TopicModel::CreateNormalizerVector(ClassId class_id, int topics_count) {
+  n_t_.insert(std::pair<ClassId, std::vector<float> >(class_id, 
+                                                      std::vector<float>(topics_count, 0)));
   auto iter = n_t_.find(class_id);
-  memset(&(iter->second[0]), 0, sizeof(float) * no_topics);
+  memset(&(iter->second[0]), 0, sizeof(float) * topics_count);
+  if (class_id == DefaultClass) {
+    n_t_default_class_ = &(n_t_.find(DefaultClass)->second);
+  }
 }
 
 const std::vector<float>* TopicModel::GetNormalizerVector(const ClassId& class_id) const {
   if (class_id == DefaultClass) {
     return n_t_default_class_;
   }
-  
+
   auto iter = n_t_.find(class_id);
   if (iter == n_t_.end()) {
     return nullptr;
@@ -513,14 +515,14 @@ TopicWeightIterator TopicModel::GetTopicWeightIterator(
   auto iter = token_to_token_id_.find(token);
   assert(iter != token_to_token_id_.end());
   return std::move(TopicWeightIterator(n_wt_[iter->second], r_wt_[iter->second],
-    &(n_t_.find(token.class_id)->second[0]), topics_count_));
+    &((*GetNormalizerVector(token.class_id))[0]), topics_count_));
 }
 
 TopicWeightIterator TopicModel::GetTopicWeightIterator(int token_id) const {
   assert(token_id >= 0);
   assert(token_id < token_size());
   return std::move(TopicWeightIterator(n_wt_[token_id], r_wt_[token_id],
-    &(n_t_.find(token(token_id).class_id)->second[0]), topics_count_));
+    &((*GetNormalizerVector(token(token_id).class_id))[0]), topics_count_));
 }
 
 }  // namespace core

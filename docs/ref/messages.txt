@@ -98,6 +98,7 @@ items in one batch are always processed sequentially.
   message Batch {
     repeated string token = 1;
     repeated Item item = 2;
+    repeated string class_id = 3;
   }
 
 

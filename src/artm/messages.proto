@@ -307,7 +307,7 @@ message TopicModel {
     repeated FloatArray n_wt = 1;
     repeated FloatArray r_wt = 2;
     repeated FloatArray n_t = 3;
-	repeated string n_t_class_id = 4;
+    repeated string n_t_class_id = 4;
   }
 
   optional bytes internals = 6;

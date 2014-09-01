@@ -109,8 +109,7 @@ class Processor : boost::noncopyable {
     bool Next();
     void Reset();
 
-    const std::string& token() const { return token_; }
-    const ClassId& class_id() const { return class_id_; }
+    const Token& token() const { return token_; }
     int id_in_model() const { return id_in_model_; }
     int id_in_batch() const { return id_in_batch_; }
     int count() const { return count_; }
@@ -126,8 +125,7 @@ class Processor : boost::noncopyable {
 
     // Current state of the iterator
     int token_index_;
-    std::string token_;
-    ClassId class_id_;
+    Token token_;
     int id_in_model_;
     int id_in_batch_;
     int count_;

@@ -99,11 +99,11 @@ void LocalDataLoader::AddBatch(const Batch& batch) {
   if (config.compact_batches()) {
     auto compacted_batch = std::make_shared<Batch>();
     BatchHelpers::CompactBatch(batch, compacted_batch.get());
-    BatchHelpers::PopulateBatch(compacted_batch);
+    BatchHelpers::PopulateClassId(compacted_batch);
     next_gen->AddBatch(compacted_batch);
   } else {
     auto modified_batch = std::make_shared<Batch>(batch);
-    BatchHelpers::PopulateBatch(modified_batch);
+    BatchHelpers::PopulateClassId(modified_batch);
     next_gen->AddBatch(modified_batch);
   }
 

@@ -4,8 +4,10 @@
 #define SRC_ARTM_CORE_PROCESSOR_H_
 
 #include <atomic>
+#include <map>
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "boost/thread.hpp"
 #include "boost/thread/mutex.hpp"

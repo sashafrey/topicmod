@@ -100,7 +100,7 @@ class Instance : boost::noncopyable {
   void DisposeDictionary(const std::string& name);
 
  private:
-  void PopulateClassId(ModelConfig* model_config);
+  void PopulateClassId(std::shared_ptr<ModelConfig>& model_config);
 
   bool is_configured_;
   InstanceType instance_type_;

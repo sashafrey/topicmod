@@ -151,7 +151,7 @@ class TopicModel : public Regularizable {
 
  private:
   ModelName model_name_;
-  
+
   std::map<Token, int> token_to_token_id_;
   std::vector<Token> token_id_to_token_;
   int topics_count_;
@@ -159,7 +159,7 @@ class TopicModel : public Regularizable {
   std::vector<float*> n_wt_;  // vector of length tokens_count
   std::vector<float*> r_wt_;  // regularizer's additions
   // normalization constant for each topic in each Phi
-  std::map<ClassId, std::vector<float> > n_t_;  
+  std::map<ClassId, std::vector<float> > n_t_;
   // pointer to the vector of default_class
   std::vector<float>* n_t_default_class_;
 

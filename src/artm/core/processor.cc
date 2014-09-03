@@ -159,8 +159,9 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
   int known_tokens_count = 0;
   TokenIterator iter(token_dict_,
                      class_id_to_weight_,
-                     topic_model_, item, 
-                     model.field_name(), 
+                     topic_model_,
+                     item,
+                     model.field_name(),
                      TokenIterator::Mode_Known);
 
   while (iter.Next()) {
@@ -224,7 +225,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
           topic_iter.Reset();
           while (topic_iter.NextNonZeroTopic() < topic_size) {
-            float val = current_class_weight * 
+            float val = current_class_weight *
               n_dw * topic_iter.Weight() * theta[topic_iter.TopicIndex()] / curZ;
             hat_n_wt_cur->set_value(
               topic_iter.TopicIndex(),

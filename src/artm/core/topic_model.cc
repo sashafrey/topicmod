@@ -471,7 +471,7 @@ int TopicModel::token_id(const Token& token) const {
 }
 
 void TopicModel::CreateNormalizerVector(ClassId class_id, int topics_count) {
-  n_t_.insert(std::pair<ClassId, std::vector<float> >(class_id, 
+  n_t_.insert(std::pair<ClassId, std::vector<float> >(class_id,
                                                       std::vector<float>(topics_count, 0)));
   auto iter = n_t_.find(class_id);
   memset(&(iter->second[0]), 0, sizeof(float) * topics_count);

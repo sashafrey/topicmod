@@ -48,14 +48,16 @@ class BatchHelpers {
  public:
   static void CompactBatch(const Batch& batch, Batch* compacted_batch);
   static std::vector<boost::uuids::uuid> ListAllBatches(const boost::filesystem::path& root);
-  static std::shared_ptr<const Batch> LoadBatch(const boost::uuids::uuid& uuid,
-                                                const std::string& disk_path);
+  static std::shared_ptr<Batch> LoadBatch(const boost::uuids::uuid& uuid,
+                                          const std::string& disk_path);
   static boost::uuids::uuid SaveBatch(const Batch& batch, const std::string& disk_path);
 
   static void LoadMessage(const std::string& filename, const std::string& disk_path,
                           ::google::protobuf::Message* message);
   static void SaveMessage(const std::string& filename, const std::string& disk_path,
                           const ::google::protobuf::Message& message);
+  static void PopulateBatch(Batch* batch);
+  static void PopulateBatch(std::shared_ptr<Batch>& batch);
 };
 
 }  // namespace core

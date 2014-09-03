@@ -118,6 +118,7 @@ class Processor : boost::noncopyable {
    private:
     const std::vector<Token>& token_dict_;
     const TopicModel& topic_model_;
+    const std::set<ClassId> model_class_id_set_;
     const Field* field_;
     int token_size_;
     bool iterate_known_;

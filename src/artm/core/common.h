@@ -24,13 +24,8 @@ typedef std::string RegularizerName;
 typedef std::string ClassId;
 
 struct Token {
-  Token(ClassId _class_id, std::string _keyword)
-    : class_id(_class_id),
-      keyword(_keyword) {}
-
-  Token()
-    : class_id(),
-      keyword() {}
+  Token(ClassId _class_id, std::string _keyword) : class_id(_class_id), keyword(_keyword) {}
+  Token() : class_id(), keyword() {}
 
   void clear() {
     class_id.clear();

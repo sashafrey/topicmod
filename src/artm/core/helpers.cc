@@ -120,12 +120,13 @@ std::vector<boost::uuids::uuid> BatchHelpers::ListAllBatches(const boost::filesy
   return uuids;
 }
 
-std::shared_ptr<const Batch> BatchHelpers::LoadBatch(const boost::uuids::uuid& uuid,
+std::shared_ptr<Batch> BatchHelpers::LoadBatch(const boost::uuids::uuid& uuid,
                                                      const std::string& disk_path) {
   Batch* batch = new Batch();
-  std::shared_ptr<const Batch> batch_ptr(batch);
+  std::shared_ptr<Batch> batch_ptr(batch);
   boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + kBatchExtension);
   LoadMessage(file.string(), disk_path, batch);
+  PopulateBatch(batch_ptr);
   return batch_ptr;
 }
 
@@ -204,6 +205,20 @@ void BatchHelpers::SaveMessage(const std::string& filename, const std::string& d
   }
 
   fout.close();
+}
+
+void BatchHelpers::PopulateBatch(Batch* batch) {
+  PopulateBatch(std::make_shared<Batch>(*batch));
+}
+
+void BatchHelpers::PopulateBatch(std::shared_ptr<Batch>& batch) {
+  if (batch->class_id_size() != batch->token_size()) {
+    batch->clear_class_id();
+    for (int i = 0; i < batch->token_size(); ++i) {
+      batch->add_class_id(DefaultClass);
+    }
+    LOG(INFO) << "Batch's field class_id must have the same length, as token!";
+  }
 }
 
 }  // namespace core

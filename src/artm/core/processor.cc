@@ -53,6 +53,7 @@ Processor::TokenIterator::TokenIterator(
     Mode mode)
     : token_dict_(token_dict),
       topic_model_(topic_model),
+      model_class_id_set_(topic_model.GetModelClassId()),
       field_(nullptr),
       token_size_(0),
       iterate_known_((mode & Mode_Known) != 0),       // NOLINT
@@ -102,8 +103,7 @@ bool Processor::TokenIterator::Next() {
     id_in_batch_ = field_->token_id(token_index_);
     auto token_ = token_dict_[id_in_batch_];
     count_ = field_->token_count(token_index_);
-    id_in_model_ = topic_model_.has_token(token_) ?
-      topic_model_.token_id(token_) : -1;
+    id_in_model_ = topic_model_.token_id(token_);
 
     if (iterate_known_ && (id_in_model_ >= 0)) {
       return true;
@@ -420,98 +420,50 @@ void Processor::ThreadFunction() {
         model_increment->set_model_name(model_name);
         model_increment->set_topics_count(topic_size);
 
-        bool use_default_class = false;
-        bool use_model_class_id = true;
-        bool use_model_class_weight = true;
-
-        // vectors with length == no_tokens
         std::vector<Token> token_dict;
         std::vector<float> token_weight_dict;
+        std::map<ClassId, float> class_id_to_weight;
 
-        // vectors with length == no_classes
-        std::vector<ClassId> class_id;
-        std::vector<float> class_weight;
-
-        if (part->batch().class_id_size() != part->batch().token_size()) {
-          // default case
-          use_default_class = true;
-          use_model_class_id = false;
-          use_model_class_weight = false;
-
-          LOG(INFO) << "Batch's field class_id must have the same length, as token!";
-        } else {
-          // not default case
-          if (model.class_id_size() == 0) {
-            // not presents classes list case
-            use_model_class_id = false;
-            use_model_class_weight = false;
-            LOG(INFO) << "ModelConfig's field class_id is empty, all found classes will be used!";
-          } else {
-            // presents classes list case
-            if (model.class_weight_size() != model.class_id_size()) {
-              // not presents classes weights list case
-              use_model_class_weight = false;
-
-              for (int i = 0; i < model.class_id_size(); ++i) {
-                class_id.push_back(model.class_id(i));
-              }
-
-              LOG(INFO) << "ModelConfig's field class_weight has incorect size, default " <<
-                "weight '1' will be used!";
-            } else {
-              // presents classes weights list case
-              for (int i = 0; i < model.class_id_size(); ++i) {
-                class_id.push_back(model.class_id(i));
-                class_weight.push_back(model.class_weight(i));
-              }
-            }
+        bool use_model_class_id = false;
+        if (model.class_id_size() != 0) {
+          use_model_class_id = true;
+          // move data into map to increase lookup efficiency
+          for (int i = 0; i < model.class_id_size(); ++i) {
+            class_id_to_weight.insert(std::make_pair(model.class_id(i), model.class_weight(i)));
           }
         }
 
         for (int token_index = 0; token_index < part->batch().token_size(); ++token_index) {
-          std::string token = part->batch().token(token_index);
-          ClassId token_class_id;
-
+          std::string token_keyword = part->batch().token(token_index);
+          ClassId token_class_id = part->batch().class_id(token_index);
+ 
           bool not_use_this_token = false;
-          if (use_default_class) {
-            token_class_id = DefaultClass;
-          } else {
-            auto temp_class_id = part->batch().class_id(token_index);
-            if ((std::find(class_id.begin(), class_id.end(), temp_class_id) != class_id.end())
-                || !use_model_class_id) {
-              token_class_id = temp_class_id;
-            } else {
+          if (use_model_class_id) {
+            if (class_id_to_weight.find(token_class_id) == class_id_to_weight.end()) {
               not_use_this_token = true;
             }
           }
 
           if (!not_use_this_token) {
-            Token current_token = Token(token_class_id, token);
-            model_increment->add_token(token);
+            Token token = Token(token_class_id, token_keyword);
+            model_increment->add_token(token_keyword);
             model_increment->add_class_id(token_class_id);
             FloatArray* counters = model_increment->add_token_increment();
             for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
               counters->add_value(0.0f);
             }
 
-            if (!topic_model->has_token(current_token)) {
-              model_increment->add_discovered_token(token);
+            if (!topic_model->has_token(token)) {
+              model_increment->add_discovered_token(token_keyword);
               model_increment->add_discovered_token_class_id(token_class_id);
             }
-
-            if (use_default_class) {
-              token_weight_dict.push_back(1);
-
-            } else if (!use_model_class_weight) {
-              token_weight_dict.push_back(1);
-
-            } else if (use_model_class_weight) {
-              // in this case class_iter always != class_id.end()
-              auto class_iter = std::find(class_id.begin(), class_id.end(), token_class_id);
-              token_weight_dict.push_back(class_weight[class_iter - class_id.begin()]);
+            
+            if (use_model_class_id) {
+              token_weight_dict.push_back(class_id_to_weight.find(token_class_id)->second);
+            } else {
+              token_weight_dict.push_back(1.0f);
             }
-
-            token_dict.push_back(Token(token_class_id, part->batch().token().Get(token_index)));
+            token_dict.push_back(token);
           }
         }
 

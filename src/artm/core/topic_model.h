@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <map>
 #include <vector>
+#include <set>
 #include <string>
 
 #include "boost/utility.hpp"
@@ -148,6 +149,7 @@ class TopicModel : public Regularizable {
   int token_id(const Token& token) const;
   Token token(int index) const;
 
+  std::set<ClassId> GetModelClassId() const;
  private:
   ModelName model_name_;
   

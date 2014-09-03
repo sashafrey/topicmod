@@ -39,8 +39,8 @@ message Field
 // Represents a set of items.
 message Batch {
   repeated string token = 1;
-  repeated Item item = 2;
-  repeated string class_id = 3;
+  repeated string class_id = 2;
+  repeated Item item = 3;
 }
 
 // Represents a configuration of a stream.

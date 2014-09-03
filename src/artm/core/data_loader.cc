@@ -99,9 +99,12 @@ void LocalDataLoader::AddBatch(const Batch& batch) {
   if (config.compact_batches()) {
     auto compacted_batch = std::make_shared<Batch>();
     BatchHelpers::CompactBatch(batch, compacted_batch.get());
+    BatchHelpers::PopulateBatch(compacted_batch);
     next_gen->AddBatch(compacted_batch);
   } else {
-    next_gen->AddBatch(std::make_shared<Batch>(batch));
+    auto modified_batch = std::make_shared<Batch>(batch);
+    BatchHelpers::PopulateBatch(modified_batch);
+    next_gen->AddBatch(modified_batch);
   }
 
   generation_.set(next_gen);
@@ -345,7 +348,7 @@ void RemoteDataLoader::ThreadFunction() {
       for (int batch_index = 0; batch_index < response.batch_id_size(); ++batch_index) {
         std::string batch_id = response.batch_id(batch_index);
         boost::uuids::uuid next_batch_uuid(boost::uuids::string_generator()(batch_id.c_str()));
-        std::shared_ptr<const Batch> batch =
+        std::shared_ptr<Batch> batch =
           BatchHelpers::LoadBatch(next_batch_uuid, config.disk_path());
 
         if (batch == nullptr) {

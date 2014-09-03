@@ -98,6 +98,7 @@ int ArtmSaveBatch(const char* disk_path, int length, const char* batch) {
 
     artm::Batch compacted_batch;
     artm::core::BatchHelpers::CompactBatch(batch_object, &compacted_batch);
+    artm::core::BatchHelpers::PopulateBatch(&compacted_batch);
     artm::core::BatchHelpers::SaveBatch(compacted_batch, std::string(disk_path));
     return ARTM_SUCCESS;
   } CATCH_EXCEPTIONS;

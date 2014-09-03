@@ -48,18 +48,21 @@ Processor::~Processor() {
 
 Processor::TokenIterator::TokenIterator(
     const std::vector<Token>& token_dict,
+    const std::map<ClassId, float>& class_id_to_weight,
     const TopicModel& topic_model,
     const Item& item, const std::string& field_name,
     Mode mode)
     : token_dict_(token_dict),
       topic_model_(topic_model),
-      model_class_id_set_(topic_model.GetModelClassId()),
+      class_id_to_weight_(class_id_to_weight),
       field_(nullptr),
       token_size_(0),
       iterate_known_((mode & Mode_Known) != 0),       // NOLINT
       iterate_unknown_((mode & Mode_Unknown) != 0),   // NOLINT
+      use_model_class_list(true),
       token_index_(-1),  // handy trick for iterators
       token_(),
+      token_class_weight_(0),
       id_in_model_(-1),
       id_in_batch_(-1),
       count_(0) {
@@ -74,6 +77,10 @@ Processor::TokenIterator::TokenIterator(
   }
 
   token_size_ = field_->token_id_size();
+
+  if (class_id_to_weight_.empty()) {
+    use_model_class_list = false;
+  }
 }
 
 void Processor::TokenIterator::Reset() {
@@ -99,18 +106,22 @@ bool Processor::TokenIterator::Next() {
       // reached the end of the stream
       return false;
     }
-
     id_in_batch_ = field_->token_id(token_index_);
-    auto token_ = token_dict_[id_in_batch_];
+    token_ = token_dict_[id_in_batch_];
     count_ = field_->token_count(token_index_);
     id_in_model_ = topic_model_.token_id(token_);
 
-    if (iterate_known_ && (id_in_model_ >= 0)) {
-      return true;
-    }
-
-    if (iterate_unknown_ && (id_in_model_ < 0)) {
-      return true;
+    if (!use_model_class_list) {
+      token_class_weight_ = 1.0f;
+      if (iterate_known_ && (id_in_model_ >= 0)) return true;
+      if (iterate_unknown_ && (id_in_model_ < 0)) return true;
+    } else {
+      auto iter = class_id_to_weight_.find(token_.class_id);
+      if (iter != class_id_to_weight_.end()) {
+        token_class_weight_ = iter->second;
+        if (iterate_known_ && (id_in_model_ >= 0)) return true;
+        if (iterate_unknown_ && (id_in_model_ < 0)) return true;
+      }
     }
   }
 
@@ -124,11 +135,11 @@ TopicWeightIterator Processor::TokenIterator::GetTopicWeightIterator() const {
 Processor::ItemProcessor::ItemProcessor(
     const TopicModel& topic_model,
     const std::vector<Token>& token_dict,
-    const std::vector<float>& token_weight_dict,
+    const std::map<ClassId, float>& class_id_to_weight,
     std::shared_ptr<InstanceSchema> schema)
      : topic_model_(topic_model),
        token_dict_(token_dict),
-       token_weight_dict_(token_weight_dict),
+       class_id_to_weight_(class_id_to_weight),
        schema_(schema) {}
 
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
@@ -141,19 +152,21 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
   // find the id of token in topic_model
   std::vector<int> token_id;
   std::vector<ClassId> class_id;
+  std::vector<float> token_class_weight;
   std::vector<float> token_count;
   std::vector<TopicWeightIterator> token_weights;
   std::vector<float> z_normalizer;
   int known_tokens_count = 0;
-  TokenIterator iter(token_dict_, 
+  TokenIterator iter(token_dict_,
+                     class_id_to_weight_,
                      topic_model_, item, 
                      model.field_name(), 
                      TokenIterator::Mode_Known);
 
   while (iter.Next()) {
-    ClassId current_class = (token_dict_[iter.id_in_batch()]).class_id;
     token_id.push_back(iter.id_in_batch());
-    class_id.push_back(current_class);
+    class_id.push_back(iter.token().class_id);
+    token_class_weight.push_back(iter.token_class_weight());
 
     token_count.push_back(static_cast<float>(iter.count()));
     token_weights.push_back(iter.GetTopicWeightIterator());
@@ -172,7 +185,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
           token_index < known_tokens_count;
           ++token_index) {
       float cur_z = 0.0f;
-      float current_class_weight = token_weight_dict_[token_index];
+      float current_class_weight = token_class_weight[token_index];
       TopicWeightIterator topic_iter = token_weights[token_index];
       topic_iter.Reset();
       while (topic_iter.NextNonZeroTopic() < topic_size) {
@@ -195,7 +208,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
       if (curZ > 0) {
         // updating theta_next
-        float current_class_weight = token_weight_dict_[token_index];
+        float current_class_weight = token_class_weight[token_index];
         topic_iter.Reset();
         while (topic_iter.NextNonZeroTopic() < topic_size) {
           theta_next[topic_iter.TopicIndex()] += current_class_weight *
@@ -421,12 +434,9 @@ void Processor::ThreadFunction() {
         model_increment->set_topics_count(topic_size);
 
         std::vector<Token> token_dict;
-        std::vector<float> token_weight_dict;
         std::map<ClassId, float> class_id_to_weight;
 
-        bool use_model_class_id = false;
         if (model.class_id_size() != 0) {
-          use_model_class_id = true;
           // move data into map to increase lookup efficiency
           for (int i = 0; i < model.class_id_size(); ++i) {
             class_id_to_weight.insert(std::make_pair(model.class_id(i), model.class_weight(i)));
@@ -436,38 +446,23 @@ void Processor::ThreadFunction() {
         for (int token_index = 0; token_index < part->batch().token_size(); ++token_index) {
           std::string token_keyword = part->batch().token(token_index);
           ClassId token_class_id = part->batch().class_id(token_index);
- 
-          bool not_use_this_token = false;
-          if (use_model_class_id) {
-            if (class_id_to_weight.find(token_class_id) == class_id_to_weight.end()) {
-              not_use_this_token = true;
-            }
+
+          Token token = Token(token_class_id, token_keyword);
+          model_increment->add_token(token_keyword);
+          model_increment->add_class_id(token_class_id);
+          FloatArray* counters = model_increment->add_token_increment();
+          for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
+            counters->add_value(0.0f);
           }
 
-          if (!not_use_this_token) {
-            Token token = Token(token_class_id, token_keyword);
-            model_increment->add_token(token_keyword);
-            model_increment->add_class_id(token_class_id);
-            FloatArray* counters = model_increment->add_token_increment();
-            for (int topic_index = 0; topic_index < topic_size; ++topic_index) {
-              counters->add_value(0.0f);
-            }
-
-            if (!topic_model->has_token(token)) {
-              model_increment->add_discovered_token(token_keyword);
-              model_increment->add_discovered_token_class_id(token_class_id);
-            }
-            
-            if (use_model_class_id) {
-              token_weight_dict.push_back(class_id_to_weight.find(token_class_id)->second);
-            } else {
-              token_weight_dict.push_back(1.0f);
-            }
-            token_dict.push_back(token);
+          if (!topic_model->has_token(token)) {
+            model_increment->add_discovered_token(token_keyword);
+            model_increment->add_discovered_token_class_id(token_class_id);
           }
+          token_dict.push_back(token);
         }
 
-        ItemProcessor item_processor(*topic_model, token_dict, token_weight_dict, schema_.get());
+        ItemProcessor item_processor(*topic_model, token_dict, class_id_to_weight, schema_.get());
         StreamIterator iter(*part);
 
         while (iter.Next() != nullptr) {

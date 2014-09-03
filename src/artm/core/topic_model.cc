@@ -525,13 +525,5 @@ TopicWeightIterator TopicModel::GetTopicWeightIterator(int token_id) const {
     &((*GetNormalizerVector(token(token_id).class_id))[0]), topics_count_));
 }
 
-std::set<ClassId> TopicModel::GetModelClassId() const {
-  std::set<ClassId> model_class_id_set;
-  for (auto iter = n_t_.begin(); iter != n_t_.end(); ++iter) {
-    model_class_id_set.insert(iter->first);
-  }
-  return model_class_id_set;
-}
-
 }  // namespace core
 }  // namespace artm

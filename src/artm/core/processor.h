@@ -75,7 +75,7 @@ class Processor : boost::noncopyable {
    public:
     explicit ItemProcessor(const TopicModel& topic_model,
                            const std::vector<Token>& token_dict,
-                           const std::vector<float>& token_weight_dict,
+                           const std::map<ClassId, float>& class_id_to_weight,
                            std::shared_ptr<InstanceSchema> schema);
 
     void InferTheta(const ModelConfig& model,
@@ -87,7 +87,7 @@ class Processor : boost::noncopyable {
    private:
     const TopicModel& topic_model_;
     const std::vector<Token>& token_dict_;
-    const std::vector<float>& token_weight_dict_;
+    const std::map<ClassId, float>& class_id_to_weight_;
     std::shared_ptr<InstanceSchema> schema_;
   };
 
@@ -101,6 +101,7 @@ class Processor : boost::noncopyable {
     };
 
     TokenIterator(const std::vector<Token>& token_dict,
+                  const std::map<ClassId, float>& class_id_to_weight,
                   const TopicModel& topic_model,
                   const Item& item,
                   const std::string& field_name,
@@ -110,6 +111,7 @@ class Processor : boost::noncopyable {
     void Reset();
 
     const Token& token() const { return token_; }
+    float token_class_weight() const { return token_class_weight_; }
     int id_in_model() const { return id_in_model_; }
     int id_in_batch() const { return id_in_batch_; }
     int count() const { return count_; }
@@ -117,16 +119,18 @@ class Processor : boost::noncopyable {
 
    private:
     const std::vector<Token>& token_dict_;
+    const std::map<ClassId, float>& class_id_to_weight_;
     const TopicModel& topic_model_;
-    const std::set<ClassId> model_class_id_set_;
     const Field* field_;
     int token_size_;
     bool iterate_known_;
     bool iterate_unknown_;
+    bool use_model_class_list;
 
     // Current state of the iterator
     int token_index_;
     Token token_;
+    float token_class_weight_;
     int id_in_model_;
     int id_in_batch_;
     int count_;

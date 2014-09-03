@@ -149,7 +149,6 @@ class TopicModel : public Regularizable {
   int token_id(const Token& token) const;
   Token token(int index) const;
 
-  std::set<ClassId> GetModelClassId() const;
  private:
   ModelName model_name_;
   

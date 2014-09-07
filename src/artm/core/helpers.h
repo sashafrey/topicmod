@@ -57,7 +57,6 @@ class BatchHelpers {
   static void SaveMessage(const std::string& filename, const std::string& disk_path,
                           const ::google::protobuf::Message& message);
   static void PopulateClassId(Batch* batch);
-  static void PopulateClassId(std::shared_ptr<Batch>& batch);
 };
 
 }  // namespace core

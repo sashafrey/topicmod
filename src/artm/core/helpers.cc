@@ -126,7 +126,7 @@ std::shared_ptr<Batch> BatchHelpers::LoadBatch(const boost::uuids::uuid& uuid,
   std::shared_ptr<Batch> batch_ptr(batch);
   boost::filesystem::path file(boost::lexical_cast<std::string>(uuid) + kBatchExtension);
   LoadMessage(file.string(), disk_path, batch);
-  PopulateClassId(batch_ptr);
+  PopulateClassId(batch_ptr.get());
   return batch_ptr;
 }
 
@@ -208,10 +208,6 @@ void BatchHelpers::SaveMessage(const std::string& filename, const std::string& d
 }
 
 void BatchHelpers::PopulateClassId(Batch* batch) {
-  PopulateClassId(std::shared_ptr<Batch>(batch));
-}
-
-void BatchHelpers::PopulateClassId(std::shared_ptr<Batch>& batch) {
   if (batch->class_id_size() != batch->token_size()) {
     batch->clear_class_id();
     for (int i = 0; i < batch->token_size(); ++i) {

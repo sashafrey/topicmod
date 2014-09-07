@@ -41,7 +41,7 @@ void Perplexity::AppendScore(
 
   for (int token_index = 0; token_index < field->token_count_size(); ++token_index) {
     double sum = 0.0;
-    const artm::core::Token& token = token_dict[token_index];
+    const artm::core::Token& token = token_dict[field->token_id(token_index)];
     double token_count = static_cast<double>(field->token_count(token_index));
 
     if (topic_model.has_token(token)) {

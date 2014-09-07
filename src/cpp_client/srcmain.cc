@@ -36,7 +36,7 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::string docword_file = "../../../datasets/docword.kos.txt";
   std::string vocab_file = "../../../datasets/vocab.kos.txt";
   std::string dictionary_file = "kos.dictionary";
-  int topics_count = 16;
+  int topics_count = 2;
 
   // Recommended values for decorrelator_tau are as follows:
   // kos - 700000, nips - 200000.
@@ -74,6 +74,7 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::shared_ptr<DictionaryConfig> unique_tokens;
   if (batch_files_count == 0) {
     ::artm::CollectionParserConfig collection_parser_config;
+    collection_parser_config.set_num_items_per_batch(50);
     collection_parser_config.set_format(CollectionParserConfig_Format_BagOfWordsUci);
     collection_parser_config.set_docword_file_path(docword_file);
     collection_parser_config.set_vocab_file_path(vocab_file);
@@ -310,7 +311,7 @@ int main(int argc, char * argv[]) {
   }
 
   int instance_size = 1;
-  int processors_size = 2;
+  int processors_size = 1;
   try {
     proc(argc, argv, processors_size, instance_size);
   } catch (std::runtime_error& error) {

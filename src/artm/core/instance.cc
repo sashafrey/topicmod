@@ -122,7 +122,6 @@ Merger* Instance::merger() {
   return merger_.get();
 }
 
-
 void Instance::CreateOrReconfigureModel(const ModelConfig& config) { 
   std::shared_ptr<artm::ModelConfig> corrected_config(new artm::ModelConfig(config));
   PopulateClassId(corrected_config);  

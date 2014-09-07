@@ -208,7 +208,7 @@ void BatchHelpers::SaveMessage(const std::string& filename, const std::string& d
 }
 
 void BatchHelpers::PopulateClassId(Batch* batch) {
-  PopulateClassId(std::make_shared<Batch>(*batch));
+  PopulateClassId(std::shared_ptr<Batch>(batch));
 }
 
 void BatchHelpers::PopulateClassId(std::shared_ptr<Batch>& batch) {

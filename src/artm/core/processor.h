@@ -127,7 +127,7 @@ class Processor : boost::noncopyable {
     int token_size_;
     bool iterate_known_;
     bool iterate_unknown_;
-    bool use_model_class_list;
+    bool use_model_class_list_;
 
     // Current state of the iterator
     int token_index_;

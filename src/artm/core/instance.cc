@@ -122,16 +122,16 @@ Merger* Instance::merger() {
   return merger_.get();
 }
 
-void Instance::CreateOrReconfigureModel(const ModelConfig& config) { 
-  std::shared_ptr<artm::ModelConfig> corrected_config(new artm::ModelConfig(config));
+void Instance::CreateOrReconfigureModel(const ModelConfig& config) {
+  auto corrected_config = std::make_shared<artm::ModelConfig>(config);
   PopulateClassId(corrected_config);  
   if (merger_ != nullptr) {
     merger_->CreateOrReconfigureModel(*corrected_config);
   }
 
   auto new_schema = schema_.get_copy();
-  auto config_to_send = std::const_pointer_cast<const ModelConfig>(corrected_config);
-  new_schema->set_model_config(config_to_send->name(), config_to_send);
+  auto const_config = std::const_pointer_cast<const ModelConfig>(corrected_config);
+  new_schema->set_model_config(const_config->name(), const_config);
   schema_.set(new_schema);
 }
 
@@ -396,8 +396,8 @@ void Instance::PopulateClassId(std::shared_ptr<ModelConfig>& model_config) {
       for (int i = 0; i < class_id_size; ++i) {
         model_config->add_class_weight(1.0f);
       }
-      LOG(INFO) << "ModelConfig's field class_weight has incorect size, default " <<
-        "weight '1' will be used!";
+      LOG(ERROR) << "Field ModelConfig.class_weight must have the same length as field ModelConfig.class_id. "
+                 << "Setting the weights of all classes to 1.0";
     }
   }
 }

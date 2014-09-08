@@ -54,10 +54,8 @@ void ThetaSnippet::AppendScore(const Score& score, Score* target) {
 
   for (int item_index = 0; item_index < theta_snippet_score->item_id_size(); item_index++) {
     theta_snippet_target->add_item_id(theta_snippet_score->item_id().Get(item_index));
-    
     auto theta_snippet_item_target = theta_snippet_target->add_values();
     auto theta_snippet_item_score = theta_snippet_score->values(item_index);
-
     for (int topic_index = 0; topic_index < theta_snippet_item_score.value_size(); topic_index++) {
       theta_snippet_item_target->add_value(theta_snippet_item_score.value(topic_index));
     }

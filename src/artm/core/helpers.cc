@@ -209,11 +209,16 @@ void BatchHelpers::SaveMessage(const std::string& filename, const std::string& d
 
 void BatchHelpers::PopulateClassId(Batch* batch) {
   if (batch->class_id_size() != batch->token_size()) {
+    if (batch->class_id_size() != 0) {
+      // ToDo(alfrey): log the ID of the batch
+      LOG(ERROR) << "Field batch.class_id must have the same length as field batch.token. "
+                 << "Setting '@DefaultClass' label for all tokens.";
+    }
+
     batch->clear_class_id();
     for (int i = 0; i < batch->token_size(); ++i) {
       batch->add_class_id(DefaultClass);
     }
-    LOG(INFO) << "Batch's field class_id must have the same length, as token";
   }
 }
 

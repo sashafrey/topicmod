@@ -59,7 +59,7 @@ Processor::TokenIterator::TokenIterator(
       token_size_(0),
       iterate_known_((mode & Mode_Known) != 0),       // NOLINT
       iterate_unknown_((mode & Mode_Unknown) != 0),   // NOLINT
-      use_model_class_list(true),
+      use_model_class_list_(true),
       token_index_(-1),  // handy trick for iterators
       token_(),
       token_class_weight_(0),
@@ -79,7 +79,7 @@ Processor::TokenIterator::TokenIterator(
   token_size_ = field_->token_id_size();
 
   if (class_id_to_weight_.empty()) {
-    use_model_class_list = false;
+    use_model_class_list_ = false;
   }
 }
 
@@ -106,22 +106,28 @@ bool Processor::TokenIterator::Next() {
       // reached the end of the stream
       return false;
     }
+
     id_in_batch_ = field_->token_id(token_index_);
     token_ = token_dict_[id_in_batch_];
     count_ = field_->token_count(token_index_);
     id_in_model_ = topic_model_.token_id(token_);
 
-    if (!use_model_class_list) {
-      token_class_weight_ = 1.0f;
-      if (iterate_known_ && (id_in_model_ >= 0)) return true;
-      if (iterate_unknown_ && (id_in_model_ < 0)) return true;
-    } else {
+    if (use_model_class_list_) {
       auto iter = class_id_to_weight_.find(token_.class_id);
-      if (iter != class_id_to_weight_.end()) {
-        token_class_weight_ = iter->second;
-        if (iterate_known_ && (id_in_model_ >= 0)) return true;
-        if (iterate_unknown_ && (id_in_model_ < 0)) return true;
-      }
+      if (iter == class_id_to_weight_.end())
+        continue;  // token belongs to unknown class, skip it and go to the next token.
+
+      token_class_weight_ = iter->second;
+    } else {
+      token_class_weight_ = 1.0f;
+    }
+
+    if (iterate_known_ && (id_in_model_ >= 0)) {
+      return true;
+    }
+
+    if (iterate_unknown_ && (id_in_model_ < 0)) {
+      return true;
     }
   }
 
@@ -137,10 +143,10 @@ Processor::ItemProcessor::ItemProcessor(
     const std::vector<Token>& token_dict,
     const std::map<ClassId, float>& class_id_to_weight,
     std::shared_ptr<InstanceSchema> schema)
-     : topic_model_(topic_model),
-       token_dict_(token_dict),
-       class_id_to_weight_(class_id_to_weight),
-       schema_(schema) {}
+    : topic_model_(topic_model),
+      token_dict_(token_dict),
+      class_id_to_weight_(class_id_to_weight),
+      schema_(schema) {}
 
 void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
                                           const Item& item,
@@ -190,7 +196,7 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
       TopicWeightIterator topic_iter = token_weights[token_index];
       topic_iter.Reset();
       while (topic_iter.NextNonZeroTopic() < topic_size) {
-        cur_z += current_class_weight * topic_iter.Weight() * theta[topic_iter.TopicIndex()];
+        cur_z += topic_iter.Weight() * theta[topic_iter.TopicIndex()] * current_class_weight;
       }
 
       z_normalizer[token_index] = cur_z;
@@ -198,7 +204,6 @@ void Processor::ItemProcessor::InferTheta(const ModelConfig& model,
 
     // 2. Find new theta (or store results if on the last iteration)
     std::vector<float> theta_next(topic_size);
-
     memset(&theta_next[0], 0, topic_size * sizeof(float));
     for (int token_index = 0;
           token_index < known_tokens_count;
@@ -382,6 +387,9 @@ void Processor::ThreadFunction() {
       LOG_IF(INFO, pop_retries >= pop_retries_max) << "Processing queue has data, processing started";
       pop_retries = 0;
 
+      if (part->batch().class_id_size() != part->batch().token_size())
+        BOOST_THROW_EXCEPTION(InternalError("part->batch().class_id_size() != part->batch().token_size()"));
+
       std::shared_ptr<InstanceSchema> schema = schema_.get();
       std::vector<ModelName> model_names = schema->GetModelNames();
       std::for_each(model_names.begin(), model_names.end(), [&](ModelName model_name) {
@@ -389,6 +397,9 @@ void Processor::ThreadFunction() {
 
         // do not process disabled models.
         if (!model.enabled()) return;  // return from lambda; goes to next step of std::for_each
+
+        if (model.class_id_size() != model.class_weight_size())
+          BOOST_THROW_EXCEPTION(InternalError("model.class_id_size() != model.class_weight_size()"));
 
         // Find and save to the variable the index of model stream in the part->stream_name() list.
         int model_stream_index = repeated_field_index_of(part->stream_name(), model.stream_name());
@@ -488,8 +499,7 @@ void Processor::ThreadFunction() {
           }
 
           bool update_model = iter.InStream(model_stream_index);
-          item_processor.InferTheta(model, *item, model_increment.get(),
-            update_model, &theta[0]);
+          item_processor.InferTheta(model, *item, model_increment.get(), update_model, &theta[0]);
 
           // Update theta cache
           model_increment->add_item_id(item->id());

@@ -29,7 +29,7 @@ TopicModel::TopicModel(ModelName model_name, int topics_count)
       n_wt_(),
       r_wt_(),
       n_t_(),
-     n_t_default_class_(nullptr),
+      n_t_default_class_(nullptr),
       batch_uuid_() {
   assert(topics_count_ > 0);
   CreateNormalizerVector(DefaultClass, topics_count_);
@@ -202,13 +202,6 @@ void TopicModel::RetrieveExternalTopicModel(::artm::TopicModel* topic_model) con
     for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
       n_wt->add_value(n_wt_[token_index][topic_index]);
       r_wt->add_value(r_wt_[token_index][topic_index]);
-    }
-  }
-  for (auto iter = n_t_.begin(); iter != n_t_.end(); ++iter) {
-    ::artm::FloatArray* n_t = topic_model_internals.add_n_t();
-    topic_model_internals.add_n_t_class_id(iter->first);
-    for (int topic_index = 0; topic_index < topic_size(); ++topic_index) {
-      n_t->add_value(iter->second[topic_index]);
     }
   }
 

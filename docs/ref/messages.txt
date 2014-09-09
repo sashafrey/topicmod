@@ -10,8 +10,6 @@ This document explains all protobuf messages that can be transfered between the 
 DoubleArray
 ===========
 
-.. _DoubleArray:
-
 Represents an array of double-precision floating point values.
 
 .. code-block:: bash
@@ -305,7 +303,7 @@ MasterProxyConfig
 
 .. class:: messages_pb2.MasterProxyConfig
 
- Represents a configuration of a
+Represents a configuration of a
 proxy to MasterComponent. The purpose of the proxy is to
 operate MasterComponent from a remote machine. There is no
 requirement to run MasterComponent and its proxy in the same
@@ -319,6 +317,8 @@ proxy.
   message MasterProxyConfig {
     optional string node_connect_endpoint = 1;
     optional MasterComponentConfig config = 2;
+    optional int32 communication_timeout = 3 [default = 1000];
+    optional int32 polling_frequency = 4 [default = 50];
   }
 
 .. attribute:: MasterProxyConfig.node_connect_endpoint
@@ -333,6 +333,21 @@ proxy.
 .. attribute:: MasterProxyConfig.config
 
   A message that defines MasterComponent configuration of a remote node.
+
+.. attribute:: MasterProxyConfig.communication_timeout
+
+  An communication timeout in milliseconds.
+  Any remote network call that exceeds communication timeout
+  will result in :c:macro:`ARTM_NETWORK_ERROR` error.
+
+.. attribute:: MasterProxyConfig.polling_frequency
+
+  Defines the frequency that the proxy object uses to
+  repeatedly pool remote master component for a status.
+
+  When :c:func:`ArtmWaitIdle` on the remote master component reports
+  :c:macro:`ARTM_STILL_WORKING`, the proxy object will retry the request
+  within specified pooling frequency.
 
 
 .. _ModelConfig:
@@ -550,6 +565,28 @@ Represents a configuration of a Decorrelator Phi regularizer.
 
   message DecorrelatorPhiConfig {
     optional BoolArray topics_to_regularize = 1;
+  }
+
+
+.. _RegularizerInternalState:
+
+RegularizerInternalState
+========================
+
+.. class:: messages_pb2.RegularizerInternalState
+
+Represents an internal state of a general regularizer.
+
+.. code-block:: bash
+
+  message RegularizerInternalState {
+    enum Type {
+      MultiLanguagePhi = 5;
+    }
+
+    optional string name = 1;
+    optional Type type = 2;
+    optional bytes data = 3;
   }
 
 

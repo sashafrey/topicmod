@@ -469,7 +469,7 @@ ArtmGetLastErrorMessage
 Error codes
 -----------
 
-.. code-block:: C
+.. code-block:: bash
 
    #define ARTM_SUCCESS 0
    #define ARTM_STILL_WORKING -1

@@ -56,6 +56,7 @@ class MasterProxy : boost::noncopyable, public MasterInterface {
   int id_;
 
   int communication_timeout_;
+  int polling_frequency_;
   std::unique_ptr<rpcz::application> application_;
   std::shared_ptr<artm::core::NodeControllerService_Stub> node_controller_service_proxy_;
 };

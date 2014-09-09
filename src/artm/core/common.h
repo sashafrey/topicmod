@@ -49,6 +49,9 @@ const int UnknownId = -1;
 
 const std::string kBatchExtension = ".batch";
 
+const int kIdleLoopFrequency = 1;  // 1 ms
+const int kNetworkPollingFrequency = 50;  // 50 ms
+
 class Notifiable {
  public:
   virtual ~Notifiable() {}

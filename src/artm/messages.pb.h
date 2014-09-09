@@ -848,22 +848,10 @@ class Batch : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& token() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_token();
 
-  // repeated .artm.Item item = 2;
-  inline int item_size() const;
-  inline void clear_item();
-  static const int kItemFieldNumber = 2;
-  inline const ::artm::Item& item(int index) const;
-  inline ::artm::Item* mutable_item(int index);
-  inline ::artm::Item* add_item();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::Item >&
-      item() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::Item >*
-      mutable_item();
-
-  // repeated string class_id = 3;
+  // repeated string class_id = 2;
   inline int class_id_size() const;
   inline void clear_class_id();
-  static const int kClassIdFieldNumber = 3;
+  static const int kClassIdFieldNumber = 2;
   inline const ::std::string& class_id(int index) const;
   inline ::std::string* mutable_class_id(int index);
   inline void set_class_id(int index, const ::std::string& value);
@@ -876,14 +864,26 @@ class Batch : public ::google::protobuf::Message {
   inline const ::google::protobuf::RepeatedPtrField< ::std::string>& class_id() const;
   inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_class_id();
 
+  // repeated .artm.Item item = 3;
+  inline int item_size() const;
+  inline void clear_item();
+  static const int kItemFieldNumber = 3;
+  inline const ::artm::Item& item(int index) const;
+  inline ::artm::Item* mutable_item(int index);
+  inline ::artm::Item* add_item();
+  inline const ::google::protobuf::RepeatedPtrField< ::artm::Item >&
+      item() const;
+  inline ::google::protobuf::RepeatedPtrField< ::artm::Item >*
+      mutable_item();
+
   // @@protoc_insertion_point(class_scope:artm.Batch)
  private:
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::google::protobuf::RepeatedPtrField< ::std::string> token_;
-  ::google::protobuf::RepeatedPtrField< ::artm::Item > item_;
   ::google::protobuf::RepeatedPtrField< ::std::string> class_id_;
+  ::google::protobuf::RepeatedPtrField< ::artm::Item > item_;
 
   mutable int _cached_size_;
   ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
@@ -4441,34 +4441,6 @@ class TopicModel_TopicModelInternals : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
       mutable_r_wt();
 
-  // repeated .artm.FloatArray n_t = 3;
-  inline int n_t_size() const;
-  inline void clear_n_t();
-  static const int kNTFieldNumber = 3;
-  inline const ::artm::FloatArray& n_t(int index) const;
-  inline ::artm::FloatArray* mutable_n_t(int index);
-  inline ::artm::FloatArray* add_n_t();
-  inline const ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >&
-      n_t() const;
-  inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
-      mutable_n_t();
-
-  // repeated string n_t_class_id = 4;
-  inline int n_t_class_id_size() const;
-  inline void clear_n_t_class_id();
-  static const int kNTClassIdFieldNumber = 4;
-  inline const ::std::string& n_t_class_id(int index) const;
-  inline ::std::string* mutable_n_t_class_id(int index);
-  inline void set_n_t_class_id(int index, const ::std::string& value);
-  inline void set_n_t_class_id(int index, const char* value);
-  inline void set_n_t_class_id(int index, const char* value, size_t size);
-  inline ::std::string* add_n_t_class_id();
-  inline void add_n_t_class_id(const ::std::string& value);
-  inline void add_n_t_class_id(const char* value);
-  inline void add_n_t_class_id(const char* value, size_t size);
-  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& n_t_class_id() const;
-  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_n_t_class_id();
-
   // @@protoc_insertion_point(class_scope:artm.TopicModel.TopicModelInternals)
  private:
 
@@ -4476,11 +4448,9 @@ class TopicModel_TopicModelInternals : public ::google::protobuf::Message {
 
   ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > n_wt_;
   ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > r_wt_;
-  ::google::protobuf::RepeatedPtrField< ::artm::FloatArray > n_t_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> n_t_class_id_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -5302,32 +5272,7 @@ Batch::mutable_token() {
   return &token_;
 }
 
-// repeated .artm.Item item = 2;
-inline int Batch::item_size() const {
-  return item_.size();
-}
-inline void Batch::clear_item() {
-  item_.Clear();
-}
-inline const ::artm::Item& Batch::item(int index) const {
-  return item_.Get(index);
-}
-inline ::artm::Item* Batch::mutable_item(int index) {
-  return item_.Mutable(index);
-}
-inline ::artm::Item* Batch::add_item() {
-  return item_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::artm::Item >&
-Batch::item() const {
-  return item_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::Item >*
-Batch::mutable_item() {
-  return &item_;
-}
-
-// repeated string class_id = 3;
+// repeated string class_id = 2;
 inline int Batch::class_id_size() const {
   return class_id_.size();
 }
@@ -5369,6 +5314,31 @@ Batch::class_id() const {
 inline ::google::protobuf::RepeatedPtrField< ::std::string>*
 Batch::mutable_class_id() {
   return &class_id_;
+}
+
+// repeated .artm.Item item = 3;
+inline int Batch::item_size() const {
+  return item_.size();
+}
+inline void Batch::clear_item() {
+  item_.Clear();
+}
+inline const ::artm::Item& Batch::item(int index) const {
+  return item_.Get(index);
+}
+inline ::artm::Item* Batch::mutable_item(int index) {
+  return item_.Mutable(index);
+}
+inline ::artm::Item* Batch::add_item() {
+  return item_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::artm::Item >&
+Batch::item() const {
+  return item_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::artm::Item >*
+Batch::mutable_item() {
+  return &item_;
 }
 
 // -------------------------------------------------------------------
@@ -9243,75 +9213,6 @@ TopicModel_TopicModelInternals::r_wt() const {
 inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
 TopicModel_TopicModelInternals::mutable_r_wt() {
   return &r_wt_;
-}
-
-// repeated .artm.FloatArray n_t = 3;
-inline int TopicModel_TopicModelInternals::n_t_size() const {
-  return n_t_.size();
-}
-inline void TopicModel_TopicModelInternals::clear_n_t() {
-  n_t_.Clear();
-}
-inline const ::artm::FloatArray& TopicModel_TopicModelInternals::n_t(int index) const {
-  return n_t_.Get(index);
-}
-inline ::artm::FloatArray* TopicModel_TopicModelInternals::mutable_n_t(int index) {
-  return n_t_.Mutable(index);
-}
-inline ::artm::FloatArray* TopicModel_TopicModelInternals::add_n_t() {
-  return n_t_.Add();
-}
-inline const ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >&
-TopicModel_TopicModelInternals::n_t() const {
-  return n_t_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
-TopicModel_TopicModelInternals::mutable_n_t() {
-  return &n_t_;
-}
-
-// repeated string n_t_class_id = 4;
-inline int TopicModel_TopicModelInternals::n_t_class_id_size() const {
-  return n_t_class_id_.size();
-}
-inline void TopicModel_TopicModelInternals::clear_n_t_class_id() {
-  n_t_class_id_.Clear();
-}
-inline const ::std::string& TopicModel_TopicModelInternals::n_t_class_id(int index) const {
-  return n_t_class_id_.Get(index);
-}
-inline ::std::string* TopicModel_TopicModelInternals::mutable_n_t_class_id(int index) {
-  return n_t_class_id_.Mutable(index);
-}
-inline void TopicModel_TopicModelInternals::set_n_t_class_id(int index, const ::std::string& value) {
-  n_t_class_id_.Mutable(index)->assign(value);
-}
-inline void TopicModel_TopicModelInternals::set_n_t_class_id(int index, const char* value) {
-  n_t_class_id_.Mutable(index)->assign(value);
-}
-inline void TopicModel_TopicModelInternals::set_n_t_class_id(int index, const char* value, size_t size) {
-  n_t_class_id_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* TopicModel_TopicModelInternals::add_n_t_class_id() {
-  return n_t_class_id_.Add();
-}
-inline void TopicModel_TopicModelInternals::add_n_t_class_id(const ::std::string& value) {
-  n_t_class_id_.Add()->assign(value);
-}
-inline void TopicModel_TopicModelInternals::add_n_t_class_id(const char* value) {
-  n_t_class_id_.Add()->assign(value);
-}
-inline void TopicModel_TopicModelInternals::add_n_t_class_id(const char* value, size_t size) {
-  n_t_class_id_.Add()->assign(reinterpret_cast<const char*>(value), size);
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-TopicModel_TopicModelInternals::n_t_class_id() const {
-  return n_t_class_id_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
-TopicModel_TopicModelInternals::mutable_n_t_class_id() {
-  return &n_t_class_id_;
 }
 
 // -------------------------------------------------------------------

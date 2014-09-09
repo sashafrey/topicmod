@@ -474,15 +474,7 @@ void TopicModel::CreateNormalizerVector(ClassId class_id, int topics_count) {
 }
 
 const std::vector<float>* TopicModel::GetNormalizerVector(const ClassId& class_id) const {
-  if (class_id == DefaultClass) {
-    return n_t_default_class_;
-  }
-
-  auto iter = n_t_.find(class_id);
-  if (iter == n_t_.end()) {
-    return nullptr;
-  }
-  return &(iter->second);
+  return const_cast<TopicModel *>(this)->GetNormalizerVector(class_id);
 }
 
 std::vector<float>* TopicModel::GetNormalizerVector(const ClassId& class_id) {

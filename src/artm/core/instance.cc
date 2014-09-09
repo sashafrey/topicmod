@@ -124,7 +124,7 @@ Merger* Instance::merger() {
 
 void Instance::CreateOrReconfigureModel(const ModelConfig& config) {
   auto corrected_config = std::make_shared<artm::ModelConfig>(config);
-  PopulateClassId(corrected_config);  
+  PopulateClassId(corrected_config.get());
   if (merger_ != nullptr) {
     merger_->CreateOrReconfigureModel(*corrected_config);
   }
@@ -387,7 +387,7 @@ void Instance::Reconfigure(const MasterComponentConfig& master_config) {
   }
 }
 
-void Instance::PopulateClassId(std::shared_ptr<ModelConfig>& model_config) {
+void Instance::PopulateClassId(ModelConfig* model_config) {
   int class_id_size = model_config->class_id_size();
   if (class_id_size != 0) {
     // model has list of classes and it is nesessary to check correctness of weights

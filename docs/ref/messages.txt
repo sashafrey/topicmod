@@ -357,6 +357,8 @@ Represents a configuration of a topic model.
     optional bool reuse_theta = 8 [default = false];
     repeated string regularizer_name = 9;
     repeated double regularizer_tau = 10;
+    repeated string class_id = 11;
+    repeated float class_weight = 12;
   }
 
 .. attribute:: ModelConfig.name
@@ -404,6 +406,15 @@ Represents a configuration of a topic model.
    A set of values that define the regularization coefficients of the corresponding regularizer.
    This repeated field must have the same length as regularizer_name.
 
+.. attribute:: ModelConfig.class_id
+
+   A set of values that define for which classes (modalities) to build topic model.
+   This repeated field must have the same length as class_weight.
+
+.. attribute:: ModelConfig.class_weight
+
+   A set of values that define the weights of the corresponding classes (modalities).
+   This repeated field must have the same length as class_id.
 
 .. _RegularizerConfig:
 
@@ -572,9 +583,10 @@ Represents one entry in a static dictionary.
 
   message DictionaryEntry {
     optional string key_token = 1;
-    optional float value = 2;
-    repeated string value_tokens = 3;
-    optional FloatArray values = 4;
+    optional string class_id = 2;
+    optional float value = 3;
+    repeated string value_tokens = 4;
+    optional FloatArray values = 5;
   }
 
 
@@ -708,14 +720,14 @@ Represents a topic model.
     optional int32 topics_count = 2;
     repeated string token = 3;
     repeated FloatArray token_weights = 4;
+    repeated string class_id = 5;
 
     message TopicModelInternals {
       repeated FloatArray n_wt = 1;
       repeated FloatArray r_wt = 2;
-      optional FloatArray n_t = 3;
     }
 
-    optional bytes internals = 5;
+    optional bytes internals = 6;
   }
 
 .. attribute:: TopicModel.name
@@ -737,6 +749,11 @@ Represents a topic model.
    A set of token weights.
    The length of this repeated field will match the length of the repeated field 'token'.
    The length of each FloatArray will match the topics_count field.
+
+.. attribute:: TopicModel.class_id
+
+   A set values that specify the class (modality) of the tokens.
+   The length of this repeated field will match the length of the repeated field 'token'.
 
 .. attribute:: TopicModel.internals
 

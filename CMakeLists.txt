@@ -11,8 +11,6 @@ if (WIN32)
 endif()
 
 if (WIN32)
-  set(BOOST_INCLUDEDIR "C:/local/boost_1_55_0")
-  set(BOOST_LIBRARYDIR "C:/local/boost_1_55_0/lib32-msvc-11.0")
   add_definitions("-D_WIN32")
   add_definitions("-DWIN32")
 endif()

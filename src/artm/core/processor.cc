@@ -53,8 +53,8 @@ Processor::TokenIterator::TokenIterator(
     const Item& item, const std::string& field_name,
     Mode mode)
     : token_dict_(token_dict),
-      topic_model_(topic_model),
       class_id_to_weight_(class_id_to_weight),
+      topic_model_(topic_model),
       field_(nullptr),
       token_size_(0),
       iterate_known_((mode & Mode_Known) != 0),       // NOLINT

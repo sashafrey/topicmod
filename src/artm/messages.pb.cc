@@ -104,6 +104,7 @@ const ::google::protobuf::EnumDescriptor* ScoreData_Type_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* PerplexityScoreConfig_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   PerplexityScoreConfig_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* PerplexityScoreConfig_Type_descriptor_ = NULL;
 const ::google::protobuf::Descriptor* PerplexityScore_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   PerplexityScore_reflection_ = NULL;
@@ -591,9 +592,11 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       sizeof(ScoreData));
   ScoreData_Type_descriptor_ = ScoreData_descriptor_->enum_type(0);
   PerplexityScoreConfig_descriptor_ = file->message_type(25);
-  static const int PerplexityScoreConfig_offsets_[2] = {
+  static const int PerplexityScoreConfig_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PerplexityScoreConfig, field_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PerplexityScoreConfig, stream_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PerplexityScoreConfig, model_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PerplexityScoreConfig, dictionary_name_),
   };
   PerplexityScoreConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -606,6 +609,7 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(PerplexityScoreConfig));
+  PerplexityScoreConfig_Type_descriptor_ = PerplexityScoreConfig_descriptor_->enum_type(0);
   PerplexityScore_descriptor_ = file->message_type(26);
   static const int PerplexityScore_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PerplexityScore, value_),
@@ -1140,48 +1144,52 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "\030\002 \001(\0162\024.artm.ScoreData.Type\022\014\n\004data\030\003 \001"
     "(\014\"o\n\004Type\022\016\n\nPerplexity\020\000\022\021\n\rSparsityTh"
     "eta\020\001\022\017\n\013SparsityPhi\020\002\022\022\n\016ItemsProcessed"
-    "\020\003\022\r\n\tTopTokens\020\004\022\020\n\014ThetaSnippet\020\005\"P\n\025P"
-    "erplexityScoreConfig\022\031\n\nfield_name\030\001 \001(\t"
-    ":\005@body\022\034\n\013stream_name\030\002 \001(\t:\007@global\"U\n"
-    "\017PerplexityScore\022\r\n\005value\030\001 \001(\001\022\013\n\003raw\030\002"
-    " \001(\001\022\022\n\nnormalizer\030\003 \001(\001\022\022\n\nzero_words\030\004"
-    " \001(\005\"\222\001\n\030SparsityThetaScoreConfig\022\031\n\nfie"
+    "\020\003\022\r\n\tTopTokens\020\004\022\020\n\014ThetaSnippet\020\005\"\363\001\n\025"
+    "PerplexityScoreConfig\022\031\n\nfield_name\030\001 \001("
+    "\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007@global\022J"
+    "\n\nmodel_type\030\003 \001(\0162 .artm.PerplexityScor"
+    "eConfig.Type:\024UnigramDocumentModel\022\027\n\017di"
+    "ctionary_name\030\004 \001(\t\"<\n\004Type\022\030\n\024UnigramDo"
+    "cumentModel\020\000\022\032\n\026UnigramCollectionModel\020"
+    "\001\"U\n\017PerplexityScore\022\r\n\005value\030\001 \001(\001\022\013\n\003r"
+    "aw\030\002 \001(\001\022\022\n\nnormalizer\030\003 \001(\001\022\022\n\nzero_wor"
+    "ds\030\004 \001(\005\"\222\001\n\030SparsityThetaScoreConfig\022\031\n"
+    "\nfield_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030"
+    "\002 \001(\t:\007@global\022\023\n\003eps\030\003 \001(\002:\0061e-037\022(\n\017t"
+    "opics_to_score\030\004 \001(\0132\017.artm.BoolArray\"N\n"
+    "\022SparsityThetaScore\022\r\n\005value\030\001 \001(\001\022\023\n\013ze"
+    "ro_topics\030\002 \001(\005\022\024\n\014total_topics\030\003 \001(\005\"W\n"
+    "\026SparsityPhiScoreConfig\022\023\n\003eps\030\001 \001(\002:\0061e"
+    "-037\022(\n\017topics_to_score\030\002 \001(\0132\017.artm.Boo"
+    "lArray\"L\n\020SparsityPhiScore\022\r\n\005value\030\001 \001("
+    "\001\022\023\n\013zero_tokens\030\002 \001(\005\022\024\n\014total_tokens\030\003"
+    " \001(\005\"T\n\031ItemsProcessedScoreConfig\022\031\n\nfie"
     "ld_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001("
-    "\t:\007@global\022\023\n\003eps\030\003 \001(\002:\0061e-037\022(\n\017topic"
-    "s_to_score\030\004 \001(\0132\017.artm.BoolArray\"N\n\022Spa"
-    "rsityThetaScore\022\r\n\005value\030\001 \001(\001\022\023\n\013zero_t"
-    "opics\030\002 \001(\005\022\024\n\014total_topics\030\003 \001(\005\"W\n\026Spa"
-    "rsityPhiScoreConfig\022\023\n\003eps\030\001 \001(\002:\0061e-037"
-    "\022(\n\017topics_to_score\030\002 \001(\0132\017.artm.BoolArr"
-    "ay\"L\n\020SparsityPhiScore\022\r\n\005value\030\001 \001(\001\022\023\n"
-    "\013zero_tokens\030\002 \001(\005\022\024\n\014total_tokens\030\003 \001(\005"
-    "\"T\n\031ItemsProcessedScoreConfig\022\031\n\nfield_n"
-    "ame\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001(\t:\007@"
-    "global\"$\n\023ItemsProcessedScore\022\r\n\005value\030\001"
-    " \001(\005\"D\n\024TopTokensScoreConfig\022\026\n\nnum_toke"
-    "ns\030\001 \001(\005:\00210\022\024\n\010topic_id\030\002 \003(\005B\002\020\001\"3\n\016To"
-    "pTokensScore\022!\n\006values\030\001 \003(\0132\021.artm.Stri"
-    "ngArray\"g\n\027ThetaSnippetScoreConfig\022\031\n\nfi"
-    "eld_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001"
-    "(\t:\007@global\022\023\n\007item_id\030\003 \003(\005B\002\020\001\"F\n\021Thet"
-    "aSnippetScore\022\017\n\007item_id\030\001 \003(\005\022 \n\006values"
-    "\030\002 \003(\0132\020.artm.FloatArray\"\354\001\n\nTopicModel\022"
-    "\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topics_count\030\002 "
-    "\001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_weights\030\004 \003("
-    "\0132\020.artm.FloatArray\022\020\n\010class_id\030\005 \003(\t\022\021\n"
-    "\tinternals\030\006 \001(\014\032U\n\023TopicModelInternals\022"
-    "\036\n\004n_wt\030\001 \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030"
-    "\002 \003(\0132\020.artm.FloatArray\"b\n\013ThetaMatrix\022\032"
-    "\n\nmodel_name\030\001 \001(\t:\006@model\022\017\n\007item_id\030\002 "
-    "\003(\005\022&\n\014item_weights\030\003 \003(\0132\020.artm.FloatAr"
-    "ray\"\235\002\n\026CollectionParserConfig\022B\n\006format"
-    "\030\001 \001(\0162#.artm.CollectionParserConfig.For"
-    "mat:\rBagOfWordsUci\022\031\n\021docword_file_path\030"
-    "\002 \001(\t\022\027\n\017vocab_file_path\030\003 \001(\t\022\025\n\rtarget"
-    "_folder\030\004 \001(\t\022\034\n\024dictionary_file_name\030\005 "
-    "\001(\t\022!\n\023num_items_per_batch\030\006 \001(\005:\0041000\"3"
-    "\n\006Format\022\021\n\rBagOfWordsUci\020\000\022\026\n\022JustLoadD"
-    "ictionary\020\001", 4611);
+    "\t:\007@global\"$\n\023ItemsProcessedScore\022\r\n\005val"
+    "ue\030\001 \001(\005\"D\n\024TopTokensScoreConfig\022\026\n\nnum_"
+    "tokens\030\001 \001(\005:\00210\022\024\n\010topic_id\030\002 \003(\005B\002\020\001\"3"
+    "\n\016TopTokensScore\022!\n\006values\030\001 \003(\0132\021.artm."
+    "StringArray\"g\n\027ThetaSnippetScoreConfig\022\031"
+    "\n\nfield_name\030\001 \001(\t:\005@body\022\034\n\013stream_name"
+    "\030\002 \001(\t:\007@global\022\023\n\007item_id\030\003 \003(\005B\002\020\001\"F\n\021"
+    "ThetaSnippetScore\022\017\n\007item_id\030\001 \003(\005\022 \n\006va"
+    "lues\030\002 \003(\0132\020.artm.FloatArray\"\354\001\n\nTopicMo"
+    "del\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topics_coun"
+    "t\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_weights\030"
+    "\004 \003(\0132\020.artm.FloatArray\022\020\n\010class_id\030\005 \003("
+    "\t\022\021\n\tinternals\030\006 \001(\014\032U\n\023TopicModelIntern"
+    "als\022\036\n\004n_wt\030\001 \003(\0132\020.artm.FloatArray\022\036\n\004r"
+    "_wt\030\002 \003(\0132\020.artm.FloatArray\"b\n\013ThetaMatr"
+    "ix\022\032\n\nmodel_name\030\001 \001(\t:\006@model\022\017\n\007item_i"
+    "d\030\002 \003(\005\022&\n\014item_weights\030\003 \003(\0132\020.artm.Flo"
+    "atArray\"\235\002\n\026CollectionParserConfig\022B\n\006fo"
+    "rmat\030\001 \001(\0162#.artm.CollectionParserConfig"
+    ".Format:\rBagOfWordsUci\022\031\n\021docword_file_p"
+    "ath\030\002 \001(\t\022\027\n\017vocab_file_path\030\003 \001(\t\022\025\n\rta"
+    "rget_folder\030\004 \001(\t\022\034\n\024dictionary_file_nam"
+    "e\030\005 \001(\t\022!\n\023num_items_per_batch\030\006 \001(\005:\00410"
+    "00\"3\n\006Format\022\021\n\rBagOfWordsUci\020\000\022\026\n\022JustL"
+    "oadDictionary\020\001", 4775);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   DoubleArray::default_instance_ = new DoubleArray();
@@ -9160,11 +9168,34 @@ void ScoreData::Swap(ScoreData* other) {
 
 // ===================================================================
 
+const ::google::protobuf::EnumDescriptor* PerplexityScoreConfig_Type_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return PerplexityScoreConfig_Type_descriptor_;
+}
+bool PerplexityScoreConfig_Type_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+      return true;
+    default:
+      return false;
+  }
+}
+
+#ifndef _MSC_VER
+const PerplexityScoreConfig_Type PerplexityScoreConfig::UnigramDocumentModel;
+const PerplexityScoreConfig_Type PerplexityScoreConfig::UnigramCollectionModel;
+const PerplexityScoreConfig_Type PerplexityScoreConfig::Type_MIN;
+const PerplexityScoreConfig_Type PerplexityScoreConfig::Type_MAX;
+const int PerplexityScoreConfig::Type_ARRAYSIZE;
+#endif  // _MSC_VER
 ::std::string* PerplexityScoreConfig::_default_field_name_ = NULL;
 ::std::string* PerplexityScoreConfig::_default_stream_name_ = NULL;
 #ifndef _MSC_VER
 const int PerplexityScoreConfig::kFieldNameFieldNumber;
 const int PerplexityScoreConfig::kStreamNameFieldNumber;
+const int PerplexityScoreConfig::kModelTypeFieldNumber;
+const int PerplexityScoreConfig::kDictionaryNameFieldNumber;
 #endif  // !_MSC_VER
 
 PerplexityScoreConfig::PerplexityScoreConfig()
@@ -9185,6 +9216,8 @@ void PerplexityScoreConfig::SharedCtor() {
   _cached_size_ = 0;
   field_name_ = const_cast< ::std::string*>(_default_field_name_);
   stream_name_ = const_cast< ::std::string*>(_default_stream_name_);
+  model_type_ = 0;
+  dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -9198,6 +9231,9 @@ void PerplexityScoreConfig::SharedDtor() {
   }
   if (stream_name_ != _default_stream_name_) {
     delete stream_name_;
+  }
+  if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete dictionary_name_;
   }
   if (this != default_instance_) {
   }
@@ -9236,6 +9272,12 @@ void PerplexityScoreConfig::Clear() {
         stream_name_->assign(*_default_stream_name_);
       }
     }
+    model_type_ = 0;
+    if (has_dictionary_name()) {
+      if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
+        dictionary_name_->clear();
+      }
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -9272,6 +9314,44 @@ bool PerplexityScoreConfig::MergePartialFromCodedStream(
                 input, this->mutable_stream_name()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->stream_name().data(), this->stream_name().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_model_type;
+        break;
+      }
+
+      // optional .artm.PerplexityScoreConfig.Type model_type = 3 [default = UnigramDocumentModel];
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_model_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::artm::PerplexityScoreConfig_Type_IsValid(value)) {
+            set_model_type(static_cast< ::artm::PerplexityScoreConfig_Type >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(3, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(34)) goto parse_dictionary_name;
+        break;
+      }
+
+      // optional string dictionary_name = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_dictionary_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_dictionary_name()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->dictionary_name().data(), this->dictionary_name().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -9316,6 +9396,21 @@ void PerplexityScoreConfig::SerializeWithCachedSizes(
       2, this->stream_name(), output);
   }
 
+  // optional .artm.PerplexityScoreConfig.Type model_type = 3 [default = UnigramDocumentModel];
+  if (has_model_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      3, this->model_type(), output);
+  }
+
+  // optional string dictionary_name = 4;
+  if (has_dictionary_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->dictionary_name().data(), this->dictionary_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->dictionary_name(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -9344,6 +9439,22 @@ void PerplexityScoreConfig::SerializeWithCachedSizes(
         2, this->stream_name(), target);
   }
 
+  // optional .artm.PerplexityScoreConfig.Type model_type = 3 [default = UnigramDocumentModel];
+  if (has_model_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      3, this->model_type(), target);
+  }
+
+  // optional string dictionary_name = 4;
+  if (has_dictionary_name()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->dictionary_name().data(), this->dictionary_name().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->dictionary_name(), target);
+  }
+
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -9367,6 +9478,19 @@ int PerplexityScoreConfig::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->stream_name());
+    }
+
+    // optional .artm.PerplexityScoreConfig.Type model_type = 3 [default = UnigramDocumentModel];
+    if (has_model_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->model_type());
+    }
+
+    // optional string dictionary_name = 4;
+    if (has_dictionary_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->dictionary_name());
     }
 
   }
@@ -9402,6 +9526,12 @@ void PerplexityScoreConfig::MergeFrom(const PerplexityScoreConfig& from) {
     if (from.has_stream_name()) {
       set_stream_name(from.stream_name());
     }
+    if (from.has_model_type()) {
+      set_model_type(from.model_type());
+    }
+    if (from.has_dictionary_name()) {
+      set_dictionary_name(from.dictionary_name());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -9427,6 +9557,8 @@ void PerplexityScoreConfig::Swap(PerplexityScoreConfig* other) {
   if (other != this) {
     std::swap(field_name_, other->field_name_);
     std::swap(stream_name_, other->stream_name_);
+    std::swap(model_type_, other->model_type_);
+    std::swap(dictionary_name_, other->dictionary_name_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

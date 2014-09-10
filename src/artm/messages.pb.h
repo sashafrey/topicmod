@@ -201,6 +201,25 @@ inline bool ScoreData_Type_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<ScoreData_Type>(
     ScoreData_Type_descriptor(), name, value);
 }
+enum PerplexityScoreConfig_Type {
+  PerplexityScoreConfig_Type_UnigramDocumentModel = 0,
+  PerplexityScoreConfig_Type_UnigramCollectionModel = 1
+};
+bool PerplexityScoreConfig_Type_IsValid(int value);
+const PerplexityScoreConfig_Type PerplexityScoreConfig_Type_Type_MIN = PerplexityScoreConfig_Type_UnigramDocumentModel;
+const PerplexityScoreConfig_Type PerplexityScoreConfig_Type_Type_MAX = PerplexityScoreConfig_Type_UnigramCollectionModel;
+const int PerplexityScoreConfig_Type_Type_ARRAYSIZE = PerplexityScoreConfig_Type_Type_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* PerplexityScoreConfig_Type_descriptor();
+inline const ::std::string& PerplexityScoreConfig_Type_Name(PerplexityScoreConfig_Type value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    PerplexityScoreConfig_Type_descriptor(), value);
+}
+inline bool PerplexityScoreConfig_Type_Parse(
+    const ::std::string& name, PerplexityScoreConfig_Type* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<PerplexityScoreConfig_Type>(
+    PerplexityScoreConfig_Type_descriptor(), name, value);
+}
 enum CollectionParserConfig_Format {
   CollectionParserConfig_Format_BagOfWordsUci = 0,
   CollectionParserConfig_Format_JustLoadDictionary = 1
@@ -3202,6 +3221,30 @@ class PerplexityScoreConfig : public ::google::protobuf::Message {
 
   // nested types ----------------------------------------------------
 
+  typedef PerplexityScoreConfig_Type Type;
+  static const Type UnigramDocumentModel = PerplexityScoreConfig_Type_UnigramDocumentModel;
+  static const Type UnigramCollectionModel = PerplexityScoreConfig_Type_UnigramCollectionModel;
+  static inline bool Type_IsValid(int value) {
+    return PerplexityScoreConfig_Type_IsValid(value);
+  }
+  static const Type Type_MIN =
+    PerplexityScoreConfig_Type_Type_MIN;
+  static const Type Type_MAX =
+    PerplexityScoreConfig_Type_Type_MAX;
+  static const int Type_ARRAYSIZE =
+    PerplexityScoreConfig_Type_Type_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  Type_descriptor() {
+    return PerplexityScoreConfig_Type_descriptor();
+  }
+  static inline const ::std::string& Type_Name(Type value) {
+    return PerplexityScoreConfig_Type_Name(value);
+  }
+  static inline bool Type_Parse(const ::std::string& name,
+      Type* value) {
+    return PerplexityScoreConfig_Type_Parse(name, value);
+  }
+
   // accessors -------------------------------------------------------
 
   // optional string field_name = 1 [default = "@body"];
@@ -3228,12 +3271,35 @@ class PerplexityScoreConfig : public ::google::protobuf::Message {
   inline ::std::string* release_stream_name();
   inline void set_allocated_stream_name(::std::string* stream_name);
 
+  // optional .artm.PerplexityScoreConfig.Type model_type = 3 [default = UnigramDocumentModel];
+  inline bool has_model_type() const;
+  inline void clear_model_type();
+  static const int kModelTypeFieldNumber = 3;
+  inline ::artm::PerplexityScoreConfig_Type model_type() const;
+  inline void set_model_type(::artm::PerplexityScoreConfig_Type value);
+
+  // optional string dictionary_name = 4;
+  inline bool has_dictionary_name() const;
+  inline void clear_dictionary_name();
+  static const int kDictionaryNameFieldNumber = 4;
+  inline const ::std::string& dictionary_name() const;
+  inline void set_dictionary_name(const ::std::string& value);
+  inline void set_dictionary_name(const char* value);
+  inline void set_dictionary_name(const char* value, size_t size);
+  inline ::std::string* mutable_dictionary_name();
+  inline ::std::string* release_dictionary_name();
+  inline void set_allocated_dictionary_name(::std::string* dictionary_name);
+
   // @@protoc_insertion_point(class_scope:artm.PerplexityScoreConfig)
  private:
   inline void set_has_field_name();
   inline void clear_has_field_name();
   inline void set_has_stream_name();
   inline void clear_has_stream_name();
+  inline void set_has_model_type();
+  inline void clear_has_model_type();
+  inline void set_has_dictionary_name();
+  inline void clear_has_dictionary_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -3241,9 +3307,11 @@ class PerplexityScoreConfig : public ::google::protobuf::Message {
   static ::std::string* _default_field_name_;
   ::std::string* stream_name_;
   static ::std::string* _default_stream_name_;
+  ::std::string* dictionary_name_;
+  int model_type_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -8220,6 +8288,99 @@ inline void PerplexityScoreConfig::set_allocated_stream_name(::std::string* stre
   }
 }
 
+// optional .artm.PerplexityScoreConfig.Type model_type = 3 [default = UnigramDocumentModel];
+inline bool PerplexityScoreConfig::has_model_type() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void PerplexityScoreConfig::set_has_model_type() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void PerplexityScoreConfig::clear_has_model_type() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void PerplexityScoreConfig::clear_model_type() {
+  model_type_ = 0;
+  clear_has_model_type();
+}
+inline ::artm::PerplexityScoreConfig_Type PerplexityScoreConfig::model_type() const {
+  return static_cast< ::artm::PerplexityScoreConfig_Type >(model_type_);
+}
+inline void PerplexityScoreConfig::set_model_type(::artm::PerplexityScoreConfig_Type value) {
+  assert(::artm::PerplexityScoreConfig_Type_IsValid(value));
+  set_has_model_type();
+  model_type_ = value;
+}
+
+// optional string dictionary_name = 4;
+inline bool PerplexityScoreConfig::has_dictionary_name() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void PerplexityScoreConfig::set_has_dictionary_name() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void PerplexityScoreConfig::clear_has_dictionary_name() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void PerplexityScoreConfig::clear_dictionary_name() {
+  if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_name_->clear();
+  }
+  clear_has_dictionary_name();
+}
+inline const ::std::string& PerplexityScoreConfig::dictionary_name() const {
+  return *dictionary_name_;
+}
+inline void PerplexityScoreConfig::set_dictionary_name(const ::std::string& value) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(value);
+}
+inline void PerplexityScoreConfig::set_dictionary_name(const char* value) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(value);
+}
+inline void PerplexityScoreConfig::set_dictionary_name(const char* value, size_t size) {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_name_ = new ::std::string;
+  }
+  dictionary_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* PerplexityScoreConfig::mutable_dictionary_name() {
+  set_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    dictionary_name_ = new ::std::string;
+  }
+  return dictionary_name_;
+}
+inline ::std::string* PerplexityScoreConfig::release_dictionary_name() {
+  clear_has_dictionary_name();
+  if (dictionary_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    return NULL;
+  } else {
+    ::std::string* temp = dictionary_name_;
+    dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+    return temp;
+  }
+}
+inline void PerplexityScoreConfig::set_allocated_dictionary_name(::std::string* dictionary_name) {
+  if (dictionary_name_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete dictionary_name_;
+  }
+  if (dictionary_name) {
+    set_has_dictionary_name();
+    dictionary_name_ = dictionary_name;
+  } else {
+    clear_has_dictionary_name();
+    dictionary_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  }
+}
+
 // -------------------------------------------------------------------
 
 // PerplexityScore
@@ -10011,6 +10172,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::artm::ScoreConfig_Type>() {
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::ScoreData_Type>() {
   return ::artm::ScoreData_Type_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::artm::PerplexityScoreConfig_Type>() {
+  return ::artm::PerplexityScoreConfig_Type_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::artm::CollectionParserConfig_Format>() {

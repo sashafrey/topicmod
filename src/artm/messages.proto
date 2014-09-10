@@ -220,8 +220,14 @@ message ScoreData {
 
 // Represents a configuration of a perplexity score.
 message PerplexityScoreConfig {
+  enum Type {
+    UnigramDocumentModel = 0;
+	UnigramCollectionModel = 1;
+  }
   optional string field_name = 1 [default = "@body"];
   optional string stream_name = 2 [default = "@global"];
+  optional Type model_type = 3 [default = UnigramDocumentModel];
+  optional string dictionary_name = 4;
 }
 
 // Represents a result of calculation of a perplexity score.

@@ -28,7 +28,6 @@
 #include "artm/regularizer_sandbox/smooth_sparse_phi.h"
 
 
-#include "artm/score_calculator_interface.h"
 #include "artm/score_sandbox/items_processed.h"
 #include "artm/score_sandbox/sparsity_theta.h"
 #include "artm/score_sandbox/sparsity_phi.h"
@@ -158,7 +157,7 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   if (need_hot_reconfigure) {
     regularizer = schema_.get()->regularizer(regularizer_name);
   } else {
-    LOG(INFO) << "Regularizer '" + regularizer_name + "' was be created!";
+    LOG(INFO) << "Regularizer '" + regularizer_name + "' will be created!";
   }
 
   std::string config_blob;  // Used by CREATE_OR_RECONFIGURE_REGULARIZER marco
@@ -215,7 +214,7 @@ void Instance::CreateOrReconfigureRegularizer(const RegularizerConfig& config) {
   schema_.set(new_schema);
 }
 
-static std::shared_ptr<ScoreCalculatorInterface> CreateScoreCalculator(const ScoreConfig& config) {
+std::shared_ptr<ScoreCalculatorInterface> Instance::CreateScoreCalculator(const ScoreConfig& config) {
   std::string score_name = config.name();
   artm::ScoreConfig_Type score_type = config.type();
 
@@ -267,7 +266,7 @@ static std::shared_ptr<ScoreCalculatorInterface> CreateScoreCalculator(const Sco
     default:
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("ScoreConfig.type", score_type));
   }
-
+  score_calculator->set_dictionaries(&dictionaries_);
   return score_calculator;
 }
 

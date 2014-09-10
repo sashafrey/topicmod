@@ -54,7 +54,7 @@ void Perplexity::AppendScore(
     if (config_.model_type() == PerplexityScoreConfig_Type_UnigramCollectionModel) {
       if (has_dictionary) {	  
         use_document_unigram_model = false;	
-	  } else {
+      } else {
         LOG(INFO) << "No such dictionary, perplexity will be counted using " <<
             "document unigram model.";
       }
@@ -74,12 +74,12 @@ void Perplexity::AppendScore(
     }
 
     if (sum == 0.0) {
-	  if (use_document_unigram_model) {
+      if (use_document_unigram_model) {
         sum = token_count / n_d;
       } else {
         if (dictionary_ptr->find(token) != dictionary_ptr->end()) {
           float n_w = dictionary_ptr->find(token)->second.value();
-		  sum = n_w / dictionary_ptr->size();
+          sum = n_w / dictionary_ptr->size();
         } else {
           LOG(INFO) << "No such token in dictionary, document unigram model will be used.";
           sum = token_count / n_d;		

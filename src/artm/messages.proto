@@ -177,7 +177,7 @@ message DictionaryConfig {
   repeated DictionaryEntry entry = 2;
 }
 
-// Represents one entry in a static dictionary.
+// Represents one entry in a static dictionary
 message DictionaryEntry {
   optional string key_token = 1;
   optional string class_id = 2;
@@ -186,7 +186,7 @@ message DictionaryEntry {
   optional FloatArray values = 5;
 }
 
-// Represents a configuration of a general score.
+// Represents a configuration of a general score
 message ScoreConfig {
   enum Type {
     Perplexity = 0;
@@ -202,7 +202,7 @@ message ScoreConfig {
   optional bytes config = 3;
 }
 
-// Represents a result of score calculation.
+// Represents a result of score calculation
 message ScoreData {
   enum Type {
     Perplexity = 0;
@@ -218,11 +218,11 @@ message ScoreData {
   optional bytes data = 3;
 }
 
-// Represents a configuration of a perplexity score.
+// Represents a configuration of a perplexity score
 message PerplexityScoreConfig {
   enum Type {
     UnigramDocumentModel = 0;
-	UnigramCollectionModel = 1;
+    UnigramCollectionModel = 1;
   }
   optional string field_name = 1 [default = "@body"];
   optional string stream_name = 2 [default = "@global"];
@@ -230,7 +230,7 @@ message PerplexityScoreConfig {
   optional string dictionary_name = 4;
 }
 
-// Represents a result of calculation of a perplexity score.
+// Represents a result of calculation of a perplexity score
 message PerplexityScore {
   optional double value = 1;
   optional double raw = 2;
@@ -238,7 +238,7 @@ message PerplexityScore {
   optional int32 zero_words = 4;
 }
 
-// Represents a configuration of a theta sparsity score.
+// Represents a configuration of a theta sparsity score
 message SparsityThetaScoreConfig {
   optional string field_name = 1 [default = "@body"];
   optional string stream_name = 2 [default = "@global"];
@@ -246,14 +246,14 @@ message SparsityThetaScoreConfig {
   optional BoolArray topics_to_score = 4;
 }
 
-// Represents a result of calculation of a theta sparsity score.
+// Represents a result of calculation of a theta sparsity score
 message SparsityThetaScore {
   optional double value = 1;
   optional int32 zero_topics = 2;
   optional int32 total_topics = 3;
 }
 
-// Represents a configuration of a sparsity phi score.
+// Represents a configuration of a sparsity phi score
 message SparsityPhiScoreConfig {
   optional float eps = 1 [default = 1e-37];
   optional BoolArray topics_to_score = 2;

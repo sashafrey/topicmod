@@ -66,7 +66,7 @@ title, author, body, abstract, actual text, links, year of publication, etc. Eac
 entities should be represented as a Field. The topic model defines how those fields
 should be taken into account when BigARTM infers a topic model. Currently each field is
 represented as "bag-of-words" --- each token is listed together with the number of its
-occurences. Note that each Field is always part of an Item, Item is part of a Batch, and
+occurrences. Note that each Field is always part of an Item, Item is part of a Batch, and
 a batch always contains a list of tokens. Therefore, each Field just lists the indexes
 of tokens in the Batch.
 
@@ -606,6 +606,15 @@ Represents a static dictionary.
     repeated DictionaryEntry entry = 2;
   }
 
+.. attribute:: DictionaryConfig.name
+
+   A value that defines the name of the dictionary.
+   The name must be unique across all dictionaries defined in the master component.
+
+.. attribute:: DictionaryConfig.entry
+
+   A list of all entries of the dictionary.
+
 
 .. _DictionaryEntry:
 
@@ -618,13 +627,36 @@ Represents one entry in a static dictionary.
 
 .. code-block:: bash
 
-  message DictionaryEntry {
-    optional string key_token = 1;
-    optional string class_id = 2;
-    optional float value = 3;
-    repeated string value_tokens = 4;
-    optional FloatArray values = 5;
-  }
+   message DictionaryEntry {
+     optional string key_token = 1;
+     optional string class_id = 2;
+     optional float value = 3;
+     repeated string value_tokens = 4;
+     optional FloatArray values = 5;
+	 optional int32 token_count = 6;
+	 optional int32 items_count = 7;
+   }
+
+.. attribute:: DictionaryEntry.key_token
+
+  A token that defines the key of the entry.
+
+.. attribute:: DictionaryEntry.class_id
+
+  The class of the :attr:`DictionaryEntry.key_token`.
+
+.. attribute:: DictionaryEntry.value
+
+  An optional generic value, associated with the entry.
+  The meaning of this value depends on the usage of the dictionary.
+
+.. attribute:: DictionaryEntry.token_count
+
+  An optional value, indicating the overall number of token occurrences in some collection.
+
+.. attribute:: DictionaryEntry.items_count
+
+  An optional value, indicating the overall number of documents containing the token.
 
 
 .. _ScoreConfig:
@@ -842,7 +874,6 @@ Represents a configuration of a collection parser.
   message CollectionParserConfig {
     enum Format {
       BagOfWordsUci = 1;
-      JustLoadDictionary = 2;
     }
 
     optional Format format = 1 [default = BagOfWordsUci];
@@ -850,7 +881,8 @@ Represents a configuration of a collection parser.
     optional string vocab_file_path = 3;
     optional string target_folder = 4;
     optional string dictionary_file_name = 5;
-    optional int32 num_items_per_batch = 6 [default = 1000];
+    optional string cooccurrence_file_name = 6;
+    optional int32 num_items_per_batch = 7 [default = 1000];
   }
 
 .. attribute:: CollectionParserConfig.format
@@ -880,14 +912,6 @@ Represents a configuration of a collection parser.
                           Values of wordID must be unity-based (not zero-based).
                           The format of the vocab.*.txt file is line
                           contains wordID=n.
-
-   ``JustLoadDictionary`` A value indicating that the collection parser should only load the
-                          :ref:`DictionaryConfig` from
-                          :attr:`target folder <CollectionParserConfig.target_folder>`.
-                          Values of
-                          :attr:`docword_file_path <CollectionParserConfig.docword_file_path>`
-                          and :attr:`vocab_file_path <CollectionParserConfig.vocab_file_path>`
-                          are not used when format is ``JustLoadDictionary``.
    ====================== =======================================================================
 
 .. attribute:: CollectionParserConfig.docword_file_path
@@ -913,6 +937,38 @@ Represents a configuration of a collection parser.
    A file name where to save the :ref:`DictionaryConfig` message
    that contains all unique tokens occured in the collection.
    The file will be created in :attr:`target_folder <CollectionParserConfig.target_folder>`.
+
+   In the resulting dictionary each entry will have the following fields:
+
+   * :attr:`DictionaryEntry.key_token` - the textual representation of the token,
+
+   * :attr:`DictionaryEntry.class_id` - the label of the default class ("@DefaultClass"),
+
+   * :attr:`DictionaryEntry.token_count` - the overall number of occurrences of the token in the collection,
+
+   * :attr:`DictionaryEntry.items_count` - the number of documents in the collection, containing the token.
+
+   Use :ref:`ArtmRequestLoadDictionary` method to load the resulting dictionary.
+
+
+.. attribute:: CollectionParserConfig.cooccurrence_file_name
+
+   A file name where to save the :ref:`DictionaryConfig` message
+   that contains information about co-occurrence of all pairs of tokens in the collection.
+   The file will be created in :attr:`target_folder <CollectionParserConfig.target_folder>`.
+
+   In the resulting dictionary each entry will correspond to two tokens ('<first>' and '<second>'),
+   and carry the information about co-occurrence of this tokens in the collection.
+
+   * :attr:`DictionaryEntry.key_token` - a string of the form '<first>~<second>',
+     produced by concatenation of two tokens together via the tilde symbol ('~').
+
+   * :attr:`DictionaryEntry.class_id` - the label of the default class ("@DefaultClass").
+
+   * :attr:`DictionaryEntry.items_count` - the number of documents in the collection, containing both tokens ('<first>' and '<second>')
+
+   Use :ref:`ArtmRequestLoadDictionary` method to load the resulting dictionary.
+
 
 .. attribute:: CollectionParserConfig.num_items_per_batch
 

@@ -411,6 +411,9 @@ ArtmRequestScore
             This will populate the buffer with :ref:`ScoreData` message, carrying the requested information.
             In case of a failure, returns one of the :ref:`error codes <error-codes>`.
 
+
+.. _ArtmRequestParseCollection:
+
 ArtmRequestParseCollection
 --------------------------
 
@@ -441,6 +444,27 @@ See the description of :ref:`CollectionParserConfig` message for more details ab
    ``InternalError :  failed mapping view: The parameter is incorrect``
 
    Try to compile BigARTM as 64 bit to workaround this issue.
+
+.. _ArtmRequestLoadDictionary:
+
+ArtmRequestLoadDictionary
+-------------------------
+
+.. c:function::  int ArtmRequestLoadDictionary(const char* filename)
+
+Loads a :ref:`DictionaryConfig` message from disk.
+
+   :param const_char* collection_parser_config:
+      A full file name of a file that contains a serialized DictionaryConfig message.
+
+   :return: In case of success, returns the length in bytes of a buffer that should be allocated on callers site
+            and then passed to :c:func:`ArtmCopyRequestResult` method.
+            The buffer will contain the resulting :ref:`DictionaryConfig` message.
+            In case of a failure, returns one of the :ref:`error codes <error-codes>`.
+
+This method can be used to load  :attr:`CollectionParserConfig.dictionary_file_name` or :attr:`CollectionParserConfig.cooccurrence_file_name` dictionaries,
+saved by :ref:`ArtmRequestParseCollection` method.
+
 
 ArtmCopyRequestResult
 ---------------------

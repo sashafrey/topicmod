@@ -604,6 +604,8 @@ Represents a static dictionary.
   message DictionaryConfig {
     optional string name = 1;
     repeated DictionaryEntry entry = 2;
+    optional int32 total_token_count = 6;
+    optional int32 total_items_count = 7;
   }
 
 .. attribute:: DictionaryConfig.name
@@ -614,6 +616,18 @@ Represents a static dictionary.
 .. attribute:: DictionaryConfig.entry
 
    A list of all entries of the dictionary.
+
+.. attribute:: DictionaryConfig.total_token_count
+
+   A sum of :attr:`DictionaryEntry.token_count` across all entries in this dictionary.
+   The value is optional and might be missing when all entries in the dictionary does not carry
+   the :attr:`DictionaryEntry.token_count` attribute.
+
+.. attribute:: DictionaryConfig.total_items_count
+
+   A sum of :attr:`DictionaryEntry.items_count` across all entries in this dictionary.
+   The value is optional and might be missing when all entries in the dictionary does not carry
+   the :attr:`DictionaryEntry.items_count` attribute.
 
 
 .. _DictionaryEntry:
@@ -633,8 +647,8 @@ Represents one entry in a static dictionary.
      optional float value = 3;
      repeated string value_tokens = 4;
      optional FloatArray values = 5;
-	 optional int32 token_count = 6;
-	 optional int32 items_count = 7;
+     optional int32 token_count = 6;
+     optional int32 items_count = 7;
    }
 
 .. attribute:: DictionaryEntry.key_token
@@ -948,6 +962,9 @@ Represents a configuration of a collection parser.
 
    * :attr:`DictionaryEntry.items_count` - the number of documents in the collection, containing the token.
 
+   * :attr:`DictionaryEntry.value` - the ratio between :attr:`DictionaryEntry.token_count`
+     and :attr:`DictionaryConfig.total_token_count`.
+
    Use :ref:`ArtmRequestLoadDictionary` method to load the resulting dictionary.
 
 
@@ -965,7 +982,8 @@ Represents a configuration of a collection parser.
 
    * :attr:`DictionaryEntry.class_id` - the label of the default class ("@DefaultClass").
 
-   * :attr:`DictionaryEntry.items_count` - the number of documents in the collection, containing both tokens ('<first>' and '<second>')
+   * :attr:`DictionaryEntry.items_count` - the number of documents in the collection,
+     containing both tokens ('<first>' and '<second>')
 
    Use :ref:`ArtmRequestLoadDictionary` method to load the resulting dictionary.
 

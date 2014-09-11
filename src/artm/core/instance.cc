@@ -32,6 +32,7 @@
 #include "artm/score_sandbox/sparsity_theta.h"
 #include "artm/score_sandbox/sparsity_phi.h"
 #include "artm/score_sandbox/top_tokens.h"
+#include "artm/score_sandbox/topic_kernel.h"
 #include "artm/score_sandbox/theta_snippet.h"
 #include "artm/score_sandbox/perplexity.h"
 
@@ -260,6 +261,12 @@ std::shared_ptr<ScoreCalculatorInterface> Instance::CreateScoreCalculator(const 
     case artm::ScoreConfig_Type_ThetaSnippet: {
       CREATE_SCORE_CALCULATOR(::artm::ThetaSnippetScoreConfig,
                               ::artm::score_sandbox::ThetaSnippet);
+      break;
+    }
+
+    case artm::ScoreConfig_Type_TopicKernel: {
+      CREATE_SCORE_CALCULATOR(::artm::TopicKernelScoreConfig,
+                              ::artm::score_sandbox::TopicKernel);
       break;
     }
 

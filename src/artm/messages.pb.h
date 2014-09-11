@@ -71,6 +71,8 @@ class TopTokensScoreConfig;
 class TopTokensScore;
 class ThetaSnippetScoreConfig;
 class ThetaSnippetScore;
+class TopicKernelScoreConfig;
+class TopicKernelScore;
 class TopicModel;
 class TopicModel_TopicModelInternals;
 class ThetaMatrix;
@@ -161,11 +163,12 @@ enum ScoreConfig_Type {
   ScoreConfig_Type_SparsityPhi = 2,
   ScoreConfig_Type_ItemsProcessed = 3,
   ScoreConfig_Type_TopTokens = 4,
-  ScoreConfig_Type_ThetaSnippet = 5
+  ScoreConfig_Type_ThetaSnippet = 5,
+  ScoreConfig_Type_TopicKernel = 6
 };
 bool ScoreConfig_Type_IsValid(int value);
 const ScoreConfig_Type ScoreConfig_Type_Type_MIN = ScoreConfig_Type_Perplexity;
-const ScoreConfig_Type ScoreConfig_Type_Type_MAX = ScoreConfig_Type_ThetaSnippet;
+const ScoreConfig_Type ScoreConfig_Type_Type_MAX = ScoreConfig_Type_TopicKernel;
 const int ScoreConfig_Type_Type_ARRAYSIZE = ScoreConfig_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ScoreConfig_Type_descriptor();
@@ -184,11 +187,12 @@ enum ScoreData_Type {
   ScoreData_Type_SparsityPhi = 2,
   ScoreData_Type_ItemsProcessed = 3,
   ScoreData_Type_TopTokens = 4,
-  ScoreData_Type_ThetaSnippet = 5
+  ScoreData_Type_ThetaSnippet = 5,
+  ScoreData_Type_TopicKernel = 6
 };
 bool ScoreData_Type_IsValid(int value);
 const ScoreData_Type ScoreData_Type_Type_MIN = ScoreData_Type_Perplexity;
-const ScoreData_Type ScoreData_Type_Type_MAX = ScoreData_Type_ThetaSnippet;
+const ScoreData_Type ScoreData_Type_Type_MAX = ScoreData_Type_TopicKernel;
 const int ScoreData_Type_Type_ARRAYSIZE = ScoreData_Type_Type_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* ScoreData_Type_descriptor();
@@ -2948,6 +2952,7 @@ class ScoreConfig : public ::google::protobuf::Message {
   static const Type ItemsProcessed = ScoreConfig_Type_ItemsProcessed;
   static const Type TopTokens = ScoreConfig_Type_TopTokens;
   static const Type ThetaSnippet = ScoreConfig_Type_ThetaSnippet;
+  static const Type TopicKernel = ScoreConfig_Type_TopicKernel;
   static inline bool Type_IsValid(int value) {
     return ScoreConfig_Type_IsValid(value);
   }
@@ -3088,6 +3093,7 @@ class ScoreData : public ::google::protobuf::Message {
   static const Type ItemsProcessed = ScoreData_Type_ItemsProcessed;
   static const Type TopTokens = ScoreData_Type_TopTokens;
   static const Type ThetaSnippet = ScoreData_Type_ThetaSnippet;
+  static const Type TopicKernel = ScoreData_Type_TopicKernel;
   static inline bool Type_IsValid(int value) {
     return ScoreData_Type_IsValid(value);
   }
@@ -4438,6 +4444,218 @@ class ThetaSnippetScore : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static ThetaSnippetScore* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class TopicKernelScoreConfig : public ::google::protobuf::Message {
+ public:
+  TopicKernelScoreConfig();
+  virtual ~TopicKernelScoreConfig();
+
+  TopicKernelScoreConfig(const TopicKernelScoreConfig& from);
+
+  inline TopicKernelScoreConfig& operator=(const TopicKernelScoreConfig& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TopicKernelScoreConfig& default_instance();
+
+  void Swap(TopicKernelScoreConfig* other);
+
+  // implements Message ----------------------------------------------
+
+  TopicKernelScoreConfig* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const TopicKernelScoreConfig& from);
+  void MergeFrom(const TopicKernelScoreConfig& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional float eps = 1 [default = 1e-037];
+  inline bool has_eps() const;
+  inline void clear_eps();
+  static const int kEpsFieldNumber = 1;
+  inline float eps() const;
+  inline void set_eps(float value);
+
+  // optional .artm.BoolArray topics_to_score = 2;
+  inline bool has_topics_to_score() const;
+  inline void clear_topics_to_score();
+  static const int kTopicsToScoreFieldNumber = 2;
+  inline const ::artm::BoolArray& topics_to_score() const;
+  inline ::artm::BoolArray* mutable_topics_to_score();
+  inline ::artm::BoolArray* release_topics_to_score();
+  inline void set_allocated_topics_to_score(::artm::BoolArray* topics_to_score);
+
+  // optional double probability_mass_threshold = 3;
+  inline bool has_probability_mass_threshold() const;
+  inline void clear_probability_mass_threshold();
+  static const int kProbabilityMassThresholdFieldNumber = 3;
+  inline double probability_mass_threshold() const;
+  inline void set_probability_mass_threshold(double value);
+
+  // @@protoc_insertion_point(class_scope:artm.TopicKernelScoreConfig)
+ private:
+  inline void set_has_eps();
+  inline void clear_has_eps();
+  inline void set_has_topics_to_score();
+  inline void clear_has_topics_to_score();
+  inline void set_has_probability_mass_threshold();
+  inline void clear_has_probability_mass_threshold();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::artm::BoolArray* topics_to_score_;
+  double probability_mass_threshold_;
+  float eps_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static TopicKernelScoreConfig* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class TopicKernelScore : public ::google::protobuf::Message {
+ public:
+  TopicKernelScore();
+  virtual ~TopicKernelScore();
+
+  TopicKernelScore(const TopicKernelScore& from);
+
+  inline TopicKernelScore& operator=(const TopicKernelScore& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const TopicKernelScore& default_instance();
+
+  void Swap(TopicKernelScore* other);
+
+  // implements Message ----------------------------------------------
+
+  TopicKernelScore* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const TopicKernelScore& from);
+  void MergeFrom(const TopicKernelScore& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional .artm.DoubleArray kernel_size = 1;
+  inline bool has_kernel_size() const;
+  inline void clear_kernel_size();
+  static const int kKernelSizeFieldNumber = 1;
+  inline const ::artm::DoubleArray& kernel_size() const;
+  inline ::artm::DoubleArray* mutable_kernel_size();
+  inline ::artm::DoubleArray* release_kernel_size();
+  inline void set_allocated_kernel_size(::artm::DoubleArray* kernel_size);
+
+  // optional .artm.DoubleArray kernel_purity = 2;
+  inline bool has_kernel_purity() const;
+  inline void clear_kernel_purity();
+  static const int kKernelPurityFieldNumber = 2;
+  inline const ::artm::DoubleArray& kernel_purity() const;
+  inline ::artm::DoubleArray* mutable_kernel_purity();
+  inline ::artm::DoubleArray* release_kernel_purity();
+  inline void set_allocated_kernel_purity(::artm::DoubleArray* kernel_purity);
+
+  // optional .artm.DoubleArray kernel_contrast = 3;
+  inline bool has_kernel_contrast() const;
+  inline void clear_kernel_contrast();
+  static const int kKernelContrastFieldNumber = 3;
+  inline const ::artm::DoubleArray& kernel_contrast() const;
+  inline ::artm::DoubleArray* mutable_kernel_contrast();
+  inline ::artm::DoubleArray* release_kernel_contrast();
+  inline void set_allocated_kernel_contrast(::artm::DoubleArray* kernel_contrast);
+
+  // @@protoc_insertion_point(class_scope:artm.TopicKernelScore)
+ private:
+  inline void set_has_kernel_size();
+  inline void clear_has_kernel_size();
+  inline void set_has_kernel_purity();
+  inline void clear_has_kernel_purity();
+  inline void set_has_kernel_contrast();
+  inline void clear_has_kernel_contrast();
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::artm::DoubleArray* kernel_size_;
+  ::artm::DoubleArray* kernel_purity_;
+  ::artm::DoubleArray* kernel_contrast_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+
+  friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
+  friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
+  friend void protobuf_ShutdownFile_artm_2fmessages_2eproto();
+
+  void InitAsDefaultInstance();
+  static TopicKernelScore* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -9352,6 +9570,210 @@ ThetaSnippetScore::values() const {
 inline ::google::protobuf::RepeatedPtrField< ::artm::FloatArray >*
 ThetaSnippetScore::mutable_values() {
   return &values_;
+}
+
+// -------------------------------------------------------------------
+
+// TopicKernelScoreConfig
+
+// optional float eps = 1 [default = 1e-037];
+inline bool TopicKernelScoreConfig::has_eps() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TopicKernelScoreConfig::set_has_eps() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TopicKernelScoreConfig::clear_has_eps() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TopicKernelScoreConfig::clear_eps() {
+  eps_ = 1e-037f;
+  clear_has_eps();
+}
+inline float TopicKernelScoreConfig::eps() const {
+  return eps_;
+}
+inline void TopicKernelScoreConfig::set_eps(float value) {
+  set_has_eps();
+  eps_ = value;
+}
+
+// optional .artm.BoolArray topics_to_score = 2;
+inline bool TopicKernelScoreConfig::has_topics_to_score() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void TopicKernelScoreConfig::set_has_topics_to_score() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void TopicKernelScoreConfig::clear_has_topics_to_score() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void TopicKernelScoreConfig::clear_topics_to_score() {
+  if (topics_to_score_ != NULL) topics_to_score_->::artm::BoolArray::Clear();
+  clear_has_topics_to_score();
+}
+inline const ::artm::BoolArray& TopicKernelScoreConfig::topics_to_score() const {
+  return topics_to_score_ != NULL ? *topics_to_score_ : *default_instance_->topics_to_score_;
+}
+inline ::artm::BoolArray* TopicKernelScoreConfig::mutable_topics_to_score() {
+  set_has_topics_to_score();
+  if (topics_to_score_ == NULL) topics_to_score_ = new ::artm::BoolArray;
+  return topics_to_score_;
+}
+inline ::artm::BoolArray* TopicKernelScoreConfig::release_topics_to_score() {
+  clear_has_topics_to_score();
+  ::artm::BoolArray* temp = topics_to_score_;
+  topics_to_score_ = NULL;
+  return temp;
+}
+inline void TopicKernelScoreConfig::set_allocated_topics_to_score(::artm::BoolArray* topics_to_score) {
+  delete topics_to_score_;
+  topics_to_score_ = topics_to_score;
+  if (topics_to_score) {
+    set_has_topics_to_score();
+  } else {
+    clear_has_topics_to_score();
+  }
+}
+
+// optional double probability_mass_threshold = 3;
+inline bool TopicKernelScoreConfig::has_probability_mass_threshold() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void TopicKernelScoreConfig::set_has_probability_mass_threshold() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void TopicKernelScoreConfig::clear_has_probability_mass_threshold() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void TopicKernelScoreConfig::clear_probability_mass_threshold() {
+  probability_mass_threshold_ = 0;
+  clear_has_probability_mass_threshold();
+}
+inline double TopicKernelScoreConfig::probability_mass_threshold() const {
+  return probability_mass_threshold_;
+}
+inline void TopicKernelScoreConfig::set_probability_mass_threshold(double value) {
+  set_has_probability_mass_threshold();
+  probability_mass_threshold_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// TopicKernelScore
+
+// optional .artm.DoubleArray kernel_size = 1;
+inline bool TopicKernelScore::has_kernel_size() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void TopicKernelScore::set_has_kernel_size() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void TopicKernelScore::clear_has_kernel_size() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void TopicKernelScore::clear_kernel_size() {
+  if (kernel_size_ != NULL) kernel_size_->::artm::DoubleArray::Clear();
+  clear_has_kernel_size();
+}
+inline const ::artm::DoubleArray& TopicKernelScore::kernel_size() const {
+  return kernel_size_ != NULL ? *kernel_size_ : *default_instance_->kernel_size_;
+}
+inline ::artm::DoubleArray* TopicKernelScore::mutable_kernel_size() {
+  set_has_kernel_size();
+  if (kernel_size_ == NULL) kernel_size_ = new ::artm::DoubleArray;
+  return kernel_size_;
+}
+inline ::artm::DoubleArray* TopicKernelScore::release_kernel_size() {
+  clear_has_kernel_size();
+  ::artm::DoubleArray* temp = kernel_size_;
+  kernel_size_ = NULL;
+  return temp;
+}
+inline void TopicKernelScore::set_allocated_kernel_size(::artm::DoubleArray* kernel_size) {
+  delete kernel_size_;
+  kernel_size_ = kernel_size;
+  if (kernel_size) {
+    set_has_kernel_size();
+  } else {
+    clear_has_kernel_size();
+  }
+}
+
+// optional .artm.DoubleArray kernel_purity = 2;
+inline bool TopicKernelScore::has_kernel_purity() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void TopicKernelScore::set_has_kernel_purity() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void TopicKernelScore::clear_has_kernel_purity() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void TopicKernelScore::clear_kernel_purity() {
+  if (kernel_purity_ != NULL) kernel_purity_->::artm::DoubleArray::Clear();
+  clear_has_kernel_purity();
+}
+inline const ::artm::DoubleArray& TopicKernelScore::kernel_purity() const {
+  return kernel_purity_ != NULL ? *kernel_purity_ : *default_instance_->kernel_purity_;
+}
+inline ::artm::DoubleArray* TopicKernelScore::mutable_kernel_purity() {
+  set_has_kernel_purity();
+  if (kernel_purity_ == NULL) kernel_purity_ = new ::artm::DoubleArray;
+  return kernel_purity_;
+}
+inline ::artm::DoubleArray* TopicKernelScore::release_kernel_purity() {
+  clear_has_kernel_purity();
+  ::artm::DoubleArray* temp = kernel_purity_;
+  kernel_purity_ = NULL;
+  return temp;
+}
+inline void TopicKernelScore::set_allocated_kernel_purity(::artm::DoubleArray* kernel_purity) {
+  delete kernel_purity_;
+  kernel_purity_ = kernel_purity;
+  if (kernel_purity) {
+    set_has_kernel_purity();
+  } else {
+    clear_has_kernel_purity();
+  }
+}
+
+// optional .artm.DoubleArray kernel_contrast = 3;
+inline bool TopicKernelScore::has_kernel_contrast() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void TopicKernelScore::set_has_kernel_contrast() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void TopicKernelScore::clear_has_kernel_contrast() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void TopicKernelScore::clear_kernel_contrast() {
+  if (kernel_contrast_ != NULL) kernel_contrast_->::artm::DoubleArray::Clear();
+  clear_has_kernel_contrast();
+}
+inline const ::artm::DoubleArray& TopicKernelScore::kernel_contrast() const {
+  return kernel_contrast_ != NULL ? *kernel_contrast_ : *default_instance_->kernel_contrast_;
+}
+inline ::artm::DoubleArray* TopicKernelScore::mutable_kernel_contrast() {
+  set_has_kernel_contrast();
+  if (kernel_contrast_ == NULL) kernel_contrast_ = new ::artm::DoubleArray;
+  return kernel_contrast_;
+}
+inline ::artm::DoubleArray* TopicKernelScore::release_kernel_contrast() {
+  clear_has_kernel_contrast();
+  ::artm::DoubleArray* temp = kernel_contrast_;
+  kernel_contrast_ = NULL;
+  return temp;
+}
+inline void TopicKernelScore::set_allocated_kernel_contrast(::artm::DoubleArray* kernel_contrast) {
+  delete kernel_contrast_;
+  kernel_contrast_ = kernel_contrast;
+  if (kernel_contrast) {
+    set_has_kernel_contrast();
+  } else {
+    clear_has_kernel_contrast();
+  }
 }
 
 // -------------------------------------------------------------------

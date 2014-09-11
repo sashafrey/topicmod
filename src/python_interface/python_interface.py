@@ -38,6 +38,10 @@ ScoreConfig_Type_TopTokens = 4
 ScoreData_Type_TopTokens = 4
 ScoreConfig_Type_ThetaSnippet = 5
 ScoreData_Type_ThetaSnippet = 5
+ScoreConfig_Type_TopicKernel = 6
+ScoreData_Type_TopicKernel = 6
+PerplexityScoreConfig_Type_UnigramDocumentModel = 0
+PerplexityScoreConfig_Type_UnigramCollectionModel = 1
 CollectionParserConfig_Format_BagOfWordsUci = 0
 CollectionParserConfig_Format_JustLoadDictionary = 1
 
@@ -282,6 +286,10 @@ class MasterComponent:
       return score
     elif (score_data.type == ScoreData_Type_ThetaSnippet):
       score = messages_pb2.ThetaSnippetScore()
+      score.ParseFromString(score_data.data)
+      return score
+    elif (score_data.type == ScoreData_Type_TopicKernel):
+      score = messages_pb2.TopicKernelScore()
       score.ParseFromString(score_data.data)
       return score
 

@@ -21,7 +21,7 @@ std::shared_ptr<Score> SparsityPhi::CalculateScore(const artm::core::TopicModel&
   if (config_.has_topics_to_score()) {
     if (config_.topics_to_score().value_size() != topics_size) {
       LOG(INFO) << "Score Sparsity Phi: len(topics_to_score) must be equal to" <<
-        "len(topics_size). All topics will be used in scoring!\n";
+        "len(topics_size). All topics will be used in scoring.";
     } else {
       has_correct_vector = true;
       topics_to_score.CopyFrom(config_.topics_to_score());

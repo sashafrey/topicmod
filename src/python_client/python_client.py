@@ -82,6 +82,13 @@ score_config.type = ScoreConfig_Type_SparsityPhi;
 sparsity_phi_score_name = "sparsity_phi_score"
 score_config.name = sparsity_phi_score_name
 
+topic_kernel_config = messages_pb2.TopicKernelScoreConfig();
+score_config = master_config.score_config.add()
+score_config.config = messages_pb2.TopicKernelScoreConfig().SerializeToString();
+score_config.type = ScoreConfig_Type_TopicKernel;
+topic_kernel_score_name = "topic_kernel_score"
+score_config.name = topic_kernel_score_name
+
 with library.CreateMasterComponent(master_config) as master_component:
     model_config = messages_pb2.ModelConfig()
     model_config.topics_count = topics_count
@@ -112,6 +119,7 @@ with library.CreateMasterComponent(master_config) as master_component:
     model_config.score_name.append(perplexity_score_name)
     model_config.score_name.append(sparsity_theta_score_name)
     model_config.score_name.append(sparsity_phi_score_name)
+    model_config.score_name.append(topic_kernel_score_name)
 
 #     model_config.regularizer_name.append(regularizer_name_theta)
 #     model_config.regularizer_tau.append(0.1)
@@ -135,18 +143,39 @@ with library.CreateMasterComponent(master_config) as master_component:
     for iter in range(0, outer_iteration_count):
         master_component.InvokeIteration(1)
         master_component.WaitIdle(120000);
+
+        model.InvokePhiRegularizers();
+
         topic_model = master_component.GetTopicModel(model)
         perplexity_score = master_component.GetScore(model, perplexity_score_name)
         sparsity_theta_score = master_component.GetScore(model, sparsity_theta_score_name)
         sparsity_phi_score = master_component.GetScore(model, sparsity_phi_score_name)
+        topic_kernel_score = master_component.GetScore(model, topic_kernel_score_name)
 
-        model.InvokePhiRegularizers();
+        kernel_size = 0
+        kernel_purity = 0
+        kernel_contrast = 0
+        useful_topics_count = 0
+        for topic_index in range(0, topic_model.topics_count):
+            current_kernel_size = topic_kernel_score.kernel_size.value[topic_index]
+            useful_topic = (current_kernel_size != -1)
+            if (useful_topic):
+                useful_topics_count += 1
+                kernel_size += current_kernel_size
+                kernel_purity += topic_kernel_score.kernel_purity.value[topic_index]
+                kernel_contrast += topic_kernel_score.kernel_contrast.value[topic_index]
+
+        kernel_size /= useful_topics_count
+        kernel_purity /= useful_topics_count
+        kernel_contrast /= useful_topics_count
 
         print "Iter# = " + str(iter) + \
                 ", Perplexity = " + str(perplexity_score.value) + \
                 ", SparsityTheta = " + str(sparsity_theta_score.value) +\
-                ", SparsityPhi = " + str(sparsity_phi_score.value)
-
+                ", SparsityPhi = " + str(sparsity_phi_score.value) +\
+                ", KernelSize = " + str(kernel_size) +\
+                ", KernelPurity = " + str(kernel_purity) +\
+                ", KernelContrast = " + str(kernel_contrast)
 
     # Log to 7 words in each topic
     tokens_size = len(topic_model.token)

@@ -77,8 +77,10 @@ namespace {
                 DictionaryConfig* dictionary) {
       for (auto iter = token_coocurrence.begin(); iter != token_coocurrence.end(); ++iter) {
         DictionaryEntry *entry = dictionary->add_entry();
-        std::string key = (token_info[iter->first.first]->keyword + "~" +
-          token_info[iter->first.second]->keyword);
+        std::string first_key = token_info[iter->first.first]->keyword;
+        std::string second_key = token_info[iter->first.second]->keyword;
+        std::string key = (first_key < second_key) ? (first_key + "~" + second_key)
+                                                   : (second_key + "~" + first_key);
         entry->set_key_token(key);
         entry->set_items_count(iter->second);
       }

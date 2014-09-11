@@ -979,6 +979,7 @@ Represents a configuration of a collection parser.
 
    * :attr:`DictionaryEntry.key_token` - a string of the form '<first>~<second>',
      produced by concatenation of two tokens together via the tilde symbol ('~').
+     `<first>` tokens is guarantied lexicographic less than the `<second>` token.
 
    * :attr:`DictionaryEntry.class_id` - the label of the default class ("@DefaultClass").
 

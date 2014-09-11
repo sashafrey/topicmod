@@ -50,11 +50,7 @@ if batches_found == 0:
     print " OK."
 else:
     print "Found " + str(batches_found) + " batches, using them."
-    collection_parser_config = messages_pb2.CollectionParserConfig();
-    collection_parser_config.format = CollectionParserConfig_Format_JustLoadDictionary
-    collection_parser_config.target_folder = target_folder
-    collection_parser_config.dictionary_file_name = dictionary_file
-    unique_tokens = library.ParseCollection(collection_parser_config);
+    unique_tokens = library.LoadDictionary(target_folder + "/" + dictionary_file);
 
 master_config = messages_pb2.MasterComponentConfig()
 master_config.processors_count = processors_count

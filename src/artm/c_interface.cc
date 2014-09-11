@@ -321,3 +321,12 @@ int ArtmRequestParseCollection(int length, const char* collection_parser_config)
     return last_message()->size();
   } CATCH_EXCEPTIONS;
 }
+
+int ArtmRequestLoadDictionary(const char* filename) {
+  try {
+    auto dictionary = std::make_shared<::artm::DictionaryConfig>();
+    ::artm::core::BatchHelpers::LoadMessage(filename, dictionary.get());
+    dictionary->SerializeToString(last_message());
+    return last_message()->size();
+  } CATCH_EXCEPTIONS;
+}

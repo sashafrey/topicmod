@@ -202,12 +202,11 @@ inline bool ScoreData_Type_Parse(
     ScoreData_Type_descriptor(), name, value);
 }
 enum CollectionParserConfig_Format {
-  CollectionParserConfig_Format_BagOfWordsUci = 0,
-  CollectionParserConfig_Format_JustLoadDictionary = 1
+  CollectionParserConfig_Format_BagOfWordsUci = 0
 };
 bool CollectionParserConfig_Format_IsValid(int value);
 const CollectionParserConfig_Format CollectionParserConfig_Format_Format_MIN = CollectionParserConfig_Format_BagOfWordsUci;
-const CollectionParserConfig_Format CollectionParserConfig_Format_Format_MAX = CollectionParserConfig_Format_JustLoadDictionary;
+const CollectionParserConfig_Format CollectionParserConfig_Format_Format_MAX = CollectionParserConfig_Format_BagOfWordsUci;
 const int CollectionParserConfig_Format_Format_ARRAYSIZE = CollectionParserConfig_Format_Format_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* CollectionParserConfig_Format_descriptor();
@@ -2707,18 +2706,38 @@ class DictionaryConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::artm::DictionaryEntry >*
       mutable_entry();
 
+  // optional int32 total_token_count = 3;
+  inline bool has_total_token_count() const;
+  inline void clear_total_token_count();
+  static const int kTotalTokenCountFieldNumber = 3;
+  inline ::google::protobuf::int32 total_token_count() const;
+  inline void set_total_token_count(::google::protobuf::int32 value);
+
+  // optional int32 total_items_count = 4;
+  inline bool has_total_items_count() const;
+  inline void clear_total_items_count();
+  static const int kTotalItemsCountFieldNumber = 4;
+  inline ::google::protobuf::int32 total_items_count() const;
+  inline void set_total_items_count(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:artm.DictionaryConfig)
  private:
   inline void set_has_name();
   inline void clear_has_name();
+  inline void set_has_total_token_count();
+  inline void clear_has_total_token_count();
+  inline void set_has_total_items_count();
+  inline void clear_has_total_items_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* name_;
   ::google::protobuf::RepeatedPtrField< ::artm::DictionaryEntry > entry_;
+  ::google::protobuf::int32 total_token_count_;
+  ::google::protobuf::int32 total_items_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -2839,6 +2858,20 @@ class DictionaryEntry : public ::google::protobuf::Message {
   inline ::artm::FloatArray* release_values();
   inline void set_allocated_values(::artm::FloatArray* values);
 
+  // optional int32 token_count = 6;
+  inline bool has_token_count() const;
+  inline void clear_token_count();
+  static const int kTokenCountFieldNumber = 6;
+  inline ::google::protobuf::int32 token_count() const;
+  inline void set_token_count(::google::protobuf::int32 value);
+
+  // optional int32 items_count = 7;
+  inline bool has_items_count() const;
+  inline void clear_items_count();
+  static const int kItemsCountFieldNumber = 7;
+  inline ::google::protobuf::int32 items_count() const;
+  inline void set_items_count(::google::protobuf::int32 value);
+
   // @@protoc_insertion_point(class_scope:artm.DictionaryEntry)
  private:
   inline void set_has_key_token();
@@ -2849,17 +2882,23 @@ class DictionaryEntry : public ::google::protobuf::Message {
   inline void clear_has_value();
   inline void set_has_values();
   inline void clear_has_values();
+  inline void set_has_token_count();
+  inline void clear_has_token_count();
+  inline void set_has_items_count();
+  inline void clear_has_items_count();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* key_token_;
   ::std::string* class_id_;
   ::google::protobuf::RepeatedPtrField< ::std::string> value_tokens_;
-  ::artm::FloatArray* values_;
   float value_;
+  ::google::protobuf::int32 token_count_;
+  ::artm::FloatArray* values_;
+  ::google::protobuf::int32 items_count_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -4801,7 +4840,6 @@ class CollectionParserConfig : public ::google::protobuf::Message {
 
   typedef CollectionParserConfig_Format Format;
   static const Format BagOfWordsUci = CollectionParserConfig_Format_BagOfWordsUci;
-  static const Format JustLoadDictionary = CollectionParserConfig_Format_JustLoadDictionary;
   static inline bool Format_IsValid(int value) {
     return CollectionParserConfig_Format_IsValid(value);
   }
@@ -4880,10 +4918,22 @@ class CollectionParserConfig : public ::google::protobuf::Message {
   inline ::std::string* release_dictionary_file_name();
   inline void set_allocated_dictionary_file_name(::std::string* dictionary_file_name);
 
-  // optional int32 num_items_per_batch = 6 [default = 1000];
+  // optional string cooccurrence_file_name = 6;
+  inline bool has_cooccurrence_file_name() const;
+  inline void clear_cooccurrence_file_name();
+  static const int kCooccurrenceFileNameFieldNumber = 6;
+  inline const ::std::string& cooccurrence_file_name() const;
+  inline void set_cooccurrence_file_name(const ::std::string& value);
+  inline void set_cooccurrence_file_name(const char* value);
+  inline void set_cooccurrence_file_name(const char* value, size_t size);
+  inline ::std::string* mutable_cooccurrence_file_name();
+  inline ::std::string* release_cooccurrence_file_name();
+  inline void set_allocated_cooccurrence_file_name(::std::string* cooccurrence_file_name);
+
+  // optional int32 num_items_per_batch = 7 [default = 1000];
   inline bool has_num_items_per_batch() const;
   inline void clear_num_items_per_batch();
-  static const int kNumItemsPerBatchFieldNumber = 6;
+  static const int kNumItemsPerBatchFieldNumber = 7;
   inline ::google::protobuf::int32 num_items_per_batch() const;
   inline void set_num_items_per_batch(::google::protobuf::int32 value);
 
@@ -4899,6 +4949,8 @@ class CollectionParserConfig : public ::google::protobuf::Message {
   inline void clear_has_target_folder();
   inline void set_has_dictionary_file_name();
   inline void clear_has_dictionary_file_name();
+  inline void set_has_cooccurrence_file_name();
+  inline void clear_has_cooccurrence_file_name();
   inline void set_has_num_items_per_batch();
   inline void clear_has_num_items_per_batch();
 
@@ -4906,13 +4958,14 @@ class CollectionParserConfig : public ::google::protobuf::Message {
 
   ::std::string* docword_file_path_;
   ::std::string* vocab_file_path_;
+  ::std::string* target_folder_;
   int format_;
   ::google::protobuf::int32 num_items_per_batch_;
-  ::std::string* target_folder_;
   ::std::string* dictionary_file_name_;
+  ::std::string* cooccurrence_file_name_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -7494,6 +7547,50 @@ DictionaryConfig::mutable_entry() {
   return &entry_;
 }
 
+// optional int32 total_token_count = 3;
+inline bool DictionaryConfig::has_total_token_count() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void DictionaryConfig::set_has_total_token_count() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void DictionaryConfig::clear_has_total_token_count() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void DictionaryConfig::clear_total_token_count() {
+  total_token_count_ = 0;
+  clear_has_total_token_count();
+}
+inline ::google::protobuf::int32 DictionaryConfig::total_token_count() const {
+  return total_token_count_;
+}
+inline void DictionaryConfig::set_total_token_count(::google::protobuf::int32 value) {
+  set_has_total_token_count();
+  total_token_count_ = value;
+}
+
+// optional int32 total_items_count = 4;
+inline bool DictionaryConfig::has_total_items_count() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void DictionaryConfig::set_has_total_items_count() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void DictionaryConfig::clear_has_total_items_count() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void DictionaryConfig::clear_total_items_count() {
+  total_items_count_ = 0;
+  clear_has_total_items_count();
+}
+inline ::google::protobuf::int32 DictionaryConfig::total_items_count() const {
+  return total_items_count_;
+}
+inline void DictionaryConfig::set_total_items_count(::google::protobuf::int32 value) {
+  set_has_total_items_count();
+  total_items_count_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // DictionaryEntry
@@ -7740,6 +7837,50 @@ inline void DictionaryEntry::set_allocated_values(::artm::FloatArray* values) {
   } else {
     clear_has_values();
   }
+}
+
+// optional int32 token_count = 6;
+inline bool DictionaryEntry::has_token_count() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void DictionaryEntry::set_has_token_count() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void DictionaryEntry::clear_has_token_count() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void DictionaryEntry::clear_token_count() {
+  token_count_ = 0;
+  clear_has_token_count();
+}
+inline ::google::protobuf::int32 DictionaryEntry::token_count() const {
+  return token_count_;
+}
+inline void DictionaryEntry::set_token_count(::google::protobuf::int32 value) {
+  set_has_token_count();
+  token_count_ = value;
+}
+
+// optional int32 items_count = 7;
+inline bool DictionaryEntry::has_items_count() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void DictionaryEntry::set_has_items_count() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void DictionaryEntry::clear_has_items_count() {
+  _has_bits_[0] &= ~0x00000040u;
+}
+inline void DictionaryEntry::clear_items_count() {
+  items_count_ = 0;
+  clear_has_items_count();
+}
+inline ::google::protobuf::int32 DictionaryEntry::items_count() const {
+  return items_count_;
+}
+inline void DictionaryEntry::set_items_count(::google::protobuf::int32 value) {
+  set_has_items_count();
+  items_count_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -9957,15 +10098,85 @@ inline void CollectionParserConfig::set_allocated_dictionary_file_name(::std::st
   }
 }
 
-// optional int32 num_items_per_batch = 6 [default = 1000];
-inline bool CollectionParserConfig::has_num_items_per_batch() const {
+// optional string cooccurrence_file_name = 6;
+inline bool CollectionParserConfig::has_cooccurrence_file_name() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void CollectionParserConfig::set_has_num_items_per_batch() {
+inline void CollectionParserConfig::set_has_cooccurrence_file_name() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void CollectionParserConfig::clear_has_num_items_per_batch() {
+inline void CollectionParserConfig::clear_has_cooccurrence_file_name() {
   _has_bits_[0] &= ~0x00000020u;
+}
+inline void CollectionParserConfig::clear_cooccurrence_file_name() {
+  if (cooccurrence_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
+    cooccurrence_file_name_->clear();
+  }
+  clear_has_cooccurrence_file_name();
+}
+inline const ::std::string& CollectionParserConfig::cooccurrence_file_name() const {
+  return *cooccurrence_file_name_;
+}
+inline void CollectionParserConfig::set_cooccurrence_file_name(const ::std::string& value) {
+  set_has_cooccurrence_file_name();
+  if (cooccurrence_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    cooccurrence_file_name_ = new ::std::string;
+  }
+  cooccurrence_file_name_->assign(value);
+}
+inline void CollectionParserConfig::set_cooccurrence_file_name(const char* value) {
+  set_has_cooccurrence_file_name();
+  if (cooccurrence_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    cooccurrence_file_name_ = new ::std::string;
+  }
+  cooccurrence_file_name_->assign(value);
+}
+inline void CollectionParserConfig::set_cooccurrence_file_name(const char* value, size_t size) {
+  set_has_cooccurrence_file_name();
+  if (cooccurrence_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    cooccurrence_file_name_ = new ::std::string;
+  }
+  cooccurrence_file_name_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CollectionParserConfig::mutable_cooccurrence_file_name() {
+  set_has_cooccurrence_file_name();
+  if (cooccurrence_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    cooccurrence_file_name_ = new ::std::string;
+  }
+  return cooccurrence_file_name_;
+}
+inline ::std::string* CollectionParserConfig::release_cooccurrence_file_name() {
+  clear_has_cooccurrence_file_name();
+  if (cooccurrence_file_name_ == &::google::protobuf::internal::GetEmptyString()) {
+    return NULL;
+  } else {
+    ::std::string* temp = cooccurrence_file_name_;
+    cooccurrence_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+    return temp;
+  }
+}
+inline void CollectionParserConfig::set_allocated_cooccurrence_file_name(::std::string* cooccurrence_file_name) {
+  if (cooccurrence_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
+    delete cooccurrence_file_name_;
+  }
+  if (cooccurrence_file_name) {
+    set_has_cooccurrence_file_name();
+    cooccurrence_file_name_ = cooccurrence_file_name;
+  } else {
+    clear_has_cooccurrence_file_name();
+    cooccurrence_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
+  }
+}
+
+// optional int32 num_items_per_batch = 7 [default = 1000];
+inline bool CollectionParserConfig::has_num_items_per_batch() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void CollectionParserConfig::set_has_num_items_per_batch() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void CollectionParserConfig::clear_has_num_items_per_batch() {
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void CollectionParserConfig::clear_num_items_per_batch() {
   num_items_per_batch_ = 1000;

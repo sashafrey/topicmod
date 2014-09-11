@@ -19,12 +19,11 @@ class CollectionParser : boost::noncopyable {
   // Parses the collection from disk according to all options,
   // specified in CollectionParserConfig.
   // Returns a dictionary that lists all unique tokens occured in the collection.
-  // Each DictionaryEntry from dictionary will contain key_token,
-  // and no other fields in the entry will be populated.
+  // Each DictionaryEntry from dictionary will contain key_token
+  // and some additional statistics like the number of term occurrences in the collection.
   std::shared_ptr<DictionaryConfig> Parse();
 
  private:
-  std::shared_ptr<DictionaryConfig> JustLoadDictionary();
   std::shared_ptr<DictionaryConfig> ParseBagOfWordsUci();
 
   CollectionParserConfig config_;

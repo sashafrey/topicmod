@@ -58,6 +58,17 @@ void SaveBatch(const Batch& batch, const std::string& disk_path) {
     StringAsArray(&config_blob)));
 }
 
+std::shared_ptr<DictionaryConfig> LoadDictionary(const std::string& disk_path) {
+  int length = HandleErrorCode(ArtmRequestLoadDictionary(disk_path.c_str()));
+
+  std::string dictionary_blob;
+  dictionary_blob.resize(length);
+  HandleErrorCode(ArtmCopyRequestResult(length, StringAsArray(&dictionary_blob)));
+
+  std::shared_ptr<DictionaryConfig> dictionary(new DictionaryConfig());
+  dictionary->ParseFromString(dictionary_blob);
+  return dictionary;
+}
 
 std::shared_ptr<DictionaryConfig> ParseCollection(const CollectionParserConfig& config) {
   std::string config_blob;

@@ -172,13 +172,18 @@ void BatchHelpers::LoadMessage(const std::string& filename, const std::string& d
   boost::filesystem::path full_path =
     boost::filesystem::path(disk_path) / boost::filesystem::path(filename);
 
-  std::ifstream fin(full_path.c_str(), std::ifstream::binary);
+  LoadMessage(full_path.string(), message);
+}
+
+void BatchHelpers::LoadMessage(const std::string& full_filename,
+                               ::google::protobuf::Message* message) {
+  std::ifstream fin(full_filename.c_str(), std::ifstream::binary);
   if (!fin.is_open())
-    BOOST_THROW_EXCEPTION(DiskReadException("Unable to open file " + full_path.string()));
+    BOOST_THROW_EXCEPTION(DiskReadException("Unable to open file " + full_filename));
 
   if (!message->ParseFromIstream(&fin)) {
     BOOST_THROW_EXCEPTION(DiskReadException(
-      "Unable to parse protobuf message from " + full_path.string()));
+      "Unable to parse protobuf message from " + full_filename));
   }
 
   fin.close();
@@ -196,9 +201,14 @@ void BatchHelpers::SaveMessage(const std::string& filename, const std::string& d
   if (boost::filesystem::exists(full_filename))
     BOOST_THROW_EXCEPTION(DiskWriteException("File already exists: " + full_filename.string()));
 
+  SaveMessage(full_filename.string(), message);
+}
+
+void BatchHelpers::SaveMessage(const std::string& full_filename,
+                               const ::google::protobuf::Message& message) {
   std::ofstream fout(full_filename.c_str(), std::ofstream::binary);
   if (!fout.is_open())
-    BOOST_THROW_EXCEPTION(DiskReadException("Unable to create file " + full_filename.string()));
+    BOOST_THROW_EXCEPTION(DiskReadException("Unable to create file " + full_filename));
 
   if (!message.SerializeToOstream(&fout)) {
     BOOST_THROW_EXCEPTION(DiskWriteException("Batch has not been serialized to disk."));

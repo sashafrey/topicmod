@@ -28,6 +28,7 @@ TEST(CollectionParser, Basic) {
   config.set_format(::artm::CollectionParserConfig_Format_BagOfWordsUci);
   config.set_target_folder("collection_parser_test/");
   config.set_dictionary_file_name("test_parser.dictionary");
+  config.set_cooccurrence_file_name("test_parser.cooc.dictionary");
   config.set_num_items_per_batch(1);
   config.set_vocab_file_path("../../../test_data/vocab.parser_test.txt");
   config.set_docword_file_path("../../../test_data/docword.parser_test.txt");
@@ -35,9 +36,33 @@ TEST(CollectionParser, Basic) {
   std::shared_ptr<::artm::DictionaryConfig> dictionary_parsed = ::artm::ParseCollection(config);
   ASSERT_EQ(dictionary_parsed->entry_size(), 3);
 
-  config.set_format(::artm::CollectionParserConfig_Format_JustLoadDictionary);
-  std::shared_ptr<::artm::DictionaryConfig> dictionary_loaded = ::artm::ParseCollection(config);
+  std::shared_ptr<::artm::DictionaryConfig> dictionary_loaded = ::artm::LoadDictionary(
+    "collection_parser_test/test_parser.dictionary");
   ASSERT_EQ(dictionary_parsed->entry_size(), dictionary_loaded->entry_size());
+
+  ASSERT_EQ(dictionary_loaded->entry_size(), 3);
+  ASSERT_EQ(dictionary_loaded->total_token_count(), 18);
+  ASSERT_EQ(dictionary_loaded->total_items_count(), 2);
+  ASSERT_EQ(dictionary_loaded->entry(0).key_token(), "token1");
+  ASSERT_EQ(dictionary_loaded->entry(0).items_count(), 1);
+  ASSERT_EQ(dictionary_loaded->entry(0).token_count(), 5);
+  ASSERT_GT(dictionary_loaded->entry(0).value(), 0);
+  ASSERT_EQ(dictionary_loaded->entry(1).key_token(), "token2");
+  ASSERT_EQ(dictionary_loaded->entry(1).items_count(), 2);
+  ASSERT_EQ(dictionary_loaded->entry(1).token_count(), 4);
+  ASSERT_EQ(dictionary_loaded->entry(2).key_token(), "token3");
+  ASSERT_EQ(dictionary_loaded->entry(2).items_count(), 2);
+  ASSERT_EQ(dictionary_loaded->entry(2).token_count(), 9);
+
+  std::shared_ptr<::artm::DictionaryConfig> cooc_dictionary_loaded = ::artm::LoadDictionary(
+    "collection_parser_test/test_parser.cooc.dictionary");
+  ASSERT_EQ(cooc_dictionary_loaded->entry_size(), 3);
+  ASSERT_EQ(cooc_dictionary_loaded->entry(0).key_token(), "token1~token2");
+  ASSERT_EQ(cooc_dictionary_loaded->entry(0).items_count(), 1);
+  ASSERT_EQ(cooc_dictionary_loaded->entry(1).key_token(), "token1~token3");
+  ASSERT_EQ(cooc_dictionary_loaded->entry(1).items_count(), 1);
+  ASSERT_EQ(cooc_dictionary_loaded->entry(2).key_token(), "token2~token3");
+  ASSERT_EQ(cooc_dictionary_loaded->entry(2).items_count(), 2);
 
   boost::filesystem::recursive_directory_iterator it("collection_parser_test");
   boost::filesystem::recursive_directory_iterator endit;
@@ -62,8 +87,5 @@ TEST(CollectionParser, ErrorHandling) {
   config.set_docword_file_path("no_such_file");
   ASSERT_THROW(::artm::ParseCollection(config), artm::DiskReadException);
 
-  config.set_format(::artm::CollectionParserConfig_Format_JustLoadDictionary);
-  config.set_target_folder("no_such_folder");
-  config.set_dictionary_file_name("no_such_file.dictionary");
-  ASSERT_THROW(::artm::ParseCollection(config), artm::DiskReadException);
+  ASSERT_THROW(::artm::LoadDictionary("no_such_file"), artm::DiskReadException);
 }

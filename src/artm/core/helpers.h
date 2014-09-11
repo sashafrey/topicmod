@@ -52,8 +52,12 @@ class BatchHelpers {
                                           const std::string& disk_path);
   static boost::uuids::uuid SaveBatch(const Batch& batch, const std::string& disk_path);
 
+  static void LoadMessage(const std::string& full_filename,
+                          ::google::protobuf::Message* message);
   static void LoadMessage(const std::string& filename, const std::string& disk_path,
                           ::google::protobuf::Message* message);
+  static void SaveMessage(const std::string& full_filename,
+                          const ::google::protobuf::Message& message);
   static void SaveMessage(const std::string& filename, const std::string& disk_path,
                           const ::google::protobuf::Message& message);
   static void PopulateClassId(Batch* batch);

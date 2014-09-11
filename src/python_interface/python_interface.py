@@ -39,7 +39,6 @@ ScoreData_Type_TopTokens = 4
 ScoreConfig_Type_ThetaSnippet = 5
 ScoreData_Type_ThetaSnippet = 5
 CollectionParserConfig_Format_BagOfWordsUci = 0
-CollectionParserConfig_Format_JustLoadDictionary = 1
 
 #################################################################################
 
@@ -105,6 +104,17 @@ class ArtmLibrary:
     config_blob_p = ctypes.create_string_buffer(config_blob)
     length = HandleErrorCode(self.lib_, self.lib_.ArtmRequestParseCollection(
                              len(config_blob), config_blob_p))
+
+    dictionary_blob = ctypes.create_string_buffer(length)
+    HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, dictionary_blob))
+
+    dictionary = messages_pb2.DictionaryConfig()
+    dictionary.ParseFromString(dictionary_blob)
+    return dictionary
+
+  def LoadDictionary(self, full_filename):
+    full_filename_p = ctypes.create_string_buffer(full_filename)
+    length = HandleErrorCode(self.lib_, self.lib_.ArtmRequestLoadDictionary(full_filename_p))
 
     dictionary_blob = ctypes.create_string_buffer(length)
     HandleErrorCode(self.lib_, self.lib_.ArtmCopyRequestResult(length, dictionary_blob))

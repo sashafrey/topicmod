@@ -86,11 +86,7 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
     std::cout << "Found " << batch_files_count << " batches in folder '"
               << batches_disk_path << "', will use them.\n";
 
-    ::artm::CollectionParserConfig collection_parser_config;
-    collection_parser_config.set_format(CollectionParserConfig_Format_JustLoadDictionary);
-    collection_parser_config.set_dictionary_file_name(dictionary_file);
-    collection_parser_config.set_target_folder(batches_disk_path);
-    unique_tokens = ::artm::ParseCollection(collection_parser_config);
+    unique_tokens = ::artm::LoadDictionary((path(batches_disk_path) / dictionary_file).string());
   }
   
   master_config.set_disk_path(batches_disk_path);

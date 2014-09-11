@@ -604,8 +604,8 @@ Represents a static dictionary.
   message DictionaryConfig {
     optional string name = 1;
     repeated DictionaryEntry entry = 2;
-    optional int32 total_token_count = 6;
-    optional int32 total_items_count = 7;
+    optional int32 total_token_count = 3;
+    optional int32 total_items_count = 4;
   }
 
 .. attribute:: DictionaryConfig.name

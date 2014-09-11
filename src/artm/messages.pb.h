@@ -4517,7 +4517,7 @@ class TopicKernelScoreConfig : public ::google::protobuf::Message {
   inline ::artm::BoolArray* release_topics_to_score();
   inline void set_allocated_topics_to_score(::artm::BoolArray* topics_to_score);
 
-  // optional double probability_mass_threshold = 3;
+  // optional double probability_mass_threshold = 3 [default = 0.1];
   inline bool has_probability_mass_threshold() const;
   inline void clear_probability_mass_threshold();
   static const int kProbabilityMassThresholdFieldNumber = 3;
@@ -4632,6 +4632,27 @@ class TopicKernelScore : public ::google::protobuf::Message {
   inline ::artm::DoubleArray* release_kernel_contrast();
   inline void set_allocated_kernel_contrast(::artm::DoubleArray* kernel_contrast);
 
+  // optional double average_kernel_size = 4;
+  inline bool has_average_kernel_size() const;
+  inline void clear_average_kernel_size();
+  static const int kAverageKernelSizeFieldNumber = 4;
+  inline double average_kernel_size() const;
+  inline void set_average_kernel_size(double value);
+
+  // optional double average_kernel_purity = 5;
+  inline bool has_average_kernel_purity() const;
+  inline void clear_average_kernel_purity();
+  static const int kAverageKernelPurityFieldNumber = 5;
+  inline double average_kernel_purity() const;
+  inline void set_average_kernel_purity(double value);
+
+  // optional double average_kernel_contrast = 6;
+  inline bool has_average_kernel_contrast() const;
+  inline void clear_average_kernel_contrast();
+  static const int kAverageKernelContrastFieldNumber = 6;
+  inline double average_kernel_contrast() const;
+  inline void set_average_kernel_contrast(double value);
+
   // @@protoc_insertion_point(class_scope:artm.TopicKernelScore)
  private:
   inline void set_has_kernel_size();
@@ -4640,15 +4661,24 @@ class TopicKernelScore : public ::google::protobuf::Message {
   inline void clear_has_kernel_purity();
   inline void set_has_kernel_contrast();
   inline void clear_has_kernel_contrast();
+  inline void set_has_average_kernel_size();
+  inline void clear_has_average_kernel_size();
+  inline void set_has_average_kernel_purity();
+  inline void clear_has_average_kernel_purity();
+  inline void set_has_average_kernel_contrast();
+  inline void clear_has_average_kernel_contrast();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::artm::DoubleArray* kernel_size_;
   ::artm::DoubleArray* kernel_purity_;
   ::artm::DoubleArray* kernel_contrast_;
+  double average_kernel_size_;
+  double average_kernel_purity_;
+  double average_kernel_contrast_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -9636,7 +9666,7 @@ inline void TopicKernelScoreConfig::set_allocated_topics_to_score(::artm::BoolAr
   }
 }
 
-// optional double probability_mass_threshold = 3;
+// optional double probability_mass_threshold = 3 [default = 0.1];
 inline bool TopicKernelScoreConfig::has_probability_mass_threshold() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -9647,7 +9677,7 @@ inline void TopicKernelScoreConfig::clear_has_probability_mass_threshold() {
   _has_bits_[0] &= ~0x00000004u;
 }
 inline void TopicKernelScoreConfig::clear_probability_mass_threshold() {
-  probability_mass_threshold_ = 0;
+  probability_mass_threshold_ = 0.1;
   clear_has_probability_mass_threshold();
 }
 inline double TopicKernelScoreConfig::probability_mass_threshold() const {
@@ -9774,6 +9804,72 @@ inline void TopicKernelScore::set_allocated_kernel_contrast(::artm::DoubleArray*
   } else {
     clear_has_kernel_contrast();
   }
+}
+
+// optional double average_kernel_size = 4;
+inline bool TopicKernelScore::has_average_kernel_size() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void TopicKernelScore::set_has_average_kernel_size() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void TopicKernelScore::clear_has_average_kernel_size() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void TopicKernelScore::clear_average_kernel_size() {
+  average_kernel_size_ = 0;
+  clear_has_average_kernel_size();
+}
+inline double TopicKernelScore::average_kernel_size() const {
+  return average_kernel_size_;
+}
+inline void TopicKernelScore::set_average_kernel_size(double value) {
+  set_has_average_kernel_size();
+  average_kernel_size_ = value;
+}
+
+// optional double average_kernel_purity = 5;
+inline bool TopicKernelScore::has_average_kernel_purity() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void TopicKernelScore::set_has_average_kernel_purity() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void TopicKernelScore::clear_has_average_kernel_purity() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void TopicKernelScore::clear_average_kernel_purity() {
+  average_kernel_purity_ = 0;
+  clear_has_average_kernel_purity();
+}
+inline double TopicKernelScore::average_kernel_purity() const {
+  return average_kernel_purity_;
+}
+inline void TopicKernelScore::set_average_kernel_purity(double value) {
+  set_has_average_kernel_purity();
+  average_kernel_purity_ = value;
+}
+
+// optional double average_kernel_contrast = 6;
+inline bool TopicKernelScore::has_average_kernel_contrast() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void TopicKernelScore::set_has_average_kernel_contrast() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void TopicKernelScore::clear_has_average_kernel_contrast() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void TopicKernelScore::clear_average_kernel_contrast() {
+  average_kernel_contrast_ = 0;
+  clear_has_average_kernel_contrast();
+}
+inline double TopicKernelScore::average_kernel_contrast() const {
+  return average_kernel_contrast_;
+}
+inline void TopicKernelScore::set_average_kernel_contrast(double value) {
+  set_has_average_kernel_contrast();
+  average_kernel_contrast_ = value;
 }
 
 // -------------------------------------------------------------------

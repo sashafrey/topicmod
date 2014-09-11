@@ -195,7 +195,7 @@ message ScoreConfig {
     ItemsProcessed = 3;
     TopTokens = 4;
     ThetaSnippet = 5;
-	TopicKernel = 6;
+    TopicKernel = 6;
   }
 
   optional string name = 1;
@@ -212,7 +212,7 @@ message ScoreData {
     ItemsProcessed = 3;
     TopTokens = 4;
     ThetaSnippet = 5;
-	TopicKernel = 6;
+    TopicKernel = 6;
   }
 
   optional string name = 1;
@@ -308,7 +308,7 @@ message ThetaSnippetScore {
 message TopicKernelScoreConfig {
   optional float eps = 1 [default = 1e-37];
   optional BoolArray topics_to_score = 2;
-  optional double probability_mass_threshold = 3;
+  optional double probability_mass_threshold = 3 [default = 0.1];
 }
 
 // Represents a result of calculation of a topic kernel score
@@ -316,6 +316,9 @@ message TopicKernelScore {
   optional DoubleArray kernel_size = 1;
   optional DoubleArray kernel_purity = 2;
   optional DoubleArray kernel_contrast = 3;
+  optional double average_kernel_size = 4;
+  optional double average_kernel_purity = 5;
+  optional double average_kernel_contrast = 6;
 }
 
 // Represents a topic model

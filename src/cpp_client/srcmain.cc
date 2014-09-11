@@ -272,24 +272,6 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
     train_items_processed = master_component.GetScoreAs<::artm::ItemsProcessedScore>(model, "train_items_processed");
     topic_kernel = master_component.GetScoreAs<::artm::TopicKernelScore>(model, "topic_kernel");
 
-    double kernel_size = 0;
-    double kernel_purity = 0;
-    double kernel_contrast = 0;
-    double useful_topics_count = 0;
-    for (int topic_index = 0; topic_index < topic_model->topics_count(); ++topic_index) {
-      double current_kernel_size = topic_kernel->kernel_size().value(topic_index);
-      bool useful_topic = (current_kernel_size != -1);
-      if (useful_topic) {
-        useful_topics_count += 1;
-        kernel_size += current_kernel_size;
-        kernel_purity += topic_kernel->kernel_purity().value(topic_index);
-        kernel_contrast += topic_kernel->kernel_contrast().value(topic_index);
-      }
-    }
-    kernel_size /= useful_topics_count;
-    kernel_purity /= useful_topics_count;
-    kernel_contrast /= useful_topics_count;
-
     std::cout << "Iter #" << (iter + 1) << ": "
               << "\n\t#Tokens = "  << topic_model->token_size() << ", "
               << "\n\tTest perplexity = " << test_perplexity->value() << ", "
@@ -299,9 +281,9 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
               << "\n\tSpatsity phi = " << sparsity_phi->value() << ", "
               << "\n\tTest items processed = " << test_items_processed->value() << ", "
               << "\n\tTrain items processed = " << train_items_processed->value() << ", "
-              << "\n\tKernel size = " << kernel_size << ", "
-              << "\n\tKernel purity = " << kernel_purity << ", "
-              << "\n\tKernel contrast = " << kernel_contrast << endl;
+              << "\n\tKernel size = " << topic_kernel->average_kernel_size() << ", "
+              << "\n\tKernel purity = " << topic_kernel->average_kernel_purity() << ", "
+              << "\n\tKernel contrast = " << topic_kernel->average_kernel_contrast() << endl;
   }
 
   std::cout << endl;

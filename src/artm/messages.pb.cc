@@ -815,10 +815,13 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(TopicKernelScoreConfig));
   TopicKernelScore_descriptor_ = file->message_type(38);
-  static const int TopicKernelScore_offsets_[3] = {
+  static const int TopicKernelScore_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TopicKernelScore, kernel_size_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TopicKernelScore, kernel_purity_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TopicKernelScore, kernel_contrast_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TopicKernelScore, average_kernel_size_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TopicKernelScore, average_kernel_purity_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(TopicKernelScore, average_kernel_contrast_),
   };
   TopicKernelScore_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1222,30 +1225,32 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "eld_name\030\001 \001(\t:\005@body\022\034\n\013stream_name\030\002 \001"
     "(\t:\007@global\022\023\n\007item_id\030\003 \003(\005B\002\020\001\"F\n\021Thet"
     "aSnippetScore\022\017\n\007item_id\030\001 \003(\005\022 \n\006values"
-    "\030\002 \003(\0132\020.artm.FloatArray\"{\n\026TopicKernelS"
-    "coreConfig\022\023\n\003eps\030\001 \001(\002:\0061e-037\022(\n\017topic"
-    "s_to_score\030\002 \001(\0132\017.artm.BoolArray\022\"\n\032pro"
-    "bability_mass_threshold\030\003 \001(\001\"\220\001\n\020TopicK"
-    "ernelScore\022&\n\013kernel_size\030\001 \001(\0132\021.artm.D"
-    "oubleArray\022(\n\rkernel_purity\030\002 \001(\0132\021.artm"
-    ".DoubleArray\022*\n\017kernel_contrast\030\003 \001(\0132\021."
-    "artm.DoubleArray\"\354\001\n\nTopicModel\022\024\n\004name\030"
-    "\001 \001(\t:\006@model\022\024\n\014topics_count\030\002 \001(\005\022\r\n\005t"
-    "oken\030\003 \003(\t\022\'\n\rtoken_weights\030\004 \003(\0132\020.artm"
-    ".FloatArray\022\020\n\010class_id\030\005 \003(\t\022\021\n\tinterna"
-    "ls\030\006 \001(\014\032U\n\023TopicModelInternals\022\036\n\004n_wt\030"
-    "\001 \003(\0132\020.artm.FloatArray\022\036\n\004r_wt\030\002 \003(\0132\020."
-    "artm.FloatArray\"b\n\013ThetaMatrix\022\032\n\nmodel_"
-    "name\030\001 \001(\t:\006@model\022\017\n\007item_id\030\002 \003(\005\022&\n\014i"
-    "tem_weights\030\003 \003(\0132\020.artm.FloatArray\"\235\002\n\026"
-    "CollectionParserConfig\022B\n\006format\030\001 \001(\0162#"
-    ".artm.CollectionParserConfig.Format:\rBag"
-    "OfWordsUci\022\031\n\021docword_file_path\030\002 \001(\t\022\027\n"
-    "\017vocab_file_path\030\003 \001(\t\022\025\n\rtarget_folder\030"
-    "\004 \001(\t\022\034\n\024dictionary_file_name\030\005 \001(\t\022!\n\023n"
-    "um_items_per_batch\030\006 \001(\005:\0041000\"3\n\006Format"
-    "\022\021\n\rBagOfWordsUci\020\000\022\026\n\022JustLoadDictionar"
-    "y\020\001", 5083);
+    "\030\002 \003(\0132\020.artm.FloatArray\"\200\001\n\026TopicKernel"
+    "ScoreConfig\022\023\n\003eps\030\001 \001(\002:\0061e-037\022(\n\017topi"
+    "cs_to_score\030\002 \001(\0132\017.artm.BoolArray\022\'\n\032pr"
+    "obability_mass_threshold\030\003 \001(\001:\0030.1\"\355\001\n\020"
+    "TopicKernelScore\022&\n\013kernel_size\030\001 \001(\0132\021."
+    "artm.DoubleArray\022(\n\rkernel_purity\030\002 \001(\0132"
+    "\021.artm.DoubleArray\022*\n\017kernel_contrast\030\003 "
+    "\001(\0132\021.artm.DoubleArray\022\033\n\023average_kernel"
+    "_size\030\004 \001(\001\022\035\n\025average_kernel_purity\030\005 \001"
+    "(\001\022\037\n\027average_kernel_contrast\030\006 \001(\001\"\354\001\n\n"
+    "TopicModel\022\024\n\004name\030\001 \001(\t:\006@model\022\024\n\014topi"
+    "cs_count\030\002 \001(\005\022\r\n\005token\030\003 \003(\t\022\'\n\rtoken_w"
+    "eights\030\004 \003(\0132\020.artm.FloatArray\022\020\n\010class_"
+    "id\030\005 \003(\t\022\021\n\tinternals\030\006 \001(\014\032U\n\023TopicMode"
+    "lInternals\022\036\n\004n_wt\030\001 \003(\0132\020.artm.FloatArr"
+    "ay\022\036\n\004r_wt\030\002 \003(\0132\020.artm.FloatArray\"b\n\013Th"
+    "etaMatrix\022\032\n\nmodel_name\030\001 \001(\t:\006@model\022\017\n"
+    "\007item_id\030\002 \003(\005\022&\n\014item_weights\030\003 \003(\0132\020.a"
+    "rtm.FloatArray\"\235\002\n\026CollectionParserConfi"
+    "g\022B\n\006format\030\001 \001(\0162#.artm.CollectionParse"
+    "rConfig.Format:\rBagOfWordsUci\022\031\n\021docword"
+    "_file_path\030\002 \001(\t\022\027\n\017vocab_file_path\030\003 \001("
+    "\t\022\025\n\rtarget_folder\030\004 \001(\t\022\034\n\024dictionary_f"
+    "ile_name\030\005 \001(\t\022!\n\023num_items_per_batch\030\006 "
+    "\001(\005:\0041000\"3\n\006Format\022\021\n\rBagOfWordsUci\020\000\022\026"
+    "\n\022JustLoadDictionary\020\001", 5182);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   DoubleArray::default_instance_ = new DoubleArray();
@@ -12747,7 +12752,7 @@ void TopicKernelScoreConfig::SharedCtor() {
   _cached_size_ = 0;
   eps_ = 1e-037f;
   topics_to_score_ = NULL;
-  probability_mass_threshold_ = 0;
+  probability_mass_threshold_ = 0.1;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -12788,7 +12793,7 @@ void TopicKernelScoreConfig::Clear() {
     if (has_topics_to_score()) {
       if (topics_to_score_ != NULL) topics_to_score_->::artm::BoolArray::Clear();
     }
-    probability_mass_threshold_ = 0;
+    probability_mass_threshold_ = 0.1;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -12829,7 +12834,7 @@ bool TopicKernelScoreConfig::MergePartialFromCodedStream(
         break;
       }
 
-      // optional double probability_mass_threshold = 3;
+      // optional double probability_mass_threshold = 3 [default = 0.1];
       case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
@@ -12874,7 +12879,7 @@ void TopicKernelScoreConfig::SerializeWithCachedSizes(
       2, this->topics_to_score(), output);
   }
 
-  // optional double probability_mass_threshold = 3;
+  // optional double probability_mass_threshold = 3 [default = 0.1];
   if (has_probability_mass_threshold()) {
     ::google::protobuf::internal::WireFormatLite::WriteDouble(3, this->probability_mass_threshold(), output);
   }
@@ -12899,7 +12904,7 @@ void TopicKernelScoreConfig::SerializeWithCachedSizes(
         2, this->topics_to_score(), target);
   }
 
-  // optional double probability_mass_threshold = 3;
+  // optional double probability_mass_threshold = 3 [default = 0.1];
   if (has_probability_mass_threshold()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(3, this->probability_mass_threshold(), target);
   }
@@ -12927,7 +12932,7 @@ int TopicKernelScoreConfig::ByteSize() const {
           this->topics_to_score());
     }
 
-    // optional double probability_mass_threshold = 3;
+    // optional double probability_mass_threshold = 3 [default = 0.1];
     if (has_probability_mass_threshold()) {
       total_size += 1 + 8;
     }
@@ -13015,6 +13020,9 @@ void TopicKernelScoreConfig::Swap(TopicKernelScoreConfig* other) {
 const int TopicKernelScore::kKernelSizeFieldNumber;
 const int TopicKernelScore::kKernelPurityFieldNumber;
 const int TopicKernelScore::kKernelContrastFieldNumber;
+const int TopicKernelScore::kAverageKernelSizeFieldNumber;
+const int TopicKernelScore::kAverageKernelPurityFieldNumber;
+const int TopicKernelScore::kAverageKernelContrastFieldNumber;
 #endif  // !_MSC_VER
 
 TopicKernelScore::TopicKernelScore()
@@ -13039,6 +13047,9 @@ void TopicKernelScore::SharedCtor() {
   kernel_size_ = NULL;
   kernel_purity_ = NULL;
   kernel_contrast_ = NULL;
+  average_kernel_size_ = 0;
+  average_kernel_purity_ = 0;
+  average_kernel_contrast_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -13086,6 +13097,9 @@ void TopicKernelScore::Clear() {
     if (has_kernel_contrast()) {
       if (kernel_contrast_ != NULL) kernel_contrast_->::artm::DoubleArray::Clear();
     }
+    average_kernel_size_ = 0;
+    average_kernel_purity_ = 0;
+    average_kernel_contrast_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -13134,6 +13148,54 @@ bool TopicKernelScore::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(33)) goto parse_average_kernel_size;
+        break;
+      }
+
+      // optional double average_kernel_size = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_average_kernel_size:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &average_kernel_size_)));
+          set_has_average_kernel_size();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(41)) goto parse_average_kernel_purity;
+        break;
+      }
+
+      // optional double average_kernel_purity = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_average_kernel_purity:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &average_kernel_purity_)));
+          set_has_average_kernel_purity();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(49)) goto parse_average_kernel_contrast;
+        break;
+      }
+
+      // optional double average_kernel_contrast = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_FIXED64) {
+         parse_average_kernel_contrast:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, &average_kernel_contrast_)));
+          set_has_average_kernel_contrast();
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -13174,6 +13236,21 @@ void TopicKernelScore::SerializeWithCachedSizes(
       3, this->kernel_contrast(), output);
   }
 
+  // optional double average_kernel_size = 4;
+  if (has_average_kernel_size()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(4, this->average_kernel_size(), output);
+  }
+
+  // optional double average_kernel_purity = 5;
+  if (has_average_kernel_purity()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(5, this->average_kernel_purity(), output);
+  }
+
+  // optional double average_kernel_contrast = 6;
+  if (has_average_kernel_contrast()) {
+    ::google::protobuf::internal::WireFormatLite::WriteDouble(6, this->average_kernel_contrast(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -13201,6 +13278,21 @@ void TopicKernelScore::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
         3, this->kernel_contrast(), target);
+  }
+
+  // optional double average_kernel_size = 4;
+  if (has_average_kernel_size()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(4, this->average_kernel_size(), target);
+  }
+
+  // optional double average_kernel_purity = 5;
+  if (has_average_kernel_purity()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(5, this->average_kernel_purity(), target);
+  }
+
+  // optional double average_kernel_contrast = 6;
+  if (has_average_kernel_contrast()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteDoubleToArray(6, this->average_kernel_contrast(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -13233,6 +13325,21 @@ int TopicKernelScore::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
           this->kernel_contrast());
+    }
+
+    // optional double average_kernel_size = 4;
+    if (has_average_kernel_size()) {
+      total_size += 1 + 8;
+    }
+
+    // optional double average_kernel_purity = 5;
+    if (has_average_kernel_purity()) {
+      total_size += 1 + 8;
+    }
+
+    // optional double average_kernel_contrast = 6;
+    if (has_average_kernel_contrast()) {
+      total_size += 1 + 8;
     }
 
   }
@@ -13271,6 +13378,15 @@ void TopicKernelScore::MergeFrom(const TopicKernelScore& from) {
     if (from.has_kernel_contrast()) {
       mutable_kernel_contrast()->::artm::DoubleArray::MergeFrom(from.kernel_contrast());
     }
+    if (from.has_average_kernel_size()) {
+      set_average_kernel_size(from.average_kernel_size());
+    }
+    if (from.has_average_kernel_purity()) {
+      set_average_kernel_purity(from.average_kernel_purity());
+    }
+    if (from.has_average_kernel_contrast()) {
+      set_average_kernel_contrast(from.average_kernel_contrast());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -13297,6 +13413,9 @@ void TopicKernelScore::Swap(TopicKernelScore* other) {
     std::swap(kernel_size_, other->kernel_size_);
     std::swap(kernel_purity_, other->kernel_purity_);
     std::swap(kernel_contrast_, other->kernel_contrast_);
+    std::swap(average_kernel_size_, other->average_kernel_size_);
+    std::swap(average_kernel_purity_, other->average_kernel_purity_);
+    std::swap(average_kernel_contrast_, other->average_kernel_contrast_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

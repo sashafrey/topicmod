@@ -15,8 +15,6 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::TopicModel&
   int tokens_size = topic_model.token_size();
 
   // parameters preparation
-  double probability_mass_threshold = 0.1;
-
   ::artm::BoolArray topics_to_score;
   bool has_correct_vector = false;
   if (config_.has_topics_to_score()) {
@@ -35,23 +33,20 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::TopicModel&
     }
   }
 
-  if (config_.has_probability_mass_threshold()) {
-    probability_mass_threshold = config_.probability_mass_threshold();
-    if (probability_mass_threshold < 0 || probability_mass_threshold > 1) {
-      probability_mass_threshold = 0.1;
-      LOG(INFO) << "Score Topic Kernel: probability_mass_threshold should be " <<
-        "in [0,1]. Default value 0.1 was set.";
-    } else {
-      LOG(INFO) << "Score Topic Kernel: probability_mass_threshold wasn't defined. " <<
-        "Default value 0.1 was set.";
-    }
+  double probability_mass_threshold = config_.probability_mass_threshold();
+  if (probability_mass_threshold < 0 || probability_mass_threshold > 1) {
+    BOOST_THROW_EXCEPTION(artm::core::ArgumentOutOfRangeException(
+        "TopicKernelScoreConfig.probablility_mass_threshold", 
+        config_.probability_mass_threshold()));
   }
 
   // kernel scores calculation
   // the elements, that corresponds non-used topics, will have value (-1)
-  ::artm::DoubleArray* kernel_size = new ::artm::DoubleArray();
-  ::artm::DoubleArray* kernel_purity = new ::artm::DoubleArray();
-  ::artm::DoubleArray* kernel_contrast = new ::artm::DoubleArray();
+  TopicKernelScore* topic_kernel_score = new TopicKernelScore();
+  std::shared_ptr<Score> retval(topic_kernel_score);
+  auto kernel_size = topic_kernel_score->mutable_kernel_size();
+  auto kernel_purity = topic_kernel_score->mutable_kernel_purity();
+  auto kernel_contrast = topic_kernel_score->mutable_kernel_contrast();
 
   for (int topic_index = 0; topic_index < topics_size; ++topic_index) {
     if (topics_to_score.value(topic_index)) {
@@ -105,13 +100,27 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::TopicModel&
     kernel_contrast->set_value(topic_index, value);
   }
 
-  // result transferring
-  TopicKernelScore* topic_kernel_score = new TopicKernelScore();
-  std::shared_ptr<Score> retval(topic_kernel_score);
+  double average_kernel_size = 0.0;
+  double average_kernel_purity = 0.0;
+  double average_kernel_contrast = 0.0;
+  double useful_topics_count = 0.0;
+  for (int topic_index = 0; topic_index < topics_size; ++topic_index) {
+    double current_kernel_size = kernel_size->value(topic_index);
+    bool useful_topic = (current_kernel_size != -1);
+    if (useful_topic) {
+      useful_topics_count += 1;
+      average_kernel_size += current_kernel_size;
+      average_kernel_purity += kernel_purity->value(topic_index);
+      average_kernel_contrast += kernel_contrast->value(topic_index);
+    }
+  }
+  average_kernel_size /= useful_topics_count;
+  average_kernel_purity /= useful_topics_count;
+  average_kernel_contrast /= useful_topics_count;
 
-  topic_kernel_score->set_allocated_kernel_size(kernel_size);
-  topic_kernel_score->set_allocated_kernel_purity(kernel_purity);
-  topic_kernel_score->set_allocated_kernel_contrast(kernel_contrast);
+  topic_kernel_score->set_average_kernel_size(average_kernel_size);
+  topic_kernel_score->set_average_kernel_purity(average_kernel_purity);
+  topic_kernel_score->set_average_kernel_contrast(average_kernel_contrast);
 
   return retval;
 }

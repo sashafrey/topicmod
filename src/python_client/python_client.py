@@ -152,30 +152,13 @@ with library.CreateMasterComponent(master_config) as master_component:
         sparsity_phi_score = master_component.GetScore(model, sparsity_phi_score_name)
         topic_kernel_score = master_component.GetScore(model, topic_kernel_score_name)
 
-        kernel_size = 0
-        kernel_purity = 0
-        kernel_contrast = 0
-        useful_topics_count = 0
-        for topic_index in range(0, topic_model.topics_count):
-            current_kernel_size = topic_kernel_score.kernel_size.value[topic_index]
-            useful_topic = (current_kernel_size != -1)
-            if (useful_topic):
-                useful_topics_count += 1
-                kernel_size += current_kernel_size
-                kernel_purity += topic_kernel_score.kernel_purity.value[topic_index]
-                kernel_contrast += topic_kernel_score.kernel_contrast.value[topic_index]
-
-        kernel_size /= useful_topics_count
-        kernel_purity /= useful_topics_count
-        kernel_contrast /= useful_topics_count
-
         print "Iter# = " + str(iter) + \
                 ", Perplexity = " + str(perplexity_score.value) + \
                 ", SparsityTheta = " + str(sparsity_theta_score.value) +\
                 ", SparsityPhi = " + str(sparsity_phi_score.value) +\
-                ", KernelSize = " + str(kernel_size) +\
-                ", KernelPurity = " + str(kernel_purity) +\
-                ", KernelContrast = " + str(kernel_contrast)
+                ", KernelSize = " + str(topic_kernel_score.average_kernel_size) +\
+                ", KernelPurity = " + str(topic_kernel_score.average_kernel_purity) +\
+                ", KernelContrast = " + str(topic_kernel_score.average_kernel_contrast)
 
     # Log to 7 words in each topic
     tokens_size = len(topic_model.token)

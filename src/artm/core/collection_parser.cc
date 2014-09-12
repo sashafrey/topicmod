@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <memory>
 #include <set>
 #include <utility>
 
@@ -61,8 +62,8 @@ namespace {
       std::sort(item_tokens_.begin(), item_tokens_.end());
       item_tokens_.erase(std::unique(item_tokens_.begin(), item_tokens_.end()),
                                      item_tokens_.end());
-      for (int first_token_id = 0; first_token_id < item_tokens_.size(); ++first_token_id) {
-        for (int second_token_id = (first_token_id + 1); second_token_id < item_tokens_.size();
+      for (size_t first_token_id = 0; first_token_id < item_tokens_.size(); ++first_token_id) {
+        for (size_t second_token_id = (first_token_id + 1); second_token_id < item_tokens_.size();
           ++second_token_id) {
           int first_token = item_tokens_[first_token_id];
           int second_token = item_tokens_[second_token_id];
@@ -163,7 +164,8 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
         "CollectionParser.num_unique_tokens (W)", (num_unique_tokens + 1), ss.str()));
     }
 
-    token_info.push_back(std::make_unique<CollectionParserTokenInfo>(token));
+    token_info.push_back(std::unique_ptr<CollectionParserTokenInfo>(
+      new CollectionParserTokenInfo(token)));
   }
 
   if (static_cast<int>(token_info.size()) != num_unique_tokens) {

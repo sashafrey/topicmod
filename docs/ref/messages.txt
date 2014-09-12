@@ -641,6 +641,12 @@ Represents a configuration of a general score.
   message ScoreConfig {
     enum Type {
       Perplexity = 0;
+      SparsityTheta = 1;
+      SparsityPhi = 2;
+      ItemsProcessed = 3;
+      TopTokens = 4;
+      ThetaSnippet = 5;
+      TopicKernel = 6;
     }
 
     optional string name = 1;
@@ -657,9 +663,21 @@ Represents a configuration of a general score.
 
    A value that defines the type of the score.
 
-   ============== ====================================================
-   ``Perplexity`` Defines a perplexity score config
-   ============== ====================================================
+   ================== ====================================================
+   ``Perplexity``     Defines a config of the Perplexity score
+
+   ``SparsityTheta``  Defines a config of the SparsityTheta score
+
+   ``SparsityPhi``    Defines a config of the SparsityPhi score
+
+   ``ItemsProcessed`` Defines a config of the ItemsProcessed score
+
+   ``TopTokens``      Defines a config of the TopTokens score
+
+   ``ThetaSnippet``   Defines a config of the ThetaSnippet score
+
+   ``TopicKernel``    Defines a config of the TopicKernel score
+   ================== ====================================================
 
 .. attribute:: ScoreConfig.config
 
@@ -680,6 +698,12 @@ Represents a general result of score calculation.
   message ScoreData {
     enum Type {
       Perplexity = 0;
+      SparsityTheta = 1;
+      SparsityPhi = 2;
+      ItemsProcessed = 3;
+      TopTokens = 4;
+      ThetaSnippet = 5;
+      TopicKernel = 6;
     }
 
     optional string name = 1;
@@ -696,9 +720,21 @@ Represents a general result of score calculation.
 
    A value that defines the type of the score.
 
-   ============== ================================================
-   ``Perplexity`` Defines a perplexity score
-   ============== ================================================
+   ================== =========================================================
+   ``Perplexity``     Defines a Perplexity score data
+
+   ``SparsityTheta``  Defines a SparsityTheta score data
+
+   ``SparsityPhi``    Defines a SparsityPhi score data
+
+   ``ItemsProcessed`` Defines a ItemsProcessed score data
+
+   ``TopTokens``      Defines a TopTokens score data
+
+   ``ThetaSnippet``   Defines a ThetaSnippet score data
+
+   ``TopicKernel``    Defines a TopicKernel score data
+   ================== =========================================================
 
 .. attribute:: ScoreData.data
 
@@ -717,8 +753,15 @@ Represents a configuration of a perplexity score.
 .. code-block:: bash
 
   message PerplexityScoreConfig {
+    enum Type {
+      UnigramDocumentModel = 0;
+      UnigramCollectionModel = 1;
+    }
+
     optional string field_name = 1 [default = "@body"];
     optional string stream_name = 2 [default = "@global"];
+    optional Type model_type = 3 [default = UnigramDocumentModel];
+    optional string dictionary_name = 4;
   }
 
 
@@ -739,6 +782,276 @@ Represents a result of calculation of a perplexity score.
     optional double normalizer = 3;
     optional int32 zero_words = 4;
   }
+
+
+.. _SparsityThetaScoreConfig:
+
+SparsityThetaScoreConfig
+========================
+
+.. class:: messages_pb2.SparsityThetaScoreConfig
+
+Represents a configuration of a theta sparsity score.
+
+.. code-block:: bash
+
+  message SparsityThetaScoreConfig {
+    optional string field_name = 1 [default = "@body"];
+    optional string stream_name = 2 [default = "@global"];
+    optional float eps = 3 [default = 1e-37];
+    optional BoolArray topics_to_score = 4;
+  }
+
+
+.. _SparsityThetaScore:
+
+SparsityThetaScore
+==================
+
+.. class:: messages_pb2.SparsityThetaScoreConfig
+
+Represents a result of calculation of a theta sparsity score.
+
+.. code-block:: bash
+
+  message SparsityThetaScore {
+    optional double value = 1;
+    optional int32 zero_topics = 2;
+    optional int32 total_topics = 3;
+  }
+
+
+.. _SparsityPhiScoreConfig:
+
+SparsityPhiScoreConfig
+======================
+
+.. class:: messages_pb2.SparsityPhiScoreConfig
+
+Represents a configuration of a sparsity phi score.
+
+.. code-block:: bash
+
+  message SparsityPhiScoreConfig {
+    optional float eps = 1 [default = 1e-37];
+    optional BoolArray topics_to_score = 2;
+  }
+
+
+
+.. _SparsityPhiScore:
+
+SparsityPhiScore
+================
+
+.. class:: messages_pb2.SparsityPhiScore
+
+Represents a result of calculation of a phi sparsity score.
+
+.. code-block:: bash
+
+  message SparsityPhiScore {
+    optional double value = 1;
+    optional int32 zero_tokens = 2;
+    optional int32 total_tokens = 3;
+  }
+
+
+.. _ItemsProcessedScoreConfig:
+
+ItemsProcessedScoreConfig
+=========================
+
+.. class:: messages_pb2.ItemsProcessedScoreConfig
+
+Represents a configuration of an items processed score.
+
+.. code-block:: bash
+
+  message ItemsProcessedScoreConfig {
+    optional string field_name = 1 [default = "@body"];
+    optional string stream_name = 2 [default = "@global"];
+  }
+
+
+.. _ItemsProcessedScore:
+
+ItemsProcessedScore
+===================
+
+.. class:: messages_pb2.ItemsProcessedScore
+
+Represents a result of calculation of an items processed score.
+
+.. code-block:: bash
+
+  message ItemsProcessedScore {
+    optional int32 value = 1;
+  }
+
+
+.. _TopTokensScoreConfig:
+
+TopTokensScoreConfig
+====================
+
+.. class:: messages_pb2.TopTokensScoreConfig
+
+Represents a configuration of a top tokens score.
+
+.. code-block:: bash
+
+  message TopTokensScoreConfig {
+    optional int32 num_tokens = 1 [default = 10];
+    repeated int32 topic_id = 2 [packed = true];
+  }
+
+
+.. _TopTokensScore:
+
+TopTokensScore
+====================
+
+.. class:: messages_pb2.TopTokensScore
+
+Represents a result of calculation of a top tokens score.
+
+.. code-block:: bash
+
+  message TopTokensScore {
+    repeated StringArray values = 1;
+  }
+
+
+.. _ThetaSnippetScoreConfig:
+
+ThetaSnippetScoreConfig
+=======================
+
+.. class:: messages_pb2.ThetaSnippetScoreConfig
+
+Represents a configuration of a theta snippet score.
+
+.. code-block:: bash
+
+  message ThetaSnippetScoreConfig {
+    optional string field_name = 1 [default = "@body"];
+    optional string stream_name = 2 [default = "@global"];
+    repeated int32 item_id = 3 [packed = true];
+  }
+
+
+.. _ThetaSnippetScore:
+
+ThetaSnippetScore
+=================
+
+.. class:: messages_pb2.ThetaSnippetScore
+
+Represents a result of calculation of a theta snippet score.
+
+.. code-block:: bash
+
+  message ThetaSnippetScore {
+    repeated int32 item_id = 1;
+    repeated FloatArray values = 2;
+  }
+
+
+.. _TopicKernelScoreConfig:
+
+TopicKernelScoreConfig
+======================
+
+.. class:: messages_pb2.TopicKernelScoreConfig
+
+Represents a configuration of a topic kernel score.
+
+.. code-block:: bash
+
+  message TopicKernelScoreConfig {
+    optional float eps = 1 [default = 1e-37];
+    optional BoolArray topics_to_score = 2;
+    optional double probability_mass_threshold = 3 [default = 0.1];
+  }
+
+* *Kernel* of a topic model is defined as the list of all tokens such that
+  the probability ``p(t | w)`` exceeds probability mass threshold.
+
+* *Kernel size* of a topic ``t`` is defined as the number of tokens in its kernel.
+
+* *Topic purity* of a topic ``t`` is defined as the sum of ``p(w | t)``
+  across all tokens ``w`` in the kernel.
+
+* *Topic contrast* of a topic ``t`` is defined as the sum of ``p(t | w)``
+  across all tokens ``w`` in the kernel defided by the size of the kernel.
+
+.. attribute:: TopicKernelScoreConfig.eps
+
+  Defines the minimum threshold on kernel size.
+  In most cases this parameter should be kept at the default value.
+
+.. attribute:: TopicKernelScoreConfig.topics_to_score
+
+  Defines the list of topics to calculate the kernel and its statistics.
+
+.. attribute:: TopicKernelScoreConfig.probability_mass_threshold
+
+  Defines the probability mass threshold (see the definition of *kernel* above).
+
+
+.. _TopicKernelScore:
+
+TopicKernelScore
+================
+
+.. class:: messages_pb2.TopicKernelScore
+
+Represents a result of calculation of a topic kernel score.
+
+.. code-block:: bash
+
+  message TopicKernelScore {
+    optional DoubleArray kernel_size = 1;
+    optional DoubleArray kernel_purity = 2;
+    optional DoubleArray kernel_contrast = 3;
+    optional double average_kernel_size = 4;
+    optional double average_kernel_purity = 5;
+    optional double average_kernel_contrast = 6;
+  }
+
+.. attribute:: TopicKernelScore.kernel_size
+
+  Provides the kernel size for all requested topics.
+  The length of this :ref:`DoubleArray` is always equal to the overall number of topics.
+  The values of ``-1`` correspond to non-calculated topics.
+  The remaining values carry the kernel size of the requested topics.
+
+.. attribute:: TopicKernelScore.kernel_purity
+
+  Provides the kernel purity for all requested topics.
+  The length of this :ref:`DoubleArray` is always equal to the overall number of topics.
+  The values of ``-1`` correspond to non-calculated topics.
+  The remaining values carry the kernel size of the requested topics.
+
+.. attribute:: TopicKernelScore.kernel_contrast
+
+  Provides the kernel contrast for all requested topics.
+  The length of this :ref:`DoubleArray` is always equal to the overall number of topics.
+  The values of ``-1`` correspond to non-calculated topics.
+  The remaining values carry the kernel contrast of the requested topics.
+
+.. attribute:: TopicKernelScore.average_kernel_size
+
+  Provides the average kernel size across all the requested topics.
+
+.. attribute:: TopicKernelScore.average_kernel_purity
+
+  Provides the average kernel purity across all the requested topics.
+
+.. attribute:: TopicKernelScore.average_kernel_contrast
+
+  Provides the average kernel contrast across all the requested topics.
 
 
 .. _TopicModel:

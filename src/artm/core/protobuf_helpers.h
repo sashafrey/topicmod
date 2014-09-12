@@ -44,9 +44,9 @@ inline bool model_has_token(const ::artm::TopicModel& topic_model,
 }
 
 template<class T, class V>
-void repeated_field_append(T& field, int index, V value) {
-  V new_value = field->value(index) + value;
-  field->set_value(index, new_value);
+void repeated_field_append(T* field, int index, V value) {
+  V new_value = field->Get(index) + value;
+  field->Set(index, new_value);
 }
 
 

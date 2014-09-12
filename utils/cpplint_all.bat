@@ -32,6 +32,7 @@ call cpplint.bat ../src/artm/score_sandbox/sparsity_phi.cc
 call cpplint.bat ../src/artm/score_sandbox/items_processed.cc
 call cpplint.bat ../src/artm/score_sandbox/top_tokens.cc
 call cpplint.bat ../src/artm/score_sandbox/theta_snippet.cc
+call cpplint.bat ../src/artm/score_sandbox/topic_kernel.cc
 
 call cpplint.bat ../src/artm_tests/boost_thread_test.cc
 call cpplint.bat ../src/artm_tests/collection_parser_test.cc
@@ -90,3 +91,4 @@ call cpplint.bat ../src/artm/score_sandbox/sparsity_phi.h
 call cpplint.bat ../src/artm/score_sandbox/items_processed.h
 call cpplint.bat ../src/artm/score_sandbox/top_tokens.h
 call cpplint.bat ../src/artm/score_sandbox/theta_snippet.h
+call cpplint.bat ../src/artm/score_sandbox/topic_kernel.h

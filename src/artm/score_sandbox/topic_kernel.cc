@@ -37,7 +37,7 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::TopicModel&
   double probability_mass_threshold = config_.probability_mass_threshold();
   if (probability_mass_threshold < 0 || probability_mass_threshold > 1) {
     BOOST_THROW_EXCEPTION(artm::core::ArgumentOutOfRangeException(
-        "TopicKernelScoreConfig.probablility_mass_threshold", 
+        "TopicKernelScoreConfig.probablility_mass_threshold",
         config_.probability_mass_threshold()));
   }
 
@@ -60,10 +60,10 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::TopicModel&
         kernel_contrast->add_value(-1);
     }
   }
-  
+
   for (int token_index = 0; token_index < tokens_size; token_index++) {
     ::artm::core::TopicWeightIterator topic_iter = topic_model.GetTopicWeightIterator(token_index);
-    
+
     // calculate normalizer
     double normalizer = 0.0;
     while (topic_iter.NextTopic() < topics_size) {
@@ -77,13 +77,12 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::TopicModel&
       if (topics_to_score.value(topic_index)) {
         double p_tw = topic_iter.Weight() *
           topic_iter.GetNormalizer()[topic_index] / normalizer;
-        
+
         if (p_tw >= probability_mass_threshold) {
-          artm::core::repeated_field_append<DoubleArray*, double>(kernel_size, topic_index, 1);
-          artm::core::repeated_field_append<DoubleArray*, double>(
-              kernel_purity, topic_index, topic_iter.Weight());
-          artm::core::repeated_field_append<DoubleArray*, double>(
-              kernel_contrast, topic_index, p_tw);
+          artm::core::repeated_field_append(kernel_size->mutable_value(), topic_index, 1.0);
+          artm::core::repeated_field_append(kernel_purity->mutable_value(), topic_index,
+                                            topic_iter.Weight());
+          artm::core::repeated_field_append(kernel_contrast->mutable_value(), topic_index, p_tw);
         }
       }
     }

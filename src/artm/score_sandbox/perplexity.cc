@@ -38,7 +38,7 @@ void Perplexity::AppendScore(
   int zero_words = 0;
   double normalizer = 0;
   double raw = 0;
-  
+
   bool has_dictionary = true;
   if (!config_.has_dictionary_name()) {
     has_dictionary = false;
@@ -47,21 +47,21 @@ void Perplexity::AppendScore(
   auto dictionary_ptr = dictionary(config_.dictionary_name());
   if (has_dictionary && dictionary_ptr == nullptr) {
     has_dictionary = false;
-  }  
-  
+  }
+
   bool use_document_unigram_model = true;
   if (config_.has_model_type()) {
     if (config_.model_type() == PerplexityScoreConfig_Type_UnigramCollectionModel) {
-      if (has_dictionary) {	  
-        use_document_unigram_model = false;	
+      if (has_dictionary) {
+        use_document_unigram_model = false;
       } else {
-        LOG(ERROR) << "Perplexity was configured to use UnigramCollectionModel with dictionary " << 
+        LOG(ERROR) << "Perplexity was configured to use UnigramCollectionModel with dictionary " <<
            config_.dictionary_name() << ". This dictionary can't be found.";
         return;
       }
-    }  
+    }
   }
-  
+
   for (int token_index = 0; token_index < field->token_count_size(); ++token_index) {
     double sum = 0.0;
     const artm::core::Token& token = token_dict[field->token_id(token_index)];
@@ -84,7 +84,7 @@ void Perplexity::AppendScore(
         } else {
           LOG(INFO) << "No token " << token.keyword << " from class " << token.class_id <<
               "in dictionary, document unigram model will be used.";
-          sum = token_count / n_d;		
+          sum = token_count / n_d;
         }
       }
       zero_words++;

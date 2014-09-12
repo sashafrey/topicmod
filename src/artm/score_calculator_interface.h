@@ -51,7 +51,6 @@ class ScoreCalculatorInterface {
 
  private:
   const ::artm::core::ThreadSafeDictionaryCollection* dictionaries_;
-
 };
 }  // namespace artm
 

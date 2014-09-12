@@ -5,6 +5,7 @@
 #include <math.h>
 
 #include "artm/core/exceptions.h"
+#include "artm/core/protobuf_helpers.h"
 #include "artm/core/topic_model.h"
 
 namespace artm {
@@ -78,14 +79,11 @@ std::shared_ptr<Score> TopicKernel::CalculateScore(const artm::core::TopicModel&
           topic_iter.GetNormalizer()[topic_index] / normalizer;
         
         if (p_tw >= probability_mass_threshold) {
-          double value = kernel_size->value(topic_index) + 1;
-          kernel_size->set_value(topic_index, value);
-
-          value = kernel_purity->value(topic_index) + topic_iter.Weight();
-          kernel_purity->set_value(topic_index, value);
-
-          value = kernel_contrast->value(topic_index) + p_tw;
-          kernel_contrast->set_value(topic_index, value);
+          artm::core::repeated_field_append<DoubleArray*, double>(kernel_size, topic_index, 1);
+          artm::core::repeated_field_append<DoubleArray*, double>(
+              kernel_purity, topic_index, topic_iter.Weight());
+          artm::core::repeated_field_append<DoubleArray*, double>(
+              kernel_contrast, topic_index, p_tw);
         }
       }
     }

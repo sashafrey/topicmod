@@ -4918,10 +4918,17 @@ class CollectionParserConfig : public ::google::protobuf::Message {
   inline ::std::string* release_dictionary_file_name();
   inline void set_allocated_dictionary_file_name(::std::string* dictionary_file_name);
 
-  // optional string cooccurrence_file_name = 6;
+  // optional int32 num_items_per_batch = 6 [default = 1000];
+  inline bool has_num_items_per_batch() const;
+  inline void clear_num_items_per_batch();
+  static const int kNumItemsPerBatchFieldNumber = 6;
+  inline ::google::protobuf::int32 num_items_per_batch() const;
+  inline void set_num_items_per_batch(::google::protobuf::int32 value);
+
+  // optional string cooccurrence_file_name = 7;
   inline bool has_cooccurrence_file_name() const;
   inline void clear_cooccurrence_file_name();
-  static const int kCooccurrenceFileNameFieldNumber = 6;
+  static const int kCooccurrenceFileNameFieldNumber = 7;
   inline const ::std::string& cooccurrence_file_name() const;
   inline void set_cooccurrence_file_name(const ::std::string& value);
   inline void set_cooccurrence_file_name(const char* value);
@@ -4930,12 +4937,21 @@ class CollectionParserConfig : public ::google::protobuf::Message {
   inline ::std::string* release_cooccurrence_file_name();
   inline void set_allocated_cooccurrence_file_name(::std::string* cooccurrence_file_name);
 
-  // optional int32 num_items_per_batch = 7 [default = 1000];
-  inline bool has_num_items_per_batch() const;
-  inline void clear_num_items_per_batch();
-  static const int kNumItemsPerBatchFieldNumber = 7;
-  inline ::google::protobuf::int32 num_items_per_batch() const;
-  inline void set_num_items_per_batch(::google::protobuf::int32 value);
+  // repeated string cooccurrence_token = 8;
+  inline int cooccurrence_token_size() const;
+  inline void clear_cooccurrence_token();
+  static const int kCooccurrenceTokenFieldNumber = 8;
+  inline const ::std::string& cooccurrence_token(int index) const;
+  inline ::std::string* mutable_cooccurrence_token(int index);
+  inline void set_cooccurrence_token(int index, const ::std::string& value);
+  inline void set_cooccurrence_token(int index, const char* value);
+  inline void set_cooccurrence_token(int index, const char* value, size_t size);
+  inline ::std::string* add_cooccurrence_token();
+  inline void add_cooccurrence_token(const ::std::string& value);
+  inline void add_cooccurrence_token(const char* value);
+  inline void add_cooccurrence_token(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& cooccurrence_token() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_cooccurrence_token();
 
   // @@protoc_insertion_point(class_scope:artm.CollectionParserConfig)
  private:
@@ -4949,23 +4965,24 @@ class CollectionParserConfig : public ::google::protobuf::Message {
   inline void clear_has_target_folder();
   inline void set_has_dictionary_file_name();
   inline void clear_has_dictionary_file_name();
-  inline void set_has_cooccurrence_file_name();
-  inline void clear_has_cooccurrence_file_name();
   inline void set_has_num_items_per_batch();
   inline void clear_has_num_items_per_batch();
+  inline void set_has_cooccurrence_file_name();
+  inline void clear_has_cooccurrence_file_name();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
   ::std::string* docword_file_path_;
   ::std::string* vocab_file_path_;
-  ::std::string* target_folder_;
   int format_;
   ::google::protobuf::int32 num_items_per_batch_;
+  ::std::string* target_folder_;
   ::std::string* dictionary_file_name_;
   ::std::string* cooccurrence_file_name_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> cooccurrence_token_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(7 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
 
   friend void  protobuf_AddDesc_artm_2fmessages_2eproto();
   friend void protobuf_AssignDesc_artm_2fmessages_2eproto();
@@ -10098,15 +10115,37 @@ inline void CollectionParserConfig::set_allocated_dictionary_file_name(::std::st
   }
 }
 
-// optional string cooccurrence_file_name = 6;
-inline bool CollectionParserConfig::has_cooccurrence_file_name() const {
+// optional int32 num_items_per_batch = 6 [default = 1000];
+inline bool CollectionParserConfig::has_num_items_per_batch() const {
   return (_has_bits_[0] & 0x00000020u) != 0;
 }
-inline void CollectionParserConfig::set_has_cooccurrence_file_name() {
+inline void CollectionParserConfig::set_has_num_items_per_batch() {
   _has_bits_[0] |= 0x00000020u;
 }
-inline void CollectionParserConfig::clear_has_cooccurrence_file_name() {
+inline void CollectionParserConfig::clear_has_num_items_per_batch() {
   _has_bits_[0] &= ~0x00000020u;
+}
+inline void CollectionParserConfig::clear_num_items_per_batch() {
+  num_items_per_batch_ = 1000;
+  clear_has_num_items_per_batch();
+}
+inline ::google::protobuf::int32 CollectionParserConfig::num_items_per_batch() const {
+  return num_items_per_batch_;
+}
+inline void CollectionParserConfig::set_num_items_per_batch(::google::protobuf::int32 value) {
+  set_has_num_items_per_batch();
+  num_items_per_batch_ = value;
+}
+
+// optional string cooccurrence_file_name = 7;
+inline bool CollectionParserConfig::has_cooccurrence_file_name() const {
+  return (_has_bits_[0] & 0x00000040u) != 0;
+}
+inline void CollectionParserConfig::set_has_cooccurrence_file_name() {
+  _has_bits_[0] |= 0x00000040u;
+}
+inline void CollectionParserConfig::clear_has_cooccurrence_file_name() {
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void CollectionParserConfig::clear_cooccurrence_file_name() {
   if (cooccurrence_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
@@ -10168,26 +10207,48 @@ inline void CollectionParserConfig::set_allocated_cooccurrence_file_name(::std::
   }
 }
 
-// optional int32 num_items_per_batch = 7 [default = 1000];
-inline bool CollectionParserConfig::has_num_items_per_batch() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+// repeated string cooccurrence_token = 8;
+inline int CollectionParserConfig::cooccurrence_token_size() const {
+  return cooccurrence_token_.size();
 }
-inline void CollectionParserConfig::set_has_num_items_per_batch() {
-  _has_bits_[0] |= 0x00000040u;
+inline void CollectionParserConfig::clear_cooccurrence_token() {
+  cooccurrence_token_.Clear();
 }
-inline void CollectionParserConfig::clear_has_num_items_per_batch() {
-  _has_bits_[0] &= ~0x00000040u;
+inline const ::std::string& CollectionParserConfig::cooccurrence_token(int index) const {
+  return cooccurrence_token_.Get(index);
 }
-inline void CollectionParserConfig::clear_num_items_per_batch() {
-  num_items_per_batch_ = 1000;
-  clear_has_num_items_per_batch();
+inline ::std::string* CollectionParserConfig::mutable_cooccurrence_token(int index) {
+  return cooccurrence_token_.Mutable(index);
 }
-inline ::google::protobuf::int32 CollectionParserConfig::num_items_per_batch() const {
-  return num_items_per_batch_;
+inline void CollectionParserConfig::set_cooccurrence_token(int index, const ::std::string& value) {
+  cooccurrence_token_.Mutable(index)->assign(value);
 }
-inline void CollectionParserConfig::set_num_items_per_batch(::google::protobuf::int32 value) {
-  set_has_num_items_per_batch();
-  num_items_per_batch_ = value;
+inline void CollectionParserConfig::set_cooccurrence_token(int index, const char* value) {
+  cooccurrence_token_.Mutable(index)->assign(value);
+}
+inline void CollectionParserConfig::set_cooccurrence_token(int index, const char* value, size_t size) {
+  cooccurrence_token_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* CollectionParserConfig::add_cooccurrence_token() {
+  return cooccurrence_token_.Add();
+}
+inline void CollectionParserConfig::add_cooccurrence_token(const ::std::string& value) {
+  cooccurrence_token_.Add()->assign(value);
+}
+inline void CollectionParserConfig::add_cooccurrence_token(const char* value) {
+  cooccurrence_token_.Add()->assign(value);
+}
+inline void CollectionParserConfig::add_cooccurrence_token(const char* value, size_t size) {
+  cooccurrence_token_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+CollectionParserConfig::cooccurrence_token() const {
+  return cooccurrence_token_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+CollectionParserConfig::mutable_cooccurrence_token() {
+  return &cooccurrence_token_;
 }
 
 

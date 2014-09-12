@@ -895,8 +895,9 @@ Represents a configuration of a collection parser.
     optional string vocab_file_path = 3;
     optional string target_folder = 4;
     optional string dictionary_file_name = 5;
-    optional string cooccurrence_file_name = 6;
-    optional int32 num_items_per_batch = 7 [default = 1000];
+    optional int32 num_items_per_batch = 6 [default = 1000];
+    optional string cooccurrence_file_name = 7;
+    repeated string cooccurrence_token = 8;
   }
 
 .. attribute:: CollectionParserConfig.format
@@ -952,6 +953,10 @@ Represents a configuration of a collection parser.
    that contains all unique tokens occured in the collection.
    The file will be created in :attr:`target_folder <CollectionParserConfig.target_folder>`.
 
+   This parameter is optional. The dictionary will be still collected even when this parameter is
+   not provided, but the resulting dictionary will be only returned as the result of
+   :ref:`ArtmRequestParseCollection`, but it will not be stored to disk.
+
    In the resulting dictionary each entry will have the following fields:
 
    * :attr:`DictionaryEntry.key_token` - the textual representation of the token,
@@ -962,17 +967,22 @@ Represents a configuration of a collection parser.
 
    * :attr:`DictionaryEntry.items_count` - the number of documents in the collection, containing the token.
 
-   * :attr:`DictionaryEntry.value` - the ratio between :attr:`DictionaryEntry.token_count`
-     and :attr:`DictionaryConfig.total_token_count`.
+   * :attr:`DictionaryEntry.value` - the ratio between :attr:`token_count <DictionaryEntry.token_count>`
+     and :attr:`total_token_count <DictionaryConfig.total_token_count>`.
 
    Use :ref:`ArtmRequestLoadDictionary` method to load the resulting dictionary.
 
+.. attribute:: CollectionParserConfig.num_items_per_batch
+
+   A value indicating the desired number of items per batch.
 
 .. attribute:: CollectionParserConfig.cooccurrence_file_name
 
    A file name where to save the :ref:`DictionaryConfig` message
    that contains information about co-occurrence of all pairs of tokens in the collection.
    The file will be created in :attr:`target_folder <CollectionParserConfig.target_folder>`.
+
+   This parameter is optional. No cooccurrence information will be collected if the filename is not provided.
 
    In the resulting dictionary each entry will correspond to two tokens ('<first>' and '<second>'),
    and carry the information about co-occurrence of this tokens in the collection.
@@ -988,7 +998,8 @@ Represents a configuration of a collection parser.
 
    Use :ref:`ArtmRequestLoadDictionary` method to load the resulting dictionary.
 
+.. attribute:: CollectionParserConfig.cooccurrence_token
 
-.. attribute:: CollectionParserConfig.num_items_per_batch
-
-   A value indicating the desired number of items per batch.
+   A list of tokens to collect cooccurrence information.
+   A cooccurrence of the pair `<first>~<second>` will be collected only when both tokens are present in
+   :attr:`CollectionParserConfig.cooccurrence_token`.

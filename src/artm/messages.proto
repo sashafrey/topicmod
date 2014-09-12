@@ -334,6 +334,7 @@ message CollectionParserConfig {
   optional string vocab_file_path = 3;
   optional string target_folder = 4;
   optional string dictionary_file_name = 5;
-  optional string cooccurrence_file_name = 6;
-  optional int32 num_items_per_batch = 7 [default = 1000];
+  optional int32 num_items_per_batch = 6 [default = 1000];
+  optional string cooccurrence_file_name = 7;
+  repeated string cooccurrence_token = 8;
 }

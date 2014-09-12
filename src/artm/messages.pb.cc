@@ -845,14 +845,15 @@ void protobuf_AssignDesc_artm_2fmessages_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(ThetaMatrix));
   CollectionParserConfig_descriptor_ = file->message_type(39);
-  static const int CollectionParserConfig_offsets_[7] = {
+  static const int CollectionParserConfig_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, format_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, docword_file_path_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, vocab_file_path_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, target_folder_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, dictionary_file_name_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, cooccurrence_file_name_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, num_items_per_batch_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, cooccurrence_file_name_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CollectionParserConfig, cooccurrence_token_),
   };
   CollectionParserConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -1181,14 +1182,15 @@ void protobuf_AddDesc_artm_2fmessages_2eproto() {
     "oatArray\022\036\n\004r_wt\030\002 \003(\0132\020.artm.FloatArray"
     "\"b\n\013ThetaMatrix\022\032\n\nmodel_name\030\001 \001(\t:\006@mo"
     "del\022\017\n\007item_id\030\002 \003(\005\022&\n\014item_weights\030\003 \003"
-    "(\0132\020.artm.FloatArray\"\245\002\n\026CollectionParse"
+    "(\0132\020.artm.FloatArray\"\301\002\n\026CollectionParse"
     "rConfig\022B\n\006format\030\001 \001(\0162#.artm.Collectio"
     "nParserConfig.Format:\rBagOfWordsUci\022\031\n\021d"
     "ocword_file_path\030\002 \001(\t\022\027\n\017vocab_file_pat"
     "h\030\003 \001(\t\022\025\n\rtarget_folder\030\004 \001(\t\022\034\n\024dictio"
-    "nary_file_name\030\005 \001(\t\022\036\n\026cooccurrence_fil"
-    "e_name\030\006 \001(\t\022!\n\023num_items_per_batch\030\007 \001("
-    "\005:\0041000\"\033\n\006Format\022\021\n\rBagOfWordsUci\020\000", 4716);
+    "nary_file_name\030\005 \001(\t\022!\n\023num_items_per_ba"
+    "tch\030\006 \001(\005:\0041000\022\036\n\026cooccurrence_file_nam"
+    "e\030\007 \001(\t\022\032\n\022cooccurrence_token\030\010 \003(\t\"\033\n\006F"
+    "ormat\022\021\n\rBagOfWordsUci\020\000", 4744);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "artm/messages.proto", &protobuf_RegisterTypes);
   DoubleArray::default_instance_ = new DoubleArray();
@@ -13725,8 +13727,9 @@ const int CollectionParserConfig::kDocwordFilePathFieldNumber;
 const int CollectionParserConfig::kVocabFilePathFieldNumber;
 const int CollectionParserConfig::kTargetFolderFieldNumber;
 const int CollectionParserConfig::kDictionaryFileNameFieldNumber;
-const int CollectionParserConfig::kCooccurrenceFileNameFieldNumber;
 const int CollectionParserConfig::kNumItemsPerBatchFieldNumber;
+const int CollectionParserConfig::kCooccurrenceFileNameFieldNumber;
+const int CollectionParserConfig::kCooccurrenceTokenFieldNumber;
 #endif  // !_MSC_VER
 
 CollectionParserConfig::CollectionParserConfig()
@@ -13750,8 +13753,8 @@ void CollectionParserConfig::SharedCtor() {
   vocab_file_path_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   target_folder_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   dictionary_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
-  cooccurrence_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   num_items_per_batch_ = 1000;
+  cooccurrence_file_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyString());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -13823,13 +13826,14 @@ void CollectionParserConfig::Clear() {
         dictionary_file_name_->clear();
       }
     }
+    num_items_per_batch_ = 1000;
     if (has_cooccurrence_file_name()) {
       if (cooccurrence_file_name_ != &::google::protobuf::internal::GetEmptyString()) {
         cooccurrence_file_name_->clear();
       }
     }
-    num_items_per_batch_ = 1000;
   }
+  cooccurrence_token_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -13924,12 +13928,28 @@ bool CollectionParserConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(50)) goto parse_cooccurrence_file_name;
+        if (input->ExpectTag(48)) goto parse_num_items_per_batch;
         break;
       }
 
-      // optional string cooccurrence_file_name = 6;
+      // optional int32 num_items_per_batch = 6 [default = 1000];
       case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_num_items_per_batch:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &num_items_per_batch_)));
+          set_has_num_items_per_batch();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(58)) goto parse_cooccurrence_file_name;
+        break;
+      }
+
+      // optional string cooccurrence_file_name = 7;
+      case 7: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_cooccurrence_file_name:
@@ -13941,22 +13961,25 @@ bool CollectionParserConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(56)) goto parse_num_items_per_batch;
+        if (input->ExpectTag(66)) goto parse_cooccurrence_token;
         break;
       }
 
-      // optional int32 num_items_per_batch = 7 [default = 1000];
-      case 7: {
+      // repeated string cooccurrence_token = 8;
+      case 8: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_num_items_per_batch:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &num_items_per_batch_)));
-          set_has_num_items_per_batch();
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_cooccurrence_token:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_cooccurrence_token()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->cooccurrence_token(this->cooccurrence_token_size() - 1).data(),
+            this->cooccurrence_token(this->cooccurrence_token_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(66)) goto parse_cooccurrence_token;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -14021,18 +14044,27 @@ void CollectionParserConfig::SerializeWithCachedSizes(
       5, this->dictionary_file_name(), output);
   }
 
-  // optional string cooccurrence_file_name = 6;
+  // optional int32 num_items_per_batch = 6 [default = 1000];
+  if (has_num_items_per_batch()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->num_items_per_batch(), output);
+  }
+
+  // optional string cooccurrence_file_name = 7;
   if (has_cooccurrence_file_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->cooccurrence_file_name().data(), this->cooccurrence_file_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      6, this->cooccurrence_file_name(), output);
+      7, this->cooccurrence_file_name(), output);
   }
 
-  // optional int32 num_items_per_batch = 7 [default = 1000];
-  if (has_num_items_per_batch()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(7, this->num_items_per_batch(), output);
+  // repeated string cooccurrence_token = 8;
+  for (int i = 0; i < this->cooccurrence_token_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->cooccurrence_token(i).data(), this->cooccurrence_token(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      8, this->cooccurrence_token(i), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -14089,19 +14121,28 @@ void CollectionParserConfig::SerializeWithCachedSizes(
         5, this->dictionary_file_name(), target);
   }
 
-  // optional string cooccurrence_file_name = 6;
+  // optional int32 num_items_per_batch = 6 [default = 1000];
+  if (has_num_items_per_batch()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->num_items_per_batch(), target);
+  }
+
+  // optional string cooccurrence_file_name = 7;
   if (has_cooccurrence_file_name()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->cooccurrence_file_name().data(), this->cooccurrence_file_name().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        6, this->cooccurrence_file_name(), target);
+        7, this->cooccurrence_file_name(), target);
   }
 
-  // optional int32 num_items_per_batch = 7 [default = 1000];
-  if (has_num_items_per_batch()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(7, this->num_items_per_batch(), target);
+  // repeated string cooccurrence_token = 8;
+  for (int i = 0; i < this->cooccurrence_token_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->cooccurrence_token(i).data(), this->cooccurrence_token(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(8, this->cooccurrence_token(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -14149,21 +14190,28 @@ int CollectionParserConfig::ByteSize() const {
           this->dictionary_file_name());
     }
 
-    // optional string cooccurrence_file_name = 6;
-    if (has_cooccurrence_file_name()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->cooccurrence_file_name());
-    }
-
-    // optional int32 num_items_per_batch = 7 [default = 1000];
+    // optional int32 num_items_per_batch = 6 [default = 1000];
     if (has_num_items_per_batch()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
           this->num_items_per_batch());
     }
 
+    // optional string cooccurrence_file_name = 7;
+    if (has_cooccurrence_file_name()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->cooccurrence_file_name());
+    }
+
   }
+  // repeated string cooccurrence_token = 8;
+  total_size += 1 * this->cooccurrence_token_size();
+  for (int i = 0; i < this->cooccurrence_token_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->cooccurrence_token(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -14189,6 +14237,7 @@ void CollectionParserConfig::MergeFrom(const ::google::protobuf::Message& from) 
 
 void CollectionParserConfig::MergeFrom(const CollectionParserConfig& from) {
   GOOGLE_CHECK_NE(&from, this);
+  cooccurrence_token_.MergeFrom(from.cooccurrence_token_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_format()) {
       set_format(from.format());
@@ -14205,11 +14254,11 @@ void CollectionParserConfig::MergeFrom(const CollectionParserConfig& from) {
     if (from.has_dictionary_file_name()) {
       set_dictionary_file_name(from.dictionary_file_name());
     }
-    if (from.has_cooccurrence_file_name()) {
-      set_cooccurrence_file_name(from.cooccurrence_file_name());
-    }
     if (from.has_num_items_per_batch()) {
       set_num_items_per_batch(from.num_items_per_batch());
+    }
+    if (from.has_cooccurrence_file_name()) {
+      set_cooccurrence_file_name(from.cooccurrence_file_name());
     }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
@@ -14239,8 +14288,9 @@ void CollectionParserConfig::Swap(CollectionParserConfig* other) {
     std::swap(vocab_file_path_, other->vocab_file_path_);
     std::swap(target_folder_, other->target_folder_);
     std::swap(dictionary_file_name_, other->dictionary_file_name_);
-    std::swap(cooccurrence_file_name_, other->cooccurrence_file_name_);
     std::swap(num_items_per_batch_, other->num_items_per_batch_);
+    std::swap(cooccurrence_file_name_, other->cooccurrence_file_name_);
+    cooccurrence_token_.Swap(&other->cooccurrence_token_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

@@ -93,6 +93,7 @@ const char* ArtmGetLastErrorMessage() {
 
 int ArtmSaveBatch(const char* disk_path, int length, const char* batch) {
   try {
+    EnableLogging();
     artm::Batch batch_object;
     ParseFromArray(batch, length, &batch_object);
 
@@ -313,6 +314,7 @@ int ArtmDisposeDictionary(int master_id, const char* dictionary_name) {
 
 int ArtmRequestParseCollection(int length, const char* collection_parser_config) {
   try {
+    EnableLogging();
     artm::CollectionParserConfig config;
     ParseFromArray(collection_parser_config, length, &config);
     ::artm::core::CollectionParser collection_parser(config);
@@ -324,6 +326,7 @@ int ArtmRequestParseCollection(int length, const char* collection_parser_config)
 
 int ArtmRequestLoadDictionary(const char* filename) {
   try {
+    EnableLogging();
     auto dictionary = std::make_shared<::artm::DictionaryConfig>();
     ::artm::core::BatchHelpers::LoadMessage(filename, dictionary.get());
     dictionary->SerializeToString(last_message());

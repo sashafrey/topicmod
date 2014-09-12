@@ -29,6 +29,9 @@ TEST(CollectionParser, Basic) {
   config.set_target_folder("collection_parser_test/");
   config.set_dictionary_file_name("test_parser.dictionary");
   config.set_cooccurrence_file_name("test_parser.cooc.dictionary");
+  config.add_cooccurrence_token("token1");
+  config.add_cooccurrence_token("token2");
+  config.add_cooccurrence_token("token3");
   config.set_num_items_per_batch(1);
   config.set_vocab_file_path("../../../test_data/vocab.parser_test.txt");
   config.set_docword_file_path("../../../test_data/docword.parser_test.txt");

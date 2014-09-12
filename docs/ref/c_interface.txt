@@ -422,7 +422,7 @@ Returns a :ref:`DictionaryConfig` message that lists all tokens, occured in the 
 
 .. c:function::  int ArtmRequestParseCollection(int length, const char* collection_parser_config)
 
-   :param const_char* collection_parser_config:
+   :param const_char*: collection_parser_config:
       Serialized :ref:`CollectionParserConfig` message,
       describing the configuration the collection parser.
 
@@ -450,12 +450,12 @@ See the description of :ref:`CollectionParserConfig` message for more details ab
 ArtmRequestLoadDictionary
 -------------------------
 
-.. c:function::  int ArtmRequestLoadDictionary(const char* filename)
-
 Loads a :ref:`DictionaryConfig` message from disk.
 
-   :param const_char* collection_parser_config:
-      A full file name of a file that contains a serialized DictionaryConfig message.
+.. c:function::  int ArtmRequestLoadDictionary(const char* filename)
+
+   :param const_char*: filename:
+            A full file name of a file that contains a serialized DictionaryConfig message.
 
    :return: In case of success, returns the length in bytes of a buffer that should be allocated on callers site
             and then passed to :c:func:`ArtmCopyRequestResult` method.

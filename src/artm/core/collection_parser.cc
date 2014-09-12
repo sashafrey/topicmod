@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <set>
 #include <utility>
 
 #include "boost/lexical_cast.hpp"
@@ -38,8 +39,22 @@ namespace {
 
   class CoocurrenceStatisticsAccumulator {
    public:
+    CoocurrenceStatisticsAccumulator(
+        const std::vector<std::unique_ptr<CollectionParserTokenInfo>>& token_info,
+        const ::google::protobuf::RepeatedPtrField< ::std::string>& tokens_to_collect)
+        : token_info_(token_info),
+          tokens_to_collect_(),
+          token_coocurrence_(),
+          item_tokens_() {
+      for (int i = 0; i < tokens_to_collect.size(); ++i) {
+        tokens_to_collect_.insert(tokens_to_collect.Get(i));
+      }
+    }
+
     void AppendTokenId(int token_id) {
-      item_tokens_.push_back(token_id);
+      if (tokens_to_collect_.find(token_info_[token_id]->keyword) != tokens_to_collect_.end()) {
+        item_tokens_.push_back(token_id);
+      }
     }
 
     void FlushNewItem() {
@@ -51,19 +66,16 @@ namespace {
           ++second_token_id) {
           int first_token = item_tokens_[first_token_id];
           int second_token = item_tokens_[second_token_id];
-          auto iter = token_coocurrence.find(std::make_pair(first_token, second_token));
-          if (iter == token_coocurrence.end()) {
-            const int max_size = (1000 * 1000 * 1000);
-            if (token_coocurrence.size() == max_size) {
-              LOG(WARNING) << "The size of cooccurrence dictionary exceed 1.000.000.000 entries. "
-                           << "No new tokens will be collected.";
-            }
-
-            if (token_coocurrence.size() > max_size)
-              continue;
-
-            token_coocurrence.insert(
+          auto iter = token_coocurrence_.find(std::make_pair(first_token, second_token));
+          if (iter == token_coocurrence_.end()) {
+            token_coocurrence_.insert(
               std::make_pair(std::make_pair(first_token, second_token), 1));
+
+            // Warn about too large dictionaries.
+            if (token_coocurrence_.size() % 1000000 == 0) {
+              LOG(WARNING) << "The size of cooccurrence dictionary has reached "
+                << token_coocurrence_.size();
+            }
           } else {
             iter->second++;
           }
@@ -73,12 +85,11 @@ namespace {
       item_tokens_.clear();
     }
 
-    void Export(const std::vector<std::unique_ptr<CollectionParserTokenInfo>>& token_info,
-                DictionaryConfig* dictionary) {
-      for (auto iter = token_coocurrence.begin(); iter != token_coocurrence.end(); ++iter) {
+    void Export(DictionaryConfig* dictionary) {
+      for (auto iter = token_coocurrence_.begin(); iter != token_coocurrence_.end(); ++iter) {
         DictionaryEntry *entry = dictionary->add_entry();
-        std::string first_key = token_info[iter->first.first]->keyword;
-        std::string second_key = token_info[iter->first.second]->keyword;
+        std::string first_key = token_info_[iter->first.first]->keyword;
+        std::string second_key = token_info_[iter->first.second]->keyword;
         std::string key = (first_key < second_key) ? (first_key + "~" + second_key)
                                                    : (second_key + "~" + first_key);
         entry->set_key_token(key);
@@ -87,7 +98,9 @@ namespace {
     }
 
    private:
-    std::map<std::pair<int, int>, int> token_coocurrence;
+    const std::vector<std::unique_ptr<CollectionParserTokenInfo>>& token_info_;
+    std::set<std::string> tokens_to_collect_;
+    std::map<std::pair<int, int>, int> token_coocurrence_;
     std::vector<int> item_tokens_;
   };
 }  // namespace
@@ -97,10 +110,12 @@ CollectionParser::CollectionParser(const ::artm::CollectionParserConfig& config)
 
 std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
   if (!boost::filesystem::exists(config_.vocab_file_path()))
-    BOOST_THROW_EXCEPTION(DiskReadException("File " + config_.vocab_file_path() + " does not exist."));
+    BOOST_THROW_EXCEPTION(DiskReadException(
+      "File " + config_.vocab_file_path() + " does not exist."));
 
   if (!boost::filesystem::exists(config_.docword_file_path()))
-    BOOST_THROW_EXCEPTION(DiskReadException("File " + config_.docword_file_path() + " does not exist."));
+    BOOST_THROW_EXCEPTION(DiskReadException(
+      "File " + config_.docword_file_path() + " does not exist."));
 
   boost::iostreams::stream<mapped_file_source> vocab(config_.vocab_file_path());
   boost::iostreams::stream<mapped_file_source> docword(config_.docword_file_path());
@@ -126,8 +141,15 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
   std::vector<std::unique_ptr<CollectionParserTokenInfo>> token_info;
   token_info.reserve(num_unique_tokens);
   std::unique_ptr<CoocurrenceStatisticsAccumulator> cooc_accum;
-  if (config_.has_cooccurrence_file_name())
-    cooc_accum.reset(new CoocurrenceStatisticsAccumulator());
+  if (config_.has_cooccurrence_file_name()) {
+    if (config_.cooccurrence_token_size() == 0) {
+      BOOST_THROW_EXCEPTION(InvalidOperation(
+        "CollectionParser.cooccurrence_token is empty"));
+    } else {
+      cooc_accum.reset(new CoocurrenceStatisticsAccumulator(
+        token_info, config_.cooccurrence_token()));
+    }
+  }
 
   for (std::string token; vocab >> token;) {
     if (static_cast<int>(token_info.size()) >= num_unique_tokens) {
@@ -198,6 +220,7 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
       // Increment statistics
       total_items_count++;
       if (cooc_accum) cooc_accum->FlushNewItem();
+      LOG_IF(INFO, total_items_count % 100000 == 0) << total_items_count << " documents parsed.";
     }
 
     auto iter = batch_dictionary.find(token_id);
@@ -244,7 +267,7 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
   // Craft the co-occurence dictionary
   if (cooc_accum != nullptr) {
     DictionaryConfig cooc;
-    cooc_accum->Export(token_info, &cooc);
+    cooc_accum->Export(&cooc);
     cooc.set_total_items_count(total_items_count);
     ::artm::core::BatchHelpers::SaveMessage(config_.cooccurrence_file_name(),
                                             config_.target_folder(), cooc);

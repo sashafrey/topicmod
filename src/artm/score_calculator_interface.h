@@ -3,10 +3,12 @@
 #ifndef SRC_ARTM_SCORE_CALCULATOR_INTERFACE_H_
 #define SRC_ARTM_SCORE_CALCULATOR_INTERFACE_H_
 
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
 
+#include "artm/core/dictionary.h"
 #include "artm/core/common.h"
 #include "artm/messages.pb.h"
 
@@ -43,8 +45,13 @@ class ScoreCalculatorInterface {
       const artm::core::TopicModel& topic_model,
       const std::vector<float>& theta,
       Score* score) { }
-};
 
+  std::shared_ptr<::artm::core::DictionaryMap> dictionary(const std::string& dictionary_name);
+  void set_dictionaries(const ::artm::core::ThreadSafeDictionaryCollection* dictionaries);
+
+ private:
+  const ::artm::core::ThreadSafeDictionaryCollection* dictionaries_;
+};
 }  // namespace artm
 
 #endif  // SRC_ARTM_SCORE_CALCULATOR_INTERFACE_H_

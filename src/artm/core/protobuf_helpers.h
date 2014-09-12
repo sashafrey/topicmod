@@ -43,6 +43,13 @@ inline bool model_has_token(const ::artm::TopicModel& topic_model,
   return false;
 }
 
+template<class T, class V>
+void repeated_field_append(T* field, int index, V value) {
+  V new_value = field->Get(index) + value;
+  field->Set(index, new_value);
+}
+
+
 }  // namespace core
 }  // namespace artm
 

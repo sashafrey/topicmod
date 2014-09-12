@@ -7,6 +7,7 @@ set(SRC_LIST
 	messages.pb.h
 	regularizer_interface.cc
 	regularizer_interface.h
+	score_calculator_interface.cc
 	score_calculator_interface.h
 	core/batch_manager.cc
 	core/batch_manager.h
@@ -75,11 +76,14 @@ set(SRC_LIST
 	score_sandbox/theta_snippet.h
 	score_sandbox/top_tokens.cc
 	score_sandbox/top_tokens.h
+	score_sandbox/topic_kernel.cc
+	score_sandbox/topic_kernel.h
 )
 
 FILE(GLOB_RECURSE SRC_LIST_OTHER
 	regularizer_interface.cc
 	regularizer_interface.h
+	score_calculator_interface.cc
 	score_calculator_interface.h
 	messages.pb.cc
 	messages.pb.h

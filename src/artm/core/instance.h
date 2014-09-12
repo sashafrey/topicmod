@@ -21,6 +21,8 @@
 #include "artm/core/template_manager.h"
 #include "artm/core/thread_safe_holder.h"
 
+#include "artm/score_calculator_interface.h"
+
 namespace artm {
 namespace core {
 
@@ -98,6 +100,8 @@ class Instance : boost::noncopyable {
   void DisposeRegularizer(const std::string& name);
   void CreateOrReconfigureDictionary(const DictionaryConfig& config);
   void DisposeDictionary(const std::string& name);
+
+  std::shared_ptr<ScoreCalculatorInterface> CreateScoreCalculator(const ScoreConfig& config);
 
  private:
   void PopulateClassId(ModelConfig* model_config);

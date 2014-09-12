@@ -157,6 +157,13 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
   score_config.set_name("train_theta_snippet");
   master_config.add_score_config()->CopyFrom(score_config);
 
+  ::artm::TopicKernelScoreConfig topic_kernel_config;
+  std::string tr = topic_kernel_config.SerializeAsString();
+  score_config.set_config(topic_kernel_config.SerializeAsString());
+  score_config.set_type(::artm::ScoreConfig_Type_TopicKernel);
+  score_config.set_name("topic_kernel");
+  master_config.add_score_config()->CopyFrom(score_config);
+
   // MasterProxyConfig master_proxy_config;
   // master_proxy_config.set_node_connect_endpoint("tcp://localhost:5555");
   // master_proxy_config.mutable_config()->CopyFrom(master_config);
@@ -216,6 +223,7 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
   model_config.add_score_name("train_items_processed");
   model_config.add_score_name("top_tokens");
   model_config.add_score_name("train_theta_snippet");
+  model_config.add_score_name("topic_kernel");
 
   Model model(master_component, model_config);
 
@@ -243,6 +251,7 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
   std::shared_ptr<ItemsProcessedScore> test_items_processed, train_items_processed;
   std::shared_ptr<TopTokensScore> top_tokens;
   std::shared_ptr<ThetaSnippetScore> train_theta_snippet;
+  std::shared_ptr<TopicKernelScore> topic_kernel;
 
   for (int iter = 0; iter < 10; ++iter) {
     master_component.InvokeIteration(1);
@@ -257,6 +266,8 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
     sparsity_phi = master_component.GetScoreAs<::artm::SparsityPhiScore>(model, "sparsity_phi");
     test_items_processed = master_component.GetScoreAs<::artm::ItemsProcessedScore>(model, "test_items_processed");
     train_items_processed = master_component.GetScoreAs<::artm::ItemsProcessedScore>(model, "train_items_processed");
+    topic_kernel = master_component.GetScoreAs<::artm::TopicKernelScore>(model, "topic_kernel");
+
     std::cout << "Iter #" << (iter + 1) << ": "
               << "\n\t#Tokens = "  << topic_model->token_size() << ", "
               << "\n\tTest perplexity = " << test_perplexity->value() << ", "
@@ -265,7 +276,10 @@ void proc(int argc, char * argv[], int processors_count, int instance_size) {
               << "\n\tTrain sparsity theta = " << train_sparsity_theta->value() << ", "
               << "\n\tSpatsity phi = " << sparsity_phi->value() << ", "
               << "\n\tTest items processed = " << test_items_processed->value() << ", "
-              << "\n\tTrain items processed = " << train_items_processed->value() << endl;
+              << "\n\tTrain items processed = " << train_items_processed->value() << ", "
+              << "\n\tKernel size = " << topic_kernel->average_kernel_size() << ", "
+              << "\n\tKernel purity = " << topic_kernel->average_kernel_purity() << ", "
+              << "\n\tKernel contrast = " << topic_kernel->average_kernel_contrast() << endl;
   }
 
   std::cout << endl;

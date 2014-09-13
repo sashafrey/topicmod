@@ -187,6 +187,7 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
 
   int64_t total_token_count = 0;
   int64_t total_items_count = 0;
+  int token_count_zero = 0;
 
   int item_id, token_id, token_count;
   for (std::string token; docword >> item_id >> token_id >> token_count;) {
@@ -203,6 +204,11 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
       }
 
       BOOST_THROW_EXCEPTION(ArgumentOutOfRangeException("wordID", token_id, ss.str()));
+    }
+
+    if (token_count == 0) {
+      token_count_zero++;
+      continue;
     }
 
     token_id--;  // convert 1-based to zero-based index
@@ -274,6 +280,9 @@ std::shared_ptr<DictionaryConfig> CollectionParser::ParseBagOfWordsUci() {
     ::artm::core::BatchHelpers::SaveMessage(config_.cooccurrence_file_name(),
                                             config_.target_folder(), cooc);
   }
+
+  LOG_IF(WARNING, token_count_zero > 0) << "Found " << token_count_zero << " tokens with zero "
+                                        << "occurrencies. All these tokens were ignored.";
 
   return retval;
 }

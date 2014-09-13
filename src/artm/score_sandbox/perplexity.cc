@@ -65,7 +65,9 @@ void Perplexity::AppendScore(
   for (int token_index = 0; token_index < field->token_count_size(); ++token_index) {
     double sum = 0.0;
     const artm::core::Token& token = token_dict[field->token_id(token_index)];
-    double token_count = static_cast<double>(field->token_count(token_index));
+    int token_count_int = field->token_count(token_index);
+    if (token_count_int == 0) continue;
+    double token_count = static_cast<double>(token_count_int);
 
     if (topic_model.has_token(token)) {
       ::artm::core::TopicWeightIterator topic_iter = topic_model.GetTopicWeightIterator(token);

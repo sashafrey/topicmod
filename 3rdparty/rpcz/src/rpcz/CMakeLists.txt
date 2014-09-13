@@ -28,10 +28,6 @@ if (rpcz_build_shared)
     add_library(rpcz SHARED ${RPCZ_SOURCES})
     target_link_libraries(rpcz ${RPCZ_LIB_DEPS})
     set(RPCZ_TARGET_LIBS rpcz)
-
-	install(TARGETS ${RPCZ_TARGET_LIBS}
-		DESTINATION lib
-		)
 endif(rpcz_build_shared)
 
 if(rpcz_build_static)
@@ -44,8 +40,4 @@ endif(rpcz_build_static)
 if (rpcz_build_zsendrp)
     add_executable(zsendrpc zsendrpc.cc)
     target_link_libraries(zsendrpc rpcz ${Boost_PROGRAM_OPTIONS_LIBRARIES})
-
-	install(TARGETS zsendrpc
-		RUNTIME DESTINATION bin
-		)
 endif(rpcz_build_zsendrp)

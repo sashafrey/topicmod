@@ -416,8 +416,10 @@ list(APPEND sources ${CMAKE_CURRENT_BINARY_DIR}/platform.hpp)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/libzmq.pc.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/libzmq.pc)
 set(zmq-pkgconfig ${CMAKE_CURRENT_BINARY_DIR}/libzmq.pc)
 
+if (0) # disable installer
 if(NOT ZMQ_BUILD_FRAMEWORK)
   install(FILES ${CMAKE_CURRENT_BINARY_DIR}/libzmq.pc DESTINATION lib/pkgconfig)
+endif()
 endif()
 
 
@@ -635,6 +637,10 @@ endforeach()
 #-----------------------------------------------------------------------------
 # installer
 
+install(TARGETS libzmq RUNTIME DESTINATION bin)
+
+if(0) # disable install
+
 if(MSVC)
   install(TARGETS libzmq libzmq-static
           ARCHIVE DESTINATION lib
@@ -780,6 +786,8 @@ if(MSVC)
     DISPLAY_NAME "Minimal install, runtime only")
 endif()
 
+endif(0)
+
 # Export this for library to help build this as a sub-project
 set(ZEROMQ_LIBRARY libzmq CACHE STRING "ZeroMQ library")
 
@@ -791,3 +799,4 @@ if(MSVC_VERSION EQUAL 1600)
     file(APPEND "${ZMQ_SLN_FILENAME}" "\n# This should be regenerated!\n")
   endif()
 endif()
+

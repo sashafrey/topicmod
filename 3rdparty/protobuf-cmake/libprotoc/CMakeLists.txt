@@ -45,6 +45,3 @@ set_target_properties(libprotoc PROPERTIES OUTPUT_NAME "protoc")
 
 set(PROTOBUF_PROTOC_LIBRARY libprotoc CACHE INTERNAL "libprotoc build")
 
-install(TARGETS libprotoc
-    DESTINATION ${LIB_DIR}
-    )

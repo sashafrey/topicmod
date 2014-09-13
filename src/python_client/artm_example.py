@@ -1,11 +1,11 @@
 import sys
-sys.path.append('BigARTM')
+sys.path.append('src')
 
 from python_interface import *
 import glob
 
-os.environ['PATH'] = ';'.join([os.path.abspath(os.curdir) + '\\BigARTM', os.environ['PATH']])
-library = ArtmLibrary(os.path.abspath(os.curdir) + '\\BigARTM\\artm.dll')
+os.environ['PATH'] = ';'.join([os.path.abspath(os.curdir) + '\\bin', os.environ['PATH']])
+library = ArtmLibrary(os.path.abspath(os.curdir) + '\\bin\\artm.dll')
 
 # Parse collection
 batches_found = len(glob.glob("kos/*.batch"))
@@ -78,6 +78,6 @@ with library.CreateMasterComponent(master_component_config) as master:
     model.InvokePhiRegularizers();
     perplexity_score = master.GetScore(model, 'perplexity_score')
     print "Iter# = " + str(iter) + ", Perplexity = " + str(perplexity_score.value)
-          
+
   top_tokens_score = master.GetScore(model, 'top_tokens_score')
   print top_tokens_score

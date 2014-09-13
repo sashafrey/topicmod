@@ -11,3 +11,5 @@ set(SRC_LIST
 
 add_executable(node_controller ${SRC_LIST})
 target_link_libraries(node_controller artm)
+
+install(TARGETS node_controller DESTINATION bin)

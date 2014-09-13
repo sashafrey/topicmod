@@ -125,6 +125,8 @@ set_property(TARGET google-glog PROPERTY VERSION 0.3.3)
 set_property(TARGET google-glog PROPERTY SOVERSION 0.3.3)
 mz_target_props(google-glog)
 
+if(0)  # disable install
+
 if(WIN32)
     install(TARGETS google-glog
                 LIBRARY DESTINATION lib
@@ -153,4 +155,6 @@ else()
                 DESTINATION share/doc/google-glog-doc
                 PATTERN "*.svn" EXCLUDE)
     endif()
+endif()
+
 endif()

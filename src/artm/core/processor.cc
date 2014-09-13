@@ -110,6 +110,9 @@ bool Processor::TokenIterator::Next() {
     id_in_batch_ = field_->token_id(token_index_);
     token_ = token_dict_[id_in_batch_];
     count_ = field_->token_count(token_index_);
+    if (count_ == 0)  // skip tokens with 0 occurrences.
+      continue;
+
     id_in_model_ = topic_model_.token_id(token_);
 
     if (use_model_class_list_) {

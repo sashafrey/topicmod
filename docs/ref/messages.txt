@@ -810,6 +810,14 @@ Represents a configuration of a perplexity score.
     optional string dictionary_name = 4;
   }
 
+.. attribute:: PerplexityScoreConfig.field_name
+
+   A value that defines which field of an item should be used in perplexity calculation.
+
+.. attribute:: PerplexityScoreConfig.stream_name
+
+   A value that defines which stream should be used in perplexity calculation.
+
 
 .. _PerplexityScore:
 
@@ -828,6 +836,26 @@ Represents a result of calculation of a perplexity score.
     optional double normalizer = 3;
     optional int32 zero_words = 4;
   }
+
+.. attribute:: PerplexityScore.value
+
+   A perplexity value which is calculated as exp(-raw/normalizer).
+
+.. attribute:: PerplexityScore.raw
+
+   A numerator of perplexity calculation. 
+   It is equal to a model likelihood.
+
+.. attribute:: PerplexityScore.normalizer
+
+   A denominator of perplexity calculation.
+   It is equal to a total number of procrssed tokens in the items.
+
+.. attribute:: PerplexityScore.zero_words
+
+   A number of tokens that have zero probability in a document.
+   Such tokens are considered to belong to unigram document model
+   instead of topic model during perplexity calculation.
 
 
 .. _SparsityThetaScoreConfig:
@@ -848,6 +876,25 @@ Represents a configuration of a theta sparsity score.
     optional BoolArray topics_to_score = 4;
   }
 
+.. attribute:: SparsityThetaScoreConfig.field_name
+
+   A value that defines which field of an item should be used in theta sparsity calculation.
+
+.. attribute:: SparsityThetaScoreConfig.stream_name
+
+   A value that defines which stream should be used in theta sparsity calculation.
+
+.. attribute:: SparsityThetaScoreConfig.eps
+
+   A value that defines a zero threshold that is 
+   what value should be considered as computer zero for theta probabilities.
+
+.. attribute:: SparsityThetaScoreConfig.topics_to_score
+
+   A set of values that define which topics should be used in theta sparsity calculation.
+   The length of this array will match the number of topics.
+   Each boolean value means calculating theta sparsity for the topic with this id or not. 
+
 
 .. _SparsityThetaScore:
 
@@ -866,6 +913,20 @@ Represents a result of calculation of a theta sparsity score.
     optional int32 total_topics = 3;
   }
 
+.. attribute:: SparsityThetaScore.value
+
+   A value of theta sparsity that is calculated as zero_topics / total_topics.
+
+.. attribute:: SparsityThetaScore.zero_topics
+
+   A numerator of theta sparsity score.
+   A number of topics that have zero probability in a topic-item distribution.
+
+.. attribute:: SparsityThetaScore.total_topics
+
+   A denominator of theta sparsity score.
+   A total number of topics in a topic-item distributions that are used in theta sparsity calculation.
+
 
 .. _SparsityPhiScoreConfig:
 
@@ -883,6 +944,16 @@ Represents a configuration of a sparsity phi score.
     optional BoolArray topics_to_score = 2;
   }
 
+.. attribute:: SparsityPhiScoreConfig.eps
+
+   A value that defines a zero threshold that is
+   what value should be considered as computer zero for phi probabilities.
+
+.. attribute:: SparsityPhiScoreConfig.topics_to_score
+
+   A set of values that define which topics should be used in phi sparsity calculation.
+   The length of this array should match the number of topics.
+   Each boolean value means calculating phi sparsity for the topic with this id or not. 
 
 
 .. _SparsityPhiScore:
@@ -902,6 +973,20 @@ Represents a result of calculation of a phi sparsity score.
     optional int32 total_tokens = 3;
   }
 
+.. attribute:: SparsityPhiScore.value
+
+   A value of phi sparsity that is calculated as zero_tokens / total_tokens.
+
+.. attribute:: SparsityPhiScore.zero_tokens
+
+   A numerator of phi sparsity score.
+   A number of tokens that have zero probability in a token-topic distribution.
+
+.. attribute:: SparsityPhiScore.total_tokens
+
+   A denominator of phi sparsity score.
+   A total number of tokens in a token-topic distributions that are used in phi sparsity calculation.
+
 
 .. _ItemsProcessedScoreConfig:
 
@@ -919,6 +1004,14 @@ Represents a configuration of an items processed score.
     optional string stream_name = 2 [default = "@global"];
   }
 
+.. attribute:: ItemsProcessedScoreConfig.field_name
+
+   A value that defines which field of an item should be used in calculation of processed items.
+
+.. attribute:: ItemsProcessedScoreConfig.stream_name
+
+   A value that defines which stream should be used in calculation of processed items.
+
 
 .. _ItemsProcessedScore:
 
@@ -934,6 +1027,13 @@ Represents a result of calculation of an items processed score.
   message ItemsProcessedScore {
     optional int32 value = 1;
   }
+
+.. attribute:: ItemsProcessedScore.value
+
+   A number of items that have the field :attr:`ItemsProcessedScoreConfig.field_name`
+   and belong to the stream :attr:`ItemsProcessedScoreConfig.stream_name`
+   and have been processed during iterations.
+   Currently this number is aggregated throughout all iterations.
 
 
 .. _TopTokensScoreConfig:
@@ -952,11 +1052,22 @@ Represents a configuration of a top tokens score.
     repeated int32 topic_id = 2 [packed = true];
   }
 
+.. attribute:: TopTokensScoreConfig.num_tokens
+
+   A value that defines a number of top tokens which should be calculated for a token-topic distribution.
+
+.. attribute:: TopTokensScoreConfig.topic_id
+
+   A set of values that define which topics should be used.
+   Topics are identified by the topic id.
+   If this repeated field is empty then top tokens are calculated for all topics.
+
+
 
 .. _TopTokensScore:
 
 TopTokensScore
-====================
+==============
 
 .. class:: messages_pb2.TopTokensScore
 
@@ -967,6 +1078,15 @@ Represents a result of calculation of a top tokens score.
   message TopTokensScore {
     repeated StringArray values = 1;
   }
+
+.. attribute:: TopTokensScore.values
+
+   A set of top tokens.
+   The length of this repeated value will match the number of topic ids
+   specified in :attr:`TopTokensScoreConfig.topic_id`.
+   Each repeated field corresponds to the topic id in the same order and 
+   contains string array of the most probable tokens in this topic.
+
 
 
 .. _ThetaSnippetScoreConfig:
@@ -986,6 +1106,20 @@ Represents a configuration of a theta snippet score.
     repeated int32 item_id = 3 [packed = true];
   }
 
+.. attribute:: ThetaSnippetScoreConfig.field_name
+
+   A value that defines which field of an item should be used in calculation of a theta snippet.
+
+.. attribute:: ThetaSnippetScoreConfig.stream_name
+
+   A value that defines which stream should be used in calculation of a theta snippet.
+
+.. attribute:: ThetaSnippetScoreConfig.item_id
+
+   A set of values that define items for which theta snippet should be calculated.
+   Items are identified by the item id.
+
+
 
 .. _ThetaSnippetScore:
 
@@ -1002,6 +1136,21 @@ Represents a result of calculation of a theta snippet score.
     repeated int32 item_id = 1;
     repeated FloatArray values = 2;
   }
+
+.. attribute:: ThetaSnippetScore.item_id
+
+   A set of item ids for which theta snippet have been calculated.
+   Items are identified by the item id.
+
+
+.. attribute:: ThetaSnippetScore.values
+
+
+
+   A set of values that define topic probabilities for each item.
+   The length of these repeated values will match the number of item ids
+   specified in :attr:`ThetaSnippetScore.item_id`.
+   Each repeated field contains float array of topic probabilities in the natural order of topic ids.
 
 
 .. _TopicKernelScoreConfig:

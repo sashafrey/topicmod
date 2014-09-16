@@ -37,6 +37,3 @@ endif(rpcz_build_tests)
 if(rpcz_build_examples)
   add_subdirectory(examples/cpp)
 endif(rpcz_build_examples)
-
-file(GLOB RPCZ_PUBLIC_HEADERS include/rpcz/*.h)
-install(FILES ${RPCZ_PUBLIC_HEADERS} DESTINATION include/rpcz)

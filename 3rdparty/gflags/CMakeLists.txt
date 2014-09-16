@@ -275,6 +275,8 @@ endforeach ()
 
 # ----------------------------------------------------------------------------
 # installation
+if(0)  # disable install
+
 if (OS_WINDOWS)
   set (RUNTIME_INSTALL_DIR Bin)
   set (LIBRARY_INSTALL_DIR Lib)
@@ -455,3 +457,5 @@ if (BUILD_PACKAGING)
   include (CPack)
 
 endif () # BUILD_PACKAGING
+
+endif()

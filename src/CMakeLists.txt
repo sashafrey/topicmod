@@ -46,3 +46,6 @@ add_subdirectory(cpp_client)
 add_subdirectory(node_controller)
 
 add_dependencies(artm-static rpcz)
+
+install(FILES python_interface/python_interface.py python_interface/messages_pb2.py DESTINATION src)
+install(FILES ../datasets/docword.kos.txt ../datasets/vocab.kos.txt python_client/artm_example.py DESTINATION .)

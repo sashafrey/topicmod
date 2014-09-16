@@ -124,3 +124,6 @@ set(ARTM_LIB_DEPS  artm-static
 add_library(artm SHARED ${SRC_LIST})
 
 target_link_libraries(artm ${ARTM_LIB_DEPS})
+
+install(TARGETS artm DESTINATION bin)
+install(FILES messages.proto messages.pb.h messages.pb.cc c_interface.h cpp_interface.h cpp_interface.cc DESTINATION src)

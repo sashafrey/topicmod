@@ -52,3 +52,8 @@ set(3RD_PARTY_DIR ${CMAKE_SOURCE_DIR}/3rdparty)
 add_subdirectory(3rdparty)
 add_subdirectory(src)
 
+if(MSVC)
+  include(InstallRequiredSystemLibraries)
+endif()
+
+install(FILES LICENSE DESTINATION .)

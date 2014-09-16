@@ -45,76 +45,72 @@ add_library(libprotobuf STATIC ${SOURCES} )
 set_target_properties(libprotobuf PROPERTIES OUTPUT_NAME "protobuf")
 set(PROTOBUF_LIBRARY libprotobuf CACHE INTERNAL "protobuf library")
 
-install(TARGETS libprotobuf
-    # Don't specify 'LIBRARY' here since that causes problems when
-    # Trying to install DLL libraries
-     DESTINATION ${LIB_DIR}
-    )
-
-# TODO: protobuf-lite
-
-# Install development headers
+# Install python files
 append_if_exist(INSTALL_FILES_LIST
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/code_generator.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/command_line_interface.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/cpp/cpp_generator.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/importer.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/java/java_generator.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/parser.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/plugin.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/plugin.pb.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/plugin.proto
-    ${PROTOBUF_ROOT}/src/google/protobuf/compiler/python/python_generator.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/descriptor_database.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/descriptor.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/descriptor.pb.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/descriptor.proto
-    ${PROTOBUF_ROOT}/src/google/protobuf/dynamic_message.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/extension_set.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/generated_enum_reflection.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/generated_message_reflection.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/generated_message_util.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/io/coded_stream.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/io/gzip_stream.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/io/printer.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/io/tokenizer.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/io/zero_copy_stream.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/io/zero_copy_stream_impl.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/io/zero_copy_stream_impl_lite.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/message.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/message_lite.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/reflection_ops.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/repeated_field.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/service.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops_internals_arm_gcc.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops_internals_arm_qnx.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops_internals_atomicword_compat.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops_internals_macosx.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops_internals_mips_gcc.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops_internals_pnacl.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops_internals_x86_gcc.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/atomicops_internals_x86_msvc.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/common.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/once.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/platform_macros.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/template_util.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/stubs/type_traits.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/text_format.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/unknown_field_set.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/wire_format.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/wire_format_lite.h
-    ${PROTOBUF_ROOT}/src/google/protobuf/wire_format_lite_inl.h
+	${PROTOBUF_ROOT}/src/google/protobuf/compiler/plugin.proto
+	${PROTOBUF_ROOT}/src/google/protobuf/descriptor.proto
+	${PROTOBUF_ROOT}/Python/ez_setup.py
+	${PROTOBUF_ROOT}/Python/mox.py
+	${PROTOBUF_ROOT}/Python/README.txt
+	${PROTOBUF_ROOT}/Python/setup.py
+	${PROTOBUF_ROOT}/Python/stubout.py
+	${PROTOBUF_ROOT}/Python/google/__init__.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/descriptor.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/descriptor_database.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/descriptor_pool.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/message.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/message_factory.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/reflection.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/service.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/service_reflection.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/text_format.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/__init__.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/api_implementation.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/containers.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/cpp_message.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/decoder.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/descriptor_database_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/descriptor_pool_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/descriptor_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/encoder.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/enum_type_wrapper.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/factory_test1.proto
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/factory_test2.proto
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/generator_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/message_cpp_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/message_factory_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/message_listener.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/message_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/more_extensions.proto
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/more_extensions_dynamic.proto
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/more_messages.proto
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/python_message.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/reflection_cpp_generated_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/reflection_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/service_reflection_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/test_bad_identifiers.proto
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/test_util.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/text_format_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/type_checkers.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/unknown_fields_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/wire_format.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/wire_format_test.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/internal/__init__.py
+	${PROTOBUF_ROOT}/Python/google/protobuf/pyext/python-proto2.cc
+	${PROTOBUF_ROOT}/Python/google/protobuf/pyext/python_descriptor.cc
+	${PROTOBUF_ROOT}/Python/google/protobuf/pyext/python_descriptor.h
+	${PROTOBUF_ROOT}/Python/google/protobuf/pyext/python_protobuf.cc
+	${PROTOBUF_ROOT}/Python/google/protobuf/pyext/python_protobuf.h
     )
 
 foreach(fil ${INSTALL_FILES_LIST})
-    file(RELATIVE_PATH relative_file ${PROTOBUF_ROOT}/src ${fil})
+    file(RELATIVE_PATH relative_file ${PROTOBUF_ROOT} ${fil})
 
     get_filename_component(relative_header_dir ${relative_file} PATH)
 
     install(FILES
         ${fil}
-        DESTINATION ${INCLUDE_DIR}/${relative_header_dir}
+        DESTINATION ${INCLUDE_DIR}/../protobuf/${relative_header_dir}
         )
 endforeach()
 

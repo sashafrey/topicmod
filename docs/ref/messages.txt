@@ -844,18 +844,17 @@ Represents a result of calculation of a perplexity score.
 .. attribute:: PerplexityScore.raw
 
    A numerator of perplexity calculation. 
-   It is equal to a model likelihood.
+   This value is equal to the likelihood of the topic model.
 
 .. attribute:: PerplexityScore.normalizer
 
    A denominator of perplexity calculation.
-   It is equal to a total number of procrssed tokens in the items.
+   This value is equal to the total number of tokens in all processed items.
 
 .. attribute:: PerplexityScore.zero_words
 
-   A number of tokens that have zero probability in a document.
-   Such tokens are considered to belong to unigram document model
-   instead of topic model during perplexity calculation.
+   A number of tokens that have zero probability p(w|t,d) in a document.
+   Such tokens are evaluated based on to unigram document model or unigram colection model.
 
 
 .. _SparsityThetaScoreConfig:
@@ -886,13 +885,13 @@ Represents a configuration of a theta sparsity score.
 
 .. attribute:: SparsityThetaScoreConfig.eps
 
-   A value that defines a zero threshold that is 
-   what value should be considered as computer zero for theta probabilities.
+   A small value that defines zero threshold for theta probabilities.
+   Theta values below the threshold will be counted as zeros when calculating theta sparsity score.
 
 .. attribute:: SparsityThetaScoreConfig.topics_to_score
 
    A set of values that define which topics should be used in theta sparsity calculation.
-   The length of this array will match the number of topics.
+   The length of this array must match the number of topics.
    Each boolean value means calculating theta sparsity for the topic with this id or not. 
 
 
@@ -946,13 +945,13 @@ Represents a configuration of a sparsity phi score.
 
 .. attribute:: SparsityPhiScoreConfig.eps
 
-   A value that defines a zero threshold that is
-   what value should be considered as computer zero for phi probabilities.
+   A small value that defines zero threshold for phi probabilities.
+   Phi values below the threshold will be counted as zeros when calculating phi sparsity score.
 
 .. attribute:: SparsityPhiScoreConfig.topics_to_score
 
    A set of values that define which topics should be used in phi sparsity calculation.
-   The length of this array should match the number of topics.
+   The length of this array must match the number of topics.
    Each boolean value means calculating phi sparsity for the topic with this id or not. 
 
 
@@ -1063,7 +1062,6 @@ Represents a configuration of a top tokens score.
    If this repeated field is empty then top tokens are calculated for all topics.
 
 
-
 .. _TopTokensScore:
 
 TopTokensScore
@@ -1086,7 +1084,6 @@ Represents a result of calculation of a top tokens score.
    specified in :attr:`TopTokensScoreConfig.topic_id`.
    Each repeated field corresponds to the topic id in the same order and 
    contains string array of the most probable tokens in this topic.
-
 
 
 .. _ThetaSnippetScoreConfig:
@@ -1120,7 +1117,6 @@ Represents a configuration of a theta snippet score.
    Items are identified by the item id.
 
 
-
 .. _ThetaSnippetScore:
 
 ThetaSnippetScore
@@ -1144,8 +1140,6 @@ Represents a result of calculation of a theta snippet score.
 
 
 .. attribute:: ThetaSnippetScore.values
-
-
 
    A set of values that define topic probabilities for each item.
    The length of these repeated values will match the number of item ids

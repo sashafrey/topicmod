@@ -9,21 +9,12 @@ It demonstrates how to
 * load the text collection into BigARTM,
 * infer topic model and retrieve the results.
 
-A separate tutorial will guide you through the
-:doc:`Networking in BigARTM <network>`.
-
 Installation on Windows
 -----------------------
 
 Prerequisites
 
-* `Python 2.7.6, 32 bit version <https://www.python.org/ftp/python/2.7.6/python-2.7.6.msi>`_
-
-* `Visual C++ Redistributable for Visual Studio 2012 Update 4, VSU_4\vcredist_x86.exe
-  <http://www.microsoft.com/en-us/download/details.aspx?id=30679>`_
-* `Google Protocol Buffers 2.5.0.
-  <https://protobuf.googlecode.com/files/protobuf-2.5.0.zip>`_
-  Unpack and follow the instructions in ``README`` file in directory ``protobuf/python/``.
+* Python 2.7 (https://www.python.org/downloads/)
 
 Installation
 
@@ -31,11 +22,15 @@ Installation
   <https://s3-eu-west-1.amazonaws.com/artm/BigARTM_v1.0_beta.7z>`_
   This package contains all files you need in this tutorial.
 
+* Setup *Google Protocol Buffers* library, included in the BigARTM distributive. 
+  Unpack and follow the instructions in ``README`` file in directory ``protobuf/python/``.
+  Skip this step if you have already set up Google Protocol Buffers earlier.
+
 Installation on Linux
 ---------------------
 
 Currently there is no distribution package of BigARTM for Linux.
-This means that BigARTM had been tested on several Linux OS, it it is known to work well,
+BigARTM had been tested on several Linux OS, and it is known to work well,
 but you have to get the source code and compile it locally on your machine.
 Please, refer to :doc:`Developer's Guide </devguide>` for further instructions.
 

@@ -38,12 +38,10 @@ several quality measures at once almost without any loss of the perplexity.
   .. _post a question: https://groups.google.com/d/forum/artm-users
   .. _ticket tracker: https://github.com/sashafrey/topicmod/issues
 
-Let's list the key features of the library.
-
 **Online**.
 BigARTM never stores the entire text collection
 in the main memory. Instead the collection is split into
-small chunks called 'batches', and loads a limited
+small chunks called 'batches', and BigARTM always loads a limited
 number of batches into memory at any time.
 
 **Parallel**.

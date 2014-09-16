@@ -637,7 +637,9 @@ endforeach()
 #-----------------------------------------------------------------------------
 # installer
 
-install(TARGETS libzmq RUNTIME DESTINATION bin)
+if(MSVC)
+  install(TARGETS libzmq RUNTIME DESTINATION bin)
+endif()
 
 if(0) # disable install
 

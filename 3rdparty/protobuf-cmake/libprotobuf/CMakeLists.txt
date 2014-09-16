@@ -45,6 +45,7 @@ add_library(libprotobuf STATIC ${SOURCES} )
 set_target_properties(libprotobuf PROPERTIES OUTPUT_NAME "protobuf")
 set(PROTOBUF_LIBRARY libprotobuf CACHE INTERNAL "protobuf library")
 
+if(MSVC)
 # Install python files
 append_if_exist(INSTALL_FILES_LIST
 	${PROTOBUF_ROOT}/src/google/protobuf/compiler/plugin.proto
@@ -113,5 +114,6 @@ foreach(fil ${INSTALL_FILES_LIST})
         DESTINATION ${INCLUDE_DIR}/../protobuf/${relative_header_dir}
         )
 endforeach()
+endif()  # if(MSVC)
 
 set(PROTOBUF_INCLUDE_DIR ${PROTOBUF_ROOT}/src CACHE INTERNAL "protobuf library")

@@ -4,7 +4,6 @@ project(3rdparty)
 
 add_subdirectory(gflags)
 add_subdirectory(glog)
-add_subdirectory(gtest)
 
 add_subdirectory(protobuf-cmake)
 add_subdirectory(zeromq)
